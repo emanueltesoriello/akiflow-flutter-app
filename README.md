@@ -1,6 +1,4 @@
-# mobile
-
-Akiflow Mobile App
+# Akiflow Mobile App
 
 ## Run Development App
 
