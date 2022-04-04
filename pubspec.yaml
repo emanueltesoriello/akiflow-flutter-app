@@ -1,0 +1,52 @@
+name: mobile
+description: Akiflow Mobile
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.2 <3.0.0"
+
+dependencies:
+  after_layout: ^1.1.0
+  cupertino_icons: ^1.0.4
+  equatable: ^2.0.3
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.0.1
+  flutter_localizations:
+    sdk: flutter
+  font_awesome_flutter: ^9.2.0
+  get_it: ^7.2.0
+  google_fonts: ^2.3.1
+  http: ^0.13.4
+  image_picker: ^0.8.4+9
+  intl: ^0.17.0
+  jiffy: ^5.0.0
+  logger: ^1.1.0
+  path: ^1.8.0
+  path_provider: ^2.0.9
+  sembast: ^3.1.2
+  sentry_flutter: ^6.4.0
+  shared_preferences: ^2.0.13
+  url_launcher: ^6.0.20
+  uuid: ^3.0.6
+
+dev_dependencies:
+  fast_i18n: ^5.12.0
+  flutter_launcher_icons: ^0.9.2
+  flutter_lints: ^1.0.4
+  flutter_native_splash: ^2.0.5
+  flutter_test:
+    sdk: flutter
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/images/logo.png"
+  android: true
+  ios: true
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/config/

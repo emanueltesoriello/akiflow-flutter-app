@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "Development",
+          "type": "dart",
+          "request": "launch",
+          "program": "lib/main_dev.dart",
+          "console": "terminal",
+          "internalConsoleOptions": "neverOpen",
+        },
+      {
+          "name": "Production",
+          "type": "dart",
+          "request": "launch",
+          "program": "lib/main.dart"
+      }
+  ]
+}
