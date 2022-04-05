@@ -9,5 +9,11 @@
     "or": "or",
     "sign_in_with_google": "Sign in with Google",
     "continuing_accept_terms_privacy": "<center>Continuing you accept the <a url=\"https://google.com\">Terms and Conditions</a><br/> and the <a url=\"https://google.com\">Privacy Policy</a> of Akiflow</center>"
+  },
+  "bottom_bar": {
+    "menu": "Menu",
+    "inbox": "Inbox",
+    "today": "Today",
+    "calendar": "Calendar"
   }
 }

@@ -58,6 +58,7 @@ flutter:
     - assets/images/gratifications/
     - assets/images/help/
     - assets/images/icons/
+    - assets/images/icons/_common/
     - assets/images/icons/google/
     - assets/images/logo/
     - assets/images/onboarding/

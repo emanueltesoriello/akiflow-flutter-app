@@ -58,7 +58,7 @@ class AppBarComp extends StatelessWidget {
                   const Space(16),
                 ],
               ),
-              const Space(10.5),
+              const Space(2),
             ],
           ),
         ),

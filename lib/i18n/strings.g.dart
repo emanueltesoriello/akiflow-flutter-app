@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 9 
+ * Strings: 13 
  *
- * Built on 2022-04-05 at 13:39 UTC
+ * Built on 2022-04-05 at 17:03 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -308,6 +308,7 @@ class _StringsEn {
 	String get login => 'Login';
 	String get typeHere => 'Type here';
 	late final _StringsOnboardingEn onboarding = _StringsOnboardingEn._(_root);
+	late final _StringsBottomBarEn bottom_bar = _StringsBottomBarEn._(_root);
 }
 
 // Path: onboarding
@@ -326,6 +327,20 @@ class _StringsOnboardingEn {
 	String get continuing_accept_terms_privacy => '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>';
 }
 
+// Path: bottom_bar
+class _StringsBottomBarEn {
+	_StringsBottomBarEn._(this._root);
+
+	// ignore: unused_field
+	final _StringsEn _root;
+
+	// Translations
+	String get menu => 'Menu';
+	String get inbox => 'Inbox';
+	String get today => 'Today';
+	String get calendar => 'Calendar';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -341,6 +356,10 @@ extension on _StringsEn {
 			'onboarding.or': 'or',
 			'onboarding.sign_in_with_google': 'Sign in with Google',
 			'onboarding.continuing_accept_terms_privacy': '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>',
+			'bottom_bar.menu': 'Menu',
+			'bottom_bar.inbox': 'Inbox',
+			'bottom_bar.today': 'Today',
+			'bottom_bar.calendar': 'Calendar',
 		};
 	}
 }

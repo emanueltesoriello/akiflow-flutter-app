@@ -13,6 +13,34 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: const Icon(SFSymbols.line_horizontal_3),
+            label: t.bottom_bar.menu,
+          ),
+          BottomNavigationBarItem(
+              icon: const Icon(SFSymbols.tray), label: t.bottom_bar.inbox),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
+              height: 19,
+            ),
+            label: t.bottom_bar.today,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(SFSymbols.calendar),
+            label: t.bottom_bar.calendar,
+          ),
+        ],
+        currentIndex: 0,
+        unselectedItemColor: ColorsExt.textGrey(context),
+        selectedItemColor: Theme.of(context).primaryColor,
+        onTap: (index) {
+          print('Tapped $index');
+        },
+      ),
       body: Column(
         children: [
           AppBarComp(
