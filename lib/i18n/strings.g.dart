@@ -2,10 +2,10 @@
 /*
  * Generated file. Do not edit.
  *
- * Locales: 2
- * Strings: 6 (3.0 per locale)
+ * Locales: 1
+ * Strings: 9 
  *
- * Built on 2022-04-04 at 14:32 UTC
+ * Built on 2022-04-05 at 10:22 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -21,7 +21,6 @@ AppLocale _currLocale = _baseLocale;
 /// - if (LocaleSettings.currentLocale == AppLocale.en) // locale check
 enum AppLocale {
 	en, // 'en' (base locale, fallback)
-	it, // 'it'
 }
 
 /// Method A: Simple
@@ -150,7 +149,6 @@ class AppLocaleUtils {
 // translation instances
 
 late _StringsEn _translationsEn = _StringsEn.build();
-late _StringsIt _translationsIt = _StringsIt.build();
 
 // extensions for AppLocale
 
@@ -162,7 +160,6 @@ extension AppLocaleExtensions on AppLocale {
 	_StringsEn get translations {
 		switch (this) {
 			case AppLocale.en: return _translationsEn;
-			case AppLocale.it: return _translationsIt;
 		}
 	}
 
@@ -176,21 +173,18 @@ extension AppLocaleExtensions on AppLocale {
 	_StringsEn build() {
 		switch (this) {
 			case AppLocale.en: return _StringsEn.build();
-			case AppLocale.it: return _StringsIt.build();
 		}
 	}
 
 	String get languageTag {
 		switch (this) {
 			case AppLocale.en: return 'en';
-			case AppLocale.it: return 'it';
 		}
 	}
 
 	Locale get flutterLocale {
 		switch (this) {
 			case AppLocale.en: return const Locale.fromSubtags(languageCode: 'en');
-			case AppLocale.it: return const Locale.fromSubtags(languageCode: 'it');
 		}
 	}
 }
@@ -199,7 +193,6 @@ extension StringAppLocaleExtensions on String {
 	AppLocale? toAppLocale() {
 		switch (this) {
 			case 'en': return AppLocale.en;
-			case 'it': return AppLocale.it;
 			default: return null;
 		}
 	}
@@ -314,28 +307,23 @@ class _StringsEn {
 	String get appName => 'Akiflow';
 	String get login => 'Login';
 	String get typeHere => 'Type here';
+	late final _StringsOnboardingEn onboarding = _StringsOnboardingEn._(_root);
 }
 
-// Path: <root>
-class _StringsIt implements _StringsEn {
-
-	/// You can call this constructor and build your own translation instance of this locale.
-	/// Constructing via the enum [AppLocale.build] is preferred.
-	_StringsIt.build();
-
-	/// Access flat map
-	@override dynamic operator[](String key) => _flatMap[key];
-
-	// Internal flat map initialized lazily
-	late final Map<String, dynamic> _flatMap = _buildFlatMap();
+// Path: onboarding
+class _StringsOnboardingEn {
+	_StringsOnboardingEn._(this._root);
 
 	// ignore: unused_field
-	@override late final _StringsIt _root = this;
+	final _StringsEn _root;
 
 	// Translations
-	@override String get appName => 'Akiflow';
-	@override String get login => 'Login';
-	@override String get typeHere => 'Type here';
+	String get welcome_to_akiflow => 'Welcome to Akiflow';
+	String get register => 'Register';
+	String get welcome_to_akiflow_subtitle => 'Where your tasks and calendars\nstays together.';
+	String get or => 'or';
+	String get sign_in_with_google => 'Sign in with Google';
+	String get continuing_accept_terms_privacy => 'Continuing you accept the Terms and Conditions\nand the Privacy Policy of Akiflow';
 }
 
 /// Flat map(s) containing all translations.
@@ -347,16 +335,12 @@ extension on _StringsEn {
 			'appName': 'Akiflow',
 			'login': 'Login',
 			'typeHere': 'Type here',
-		};
-	}
-}
-
-extension on _StringsIt {
-	Map<String, dynamic> _buildFlatMap() {
-		return {
-			'appName': 'Akiflow',
-			'login': 'Login',
-			'typeHere': 'Type here',
+			'onboarding.welcome_to_akiflow': 'Welcome to Akiflow',
+			'onboarding.register': 'Register',
+			'onboarding.welcome_to_akiflow_subtitle': 'Where your tasks and calendars\nstays together.',
+			'onboarding.or': 'or',
+			'onboarding.sign_in_with_google': 'Sign in with Google',
+			'onboarding.continuing_accept_terms_privacy': 'Continuing you accept the Terms and Conditions\nand the Privacy Policy of Akiflow',
 		};
 	}
 }

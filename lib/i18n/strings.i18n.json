@@ -1,5 +1,13 @@
 {
   "appName": "Akiflow",
   "login": "Login",
-  "typeHere": "Type here"
+  "typeHere": "Type here",
+  "onboarding": {
+    "welcome_to_akiflow": "Welcome to Akiflow",
+    "register": "Register",
+    "welcome_to_akiflow_subtitle": "Where your tasks and calendars\nstays together.",
+    "or": "or",
+    "sign_in_with_google": "Sign in with Google",
+    "continuing_accept_terms_privacy": "Continuing you accept the Terms and Conditions\nand the Privacy Policy of Akiflow"
+  }
 }

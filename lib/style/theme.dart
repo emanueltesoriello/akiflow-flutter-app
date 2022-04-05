@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-/// Colors
-const Color primary = Color(0xFFAF38F9);
-const Color primaryLight = Color(0xFFF7EBFE);
-const Color textLight = Color(0xff222222);
-const Color textDark = Color(0xffeeeeee);
-const Color backgroundLight = Color(0xffF2F1F6);
-const Color backgroundDark = Color(0xFF121212);
-const Color disabledLight = Color(0xffcccccc);
+import 'package:mobile/style/colors.dart';
 
 /// Styles
 const double cardRadius = 10.0;
@@ -21,28 +13,29 @@ const double buttonHeight = 60;
 
 /// Sizes
 const double maxWidth = 600;
-const double radius = 10;
+const double radius = 8;
+const double border = 1;
 
 /// Light Theme
 final ThemeData lightTheme = ThemeData.light().copyWith(
-  primaryColor: primary,
-  primaryColorLight: primaryLight,
-  backgroundColor: backgroundLight,
-  scaffoldBackgroundColor: backgroundLight,
+  primaryColor: ColorsLight.brandPurple,
+  primaryColorLight: ColorsLight.brandLight,
+  backgroundColor: ColorsLight.background,
+  scaffoldBackgroundColor: ColorsLight.background,
   appBarTheme: const AppBarTheme(
-    color: primaryLight,
-    iconTheme: IconThemeData(color: primary),
-    actionsIconTheme: IconThemeData(color: primary),
-    foregroundColor: primary,
+    color: ColorsLight.brandLight,
+    iconTheme: IconThemeData(color: ColorsLight.brandPurple),
+    actionsIconTheme: IconThemeData(color: ColorsLight.brandPurple),
+    foregroundColor: ColorsLight.brandPurple,
   ),
   textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: primary,
-    selectionColor: primary,
-    selectionHandleColor: primary,
+    cursorColor: ColorsLight.brandPurple,
+    selectionColor: ColorsLight.brandPurple,
+    selectionHandleColor: ColorsLight.brandPurple,
   ),
   colorScheme: ColorScheme.fromSwatch().copyWith(
-    primary: primary,
-    secondary: primary,
+    primary: ColorsLight.brandPurple,
+    secondary: ColorsLight.brandPurple,
   ),
   cardTheme: CardTheme(
     margin: EdgeInsets.zero,
@@ -52,15 +45,16 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     ),
   ),
   textTheme: GoogleFonts.beVietnamTextTheme(),
-  checkboxTheme:
-      CheckboxThemeData(fillColor: MaterialStateProperty.all(primary)),
+  checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.all(ColorsLight.brandPurple)),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      primary: primary,
-      textStyle: const TextStyle(fontWeight: FontWeight.bold, color: primary),
+      primary: ColorsLight.brandPurple,
+      textStyle: const TextStyle(
+          fontWeight: FontWeight.bold, color: ColorsLight.brandPurple),
     ),
   ),
-  disabledColor: disabledLight,
+  disabledColor: ColorsLight.greyDefault,
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: ZoomPageTransitionsBuilder(),
@@ -87,7 +81,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
 //   ),
 //   colorScheme: ColorScheme.fromSwatch().copyWith(
 //     primary: primaryDark,
-//     secondary: primary,
+//     secondary: ColorsLight.brandPurple,
 //   ),
 //   cardColor: cardDark,
 //   cardTheme: CardTheme(
@@ -108,7 +102,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
 //   dialogBackgroundColor: cardDark,
 //   textButtonTheme: TextButtonThemeData(
 //     style: TextButton.styleFrom(
-//       primary: primary,
+//       primary: ColorsLight.brandPurple,
 //       textStyle:
 //           const TextStyle(fontWeight: FontWeight.bold, color: primary),
 //     ),

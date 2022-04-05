@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:mobile/style/theme.dart';
 
 class ButtonComp extends StatefulWidget {
   final Widget child;
@@ -70,10 +71,10 @@ class _ButtonCompState extends State<ButtonComp>
             builder: (_, child) => Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(radius),
                 border: Border.all(
                   color: Theme.of(context).primaryColor,
-                  width: 1,
+                  width: border,
                 ),
                 color: _animation!.value,
               ),
