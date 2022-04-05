@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/style/colors.dart';
 
 /// Styles
@@ -20,8 +19,20 @@ const double border = 1;
 final ThemeData lightTheme = ThemeData.light().copyWith(
   primaryColor: ColorsLight.brandPurple,
   primaryColorLight: ColorsLight.brandLight,
-  backgroundColor: ColorsLight.background,
+  backgroundColor: ColorsLight.white,
   scaffoldBackgroundColor: ColorsLight.background,
+  textTheme: const TextTheme(
+    headline1: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      color: ColorsLight.greyDarker,
+    ),
+    headline2: TextStyle(
+      fontSize: 17,
+      fontWeight: FontWeight.w400,
+      color: ColorsLight.greyMedium,
+    ),
+  ),
   appBarTheme: const AppBarTheme(
     color: ColorsLight.brandLight,
     iconTheme: IconThemeData(color: ColorsLight.brandPurple),
@@ -44,7 +55,6 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       borderRadius: BorderRadius.circular(0),
     ),
   ),
-  textTheme: GoogleFonts.beVietnamTextTheme(),
   checkboxTheme: CheckboxThemeData(
       fillColor: MaterialStateProperty.all(ColorsLight.brandPurple)),
   textButtonTheme: TextButtonThemeData(

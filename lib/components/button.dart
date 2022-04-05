@@ -79,7 +79,7 @@ class _ButtonCompState extends State<ButtonComp>
                 color: _animation!.value,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                 child: Center(child: widget.child),
               ),
             ),

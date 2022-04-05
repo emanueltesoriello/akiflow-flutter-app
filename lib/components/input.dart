@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile/components/space.dart';
 import 'package:mobile/i18n/strings.g.dart';
 
@@ -270,7 +269,7 @@ class _InputState extends State<Input> {
     if (!widget.password) return Container();
 
     return IconButton(
-      icon: const Icon(FontAwesomeIcons.eye, size: 14),
+      icon: const Icon(Icons.remove_red_eye, size: 14),
       onPressed: () {
         showPassword.value = !showPassword.value;
       },

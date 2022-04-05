@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 9 
  *
- * Built on 2022-04-05 at 10:22 UTC
+ * Built on 2022-04-05 at 13:39 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -323,7 +323,7 @@ class _StringsOnboardingEn {
 	String get welcome_to_akiflow_subtitle => 'Where your tasks and calendars\nstays together.';
 	String get or => 'or';
 	String get sign_in_with_google => 'Sign in with Google';
-	String get continuing_accept_terms_privacy => 'Continuing you accept the Terms and Conditions\nand the Privacy Policy of Akiflow';
+	String get continuing_accept_terms_privacy => '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>';
 }
 
 /// Flat map(s) containing all translations.
@@ -340,7 +340,7 @@ extension on _StringsEn {
 			'onboarding.welcome_to_akiflow_subtitle': 'Where your tasks and calendars\nstays together.',
 			'onboarding.or': 'or',
 			'onboarding.sign_in_with_google': 'Sign in with Google',
-			'onboarding.continuing_accept_terms_privacy': 'Continuing you accept the Terms and Conditions\nand the Privacy Policy of Akiflow',
+			'onboarding.continuing_accept_terms_privacy': '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>',
 		};
 	}
 }

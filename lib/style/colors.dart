@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 
+extension ColorsExt on Colors {
+  static Color textBrightnessBased(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.greyDark
+        : ColorsDark.greyDark;
+  }
+
+  static Color whiteButtonBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.greyBlue
+        : ColorsDark.greyBlue;
+  }
+}
+
 extension ColorsLight on Colors {
   // main
   static const Color brandPurple = Color(0xFFAF38F9);
@@ -7,7 +21,7 @@ extension ColorsLight on Colors {
   static const Color brandLight = Color(0xFFF7EBFE);
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
-  static const Color background = Color(0xFFe5e5e5);
+  static const Color background = Color(0xFFFAFBFD);
 
   // greys
   static const Color greyDarker = Color(0xFF37404A);
