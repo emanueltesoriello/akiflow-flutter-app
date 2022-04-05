@@ -59,6 +59,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
     },
   ),
+  dividerColor: ColorsLight.greyBlueLight,
 );
 
 /// Dark Theme

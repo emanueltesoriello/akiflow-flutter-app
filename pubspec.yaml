@@ -15,6 +15,7 @@ dependencies:
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter
+  flutter_sfsymbols: ^2.0.0
   flutter_svg: ^1.0.3
   flutter_widget_from_html: ^0.8.5
   get_it: ^7.2.0
@@ -61,3 +62,20 @@ flutter:
     - assets/images/logo/
     - assets/images/onboarding/
     - assets/images/popup/
+
+  fonts:
+    - family: sficonsets
+      fonts:
+        - asset: assets/fonts/sficonsets.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/RobotoMono-Regular.ttf
+        - asset: assets/fonts/RobotoMono-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/RobotoMono-Bold.ttf
+          weight: 700
