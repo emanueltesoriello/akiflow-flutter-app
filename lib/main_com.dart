@@ -111,7 +111,7 @@ class Application extends StatelessWidget {
                       state.action.dismiss != null
                           ? TextButton(
                               child:
-                                  Text(state.action.dismissTitle ?? "ANNULLA"),
+                                  Text(state.action.dismissTitle ?? t.dismiss),
                               onPressed: () {
                                 Navigator.pop(context);
                                 state.action.dismiss!();
@@ -119,7 +119,7 @@ class Application extends StatelessWidget {
                             )
                           : Container(),
                       TextButton(
-                        child: Text(state.action.confirmTitle ?? "OK"),
+                        child: Text(state.action.confirmTitle ?? t.ok),
                         onPressed: () {
                           Navigator.pop(context);
                           if (state.action.confirm != null) {

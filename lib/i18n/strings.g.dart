@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 13 
+ * Strings: 15 
  *
- * Built on 2022-04-05 at 17:03 UTC
+ * Built on 2022-04-05 at 17:34 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -307,6 +307,8 @@ class _StringsEn {
 	String get appName => 'Akiflow';
 	String get login => 'Login';
 	String get typeHere => 'Type here';
+	String get dismiss => 'Dismiss';
+	String get ok => 'OK';
 	late final _StringsOnboardingEn onboarding = _StringsOnboardingEn._(_root);
 	late final _StringsBottomBarEn bottom_bar = _StringsBottomBarEn._(_root);
 }
@@ -350,6 +352,8 @@ extension on _StringsEn {
 			'appName': 'Akiflow',
 			'login': 'Login',
 			'typeHere': 'Type here',
+			'dismiss': 'Dismiss',
+			'ok': 'OK',
 			'onboarding.welcome_to_akiflow': 'Welcome to Akiflow',
 			'onboarding.register': 'Register',
 			'onboarding.welcome_to_akiflow_subtitle': 'Where your tasks and calendars\nstays together.',

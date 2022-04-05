@@ -2,6 +2,8 @@
   "appName": "Akiflow",
   "login": "Login",
   "typeHere": "Type here",
+  "dismiss": "Dismiss",
+  "ok": "OK",
   "onboarding": {
     "welcome_to_akiflow": "Welcome to Akiflow",
     "register": "Register",
