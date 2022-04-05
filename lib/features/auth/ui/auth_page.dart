@@ -36,13 +36,21 @@ class AuthPage extends StatelessWidget {
               Text(
                 t.onboarding.welcome_to_akiflow,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline1,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.textGrey(context),
+                ),
               ),
               const Space(8),
               Text(
                 t.onboarding.welcome_to_akiflow_subtitle,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline2,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w400,
+                  color: ColorsExt.textGrey2_5(context),
+                ),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -68,7 +76,7 @@ class AuthPage extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
-                    color: ColorsExt.textBrightnessBased(context),
+                    color: ColorsExt.textGrey3(context),
                   )),
               const Space(8),
               GoogleButton(
@@ -80,7 +88,7 @@ class AuthPage extends StatelessWidget {
                 enableCaching: false,
                 textStyle: TextStyle(
                   fontSize: 13,
-                  color: ColorsExt.textBrightnessBased(context),
+                  color: ColorsExt.textGrey2_5(context),
                 ),
                 customWidgetBuilder: (dom.Element element) {
                   List<TextSpan> textSpans = [];
@@ -92,7 +100,7 @@ class AuthPage extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
-                          color: ColorsExt.textBrightnessBased(context),
+                          color: ColorsExt.textGrey2_5(context),
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
@@ -104,7 +112,7 @@ class AuthPage extends StatelessWidget {
                         text: node.text,
                         style: TextStyle(
                           fontSize: 13,
-                          color: ColorsExt.textBrightnessBased(context),
+                          color: ColorsExt.textGrey2_5(context),
                         ),
                       ));
                     }

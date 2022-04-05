@@ -91,7 +91,7 @@ class _GoogleButtonState extends State<GoogleButton>
                       t.onboarding.sign_in_with_google,
                       style: TextStyle(
                         fontSize: 17,
-                        color: ColorsExt.textBrightnessBased(context),
+                        color: ColorsExt.textGrey2_5(context),
                       ),
                     )),
                     const Space(8),

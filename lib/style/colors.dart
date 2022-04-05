@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 
 extension ColorsExt on Colors {
-  static Color textBrightnessBased(BuildContext context) {
+  static Color textGrey2_5(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.greyDark
         : ColorsDark.greyDark;
+  }
+
+  static Color textGrey3(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.greyMedium
+        : ColorsDark.greyMedium;
+  }
+
+  static Color textGrey(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.greyDarker
+        : ColorsDark.greyDarker;
   }
 
   static Color whiteButtonBorder(BuildContext context) {
@@ -26,7 +38,7 @@ extension ColorsLight on Colors {
   // greys
   static const Color greyDarker = Color(0xFF37404A);
   static const Color greyDark = Color(0xFF445B6A);
-  static const Color greyMedium = Color(0xFFA0AEB8);
+  static const Color greyMedium = Color(0xFF7C8B95);
   static const Color greyDefault = Color(0xFFB3C0C7);
   static const Color greyBlue = Color(0xFFBFD6E4);
   static const Color greyBlueLight =

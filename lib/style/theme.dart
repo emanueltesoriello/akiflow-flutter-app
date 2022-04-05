@@ -21,18 +21,6 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   primaryColorLight: ColorsLight.brandLight,
   backgroundColor: ColorsLight.white,
   scaffoldBackgroundColor: ColorsLight.background,
-  textTheme: const TextTheme(
-    headline1: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w500,
-      color: ColorsLight.greyDarker,
-    ),
-    headline2: TextStyle(
-      fontSize: 17,
-      fontWeight: FontWeight.w400,
-      color: ColorsLight.greyMedium,
-    ),
-  ),
   appBarTheme: const AppBarTheme(
     color: ColorsLight.brandLight,
     iconTheme: IconThemeData(color: ColorsLight.brandPurple),
