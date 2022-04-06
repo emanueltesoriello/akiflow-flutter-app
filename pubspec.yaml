@@ -31,6 +31,8 @@ dependencies:
   shared_preferences: ^2.0.13
   url_launcher: ^6.0.20
   uuid: ^3.0.6
+  model:
+    path: ./packages/model
 
 dev_dependencies:
   fast_i18n: ^5.12.0

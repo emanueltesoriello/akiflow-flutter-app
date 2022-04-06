@@ -1,6 +1,6 @@
 import 'package:http/http.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/model/user.dart';
+import 'package:model/user.dart';
 
 class HttpClient extends BaseClient {
   final PreferencesRepository _preferences;

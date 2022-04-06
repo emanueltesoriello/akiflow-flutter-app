@@ -4,9 +4,9 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/model/user.dart';
 import 'package:mobile/repository/auth.dart';
 import 'package:mobile/services/dialog_service.dart';
+import 'package:model/user.dart';
 
 part 'auth_state.dart';
 

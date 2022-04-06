@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/model/user.dart';
+import 'package:model/user.dart';
 
 abstract class IAuthRepository {
   Future<User> auth({
@@ -22,8 +22,6 @@ class AuthRepository implements IAuthRepository {
   Future<User> auth(
       {required String code, required String codeVerifier}) async {
     Uri url = Uri.parse(Config.endpoint + "/redirect/token");
-
-    print(url);
 
     Map body = ({
       "client_id": Config.oauthClientId,
