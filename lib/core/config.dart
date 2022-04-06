@@ -30,4 +30,12 @@ abstract class Config {
   static String sentryDsn() {
     return _config['sentry_dsn'] as String;
   }
+
+  static String oauthClientId() {
+    return _config['oauth_client_id'] as String;
+  }
+
+  static String oauthRedirectUrl() {
+    return _config['oauth_redirect_url'] as String;
+  }
 }

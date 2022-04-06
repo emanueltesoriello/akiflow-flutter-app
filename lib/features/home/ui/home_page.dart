@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
             label: t.bottom_bar.calendar,
           ),
         ],
-        currentIndex: 0,
+        currentIndex: 1,
         unselectedItemColor: ColorsExt.textGrey(context),
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) {
