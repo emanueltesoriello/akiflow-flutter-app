@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:model/user.dart';
+import 'package:models/user.dart';
 
 abstract class IAuthRepository {
   Future<User> auth({

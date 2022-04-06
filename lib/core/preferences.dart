@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:model/user.dart';
+import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class PreferencesRepository {

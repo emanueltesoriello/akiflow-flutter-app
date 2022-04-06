@@ -6,7 +6,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/auth.dart';
 import 'package:mobile/services/dialog_service.dart';
-import 'package:model/user.dart';
+import 'package:models/user.dart';
 
 part 'auth_state.dart';
 
