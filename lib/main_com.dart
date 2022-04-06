@@ -64,9 +64,11 @@ class Application extends StatelessWidget {
           create: (BuildContext context) => DialogCubit(),
         ),
         BlocProvider<AuthCubit>(
+          lazy: false,
           create: (BuildContext context) => AuthCubit(),
         ),
         BlocProvider<HomeCubit>(
+          lazy: false,
           create: (BuildContext context) => HomeCubit(),
         ),
       ],

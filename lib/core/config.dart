@@ -16,12 +16,14 @@ abstract class Config {
     _development = development;
   }
 
-  /// The starting [endpoint] based on the environment
   static String get endpoint {
     return _config['endpoint'] as String;
   }
 
-  /// The [development] value based on the environment
+  static String get oauthEndpoint {
+    return _config['oauth_endpoint'] as String;
+  }
+
   static bool get development {
     return _development;
   }

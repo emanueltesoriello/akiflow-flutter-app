@@ -36,8 +36,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
         Config.oauthClientId,
         Config.oauthRedirectUrl,
         serviceConfiguration: AuthorizationServiceConfiguration(
-          authorizationEndpoint: Config.endpoint + '/oauth/authorize',
-          tokenEndpoint: Config.endpoint + '/redirect/token',
+          authorizationEndpoint: Config.oauthEndpoint + '/oauth/authorize',
+          tokenEndpoint: Config.oauthEndpoint + '/redirect/token',
         ),
       ),
     );

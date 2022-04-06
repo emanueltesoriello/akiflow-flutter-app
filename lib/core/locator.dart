@@ -3,6 +3,7 @@ import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/auth.dart';
 import 'package:mobile/repository/local_storage.dart';
+import 'package:mobile/repository/tasks.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:sembast/sembast.dart';
@@ -28,4 +29,5 @@ void setupLocator(Database db, SharedPreferences preferences) {
   /// Repositories
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);
   locator.registerSingleton<AuthRepository>(AuthRepository());
+  locator.registerSingleton<TasksRepository>(TasksRepository());
 }

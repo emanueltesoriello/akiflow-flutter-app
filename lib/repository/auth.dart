@@ -21,7 +21,7 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<User> auth(
       {required String code, required String codeVerifier}) async {
-    Uri url = Uri.parse(Config.endpoint + "/redirect/token");
+    Uri url = Uri.parse(Config.oauthEndpoint + "/redirect/token");
 
     Map body = ({
       "client_id": Config.oauthClientId,
