@@ -17,25 +17,25 @@ abstract class Config {
   }
 
   /// The starting [endpoint] based on the environment
-  static String endpoint() {
+  static String get endpoint {
     return _config['endpoint'] as String;
   }
 
   /// The [development] value based on the environment
-  static bool development() {
+  static bool get development {
     return _development;
   }
 
   /// Sentry DSN based on the environment
-  static String sentryDsn() {
+  static String get sentryDsn {
     return _config['sentry_dsn'] as String;
   }
 
-  static String oauthClientId() {
+  static String get oauthClientId {
     return _config['oauth_client_id'] as String;
   }
 
-  static String oauthRedirectUrl() {
+  static String get oauthRedirectUrl {
     return _config['oauth_redirect_url'] as String;
   }
 }

@@ -81,7 +81,7 @@ class Application extends StatelessWidget {
           supportedLocales: const [
             Locale('it', 'IT'),
           ],
-          debugShowCheckedModeBanner: Config.development(),
+          debugShowCheckedModeBanner: Config.development,
           navigatorObservers: [routeObserver],
           theme: lightTheme,
           home: BlocListener<DialogCubit, DialogState>(

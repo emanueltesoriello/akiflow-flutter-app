@@ -1,6 +1,6 @@
 {
-    "endpoint": "",
+    "endpoint": "https://app.akiflow.com",
     "sentry_dsn": "https://add9dcb365c04a5998caa2a54f5b3bc9@bugtracker.akiflow.com/7",
     "oauth_client_id": "1000006",
-    "oauth_redirect_uri": "https://app.akiflow.com/auth/callback"
+    "oauth_redirect_url": "com.akiflow.mobile:/callback"
 }

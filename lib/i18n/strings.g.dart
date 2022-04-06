@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 15 
+ * Strings: 16 
  *
- * Built on 2022-04-05 at 17:34 UTC
+ * Built on 2022-04-06 at 12:01 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -322,6 +322,7 @@ class _StringsOnboardingEn {
 
 	// Translations
 	String get welcome_to_akiflow => 'Welcome to Akiflow';
+	String get login => 'Login';
 	String get register => 'Register';
 	String get welcome_to_akiflow_subtitle => 'Where your tasks and calendars\nstays together.';
 	String get or => 'or';
@@ -355,6 +356,7 @@ extension on _StringsEn {
 			'dismiss': 'Dismiss',
 			'ok': 'OK',
 			'onboarding.welcome_to_akiflow': 'Welcome to Akiflow',
+			'onboarding.login': 'Login',
 			'onboarding.register': 'Register',
 			'onboarding.welcome_to_akiflow_subtitle': 'Where your tasks and calendars\nstays together.',
 			'onboarding.or': 'or',

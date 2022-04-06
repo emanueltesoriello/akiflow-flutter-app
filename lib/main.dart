@@ -23,7 +23,7 @@ Future<void> main() async {
   await SentryFlutter.init(
     (options) {
       options.beforeSend = beforeSend;
-      options.dsn = Config.sentryDsn();
+      options.dsn = Config.sentryDsn;
       options.tracesSampleRate = 1.0;
     },
     appRunner: () => mainCom(),

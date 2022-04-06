@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:mobile/components/app_bar.dart';
 import 'package:mobile/components/button.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/i18n/strings.g.dart';
 import 'package:mobile/style/colors.dart';
@@ -60,6 +62,15 @@ class HomePage extends StatelessWidget {
                 onPressed: () {},
               ),
             ],
+          ),
+          BlocBuilder<AuthCubit, AuthCubitState>(
+            builder: (context, state) {
+              if (state.user == null) {
+                return const Text("not logged");
+              }
+
+              return Text(state.user?.name ?? "n/d");
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(20),
