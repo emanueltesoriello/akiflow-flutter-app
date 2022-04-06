@@ -1,5 +1,6 @@
 import 'package:http/http.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/model/user.dart';
 
 class HttpClient extends BaseClient {
   final PreferencesRepository _preferences;
@@ -10,9 +11,10 @@ class HttpClient extends BaseClient {
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
-    if (_preferences.getUser() != null) {
-      request.headers['Authorization'] =
-          "Bearer " + (_preferences.getUser()!.accessToken ?? '');
+    User? user = _preferences.user;
+
+    if (user != null) {
+      request.headers['Authorization'] = "Bearer " + (user.accessToken ?? '');
     }
 
     request.headers['Accept'] = "application/json";

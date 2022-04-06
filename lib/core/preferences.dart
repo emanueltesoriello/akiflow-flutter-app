@@ -8,7 +8,7 @@ abstract class PreferencesRepository {
 
   Future<void> saveUser(User user);
 
-  User? getUser();
+  User? get user;
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -27,7 +27,7 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
-  User? getUser() {
+  User? get user {
     final userString = _prefs.getString("user");
 
     if (userString == null) {

@@ -21,7 +21,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   _init() async {
-    User? user = _preferencesRepository.getUser();
+    User? user = _preferencesRepository.user;
 
     if (user != null) {
       emit(AuthCubitState(user: user));
