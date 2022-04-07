@@ -13,6 +13,7 @@ const double buttonHeight = 60;
 /// Sizes
 const double maxWidth = 600;
 const double radius = 8;
+const double noticeRadius = 4;
 const double border = 1;
 
 /// Light Theme
@@ -31,6 +32,13 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     cursorColor: ColorsLight.brandPurple,
     selectionColor: ColorsLight.brandPurple,
     selectionHandleColor: ColorsLight.brandPurple,
+  ),
+  textTheme: const TextTheme(
+    bodyText1: TextStyle(),
+    bodyText2: TextStyle(),
+  ).apply(
+    bodyColor: ColorsLight.greyDarker,
+    displayColor: ColorsLight.greyDarker,
   ),
   colorScheme: ColorScheme.fromSwatch().copyWith(
     primary: ColorsLight.brandPurple,

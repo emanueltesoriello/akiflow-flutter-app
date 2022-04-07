@@ -49,7 +49,7 @@ class AuthPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    color: ColorsExt.textGrey(context),
+                    color: ColorsExt.textGrey1(context),
                   ),
                 ),
                 const Space(8),

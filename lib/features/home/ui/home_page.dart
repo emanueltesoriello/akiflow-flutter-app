@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
             icon: Image.asset(
               "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
               height: 19,
-              color: ColorsExt.textGrey(context),
+              color: ColorsExt.textGrey1(context),
             ),
             activeIcon: Image.asset(
               "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
               return 0;
           }
         }(),
-        unselectedItemColor: ColorsExt.textGrey(context),
+        unselectedItemColor: ColorsExt.textGrey1(context),
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) {
           if (index == 0) {

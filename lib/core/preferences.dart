@@ -9,6 +9,10 @@ abstract class PreferencesRepository {
   Future<void> saveUser(User user);
 
   User? get user;
+
+  bool get inboxNoticeHidden;
+
+  Future<void> setInboxNoticeHidden(bool value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -35,5 +39,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     return User.fromMap(jsonDecode(userString));
+  }
+
+  @override
+  bool get inboxNoticeHidden {
+    return _prefs.getBool("inboxNoticeHidden") ?? false;
+  }
+
+  @override
+  Future<void> setInboxNoticeHidden(bool value) async {
+    await _prefs.setBool("inboxNoticeHidden", value);
   }
 }

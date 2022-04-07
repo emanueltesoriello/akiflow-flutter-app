@@ -13,7 +13,7 @@ extension ColorsExt on Colors {
         : ColorsDark.greyMedium;
   }
 
-  static Color textGrey(BuildContext context) {
+  static Color textGrey1(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.greyDarker
         : ColorsDark.greyDarker;
@@ -23,6 +23,18 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.greyBlue
         : ColorsDark.greyBlue;
+  }
+
+  static notice(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.greenLightAlt
+        : ColorsDark.greenLightAlt;
+  }
+
+  static iconInfo(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.green
+        : ColorsDark.green;
   }
 }
 

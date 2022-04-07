@@ -4,6 +4,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/auth.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:models/user.dart';
@@ -16,7 +17,9 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final DialogService _dialogService = locator<DialogService>();
   final AuthRepository _authRepository = locator<AuthRepository>();
 
-  AuthCubit() : super(const AuthCubitState()) {
+  final TasksCubit _tasksCubit;
+
+  AuthCubit(this._tasksCubit) : super(const AuthCubitState()) {
     _init();
   }
 
@@ -25,6 +28,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     if (user != null) {
       emit(AuthCubitState(user: user));
+      _tasksCubit.loggedEvent();
     }
   }
 
@@ -47,6 +51,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
           code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
 
       await _preferencesRepository.saveUser(user);
+
+      _tasksCubit.firstLoginEvent();
 
       emit(state.copyWith(user: user));
     } else {
