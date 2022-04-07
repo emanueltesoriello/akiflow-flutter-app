@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/app_bar.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -9,7 +10,7 @@ class InboxAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBarComp(
-      title: 'Inbox',
+      title: t.bottom_bar.inbox,
       leading: Icon(
         SFSymbols.tray,
         size: 26,
