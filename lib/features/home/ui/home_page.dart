@@ -3,13 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/app_bar.dart';
-import 'package:mobile/components/button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/home/cubit/home_cubit.dart';
-import 'package:mobile/features/home/views/inbox/ui/inbox_view.dart';
+import 'package:mobile/features/home/views/inbox/ui/view.dart';
+import 'package:mobile/features/home/views/settings/ui/view.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/text_style.dart';
 
 class HomePage extends StatelessWidget {
   final List<Widget> _views = [
@@ -55,7 +53,16 @@ class HomePage extends StatelessWidget {
         unselectedItemColor: ColorsExt.textGrey(context),
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) {
-          context.read<HomeCubit>().bottomBarViewClick(index);
+          if (index == 0) {
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              isScrollControlled: true,
+              builder: (context) => const SettingsView(),
+            );
+          } else {
+            context.read<HomeCubit>().bottomBarViewClick(index);
+          }
         },
       ),
       body: Column(
@@ -92,27 +99,6 @@ class HomePage extends StatelessWidget {
               builder: (context, state) {
                 return _views[state.currentViewIndex];
               },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ButtonComp(
-                  child: Text(
-                    t.login,
-                    style: TextStyleExt.button(context),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AuthPage(),
-                        ));
-                  },
-                ),
-              ],
             ),
           ),
         ],
