@@ -30,6 +30,16 @@ class HomeCubit extends Cubit<HomeCubitState> {
   }
 
   void bottomBarViewClick(int index) {
-    emit(state.copyWith(currentViewIndex: index));
+    switch (index) {
+      case 1:
+        emit(state.copyWith(homeViewType: HomeViewType.inbox));
+        break;
+      case 2:
+        emit(state.copyWith(homeViewType: HomeViewType.today));
+        break;
+      case 3:
+        emit(state.copyWith(homeViewType: HomeViewType.calendar));
+        break;
+    }
   }
 }

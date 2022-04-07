@@ -1,24 +1,26 @@
 part of 'home_cubit.dart';
 
+enum HomeViewType { inbox, today, calendar }
+
 class HomeCubitState extends Equatable {
   final bool loading;
-  final int currentViewIndex;
+  final HomeViewType homeViewType;
 
   const HomeCubitState({
     this.loading = false,
-    this.currentViewIndex = 1,
+    this.homeViewType = HomeViewType.inbox,
   });
 
   HomeCubitState copyWith({
     bool? loading,
-    int? currentViewIndex,
+    HomeViewType? homeViewType,
   }) {
     return HomeCubitState(
       loading: loading ?? this.loading,
-      currentViewIndex: currentViewIndex ?? this.currentViewIndex,
+      homeViewType: homeViewType ?? this.homeViewType,
     );
   }
 
   @override
-  List<Object?> get props => [loading, currentViewIndex];
+  List<Object?> get props => [loading, homeViewType];
 }

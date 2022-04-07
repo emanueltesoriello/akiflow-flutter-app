@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/app_bar.dart';
-import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/home/cubit/home_cubit.dart';
+import 'package:mobile/features/home/views/_components/calendar_appbar.dart';
+import 'package:mobile/features/home/views/_components/inbox_appbar.dart';
+import 'package:mobile/features/home/views/_components/today_appbar.dart';
 import 'package:mobile/features/home/views/inbox/ui/view.dart';
 import 'package:mobile/features/home/views/settings/ui/view.dart';
 import 'package:mobile/style/colors.dart';
@@ -49,7 +50,18 @@ class HomePage extends StatelessWidget {
             label: t.bottom_bar.calendar,
           ),
         ],
-        currentIndex: context.watch<HomeCubit>().state.currentViewIndex,
+        currentIndex: () {
+          switch (context.watch<HomeCubit>().state.homeViewType) {
+            case HomeViewType.inbox:
+              return 1;
+            case HomeViewType.today:
+              return 2;
+            case HomeViewType.calendar:
+              return 3;
+            default:
+              return 0;
+          }
+        }(),
         unselectedItemColor: ColorsExt.textGrey(context),
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) {
@@ -67,37 +79,33 @@ class HomePage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          AppBarComp(
-            title: 'Inbox',
-            leading: Icon(
-              SFSymbols.tray,
-              size: 26,
-              color: ColorsExt.textGrey2_5(context),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  SFSymbols.ellipsis,
-                  size: 18,
-                  color: ColorsExt.textGrey3(context),
-                ),
-                onPressed: () {},
-              ),
-            ],
-          ),
-          BlocBuilder<AuthCubit, AuthCubitState>(
+          BlocBuilder<HomeCubit, HomeCubitState>(
             builder: (context, state) {
-              if (state.user == null) {
-                return const Text("not logged");
+              switch (state.homeViewType) {
+                case HomeViewType.inbox:
+                  return const InboxAppBar();
+                case HomeViewType.today:
+                  return const TodayAppBar();
+                case HomeViewType.calendar:
+                  return const CalendarAppBar();
+                default:
+                  return const SizedBox();
               }
-
-              return Text(state.user?.name ?? "n/d");
             },
           ),
           Expanded(
             child: BlocBuilder<HomeCubit, HomeCubitState>(
               builder: (context, state) {
-                return _views[state.currentViewIndex];
+                switch (state.homeViewType) {
+                  case HomeViewType.inbox:
+                    return _views[1];
+                  case HomeViewType.today:
+                    return _views[2];
+                  case HomeViewType.calendar:
+                    return _views[3];
+                  default:
+                    return const SizedBox();
+                }
               },
             ),
           ),
