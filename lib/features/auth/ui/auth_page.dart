@@ -22,7 +22,7 @@ class AuthPage extends StatelessWidget {
       listener: (context, state) {
         if (state.user != null) {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const HomePage()),
+              MaterialPageRoute(builder: (context) => HomePage()),
               (Route<dynamic> route) => false);
         }
       },

@@ -134,7 +134,7 @@ class Application extends StatelessWidget {
                 );
               }
             },
-            child: const HomePage(),
+            child: HomePage(),
           )),
     );
   }

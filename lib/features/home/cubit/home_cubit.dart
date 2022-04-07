@@ -28,4 +28,8 @@ class HomeCubit extends Cubit<HomeCubitState> {
       }
     }
   }
+
+  void bottomBarViewClick(int index) {
+    emit(state.copyWith(currentViewIndex: index));
+  }
 }

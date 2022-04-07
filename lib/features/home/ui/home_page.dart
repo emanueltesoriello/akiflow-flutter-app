@@ -6,11 +6,20 @@ import 'package:mobile/components/app_bar.dart';
 import 'package:mobile/components/button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
+import 'package:mobile/features/home/cubit/home_cubit.dart';
+import 'package:mobile/features/home/views/inbox/ui/inbox_view.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/text_style.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final List<Widget> _views = [
+    const SizedBox(),
+    const InboxView(),
+    const SizedBox(),
+    const SizedBox(),
+  ];
+
+  HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +37,12 @@ class HomePage extends StatelessWidget {
             icon: Image.asset(
               "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
               height: 19,
+              color: ColorsExt.textGrey(context),
+            ),
+            activeIcon: Image.asset(
+              "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
+              height: 19,
+              color: Theme.of(context).primaryColor,
             ),
             label: t.bottom_bar.today,
           ),
@@ -36,11 +51,11 @@ class HomePage extends StatelessWidget {
             label: t.bottom_bar.calendar,
           ),
         ],
-        currentIndex: 1,
+        currentIndex: context.watch<HomeCubit>().state.currentViewIndex,
         unselectedItemColor: ColorsExt.textGrey(context),
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) {
-          print('Tapped $index');
+          context.read<HomeCubit>().bottomBarViewClick(index);
         },
       ),
       body: Column(
@@ -71,6 +86,13 @@ class HomePage extends StatelessWidget {
 
               return Text(state.user?.name ?? "n/d");
             },
+          ),
+          Expanded(
+            child: BlocBuilder<HomeCubit, HomeCubitState>(
+              builder: (context, state) {
+                return _views[state.currentViewIndex];
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(20),
