@@ -67,6 +67,9 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
     },
   ),
+  iconTheme: const IconThemeData(
+    color: ColorsLight.greyDarker,
+  ),
   dividerColor: ColorsLight.greyBlueLight,
 );
 

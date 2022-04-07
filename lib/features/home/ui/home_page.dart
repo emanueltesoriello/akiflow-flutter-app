@@ -94,19 +94,22 @@ class HomePage extends StatelessWidget {
             },
           ),
           Expanded(
-            child: BlocBuilder<HomeCubit, HomeCubitState>(
-              builder: (context, state) {
-                switch (state.homeViewType) {
-                  case HomeViewType.inbox:
-                    return _views[1];
-                  case HomeViewType.today:
-                    return _views[2];
-                  case HomeViewType.calendar:
-                    return _views[3];
-                  default:
-                    return const SizedBox();
-                }
-              },
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: BlocBuilder<HomeCubit, HomeCubitState>(
+                builder: (context, state) {
+                  switch (state.homeViewType) {
+                    case HomeViewType.inbox:
+                      return _views[1];
+                    case HomeViewType.today:
+                      return _views[2];
+                    case HomeViewType.calendar:
+                      return _views[3];
+                    default:
+                      return const SizedBox();
+                  }
+                },
+              ),
             ),
           ),
         ],

@@ -13,6 +13,12 @@ extension ColorsExt on Colors {
         : ColorsDark.greyMedium;
   }
 
+  static Color textGrey5(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.greyBlueLight
+        : ColorsDark.greyBlueLight;
+  }
+
   static Color textGrey1(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.greyDarker

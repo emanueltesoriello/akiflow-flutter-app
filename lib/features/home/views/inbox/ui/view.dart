@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/notice.dart';
+import 'package:mobile/components/inbox/task.dart';
 import 'package:mobile/features/home/views/inbox/cubit/view_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:models/task/task.dart';
@@ -49,7 +50,12 @@ class _View extends StatelessWidget {
 
         Task task = tasks[index];
 
-        return Text(task.title ?? "");
+        return TaskRow(
+          task: task,
+          completed: () {
+            // TODO on completed task
+          },
+        );
       },
       separatorBuilder: (context, index) {
         if (index == 0) {
