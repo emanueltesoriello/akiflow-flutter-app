@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/components/app_bar.dart';
+import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/style/colors.dart';
 
 class CalendarAppBar extends StatelessWidget {

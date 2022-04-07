@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/components/space.dart';
+import 'package:mobile/components/base/space.dart';
 import 'package:mobile/style/colors.dart';
 
 class AppBarComp extends StatelessWidget {

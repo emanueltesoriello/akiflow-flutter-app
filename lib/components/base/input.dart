@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/space.dart';
+import 'package:mobile/components/base/space.dart';
 
 class Input extends StatefulWidget {
   final String? label;

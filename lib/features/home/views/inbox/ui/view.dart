@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/notice.dart';
+import 'package:mobile/components/base/notice.dart';
 import 'package:mobile/features/home/views/inbox/cubit/view_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:models/task/task.dart';
