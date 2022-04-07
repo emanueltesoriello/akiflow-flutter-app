@@ -12,7 +12,7 @@ class CalendarAppBar extends StatelessWidget {
     return AppBarComp(
       title: DateFormat('EEE').format(DateTime.now()),
       leading: Icon(
-        SFSymbols.tray,
+        SFSymbols.calendar,
         size: 26,
         color: ColorsExt.textGrey2_5(context),
       ),
