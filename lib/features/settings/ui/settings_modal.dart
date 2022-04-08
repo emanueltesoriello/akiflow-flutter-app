@@ -117,13 +117,49 @@ class SettingsModal extends StatelessWidget {
                       children: <Widget>[
                         ButtonSelectable(
                           title: t.bottom_bar.inbox,
-                          leading: SFSymbols.tray,
+                          leading: Icon(
+                            SFSymbols.tray,
+                            size: 24,
+                            color: ColorsExt.grey2(context),
+                          ),
                           selected: true,
                           trailing: Text(
                             context
                                 .watch<TasksCubit>()
                                 .state
                                 .tasks
+                                .length
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey2_5(context),
+                            ),
+                          ),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ButtonSelectable(
+                          title: t.bottom_bar.today,
+                          leading: Image.asset(
+                            "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
+                            height: 19,
+                            color: ColorsExt.grey1(context),
+                          ),
+                          selected: false,
+                          trailing: Text(
+                            context
+                                .watch<TasksCubit>()
+                                .state
+                                .tasks
+                                .where((element) =>
+                                    element.date?.isBefore(DateTime.now()) ??
+                                    false)
                                 .length
                                 .toString(),
                             style: TextStyle(

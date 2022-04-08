@@ -10,8 +10,10 @@ abstract class Task implements Built<Task, TaskBuilder> {
   String? get id;
   @BuiltValueField(wireName: 'title')
   String? get title;
+
   @BuiltValueField(wireName: 'date')
-  String? get date;
+  DateTime? get date;
+
   @BuiltValueField(wireName: 'description')
   String? get description;
   @BuiltValueField(wireName: 'duration')

@@ -5,7 +5,7 @@ import 'package:mobile/style/colors.dart';
 class ButtonSelectable extends StatefulWidget {
   final String title;
   final Function() onPressed;
-  final IconData? leading;
+  final Widget? leading;
   final Widget? trailing;
   final bool selected;
 
@@ -131,11 +131,7 @@ class _ButtonSelectableState extends State<ButtonSelectable>
 
     return Row(
       children: [
-        Icon(
-          widget.leading!,
-          size: 24,
-          color: ColorsExt.grey2(context),
-        ),
+        SizedBox(width: 26, child: widget.leading!),
         const SizedBox(width: 10.5),
       ],
     );

@@ -38,7 +38,7 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
       result
         ..add('date')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.description;
     if (value != null) {
@@ -184,7 +184,7 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           break;
         case 'date':
           result.date = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'description':
           result.description = serializers.deserialize(value,
@@ -271,7 +271,7 @@ class _$Task extends Task {
   @override
   final String? title;
   @override
-  final String? date;
+  final DateTime? date;
   @override
   final String? description;
   @override
@@ -451,9 +451,9 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   String? get title => _$this._title;
   set title(String? title) => _$this._title = title;
 
-  String? _date;
-  String? get date => _$this._date;
-  set date(String? date) => _$this._date = date;
+  DateTime? _date;
+  DateTime? get date => _$this._date;
+  set date(DateTime? date) => _$this._date = date;
 
   String? _description;
   String? get description => _$this._description;
