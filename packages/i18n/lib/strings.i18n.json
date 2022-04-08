@@ -25,6 +25,8 @@
   },
   "settings": {
     "title": "Settings",
-    "logout": "Log out"
+    "logout": "Log out",
+    "upgrade_to_pro": "Upgrade to pro",
+    "my_account": "My account"
   }
 }

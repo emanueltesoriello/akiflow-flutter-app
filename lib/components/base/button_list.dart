@@ -9,14 +9,16 @@ enum ButtonListPosition { single, top, center, bottom }
 class ButtonList extends StatefulWidget {
   final String title;
   final Function() onPressed;
-  final Widget? leadingWidget;
+  final IconData? leading;
+  final Color? leadingColor;
   final ButtonListPosition position;
 
   const ButtonList({
     Key? key,
     required this.title,
     required this.onPressed,
-    this.leadingWidget,
+    this.leading,
+    this.leadingColor,
     this.position = ButtonListPosition.single,
   }) : super(key: key);
 
@@ -76,48 +78,55 @@ class _ButtonListState extends State<ButtonList>
 
             return AnimatedBuilder(
               animation: _animation!,
-              builder: (_, child) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius(context),
-                  color: _animation!.value,
-                  border: Border.all(
-                    color: ColorsExt.grey5(context),
-                  ),
-                ),
-                child: Padding(
-                  padding: paddingWidget(context),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: borderRadius(context),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                      child: Row(
-                        children: [
-                          _buildLeadingIcon(),
-                          Expanded(
-                            child: Text(
-                              widget.title,
-                              textAlign: widget.leadingWidget == null
-                                  ? TextAlign.center
-                                  : TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: ColorsExt.grey2(context),
-                              ),
-                            ),
-                          ),
-                          Builder(builder: (context) {
-                            if (widget.leadingWidget == null) {
-                              return const SizedBox();
-                            }
-
-                            return const Icon(SFSymbols.chevron_right);
-                          }),
-                        ],
+              builder: (_, child) => IntrinsicHeight(
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: ColorsExt.grey5(context),
+                        borderRadius: borderRadius(context),
                       ),
                     ),
-                  ),
+                    AnimatedBuilder(
+                      animation: _animation!,
+                      builder: (_, child) => Container(
+                        margin: margin(context),
+                        padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                        decoration: BoxDecoration(
+                          borderRadius: borderRadius(context),
+                          color: _animation!.value,
+                        ),
+                        child: Row(
+                          children: [
+                            _buildLeadingIcon(),
+                            Expanded(
+                              child: Text(
+                                widget.title,
+                                textAlign: widget.leading == null
+                                    ? TextAlign.center
+                                    : TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: ColorsExt.grey2(context),
+                                ),
+                              ),
+                            ),
+                            Builder(builder: (context) {
+                              if (widget.leading == null) {
+                                return const SizedBox();
+                              }
+
+                              return Icon(
+                                SFSymbols.chevron_right,
+                                size: 20,
+                                color: ColorsExt.grey3(context),
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -126,28 +135,32 @@ class _ButtonListState extends State<ButtonList>
   }
 
   Widget _buildLeadingIcon() {
-    if (widget.leadingWidget == null) {
+    if (widget.leading == null) {
       return const SizedBox();
     }
 
     return Row(
       children: [
-        SizedBox(height: 20, width: 20, child: widget.leadingWidget),
+        Icon(
+          widget.leading!,
+          size: 24,
+          color: widget.leadingColor ?? ColorsExt.grey2(context),
+        ),
         const SizedBox(width: 8),
       ],
     );
   }
 
-  EdgeInsets paddingWidget(BuildContext context) {
+  EdgeInsets margin(BuildContext context) {
     switch (widget.position) {
       case ButtonListPosition.single:
         return const EdgeInsets.all(1);
       case ButtonListPosition.top:
-        return const EdgeInsets.only(top: 1, left: 1, right: 1);
+        return const EdgeInsets.only(left: 1, top: 1, right: 1);
       case ButtonListPosition.center:
-        return const EdgeInsets.only(left: 1, right: 1);
+        return const EdgeInsets.all(1);
       case ButtonListPosition.bottom:
-        return const EdgeInsets.only(bottom: 1, left: 1, right: 1);
+        return const EdgeInsets.only(left: 1, bottom: 1, right: 1);
     }
   }
 
@@ -168,63 +181,6 @@ class _ButtonListState extends State<ButtonList>
         return const BorderRadius.only(
           bottomLeft: Radius.circular(radius),
           bottomRight: Radius.circular(radius),
-        );
-    }
-  }
-
-  BoxDecoration decoration(BuildContext context) {
-    switch (widget.position) {
-      case ButtonListPosition.single:
-        return BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(radius),
-            ),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ));
-      case ButtonListPosition.top:
-        return BoxDecoration(
-          // borderRadius: BorderRadius.only(
-          //   topLeft: Radius.circular(radius),
-          //   topRight: Radius.circular(radius),
-          // ),
-          border: Border(
-            top: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ),
-            left: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ),
-            right: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ),
-          ),
-        );
-      case ButtonListPosition.center:
-        return BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(radius),
-            ),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ));
-      case ButtonListPosition.bottom:
-        return BoxDecoration(
-          // borderRadius: BorderRadius.only(
-          //   bottomLeft: Radius.circular(radius),
-          //   bottomRight: Radius.circular(radius),
-          // ),
-          border: Border(
-            bottom: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ),
-            left: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ),
-            right: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-            ),
-          ),
         );
     }
   }

@@ -38,7 +38,22 @@ class SettingsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   ButtonList(
+                    title:
+                        t.settings.upgrade_to_pro, // TODO  svg for crown icons
+                    position: ButtonListPosition.top,
+                    leading: SFSymbols.person,
+                    leadingColor: Theme.of(context).primaryColor,
+                    onPressed: () {},
+                  ),
+                  ButtonList(
+                    title: t.settings.my_account,
+                    position: ButtonListPosition.center,
+                    leading: SFSymbols.person_circle,
+                    onPressed: () {},
+                  ),
+                  ButtonList(
                     title: t.settings.logout,
+                    position: ButtonListPosition.bottom,
                     onPressed: () {},
                   ),
                 ],

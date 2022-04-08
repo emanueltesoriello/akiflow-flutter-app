@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 20 
+ * Strings: 22 
  *
- * Built on 2022-04-08 at 08:40 UTC
+ * Built on 2022-04-08 at 08:48 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -368,6 +368,8 @@ class _StringsSettingsEn {
 	// Translations
 	String get title => 'Settings';
 	String get logout => 'Log out';
+	String get upgrade_to_pro => 'Upgrade to pro';
+	String get my_account => 'My account';
 }
 
 /// Flat map(s) containing all translations.
@@ -396,6 +398,8 @@ extension on _StringsEn {
 			'notice.inbox_subtitle': 'In Inbox you will find all the tasks',
 			'settings.title': 'Settings',
 			'settings.logout': 'Log out',
+			'settings.upgrade_to_pro': 'Upgrade to pro',
+			'settings.my_account': 'My account',
 		};
 	}
 }
