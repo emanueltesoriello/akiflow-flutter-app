@@ -7,6 +7,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/auth.dart';
 import 'package:mobile/services/dialog_service.dart';
+import 'package:mobile/utils/nullable.dart';
 import 'package:models/user.dart';
 
 part 'auth_state.dart';
@@ -41,7 +42,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
         Config.oauthRedirectUrl,
         serviceConfiguration: AuthorizationServiceConfiguration(
           authorizationEndpoint: Config.oauthEndpoint + '/oauth/authorize',
-          tokenEndpoint: Config.oauthEndpoint + '/redirect/token',
+          tokenEndpoint: Config.oauthEndpoint + '/oauth/authorize',
         ),
       ),
     );
@@ -54,7 +55,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       _tasksCubit.firstLoginEvent();
 
-      emit(state.copyWith(user: user));
+      emit(state.copyWith(user: Nullable(user)));
     } else {
       _dialogService.showGenericError();
     }
@@ -62,7 +63,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
   void logoutClick() {
     _preferencesRepository.clear();
-    emit(state.copyWith(user: null));
+    emit(state.copyWith(user: Nullable(null)));
 
     _tasksCubit.logoutEvent();
   }

@@ -57,7 +57,7 @@ class SettingsModal extends StatelessWidget {
                     child: BlocBuilder<AuthCubit, AuthCubitState>(
                       builder: (context, state) {
                         if (state.user == null) {
-                          return const Text("not logged");
+                          return const SizedBox();
                         }
 
                         return Column(
