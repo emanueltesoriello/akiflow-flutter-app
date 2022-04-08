@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/text_style.dart';
 
 class SettingsModal extends StatelessWidget {
   const SettingsModal({Key? key}) : super(key: key);
@@ -109,21 +105,7 @@ class SettingsModal extends StatelessWidget {
               const Divider(height: 40),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ButtonComp(
-                    child: Text(
-                      t.login,
-                      style: TextStyleExt.button(context),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AuthPage(),
-                          ));
-                    },
-                  ),
-                ],
+                children: const <Widget>[],
               ),
             ],
           ),

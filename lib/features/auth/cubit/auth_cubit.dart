@@ -40,6 +40,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
       AuthorizationRequest(
         Config.oauthClientId,
         Config.oauthRedirectUrl,
+        preferEphemeralSession: true,
         serviceConfiguration: AuthorizationServiceConfiguration(
           authorizationEndpoint: Config.oauthEndpoint + '/oauth/authorize',
           tokenEndpoint: Config.oauthEndpoint + '/oauth/authorize',

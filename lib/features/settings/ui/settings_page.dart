@@ -6,7 +6,7 @@ import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/home/ui/home_page.dart';
+import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -145,7 +145,8 @@ class SettingsPage extends StatelessWidget {
                       context.read<AuthCubit>().logoutClick();
 
                       Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => HomePage()),
+                          MaterialPageRoute(
+                              builder: (context) => const AuthPage()),
                           (Route<dynamic> route) => false);
                     },
                   ),

@@ -5,9 +5,9 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/home/cubit/home_cubit.dart';
 import 'package:mobile/features/home/views/_components/calendar_appbar.dart';
 import 'package:mobile/features/home/views/_components/inbox_appbar.dart';
-import 'package:mobile/features/home/views/_components/settings_modal.dart';
 import 'package:mobile/features/home/views/_components/today_appbar.dart';
 import 'package:mobile/features/home/views/inbox/ui/view.dart';
+import 'package:mobile/features/home/views/settings_modal/settings_modal.dart';
 import 'package:mobile/style/colors.dart';
 
 class HomePage extends StatelessWidget {

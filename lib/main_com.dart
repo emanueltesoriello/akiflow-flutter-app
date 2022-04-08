@@ -7,7 +7,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';
 import 'package:mobile/features/home/cubit/home_cubit.dart';
 import 'package:mobile/features/home/ui/home_page.dart';
@@ -32,7 +34,9 @@ Future<void> mainCom() async {
   /// Setup the injector
   setupLocator(db, preferences);
 
-  runApp(const Application());
+  bool userLogged = locator<PreferencesRepository>().user != null;
+
+  runApp(Application(userLogged: userLogged));
 }
 
 bool dialogShown = false;
@@ -52,7 +56,12 @@ Future<Database> _openDatabase() async {
 }
 
 class Application extends StatelessWidget {
-  const Application({Key? key}) : super(key: key);
+  final bool userLogged;
+
+  const Application({
+    Key? key,
+    required this.userLogged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +154,7 @@ class Application extends StatelessWidget {
                 );
               }
             },
-            child: HomePage(),
+            child: userLogged ? HomePage() : const AuthPage(),
           )),
     );
   }
