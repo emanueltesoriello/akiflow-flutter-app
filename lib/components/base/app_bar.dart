@@ -90,7 +90,7 @@ class AppBarComp extends StatelessWidget {
       style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 24,
-          color: ColorsExt.textGrey2_5(context)),
+          color: ColorsExt.grey2(context)),
     );
   }
 

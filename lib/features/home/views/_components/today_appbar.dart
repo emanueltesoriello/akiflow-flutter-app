@@ -16,7 +16,7 @@ class TodayAppBar extends StatelessWidget {
           icon: Icon(
             SFSymbols.ellipsis,
             size: 18,
-            color: ColorsExt.textGrey3(context),
+            color: ColorsExt.grey2(context),
           ),
           onPressed: () {},
         ),

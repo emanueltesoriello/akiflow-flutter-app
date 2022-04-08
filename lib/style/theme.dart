@@ -18,60 +18,61 @@ const double border = 1;
 
 /// Light Theme
 final ThemeData lightTheme = ThemeData.light().copyWith(
-  primaryColor: ColorsLight.brandPurple,
-  primaryColorLight: ColorsLight.brandLight,
-  backgroundColor: ColorsLight.white,
-  scaffoldBackgroundColor: ColorsLight.background,
-  appBarTheme: const AppBarTheme(
-    color: ColorsLight.brandLight,
-    iconTheme: IconThemeData(color: ColorsLight.brandPurple),
-    actionsIconTheme: IconThemeData(color: ColorsLight.brandPurple),
-    foregroundColor: ColorsLight.brandPurple,
-  ),
-  textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: ColorsLight.brandPurple,
-    selectionColor: ColorsLight.brandPurple,
-    selectionHandleColor: ColorsLight.brandPurple,
-  ),
-  textTheme: const TextTheme(
-    bodyText1: TextStyle(),
-    bodyText2: TextStyle(),
-  ).apply(
-    bodyColor: ColorsLight.greyDarker,
-    displayColor: ColorsLight.greyDarker,
-  ),
-  colorScheme: ColorScheme.fromSwatch().copyWith(
-    primary: ColorsLight.brandPurple,
-    secondary: ColorsLight.brandPurple,
-  ),
-  cardTheme: CardTheme(
-    margin: EdgeInsets.zero,
-    elevation: 0,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(0),
+    primaryColor: ColorsLight.akiflow,
+    primaryColorLight: ColorsLight.akiflow10,
+    backgroundColor: ColorsLight.white,
+    scaffoldBackgroundColor: ColorsLight.grey7,
+    appBarTheme: const AppBarTheme(
+      color: ColorsLight.akiflow10,
+      iconTheme: IconThemeData(color: ColorsLight.akiflow),
+      actionsIconTheme: IconThemeData(color: ColorsLight.akiflow),
+      foregroundColor: ColorsLight.akiflow,
     ),
-  ),
-  checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.all(ColorsLight.brandPurple)),
-  textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(
-      primary: ColorsLight.brandPurple,
-      textStyle: const TextStyle(
-          fontWeight: FontWeight.bold, color: ColorsLight.brandPurple),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: ColorsLight.akiflow,
+      selectionColor: ColorsLight.akiflow,
+      selectionHandleColor: ColorsLight.akiflow,
     ),
-  ),
-  disabledColor: ColorsLight.greyDefault,
-  pageTransitionsTheme: const PageTransitionsTheme(
-    builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.android: ZoomPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-    },
-  ),
-  iconTheme: const IconThemeData(
-    color: ColorsLight.greyDarker,
-  ),
-  dividerColor: ColorsLight.greyBlueLight,
-);
+    textTheme: const TextTheme(
+      bodyText1: TextStyle(),
+      bodyText2: TextStyle(),
+    ).apply(
+      fontFamily: "Inter",
+      bodyColor: ColorsLight.grey1,
+      displayColor: ColorsLight.grey1,
+    ),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      primary: ColorsLight.akiflow,
+      secondary: ColorsLight.akiflow,
+    ),
+    cardTheme: CardTheme(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
+    ),
+    checkboxTheme: CheckboxThemeData(
+        fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        primary: ColorsLight.akiflow,
+        textStyle: const TextStyle(
+            fontWeight: FontWeight.bold, color: ColorsLight.akiflow),
+      ),
+    ),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
+    iconTheme: const IconThemeData(
+      color: ColorsLight.grey2,
+    ),
+    dividerColor: ColorsLight.grey5,
+    dividerTheme:
+        const DividerThemeData(color: ColorsLight.grey5, thickness: 1));
 
 /// Dark Theme
 // final ThemeData darkTheme = ThemeData.light().copyWith(
@@ -91,7 +92,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
 //   ),
 //   colorScheme: ColorScheme.fromSwatch().copyWith(
 //     primary: primaryDark,
-//     secondary: ColorsLight.brandPurple,
+//     secondary: ColorsLight.akiflow,
 //   ),
 //   cardColor: cardDark,
 //   cardTheme: CardTheme(
@@ -112,7 +113,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
 //   dialogBackgroundColor: cardDark,
 //   textButtonTheme: TextButtonThemeData(
 //     style: TextButton.styleFrom(
-//       primary: ColorsLight.brandPurple,
+//       primary: ColorsLight.akiflow,
 //       textStyle:
 //           const TextStyle(fontWeight: FontWeight.bold, color: primary),
 //     ),

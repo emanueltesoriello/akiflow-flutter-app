@@ -14,14 +14,14 @@ class CalendarAppBar extends StatelessWidget {
       leading: Icon(
         SFSymbols.calendar,
         size: 26,
-        color: ColorsExt.textGrey2_5(context),
+        color: ColorsExt.grey2(context),
       ),
       actions: [
         IconButton(
           icon: Icon(
             SFSymbols.ellipsis,
             size: 18,
-            color: ColorsExt.textGrey3(context),
+            color: ColorsExt.grey2(context),
           ),
           onPressed: () {},
         ),

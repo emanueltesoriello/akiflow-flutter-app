@@ -1,4 +1,4 @@
-part of 'view_cubit.dart';
+part of 'settings_cubit.dart';
 
 class SettingsCubitState extends Equatable {
   final bool loading;

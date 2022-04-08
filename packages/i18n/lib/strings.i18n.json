@@ -22,5 +22,9 @@
   "notice": {
     "inbox_title": "Inbox is where magic happens",
     "inbox_subtitle": "In Inbox you will find all the tasks"
+  },
+  "settings": {
+    "title": "Settings",
+    "logout": "Log out"
   }
 }

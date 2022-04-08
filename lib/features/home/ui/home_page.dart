@@ -5,9 +5,9 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/home/cubit/home_cubit.dart';
 import 'package:mobile/features/home/views/_components/calendar_appbar.dart';
 import 'package:mobile/features/home/views/_components/inbox_appbar.dart';
+import 'package:mobile/features/home/views/_components/settings_modal.dart';
 import 'package:mobile/features/home/views/_components/today_appbar.dart';
 import 'package:mobile/features/home/views/inbox/ui/view.dart';
-import 'package:mobile/features/home/views/settings/ui/view.dart';
 import 'package:mobile/style/colors.dart';
 
 class HomePage extends StatelessWidget {
@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
             icon: Image.asset(
               "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
               height: 19,
-              color: ColorsExt.textGrey1(context),
+              color: ColorsExt.grey1(context),
             ),
             activeIcon: Image.asset(
               "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
               return 0;
           }
         }(),
-        unselectedItemColor: ColorsExt.textGrey1(context),
+        unselectedItemColor: ColorsExt.grey1(context),
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) {
           if (index == 0) {
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
               context: context,
               backgroundColor: Colors.transparent,
               isScrollControlled: true,
-              builder: (context) => const SettingsView(),
+              builder: (context) => const SettingsModal(),
             );
           } else {
             context.read<HomeCubit>().bottomBarViewClick(index);

@@ -75,7 +75,7 @@ class _GoogleButtonState extends State<GoogleButton>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(radius),
                 border: Border.all(
-                  color: ColorsExt.whiteButtonBorder(context),
+                  color: ColorsExt.grey5(context),
                   width: border,
                 ),
                 color: _animation!.value,
@@ -91,7 +91,7 @@ class _GoogleButtonState extends State<GoogleButton>
                       t.onboarding.sign_in_with_google,
                       style: TextStyle(
                         fontSize: 17,
-                        color: ColorsExt.textGrey2_5(context),
+                        color: ColorsExt.grey2_5(context),
                       ),
                     )),
                     const Space(8),

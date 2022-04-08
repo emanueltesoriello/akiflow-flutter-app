@@ -49,7 +49,7 @@ class AuthPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    color: ColorsExt.textGrey1(context),
+                    color: ColorsExt.grey1(context),
                   ),
                 ),
                 const Space(8),
@@ -59,7 +59,7 @@ class AuthPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w400,
-                    color: ColorsExt.textGrey2_5(context),
+                    color: ColorsExt.grey2_5(context),
                   ),
                 ),
                 SizedBox(
@@ -89,7 +89,7 @@ class AuthPage extends StatelessWidget {
                   enableCaching: false,
                   textStyle: TextStyle(
                     fontSize: 13,
-                    color: ColorsExt.textGrey2_5(context),
+                    color: ColorsExt.grey2_5(context),
                   ),
                   customWidgetBuilder: (dom.Element element) {
                     List<TextSpan> textSpans = [];
@@ -101,7 +101,7 @@ class AuthPage extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
-                            color: ColorsExt.textGrey2_5(context),
+                            color: ColorsExt.grey2_5(context),
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
@@ -113,7 +113,7 @@ class AuthPage extends StatelessWidget {
                           text: node.text,
                           style: TextStyle(
                             fontSize: 13,
-                            color: ColorsExt.textGrey2_5(context),
+                            color: ColorsExt.grey2_5(context),
                           ),
                         ));
                       }

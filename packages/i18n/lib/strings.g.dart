@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 18 
+ * Strings: 20 
  *
- * Built on 2022-04-07 at 12:48 UTC
+ * Built on 2022-04-08 at 08:40 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -312,6 +312,7 @@ class _StringsEn {
 	late final _StringsOnboardingEn onboarding = _StringsOnboardingEn._(_root);
 	late final _StringsBottomBarEn bottom_bar = _StringsBottomBarEn._(_root);
 	late final _StringsNoticeEn notice = _StringsNoticeEn._(_root);
+	late final _StringsSettingsEn settings = _StringsSettingsEn._(_root);
 }
 
 // Path: onboarding
@@ -357,6 +358,18 @@ class _StringsNoticeEn {
 	String get inbox_subtitle => 'In Inbox you will find all the tasks';
 }
 
+// Path: settings
+class _StringsSettingsEn {
+	_StringsSettingsEn._(this._root);
+
+	// ignore: unused_field
+	final _StringsEn _root;
+
+	// Translations
+	String get title => 'Settings';
+	String get logout => 'Log out';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -381,6 +394,8 @@ extension on _StringsEn {
 			'bottom_bar.calendar': 'Calendar',
 			'notice.inbox_title': 'Inbox is where magic happens',
 			'notice.inbox_subtitle': 'In Inbox you will find all the tasks',
+			'settings.title': 'Settings',
+			'settings.logout': 'Log out',
 		};
 	}
 }

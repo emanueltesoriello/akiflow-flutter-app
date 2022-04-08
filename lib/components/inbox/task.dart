@@ -23,7 +23,7 @@ class TaskRow extends StatelessWidget {
         color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(noticeRadius),
         border: Border.all(
-          color: ColorsExt.textGrey5(context),
+          color: ColorsExt.grey5(context),
           width: 1,
         ),
       ),
@@ -33,7 +33,7 @@ class TaskRow extends StatelessWidget {
           Icon(
             SFSymbols.square,
             size: 20,
-            color: ColorsExt.textGrey3(context),
+            color: ColorsExt.grey3(context),
           ),
           const SizedBox(width: 10),
           Expanded(

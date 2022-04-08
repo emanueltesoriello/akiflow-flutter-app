@@ -24,13 +24,13 @@ class Notice extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: background ?? ColorsExt.notice(context),
+        color: background ?? ColorsExt.green(context),
         borderRadius: BorderRadius.circular(noticeRadius),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: ColorsExt.iconInfo(context)),
+          Icon(icon, size: 20, color: ColorsExt.green20(context)),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -54,8 +54,7 @@ class Notice extends StatelessWidget {
           Stack(
             alignment: Alignment.topRight,
             children: [
-              Icon(SFSymbols.xmark,
-                  size: 20, color: ColorsExt.textGrey1(context)),
+              Icon(SFSymbols.xmark, size: 20, color: ColorsExt.grey1(context)),
               InkWell(
                 onTap: onClose,
                 child: const SizedBox(width: 36, height: 36),
