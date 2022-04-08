@@ -27,8 +27,7 @@ class SettingsModal extends StatelessWidget {
         child: Container(
           color: Theme.of(context).backgroundColor,
           padding: const EdgeInsets.only(top: 16),
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -44,86 +43,101 @@ class SettingsModal extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 19),
-              Row(
-                children: [
-                  SvgPicture.asset(
-                    "assets/images/logo/logo_outline.svg",
-                    width: 48,
-                    height: 48,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: BlocBuilder<AuthCubit, AuthCubitState>(
-                      builder: (context, state) {
-                        if (state.user == null) {
-                          return const SizedBox();
-                        }
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/logo/logo_outline.svg",
+                          width: 48,
+                          height: 48,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: BlocBuilder<AuthCubit, AuthCubitState>(
+                            builder: (context, state) {
+                              if (state.user == null) {
+                                return const SizedBox();
+                              }
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              state.user?.name ?? "n/d",
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    state.user?.name ?? "n/d",
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    state.user?.email ?? "n/d",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: ColorsExt.grey3(context),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        InkWell(
+                          child: Icon(
+                            SFSymbols.search,
+                            color: ColorsExt.grey3(context),
+                          ),
+                          onTap: () {
+                            // TODO search
+                          },
+                        ),
+                        const SizedBox(width: 12),
+                        InkWell(
+                          child: Icon(
+                            SFSymbols.gear_alt,
+                            color: ColorsExt.grey3(context),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SettingsPage()));
+                          },
+                        ),
+                      ],
+                    ),
+                    const Divider(height: 32),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ButtonSelectable(
+                          title: t.bottom_bar.inbox,
+                          leading: SFSymbols.tray,
+                          selected: true,
+                          trailing: Text(
+                            context
+                                .watch<TasksCubit>()
+                                .state
+                                .tasks
+                                .length
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey2_5(context),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              state.user?.email ?? "n/d",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: ColorsExt.grey3(context),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                          ),
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  InkWell(
-                    child: Icon(
-                      SFSymbols.search,
-                      color: ColorsExt.grey3(context),
-                    ),
-                    onTap: () {
-                      // TODO search
-                    },
-                  ),
-                  const SizedBox(width: 12),
-                  InkWell(
-                    child: Icon(
-                      SFSymbols.gear_alt,
-                      color: ColorsExt.grey3(context),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SettingsPage()));
-                    },
-                  ),
-                ],
-              ),
-              const Divider(height: 32),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ButtonSelectable(
-                    title: t.bottom_bar.inbox,
-                    leading: SFSymbols.tray,
-                    selected: true,
-                    trailing: Text(
-                      context.watch<TasksCubit>().state.tasks.length.toString(),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey2_5(context),
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
