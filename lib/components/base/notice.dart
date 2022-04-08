@@ -24,13 +24,13 @@ class Notice extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: background ?? ColorsExt.green(context),
+        color: background ?? ColorsExt.green20(context),
         borderRadius: BorderRadius.circular(noticeRadius),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: ColorsExt.green20(context)),
+          Icon(icon, size: 20, color: ColorsExt.green(context)),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 22 
+ * Strings: 31 
  *
- * Built on 2022-04-08 at 08:48 UTC
+ * Built on 2022-04-08 at 12:10 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -370,6 +370,15 @@ class _StringsSettingsEn {
 	String get logout => 'Log out';
 	String get upgrade_to_pro => 'Upgrade to pro';
 	String get my_account => 'My account';
+	String get general => 'General';
+	String get tasks => 'Tasks';
+	String get notifications => 'Notifications';
+	String get integrations => 'Integrations';
+	String get refer_your_friends => 'Refer your friends';
+	String get help_center => 'Help center';
+	String get about => 'About';
+	String get follow_us_on_twitter => 'Follow Us on Twitter';
+	String get join_our_community => 'Join our community';
 }
 
 /// Flat map(s) containing all translations.
@@ -400,6 +409,15 @@ extension on _StringsEn {
 			'settings.logout': 'Log out',
 			'settings.upgrade_to_pro': 'Upgrade to pro',
 			'settings.my_account': 'My account',
+			'settings.general': 'General',
+			'settings.tasks': 'Tasks',
+			'settings.notifications': 'Notifications',
+			'settings.integrations': 'Integrations',
+			'settings.refer_your_friends': 'Refer your friends',
+			'settings.help_center': 'Help center',
+			'settings.about': 'About',
+			'settings.follow_us_on_twitter': 'Follow Us on Twitter',
+			'settings.join_our_community': 'Join our community',
 		};
 	}
 }

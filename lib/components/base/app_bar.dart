@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:mobile/components/base/space.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -71,12 +72,41 @@ class AppBarComp extends StatelessWidget {
   }
 
   Widget _buildLeading(BuildContext context) {
-    if (leading == null) return Container();
-
     return Row(
       children: [
-        leading!,
-        Container(width: 10),
+        Builder(builder: (context) {
+          if (showBack) {
+            return Row(
+              children: [
+                InkWell(
+                  onTap: (() => Navigator.pop(context)),
+                  child: Icon(
+                    SFSymbols.arrow_left,
+                    size: 26,
+                    color: ColorsExt.grey2(context),
+                  ),
+                ),
+                Container(width: 10),
+              ],
+            );
+          } else {
+            return const SizedBox();
+          }
+        }),
+        Builder(builder: (context) {
+          if (leading == null) return Container();
+
+          return Column(
+            children: [
+              Row(
+                children: [
+                  leading!,
+                  Container(width: 10),
+                ],
+              ),
+            ],
+          );
+        }),
       ],
     );
   }

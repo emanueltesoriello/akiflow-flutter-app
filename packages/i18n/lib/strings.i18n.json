@@ -27,6 +27,15 @@
     "title": "Settings",
     "logout": "Log out",
     "upgrade_to_pro": "Upgrade to pro",
-    "my_account": "My account"
+    "my_account": "My account",
+    "general": "General",
+    "tasks": "Tasks",
+    "notifications": "Notifications",
+    "integrations": "Integrations",
+    "refer_your_friends": "Refer your friends",
+    "help_center": "Help center",
+    "about": "About",
+    "follow_us_on_twitter": "Follow Us on Twitter",
+    "join_our_community": "Join our community"
   }
 }

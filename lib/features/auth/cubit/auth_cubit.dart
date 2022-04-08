@@ -59,4 +59,11 @@ class AuthCubit extends Cubit<AuthCubitState> {
       _dialogService.showGenericError();
     }
   }
+
+  void logoutClick() {
+    _preferencesRepository.clear();
+    emit(state.copyWith(user: null));
+
+    _tasksCubit.logoutEvent();
+  }
 }

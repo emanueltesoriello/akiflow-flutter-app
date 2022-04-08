@@ -4,7 +4,7 @@ import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
-enum ButtonListPosition { single, top, center, bottom }
+enum ButtonListPosition { single, top, center, bottom, only_horizontal_padding }
 
 class ButtonList extends StatefulWidget {
   final String title;
@@ -12,6 +12,7 @@ class ButtonList extends StatefulWidget {
   final IconData? leading;
   final Color? leadingColor;
   final ButtonListPosition position;
+  final bool showShevron;
 
   const ButtonList({
     Key? key,
@@ -20,6 +21,7 @@ class ButtonList extends StatefulWidget {
     this.leading,
     this.leadingColor,
     this.position = ButtonListPosition.single,
+    this.showShevron = true,
   }) : super(key: key);
 
   @override
@@ -116,6 +118,10 @@ class _ButtonListState extends State<ButtonList>
                                 return const SizedBox();
                               }
 
+                              if (widget.showShevron == false) {
+                                return const SizedBox();
+                              }
+
                               return Icon(
                                 SFSymbols.chevron_right,
                                 size: 20,
@@ -161,6 +167,8 @@ class _ButtonListState extends State<ButtonList>
         return const EdgeInsets.all(1);
       case ButtonListPosition.bottom:
         return const EdgeInsets.only(left: 1, bottom: 1, right: 1);
+      case ButtonListPosition.only_horizontal_padding:
+        return const EdgeInsets.only(left: 1, right: 1);
     }
   }
 
@@ -182,6 +190,8 @@ class _ButtonListState extends State<ButtonList>
           bottomLeft: Radius.circular(radius),
           bottomRight: Radius.circular(radius),
         );
+      case ButtonListPosition.only_horizontal_padding:
+        return const BorderRadius.all(Radius.zero);
     }
   }
 }
