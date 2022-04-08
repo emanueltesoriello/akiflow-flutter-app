@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/button_selectable.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
 class SettingsModal extends StatelessWidget {
@@ -102,10 +105,25 @@ class SettingsModal extends StatelessWidget {
                   ),
                 ],
               ),
-              const Divider(height: 40),
+              const Divider(height: 32),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[],
+                children: <Widget>[
+                  ButtonSelectable(
+                    title: t.bottom_bar.inbox,
+                    leading: SFSymbols.tray,
+                    selected: true,
+                    trailing: Text(
+                      context.watch<TasksCubit>().state.tasks.length.toString(),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsExt.grey2_5(context),
+                      ),
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
               ),
             ],
           ),

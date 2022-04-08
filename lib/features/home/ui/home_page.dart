@@ -7,7 +7,7 @@ import 'package:mobile/features/home/views/_components/calendar_appbar.dart';
 import 'package:mobile/features/home/views/_components/inbox_appbar.dart';
 import 'package:mobile/features/home/views/_components/today_appbar.dart';
 import 'package:mobile/features/home/views/inbox/ui/view.dart';
-import 'package:mobile/features/home/views/settings_modal/settings_modal.dart';
+import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/style/colors.dart';
 
 class HomePage extends StatelessWidget {
