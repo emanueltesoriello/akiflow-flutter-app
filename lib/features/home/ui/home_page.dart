@@ -23,6 +23,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.read<HomeCubit>().addTask(),
+        child: const Icon(SFSymbols.arrow_2_circlepath),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[

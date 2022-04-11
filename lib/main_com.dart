@@ -15,21 +15,19 @@ import 'package:mobile/features/home/cubit/home_cubit.dart';
 import 'package:mobile/features/home/ui/home_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/services/local_database_service.dart';
 import 'package:mobile/style/theme.dart';
+import 'package:mobile/utils/database_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Future<void> mainCom() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
 
-  LocalDatabaseService localDatabaseService = LocalDatabaseService();
+  Database database = await DatabaseUtils.open();
 
-  await localDatabaseService.open();
-
-  setupLocator(
-      preferences: preferences, localDatabaseService: localDatabaseService);
+  setupLocator(preferences: preferences, database: database);
 
   bool userLogged = locator<PreferencesRepository>().user != null;
 
@@ -72,7 +70,9 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<HomeCubit>(
           lazy: false,
-          create: (BuildContext context) => HomeCubit(),
+          create: (BuildContext context) => HomeCubit(
+            context.read<TasksCubit>(),
+          ),
         ),
       ],
       child: MaterialApp(

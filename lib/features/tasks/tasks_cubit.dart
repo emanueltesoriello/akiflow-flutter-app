@@ -19,21 +19,17 @@ class TasksCubit extends Cubit<TasksCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      List<Task> all = await _tasksRepository.inboxTasks();
+      List<Task> all = await _tasksRepository.tasks();
 
       emit(state.copyWith(tasks: all));
     }
   }
 
-  void loggedEvent() {
-    _init();
-  }
-
-  void firstLoginEvent() {
-    _init();
-  }
-
   void logoutEvent() {
     emit(state.copyWith(tasks: []));
+  }
+
+  void refresh() {
+    _init();
   }
 }

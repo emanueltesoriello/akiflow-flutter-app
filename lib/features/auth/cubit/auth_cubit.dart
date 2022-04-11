@@ -29,7 +29,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     if (user != null) {
       emit(AuthCubitState(user: user));
-      _tasksCubit.loggedEvent();
+      _tasksCubit.refresh();
     }
   }
 
@@ -54,7 +54,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _preferencesRepository.saveUser(user);
 
-      _tasksCubit.firstLoginEvent();
+      _tasksCubit.refresh();
 
       emit(state.copyWith(user: Nullable(user)));
     } else {

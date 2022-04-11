@@ -59,44 +59,31 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
         ..add('status')
         ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     }
-    value = object.userId;
-    if (value != null) {
-      result
-        ..add('user_id')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
-    }
     value = object.createdAt;
     if (value != null) {
       result
         ..add('created_at')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.updatedAt;
     if (value != null) {
       result
         ..add('updated_at')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.deletedAt;
     if (value != null) {
       result
         ..add('deleted_at')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.content;
-    if (value != null) {
-      result
-        ..add('content')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(Content)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.dailyGoal;
     if (value != null) {
       result
-        ..add('dailyGoal')
+        ..add('daily_goal')
         ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     }
     value = object.sorting;
@@ -117,35 +104,35 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
       result
         ..add('done_at')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.readAt;
     if (value != null) {
       result
         ..add('read_at')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.globalUpdatedAt;
     if (value != null) {
       result
         ..add('global_updated_at')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.globalCreatedAt;
     if (value != null) {
       result
         ..add('global_created_at')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.activationDatetime;
     if (value != null) {
       result
         ..add('activation_datetime')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
     }
     value = object.sortingLabel;
     if (value != null) {
@@ -158,7 +145,14 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
       result
         ..add('due_date')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+            specifiedType: const FullType(DateTime)));
+    }
+    value = object.remoteUpdatedAt;
+    if (value != null) {
+      result
+        ..add('remote_updated_at')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
     }
     return result;
   }
@@ -198,27 +192,19 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.status = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
-        case 'user_id':
-          result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
-          break;
         case 'created_at':
           result.createdAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'updated_at':
           result.updatedAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'deleted_at':
           result.deletedAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'content':
-          result.content.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Content))! as Content);
-          break;
-        case 'dailyGoal':
+        case 'daily_goal':
           result.dailyGoal = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
@@ -232,23 +218,23 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           break;
         case 'done_at':
           result.doneAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'read_at':
           result.readAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'global_updated_at':
           result.globalUpdatedAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'global_created_at':
           result.globalCreatedAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'activation_datetime':
           result.activationDatetime = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'sorting_label':
           result.sortingLabel = serializers.deserialize(value,
@@ -256,7 +242,11 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           break;
         case 'due_date':
           result.dueDate = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'remote_updated_at':
+          result.remoteUpdatedAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -279,13 +269,11 @@ class _$Task extends Task {
   @override
   final int? status;
   @override
-  final int? userId;
+  final DateTime? createdAt;
   @override
-  final String? createdAt;
+  final DateTime? updatedAt;
   @override
-  final String? updatedAt;
-  @override
-  final String? deletedAt;
+  final DateTime? deletedAt;
   @override
   final Content? content;
   @override
@@ -295,19 +283,21 @@ class _$Task extends Task {
   @override
   final bool? done;
   @override
-  final String? doneAt;
+  final DateTime? doneAt;
   @override
-  final String? readAt;
+  final DateTime? readAt;
   @override
-  final String? globalUpdatedAt;
+  final DateTime? globalUpdatedAt;
   @override
-  final String? globalCreatedAt;
+  final DateTime? globalCreatedAt;
   @override
-  final String? activationDatetime;
+  final DateTime? activationDatetime;
   @override
   final int? sortingLabel;
   @override
-  final String? dueDate;
+  final DateTime? dueDate;
+  @override
+  final DateTime? remoteUpdatedAt;
 
   factory _$Task([void Function(TaskBuilder)? updates]) =>
       (new TaskBuilder()..update(updates)).build();
@@ -319,7 +309,6 @@ class _$Task extends Task {
       this.description,
       this.duration,
       this.status,
-      this.userId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt,
@@ -333,7 +322,8 @@ class _$Task extends Task {
       this.globalCreatedAt,
       this.activationDatetime,
       this.sortingLabel,
-      this.dueDate})
+      this.dueDate,
+      this.remoteUpdatedAt})
       : super._();
 
   @override
@@ -353,7 +343,6 @@ class _$Task extends Task {
         description == other.description &&
         duration == other.duration &&
         status == other.status &&
-        userId == other.userId &&
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt &&
         deletedAt == other.deletedAt &&
@@ -367,7 +356,8 @@ class _$Task extends Task {
         globalCreatedAt == other.globalCreatedAt &&
         activationDatetime == other.activationDatetime &&
         sortingLabel == other.sortingLabel &&
-        dueDate == other.dueDate;
+        dueDate == other.dueDate &&
+        remoteUpdatedAt == other.remoteUpdatedAt;
   }
 
   @override
@@ -395,21 +385,21 @@ class _$Task extends Task {
                                                                             description.hashCode),
                                                                         duration.hashCode),
                                                                     status.hashCode),
-                                                                userId.hashCode),
-                                                            createdAt.hashCode),
-                                                        updatedAt.hashCode),
-                                                    deletedAt.hashCode),
-                                                content.hashCode),
-                                            dailyGoal.hashCode),
-                                        sorting.hashCode),
-                                    done.hashCode),
-                                doneAt.hashCode),
-                            readAt.hashCode),
-                        globalUpdatedAt.hashCode),
-                    globalCreatedAt.hashCode),
-                activationDatetime.hashCode),
-            sortingLabel.hashCode),
-        dueDate.hashCode));
+                                                                createdAt.hashCode),
+                                                            updatedAt.hashCode),
+                                                        deletedAt.hashCode),
+                                                    content.hashCode),
+                                                dailyGoal.hashCode),
+                                            sorting.hashCode),
+                                        done.hashCode),
+                                    doneAt.hashCode),
+                                readAt.hashCode),
+                            globalUpdatedAt.hashCode),
+                        globalCreatedAt.hashCode),
+                    activationDatetime.hashCode),
+                sortingLabel.hashCode),
+            dueDate.hashCode),
+        remoteUpdatedAt.hashCode));
   }
 
   @override
@@ -421,7 +411,6 @@ class _$Task extends Task {
           ..add('description', description)
           ..add('duration', duration)
           ..add('status', status)
-          ..add('userId', userId)
           ..add('createdAt', createdAt)
           ..add('updatedAt', updatedAt)
           ..add('deletedAt', deletedAt)
@@ -435,7 +424,8 @@ class _$Task extends Task {
           ..add('globalCreatedAt', globalCreatedAt)
           ..add('activationDatetime', activationDatetime)
           ..add('sortingLabel', sortingLabel)
-          ..add('dueDate', dueDate))
+          ..add('dueDate', dueDate)
+          ..add('remoteUpdatedAt', remoteUpdatedAt))
         .toString();
   }
 }
@@ -467,21 +457,17 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   int? get status => _$this._status;
   set status(int? status) => _$this._status = status;
 
-  int? _userId;
-  int? get userId => _$this._userId;
-  set userId(int? userId) => _$this._userId = userId;
+  DateTime? _createdAt;
+  DateTime? get createdAt => _$this._createdAt;
+  set createdAt(DateTime? createdAt) => _$this._createdAt = createdAt;
 
-  String? _createdAt;
-  String? get createdAt => _$this._createdAt;
-  set createdAt(String? createdAt) => _$this._createdAt = createdAt;
+  DateTime? _updatedAt;
+  DateTime? get updatedAt => _$this._updatedAt;
+  set updatedAt(DateTime? updatedAt) => _$this._updatedAt = updatedAt;
 
-  String? _updatedAt;
-  String? get updatedAt => _$this._updatedAt;
-  set updatedAt(String? updatedAt) => _$this._updatedAt = updatedAt;
-
-  String? _deletedAt;
-  String? get deletedAt => _$this._deletedAt;
-  set deletedAt(String? deletedAt) => _$this._deletedAt = deletedAt;
+  DateTime? _deletedAt;
+  DateTime? get deletedAt => _$this._deletedAt;
+  set deletedAt(DateTime? deletedAt) => _$this._deletedAt = deletedAt;
 
   ContentBuilder? _content;
   ContentBuilder get content => _$this._content ??= new ContentBuilder();
@@ -499,36 +485,41 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   bool? get done => _$this._done;
   set done(bool? done) => _$this._done = done;
 
-  String? _doneAt;
-  String? get doneAt => _$this._doneAt;
-  set doneAt(String? doneAt) => _$this._doneAt = doneAt;
+  DateTime? _doneAt;
+  DateTime? get doneAt => _$this._doneAt;
+  set doneAt(DateTime? doneAt) => _$this._doneAt = doneAt;
 
-  String? _readAt;
-  String? get readAt => _$this._readAt;
-  set readAt(String? readAt) => _$this._readAt = readAt;
+  DateTime? _readAt;
+  DateTime? get readAt => _$this._readAt;
+  set readAt(DateTime? readAt) => _$this._readAt = readAt;
 
-  String? _globalUpdatedAt;
-  String? get globalUpdatedAt => _$this._globalUpdatedAt;
-  set globalUpdatedAt(String? globalUpdatedAt) =>
+  DateTime? _globalUpdatedAt;
+  DateTime? get globalUpdatedAt => _$this._globalUpdatedAt;
+  set globalUpdatedAt(DateTime? globalUpdatedAt) =>
       _$this._globalUpdatedAt = globalUpdatedAt;
 
-  String? _globalCreatedAt;
-  String? get globalCreatedAt => _$this._globalCreatedAt;
-  set globalCreatedAt(String? globalCreatedAt) =>
+  DateTime? _globalCreatedAt;
+  DateTime? get globalCreatedAt => _$this._globalCreatedAt;
+  set globalCreatedAt(DateTime? globalCreatedAt) =>
       _$this._globalCreatedAt = globalCreatedAt;
 
-  String? _activationDatetime;
-  String? get activationDatetime => _$this._activationDatetime;
-  set activationDatetime(String? activationDatetime) =>
+  DateTime? _activationDatetime;
+  DateTime? get activationDatetime => _$this._activationDatetime;
+  set activationDatetime(DateTime? activationDatetime) =>
       _$this._activationDatetime = activationDatetime;
 
   int? _sortingLabel;
   int? get sortingLabel => _$this._sortingLabel;
   set sortingLabel(int? sortingLabel) => _$this._sortingLabel = sortingLabel;
 
-  String? _dueDate;
-  String? get dueDate => _$this._dueDate;
-  set dueDate(String? dueDate) => _$this._dueDate = dueDate;
+  DateTime? _dueDate;
+  DateTime? get dueDate => _$this._dueDate;
+  set dueDate(DateTime? dueDate) => _$this._dueDate = dueDate;
+
+  DateTime? _remoteUpdatedAt;
+  DateTime? get remoteUpdatedAt => _$this._remoteUpdatedAt;
+  set remoteUpdatedAt(DateTime? remoteUpdatedAt) =>
+      _$this._remoteUpdatedAt = remoteUpdatedAt;
 
   TaskBuilder();
 
@@ -541,7 +532,6 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _description = $v.description;
       _duration = $v.duration;
       _status = $v.status;
-      _userId = $v.userId;
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
       _deletedAt = $v.deletedAt;
@@ -556,6 +546,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _activationDatetime = $v.activationDatetime;
       _sortingLabel = $v.sortingLabel;
       _dueDate = $v.dueDate;
+      _remoteUpdatedAt = $v.remoteUpdatedAt;
       _$v = null;
     }
     return this;
@@ -584,7 +575,6 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
               description: description,
               duration: duration,
               status: status,
-              userId: userId,
               createdAt: createdAt,
               updatedAt: updatedAt,
               deletedAt: deletedAt,
@@ -598,7 +588,8 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
               globalCreatedAt: globalCreatedAt,
               activationDatetime: activationDatetime,
               sortingLabel: sortingLabel,
-              dueDate: dueDate);
+              dueDate: dueDate,
+              remoteUpdatedAt: remoteUpdatedAt);
     } catch (_) {
       late String _$failedField;
       try {
