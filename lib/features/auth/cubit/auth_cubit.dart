@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/repository/auth.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/utils/nullable.dart';
 import 'package:models/user.dart';
@@ -16,7 +16,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final PreferencesRepository _preferencesRepository =
       locator<PreferencesRepository>();
   final DialogService _dialogService = locator<DialogService>();
-  final AuthRepository _authRepository = locator<AuthRepository>();
+  final AuthApi _authApi = locator<AuthApi>();
 
   final TasksCubit _tasksCubit;
 
@@ -49,7 +49,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
     );
 
     if (result != null) {
-      User user = await _authRepository.auth(
+      User user = await _authApi.auth(
           code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
 
       await _preferencesRepository.saveUser(user);

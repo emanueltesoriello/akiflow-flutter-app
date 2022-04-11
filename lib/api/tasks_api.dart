@@ -6,14 +6,14 @@ import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:models/task/task.dart';
 
-abstract class ITasksRepository {
+abstract class ITasksApi {
   Future<List<Task>> all();
 }
 
-class TasksRepository implements ITasksRepository {
+class TasksApi implements ITasksApi {
   final HttpClient _httpClient = locator<HttpClient>();
 
-  TasksRepository();
+  TasksApi();
 
   @override
   Future<List<Task>> all() async {

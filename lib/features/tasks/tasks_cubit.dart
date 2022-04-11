@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/repository/tasks.dart';
+import 'package:mobile/repository/tasks_repository.dart';
 import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 
@@ -19,7 +19,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      List<Task> all = await _tasksRepository.all();
+      List<Task> all = await _tasksRepository.inboxTasks();
 
       emit(state.copyWith(tasks: all));
     }

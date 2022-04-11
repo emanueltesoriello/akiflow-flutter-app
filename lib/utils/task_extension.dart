@@ -13,6 +13,31 @@ enum TaskStatusType {
   permanentlyDeleted, // same as above
 }
 
+extension TaskStatusTypeExt on TaskStatusType {
+  int get id {
+    switch (this) {
+      case TaskStatusType.inbox:
+        return 1;
+      case TaskStatusType.planned:
+        return 2;
+      case TaskStatusType.completed:
+        return 3;
+      case TaskStatusType.snoozed:
+        return 4;
+      case TaskStatusType.archived:
+        return 5;
+      case TaskStatusType.deleted:
+        return 6;
+      case TaskStatusType.someday:
+        return 7;
+      case TaskStatusType.hidden:
+        return 8;
+      case TaskStatusType.permanentlyDeleted:
+        return 9;
+    }
+  }
+}
+
 extension TaskExt on Task {
   bool get isToday {
     return (date?.isBefore(DateTime.now()) ?? false) && (done ?? false);

@@ -24,9 +24,12 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 Future<void> mainCom() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
 
-  setupLocator(preferences);
+  LocalDatabaseService localDatabaseService = LocalDatabaseService();
 
-  locator<LocalDatabaseService>().open();
+  await localDatabaseService.open();
+
+  setupLocator(
+      preferences: preferences, localDatabaseService: localDatabaseService);
 
   bool userLogged = locator<PreferencesRepository>().user != null;
 

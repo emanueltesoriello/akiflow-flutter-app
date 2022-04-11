@@ -6,17 +6,17 @@ import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:models/user.dart';
 
-abstract class IAuthRepository {
+abstract class IAuthApi {
   Future<User> auth({
     required String code,
     required String codeVerifier,
   });
 }
 
-class AuthRepository implements IAuthRepository {
+class AuthApi implements IAuthApi {
   final HttpClient _httpClient = locator<HttpClient>();
 
-  AuthRepository();
+  AuthApi();
 
   @override
   Future<User> auth(
