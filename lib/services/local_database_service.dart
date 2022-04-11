@@ -12,8 +12,8 @@ class LocalDatabaseService {
   LocalDatabaseService();
 
   Future<void> open() async {
-    var txnsPath = await getDatabasesPath();
-    var path = join(txnsPath, _databaseName);
+    var databsePath = await getDatabasesPath();
+    var path = join(databsePath, _databaseName);
 
     await Directory(dirname(path)).create(recursive: true);
 
