@@ -1,16 +1,29 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LocalDatabaseService {
+  static const _databaseName = 'local.db';
+
   late final Database database;
 
   LocalDatabaseService();
 
   Future<void> open() async {
-    database = await openDatabase('local.db');
+    var txnsPath = await getDatabasesPath();
+    var path = join(txnsPath, _databaseName);
+
+    await Directory(dirname(path)).create(recursive: true);
+
+    database = await openDatabase(_databaseName);
+
+    print("database opened at $path, starting setup");
 
     await _setup();
+
+    print("database setup completed");
   }
 
   Future<void> close() async {
@@ -18,19 +31,21 @@ class LocalDatabaseService {
   }
 
   Future<void> _setup() async {
-    await _setupAccounts();
-    await _setupCalendars();
-    await _setupContacts();
-    await _setupDocs();
-    await _setupEventModifiers();
-    await _setupEvents();
-    await _setupList();
-    await _setupMigrations();
-    await _setupTasks();
+    database.transaction((txn) async {
+      await _setupAccounts(txn);
+      await _setupCalendars(txn);
+      await _setupContacts(txn);
+      await _setupDocs(txn);
+      await _setupEventModifiers(txn);
+      await _setupEvents(txn);
+      await _setupList(txn);
+      await _setupMigrations(txn);
+      await _setupTasks(txn);
+    });
   }
 
-  Future<void> _setupAccounts() async {
-    await database.execute('''
+  Future<void> _setupAccounts(txn) async {
+    await txn.execute('''
       CREATE TABLE IF NOT EXISTS accounts
       (
         `accountid`         VARCHAR(100) PRIMARY KEY,
@@ -53,17 +68,17 @@ class LocalDatabaseService {
         `id`                UUID
       )
     ''');
-    await database.execute('''
-      CREATE INDEX accounts_accountId ON accounts(`accountId`)
+    await txn.execute('''
+      CREATE INDEX IF NOT EXISTS accounts_accountId ON accounts(`accountId`)
     ''');
-    await database.execute('''
-      CREATE INDEX accounts_identifier ON accounts(`identifier`)
+    await txn.execute('''
+      CREATE INDEX IF NOT EXISTS accounts_identifier ON accounts(`identifier`)
     ''');
   }
 
-  Future<void> _setupCalendars() async {
-    await database.execute('''
-      CREATE TABLE calendars
+  Future<void> _setupCalendars(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS calendars
         (
           `id`                UUID PRIMARY KEY,
           `originid`          VARCHAR(255),
@@ -89,16 +104,15 @@ class LocalDatabaseService {
           `updatedat`         BIGINT,
           `deletedat`         BIGINT
         )
-      )
     ''');
-    await database.execute('''
-      CREATE INDEX calendars_akiflowPrimary ON calendars(`akiflowPrimary`)
+    await txn.execute('''
+      CREATE INDEX IF NOT EXISTS calendars_akiflowPrimary ON calendars(`akiflowPrimary`)
     ''');
   }
 
-  Future<void> _setupContacts() async {
-    await database.execute('''
-      CREATE TABLE contacts
+  Future<void> _setupContacts(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS contacts
         (
           `id`               UUID PRIMARY KEY,
           `originid`         VARCHAR(255),
@@ -121,14 +135,14 @@ class LocalDatabaseService {
           `deletedat`        BIGINT
         )
     ''');
-    await database.execute('''
-      CREATE INDEX contacts_searchText ON contacts(`searchText`)
+    await txn.execute('''
+      CREATE INDEX IF NOT EXISTS contacts_searchText ON contacts(`searchText`)
     ''');
   }
 
-  Future<void> _setupDocs() async {
-    await database.execute('''
-      CREATE TABLE docs
+  Future<void> _setupDocs(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS docs
         (
           `id`              UUID PRIMARY KEY,
           `connectorid`     VARCHAR(50),
@@ -161,22 +175,27 @@ class LocalDatabaseService {
           `remoteupdatedat` BIGINT
         )
     ''');
-    await database.execute(
-        'CREATE UNIQUE INDEX docs_connectorId_originId ON docs(`connectorId`,`originId`)');
-    await database
-        .execute('CREATE INDEX docs_customIndex1 ON docs(`customIndex1`)');
-    await database.execute('CREATE INDEX docs_important ON docs(`important`)');
-    await database.execute('CREATE INDEX docs_priority ON docs(`priority`)');
-    await database
-        .execute('CREATE INDEX docs_searchText ON docs(`searchText`)');
-    await database.execute('CREATE INDEX docs_sorting ON docs(`sorting`)');
-    await database.execute('CREATE INDEX docs_taskId ON docs(`taskId`)');
-    await database.execute('CREATE INDEX docs_usages ON docs(`usages`)');
+    await txn.execute(
+        'CREATE UNIQUE INDEX IF NOT EXISTS docs_connectorId_originId ON docs(`connectorId`,`originId`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS docs_customIndex1 ON docs(`customIndex1`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS docs_important ON docs(`important`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS docs_priority ON docs(`priority`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS docs_searchText ON docs(`searchText`)');
+    await txn
+        .execute('CREATE INDEX IF NOT EXISTS docs_sorting ON docs(`sorting`)');
+    await txn
+        .execute('CREATE INDEX IF NOT EXISTS docs_taskId ON docs(`taskId`)');
+    await txn
+        .execute('CREATE INDEX IF NOT EXISTS docs_usages ON docs(`usages`)');
   }
 
-  Future<void> _setupEventModifiers() async {
-    await database.execute('''
-      CREATE TABLE event_modifiers
+  Future<void> _setupEventModifiers(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS event_modifiers
         (
           `id`               UUID PRIMARY KEY,
           `akiflowaccountid` UUID,
@@ -196,9 +215,9 @@ class LocalDatabaseService {
     ''');
   }
 
-  Future<void> _setupEvents() async {
-    await database.execute('''
-      CREATE TABLE events
+  Future<void> _setupEvents(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS events
         (
           `id`                        UUID PRIMARY KEY,
           `originid`                  VARCHAR(255),
@@ -250,20 +269,23 @@ class LocalDatabaseService {
           `recurrencesyncretry`       INTEGER
         )
     ''');
-    await database.execute('CREATE INDEX events_endDate ON events(`endDate`)');
-    await database.execute('CREATE INDEX events_endTime ON events(`endTime`)');
-    await database
-        .execute('CREATE INDEX events_recurringId ON events(`recurringId`)');
-    await database
-        .execute('CREATE INDEX events_startDate ON events(`startDate`)');
-    await database
-        .execute('CREATE INDEX events_startTime ON events(`startTime`)');
-    await database.execute('CREATE INDEX events_taskId ON events(`taskId`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS events_endDate ON events(`endDate`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS events_endTime ON events(`endTime`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS events_recurringId ON events(`recurringId`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS events_startDate ON events(`startDate`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS events_startTime ON events(`startTime`)');
+    await txn.execute(
+        'CREATE INDEX IF NOT EXISTS events_taskId ON events(`taskId`)');
   }
 
-  Future<void> _setupList() async {
-    await database.execute('''
-      CREATE TABLE lists
+  Future<void> _setupList(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS lists
         (
           `id`              UUID PRIMARY KEY,
           `title`           VARCHAR(255),
@@ -282,15 +304,15 @@ class LocalDatabaseService {
     ''');
   }
 
-  Future<void> _setupMigrations() async {
-    await database.execute('''
-      CREATE TABLE migrations(`name` VARCHAR(255) PRIMARY KEY ,`createdAt` BIGINT )
+  Future<void> _setupMigrations(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS migrations(`name` VARCHAR(255) PRIMARY KEY ,`createdAt` BIGINT )
     ''');
   }
 
-  Future<void> _setupTasks() async {
-    await database.execute('''
-      CREATE TABLE tasks
+  Future<void> _setupTasks(txn) async {
+    await txn.execute('''
+      CREATE TABLE IF NOT EXISTS tasks
         (
           `id`              UUID PRIMARY KEY,
           `title`           VARCHAR(255),
