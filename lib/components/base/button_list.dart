@@ -4,7 +4,7 @@ import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
-enum ButtonListPosition { single, top, center, bottom, only_horizontal_padding }
+enum ButtonListPosition { single, top, center, bottom, onlyHorizontalPadding }
 
 class ButtonList extends StatefulWidget {
   final String title;
@@ -167,7 +167,7 @@ class _ButtonListState extends State<ButtonList>
         return const EdgeInsets.all(1);
       case ButtonListPosition.bottom:
         return const EdgeInsets.only(left: 1, bottom: 1, right: 1);
-      case ButtonListPosition.only_horizontal_padding:
+      case ButtonListPosition.onlyHorizontalPadding:
         return const EdgeInsets.only(left: 1, right: 1);
     }
   }
@@ -190,7 +190,7 @@ class _ButtonListState extends State<ButtonList>
           bottomLeft: Radius.circular(radius),
           bottomRight: Radius.circular(radius),
         );
-      case ButtonListPosition.only_horizontal_padding:
+      case ButtonListPosition.onlyHorizontalPadding:
         return const BorderRadius.all(Radius.zero);
     }
   }

@@ -58,7 +58,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   ButtonList(
                     title: t.settings.general,
-                    position: ButtonListPosition.only_horizontal_padding,
+                    position: ButtonListPosition.onlyHorizontalPadding,
                     leading: SFSymbols.gear_alt,
                     onPressed: () {
                       // TODO general settings event
