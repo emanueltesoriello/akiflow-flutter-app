@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
@@ -28,6 +30,10 @@ class AuthCubit extends Cubit<AuthCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
+      if (Config.development) {
+        log(user.accessToken?.toString() ?? "");
+      }
+
       emit(AuthCubitState(user: user));
       _tasksCubit.refresh();
     }

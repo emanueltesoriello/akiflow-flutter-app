@@ -329,8 +329,6 @@ CREATE TABLE IF NOT EXISTS tasks(
   `daily_goal` DATETIME,
   `origin` DATETIME,
   `remote_updated_at` DATETIME,
-  `global_updated_at` DATETIME,
-  `global_created_at` DATETIME,
   `section_id` UUID,
   `sorting_label` INTEGER,
   `due_date` DATETIME

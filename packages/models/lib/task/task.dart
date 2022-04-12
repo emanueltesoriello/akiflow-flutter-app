@@ -1,5 +1,6 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:intl/intl.dart';
 import 'package:models/serializers.dart';
 import 'package:models/task/content.dart';
 
@@ -80,8 +81,14 @@ abstract class Task implements Built<Task, TaskBuilder> {
   TaskBuilder toBuilder();
 
   Map<String, dynamic> toMap() {
-    return serializers.serializeWith(Task.serializer, this)
+    Map<String, dynamic> data = serializers.serializeWith(Task.serializer, this)
         as Map<String, dynamic>;
+
+    if (date != null) {
+      data['date'] = DateFormat('yyyy-MM-dd').format(date!);
+    }
+
+    return data;
   }
 
   static Task fromMap(Map<String, dynamic> json) {
@@ -91,6 +98,9 @@ abstract class Task implements Built<Task, TaskBuilder> {
   Map<String, Object?> toSql() {
     Map<String?, dynamic> data = serializers.serializeWith(
         Task.serializer, this) as Map<String?, dynamic>;
+
+    data.remove("global_created_at");
+    data.remove("global_updated_at");
 
     for (var key in data.keys) {
       if (data[key] is bool) {

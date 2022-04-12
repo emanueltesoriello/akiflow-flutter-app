@@ -53,7 +53,7 @@ class _View extends StatelessWidget {
         return TaskRow(
           task: task,
           completed: () {
-            // TODO on completed task
+            context.read<TasksCubit>().setCompleted(task);
           },
         );
       },

@@ -40,11 +40,9 @@ class TasksRepository {
   }
 
   Future<List<Task>> unsynced() async {
-    const withoutRemoteUpdatedAt = '`remote_updated_at` IS NULL';
-    const deletedAtLaterThanRemoteUpdatedAt =
-        '`deleted_at` > `remote_updated_at`';
-    const updatedAtLaterThanRemoteUpdatedAt =
-        '`updated_at` > `remote_updated_at`';
+    const withoutRemoteUpdatedAt = "remote_updated_at IS NULL";
+    const deletedAtLaterThanRemoteUpdatedAt = "deleted_at > remote_updated_at";
+    const updatedAtLaterThanRemoteUpdatedAt = "updated_at > remote_updated_at";
 
     var result = await _database.query(
       tableName,

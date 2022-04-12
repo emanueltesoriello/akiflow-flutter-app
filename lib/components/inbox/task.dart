@@ -30,10 +30,15 @@ class TaskRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            SFSymbols.square,
-            size: 20,
-            color: ColorsExt.grey3(context),
+          InkWell(
+            onTap: () {
+              completed();
+            },
+            child: Icon(
+              SFSymbols.square,
+              size: 20,
+              color: ColorsExt.grey3(context),
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(

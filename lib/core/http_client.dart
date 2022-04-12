@@ -17,7 +17,7 @@ class HttpClient extends BaseClient {
       request.headers['Authorization'] = "Bearer " + (user.accessToken ?? '');
     }
 
-    request.headers['Accept'] = "application/json";
+    request.headers['Content-Type'] = "application/json";
 
     return _inner.send(request);
   }

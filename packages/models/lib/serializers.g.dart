@@ -7,7 +7,9 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(Account.serializer)
       ..add(Content.serializer)
+      ..add(LocalDetails.serializer)
       ..add(Task.serializer)
       ..add(User.serializer))
     .build();

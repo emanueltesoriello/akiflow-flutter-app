@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/exceptions/api_exception.dart';
 import 'package:models/task/task.dart';
 
 abstract class ITasksApi {
@@ -23,15 +24,18 @@ class TasksApi implements ITasksApi {
   Future<List<Task>> all({
     int perPage = 2500,
     bool withDeleted = true,
-    required DateTime updatedAfter,
+    DateTime? updatedAfter,
   }) async {
     Map<String, dynamic> params = {
       "perPage": perPage.toString(),
       "withDeleted": withDeleted.toString(),
-      "updatedAfter": updatedAfter.toIso8601String(),
     };
 
-    Uri url = Uri.parse(Config.endpoint + "/tasks");
+    if (updatedAfter != null) {
+      params["updatedAfter"] = updatedAfter.toIso8601String();
+    }
+
+    Uri url = Uri.parse(Config.endpoint + "/v2/tasks");
 
     url = url.replace(queryParameters: params);
 
@@ -46,7 +50,7 @@ class TasksApi implements ITasksApi {
   }
 
   Future<List<Task>> post(List<Task> unsynced) async {
-    Uri url = Uri.parse(Config.endpoint + "/tasks");
+    Uri url = Uri.parse(Config.endpoint + "/v2/tasks");
 
     // json list
     List<Map<String, dynamic>> jsonList =
@@ -56,11 +60,11 @@ class TasksApi implements ITasksApi {
 
     Response responseRaw = await _httpClient.post(url, body: json);
 
-    if (responseRaw.body == "[]") {
-      return [];
-    }
-
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
+
+    if (response.containsKey("errors")) {
+      throw ApiException(response);
+    }
 
     List<Task> tasks =
         response["data"].map<Task>((task) => Task.fromMap(task)).toList();
