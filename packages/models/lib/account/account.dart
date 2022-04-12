@@ -94,5 +94,6 @@ abstract class Account implements Built<Account, AccountBuilder> {
     return serializers.deserializeWith(Account.serializer, data)!;
   }
 
+  @BuiltValueSerializer(serializeNulls: true)
   static Serializer<Account> get serializer => _$accountSerializer;
 }

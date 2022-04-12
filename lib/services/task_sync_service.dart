@@ -26,48 +26,51 @@ class TaskSyncService {
     DateTime? lastSyncAt = await getRemoteUpdatedAt();
 
     // TODO read all paginated response
-    List<Task> remoteTasks = await _tasksApi.all(updatedAfter: lastSyncAt);
+    List<Task> remoteItems = await _tasksApi.all(
+      updatedAfter: lastSyncAt,
+      allPages: true,
+    );
 
-    if (remoteTasks.isEmpty) {
+    if (remoteItems.isEmpty) {
       print('No remote tasks to sync');
       return;
     }
 
-    List<Task> localTasks = await _tasksRepository.tasks();
+    List<Task> localItems = await _tasksRepository.tasks();
 
-    for (Task remoteTask in remoteTasks) {
+    for (Task remoteItem in remoteItems) {
       bool hasAlreadyInLocalDatabase =
-          localTasks.any((element) => element.id == remoteTask.id);
+          localItems.any((element) => element.id == remoteItem.id);
 
       // check if remote task is already in local database
       if (hasAlreadyInLocalDatabase) {
         Task localTask =
-            localTasks.firstWhere((element) => element.id == remoteTask.id);
+            localItems.firstWhere((element) => element.id == remoteItem.id);
 
-        DateTime? remoteGlobalUpdateAt = remoteTask.globalUpdatedAt;
+        DateTime? remoteGlobalUpdateAt = remoteItem.globalUpdatedAt;
         DateTime? localUpdatedAt = localTask.updatedAt;
 
         bool notYetUpdated =
             localUpdatedAt == null || remoteGlobalUpdateAt == null;
 
-        bool remoteTaskIsRecentThanLocal =
+        bool remoteItemIsRecentThanLocal =
             notYetUpdated || remoteGlobalUpdateAt.isAfter(localUpdatedAt);
 
-        if (remoteTaskIsRecentThanLocal) {
-          remoteTask = remoteTask.rebuild((t) {
+        if (remoteItemIsRecentThanLocal) {
+          remoteItem = remoteItem.rebuild((t) {
             t.updatedAt = remoteGlobalUpdateAt;
             t.remoteUpdatedAt = remoteGlobalUpdateAt;
           });
 
-          await _updateLocalTask(id: localTask.id!, remoteTask: remoteTask);
+          await _updateLocalTask(id: localTask.id!, remoteItem: remoteItem);
         }
       } else {
-        await _addRemoteTaskToLocalDb(remoteTask);
+        await _addRemoteTaskToLocalDb(remoteItem);
       }
     }
 
-    if (remoteTasks.any((element) => element.updatedAt != null)) {
-      Task maxRemoteTasksUpdatedAt = remoteTasks.reduce((t1, t2) {
+    if (remoteItems.any((element) => element.updatedAt != null)) {
+      Task maxRemoteTasksUpdatedAt = remoteItems.reduce((t1, t2) {
         if (t1.updatedAt == null) return t2;
         if (t2.updatedAt == null) return t1;
         return t1.updatedAt!.isAfter(t2.updatedAt!) ? t1 : t2;
@@ -85,9 +88,9 @@ class TaskSyncService {
       return;
     }
 
-    for (Task task in unsynced) {
-      DateTime? updatedAt = task.updatedAt;
-      DateTime? deletedAt = task.deletedAt;
+    for (Task item in unsynced) {
+      DateTime? updatedAt = item.updatedAt;
+      DateTime? deletedAt = item.deletedAt;
 
       DateTime? maxDate;
 
@@ -99,7 +102,7 @@ class TaskSyncService {
         maxDate = deletedAt;
       }
 
-      task = task.rebuild((t) {
+      item = item.rebuild((t) {
         t.updatedAt = maxDate;
         t.remoteUpdatedAt = maxDate;
       });
@@ -133,13 +136,13 @@ class TaskSyncService {
   }
 
   Future<void> _updateLocalTask(
-      {required String id, required Task remoteTask}) async {
-    print("update local task: ${remoteTask.title}");
-    await _tasksRepository.updateById(id, data: remoteTask);
+      {required String id, required Task remoteItem}) async {
+    print("update local task: ${remoteItem.title}");
+    await _tasksRepository.updateById(id, data: remoteItem);
   }
 
-  Future<void> _addRemoteTaskToLocalDb(Task remoteTask) async {
+  Future<void> _addRemoteTaskToLocalDb(Task remoteItem) async {
     print("does not exist locally, add it");
-    await _tasksRepository.add([remoteTask]);
+    await _tasksRepository.add([remoteItem]);
   }
 }

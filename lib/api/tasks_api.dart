@@ -25,6 +25,7 @@ class TasksApi implements ITasksApi {
     int perPage = 2500,
     bool withDeleted = true,
     DateTime? updatedAfter,
+    bool allPages = false,
   }) async {
     Map<String, dynamic> params = {
       "perPage": perPage.toString(),
@@ -43,8 +44,29 @@ class TasksApi implements ITasksApi {
 
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
+    if (response.containsKey("errors")) {
+      throw ApiException(response);
+    }
+
     List<Task> tasks =
         response["data"].map<Task>((task) => Task.fromMap(task)).toList();
+
+    String? nextPage = response["nextPage"];
+
+    if (nextPage != null && allPages) {
+      print("nextPage: $nextPage");
+
+      List<Task> moreTasks = await all(
+        perPage: perPage,
+        withDeleted: withDeleted,
+        updatedAfter: updatedAfter,
+        allPages: allPages,
+      );
+
+      tasks.addAll(moreTasks);
+
+      print("tasks: ${tasks.length}");
+    }
 
     return tasks;
   }

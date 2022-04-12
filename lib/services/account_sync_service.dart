@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:models/account/account.dart';
 
@@ -19,29 +20,39 @@ class AccountSyncService {
   }
 
   Future<void> _remoteToLocal() async {
-    // TODO read all paginated response
-    List<Account> remoteItems = await _accountApi.all();
+    DateTime? lastSyncAt = await getRemoteUpdatedAt();
 
-    if (remoteItems.isEmpty) return;
+    List<Account> remoteItems = await _accountApi.all(
+      updatedAfter: lastSyncAt,
+      allPages: true,
+    );
+
+    if (remoteItems.isEmpty) {
+      print('No remote accounts to sync');
+      return;
+    }
 
     List<Account> localItems = await _accountsRepository.all();
 
     for (Account remoteItem in remoteItems) {
-      // check if remote account is already in local database
-      if (localItems.any((element) => element.id == remoteItem.id)) {
+      bool hasAlreadyInLocalDatabase =
+          localItems.any((element) => element.id == remoteItem.id);
+
+      if (hasAlreadyInLocalDatabase) {
         Account localAccount =
             localItems.firstWhere((element) => element.id == remoteItem.id);
 
         DateTime? remoteGlobalUpdateAt = remoteItem.globalUpdatedAt;
-        DateTime? localGlobalUpdatedAt = localAccount.globalUpdatedAt;
+        DateTime? localUpdatedAt = localAccount.updatedAt;
 
-        bool remoteItemIsRecentThanLocal = remoteGlobalUpdateAt != null &&
-            localGlobalUpdatedAt != null &&
-            remoteGlobalUpdateAt.isAfter(localGlobalUpdatedAt);
+        bool notYetUpdated =
+            localUpdatedAt == null || remoteGlobalUpdateAt == null;
+
+        bool remoteItemIsRecentThanLocal =
+            notYetUpdated || remoteGlobalUpdateAt.isAfter(localUpdatedAt);
 
         if (remoteItemIsRecentThanLocal) {
           remoteItem = remoteItem.rebuild((t) {
-            t.createdAt = remoteItem.globalCreatedAt;
             t.updatedAt = remoteGlobalUpdateAt;
             t.remoteUpdatedAt = remoteGlobalUpdateAt;
           });
@@ -54,45 +65,51 @@ class AccountSyncService {
       }
     }
 
-    Account? maxRemoteAccountsUpdatedAt = remoteItems
-        .reduce((t1, t2) => t1.updatedAt!.isAfter(t2.updatedAt!) ? t1 : t2);
+    if (remoteItems.any((element) => element.updatedAt != null)) {
+      Account maxRemoteAccountsUpdatedAt = remoteItems.reduce((t1, t2) {
+        if (t1.updatedAt == null) return t2;
+        if (t2.updatedAt == null) return t1;
+        return t1.updatedAt!.isAfter(t2.updatedAt!) ? t1 : t2;
+      });
 
-    await updateLocalLastSyncAt(maxRemoteAccountsUpdatedAt.updatedAt);
-
-    // TODO update lastSyncAt in db of account table
-
-    // TODO update globalUpdatedAt remote account
+      await updateLocalLastSyncAt(maxRemoteAccountsUpdatedAt.updatedAt);
+    }
   }
 
   Future<void> _localToRemote() async {
     List<Account> unsynced = await _accountsRepository.unsynced();
 
-    if (unsynced.isNotEmpty) {
-      print("sync local accounts: ${unsynced.length}");
+    if (unsynced.isEmpty) {
+      print('No local accounts to sync');
+      return;
+    }
 
-      for (Account item in unsynced) {
-        DateTime? updatedAt = item.updatedAt;
-        DateTime? deletedAt = item.deletedAt;
+    for (Account item in unsynced) {
+      DateTime? updatedAt = item.updatedAt;
+      DateTime? deletedAt = item.deletedAt;
 
-        DateTime? maxDate;
+      DateTime? maxDate;
 
-        if (updatedAt != null && deletedAt != null) {
-          maxDate = updatedAt.isAfter(deletedAt) ? updatedAt : deletedAt;
-        } else if (updatedAt != null) {
-          maxDate = updatedAt;
-        } else if (deletedAt != null) {
-          maxDate = deletedAt;
-        }
-
-        item = item.rebuild((t) {
-          t.globalUpdatedAt = maxDate;
-          t.globalCreatedAt = t.createdAt;
-        });
+      if (updatedAt != null && deletedAt != null) {
+        maxDate = updatedAt.isAfter(deletedAt) ? updatedAt : deletedAt;
+      } else if (updatedAt != null) {
+        maxDate = updatedAt;
+      } else if (deletedAt != null) {
+        maxDate = deletedAt;
       }
 
+      item = item.rebuild((t) {
+        t.updatedAt = maxDate;
+        t.remoteUpdatedAt = maxDate;
+      });
+    }
+
+    try {
       List<Account> updated = await _accountApi.post(unsynced);
 
       print("updated: ${updated.length}");
+    } on ApiException catch (e) {
+      print(e);
     }
   }
 
@@ -116,7 +133,7 @@ class AccountSyncService {
 
   Future<void> _updateLocalAccount(
       {required String id, required Account remoteItem}) async {
-    print("update local account");
+    print("update local account: ${remoteItem.accountId}");
     await _accountsRepository.updateById(id, data: remoteItem);
   }
 

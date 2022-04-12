@@ -20,103 +20,90 @@ class _$AccountSerializer implements StructuredSerializer<Account> {
     final result = <Object?>[];
     Object? value;
     value = object.id;
-    if (value != null) {
-      result
-        ..add('id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.connectorId;
-    if (value != null) {
-      result
-        ..add('connector_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('connector_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.accountId;
-    if (value != null) {
-      result
-        ..add('account_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('account_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.originAccountId;
-    if (value != null) {
-      result
-        ..add('origin_account_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('origin_account_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.shortName;
-    if (value != null) {
-      result
-        ..add('short_name')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('short_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.fullName;
-    if (value != null) {
-      result
-        ..add('full_name')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('full_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.picture;
-    if (value != null) {
-      result
-        ..add('picture')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('picture')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.identifier;
-    if (value != null) {
-      result
-        ..add('identifier')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('identifier')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.createdAt;
-    if (value != null) {
-      result
-        ..add('created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.updatedAt;
-    if (value != null) {
-      result
-        ..add('updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.deletedAt;
-    if (value != null) {
-      result
-        ..add('deleted_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('deleted_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalUpdatedAt;
-    if (value != null) {
-      result
-        ..add('global_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalCreatedAt;
-    if (value != null) {
-      result
-        ..add('global_created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.remoteUpdatedAt;
-    if (value != null) {
-      result
-        ..add('remote_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('remote_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
+
     return result;
   }
 
