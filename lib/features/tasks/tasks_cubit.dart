@@ -19,7 +19,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      List<Task> all = await _tasksRepository.tasks();
+      List<Task> all = await _tasksRepository.get();
 
       emit(state.copyWith(tasks: all));
     }
@@ -35,10 +35,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void setCompleted(Task task) {
     // TESTING
-    //
-    //task = task.rebuild(
+    // task = task.rebuild(
     //   (b) => b
-    //     ..title = "Sync 4 OK"
+    //     ..title = "Sync 10 OK"
     //     ..updatedAt = DateTime.now(),
     // );
 

@@ -1,10 +1,13 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:models/base.dart';
 import 'package:models/serializers.dart';
 
 part 'user.g.dart';
 
-abstract class User implements Built<User, UserBuilder> {
+abstract class User extends Object
+    with Base
+    implements Built<User, UserBuilder> {
   int? get id;
 
   @BuiltValueField(wireName: 'chargebee_id')
@@ -64,6 +67,7 @@ abstract class User implements Built<User, UserBuilder> {
   @override
   UserBuilder toBuilder();
 
+  @override
   Map<String, dynamic> toMap() {
     return serializers.serializeWith(User.serializer, this)
         as Map<String, dynamic>;
@@ -71,6 +75,11 @@ abstract class User implements Built<User, UserBuilder> {
 
   static User fromMap(Map<String, dynamic> json) {
     return serializers.deserializeWith(User.serializer, json)!;
+  }
+
+  @override
+  Map<String, Object?> toSql() {
+    return Map<String, Object?>.from(toMap());
   }
 
   static Serializer<User> get serializer => _$userSerializer;

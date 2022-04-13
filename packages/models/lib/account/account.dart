@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:models/account/local_details.dart';
+import 'package:models/base.dart';
 import 'package:models/serializers.dart';
 
 part 'account.g.dart';
 
-abstract class Account implements Built<Account, AccountBuilder> {
+abstract class Account extends Object
+    with Base
+    implements Built<Account, AccountBuilder> {
   String? get id;
 
   @BuiltValueField(wireName: 'connector_id')
@@ -59,6 +62,7 @@ abstract class Account implements Built<Account, AccountBuilder> {
   @override
   AccountBuilder toBuilder();
 
+  @override
   Map<String, dynamic> toMap() {
     return serializers.serializeWith(Account.serializer, this)
         as Map<String, dynamic>;
@@ -68,6 +72,7 @@ abstract class Account implements Built<Account, AccountBuilder> {
     return serializers.deserializeWith(Account.serializer, json)!;
   }
 
+  @override
   Map<String, Object?> toSql() {
     Map<String?, dynamic> data = serializers.serializeWith(
         Account.serializer, this) as Map<String?, dynamic>;

@@ -1,55 +1,36 @@
-import 'package:models/task/task.dart';
+import 'package:mobile/repository/database_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
-class TasksRepository {
-  static const tableName = 'tasks';
+class TasksRepository extends DatabaseRepository {
+  static const table = 'tasks';
 
-  final Database _database;
+  TasksRepository(
+    Database database, {
+    required Function(Map<String, dynamic>) fromSql,
+  }) : super(database, tableName: table, fromSql: fromSql);
 
-  TasksRepository(this._database);
-
-  Future<List<Task>> tasks() async {
-    List<Map<String, Object?>> result = await _database.query(
-      tableName,
-      orderBy: 'sorting DESC',
-    );
-
-    return result.map((item) => Task.fromSql(item)).toList();
+  @override
+  Future<List<Task>> get<Task>() async {
+    return await super.get<Task>();
   }
 
-  Future<void> add(List<Task> tasks) async {
-    var batch = _database.batch();
-
-    for (Task task in tasks) {
-      batch.insert(tableName, task.toSql());
-    }
-
-    var results = await batch.commit();
-
-    print(results);
+  @override
+  Future<void> add<Task>(List<Task> items) async {
+    await super.add<Task>(items);
   }
 
-  // TODO better use `INSERT OR REPLACE INTO` ?
-  Future<void> updateById(String? id, {required Task data}) {
-    return _database.update(
-      tableName,
-      data.toSql(),
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+  @override
+  Future<void> updateById<Task>(String? id, {required Task data}) async {
+    await super.updateById<Task>(id, data: data);
   }
 
-  Future<List<Task>> unsynced() async {
-    const withoutRemoteUpdatedAt = "remote_updated_at IS NULL";
-    const deletedAtLaterThanRemoteUpdatedAt = "deleted_at > remote_updated_at";
-    const updatedAtLaterThanRemoteUpdatedAt = "updated_at > remote_updated_at";
+  @override
+  Future<List<Task>> unsynced<Task>() async {
+    return await super.unsynced<Task>();
+  }
 
-    var result = await _database.query(
-      tableName,
-      where:
-          '$withoutRemoteUpdatedAt OR $deletedAtLaterThanRemoteUpdatedAt OR $updatedAtLaterThanRemoteUpdatedAt',
-    );
-
-    return result.map((item) => Task.fromSql(item)).toList();
+  @override
+  Future<Task> byId<Task>(String id) async {
+    return await super.byId<Task>(id);
   }
 }

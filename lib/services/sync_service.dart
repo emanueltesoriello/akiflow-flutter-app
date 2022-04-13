@@ -1,23 +1,29 @@
 import 'dart:async';
 
-import 'package:mobile/api/tasks_api.dart';
+import 'package:mobile/api/api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/repository/accounts_repository.dart';
-import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/repository/database_repository.dart';
 import 'package:models/account/account.dart';
-import 'package:models/task/task.dart';
 
-class TaskSyncService {
-  final TasksApi _tasksApi = locator<TasksApi>();
-  final TasksRepository _tasksRepository = locator<TasksRepository>();
+class SyncService {
+  // need to check last sync time
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
 
   final Account account;
+  final Api api;
+  final DatabaseRepository databaseRepository;
 
-  TaskSyncService({required this.account});
+  SyncService({
+    required this.account,
+    required this.api,
+    required this.databaseRepository,
+  });
 
   Future<void> start() async {
+    print('start sync entity ${api.runtimeType} id ${account.connectorId}');
+
     await _remoteToLocal();
     await _localToRemote();
   }
@@ -25,26 +31,27 @@ class TaskSyncService {
   Future<void> _remoteToLocal() async {
     DateTime? lastSyncAt = await getRemoteUpdatedAt();
 
-    // TODO read all paginated response
-    List<Task> remoteItems = await _tasksApi.all(
+    var remoteItems = await api.get(
+      perPage: 2500,
+      withDeleted: true,
       updatedAfter: lastSyncAt,
       allPages: true,
     );
 
     if (remoteItems.isEmpty) {
-      print('No remote tasks to sync');
+      print('No remote items to sync');
       return;
     }
 
-    List<Task> localItems = await _tasksRepository.tasks();
+    List<dynamic> localItems = await databaseRepository.get();
 
-    for (Task remoteItem in remoteItems) {
+    for (var remoteItem in remoteItems) {
       bool hasAlreadyInLocalDatabase =
           localItems.any((element) => element.id == remoteItem.id);
 
-      // check if remote task is already in local database
+      // check if remote item is already in local database
       if (hasAlreadyInLocalDatabase) {
-        Task localTask =
+        var localTask =
             localItems.firstWhere((element) => element.id == remoteItem.id);
 
         DateTime? remoteGlobalUpdateAt = remoteItem.globalUpdatedAt;
@@ -70,25 +77,23 @@ class TaskSyncService {
     }
 
     if (remoteItems.any((element) => element.updatedAt != null)) {
-      Task maxRemoteTasksUpdatedAt = remoteItems.reduce((t1, t2) {
-        if (t1.updatedAt == null) return t2;
-        if (t2.updatedAt == null) return t1;
-        return t1.updatedAt!.isAfter(t2.updatedAt!) ? t1 : t2;
-      });
+      var maxRemoteTasksUpdatedAt = remoteItems
+          .map((element) => element.updatedAt)
+          .reduce((value, element) => value.isAfter(element) ? value : element);
 
-      await updateLocalLastSyncAt(maxRemoteTasksUpdatedAt.updatedAt);
+      await updateLocalLastSyncAt(maxRemoteTasksUpdatedAt);
     }
   }
 
   Future<void> _localToRemote() async {
-    List<Task> unsynced = await _tasksRepository.unsynced();
+    List<dynamic> unsynced = await databaseRepository.unsynced();
 
     if (unsynced.isEmpty) {
-      print('No local tasks to sync');
+      print('No local items to sync');
       return;
     }
 
-    for (Task item in unsynced) {
+    for (var item in unsynced) {
       DateTime? updatedAt = item.updatedAt;
       DateTime? deletedAt = item.deletedAt;
 
@@ -109,7 +114,7 @@ class TaskSyncService {
     }
 
     try {
-      List<Task> updated = await _tasksApi.post(unsynced);
+      List<dynamic> updated = await api.post(unsynced: unsynced);
 
       print("updated: ${updated.length}");
     } on ApiException catch (e) {
@@ -136,13 +141,13 @@ class TaskSyncService {
   }
 
   Future<void> _updateLocalTask(
-      {required String id, required Task remoteItem}) async {
-    print("update local task: ${remoteItem.title}");
-    await _tasksRepository.updateById(id, data: remoteItem);
+      {required String id, required var remoteItem}) async {
+    print("update local item: ${remoteItem.id}");
+    await databaseRepository.updateById(id, data: remoteItem);
   }
 
-  Future<void> _addRemoteTaskToLocalDb(Task remoteItem) async {
+  Future<void> _addRemoteTaskToLocalDb(var remoteItem) async {
     print("does not exist locally, add it");
-    await _tasksRepository.add([remoteItem]);
+    await databaseRepository.add([remoteItem]);
   }
 }

@@ -1,12 +1,15 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:intl/intl.dart';
+import 'package:models/base.dart';
 import 'package:models/serializers.dart';
 import 'package:models/task/content.dart';
 
 part 'task.g.dart';
 
-abstract class Task implements Built<Task, TaskBuilder> {
+abstract class Task extends Object
+    with Base
+    implements Built<Task, TaskBuilder> {
   @BuiltValueField(wireName: 'id')
   String? get id;
 
@@ -80,6 +83,7 @@ abstract class Task implements Built<Task, TaskBuilder> {
   @override
   TaskBuilder toBuilder();
 
+  @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> data = serializers.serializeWith(Task.serializer, this)
         as Map<String, dynamic>;
@@ -91,10 +95,15 @@ abstract class Task implements Built<Task, TaskBuilder> {
     return data;
   }
 
+  static Map<String, dynamic> toMapS(data) {
+    return data.toMap();
+  }
+
   static Task fromMap(Map<String, dynamic> json) {
     return serializers.deserializeWith(Task.serializer, json)!;
   }
 
+  @override
   Map<String, Object?> toSql() {
     Map<String?, dynamic> data = serializers.serializeWith(
         Task.serializer, this) as Map<String?, dynamic>;

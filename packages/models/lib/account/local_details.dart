@@ -1,10 +1,12 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:models/base.dart';
 import 'package:models/serializers.dart';
 
 part 'local_details.g.dart';
 
-abstract class LocalDetails
+abstract class LocalDetails extends Object
+    with Base
     implements Built<LocalDetails, LocalDetailsBuilder> {
   bool? get firstSyncExecuted;
   DateTime? get lastAccountsSyncAt;
@@ -24,6 +26,7 @@ abstract class LocalDetails
   @override
   LocalDetailsBuilder toBuilder();
 
+  @override
   Map<String, dynamic> toMap() {
     return serializers.serializeWith(LocalDetails.serializer, this)
         as Map<String, dynamic>;
@@ -33,6 +36,7 @@ abstract class LocalDetails
     return serializers.deserializeWith(LocalDetails.serializer, json)!;
   }
 
+  @override
   Map<String, Object?> toSql() {
     Map<String?, dynamic> data = serializers.serializeWith(
         LocalDetails.serializer, this) as Map<String?, dynamic>;

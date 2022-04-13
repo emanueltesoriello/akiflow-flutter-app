@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/api/account_api.dart';
+import 'package:mobile/api/task_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/services/account_sync_service.dart';
-import 'package:mobile/services/task_sync_service.dart';
+import 'package:mobile/repository/accounts_repository.dart';
+import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
 
 part 'home_state.dart';
@@ -12,6 +14,9 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeCubitState> {
   final TasksCubit _tasksCubit;
   final AccountApi _accountApi = locator<AccountApi>();
+  final TaskApi _taskApi = locator<TaskApi>();
+  final AccountsRepository _accountsRepository = locator<AccountsRepository>();
+  final TasksRepository _tasksRepository = locator<TasksRepository>();
 
   HomeCubit(this._tasksCubit) : super(const HomeCubitState()) {
     _init();
@@ -22,18 +27,27 @@ class HomeCubit extends Cubit<HomeCubitState> {
   }
 
   Future<void> _syncTasks() async {
-    List<Account> accounts = await _accountApi.all();
+    List<Account> accounts = await _accountApi.get();
 
     for (Account account in accounts) {
-      AccountSyncService accountSyncService =
-          AccountSyncService(account: account);
+      SyncService accountSyncService = SyncService(
+        account: account,
+        api: _accountApi,
+        databaseRepository: _accountsRepository,
+      );
+
       await accountSyncService.start();
     }
 
     Account akiflowAccount =
         accounts.firstWhere((account) => account.connectorId == 'akiflow');
 
-    TaskSyncService _syncService = TaskSyncService(account: akiflowAccount);
+    SyncService _syncService = SyncService(
+      account: akiflowAccount,
+      api: _taskApi,
+      databaseRepository: _tasksRepository,
+    );
+
     await _syncService.start();
 
     _tasksCubit.refresh();

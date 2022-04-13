@@ -1,27 +1,22 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:mobile/core/config.dart';
+import 'package:mobile/api/base_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
-import 'package:models/task/task.dart';
+import 'package:models/base.dart';
 
-abstract class ITasksApi {
-  Future<List<Task>> all({
-    int perPage,
-    bool withDeleted,
-    required DateTime updatedAfter,
-  });
-}
-
-class TasksApi implements ITasksApi {
+class Api implements IBaseApi {
   final HttpClient _httpClient = locator<HttpClient>();
 
-  TasksApi();
+  final Uri url;
+  final Function(Map<String, dynamic>) fromMap;
+
+  Api(this.url, {required this.fromMap});
 
   @override
-  Future<List<Task>> all({
+  Future<List<T>> get<T>({
     int perPage = 2500,
     bool withDeleted = true,
     DateTime? updatedAfter,
@@ -36,11 +31,9 @@ class TasksApi implements ITasksApi {
       params["updatedAfter"] = updatedAfter.toIso8601String();
     }
 
-    Uri url = Uri.parse(Config.endpoint + "/v2/tasks");
+    Uri urlWithQueryParameters = url.replace(queryParameters: params);
 
-    url = url.replace(queryParameters: params);
-
-    Response responseRaw = await _httpClient.get(url);
+    Response responseRaw = await _httpClient.get(urlWithQueryParameters);
 
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
@@ -48,35 +41,43 @@ class TasksApi implements ITasksApi {
       throw ApiException(response);
     }
 
-    List<Task> tasks =
-        response["data"].map<Task>((task) => Task.fromMap(task)).toList();
+    List<dynamic> items = response["data"];
 
     String? nextPage = response["nextPage"];
 
     if (nextPage != null && allPages) {
       print("nextPage: $nextPage");
 
-      List<Task> moreTasks = await all(
+      List<T> moreItems = await get(
         perPage: perPage,
         withDeleted: withDeleted,
         updatedAfter: updatedAfter,
         allPages: allPages,
       );
 
-      tasks.addAll(moreTasks);
+      items.addAll(moreItems);
 
-      print("tasks: ${tasks.length}");
+      print("items: ${items.length}");
     }
 
-    return tasks;
+    List<T> result = [];
+
+    for (dynamic item in items) {
+      result.add(fromMap(item));
+    }
+
+    return result;
   }
 
-  Future<List<Task>> post(List<Task> unsynced) async {
-    Uri url = Uri.parse(Config.endpoint + "/v2/tasks");
+  @override
+  Future<List<T>> post<T>({
+    required List<T> unsynced,
+  }) async {
+    List<dynamic> jsonList = [];
 
-    // json list
-    List<Map<String, dynamic>> jsonList =
-        unsynced.map((task) => task.toMap()).toList();
+    for (T item in unsynced) {
+      jsonList.add((item as Base).toMap());
+    }
 
     String json = jsonEncode(jsonList);
 
@@ -88,9 +89,14 @@ class TasksApi implements ITasksApi {
       throw ApiException(response);
     }
 
-    List<Task> tasks =
-        response["data"].map<Task>((task) => Task.fromMap(task)).toList();
+    List<dynamic> items = response["data"];
 
-    return tasks;
+    List<T> result = [];
+
+    for (dynamic item in items) {
+      result.add(fromMap(item));
+    }
+
+    return result;
   }
 }
