@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/home/cubit/home_cubit.dart';
-import 'package:mobile/features/home/views/_components/calendar_appbar.dart';
-import 'package:mobile/features/home/views/_components/inbox_appbar.dart';
-import 'package:mobile/features/home/views/_components/today_appbar.dart';
-import 'package:mobile/features/home/views/inbox/ui/view.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/main/views/_components/calendar_appbar.dart';
+import 'package:mobile/features/main/views/_components/inbox_appbar.dart';
+import 'package:mobile/features/main/views/_components/today_appbar.dart';
+import 'package:mobile/features/main/views/inbox/ui/view.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/style/colors.dart';
 
-class HomePage extends StatelessWidget {
+class MainPage extends StatelessWidget {
   final List<Widget> _views = [
     const SizedBox(),
     const InboxView(),
@@ -18,13 +18,13 @@ class HomePage extends StatelessWidget {
     const SizedBox(),
   ];
 
-  HomePage({Key? key}) : super(key: key);
+  MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<HomeCubit>().addTask(),
+        onPressed: () => context.read<MainCubit>().addTask(),
         child: const Icon(SFSymbols.arrow_2_circlepath),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
         currentIndex: () {
-          switch (context.watch<HomeCubit>().state.homeViewType) {
+          switch (context.watch<MainCubit>().state.homeViewType) {
             case HomeViewType.inbox:
               return 1;
             case HomeViewType.today:
@@ -77,13 +77,13 @@ class HomePage extends StatelessWidget {
               builder: (context) => const SettingsModal(),
             );
           } else {
-            context.read<HomeCubit>().bottomBarViewClick(index);
+            context.read<MainCubit>().bottomBarViewClick(index);
           }
         },
       ),
       body: Column(
         children: [
-          BlocBuilder<HomeCubit, HomeCubitState>(
+          BlocBuilder<MainCubit, MainCubitState>(
             builder: (context, state) {
               switch (state.homeViewType) {
                 case HomeViewType.inbox:
@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
           Expanded(
             child: Container(
               color: Theme.of(context).scaffoldBackgroundColor,
-              child: BlocBuilder<HomeCubit, HomeCubitState>(
+              child: BlocBuilder<MainCubit, MainCubitState>(
                 builder: (context, state) {
                   switch (state.homeViewType) {
                     case HomeViewType.inbox:

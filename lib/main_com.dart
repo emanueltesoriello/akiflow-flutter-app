@@ -11,8 +11,8 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';
-import 'package:mobile/features/home/cubit/home_cubit.dart';
-import 'package:mobile/features/home/ui/home_page.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/theme.dart';
@@ -68,9 +68,9 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => SettingsCubit(),
         ),
-        BlocProvider<HomeCubit>(
+        BlocProvider<MainCubit>(
           lazy: false,
-          create: (BuildContext context) => HomeCubit(
+          create: (BuildContext context) => MainCubit(
             context.read<TasksCubit>(),
           ),
         ),
@@ -137,7 +137,7 @@ class Application extends StatelessWidget {
                 );
               }
             },
-            child: userLogged ? HomePage() : const AuthPage(),
+            child: userLogged ? MainPage() : const AuthPage(),
           )),
     );
   }

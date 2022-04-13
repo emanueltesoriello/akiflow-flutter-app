@@ -11,9 +11,9 @@ import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
 
-part 'home_state.dart';
+part 'main_state.dart';
 
-class HomeCubit extends Cubit<HomeCubitState> {
+class MainCubit extends Cubit<MainCubitState> {
   final TasksCubit _tasksCubit;
   final AccountApi _accountApi = locator<AccountApi>();
   final TaskApi _taskApi = locator<TaskApi>();
@@ -23,7 +23,7 @@ class HomeCubit extends Cubit<HomeCubitState> {
   final CalendarsRepository _calendarsRepository =
       locator<CalendarsRepository>();
 
-  HomeCubit(this._tasksCubit) : super(const HomeCubitState()) {
+  MainCubit(this._tasksCubit) : super(const MainCubitState()) {
     _init();
   }
 

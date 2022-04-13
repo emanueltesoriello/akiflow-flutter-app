@@ -8,7 +8,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button.dart';
 import 'package:mobile/components/base/space.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/home/ui/home_page.dart';
+import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/text_style.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,7 +26,7 @@ class AuthPage extends StatelessWidget {
         listener: (context, state) {
           if (state.user != null) {
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => MainPage()),
                 (Route<dynamic> route) => false);
           }
         },
