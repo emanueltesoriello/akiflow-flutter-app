@@ -103,6 +103,12 @@ class _$AccountSerializer implements StructuredSerializer<Account> {
       ..add('remote_updated_at')
       ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
+    value = object.localDetails;
+
+    result
+      ..add('local_details')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(LocalDetails)));
 
     return result;
   }
@@ -173,6 +179,10 @@ class _$AccountSerializer implements StructuredSerializer<Account> {
         case 'remote_updated_at':
           result.remoteUpdatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'local_details':
+          result.localDetails.replace(serializers.deserialize(value,
+              specifiedType: const FullType(LocalDetails))! as LocalDetails);
           break;
       }
     }

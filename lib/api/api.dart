@@ -23,8 +23,8 @@ class Api implements IBaseApi {
     bool allPages = false,
   }) async {
     Map<String, dynamic> params = {
-      "perPage": perPage.toString(),
-      "withDeleted": withDeleted.toString(),
+      "per_page": perPage.toString(),
+      "with_deleted": withDeleted.toString(),
     };
 
     if (updatedAfter != null) {
@@ -32,6 +32,8 @@ class Api implements IBaseApi {
     }
 
     Uri urlWithQueryParameters = url.replace(queryParameters: params);
+
+    print(urlWithQueryParameters);
 
     Response responseRaw = await _httpClient.get(urlWithQueryParameters);
 

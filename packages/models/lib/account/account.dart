@@ -49,7 +49,7 @@ abstract class Account extends Object
   @BuiltValueField(wireName: 'remote_updated_at')
   DateTime? get remoteUpdatedAt;
 
-  @BuiltValueField(wireName: 'local_details', serialize: false)
+  @BuiltValueField(wireName: 'local_details')
   LocalDetails? get localDetails;
 
   Account._();
@@ -85,8 +85,8 @@ abstract class Account extends Object
         data[key] = data[key] ? 1 : 0;
       }
 
-      if (data[key] is LocalDetails) {
-        data[key] = jsonEncode(data[key]?.toMap());
+      if (key == "local_details" && data[key] != null) {
+        data[key] = jsonEncode(Map.from(data[key]));
       }
     }
 
@@ -95,6 +95,11 @@ abstract class Account extends Object
 
   static Account fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
+
+    if (data["local_details"] != null) {
+      data["local_details"] =
+          jsonDecode(data["local_details"] as String? ?? "");
+    }
 
     return serializers.deserializeWith(Account.serializer, data)!;
   }

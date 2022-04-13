@@ -38,22 +38,38 @@ class HomeCubit extends Cubit<HomeCubitState> {
     Account akiflowAccount =
         accountsData.firstWhere((account) => account.connectorId == 'akiflow');
 
+    Account localAkiflowAccount =
+        await _accountsRepository.byId(akiflowAccount.id!);
+
     SyncService accounts = SyncService(
-      akiflowAccount: akiflowAccount,
       api: _accountApi,
       databaseRepository: _accountsRepository,
+      getLastUpdate: () => localAkiflowAccount.localDetails?.lastAccountsSyncAt,
+      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
+          localAkiflowAccount.id,
+          data: localAkiflowAccount
+              .rebuild((b) => b..localDetails.lastAccountsSyncAt = lastUpdate)),
     );
 
     SyncService tasks = SyncService(
-      akiflowAccount: akiflowAccount,
       api: _taskApi,
       databaseRepository: _tasksRepository,
+      getLastUpdate: () => localAkiflowAccount.localDetails?.lastTasksSyncAt,
+      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
+          localAkiflowAccount.id,
+          data: localAkiflowAccount
+              .rebuild((b) => b..localDetails.lastTasksSyncAt = lastUpdate)),
     );
 
     SyncService calendars = SyncService(
-      akiflowAccount: akiflowAccount,
       api: _calendarApi,
       databaseRepository: _calendarsRepository,
+      getLastUpdate: () =>
+          localAkiflowAccount.localDetails?.lastCalendarsSyncAt,
+      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
+          localAkiflowAccount.id,
+          data: localAkiflowAccount.rebuild(
+              (b) => b..localDetails.lastCalendarsSyncAt = lastUpdate)),
     );
 
     await accounts.start();
