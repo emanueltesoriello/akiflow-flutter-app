@@ -11,25 +11,26 @@ class SyncService {
   // need to check last sync time
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
 
-  final Account account;
+  final Account akiflowAccount;
   final Api api;
   final DatabaseRepository databaseRepository;
 
   SyncService({
-    required this.account,
+    required this.akiflowAccount,
     required this.api,
     required this.databaseRepository,
   });
 
   Future<void> start() async {
-    print('start sync entity ${api.runtimeType} id ${account.connectorId}');
+    print(
+        'start sync entity ${api.runtimeType} id ${akiflowAccount.connectorId}');
 
     await _remoteToLocal();
     await _localToRemote();
   }
 
   Future<void> _remoteToLocal() async {
-    DateTime? lastSyncAt = await getRemoteUpdatedAt();
+    DateTime? lastSyncAt = await getLocalLastSync();
 
     var remoteItems = await api.get(
       perPage: 2500,
@@ -122,13 +123,13 @@ class SyncService {
     }
   }
 
-  Future<DateTime?> getRemoteUpdatedAt() async {
-    Account localAccount = await _accountsRepository.byId(account.id!);
+  Future<DateTime?> getLocalLastSync() async {
+    Account localAccount = await _accountsRepository.byId(akiflowAccount.id!);
     return localAccount.localDetails?.lastAccountsSyncAt;
   }
 
   Future<void> updateLocalLastSyncAt(DateTime? date) async {
-    Account localAccount = await _accountsRepository.byId(account.id!);
+    Account localAccount = await _accountsRepository.byId(akiflowAccount.id!);
 
     localAccount = localAccount.rebuild((t) {
       t.localDetails.lastTasksSyncAt = date;
