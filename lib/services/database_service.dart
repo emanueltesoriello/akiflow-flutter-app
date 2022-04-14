@@ -35,6 +35,10 @@ class DatabaseService {
 
     await sql.deleteDatabase(database!.path);
 
+    try {
+      File(database!.path).deleteSync();
+    } catch (_) {}
+
     await open();
   }
 
@@ -64,15 +68,20 @@ CREATE TABLE IF NOT EXISTS accounts(
   `identifier` VARCHAR(255),
   `identifier_picture` VARCHAR(255),
   `details` TEXT,
-  `local_details` TEXT,
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME,
-  `remote_updated_at` DATETIME,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT,
+  `remote_updated_at` TEXT,
   `autologin_token` VARCHAR(255),
   `status` VARCHAR(255),
   `sync_status` VARCHAR(255),
-  `id` UUID
+  `id` UUID,
+  `first_time_sync_executed` TEXT,
+  `last_accounts_sync_at` TEXT,
+  `last_labels_sync_at` TEXT,
+  `last_tasks_sync_at` TEXT,
+  `last_calendars_sync_at` TEXT,
+  `last_events_sync_at` TEXT
 )
     ''');
     await txn.execute('''
@@ -105,10 +114,10 @@ CREATE TABLE IF NOT EXISTS calendars(
   `settings` TEXT,
   `etag` VARCHAR(255),
   `sync_status` VARCHAR(255),
-  `remote_updated_at` DATETIME,
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME
+  `remote_updated_at` TEXT,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT
 )
     ''');
     await txn.execute('''
@@ -132,12 +141,12 @@ CREATE TABLE IF NOT EXISTS contacts(
   `local_url` VARCHAR(255),
   `content` TEXT,
   `etag` VARCHAR(255),
-  `sorting` DATETIME,
-  `origin_updated_at` DATETIME,
-  `remote_updated_at` DATETIME,
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME
+  `sorting` TEXT,
+  `origin_updated_at` TEXT,
+  `remote_updated_at` TEXT,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT
 )
     ''');
     await txn.execute('''
@@ -153,7 +162,7 @@ CREATE TABLE IF NOT EXISTS docs(
   `origin_id` VARCHAR(255),
   `accountId` VARCHAR(100),
   `origin_account_id` VARCHAR(50),
-  `origin_updated_at` DATETIME,
+  `origin_updated_at` TEXT,
   `task_id` UUID,
   `search_text` VARCHAR(255),
   `title` VARCHAR(255),
@@ -166,17 +175,17 @@ CREATE TABLE IF NOT EXISTS docs(
   `custom_type` VARCHAR(50),
   `important` INTEGER,
   `priority` INT,
-  `sorting` DATETIME,
+  `sorting` TEXT,
   `usages` INT,
-  `last_usage_at` DATETIME,
+  `last_usage_at` TEXT,
   `pinned` INTEGER,
   `hidden` INTEGER,
   `custom_index1` INT,
   `custom_index2` INT,
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME,
-  `remote_updated_at` DATETIME
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT,
+  `remote_updated_at` TEXT
 )
     ''');
     await txn.execute(
@@ -206,14 +215,14 @@ CREATE TABLE IF NOT EXISTS event_modifiers(
   `calendar_id` UUID,
   `action` VARCHAR(255),
   `content` TEXT,
-  `processed_at` DATETIME,
-  `failed_at` DATETIME,
+  `processed_at` TEXT,
+  `failed_at` TEXT,
   `result` TEXT,
   `attempts` INT,
-  `remote_updated_at` DATETIME,
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME
+  `remote_updated_at` TEXT,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT
 )
     ''');
   }
@@ -236,15 +245,15 @@ CREATE TABLE IF NOT EXISTS events(
   `origincalendar_id` VARCHAR(255),
   `creator_id` VARCHAR(255),
   `organizer_id` VARCHAR(255),
-  `original_start_time` DATETIME,
+  `original_start_time` TEXT,
   `original_start_date` VARCHAR(10),
-  `start_time` DATETIME,
-  `end_time` DATETIME,
+  `start_time` TEXT,
+  `end_time` TEXT,
   `start_date` VARCHAR(10),
   `end_date` VARCHAR(10),
   `start_date_time_tz` VARCHAR(255),
   `end_date_time_tz` VARCHAR(255),
-  `origin_updated_at` DATETIME,
+  `origin_updated_at` TEXT,
   `etag` VARCHAR(255),
   `title` VARCHAR(255),
   `description` VARCHAR(255),
@@ -264,11 +273,11 @@ CREATE TABLE IF NOT EXISTS events(
   `calendar_color` VARCHAR(10),
   `task_id` UUID,
   `fingerprints` TEXT,
-  `remote_updated_at` DATETIME,
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME,
-  `until_date_time` DATETIME,
+  `remote_updated_at` TEXT,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT,
+  `until_date_time` TEXT,
   `recurrence_exception_delete` INTEGER,
   `recurrence_sync_retry` INTEGER
 )
@@ -294,11 +303,11 @@ CREATE TABLE IF NOT EXISTS lists(
   `title` VARCHAR(255),
   `icon` VARCHAR(255),
   `color` VARCHAR(255),
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME,
-  `sorting` DATETIME,
-  `remote_updated_at` DATETIME,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT,
+  `sorting` TEXT,
+  `remote_updated_at` TEXT,
   "parentId" UUID,
   `is_folder` INTEGER,
   `system` VARCHAR(255),
@@ -309,7 +318,7 @@ CREATE TABLE IF NOT EXISTS lists(
 
   Future<void> _setupMigrations(txn) async {
     await txn.execute('''
-      CREATE TABLE IF NOT EXISTS migrations(`name` VARCHAR(255) PRIMARY KEY ,`created_at` DATETIME )
+      CREATE TABLE IF NOT EXISTS migrations(`name` VARCHAR(255) PRIMARY KEY ,`created_at` TEXT )
     ''');
   }
 
@@ -318,8 +327,8 @@ CREATE TABLE IF NOT EXISTS lists(
 CREATE TABLE IF NOT EXISTS tasks(
   `id` UUID PRIMARY KEY,
   `title` VARCHAR(255),
-  `date` DATETIME,
-  `date_time` DATETIME,
+  `date` TEXT,
+  `date_time` TEXT,
   `recurring_id` UUID,
   `recurrence` TEXT,
   `description` TEXT,
@@ -328,25 +337,25 @@ CREATE TABLE IF NOT EXISTS tasks(
   `links` TEXT,
   `status` TINYINT,
   `done` INTEGER,
-  `done_at` DATETIME,
+  `done_at` TEXT,
   `duration` INT,
   `priority` TINYINT,
-  `sorting` DATETIME,
+  `sorting` TEXT,
   `important` INTEGER,
   `list_id` UUID,
   `content` TEXT,
   `location` TEXT,
   `attendees` TEXT,
-  `read_at` DATETIME,
-  `created_at` DATETIME,
-  `updated_at` DATETIME,
-  `deleted_at` DATETIME,
-  `daily_goal` DATETIME,
-  `origin` DATETIME,
-  `remote_updated_at` DATETIME,
+  `read_at` TEXT,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT,
+  `daily_goal` TEXT,
+  `origin` TEXT,
+  `remote_updated_at` TEXT,
   `section_id` UUID,
-  `sorting_label` INTEGER,
-  `due_date` DATETIME
+  `sorting_label` TEXT,
+  `due_date` TEXT
 )
     ''');
   }

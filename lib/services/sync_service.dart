@@ -3,29 +3,32 @@ import 'dart:async';
 import 'package:mobile/api/api.dart';
 import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
+import 'package:models/account/account.dart';
 
 class SyncService {
   final Api api;
+  final Account akiflowAccount;
   final DatabaseRepository databaseRepository;
-  final DateTime? Function() getLastUpdate;
-  final Function(DateTime) setLastUpdate;
+  final DateTime? lastSyncAt;
+
+  DateTime? lastSyncAtUpdated;
 
   SyncService({
     required this.api,
+    required this.akiflowAccount,
     required this.databaseRepository,
-    required this.getLastUpdate,
-    required this.setLastUpdate,
+    required this.lastSyncAt,
   });
 
   Future<void> start() async {
-    print('--- ${api.runtimeType}, start sync ---');
+    print('${api.runtimeType}: start sync ---');
 
     await _remoteToLocal();
     await _localToRemote();
   }
 
   Future<void> _remoteToLocal() async {
-    DateTime? lastSyncAt = getLastUpdate();
+    print('${api.runtimeType}: remote to local lastSync $lastSyncAt ---');
 
     var remoteItems = await api.get(
       perPage: 2500,
@@ -37,30 +40,39 @@ class SyncService {
     if (remoteItems.isEmpty) {
       return;
     } else {
-      print('remote to local: ${remoteItems.length} items to sync');
+      print(
+          '${api.runtimeType}: remote to local: ${remoteItems.length} items to sync');
     }
 
-    DateTime maxRemoteUpdatedAt = DateTime.fromMillisecondsSinceEpoch(0);
+    DateTime? maxRemoteUpdatedAt;
 
     for (var item in remoteItems) {
       DateTime remoteTaskUpdatedAt = item.updatedAt;
-      if (remoteTaskUpdatedAt.isAfter(maxRemoteUpdatedAt)) {
+
+      if (maxRemoteUpdatedAt == null ||
+          remoteTaskUpdatedAt.isAfter(maxRemoteUpdatedAt)) {
         maxRemoteUpdatedAt = remoteTaskUpdatedAt;
       }
     }
 
     await _upsertItems(remoteItems);
 
-    await setLastUpdate(maxRemoteUpdatedAt);
+    if (maxRemoteUpdatedAt != null) {
+      lastSyncAtUpdated = maxRemoteUpdatedAt;
+    }
   }
 
   Future<void> _localToRemote() async {
+    print('${api.runtimeType}: local to remote ---');
+
     List<dynamic> unsynced = await databaseRepository.unsynced();
 
     if (unsynced.isEmpty) {
+      print('${api.runtimeType}: local no data to sync ---');
       return;
     } else {
-      print('local to remote: ${unsynced.length} items to sync');
+      print(
+          '${api.runtimeType}: local to remote: ${unsynced.length} items to sync');
     }
 
     for (int i = 0; i < unsynced.length; i++) {
@@ -80,7 +92,6 @@ class SyncService {
       }
 
       item = item.rebuild((t) {
-        t.remoteUpdatedAt = maxDate;
         t.globalUpdatedAt = maxDate;
       });
 
@@ -88,15 +99,13 @@ class SyncService {
     }
 
     try {
-      print("local to remote: ${unsynced.length} items to sync");
-
       List<dynamic> updated = await api.post(unsynced: unsynced);
 
       await _upsertItems(updated);
 
-      print("local to remote: done");
+      print('${api.runtimeType}: local to remote: done');
     } on ApiException catch (e) {
-      print(e);
+      print('${api.runtimeType}: ${e.runtimeType}: ${e.message}');
     }
   }
 
@@ -119,8 +128,9 @@ class SyncService {
         bool notYetUpdated =
             localUpdatedAt == null || remoteGlobalUpdateAt == null;
 
-        bool remoteItemIsRecentThanLocal =
-            notYetUpdated || remoteGlobalUpdateAt.isAfter(localUpdatedAt);
+        bool remoteItemIsRecentThanLocal = notYetUpdated ||
+            remoteGlobalUpdateAt.isAfter(localUpdatedAt) ||
+            remoteGlobalUpdateAt.isAtSameMomentAs(localUpdatedAt);
 
         if (remoteItemIsRecentThanLocal) {
           remoteItem = remoteItem.rebuild((t) {
@@ -130,11 +140,12 @@ class SyncService {
 
           remoteItems[i] = remoteItem;
 
-          await _updateLocalTask(id: localTask.id!, remoteItem: remoteItem);
+          print('${api.runtimeType}: save item to db: $remoteItem');
 
-          print('save item to db: ${remoteItem.id}');
+          await _updateLocalTask(id: remoteItem.id!, remoteItem: remoteItem);
         } else {
-          print("skip upsert item, remote is not recent than local");
+          print(
+              '${api.runtimeType}: skip upsert item, remote is not recent than local');
         }
       } else {
         await _addRemoteTaskToLocalDb(remoteItem);

@@ -35,12 +35,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void setCompleted(Task task) {
     // TESTING
-    // task = task.rebuild(
-    //   (b) => b
-    //     ..title = "Sync 10 OK"
-    //     ..updatedAt = DateTime.now(),
-    // );
+    task = task.rebuild(
+      (b) => b
+        ..title = "Sync 10 OK"
+        ..updatedAt = DateTime.now(),
+    );
 
-    // _tasksRepository.updateById(task.id, data: task);
+    _tasksRepository.updateById(task.id, data: task);
   }
 }

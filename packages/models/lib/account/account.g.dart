@@ -103,12 +103,41 @@ class _$AccountSerializer implements StructuredSerializer<Account> {
       ..add('remote_updated_at')
       ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    value = object.localDetails;
+    value = object.firstTimeSyncExecuted;
 
     result
-      ..add('local_details')
+      ..add('first_time_sync_executed')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+    value = object.lastAccountsSyncAt;
+
+    result
+      ..add('last_accounts_sync_at')
       ..add(serializers.serialize(value,
-          specifiedType: const FullType(LocalDetails)));
+          specifiedType: const FullType(DateTime)));
+    value = object.lastLabelsSyncAt;
+
+    result
+      ..add('last_labels_sync_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
+    value = object.lastTasksSyncAt;
+
+    result
+      ..add('last_tasks_sync_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
+    value = object.lastCalendarsSyncAt;
+
+    result
+      ..add('last_calendars_sync_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
+    value = object.lastEventsSyncAt;
+
+    result
+      ..add('last_events_sync_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
 
     return result;
   }
@@ -180,9 +209,29 @@ class _$AccountSerializer implements StructuredSerializer<Account> {
           result.remoteUpdatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'local_details':
-          result.localDetails.replace(serializers.deserialize(value,
-              specifiedType: const FullType(LocalDetails))! as LocalDetails);
+        case 'first_time_sync_executed':
+          result.firstTimeSyncExecuted = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool?;
+          break;
+        case 'last_accounts_sync_at':
+          result.lastAccountsSyncAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'last_labels_sync_at':
+          result.lastLabelsSyncAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'last_tasks_sync_at':
+          result.lastTasksSyncAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'last_calendars_sync_at':
+          result.lastCalendarsSyncAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'last_events_sync_at':
+          result.lastEventsSyncAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -221,7 +270,17 @@ class _$Account extends Account {
   @override
   final DateTime? remoteUpdatedAt;
   @override
-  final LocalDetails? localDetails;
+  final bool? firstTimeSyncExecuted;
+  @override
+  final DateTime? lastAccountsSyncAt;
+  @override
+  final DateTime? lastLabelsSyncAt;
+  @override
+  final DateTime? lastTasksSyncAt;
+  @override
+  final DateTime? lastCalendarsSyncAt;
+  @override
+  final DateTime? lastEventsSyncAt;
 
   factory _$Account([void Function(AccountBuilder)? updates]) =>
       (new AccountBuilder()..update(updates)).build();
@@ -241,7 +300,12 @@ class _$Account extends Account {
       this.globalUpdatedAt,
       this.globalCreatedAt,
       this.remoteUpdatedAt,
-      this.localDetails})
+      this.firstTimeSyncExecuted,
+      this.lastAccountsSyncAt,
+      this.lastLabelsSyncAt,
+      this.lastTasksSyncAt,
+      this.lastCalendarsSyncAt,
+      this.lastEventsSyncAt})
       : super._();
 
   @override
@@ -269,7 +333,12 @@ class _$Account extends Account {
         globalUpdatedAt == other.globalUpdatedAt &&
         globalCreatedAt == other.globalCreatedAt &&
         remoteUpdatedAt == other.remoteUpdatedAt &&
-        localDetails == other.localDetails;
+        firstTimeSyncExecuted == other.firstTimeSyncExecuted &&
+        lastAccountsSyncAt == other.lastAccountsSyncAt &&
+        lastLabelsSyncAt == other.lastLabelsSyncAt &&
+        lastTasksSyncAt == other.lastTasksSyncAt &&
+        lastCalendarsSyncAt == other.lastCalendarsSyncAt &&
+        lastEventsSyncAt == other.lastEventsSyncAt;
   }
 
   @override
@@ -288,22 +357,30 @@ class _$Account extends Account {
                                                 $jc(
                                                     $jc(
                                                         $jc(
-                                                            $jc(0, id.hashCode),
-                                                            connectorId
-                                                                .hashCode),
-                                                        accountId.hashCode),
-                                                    originAccountId.hashCode),
-                                                shortName.hashCode),
-                                            fullName.hashCode),
-                                        picture.hashCode),
-                                    identifier.hashCode),
-                                createdAt.hashCode),
-                            updatedAt.hashCode),
-                        deletedAt.hashCode),
-                    globalUpdatedAt.hashCode),
-                globalCreatedAt.hashCode),
-            remoteUpdatedAt.hashCode),
-        localDetails.hashCode));
+                                                            $jc(
+                                                                $jc(
+                                                                    $jc(
+                                                                        $jc(
+                                                                            $jc($jc(0, id.hashCode),
+                                                                                connectorId.hashCode),
+                                                                            accountId.hashCode),
+                                                                        originAccountId.hashCode),
+                                                                    shortName.hashCode),
+                                                                fullName.hashCode),
+                                                            picture.hashCode),
+                                                        identifier.hashCode),
+                                                    createdAt.hashCode),
+                                                updatedAt.hashCode),
+                                            deletedAt.hashCode),
+                                        globalUpdatedAt.hashCode),
+                                    globalCreatedAt.hashCode),
+                                remoteUpdatedAt.hashCode),
+                            firstTimeSyncExecuted.hashCode),
+                        lastAccountsSyncAt.hashCode),
+                    lastLabelsSyncAt.hashCode),
+                lastTasksSyncAt.hashCode),
+            lastCalendarsSyncAt.hashCode),
+        lastEventsSyncAt.hashCode));
   }
 
   @override
@@ -323,7 +400,12 @@ class _$Account extends Account {
           ..add('globalUpdatedAt', globalUpdatedAt)
           ..add('globalCreatedAt', globalCreatedAt)
           ..add('remoteUpdatedAt', remoteUpdatedAt)
-          ..add('localDetails', localDetails))
+          ..add('firstTimeSyncExecuted', firstTimeSyncExecuted)
+          ..add('lastAccountsSyncAt', lastAccountsSyncAt)
+          ..add('lastLabelsSyncAt', lastLabelsSyncAt)
+          ..add('lastTasksSyncAt', lastTasksSyncAt)
+          ..add('lastCalendarsSyncAt', lastCalendarsSyncAt)
+          ..add('lastEventsSyncAt', lastEventsSyncAt))
         .toString();
   }
 }
@@ -391,11 +473,35 @@ class AccountBuilder implements Builder<Account, AccountBuilder> {
   set remoteUpdatedAt(DateTime? remoteUpdatedAt) =>
       _$this._remoteUpdatedAt = remoteUpdatedAt;
 
-  LocalDetailsBuilder? _localDetails;
-  LocalDetailsBuilder get localDetails =>
-      _$this._localDetails ??= new LocalDetailsBuilder();
-  set localDetails(LocalDetailsBuilder? localDetails) =>
-      _$this._localDetails = localDetails;
+  bool? _firstTimeSyncExecuted;
+  bool? get firstTimeSyncExecuted => _$this._firstTimeSyncExecuted;
+  set firstTimeSyncExecuted(bool? firstTimeSyncExecuted) =>
+      _$this._firstTimeSyncExecuted = firstTimeSyncExecuted;
+
+  DateTime? _lastAccountsSyncAt;
+  DateTime? get lastAccountsSyncAt => _$this._lastAccountsSyncAt;
+  set lastAccountsSyncAt(DateTime? lastAccountsSyncAt) =>
+      _$this._lastAccountsSyncAt = lastAccountsSyncAt;
+
+  DateTime? _lastLabelsSyncAt;
+  DateTime? get lastLabelsSyncAt => _$this._lastLabelsSyncAt;
+  set lastLabelsSyncAt(DateTime? lastLabelsSyncAt) =>
+      _$this._lastLabelsSyncAt = lastLabelsSyncAt;
+
+  DateTime? _lastTasksSyncAt;
+  DateTime? get lastTasksSyncAt => _$this._lastTasksSyncAt;
+  set lastTasksSyncAt(DateTime? lastTasksSyncAt) =>
+      _$this._lastTasksSyncAt = lastTasksSyncAt;
+
+  DateTime? _lastCalendarsSyncAt;
+  DateTime? get lastCalendarsSyncAt => _$this._lastCalendarsSyncAt;
+  set lastCalendarsSyncAt(DateTime? lastCalendarsSyncAt) =>
+      _$this._lastCalendarsSyncAt = lastCalendarsSyncAt;
+
+  DateTime? _lastEventsSyncAt;
+  DateTime? get lastEventsSyncAt => _$this._lastEventsSyncAt;
+  set lastEventsSyncAt(DateTime? lastEventsSyncAt) =>
+      _$this._lastEventsSyncAt = lastEventsSyncAt;
 
   AccountBuilder();
 
@@ -416,7 +522,12 @@ class AccountBuilder implements Builder<Account, AccountBuilder> {
       _globalUpdatedAt = $v.globalUpdatedAt;
       _globalCreatedAt = $v.globalCreatedAt;
       _remoteUpdatedAt = $v.remoteUpdatedAt;
-      _localDetails = $v.localDetails?.toBuilder();
+      _firstTimeSyncExecuted = $v.firstTimeSyncExecuted;
+      _lastAccountsSyncAt = $v.lastAccountsSyncAt;
+      _lastLabelsSyncAt = $v.lastLabelsSyncAt;
+      _lastTasksSyncAt = $v.lastTasksSyncAt;
+      _lastCalendarsSyncAt = $v.lastCalendarsSyncAt;
+      _lastEventsSyncAt = $v.lastEventsSyncAt;
       _$v = null;
     }
     return this;
@@ -435,36 +546,28 @@ class AccountBuilder implements Builder<Account, AccountBuilder> {
 
   @override
   _$Account build() {
-    _$Account _$result;
-    try {
-      _$result = _$v ??
-          new _$Account._(
-              id: id,
-              connectorId: connectorId,
-              accountId: accountId,
-              originAccountId: originAccountId,
-              shortName: shortName,
-              fullName: fullName,
-              picture: picture,
-              identifier: identifier,
-              createdAt: createdAt,
-              updatedAt: updatedAt,
-              deletedAt: deletedAt,
-              globalUpdatedAt: globalUpdatedAt,
-              globalCreatedAt: globalCreatedAt,
-              remoteUpdatedAt: remoteUpdatedAt,
-              localDetails: _localDetails?.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'localDetails';
-        _localDetails?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'Account', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result = _$v ??
+        new _$Account._(
+            id: id,
+            connectorId: connectorId,
+            accountId: accountId,
+            originAccountId: originAccountId,
+            shortName: shortName,
+            fullName: fullName,
+            picture: picture,
+            identifier: identifier,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
+            globalUpdatedAt: globalUpdatedAt,
+            globalCreatedAt: globalCreatedAt,
+            remoteUpdatedAt: remoteUpdatedAt,
+            firstTimeSyncExecuted: firstTimeSyncExecuted,
+            lastAccountsSyncAt: lastAccountsSyncAt,
+            lastLabelsSyncAt: lastLabelsSyncAt,
+            lastTasksSyncAt: lastTasksSyncAt,
+            lastCalendarsSyncAt: lastCalendarsSyncAt,
+            lastEventsSyncAt: lastEventsSyncAt);
     replace(_$result);
     return _$result;
   }

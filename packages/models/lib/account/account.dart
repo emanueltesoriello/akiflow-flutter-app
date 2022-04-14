@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:models/account/local_details.dart';
 import 'package:models/base.dart';
 import 'package:models/serializers.dart';
 
@@ -49,8 +48,23 @@ abstract class Account extends Object
   @BuiltValueField(wireName: 'remote_updated_at')
   DateTime? get remoteUpdatedAt;
 
-  @BuiltValueField(wireName: 'local_details')
-  LocalDetails? get localDetails;
+  @BuiltValueField(wireName: 'first_time_sync_executed')
+  bool? get firstTimeSyncExecuted;
+
+  @BuiltValueField(wireName: 'last_accounts_sync_at')
+  DateTime? get lastAccountsSyncAt;
+
+  @BuiltValueField(wireName: 'last_labels_sync_at')
+  DateTime? get lastLabelsSyncAt;
+
+  @BuiltValueField(wireName: 'last_tasks_sync_at')
+  DateTime? get lastTasksSyncAt;
+
+  @BuiltValueField(wireName: 'last_calendars_sync_at')
+  DateTime? get lastCalendarsSyncAt;
+
+  @BuiltValueField(wireName: 'last_events_sync_at')
+  DateTime? get lastEventsSyncAt;
 
   Account._();
 
@@ -96,12 +110,18 @@ abstract class Account extends Object
   static Account fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
+    // print("local_details raw: ${data["local_details"]}");
+
     if (data["local_details"] != null) {
       data["local_details"] =
           jsonDecode(data["local_details"] as String? ?? "");
     }
 
-    return serializers.deserializeWith(Account.serializer, data)!;
+    Account account = serializers.deserializeWith(Account.serializer, data)!;
+
+    // print("parsed: ${account.localDetails}");
+
+    return account;
   }
 
   @BuiltValueSerializer(serializeNulls: true)

@@ -20,6 +20,14 @@ import 'package:models/user.dart';
 
 part 'main_state.dart';
 
+enum Entity {
+  accounts,
+  calendars,
+  tasks,
+  labels,
+  events,
+}
+
 class MainCubit extends Cubit<MainCubitState> {
   final PreferencesRepository _preferencesRepository =
       locator<PreferencesRepository>();
@@ -40,100 +48,144 @@ class MainCubit extends Cubit<MainCubitState> {
 
   final TasksCubit _tasksCubit;
 
+  Account? localAkiflowAccount;
+
   MainCubit(this._tasksCubit) : super(const MainCubitState()) {
-    _init();
+    init();
   }
 
-  _init() {
+  init() async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      _syncTasks();
+      await refreshLocalAkiflowAccount();
+
+      if (localAkiflowAccount == null) {
+        _dialogService.showMessage("No accounts found");
+        return;
+      }
+
+      await _sync(Entity.accounts);
+      await _sync(Entity.calendars);
+
+      _syncData();
     }
   }
 
-  Future<void> refresh() async {
-    await _syncTasks();
-  }
+  Future<void> _syncData() async {
+    await _sync(Entity.tasks);
+    await _sync(Entity.labels);
+    await _sync(Entity.events);
 
-  Future<void> _syncTasks() async {
-    List<Account> accountsData = await _accountApi.get();
-
-    if (accountsData.isEmpty) {
-      _dialogService.showMessage("No accounts found");
-      return;
-    }
-
-    Account akiflowAccount =
-        accountsData.firstWhere((account) => account.connectorId == 'akiflow');
-
-    Account localAkiflowAccount;
-
-    try {
-      localAkiflowAccount = await _accountsRepository.byId(akiflowAccount.id!);
-    } catch (_) {
-      await _accountsRepository.add([akiflowAccount]);
-      localAkiflowAccount = await _accountsRepository.byId(akiflowAccount.id!);
-    }
-
-    SyncService accounts = SyncService(
-      api: _accountApi,
-      databaseRepository: _accountsRepository,
-      getLastUpdate: () => localAkiflowAccount.localDetails?.lastAccountsSyncAt,
-      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
-          localAkiflowAccount.id,
-          data: localAkiflowAccount
-              .rebuild((b) => b..localDetails.lastAccountsSyncAt = lastUpdate)),
-    );
-
-    SyncService tasks = SyncService(
-      api: _taskApi,
-      databaseRepository: _tasksRepository,
-      getLastUpdate: () => localAkiflowAccount.localDetails?.lastTasksSyncAt,
-      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
-          localAkiflowAccount.id,
-          data: localAkiflowAccount
-              .rebuild((b) => b..localDetails.lastTasksSyncAt = lastUpdate)),
-    );
-
-    SyncService calendars = SyncService(
-      api: _calendarApi,
-      databaseRepository: _calendarsRepository,
-      getLastUpdate: () =>
-          localAkiflowAccount.localDetails?.lastCalendarsSyncAt,
-      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
-          localAkiflowAccount.id,
-          data: localAkiflowAccount.rebuild(
-              (b) => b..localDetails.lastCalendarsSyncAt = lastUpdate)),
-    );
-
-    SyncService labels = SyncService(
-      api: _labelApi,
-      databaseRepository: _labelsRepository,
-      getLastUpdate: () => localAkiflowAccount.localDetails?.lastLabelsSyncAt,
-      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
-          localAkiflowAccount.id,
-          data: localAkiflowAccount
-              .rebuild((b) => b..localDetails.lastLabelsSyncAt = lastUpdate)),
-    );
-
-    SyncService events = SyncService(
-      api: _eventApi,
-      databaseRepository: _eventsRepository,
-      getLastUpdate: () => localAkiflowAccount.localDetails?.lastEventsSyncAt,
-      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
-          localAkiflowAccount.id,
-          data: localAkiflowAccount
-              .rebuild((b) => b..localDetails.lastEventsSyncAt = lastUpdate)),
-    );
-
-    await accounts.start();
-    await tasks.start();
-    await calendars.start();
-    await labels.start();
-    await events.start();
+    await _accountsRepository.updateById(localAkiflowAccount!.id!,
+        data: localAkiflowAccount);
 
     _tasksCubit.refresh();
+  }
+
+  Future<void> refreshLocalAkiflowAccount() async {
+    if (localAkiflowAccount == null) {
+      List<Account> accountsData = await _accountApi.get();
+
+      if (accountsData.isEmpty) {
+        return;
+      }
+
+      Account akiflowAccount = accountsData
+          .firstWhere((account) => account.connectorId == 'akiflow');
+
+      try {
+        localAkiflowAccount =
+            await _accountsRepository.byId(akiflowAccount.id!);
+      } catch (_) {
+        await _accountsRepository.add([akiflowAccount]);
+        localAkiflowAccount =
+            await _accountsRepository.byId(akiflowAccount.id!);
+      }
+    } else {
+      localAkiflowAccount =
+          await _accountsRepository.byId(localAkiflowAccount!.id!);
+    }
+  }
+
+  Future<void> _sync(Entity entity) async {
+    switch (entity) {
+      case Entity.accounts:
+        SyncService service = SyncService(
+          akiflowAccount: localAkiflowAccount!,
+          api: _accountApi,
+          databaseRepository: _accountsRepository,
+          lastSyncAt: localAkiflowAccount!.lastAccountsSyncAt,
+        );
+
+        await service.start();
+
+        if (service.lastSyncAtUpdated != null) {
+          localAkiflowAccount = localAkiflowAccount!.rebuild(
+              (b) => b..lastAccountsSyncAt = service.lastSyncAtUpdated);
+        }
+        break;
+      case Entity.calendars:
+        SyncService service = SyncService(
+          akiflowAccount: localAkiflowAccount!,
+          api: _calendarApi,
+          databaseRepository: _calendarsRepository,
+          lastSyncAt: localAkiflowAccount!.lastCalendarsSyncAt,
+        );
+
+        await service.start();
+
+        if (service.lastSyncAtUpdated != null) {
+          localAkiflowAccount = localAkiflowAccount!.rebuild(
+              (b) => b..lastCalendarsSyncAt = service.lastSyncAtUpdated);
+        }
+        break;
+      case Entity.tasks:
+        SyncService service = SyncService(
+          akiflowAccount: localAkiflowAccount!,
+          api: _taskApi,
+          databaseRepository: _tasksRepository,
+          lastSyncAt: localAkiflowAccount!.lastTasksSyncAt,
+        );
+
+        await service.start();
+
+        if (service.lastSyncAtUpdated != null) {
+          localAkiflowAccount = localAkiflowAccount!
+              .rebuild((b) => b..lastTasksSyncAt = service.lastSyncAtUpdated);
+        }
+        break;
+      case Entity.labels:
+        SyncService service = SyncService(
+          akiflowAccount: localAkiflowAccount!,
+          api: _labelApi,
+          databaseRepository: _labelsRepository,
+          lastSyncAt: localAkiflowAccount!.lastLabelsSyncAt,
+        );
+
+        await service.start();
+
+        if (service.lastSyncAtUpdated != null) {
+          localAkiflowAccount = localAkiflowAccount!
+              .rebuild((b) => b..lastLabelsSyncAt = service.lastSyncAtUpdated);
+        }
+        break;
+      case Entity.events:
+        SyncService service = SyncService(
+          akiflowAccount: localAkiflowAccount!,
+          api: _eventApi,
+          databaseRepository: _eventsRepository,
+          lastSyncAt: localAkiflowAccount!.lastEventsSyncAt,
+        );
+
+        await service.start();
+
+        if (service.lastSyncAtUpdated != null) {
+          localAkiflowAccount = localAkiflowAccount!
+              .rebuild((b) => b..lastEventsSyncAt = service.lastSyncAtUpdated);
+        }
+        break;
+    }
   }
 
   void bottomBarViewClick(int index) {
@@ -151,6 +203,8 @@ class MainCubit extends Cubit<MainCubitState> {
   }
 
   addTask() async {
-    _syncTasks();
+    await _sync(Entity.tasks);
+
+    _tasksCubit.refresh();
   }
 }

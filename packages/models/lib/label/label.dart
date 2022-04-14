@@ -103,6 +103,10 @@ abstract class Label extends Object
       if (key == "done" && data[key] != null) {
         data[key] = (data[key] == 1);
       }
+
+      if ((key == "sorting" || key == "sorting_label") && data[key] != null) {
+        data[key] = (int.parse(data[key] as String));
+      }
     }
 
     return serializers.deserializeWith(Label.serializer, data)!;

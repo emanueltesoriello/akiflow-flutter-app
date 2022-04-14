@@ -37,10 +37,21 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   }
 
   @override
-  Future<void> updateById<T>(String? id, {required T data}) {
-    return _databaseService.database!.update(
+  Future<void> updateById<T>(String? id, {required T data}) async {
+    await _databaseService.database!.update(
       tableName,
       (data as Base).toSql(),
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  @override
+  Future<void> setFieldByName<T>(String? id,
+      {required String field, required T value}) async {
+    await _databaseService.database!.update(
+      tableName,
+      {field: value},
       where: 'id = ?',
       whereArgs: [id],
     );

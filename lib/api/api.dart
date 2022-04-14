@@ -33,8 +33,6 @@ class Api implements IBaseApi {
 
     Uri urlWithQueryParameters = url.replace(queryParameters: params);
 
-    print(urlWithQueryParameters);
-
     Response responseRaw = await _httpClient.get(urlWithQueryParameters);
 
     Map<String, dynamic> response = jsonDecode(responseRaw.body);

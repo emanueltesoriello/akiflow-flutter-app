@@ -41,7 +41,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
       }
 
       emit(AuthCubitState(user: user));
-      _mainCubit.refresh();
     }
   }
 
@@ -66,7 +65,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _preferencesRepository.saveUser(user);
 
-      _mainCubit.refresh();
+      _mainCubit.init();
 
       emit(state.copyWith(user: Nullable(user)));
     } else {
