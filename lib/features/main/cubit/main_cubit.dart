@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/calendar_api.dart';
+import 'package:mobile/api/label_api.dart';
 import 'package:mobile/api/task_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -9,6 +10,7 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/calendars_repository.dart';
+import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
@@ -19,13 +21,17 @@ part 'main_state.dart';
 class MainCubit extends Cubit<MainCubitState> {
   final PreferencesRepository _preferencesRepository =
       locator<PreferencesRepository>();
+
   final AccountApi _accountApi = locator<AccountApi>();
   final TaskApi _taskApi = locator<TaskApi>();
   final CalendarApi _calendarApi = locator<CalendarApi>();
+  final LabelApi _labelApi = locator<LabelApi>();
+
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final CalendarsRepository _calendarsRepository =
       locator<CalendarsRepository>();
+  final LabelsRepository _labelsRepository = locator<LabelsRepository>();
 
   final AuthCubit _authCubit;
   final TasksCubit _tasksCubit;
@@ -85,9 +91,20 @@ class MainCubit extends Cubit<MainCubitState> {
               (b) => b..localDetails.lastCalendarsSyncAt = lastUpdate)),
     );
 
+    SyncService labels = SyncService(
+      api: _labelApi,
+      databaseRepository: _labelsRepository,
+      getLastUpdate: () => localAkiflowAccount.localDetails?.lastLabelsSyncAt,
+      setLastUpdate: (lastUpdate) async => _accountsRepository.updateById(
+          localAkiflowAccount.id,
+          data: localAkiflowAccount
+              .rebuild((b) => b..localDetails.lastLabelsSyncAt = lastUpdate)),
+    );
+
     await accounts.start();
     await tasks.start();
     await calendars.start();
+    await labels.start();
 
     _tasksCubit.refresh();
   }
