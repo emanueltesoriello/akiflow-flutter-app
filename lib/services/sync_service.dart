@@ -55,6 +55,8 @@ class SyncService {
       }
     }
 
+    print('${api.runtimeType}: remote to local item: ${remoteItems.length}');
+
     await _upsertItems(remoteItems);
 
     if (maxRemoteUpdatedAt != null) {
@@ -96,6 +98,8 @@ class SyncService {
       });
 
       unsynced[i] = item;
+
+      print('${api.runtimeType}: local to remote item: ${item.id}');
     }
 
     try {
@@ -140,7 +144,7 @@ class SyncService {
 
           remoteItems[i] = remoteItem;
 
-          print('${api.runtimeType}: save item to db: $remoteItem');
+          print('${api.runtimeType}: save item to db ${remoteItem.id}');
 
           await _updateLocalTask(id: remoteItem.id!, remoteItem: remoteItem);
         } else {

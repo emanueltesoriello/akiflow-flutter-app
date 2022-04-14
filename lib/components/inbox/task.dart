@@ -53,17 +53,11 @@ class TaskRow extends StatelessWidget {
                   ),
                 ),
                 Builder(builder: (context) {
-                  if (task.description == null || task.description!.isEmpty) {
-                    return const SizedBox();
-                  }
-
-                  return const SizedBox();
-
                   return Column(
                     children: [
                       const SizedBox(height: 5),
                       HtmlWidget(
-                        task.description!,
+                        task.id!,
                         textStyle: const TextStyle(fontSize: 15),
                       ),
                     ],

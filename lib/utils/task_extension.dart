@@ -40,7 +40,7 @@ extension TaskStatusTypeExt on TaskStatusType {
 
 extension TaskExt on Task {
   bool get isToday {
-    return (date?.isBefore(DateTime.now()) ?? false) && (done ?? false);
+    return (date?.isBefore(DateTime.now().toUtc()) ?? false) && (done ?? false);
   }
 
   TaskStatusType? get statusType {

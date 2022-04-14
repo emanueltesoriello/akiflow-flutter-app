@@ -5,6 +5,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:models/task/task.dart';
 import 'package:models/user.dart';
+import 'package:uuid/uuid.dart';
 
 part 'tasks_state.dart';
 
@@ -37,9 +38,21 @@ class TasksCubit extends Cubit<TasksCubitState> {
     // TESTING
     task = task.rebuild(
       (b) => b
-        ..title = "Sync 10 OK"
-        ..updatedAt = DateTime.now(),
+        ..title = const Uuid().v4()
+        ..updatedAt = DateTime.now().toUtc(),
     );
+
+    List<Task> all = state.tasks.toList();
+
+    all = all.map((t) {
+      if (t.id == task.id) {
+        return task;
+      }
+
+      return t;
+    }).toList();
+
+    emit(state.copyWith(tasks: all));
 
     _tasksRepository.updateById(task.id, data: task);
   }

@@ -24,6 +24,8 @@ class _View extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Task> tasks = context.watch<TasksCubit>().state.tasks.toList();
 
+    tasks.removeWhere((task) => task.deletedAt != null);
+
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: tasks.length + 1,
