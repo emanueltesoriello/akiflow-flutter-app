@@ -1,13 +1,11 @@
 import 'package:mobile/repository/database_repository.dart';
-import 'package:sqflite/sqflite.dart';
 
 class TasksRepository extends DatabaseRepository {
   static const table = 'tasks';
 
-  TasksRepository(
-    Database database, {
+  TasksRepository({
     required Function(Map<String, dynamic>) fromSql,
-  }) : super(database, tableName: table, fromSql: fromSql);
+  }) : super(tableName: table, fromSql: fromSql);
 
   @override
   Future<List<Task>> get<Task>() async {

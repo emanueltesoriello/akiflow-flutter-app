@@ -7,7 +7,9 @@ import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/utils/nullable.dart';
 import 'package:models/user.dart';
@@ -19,15 +21,19 @@ class AuthCubit extends Cubit<AuthCubitState> {
       locator<PreferencesRepository>();
   final DialogService _dialogService = locator<DialogService>();
   final AuthApi _authApi = locator<AuthApi>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
 
   final TasksCubit _tasksCubit;
+  final MainCubit _mainCubit;
 
-  AuthCubit(this._tasksCubit) : super(const AuthCubitState()) {
+  AuthCubit(this._tasksCubit, this._mainCubit) : super(const AuthCubitState()) {
     _init();
   }
 
   _init() async {
     User? user = _preferencesRepository.user;
+
+    print("logged in: ${user != null}");
 
     if (user != null) {
       if (Config.development) {
@@ -35,7 +41,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
       }
 
       emit(AuthCubitState(user: user));
-      _tasksCubit.refresh();
+      _mainCubit.refresh();
     }
   }
 
@@ -60,7 +66,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _preferencesRepository.saveUser(user);
 
-      _tasksCubit.refresh();
+      _mainCubit.refresh();
 
       emit(state.copyWith(user: Nullable(user)));
     } else {
@@ -70,6 +76,9 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
   void logout() {
     _preferencesRepository.clear();
+
+    _databaseService.delete();
+
     emit(state.copyWith(user: Nullable(null)));
 
     _tasksCubit.logoutEvent();

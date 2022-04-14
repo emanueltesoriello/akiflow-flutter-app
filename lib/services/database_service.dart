@@ -2,32 +2,44 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqflite.dart' as sql;
 
-class DatabaseUtils {
+class DatabaseService {
   static const _databaseName = 'local.db';
 
-  DatabaseUtils();
+  sql.Database? database;
 
-  static Future<Database> open() async {
-    var databsePath = await getDatabasesPath();
+  DatabaseService();
+
+  Future<sql.Database> open() async {
+    var databsePath = await sql.getDatabasesPath();
     var path = join(databsePath, _databaseName);
 
     await Directory(dirname(path)).create(recursive: true);
 
-    Database database = await openDatabase(_databaseName);
+    database = await sql.openDatabase(_databaseName);
 
     print("database opened at $path, starting setup");
 
-    await _setup(database);
+    await _setup();
 
     print("database setup completed");
 
-    return database;
+    return database!;
   }
 
-  static Future<void> _setup(Database database) async {
-    database.transaction((txn) async {
+  Future<void> delete() async {
+    if (database == null) {
+      return;
+    }
+
+    await sql.deleteDatabase(database!.path);
+
+    await open();
+  }
+
+  Future<void> _setup() async {
+    database!.transaction((txn) async {
       await _setupAccounts(txn);
       await _setupCalendars(txn);
       await _setupContacts(txn);
@@ -40,7 +52,7 @@ class DatabaseUtils {
     });
   }
 
-  static Future<void> _setupAccounts(txn) async {
+  Future<void> _setupAccounts(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS accounts(
   `account_id` VARCHAR(100) PRIMARY KEY,
@@ -71,7 +83,7 @@ CREATE TABLE IF NOT EXISTS accounts(
     ''');
   }
 
-  static Future<void> _setupCalendars(txn) async {
+  Future<void> _setupCalendars(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS calendars(
   `id` UUID PRIMARY KEY,
@@ -104,7 +116,7 @@ CREATE TABLE IF NOT EXISTS calendars(
     ''');
   }
 
-  static Future<void> _setupContacts(txn) async {
+  Future<void> _setupContacts(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS contacts(
   `id` UUID PRIMARY KEY,
@@ -133,7 +145,7 @@ CREATE TABLE IF NOT EXISTS contacts(
     ''');
   }
 
-  static Future<void> _setupDocs(txn) async {
+  Future<void> _setupDocs(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS docs(
   `id` UUID PRIMARY KEY,
@@ -185,7 +197,7 @@ CREATE TABLE IF NOT EXISTS docs(
         .execute('CREATE INDEX IF NOT EXISTS docs_usages ON docs(`usages`)');
   }
 
-  static Future<void> _setupEventModifiers(txn) async {
+  Future<void> _setupEventModifiers(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS event_modifiers(
   `id` UUID PRIMARY KEY,
@@ -206,17 +218,19 @@ CREATE TABLE IF NOT EXISTS event_modifiers(
     ''');
   }
 
-  static Future<void> _setupEvents(txn) async {
+  Future<void> _setupEvents(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS events(
   `id` UUID PRIMARY KEY,
-  `origin_id` VARCHAR(255),
   `customorigin_id` VARCHAR(255),
   `connector_id` VARCHAR(50),
-  `accountId` VARCHAR(100),
+  `account_id` VARCHAR(100),
   `akiflow_account_id` UUID,
+  `origin_id` VARCHAR(255),
   `origin_account_id` VARCHAR(50),
+  `origin_calendar_id` TEXT,
   `recurring_id` UUID,
+  `custom_origin_id` UUID,
   `origin_recurring_id` VARCHAR(255),
   `calendar_id` VARCHAR(255),
   `origincalendar_id` VARCHAR(255),
@@ -273,7 +287,7 @@ CREATE TABLE IF NOT EXISTS events(
         'CREATE INDEX IF NOT EXISTS events_task_id ON events(`task_id`)');
   }
 
-  static Future<void> _setupList(txn) async {
+  Future<void> _setupList(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS lists(
   `id` UUID PRIMARY KEY,
@@ -293,13 +307,13 @@ CREATE TABLE IF NOT EXISTS lists(
     ''');
   }
 
-  static Future<void> _setupMigrations(txn) async {
+  Future<void> _setupMigrations(txn) async {
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS migrations(`name` VARCHAR(255) PRIMARY KEY ,`created_at` DATETIME )
     ''');
   }
 
-  static Future<void> _setupTasks(txn) async {
+  Future<void> _setupTasks(txn) async {
     await txn.execute('''
 CREATE TABLE IF NOT EXISTS tasks(
   `id` UUID PRIMARY KEY,
@@ -309,6 +323,7 @@ CREATE TABLE IF NOT EXISTS tasks(
   `recurring_id` UUID,
   `recurrence` TEXT,
   `description` TEXT,
+  `origin_id` TEXT,
   `search_text` VARCHAR(255),
   `links` TEXT,
   `status` TINYINT,

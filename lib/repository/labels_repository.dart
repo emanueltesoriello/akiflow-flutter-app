@@ -1,13 +1,11 @@
 import 'package:mobile/repository/database_repository.dart';
-import 'package:sqflite/sqflite.dart';
 
 class LabelsRepository extends DatabaseRepository {
   static const table = 'lists';
 
-  LabelsRepository(
-    Database database, {
+  LabelsRepository({
     required Function(Map<String, dynamic>) fromSql,
-  }) : super(database, tableName: table, fromSql: fromSql);
+  }) : super(tableName: table, fromSql: fromSql);
 
   @override
   Future<List<Task>> get<Task>() async {

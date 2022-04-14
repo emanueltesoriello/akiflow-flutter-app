@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,19 +16,21 @@ import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/services/database_service.dart';
+import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
-import 'package:mobile/utils/database_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Future<void> mainCom() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
 
-  Database database = await DatabaseUtils.open();
+  DatabaseService databaseService = DatabaseService();
 
-  setupLocator(preferences: preferences, database: database);
+  await databaseService.open();
+
+  setupLocator(preferences: preferences, databaseService: databaseService);
 
   bool userLogged = locator<PreferencesRepository>().user != null;
 
@@ -58,22 +61,22 @@ class Application extends StatelessWidget {
         BlocProvider<TasksCubit>(
           create: (BuildContext context) => TasksCubit(),
         ),
+        BlocProvider<MainCubit>(
+          lazy: false,
+          create: (BuildContext context) => MainCubit(
+            context.read<TasksCubit>(),
+          ),
+        ),
         BlocProvider<AuthCubit>(
           lazy: false,
           create: (BuildContext context) => AuthCubit(
             context.read<TasksCubit>(),
+            context.read<MainCubit>(),
           ),
         ),
         BlocProvider<SettingsCubit>(
           lazy: false,
           create: (BuildContext context) => SettingsCubit(),
-        ),
-        BlocProvider<MainCubit>(
-          lazy: false,
-          create: (BuildContext context) => MainCubit(
-            context.read<TasksCubit>(),
-            context.read<AuthCubit>(),
-          ),
         ),
       ],
       child: MaterialApp(
@@ -106,36 +109,40 @@ class Application extends StatelessWidget {
                   },
                 );
 
-                showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    title: Text(state.action.title),
-                    content: state.action.content != null
-                        ? Text(state.action.content!)
-                        : null,
-                    actions: <Widget>[
-                      state.action.dismiss != null
-                          ? TextButton(
-                              child:
-                                  Text(state.action.dismissTitle ?? t.dismiss),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                state.action.dismiss!();
-                              },
-                            )
-                          : Container(),
-                      TextButton(
-                        child: Text(state.action.confirmTitle ?? t.ok),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          if (state.action.confirm != null) {
-                            state.action.confirm!();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                );
+                SchedulerBinding.instance!.addPostFrameCallback((_) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text(state.action.title,
+                          style: TextStyle(color: ColorsExt.grey1(context))),
+                      content: state.action.content != null
+                          ? Text(state.action.content!,
+                              style: TextStyle(color: ColorsExt.grey1(context)))
+                          : null,
+                      actions: <Widget>[
+                        state.action.dismiss != null
+                            ? TextButton(
+                                child: Text(
+                                    state.action.dismissTitle ?? t.dismiss),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  state.action.dismiss!();
+                                },
+                              )
+                            : Container(),
+                        TextButton(
+                          child: Text(state.action.confirmTitle ?? t.ok),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            if (state.action.confirm != null) {
+                              state.action.confirm!();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                });
               }
             },
             child: userLogged ? MainPage() : const AuthPage(),

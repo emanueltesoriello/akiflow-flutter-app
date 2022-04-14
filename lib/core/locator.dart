@@ -2,28 +2,31 @@ import 'package:get_it/get_it.dart';
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/api/calendar_api.dart';
+import 'package:mobile/api/event_api.dart';
 import 'package:mobile/api/label_api.dart';
 import 'package:mobile/api/task_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/calendars_repository.dart';
+import 'package:mobile/repository/events_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/calendar/calendar.dart';
+import 'package:models/event/event.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 GetIt locator = GetIt.instance;
 
 void setupLocator({
   required SharedPreferences preferences,
-  required Database database,
+  required DatabaseService databaseService,
 }) {
   PreferencesRepository preferencesRepository =
       PreferencesRepositoryImpl(preferences);
@@ -32,7 +35,8 @@ void setupLocator({
   locator.registerSingleton<HttpClient>(HttpClient(preferencesRepository));
 
   /// Utils
-  locator.registerLazySingleton(() => DialogService());
+  locator.registerSingleton<DialogService>(DialogService());
+  locator.registerSingleton<DatabaseService>(databaseService);
 
   /// Apis
   locator.registerSingleton<AuthApi>(AuthApi());
@@ -40,17 +44,20 @@ void setupLocator({
   locator.registerSingleton<TaskApi>(TaskApi());
   locator.registerSingleton<CalendarApi>(CalendarApi());
   locator.registerSingleton<LabelApi>(LabelApi());
+  locator.registerSingleton<EventApi>(EventApi());
 
   /// Repositories
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);
   locator.registerSingleton<TasksRepository>(
-      TasksRepository(database, fromSql: Task.fromSql));
+      TasksRepository(fromSql: Task.fromSql));
   locator.registerSingleton<AccountsRepository>(
-      AccountsRepository(database, fromSql: Account.fromSql));
+      AccountsRepository(fromSql: Account.fromSql));
   locator.registerSingleton<CalendarsRepository>(
-      CalendarsRepository(database, fromSql: Calendar.fromSql));
+      CalendarsRepository(fromSql: Calendar.fromSql));
   locator.registerSingleton<LabelsRepository>(
-      LabelsRepository(database, fromSql: Label.fromSql));
+      LabelsRepository(fromSql: Label.fromSql));
+  locator.registerSingleton<EventsRepository>(
+      EventsRepository(fromSql: Event.fromSql));
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());

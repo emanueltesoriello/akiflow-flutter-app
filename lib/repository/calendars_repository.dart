@@ -1,13 +1,11 @@
 import 'package:mobile/repository/database_repository.dart';
-import 'package:sqflite/sqflite.dart';
 
 class CalendarsRepository extends DatabaseRepository {
   static const table = 'calendars';
 
-  CalendarsRepository(
-    Database database, {
+  CalendarsRepository({
     required Function(Map<String, dynamic>) fromSql,
-  }) : super(database, tableName: table, fromSql: fromSql);
+  }) : super(tableName: table, fromSql: fromSql);
 
   @override
   Future<List<Calendar>> get<Calendar>() async {
