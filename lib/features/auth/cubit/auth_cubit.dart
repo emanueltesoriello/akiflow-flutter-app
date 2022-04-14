@@ -68,7 +68,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
     }
   }
 
-  void logoutClick() {
+  void logout() {
     _preferencesRepository.clear();
     emit(state.copyWith(user: Nullable(null)));
 

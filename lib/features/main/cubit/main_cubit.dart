@@ -4,17 +4,21 @@ import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/calendar_api.dart';
 import 'package:mobile/api/task_api.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/calendars_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
+import 'package:models/user.dart';
 
 part 'main_state.dart';
 
 class MainCubit extends Cubit<MainCubitState> {
-  final TasksCubit _tasksCubit;
+  final PreferencesRepository _preferencesRepository =
+      locator<PreferencesRepository>();
   final AccountApi _accountApi = locator<AccountApi>();
   final TaskApi _taskApi = locator<TaskApi>();
   final CalendarApi _calendarApi = locator<CalendarApi>();
@@ -23,12 +27,21 @@ class MainCubit extends Cubit<MainCubitState> {
   final CalendarsRepository _calendarsRepository =
       locator<CalendarsRepository>();
 
-  MainCubit(this._tasksCubit) : super(const MainCubitState()) {
+  final AuthCubit _authCubit;
+  final TasksCubit _tasksCubit;
+
+  MainCubit(this._tasksCubit, this._authCubit) : super(const MainCubitState()) {
     _init();
   }
 
   _init() {
-    _syncTasks();
+    User? user = _preferencesRepository.user;
+
+    if (user != null) {
+      _syncTasks();
+    } else {
+      _authCubit.logout();
+    }
   }
 
   Future<void> _syncTasks() async {

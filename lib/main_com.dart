@@ -72,6 +72,7 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => MainCubit(
             context.read<TasksCubit>(),
+            context.read<AuthCubit>(),
           ),
         ),
       ],

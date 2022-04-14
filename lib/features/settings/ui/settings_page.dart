@@ -142,7 +142,7 @@ class SettingsPage extends StatelessWidget {
                     title: t.settings.logout,
                     position: ButtonListPosition.single,
                     onPressed: () {
-                      context.read<AuthCubit>().logoutClick();
+                      context.read<AuthCubit>().logout();
 
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
