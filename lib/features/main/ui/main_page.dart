@@ -24,7 +24,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<MainCubit>().addTask(),
+        onPressed: () => context.read<MainCubit>().syncClick(),
         child: const Icon(SFSymbols.arrow_2_circlepath),
       ),
       bottomNavigationBar: BottomNavigationBar(
