@@ -207,4 +207,8 @@ class MainCubit extends Cubit<MainCubitState> {
 
     _tasksCubit.refresh();
   }
+
+  void logout() {
+    localAkiflowAccount = null;
+  }
 }

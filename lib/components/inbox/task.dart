@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:models/task/task.dart';
@@ -56,9 +56,10 @@ class TaskRow extends StatelessWidget {
                   return Column(
                     children: [
                       const SizedBox(height: 5),
-                      HtmlWidget(
-                        task.id!,
-                        textStyle: const TextStyle(fontSize: 15),
+                      Text(
+                        DateFormat("dd MMM 'at' HH:mm")
+                            .format(task.createdAt!.toLocal()),
+                        style: const TextStyle(fontSize: 15),
                       ),
                     ],
                   );

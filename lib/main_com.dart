@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -109,40 +108,38 @@ class Application extends StatelessWidget {
                   },
                 );
 
-                SchedulerBinding.instance!.addPostFrameCallback((_) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: Text(state.action.title,
-                          style: TextStyle(color: ColorsExt.grey1(context))),
-                      content: state.action.content != null
-                          ? Text(state.action.content!,
-                              style: TextStyle(color: ColorsExt.grey1(context)))
-                          : null,
-                      actions: <Widget>[
-                        state.action.dismiss != null
-                            ? TextButton(
-                                child: Text(
-                                    state.action.dismissTitle ?? t.dismiss),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  state.action.dismiss!();
-                                },
-                              )
-                            : Container(),
-                        TextButton(
-                          child: Text(state.action.confirmTitle ?? t.ok),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            if (state.action.confirm != null) {
-                              state.action.confirm!();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                });
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text(state.action.title,
+                        style: TextStyle(color: ColorsExt.grey1(context))),
+                    content: state.action.content != null
+                        ? Text(state.action.content!,
+                            style: TextStyle(color: ColorsExt.grey1(context)))
+                        : null,
+                    actions: <Widget>[
+                      state.action.dismiss != null
+                          ? TextButton(
+                              child:
+                                  Text(state.action.dismissTitle ?? t.dismiss),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                state.action.dismiss!();
+                              },
+                            )
+                          : Container(),
+                      TextButton(
+                        child: Text(state.action.confirmTitle ?? t.ok),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          if (state.action.confirm != null) {
+                            state.action.confirm!();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                );
               }
             },
             child: userLogged ? MainPage() : const AuthPage(),

@@ -26,7 +26,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  void logoutEvent() {
+  void logout() {
     emit(state.copyWith(tasks: []));
   }
 
