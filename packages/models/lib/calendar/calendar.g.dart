@@ -67,6 +67,18 @@ class _$CalendarSerializer implements StructuredSerializer<Calendar> {
       ..add('description')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.akiflowAccountId;
+
+    result
+      ..add('akiflow_account_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.originAccountId;
+
+    result
+      ..add('origin_account_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.primary;
 
     result
@@ -275,6 +287,10 @@ class _$Calendar extends Calendar {
   @override
   final String? description;
   @override
+  final String? akiflowAccountId;
+  @override
+  final String? originAccountId;
+  @override
   final Content? content;
   @override
   final bool? primary;
@@ -319,6 +335,8 @@ class _$Calendar extends Calendar {
       this.etag,
       this.title,
       this.description,
+      this.akiflowAccountId,
+      this.originAccountId,
       this.content,
       this.primary,
       this.akiflowPrimary,
@@ -356,6 +374,8 @@ class _$Calendar extends Calendar {
         etag == other.etag &&
         title == other.title &&
         description == other.description &&
+        akiflowAccountId == other.akiflowAccountId &&
+        originAccountId == other.originAccountId &&
         content == other.content &&
         primary == other.primary &&
         akiflowPrimary == other.akiflowPrimary &&
@@ -394,10 +414,10 @@ class _$Calendar extends Calendar {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc(0, id.hashCode), originId.hashCode), connectorId.hashCode), akiflowCalendarId.hashCode), originCalendarId.hashCode),
-                                                                                etag.hashCode),
-                                                                            title.hashCode),
-                                                                        description.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), originId.hashCode), connectorId.hashCode), akiflowCalendarId.hashCode), originCalendarId.hashCode), etag.hashCode), title.hashCode),
+                                                                                description.hashCode),
+                                                                            akiflowAccountId.hashCode),
+                                                                        originAccountId.hashCode),
                                                                     content.hashCode),
                                                                 primary.hashCode),
                                                             akiflowPrimary.hashCode),
@@ -427,6 +447,8 @@ class _$Calendar extends Calendar {
           ..add('etag', etag)
           ..add('title', title)
           ..add('description', description)
+          ..add('akiflowAccountId', akiflowAccountId)
+          ..add('originAccountId', originAccountId)
           ..add('content', content)
           ..add('primary', primary)
           ..add('akiflowPrimary', akiflowPrimary)
@@ -483,6 +505,16 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
   String? _description;
   String? get description => _$this._description;
   set description(String? description) => _$this._description = description;
+
+  String? _akiflowAccountId;
+  String? get akiflowAccountId => _$this._akiflowAccountId;
+  set akiflowAccountId(String? akiflowAccountId) =>
+      _$this._akiflowAccountId = akiflowAccountId;
+
+  String? _originAccountId;
+  String? get originAccountId => _$this._originAccountId;
+  set originAccountId(String? originAccountId) =>
+      _$this._originAccountId = originAccountId;
 
   ContentBuilder? _content;
   ContentBuilder get content => _$this._content ??= new ContentBuilder();
@@ -566,6 +598,8 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
       _etag = $v.etag;
       _title = $v.title;
       _description = $v.description;
+      _akiflowAccountId = $v.akiflowAccountId;
+      _originAccountId = $v.originAccountId;
       _content = $v.content?.toBuilder();
       _primary = $v.primary;
       _akiflowPrimary = $v.akiflowPrimary;
@@ -612,6 +646,8 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
               etag: etag,
               title: title,
               description: description,
+              akiflowAccountId: akiflowAccountId,
+              originAccountId: originAccountId,
               content: _content?.build(),
               primary: primary,
               akiflowPrimary: akiflowPrimary,

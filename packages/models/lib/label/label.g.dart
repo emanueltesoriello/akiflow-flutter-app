@@ -79,7 +79,8 @@ class _$LabelSerializer implements StructuredSerializer<Label> {
     if (value != null) {
       result
         ..add('sorting')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
     }
     value = object.parentId;
     if (value != null) {
@@ -171,7 +172,7 @@ class _$LabelSerializer implements StructuredSerializer<Label> {
           break;
         case 'sorting':
           result.sorting = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'parent_id':
           result.parentId = serializers.deserialize(value,
@@ -222,7 +223,7 @@ class _$Label extends Label {
   @override
   final DateTime? remoteUpdatedAt;
   @override
-  final int? sorting;
+  final DateTime? sorting;
   @override
   final String? parentId;
   @override
@@ -375,9 +376,9 @@ class LabelBuilder implements Builder<Label, LabelBuilder> {
   set remoteUpdatedAt(DateTime? remoteUpdatedAt) =>
       _$this._remoteUpdatedAt = remoteUpdatedAt;
 
-  int? _sorting;
-  int? get sorting => _$this._sorting;
-  set sorting(int? sorting) => _$this._sorting = sorting;
+  DateTime? _sorting;
+  DateTime? get sorting => _$this._sorting;
+  set sorting(DateTime? sorting) => _$this._sorting = sorting;
 
   String? _parentId;
   String? get parentId => _$this._parentId;

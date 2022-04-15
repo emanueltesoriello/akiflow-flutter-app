@@ -33,7 +33,7 @@ abstract class Label extends Object
   DateTime? get remoteUpdatedAt;
 
   @BuiltValueField(wireName: 'sorting')
-  int? get sorting;
+  DateTime? get sorting;
 
   @BuiltValueField(wireName: 'parent_id')
   String? get parentId;
@@ -81,19 +81,20 @@ abstract class Label extends Object
 
   @override
   Map<String, Object?> toSql() {
-    Map<String?, dynamic> data = serializers.serializeWith(
-        Label.serializer, this) as Map<String?, dynamic>;
-
-    data.remove("global_created_at");
-    data.remove("global_updated_at");
-
-    for (var key in data.keys) {
-      if (data[key] is bool) {
-        data[key] = data[key] ? 1 : 0;
-      }
-    }
-
-    return Map<String, Object?>.from(data);
+    return {
+      "id": id,
+      "title": title,
+      "icon": icon,
+      "color": color,
+      "sorting": sorting ?? DateTime.now().toUtc(),
+      "parent_id": parentId,
+      "type": type,
+      "system": system,
+      "updated_at": updatedAt?.toIso8601String(),
+      "created_at": createdAt?.toIso8601String(),
+      "deleted_at": deletedAt?.toIso8601String(),
+      "remote_updated_at": remoteUpdatedAt?.toIso8601String()
+    };
   }
 
   static Label fromSql(Map<String?, dynamic> json) {

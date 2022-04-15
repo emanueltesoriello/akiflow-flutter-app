@@ -67,6 +67,30 @@ class _$AccountSerializer implements StructuredSerializer<Account> {
       ..add('identifier')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.details;
+
+    result
+      ..add('details')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(JsonObject)));
+    value = object.autologinToken;
+
+    result
+      ..add('autologin_token')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.status;
+
+    result
+      ..add('status')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.syncStatus;
+
+    result
+      ..add('sync_status')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.createdAt;
 
     result
@@ -185,6 +209,22 @@ class _$AccountSerializer implements StructuredSerializer<Account> {
           result.identifier = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'details':
+          result.details = serializers.deserialize(value,
+              specifiedType: const FullType(JsonObject)) as JsonObject?;
+          break;
+        case 'autologin_token':
+          result.autologinToken = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
+        case 'status':
+          result.status = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
+        case 'sync_status':
+          result.syncStatus = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
         case 'created_at':
           result.createdAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
@@ -258,6 +298,14 @@ class _$Account extends Account {
   @override
   final String? identifier;
   @override
+  final JsonObject? details;
+  @override
+  final String? autologinToken;
+  @override
+  final String? status;
+  @override
+  final String? syncStatus;
+  @override
   final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
@@ -294,6 +342,10 @@ class _$Account extends Account {
       this.fullName,
       this.picture,
       this.identifier,
+      this.details,
+      this.autologinToken,
+      this.status,
+      this.syncStatus,
       this.createdAt,
       this.updatedAt,
       this.deletedAt,
@@ -327,6 +379,10 @@ class _$Account extends Account {
         fullName == other.fullName &&
         picture == other.picture &&
         identifier == other.identifier &&
+        details == other.details &&
+        autologinToken == other.autologinToken &&
+        status == other.status &&
+        syncStatus == other.syncStatus &&
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt &&
         deletedAt == other.deletedAt &&
@@ -361,14 +417,14 @@ class _$Account extends Account {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc(0, id.hashCode),
-                                                                                connectorId.hashCode),
-                                                                            accountId.hashCode),
-                                                                        originAccountId.hashCode),
-                                                                    shortName.hashCode),
-                                                                fullName.hashCode),
-                                                            picture.hashCode),
-                                                        identifier.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc(0, id.hashCode), connectorId.hashCode), accountId.hashCode), originAccountId.hashCode), shortName.hashCode),
+                                                                                fullName.hashCode),
+                                                                            picture.hashCode),
+                                                                        identifier.hashCode),
+                                                                    details.hashCode),
+                                                                autologinToken.hashCode),
+                                                            status.hashCode),
+                                                        syncStatus.hashCode),
                                                     createdAt.hashCode),
                                                 updatedAt.hashCode),
                                             deletedAt.hashCode),
@@ -394,6 +450,10 @@ class _$Account extends Account {
           ..add('fullName', fullName)
           ..add('picture', picture)
           ..add('identifier', identifier)
+          ..add('details', details)
+          ..add('autologinToken', autologinToken)
+          ..add('status', status)
+          ..add('syncStatus', syncStatus)
           ..add('createdAt', createdAt)
           ..add('updatedAt', updatedAt)
           ..add('deletedAt', deletedAt)
@@ -445,6 +505,23 @@ class AccountBuilder implements Builder<Account, AccountBuilder> {
   String? _identifier;
   String? get identifier => _$this._identifier;
   set identifier(String? identifier) => _$this._identifier = identifier;
+
+  JsonObject? _details;
+  JsonObject? get details => _$this._details;
+  set details(JsonObject? details) => _$this._details = details;
+
+  String? _autologinToken;
+  String? get autologinToken => _$this._autologinToken;
+  set autologinToken(String? autologinToken) =>
+      _$this._autologinToken = autologinToken;
+
+  String? _status;
+  String? get status => _$this._status;
+  set status(String? status) => _$this._status = status;
+
+  String? _syncStatus;
+  String? get syncStatus => _$this._syncStatus;
+  set syncStatus(String? syncStatus) => _$this._syncStatus = syncStatus;
 
   DateTime? _createdAt;
   DateTime? get createdAt => _$this._createdAt;
@@ -516,6 +593,10 @@ class AccountBuilder implements Builder<Account, AccountBuilder> {
       _fullName = $v.fullName;
       _picture = $v.picture;
       _identifier = $v.identifier;
+      _details = $v.details;
+      _autologinToken = $v.autologinToken;
+      _status = $v.status;
+      _syncStatus = $v.syncStatus;
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
       _deletedAt = $v.deletedAt;
@@ -556,6 +637,10 @@ class AccountBuilder implements Builder<Account, AccountBuilder> {
             fullName: fullName,
             picture: picture,
             identifier: identifier,
+            details: details,
+            autologinToken: autologinToken,
+            status: status,
+            syncStatus: syncStatus,
             createdAt: createdAt,
             updatedAt: updatedAt,
             deletedAt: deletedAt,

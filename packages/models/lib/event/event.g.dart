@@ -257,6 +257,63 @@ class _$EventSerializer implements StructuredSerializer<Event> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
+    value = object.content;
+    if (value != null) {
+      result
+        ..add('content')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(Content)));
+    }
+    value = object.attendees;
+    if (value != null) {
+      result
+        ..add('attendees')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(ListJsonObject)));
+    }
+    value = object.recurrence;
+    if (value != null) {
+      result
+        ..add('recurrence')
+        ..add(serializers.serialize(value,
+            specifiedType:
+                const FullType(List, const [const FullType(String)])));
+    }
+    value = object.fingerprints;
+    if (value != null) {
+      result
+        ..add('fingerprints')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(JsonObject)));
+    }
+    value = object.startDate;
+    if (value != null) {
+      result
+        ..add('start_date')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
+    }
+    value = object.endDate;
+    if (value != null) {
+      result
+        ..add('end_date')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
+    }
+    value = object.startDateTimeTz;
+    if (value != null) {
+      result
+        ..add('start_date_time_tz')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
+    }
+    value = object.endDateTimeTz;
+    if (value != null) {
+      result
+        ..add('end_date_time_tz')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
+    }
     value = object.remoteUpdatedAt;
     if (value != null) {
       result
@@ -463,6 +520,40 @@ class _$EventSerializer implements StructuredSerializer<Event> {
           result.taskId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'content':
+          result.content.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Content))! as Content);
+          break;
+        case 'attendees':
+          result.attendees = serializers.deserialize(value,
+              specifiedType: const FullType(ListJsonObject)) as ListJsonObject?;
+          break;
+        case 'recurrence':
+          result.recurrence = serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(List, const [const FullType(String)]))
+              as List<String>?;
+          break;
+        case 'fingerprints':
+          result.fingerprints = serializers.deserialize(value,
+              specifiedType: const FullType(JsonObject)) as JsonObject?;
+          break;
+        case 'start_date':
+          result.startDate = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'end_date':
+          result.endDate = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'start_date_time_tz':
+          result.startDateTimeTz = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
+        case 'end_date_time_tz':
+          result.endDateTimeTz = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
         case 'remote_updated_at':
           result.remoteUpdatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
@@ -572,6 +663,22 @@ class _$Event extends Event {
   @override
   final String? taskId;
   @override
+  final Content? content;
+  @override
+  final ListJsonObject? attendees;
+  @override
+  final List<String>? recurrence;
+  @override
+  final JsonObject? fingerprints;
+  @override
+  final DateTime? startDate;
+  @override
+  final DateTime? endDate;
+  @override
+  final DateTime? startDateTimeTz;
+  @override
+  final DateTime? endDateTimeTz;
+  @override
   final DateTime? remoteUpdatedAt;
   @override
   final DateTime? createdAt;
@@ -626,6 +733,14 @@ class _$Event extends Event {
       this.color,
       this.calendarColor,
       this.taskId,
+      this.content,
+      this.attendees,
+      this.recurrence,
+      this.fingerprints,
+      this.startDate,
+      this.endDate,
+      this.startDateTimeTz,
+      this.endDateTimeTz,
       this.remoteUpdatedAt,
       this.createdAt,
       this.updatedAt,
@@ -681,6 +796,14 @@ class _$Event extends Event {
         color == other.color &&
         calendarColor == other.calendarColor &&
         taskId == other.taskId &&
+        content == other.content &&
+        attendees == other.attendees &&
+        recurrence == other.recurrence &&
+        fingerprints == other.fingerprints &&
+        startDate == other.startDate &&
+        endDate == other.endDate &&
+        startDateTimeTz == other.startDateTimeTz &&
+        endDateTimeTz == other.endDateTimeTz &&
         remoteUpdatedAt == other.remoteUpdatedAt &&
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt &&
@@ -711,18 +834,18 @@ class _$Event extends Event {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), originId.hashCode), customOriginId.hashCode), connectorId.hashCode), accountId.hashCode), akiflowAccountId.hashCode), originAccountId.hashCode), recurringId.hashCode), originRecurringId.hashCode), calendarId.hashCode), originCalendarId.hashCode), creatorId.hashCode), organizerId.hashCode), originalStartTime.hashCode), originalStartDate.hashCode), startTime.hashCode), endTime.hashCode), originUpdatedAt.hashCode), etag.hashCode), title.hashCode), description.hashCode), recurrenceException.hashCode), declined.hashCode),
-                                                                                readOnly.hashCode),
-                                                                            hidden.hashCode),
-                                                                        recurrenceExceptionDelete.hashCode),
-                                                                    url.hashCode),
-                                                                meetingStatus.hashCode),
-                                                            meetingUrl.hashCode),
-                                                        meetingIcon.hashCode),
-                                                    meetingSolution.hashCode),
-                                                color.hashCode),
-                                            calendarColor.hashCode),
-                                        taskId.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), originId.hashCode), customOriginId.hashCode), connectorId.hashCode), accountId.hashCode), akiflowAccountId.hashCode), originAccountId.hashCode), recurringId.hashCode), originRecurringId.hashCode), calendarId.hashCode), originCalendarId.hashCode), creatorId.hashCode), organizerId.hashCode), originalStartTime.hashCode), originalStartDate.hashCode), startTime.hashCode), endTime.hashCode), originUpdatedAt.hashCode), etag.hashCode), title.hashCode), description.hashCode), recurrenceException.hashCode), declined.hashCode), readOnly.hashCode), hidden.hashCode), recurrenceExceptionDelete.hashCode), url.hashCode), meetingStatus.hashCode), meetingUrl.hashCode), meetingIcon.hashCode), meetingSolution.hashCode),
+                                                                                color.hashCode),
+                                                                            calendarColor.hashCode),
+                                                                        taskId.hashCode),
+                                                                    content.hashCode),
+                                                                attendees.hashCode),
+                                                            recurrence.hashCode),
+                                                        fingerprints.hashCode),
+                                                    startDate.hashCode),
+                                                endDate.hashCode),
+                                            startDateTimeTz.hashCode),
+                                        endDateTimeTz.hashCode),
                                     remoteUpdatedAt.hashCode),
                                 createdAt.hashCode),
                             updatedAt.hashCode),
@@ -770,6 +893,14 @@ class _$Event extends Event {
           ..add('color', color)
           ..add('calendarColor', calendarColor)
           ..add('taskId', taskId)
+          ..add('content', content)
+          ..add('attendees', attendees)
+          ..add('recurrence', recurrence)
+          ..add('fingerprints', fingerprints)
+          ..add('startDate', startDate)
+          ..add('endDate', endDate)
+          ..add('startDateTimeTz', startDateTimeTz)
+          ..add('endDateTimeTz', endDateTimeTz)
           ..add('remoteUpdatedAt', remoteUpdatedAt)
           ..add('createdAt', createdAt)
           ..add('updatedAt', updatedAt)
@@ -934,6 +1065,41 @@ class EventBuilder implements Builder<Event, EventBuilder> {
   String? get taskId => _$this._taskId;
   set taskId(String? taskId) => _$this._taskId = taskId;
 
+  ContentBuilder? _content;
+  ContentBuilder get content => _$this._content ??= new ContentBuilder();
+  set content(ContentBuilder? content) => _$this._content = content;
+
+  ListJsonObject? _attendees;
+  ListJsonObject? get attendees => _$this._attendees;
+  set attendees(ListJsonObject? attendees) => _$this._attendees = attendees;
+
+  List<String>? _recurrence;
+  List<String>? get recurrence => _$this._recurrence;
+  set recurrence(List<String>? recurrence) => _$this._recurrence = recurrence;
+
+  JsonObject? _fingerprints;
+  JsonObject? get fingerprints => _$this._fingerprints;
+  set fingerprints(JsonObject? fingerprints) =>
+      _$this._fingerprints = fingerprints;
+
+  DateTime? _startDate;
+  DateTime? get startDate => _$this._startDate;
+  set startDate(DateTime? startDate) => _$this._startDate = startDate;
+
+  DateTime? _endDate;
+  DateTime? get endDate => _$this._endDate;
+  set endDate(DateTime? endDate) => _$this._endDate = endDate;
+
+  DateTime? _startDateTimeTz;
+  DateTime? get startDateTimeTz => _$this._startDateTimeTz;
+  set startDateTimeTz(DateTime? startDateTimeTz) =>
+      _$this._startDateTimeTz = startDateTimeTz;
+
+  DateTime? _endDateTimeTz;
+  DateTime? get endDateTimeTz => _$this._endDateTimeTz;
+  set endDateTimeTz(DateTime? endDateTimeTz) =>
+      _$this._endDateTimeTz = endDateTimeTz;
+
   DateTime? _remoteUpdatedAt;
   DateTime? get remoteUpdatedAt => _$this._remoteUpdatedAt;
   set remoteUpdatedAt(DateTime? remoteUpdatedAt) =>
@@ -1010,6 +1176,14 @@ class EventBuilder implements Builder<Event, EventBuilder> {
       _color = $v.color;
       _calendarColor = $v.calendarColor;
       _taskId = $v.taskId;
+      _content = $v.content?.toBuilder();
+      _attendees = $v.attendees;
+      _recurrence = $v.recurrence;
+      _fingerprints = $v.fingerprints;
+      _startDate = $v.startDate;
+      _endDate = $v.endDate;
+      _startDateTimeTz = $v.startDateTimeTz;
+      _endDateTimeTz = $v.endDateTimeTz;
       _remoteUpdatedAt = $v.remoteUpdatedAt;
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
@@ -1036,50 +1210,71 @@ class EventBuilder implements Builder<Event, EventBuilder> {
 
   @override
   _$Event build() {
-    final _$result = _$v ??
-        new _$Event._(
-            id: id,
-            originId: originId,
-            customOriginId: customOriginId,
-            connectorId: connectorId,
-            accountId: accountId,
-            akiflowAccountId: akiflowAccountId,
-            originAccountId: originAccountId,
-            recurringId: recurringId,
-            originRecurringId: originRecurringId,
-            calendarId: calendarId,
-            originCalendarId: originCalendarId,
-            creatorId: creatorId,
-            organizerId: organizerId,
-            originalStartTime: originalStartTime,
-            originalStartDate: originalStartDate,
-            startTime: startTime,
-            endTime: endTime,
-            originUpdatedAt: originUpdatedAt,
-            etag: etag,
-            title: title,
-            description: description,
-            recurrenceException: recurrenceException,
-            declined: declined,
-            readOnly: readOnly,
-            hidden: hidden,
-            recurrenceExceptionDelete: recurrenceExceptionDelete,
-            url: url,
-            meetingStatus: meetingStatus,
-            meetingUrl: meetingUrl,
-            meetingIcon: meetingIcon,
-            meetingSolution: meetingSolution,
-            color: color,
-            calendarColor: calendarColor,
-            taskId: taskId,
-            remoteUpdatedAt: remoteUpdatedAt,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            deletedAt: deletedAt,
-            untilDateTime: untilDateTime,
-            recurrenceSyncRetry: recurrenceSyncRetry,
-            globalUpdatedAt: globalUpdatedAt,
-            globalCreatedAt: globalCreatedAt);
+    _$Event _$result;
+    try {
+      _$result = _$v ??
+          new _$Event._(
+              id: id,
+              originId: originId,
+              customOriginId: customOriginId,
+              connectorId: connectorId,
+              accountId: accountId,
+              akiflowAccountId: akiflowAccountId,
+              originAccountId: originAccountId,
+              recurringId: recurringId,
+              originRecurringId: originRecurringId,
+              calendarId: calendarId,
+              originCalendarId: originCalendarId,
+              creatorId: creatorId,
+              organizerId: organizerId,
+              originalStartTime: originalStartTime,
+              originalStartDate: originalStartDate,
+              startTime: startTime,
+              endTime: endTime,
+              originUpdatedAt: originUpdatedAt,
+              etag: etag,
+              title: title,
+              description: description,
+              recurrenceException: recurrenceException,
+              declined: declined,
+              readOnly: readOnly,
+              hidden: hidden,
+              recurrenceExceptionDelete: recurrenceExceptionDelete,
+              url: url,
+              meetingStatus: meetingStatus,
+              meetingUrl: meetingUrl,
+              meetingIcon: meetingIcon,
+              meetingSolution: meetingSolution,
+              color: color,
+              calendarColor: calendarColor,
+              taskId: taskId,
+              content: _content?.build(),
+              attendees: attendees,
+              recurrence: recurrence,
+              fingerprints: fingerprints,
+              startDate: startDate,
+              endDate: endDate,
+              startDateTimeTz: startDateTimeTz,
+              endDateTimeTz: endDateTimeTz,
+              remoteUpdatedAt: remoteUpdatedAt,
+              createdAt: createdAt,
+              updatedAt: updatedAt,
+              deletedAt: deletedAt,
+              untilDateTime: untilDateTime,
+              recurrenceSyncRetry: recurrenceSyncRetry,
+              globalUpdatedAt: globalUpdatedAt,
+              globalCreatedAt: globalCreatedAt);
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'content';
+        _content?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'Event', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

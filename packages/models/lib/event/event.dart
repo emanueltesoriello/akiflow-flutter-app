@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:models/base.dart';
 import 'package:models/serializers.dart';
+import 'package:models/task/content.dart';
 
 part 'event.g.dart';
 
@@ -122,6 +126,30 @@ abstract class Event extends Object
   @BuiltValueField(wireName: 'task_id')
   String? get taskId;
 
+  @BuiltValueField(wireName: 'content')
+  Content? get content;
+
+  @BuiltValueField(wireName: 'attendees')
+  ListJsonObject? get attendees;
+
+  @BuiltValueField(wireName: 'recurrence')
+  List<String>? get recurrence;
+
+  @BuiltValueField(wireName: 'fingerprints')
+  JsonObject? get fingerprints;
+
+  @BuiltValueField(wireName: 'start_date')
+  DateTime? get startDate;
+
+  @BuiltValueField(wireName: 'end_date')
+  DateTime? get endDate;
+
+  @BuiltValueField(wireName: 'start_date_time_tz')
+  DateTime? get startDateTimeTz;
+
+  @BuiltValueField(wireName: 'end_date_time_tz')
+  DateTime? get endDateTimeTz;
+
   @BuiltValueField(wireName: 'remote_updated_at')
   DateTime? get remoteUpdatedAt;
 
@@ -174,19 +202,55 @@ abstract class Event extends Object
 
   @override
   Map<String, Object?> toSql() {
-    Map<String?, dynamic> data = serializers.serializeWith(
-        Event.serializer, this) as Map<String?, dynamic>;
-
-    data.remove("global_created_at");
-    data.remove("global_updated_at");
-
-    for (var key in data.keys) {
-      if (data[key] is bool) {
-        data[key] = data[key] ? 1 : 0;
-      }
-    }
-
-    return Map<String, Object?>.from(data);
+    return {
+      "id": id,
+      "origin_id": originId,
+      "custom_origin_id": customOriginId,
+      "connector_id": connectorId,
+      "akiflow_account_id": akiflowAccountId,
+      "origin_account_id": originAccountId,
+      "recurring_id": recurringId,
+      "origin_recurring_id": originRecurringId,
+      "calendar_id": calendarId,
+      "origin_calendar_id": originCalendarId,
+      "creator_id": creatorId,
+      "organizer_id": organizerId,
+      "original_start_time": originalStartTime?.toIso8601String(),
+      "original_start_date": originalStartDate?.toIso8601String(),
+      "start_time": startTime?.toIso8601String(),
+      "end_time": endTime?.toIso8601String(),
+      "start_date": startDate?.toIso8601String(),
+      "end_date": endDate?.toIso8601String(),
+      "start_date_time_tz": startDateTimeTz?.toIso8601String(),
+      "end_date_time_tz": endDateTimeTz?.toIso8601String(),
+      "origin_updated_at": originUpdatedAt?.toIso8601String(),
+      "etag": etag,
+      "title": title,
+      "description": description,
+      "content": jsonEncode(content?.toMap() ?? {}),
+      "attendees": jsonEncode(attendees?.value ?? {}),
+      "recurrence": jsonEncode(recurrence),
+      "recurrence_exception": recurrenceException == true ? 1 : 0,
+      "declined": declined,
+      "read_only": readOnly == true ? 1 : 0,
+      "hidden": hidden == true ? 1 : 0,
+      "url": url,
+      "meeting_status": meetingStatus,
+      "meeting_url": meetingUrl,
+      "meeting_icon": meetingIcon,
+      "meeting_solution": meetingSolution,
+      "color": color,
+      "calendar_color": calendarColor,
+      "task_id": taskId,
+      "fingerprints": jsonEncode(fingerprints?.value ?? {}),
+      "until_date_time": untilDateTime?.toIso8601String(),
+      "recurrence_exception_delete": recurrenceExceptionDelete,
+      "recurrence_sync_retry": recurrenceSyncRetry?.toIso8601String(),
+      "updated_at": updatedAt?.toIso8601String(),
+      "created_at": createdAt?.toIso8601String(),
+      "deleted_at": deletedAt?.toIso8601String(),
+      "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
+    };
   }
 
   static Event fromSql(Map<String?, dynamic> json) {
@@ -211,6 +275,17 @@ abstract class Event extends Object
           break;
         case "recurrence_exception_delete":
           data[key] = (data[key] == 1);
+          break;
+        case "content":
+          data[key] = data[key] is String
+              ? Content.fromMap(jsonDecode(data[key] as String))
+              : null;
+          break;
+        case "attendees":
+        case "recurrence":
+        case "fingerprints":
+          data[key] =
+              data[key] is String ? (jsonDecode(data[key] as String)) : null;
           break;
         default:
       }

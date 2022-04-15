@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:intl/intl.dart';
 import 'package:models/base.dart';
@@ -73,6 +76,27 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'remote_updated_at')
   DateTime? get remoteUpdatedAt;
 
+  @BuiltValueField(wireName: 'recurring_id')
+  String? get recurringId;
+
+  @BuiltValueField(wireName: 'recurrence')
+  JsonObject? get recurrence;
+
+  @BuiltValueField(wireName: 'priority')
+  String? get priority;
+
+  @BuiltValueField(wireName: 'list_id')
+  String? get listId;
+
+  @BuiltValueField(wireName: 'section_id')
+  String? get sectionId;
+
+  @BuiltValueField(wireName: 'links')
+  List<String>? get links;
+
+  @BuiltValueField(wireName: 'origin')
+  String? get origin;
+
   Task._();
 
   factory Task([void Function(TaskBuilder) updates]) = _$Task;
@@ -105,19 +129,33 @@ abstract class Task extends Object
 
   @override
   Map<String, Object?> toSql() {
-    Map<String?, dynamic> data = serializers.serializeWith(
-        Task.serializer, this) as Map<String?, dynamic>;
-
-    data.remove("global_created_at");
-    data.remove("global_updated_at");
-
-    for (var key in data.keys) {
-      if (data[key] is bool) {
-        data[key] = data[key] ? 1 : 0;
-      }
-    }
-
-    return Map<String, Object?>.from(data);
+    return {
+      "id": id,
+      "title": title,
+      "description": description,
+      "date": date,
+      "recurring_id": recurringId,
+      "recurrence": jsonEncode(recurrence?.value ?? {}),
+      "status": status,
+      "duration": duration,
+      "daily_goal": dailyGoal,
+      "priority": priority,
+      "list_id": listId,
+      "section_id": sectionId,
+      "links": jsonEncode(links),
+      "content": jsonEncode(content?.toSql() ?? {}),
+      "sorting": sorting ?? (createdAt) ?? DateTime.now().toUtc(),
+      "sorting_label": sortingLabel,
+      "done": done == true ? 1 : 0,
+      "done_at": doneAt?.toIso8601String(),
+      "read_at": readAt?.toIso8601String(),
+      "due_date": dueDate?.toIso8601String(),
+      "updated_at": updatedAt?.toIso8601String(),
+      "created_at": createdAt?.toIso8601String(),
+      "deleted_at": deletedAt?.toIso8601String(),
+      "origin": origin,
+      "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
+    };
   }
 
   static Task fromSql(Map<String?, dynamic> json) {
@@ -130,6 +168,12 @@ abstract class Task extends Object
 
       if ((key == "sorting" || key == "sorting_label") && data[key] != null) {
         data[key] = (int.parse(data[key] as String));
+      }
+
+      if (key == "links") {
+        data[key] = data["links"] is String
+            ? jsonDecode(data["links"] as String)
+            : null;
       }
     }
 

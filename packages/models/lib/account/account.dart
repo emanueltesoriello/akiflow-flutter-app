@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:models/base.dart';
 import 'package:models/serializers.dart';
@@ -29,6 +30,18 @@ abstract class Account extends Object
 
   String? get picture;
   String? get identifier;
+
+  @BuiltValueField(wireName: 'details')
+  JsonObject? get details;
+
+  @BuiltValueField(wireName: 'autologin_token')
+  String? get autologinToken;
+
+  @BuiltValueField(wireName: 'status')
+  String? get status;
+
+  @BuiltValueField(wireName: 'sync_status')
+  String? get syncStatus;
 
   @BuiltValueField(wireName: 'created_at')
   DateTime? get createdAt;
@@ -88,40 +101,40 @@ abstract class Account extends Object
 
   @override
   Map<String, Object?> toSql() {
-    Map<String?, dynamic> data = serializers.serializeWith(
-        Account.serializer, this) as Map<String?, dynamic>;
-
-    data.remove("global_created_at");
-    data.remove("global_updated_at");
-
-    for (var key in data.keys) {
-      if (data[key] is bool) {
-        data[key] = data[key] ? 1 : 0;
-      }
-
-      if (key == "local_details" && data[key] != null) {
-        data[key] = jsonEncode(Map.from(data[key]));
-      }
-    }
-
-    return Map<String, Object?>.from(data);
+    return {
+      "id": id,
+      "account_id": accountId,
+      "connector_id": connectorId,
+      "origin_account_id": originAccountId,
+      "short_name": shortName,
+      "full_name": fullName,
+      "picture": picture,
+      "identifier": identifier,
+      "details": jsonEncode(details?.value ?? {}),
+      "autologin_token": autologinToken,
+      "status": status,
+      "sync_status": syncStatus,
+      "updated_at": updatedAt?.toIso8601String(),
+      "created_at": createdAt?.toIso8601String(),
+      "deleted_at": deletedAt?.toIso8601String(),
+      "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
+    };
   }
 
   static Account fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
-    // print("local_details raw: ${data["local_details"]}");
-
-    if (data["local_details"] != null) {
-      data["local_details"] =
-          jsonDecode(data["local_details"] as String? ?? "");
+    for (var key in data.keys) {
+      switch (key) {
+        case "details":
+          data[key] =
+              data[key] is String ? (jsonDecode(data[key] as String)) : null;
+          break;
+        default:
+      }
     }
 
-    Account account = serializers.deserializeWith(Account.serializer, data)!;
-
-    // print("parsed: ${account.localDetails}");
-
-    return account;
+    return serializers.deserializeWith(Account.serializer, data)!;
   }
 
   @BuiltValueSerializer(serializeNulls: true)

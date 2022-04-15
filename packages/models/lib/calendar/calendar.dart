@@ -30,6 +30,10 @@ abstract class Calendar extends Object
   String? get title;
   @BuiltValueField(wireName: 'description')
   String? get description;
+  @BuiltValueField(wireName: 'akiflow_account_id')
+  String? get akiflowAccountId;
+  @BuiltValueField(wireName: 'origin_account_id')
+  String? get originAccountId;
   @BuiltValueField(wireName: 'content', serialize: false)
   Content? get content;
 
@@ -83,27 +87,30 @@ abstract class Calendar extends Object
 
   @override
   Map<String, Object?> toSql() {
-    Map<String?, dynamic> data = serializers.serializeWith(
-        Calendar.serializer, this) as Map<String?, dynamic>;
-
-    data.remove("global_created_at");
-    data.remove("global_updated_at");
-
-    for (var key in data.keys) {
-      if (data[key] is bool) {
-        data[key] = data[key] ? 1 : 0;
-      }
-    }
-
-    if (data["content"] is Content) {
-      data["content"] = jsonEncode(data[content]?.toMap());
-    }
-
-    if (data["settings"] is Settings) {
-      data["settings"] = jsonEncode(data[settings]?.toMap());
-    }
-
-    return Map<String, Object?>.from(data);
+    return {
+      "id": id,
+      "origin_id": originId,
+      "connector_id": connectorId,
+      "akiflow_account_id": akiflowAccountId,
+      "origin_account_id": originAccountId,
+      "etag": etag,
+      "title": title,
+      "description": description,
+      "content": jsonEncode(content?.toMap() ?? {}),
+      "primary": primary == true ? 1 : 0,
+      "akiflow_primary": akiflowPrimary == true ? 1 : 0,
+      "read_only": readOnly == true ? 1 : 0,
+      "url": url,
+      "color": color,
+      "icon": icon,
+      "sync_status": syncStatus,
+      "is_akiflow_calendar": isAkiflowCalendar == null,
+      "settings": jsonEncode(settings?.toMap() ?? {}),
+      "updated_at": updatedAt?.toIso8601String(),
+      "created_at": createdAt?.toIso8601String(),
+      "deleted_at": deletedAt?.toIso8601String(),
+      "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
+    };
   }
 
   static Calendar fromSql(Map<String?, dynamic> json) {
@@ -122,6 +129,16 @@ abstract class Calendar extends Object
           break;
         case "is_akiflow_calendar":
           data[key] = (data[key] == 1);
+          break;
+        case "content":
+          data[key] = data[key] is String
+              ? Content.fromMap(jsonDecode(data[key] as String))
+              : null;
+          break;
+        case "settings":
+          data[key] = data[key] is String
+              ? Settings.fromMap(jsonDecode(data[key] as String))
+              : null;
           break;
         default:
       }
