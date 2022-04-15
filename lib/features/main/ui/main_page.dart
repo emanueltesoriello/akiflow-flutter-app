@@ -7,6 +7,7 @@ import 'package:mobile/features/main/views/_components/calendar_appbar.dart';
 import 'package:mobile/features/main/views/_components/inbox_appbar.dart';
 import 'package:mobile/features/main/views/_components/today_appbar.dart';
 import 'package:mobile/features/main/views/inbox/ui/view.dart';
+import 'package:mobile/features/main/views/today/ui/today_view.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -14,7 +15,7 @@ class MainPage extends StatelessWidget {
   final List<Widget> _views = [
     const SizedBox(),
     const InboxView(),
-    const SizedBox(),
+    const TodayView(),
     const SizedBox(),
   ];
 
