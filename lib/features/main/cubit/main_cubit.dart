@@ -66,10 +66,10 @@ class MainCubit extends Cubit<MainCubitState> {
       }
 
       await _sync(Entity.accounts);
-      await _sync(Entity.calendars);
+      // await _sync(Entity.calendars);
       await _sync(Entity.tasks);
-      await _sync(Entity.labels);
-      await _sync(Entity.events);
+      // await _sync(Entity.labels);
+      // await _sync(Entity.events);
 
       await _accountsRepository.updateById(localAkiflowAccount!.id!,
           data: localAkiflowAccount);
@@ -199,8 +199,8 @@ class MainCubit extends Cubit<MainCubitState> {
 
   syncClick() async {
     await _sync(Entity.tasks);
-    await _sync(Entity.labels);
-    await _sync(Entity.events);
+    // await _sync(Entity.labels);
+    // await _sync(Entity.events);
 
     await _accountsRepository.updateById(localAkiflowAccount!.id!,
         data: localAkiflowAccount);
