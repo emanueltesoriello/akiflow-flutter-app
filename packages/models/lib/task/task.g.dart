@@ -90,7 +90,8 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
     if (value != null) {
       result
         ..add('sorting')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
     }
     value = object.done;
     if (value != null) {
@@ -138,7 +139,8 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
     if (value != null) {
       result
         ..add('sorting_label')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
     }
     value = object.dueDate;
     if (value != null) {
@@ -161,13 +163,6 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    value = object.recurrence;
-    if (value != null) {
-      result
-        ..add('recurrence')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(JsonObject)));
-    }
     value = object.priority;
     if (value != null) {
       result
@@ -188,14 +183,6 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
         ..add('section_id')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
-    }
-    value = object.links;
-    if (value != null) {
-      result
-        ..add('links')
-        ..add(serializers.serialize(value,
-            specifiedType:
-                const FullType(List, const [const FullType(String)])));
     }
     value = object.origin;
     if (value != null) {
@@ -260,7 +247,7 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           break;
         case 'sorting':
           result.sorting = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'done':
           result.done = serializers.deserialize(value,
@@ -288,7 +275,7 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           break;
         case 'sorting_label':
           result.sortingLabel = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'due_date':
           result.dueDate = serializers.deserialize(value,
@@ -302,10 +289,6 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.recurringId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
-        case 'recurrence':
-          result.recurrence = serializers.deserialize(value,
-              specifiedType: const FullType(JsonObject)) as JsonObject?;
-          break;
         case 'priority':
           result.priority = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
@@ -317,12 +300,6 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
         case 'section_id':
           result.sectionId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
-          break;
-        case 'links':
-          result.links = serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(List, const [const FullType(String)]))
-              as List<String>?;
           break;
         case 'origin':
           result.origin = serializers.deserialize(value,
@@ -359,7 +336,7 @@ class _$Task extends Task {
   @override
   final int? dailyGoal;
   @override
-  final int? sorting;
+  final DateTime? sorting;
   @override
   final bool? done;
   @override
@@ -373,7 +350,7 @@ class _$Task extends Task {
   @override
   final DateTime? activationDatetime;
   @override
-  final int? sortingLabel;
+  final DateTime? sortingLabel;
   @override
   final DateTime? dueDate;
   @override
@@ -592,9 +569,9 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   int? get dailyGoal => _$this._dailyGoal;
   set dailyGoal(int? dailyGoal) => _$this._dailyGoal = dailyGoal;
 
-  int? _sorting;
-  int? get sorting => _$this._sorting;
-  set sorting(int? sorting) => _$this._sorting = sorting;
+  DateTime? _sorting;
+  DateTime? get sorting => _$this._sorting;
+  set sorting(DateTime? sorting) => _$this._sorting = sorting;
 
   bool? _done;
   bool? get done => _$this._done;
@@ -623,9 +600,10 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   set activationDatetime(DateTime? activationDatetime) =>
       _$this._activationDatetime = activationDatetime;
 
-  int? _sortingLabel;
-  int? get sortingLabel => _$this._sortingLabel;
-  set sortingLabel(int? sortingLabel) => _$this._sortingLabel = sortingLabel;
+  DateTime? _sortingLabel;
+  DateTime? get sortingLabel => _$this._sortingLabel;
+  set sortingLabel(DateTime? sortingLabel) =>
+      _$this._sortingLabel = sortingLabel;
 
   DateTime? _dueDate;
   DateTime? get dueDate => _$this._dueDate;

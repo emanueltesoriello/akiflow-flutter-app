@@ -86,6 +86,7 @@ class Api implements IBaseApi {
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
     if (response.containsKey("errors")) {
+      print(response);
       throw ApiException(response);
     }
 

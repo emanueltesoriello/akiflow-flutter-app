@@ -206,6 +206,14 @@ class _$CalendarSerializer implements StructuredSerializer<Calendar> {
           result.description = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'akiflow_account_id':
+          result.akiflowAccountId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
+        case 'origin_account_id':
+          result.originAccountId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
         case 'primary':
           result.primary = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool?;

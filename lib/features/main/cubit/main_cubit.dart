@@ -199,8 +199,8 @@ class MainCubit extends Cubit<MainCubitState> {
 
   syncClick() async {
     await _sync(Entity.tasks);
-    // await _sync(Entity.labels);
-    // await _sync(Entity.events);
+    await _sync(Entity.labels);
+    await _sync(Entity.events);
 
     await _accountsRepository.updateById(localAkiflowAccount!.id!,
         data: localAkiflowAccount);

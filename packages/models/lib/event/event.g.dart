@@ -257,13 +257,6 @@ class _$EventSerializer implements StructuredSerializer<Event> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    value = object.content;
-    if (value != null) {
-      result
-        ..add('content')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(Content)));
-    }
     value = object.attendees;
     if (value != null) {
       result
@@ -276,8 +269,7 @@ class _$EventSerializer implements StructuredSerializer<Event> {
       result
         ..add('recurrence')
         ..add(serializers.serialize(value,
-            specifiedType:
-                const FullType(List, const [const FullType(String)])));
+            specifiedType: const FullType(ListJsonObject)));
     }
     value = object.fingerprints;
     if (value != null) {
@@ -520,19 +512,13 @@ class _$EventSerializer implements StructuredSerializer<Event> {
           result.taskId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
-        case 'content':
-          result.content.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Content))! as Content);
-          break;
         case 'attendees':
           result.attendees = serializers.deserialize(value,
               specifiedType: const FullType(ListJsonObject)) as ListJsonObject?;
           break;
         case 'recurrence':
           result.recurrence = serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(List, const [const FullType(String)]))
-              as List<String>?;
+              specifiedType: const FullType(ListJsonObject)) as ListJsonObject?;
           break;
         case 'fingerprints':
           result.fingerprints = serializers.deserialize(value,
@@ -667,7 +653,7 @@ class _$Event extends Event {
   @override
   final ListJsonObject? attendees;
   @override
-  final List<String>? recurrence;
+  final ListJsonObject? recurrence;
   @override
   final JsonObject? fingerprints;
   @override
@@ -1073,9 +1059,9 @@ class EventBuilder implements Builder<Event, EventBuilder> {
   ListJsonObject? get attendees => _$this._attendees;
   set attendees(ListJsonObject? attendees) => _$this._attendees = attendees;
 
-  List<String>? _recurrence;
-  List<String>? get recurrence => _$this._recurrence;
-  set recurrence(List<String>? recurrence) => _$this._recurrence = recurrence;
+  ListJsonObject? _recurrence;
+  ListJsonObject? get recurrence => _$this._recurrence;
+  set recurrence(ListJsonObject? recurrence) => _$this._recurrence = recurrence;
 
   JsonObject? _fingerprints;
   JsonObject? get fingerprints => _$this._fingerprints;

@@ -47,7 +47,7 @@ abstract class Task extends Object
   int? get dailyGoal;
 
   @BuiltValueField(wireName: 'sorting')
-  int? get sorting;
+  DateTime? get sorting;
 
   @BuiltValueField(wireName: 'done')
   bool? get done;
@@ -68,7 +68,7 @@ abstract class Task extends Object
   DateTime? get activationDatetime;
 
   @BuiltValueField(wireName: 'sorting_label')
-  int? get sortingLabel;
+  DateTime? get sortingLabel;
 
   @BuiltValueField(wireName: 'due_date')
   DateTime? get dueDate;
@@ -79,7 +79,7 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'recurring_id')
   String? get recurringId;
 
-  @BuiltValueField(wireName: 'recurrence')
+  @BuiltValueField(wireName: 'recurrence', serialize: false)
   JsonObject? get recurrence;
 
   @BuiltValueField(wireName: 'priority')
@@ -91,7 +91,7 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'section_id')
   String? get sectionId;
 
-  @BuiltValueField(wireName: 'links')
+  @BuiltValueField(wireName: 'links', serialize: false)
   List<String>? get links;
 
   @BuiltValueField(wireName: 'origin')
@@ -116,6 +116,14 @@ abstract class Task extends Object
       data['date'] = DateFormat('yyyy-MM-dd').format(date!);
     }
 
+    if (sorting != null) {
+      data['sorting'] = sorting?.microsecondsSinceEpoch;
+    }
+
+    if (sortingLabel != null) {
+      data['sorting_label'] = sortingLabel?.microsecondsSinceEpoch;
+    }
+
     return data;
   }
 
@@ -133,7 +141,7 @@ abstract class Task extends Object
       "id": id,
       "title": title,
       "description": description,
-      "date": date,
+      "date": date?.toIso8601String(),
       "recurring_id": recurringId,
       "recurrence": jsonEncode(recurrence?.value ?? {}),
       "status": status,
@@ -144,8 +152,12 @@ abstract class Task extends Object
       "section_id": sectionId,
       "links": jsonEncode(links),
       "content": jsonEncode(content?.toSql() ?? {}),
-      "sorting": sorting ?? (createdAt) ?? DateTime.now().toUtc(),
-      "sorting_label": sortingLabel,
+      "sorting": sorting != null
+          ? sorting!.toIso8601String()
+          : (createdAt != null
+              ? createdAt!.toIso8601String()
+              : DateTime.now().toUtc()),
+      "sorting_label": sortingLabel?.toIso8601String(),
       "done": done == true ? 1 : 0,
       "done_at": doneAt?.toIso8601String(),
       "read_at": readAt?.toIso8601String(),
@@ -164,10 +176,6 @@ abstract class Task extends Object
     for (var key in data.keys) {
       if (key == "done" && data[key] != null) {
         data[key] = (data[key] == 1);
-      }
-
-      if ((key == "sorting" || key == "sorting_label") && data[key] != null) {
-        data[key] = (int.parse(data[key] as String));
       }
 
       if (key == "links") {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
+import 'package:intl/intl.dart';
 import 'package:models/base.dart';
 import 'package:models/serializers.dart';
 import 'package:models/task/content.dart';
@@ -63,18 +64,6 @@ abstract class Event extends Object
   @BuiltValueField(wireName: 'end_time')
   DateTime? get endTime;
 
-  // @BuiltValueField(wireName: 'start_date')
-  // DateTime? get startDate;
-
-  // @BuiltValueField(wireName: 'end_date')
-  // DateTime? get endDate;
-
-  // @BuiltValueField(wireName: 'start_date_tz')
-  // DateTime? get startDateTz;
-
-  // @BuiltValueField(wireName: 'end_date_tz')
-  // DateTime? get endDateTz;
-
   @BuiltValueField(wireName: 'origin_updated_at')
   DateTime? get originUpdatedAt;
 
@@ -126,14 +115,14 @@ abstract class Event extends Object
   @BuiltValueField(wireName: 'task_id')
   String? get taskId;
 
-  @BuiltValueField(wireName: 'content')
+  @BuiltValueField(wireName: 'content', serialize: false)
   Content? get content;
 
   @BuiltValueField(wireName: 'attendees')
   ListJsonObject? get attendees;
 
   @BuiltValueField(wireName: 'recurrence')
-  List<String>? get recurrence;
+  ListJsonObject? get recurrence;
 
   @BuiltValueField(wireName: 'fingerprints')
   JsonObject? get fingerprints;
@@ -189,11 +178,14 @@ abstract class Event extends Object
     Map<String, dynamic> data = serializers.serializeWith(
         Event.serializer, this) as Map<String, dynamic>;
 
-    return data;
-  }
+    if (startDate != null) {
+      data['start_date'] = DateFormat('yyyy-MM-dd').format(startDate!);
+    }
+    if (endDate != null) {
+      data['end_date'] = DateFormat('yyyy-MM-dd').format(endDate!);
+    }
 
-  static Map<String, dynamic> toMapS(data) {
-    return data.toMap();
+    return data;
   }
 
   static Event fromMap(Map<String, dynamic> json) {
@@ -228,10 +220,10 @@ abstract class Event extends Object
       "title": title,
       "description": description,
       "content": jsonEncode(content?.toMap() ?? {}),
-      "attendees": jsonEncode(attendees?.value ?? {}),
-      "recurrence": jsonEncode(recurrence),
+      "attendees": jsonEncode(attendees?.value ?? []),
+      "recurrence": jsonEncode(recurrence?.value ?? []),
       "recurrence_exception": recurrenceException == true ? 1 : 0,
-      "declined": declined,
+      "declined": declined == true ? 1 : 0,
       "read_only": readOnly == true ? 1 : 0,
       "hidden": hidden == true ? 1 : 0,
       "url": url,
@@ -244,7 +236,7 @@ abstract class Event extends Object
       "task_id": taskId,
       "fingerprints": jsonEncode(fingerprints?.value ?? {}),
       "until_date_time": untilDateTime?.toIso8601String(),
-      "recurrence_exception_delete": recurrenceExceptionDelete,
+      "recurrence_exception_delete": recurrenceExceptionDelete == true ? 1 : 0,
       "recurrence_sync_retry": recurrenceSyncRetry?.toIso8601String(),
       "updated_at": updatedAt?.toIso8601String(),
       "created_at": createdAt?.toIso8601String(),

@@ -68,11 +68,11 @@ abstract class Label extends Object
     Map<String, dynamic> data = serializers.serializeWith(
         Label.serializer, this) as Map<String, dynamic>;
 
-    return data;
-  }
+    if (sorting != null) {
+      data['sorting'] = sorting?.microsecondsSinceEpoch;
+    }
 
-  static Map<String, dynamic> toMapS(data) {
-    return data.toMap();
+    return data;
   }
 
   static Label fromMap(Map<String, dynamic> json) {
@@ -86,7 +86,11 @@ abstract class Label extends Object
       "title": title,
       "icon": icon,
       "color": color,
-      "sorting": sorting ?? DateTime.now().toUtc(),
+      "sorting": sorting != null
+          ? sorting!.toIso8601String()
+          : (createdAt != null
+              ? createdAt!.toIso8601String()
+              : DateTime.now().toUtc()),
       "parent_id": parentId,
       "type": type,
       "system": system,
@@ -103,10 +107,6 @@ abstract class Label extends Object
     for (var key in data.keys) {
       if (key == "done" && data[key] != null) {
         data[key] = (data[key] == 1);
-      }
-
-      if ((key == "sorting" || key == "sorting_label") && data[key] != null) {
-        data[key] = (int.parse(data[key] as String));
       }
     }
 
