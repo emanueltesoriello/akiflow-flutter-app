@@ -61,7 +61,7 @@ class _ButtonSelectableState extends State<ButtonSelectable>
       },
       onTapUp: (_) {
         _controller.reverse();
-        widget.onPressed.call();
+        widget.onPressed();
       },
       onLongPressCancel: () => _controller.reverse(),
       onLongPressEnd: (_) => _controller.reverse(),

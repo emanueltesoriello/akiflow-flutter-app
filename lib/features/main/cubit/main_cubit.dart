@@ -183,7 +183,7 @@ class MainCubit extends Cubit<MainCubitState> {
     }
   }
 
-  void bottomBarViewClick(int index) {
+  void changeHomeView(int index) {
     switch (index) {
       case 1:
         emit(state.copyWith(homeViewType: HomeViewType.inbox));

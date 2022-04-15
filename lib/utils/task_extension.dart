@@ -40,7 +40,13 @@ extension TaskStatusTypeExt on TaskStatusType {
 
 extension TaskExt on Task {
   bool get isToday {
-    return (date?.isBefore(DateTime.now().toUtc()) ?? false) && (done ?? false);
+    if (date != null) {
+      return date!.day == DateTime.now().day &&
+          date!.month == DateTime.now().month &&
+          date!.year == DateTime.now().year;
+    }
+
+    return false;
   }
 
   TaskStatusType? get statusType {
@@ -66,5 +72,29 @@ extension TaskExt on Task {
       default:
         return null;
     }
+  }
+
+  static List<Task> filterInboxTasks(List<Task> tasks) {
+    tasks.removeWhere((task) => task.deletedAt != null);
+
+    tasks.removeWhere((element) => element.done == true);
+
+    tasks.removeWhere((element) => element.doneAt != null);
+
+    tasks.removeWhere((element) => element.statusType != TaskStatusType.inbox);
+
+    return tasks;
+  }
+
+  static List<Task> filterTodayTasks(List<Task> tasks) {
+    tasks.removeWhere((task) => task.deletedAt != null);
+
+    tasks.removeWhere((element) => element.done == true);
+
+    tasks.removeWhere((element) => element.doneAt != null);
+
+    tasks.removeWhere((task) => !task.isToday);
+
+    return tasks;
   }
 }

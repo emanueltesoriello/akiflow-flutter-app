@@ -5,9 +5,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_selectable.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
+import 'package:models/task/task.dart';
 
 class SettingsModal extends StatelessWidget {
   const SettingsModal({Key? key}) : super(key: key);
@@ -112,65 +115,74 @@ class SettingsModal extends StatelessWidget {
                       ],
                     ),
                     const Divider(height: 32),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ButtonSelectable(
+                    BlocBuilder<MainCubit, MainCubitState>(
+                      builder: (context, state) {
+                        HomeViewType homeViewType = state.homeViewType;
+
+                        return ButtonSelectable(
                           title: t.bottom_bar.inbox,
                           leading: Icon(
                             SFSymbols.tray,
                             size: 24,
                             color: ColorsExt.grey2(context),
                           ),
-                          selected: true,
-                          trailing: Text(
-                            context
-                                .watch<TasksCubit>()
-                                .state
-                                .tasks
-                                .length
-                                .toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2_5(context),
-                            ),
-                          ),
-                          onPressed: () {},
-                        ),
-                      ],
+                          selected: homeViewType == HomeViewType.inbox,
+                          trailing: Builder(builder: (context) {
+                            List<Task> tasks = List.from(
+                                context.watch<TasksCubit>().state.tasks);
+
+                            tasks = TaskExt.filterInboxTasks(tasks);
+
+                            return Text(
+                              tasks.length.toString(),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: ColorsExt.grey2_5(context),
+                              ),
+                            );
+                          }),
+                          onPressed: () {
+                            context.read<MainCubit>().changeHomeView(1);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
                     ),
                     const SizedBox(height: 2),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ButtonSelectable(
+                    BlocBuilder<MainCubit, MainCubitState>(
+                      builder: (context, state) {
+                        HomeViewType homeViewType = state.homeViewType;
+
+                        return ButtonSelectable(
                           title: t.bottom_bar.today,
                           leading: Image.asset(
                             "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
                             height: 19,
                             color: ColorsExt.grey1(context),
                           ),
-                          selected: false,
-                          trailing: Text(
-                            context
-                                .watch<TasksCubit>()
-                                .state
-                                .tasks
-                                .where((element) =>
-                                    element.date?.isBefore(DateTime.now()) ??
-                                    false)
-                                .length
-                                .toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2_5(context),
-                            ),
-                          ),
-                          onPressed: () {},
-                        ),
-                      ],
+                          selected: homeViewType == HomeViewType.today,
+                          trailing: Builder(builder: (context) {
+                            List<Task> tasks = List.from(
+                                context.watch<TasksCubit>().state.tasks);
+
+                            tasks = TaskExt.filterTodayTasks(tasks);
+
+                            return Text(
+                              tasks.length.toString(),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: ColorsExt.grey2_5(context),
+                              ),
+                            );
+                          }),
+                          onPressed: () {
+                            context.read<MainCubit>().changeHomeView(2);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),

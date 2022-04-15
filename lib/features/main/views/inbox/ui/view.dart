@@ -5,6 +5,7 @@ import 'package:mobile/components/base/notice.dart';
 import 'package:mobile/components/inbox/task.dart';
 import 'package:mobile/features/main/views/inbox/cubit/view_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
 class InboxView extends StatelessWidget {
@@ -22,9 +23,9 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> tasks = context.watch<TasksCubit>().state.tasks.toList();
+    List<Task> tasks = List.from(context.watch<TasksCubit>().state.tasks);
 
-    tasks.removeWhere((task) => task.deletedAt != null);
+    tasks = TaskExt.filterInboxTasks(tasks);
 
     return ListView.separated(
       padding: const EdgeInsets.all(16),

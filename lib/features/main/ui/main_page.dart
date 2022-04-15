@@ -77,7 +77,7 @@ class MainPage extends StatelessWidget {
               builder: (context) => const SettingsModal(),
             );
           } else {
-            context.read<MainCubit>().bottomBarViewClick(index);
+            context.read<MainCubit>().changeHomeView(index);
           }
         },
       ),
