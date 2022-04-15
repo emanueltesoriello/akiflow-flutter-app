@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:built_value/built_value.dart';
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:intl/intl.dart';
 import 'package:models/base.dart';
 import 'package:models/serializers.dart';
-import 'package:models/task/content.dart';
 
 part 'task.g.dart';
 
@@ -40,15 +38,6 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'deleted_at')
   DateTime? get deletedAt;
 
-  @BuiltValueField(wireName: 'content', serialize: false)
-  Content? get content;
-
-  @BuiltValueField(wireName: 'daily_goal')
-  int? get dailyGoal;
-
-  @BuiltValueField(wireName: 'sorting')
-  DateTime? get sorting;
-
   @BuiltValueField(wireName: 'done')
   bool? get done;
 
@@ -67,9 +56,6 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'activation_datetime')
   DateTime? get activationDatetime;
 
-  @BuiltValueField(wireName: 'sorting_label')
-  DateTime? get sortingLabel;
-
   @BuiltValueField(wireName: 'due_date')
   DateTime? get dueDate;
 
@@ -79,20 +65,14 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'recurring_id')
   String? get recurringId;
 
-  @BuiltValueField(wireName: 'recurrence', serialize: false)
-  JsonObject? get recurrence;
-
   @BuiltValueField(wireName: 'priority')
-  String? get priority;
+  int? get priority;
 
   @BuiltValueField(wireName: 'list_id')
   String? get listId;
 
   @BuiltValueField(wireName: 'section_id')
   String? get sectionId;
-
-  @BuiltValueField(wireName: 'links', serialize: false)
-  List<String>? get links;
 
   @BuiltValueField(wireName: 'origin')
   String? get origin;
@@ -116,14 +96,6 @@ abstract class Task extends Object
       data['date'] = DateFormat('yyyy-MM-dd').format(date!);
     }
 
-    if (sorting != null) {
-      data['sorting'] = sorting?.microsecondsSinceEpoch;
-    }
-
-    if (sortingLabel != null) {
-      data['sorting_label'] = sortingLabel?.microsecondsSinceEpoch;
-    }
-
     return data;
   }
 
@@ -143,21 +115,11 @@ abstract class Task extends Object
       "description": description,
       "date": date?.toIso8601String(),
       "recurring_id": recurringId,
-      "recurrence": jsonEncode(recurrence?.value ?? {}),
       "status": status,
       "duration": duration,
-      "daily_goal": dailyGoal,
       "priority": priority,
       "list_id": listId,
       "section_id": sectionId,
-      "links": jsonEncode(links),
-      "content": jsonEncode(content?.toSql() ?? {}),
-      "sorting": sorting != null
-          ? sorting!.toIso8601String()
-          : (createdAt != null
-              ? createdAt!.toIso8601String()
-              : DateTime.now().toUtc()),
-      "sorting_label": sortingLabel?.toIso8601String(),
       "done": done == true ? 1 : 0,
       "done_at": doneAt?.toIso8601String(),
       "read_at": readAt?.toIso8601String(),
@@ -188,5 +150,6 @@ abstract class Task extends Object
     return serializers.deserializeWith(Task.serializer, data)!;
   }
 
+  @BuiltValueSerializer(serializeNulls: true)
   static Serializer<Task> get serializer => _$taskSerializer;
 }

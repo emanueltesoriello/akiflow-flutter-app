@@ -9,10 +9,8 @@ part of 'serializers.dart';
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Account.serializer)
       ..add(Calendar.serializer)
-      ..add(Content.serializer)
       ..add(Event.serializer)
       ..add(Label.serializer)
-      ..add(Settings.serializer)
       ..add(Task.serializer)
       ..add(User.serializer))
     .build();

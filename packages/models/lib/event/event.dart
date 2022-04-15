@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:built_value/built_value.dart';
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:intl/intl.dart';
 import 'package:models/base.dart';
 import 'package:models/serializers.dart';
-import 'package:models/task/content.dart';
 
 part 'event.g.dart';
 
@@ -67,9 +63,6 @@ abstract class Event extends Object
   @BuiltValueField(wireName: 'origin_updated_at')
   DateTime? get originUpdatedAt;
 
-  @BuiltValueField(wireName: 'etag')
-  String? get etag;
-
   @BuiltValueField(wireName: 'title')
   String? get title;
 
@@ -114,18 +107,6 @@ abstract class Event extends Object
 
   @BuiltValueField(wireName: 'task_id')
   String? get taskId;
-
-  @BuiltValueField(wireName: 'content', serialize: false)
-  Content? get content;
-
-  @BuiltValueField(wireName: 'attendees')
-  ListJsonObject? get attendees;
-
-  @BuiltValueField(wireName: 'recurrence')
-  ListJsonObject? get recurrence;
-
-  @BuiltValueField(wireName: 'fingerprints')
-  JsonObject? get fingerprints;
 
   @BuiltValueField(wireName: 'start_date')
   DateTime? get startDate;
@@ -216,12 +197,8 @@ abstract class Event extends Object
       "start_date_time_tz": startDateTimeTz?.toIso8601String(),
       "end_date_time_tz": endDateTimeTz?.toIso8601String(),
       "origin_updated_at": originUpdatedAt?.toIso8601String(),
-      "etag": etag,
       "title": title,
       "description": description,
-      "content": jsonEncode(content?.toMap() ?? {}),
-      "attendees": jsonEncode(attendees?.value ?? []),
-      "recurrence": jsonEncode(recurrence?.value ?? []),
       "recurrence_exception": recurrenceException == true ? 1 : 0,
       "declined": declined == true ? 1 : 0,
       "read_only": readOnly == true ? 1 : 0,
@@ -234,7 +211,6 @@ abstract class Event extends Object
       "color": color,
       "calendar_color": calendarColor,
       "task_id": taskId,
-      "fingerprints": jsonEncode(fingerprints?.value ?? {}),
       "until_date_time": untilDateTime?.toIso8601String(),
       "recurrence_exception_delete": recurrenceExceptionDelete == true ? 1 : 0,
       "recurrence_sync_retry": recurrenceSyncRetry?.toIso8601String(),
@@ -268,17 +244,6 @@ abstract class Event extends Object
         case "recurrence_exception_delete":
           data[key] = (data[key] == 1);
           break;
-        case "content":
-          data[key] = data[key] is String
-              ? Content.fromMap(jsonDecode(data[key] as String))
-              : null;
-          break;
-        case "attendees":
-        case "recurrence":
-        case "fingerprints":
-          data[key] =
-              data[key] is String ? (jsonDecode(data[key] as String)) : null;
-          break;
         default:
       }
     }
@@ -286,5 +251,6 @@ abstract class Event extends Object
     return serializers.deserializeWith(Event.serializer, data)!;
   }
 
+  @BuiltValueSerializer(serializeNulls: true)
   static Serializer<Event> get serializer => _$eventSerializer;
 }

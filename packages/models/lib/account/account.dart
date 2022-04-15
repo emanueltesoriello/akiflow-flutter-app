@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:built_value/built_value.dart';
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:models/base.dart';
 import 'package:models/serializers.dart';
@@ -30,9 +29,6 @@ abstract class Account extends Object
 
   String? get picture;
   String? get identifier;
-
-  @BuiltValueField(wireName: 'details')
-  JsonObject? get details;
 
   @BuiltValueField(wireName: 'autologin_token')
   String? get autologinToken;
@@ -110,7 +106,6 @@ abstract class Account extends Object
       "full_name": fullName,
       "picture": picture,
       "identifier": identifier,
-      "details": jsonEncode(details?.value ?? {}),
       "autologin_token": autologinToken,
       "status": status,
       "sync_status": syncStatus,

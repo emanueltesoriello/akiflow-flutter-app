@@ -49,12 +49,6 @@ class _$CalendarSerializer implements StructuredSerializer<Calendar> {
       ..add('origin_account_id')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
-    value = object.etag;
-
-    result
-      ..add('etag')
-      ..add(
-          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.title;
 
     result
@@ -110,12 +104,6 @@ class _$CalendarSerializer implements StructuredSerializer<Calendar> {
 
     result
       ..add('icon')
-      ..add(
-          serializers.serialize(value, specifiedType: const FullType(String)));
-    value = object.syncStatus;
-
-    result
-      ..add('sync_status')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.isAkiflowCalendar;
@@ -194,10 +182,6 @@ class _$CalendarSerializer implements StructuredSerializer<Calendar> {
           result.originCalendarId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
-        case 'etag':
-          result.etag = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
         case 'title':
           result.title = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
@@ -236,10 +220,6 @@ class _$CalendarSerializer implements StructuredSerializer<Calendar> {
           break;
         case 'icon':
           result.icon = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'sync_status':
-          result.syncStatus = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
         case 'is_akiflow_calendar':
@@ -289,8 +269,6 @@ class _$Calendar extends Calendar {
   @override
   final String? originCalendarId;
   @override
-  final String? etag;
-  @override
   final String? title;
   @override
   final String? description;
@@ -298,8 +276,6 @@ class _$Calendar extends Calendar {
   final String? akiflowAccountId;
   @override
   final String? originAccountId;
-  @override
-  final Content? content;
   @override
   final bool? primary;
   @override
@@ -313,11 +289,7 @@ class _$Calendar extends Calendar {
   @override
   final String? icon;
   @override
-  final String? syncStatus;
-  @override
   final bool? isAkiflowCalendar;
-  @override
-  final Settings? settings;
   @override
   final DateTime? globalUpdatedAt;
   @override
@@ -340,21 +312,17 @@ class _$Calendar extends Calendar {
       this.connectorId,
       this.akiflowCalendarId,
       this.originCalendarId,
-      this.etag,
       this.title,
       this.description,
       this.akiflowAccountId,
       this.originAccountId,
-      this.content,
       this.primary,
       this.akiflowPrimary,
       this.readOnly,
       this.url,
       this.color,
       this.icon,
-      this.syncStatus,
       this.isAkiflowCalendar,
-      this.settings,
       this.globalUpdatedAt,
       this.globalCreatedAt,
       this.createdAt,
@@ -379,21 +347,17 @@ class _$Calendar extends Calendar {
         connectorId == other.connectorId &&
         akiflowCalendarId == other.akiflowCalendarId &&
         originCalendarId == other.originCalendarId &&
-        etag == other.etag &&
         title == other.title &&
         description == other.description &&
         akiflowAccountId == other.akiflowAccountId &&
         originAccountId == other.originAccountId &&
-        content == other.content &&
         primary == other.primary &&
         akiflowPrimary == other.akiflowPrimary &&
         readOnly == other.readOnly &&
         url == other.url &&
         color == other.color &&
         icon == other.icon &&
-        syncStatus == other.syncStatus &&
         isAkiflowCalendar == other.isAkiflowCalendar &&
-        settings == other.settings &&
         globalUpdatedAt == other.globalUpdatedAt &&
         globalCreatedAt == other.globalCreatedAt &&
         createdAt == other.createdAt &&
@@ -422,20 +386,20 @@ class _$Calendar extends Calendar {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), originId.hashCode), connectorId.hashCode), akiflowCalendarId.hashCode), originCalendarId.hashCode), etag.hashCode), title.hashCode),
-                                                                                description.hashCode),
-                                                                            akiflowAccountId.hashCode),
-                                                                        originAccountId.hashCode),
-                                                                    content.hashCode),
-                                                                primary.hashCode),
-                                                            akiflowPrimary.hashCode),
-                                                        readOnly.hashCode),
-                                                    url.hashCode),
-                                                color.hashCode),
-                                            icon.hashCode),
-                                        syncStatus.hashCode),
-                                    isAkiflowCalendar.hashCode),
-                                settings.hashCode),
+                                                                            $jc($jc($jc($jc(0, id.hashCode), originId.hashCode), connectorId.hashCode),
+                                                                                akiflowCalendarId.hashCode),
+                                                                            originCalendarId.hashCode),
+                                                                        title.hashCode),
+                                                                    description.hashCode),
+                                                                akiflowAccountId.hashCode),
+                                                            originAccountId.hashCode),
+                                                        primary.hashCode),
+                                                    akiflowPrimary.hashCode),
+                                                readOnly.hashCode),
+                                            url.hashCode),
+                                        color.hashCode),
+                                    icon.hashCode),
+                                isAkiflowCalendar.hashCode),
                             globalUpdatedAt.hashCode),
                         globalCreatedAt.hashCode),
                     createdAt.hashCode),
@@ -452,21 +416,17 @@ class _$Calendar extends Calendar {
           ..add('connectorId', connectorId)
           ..add('akiflowCalendarId', akiflowCalendarId)
           ..add('originCalendarId', originCalendarId)
-          ..add('etag', etag)
           ..add('title', title)
           ..add('description', description)
           ..add('akiflowAccountId', akiflowAccountId)
           ..add('originAccountId', originAccountId)
-          ..add('content', content)
           ..add('primary', primary)
           ..add('akiflowPrimary', akiflowPrimary)
           ..add('readOnly', readOnly)
           ..add('url', url)
           ..add('color', color)
           ..add('icon', icon)
-          ..add('syncStatus', syncStatus)
           ..add('isAkiflowCalendar', isAkiflowCalendar)
-          ..add('settings', settings)
           ..add('globalUpdatedAt', globalUpdatedAt)
           ..add('globalCreatedAt', globalCreatedAt)
           ..add('createdAt', createdAt)
@@ -502,10 +462,6 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
   set originCalendarId(String? originCalendarId) =>
       _$this._originCalendarId = originCalendarId;
 
-  String? _etag;
-  String? get etag => _$this._etag;
-  set etag(String? etag) => _$this._etag = etag;
-
   String? _title;
   String? get title => _$this._title;
   set title(String? title) => _$this._title = title;
@@ -523,10 +479,6 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
   String? get originAccountId => _$this._originAccountId;
   set originAccountId(String? originAccountId) =>
       _$this._originAccountId = originAccountId;
-
-  ContentBuilder? _content;
-  ContentBuilder get content => _$this._content ??= new ContentBuilder();
-  set content(ContentBuilder? content) => _$this._content = content;
 
   bool? _primary;
   bool? get primary => _$this._primary;
@@ -553,18 +505,10 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
   String? get icon => _$this._icon;
   set icon(String? icon) => _$this._icon = icon;
 
-  String? _syncStatus;
-  String? get syncStatus => _$this._syncStatus;
-  set syncStatus(String? syncStatus) => _$this._syncStatus = syncStatus;
-
   bool? _isAkiflowCalendar;
   bool? get isAkiflowCalendar => _$this._isAkiflowCalendar;
   set isAkiflowCalendar(bool? isAkiflowCalendar) =>
       _$this._isAkiflowCalendar = isAkiflowCalendar;
-
-  SettingsBuilder? _settings;
-  SettingsBuilder get settings => _$this._settings ??= new SettingsBuilder();
-  set settings(SettingsBuilder? settings) => _$this._settings = settings;
 
   DateTime? _globalUpdatedAt;
   DateTime? get globalUpdatedAt => _$this._globalUpdatedAt;
@@ -603,21 +547,17 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
       _connectorId = $v.connectorId;
       _akiflowCalendarId = $v.akiflowCalendarId;
       _originCalendarId = $v.originCalendarId;
-      _etag = $v.etag;
       _title = $v.title;
       _description = $v.description;
       _akiflowAccountId = $v.akiflowAccountId;
       _originAccountId = $v.originAccountId;
-      _content = $v.content?.toBuilder();
       _primary = $v.primary;
       _akiflowPrimary = $v.akiflowPrimary;
       _readOnly = $v.readOnly;
       _url = $v.url;
       _color = $v.color;
       _icon = $v.icon;
-      _syncStatus = $v.syncStatus;
       _isAkiflowCalendar = $v.isAkiflowCalendar;
-      _settings = $v.settings?.toBuilder();
       _globalUpdatedAt = $v.globalUpdatedAt;
       _globalCreatedAt = $v.globalCreatedAt;
       _createdAt = $v.createdAt;
@@ -642,50 +582,30 @@ class CalendarBuilder implements Builder<Calendar, CalendarBuilder> {
 
   @override
   _$Calendar build() {
-    _$Calendar _$result;
-    try {
-      _$result = _$v ??
-          new _$Calendar._(
-              id: id,
-              originId: originId,
-              connectorId: connectorId,
-              akiflowCalendarId: akiflowCalendarId,
-              originCalendarId: originCalendarId,
-              etag: etag,
-              title: title,
-              description: description,
-              akiflowAccountId: akiflowAccountId,
-              originAccountId: originAccountId,
-              content: _content?.build(),
-              primary: primary,
-              akiflowPrimary: akiflowPrimary,
-              readOnly: readOnly,
-              url: url,
-              color: color,
-              icon: icon,
-              syncStatus: syncStatus,
-              isAkiflowCalendar: isAkiflowCalendar,
-              settings: _settings?.build(),
-              globalUpdatedAt: globalUpdatedAt,
-              globalCreatedAt: globalCreatedAt,
-              createdAt: createdAt,
-              updatedAt: updatedAt,
-              deletedAt: deletedAt,
-              remoteUpdatedAt: remoteUpdatedAt);
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'content';
-        _content?.build();
-
-        _$failedField = 'settings';
-        _settings?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'Calendar', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result = _$v ??
+        new _$Calendar._(
+            id: id,
+            originId: originId,
+            connectorId: connectorId,
+            akiflowCalendarId: akiflowCalendarId,
+            originCalendarId: originCalendarId,
+            title: title,
+            description: description,
+            akiflowAccountId: akiflowAccountId,
+            originAccountId: originAccountId,
+            primary: primary,
+            akiflowPrimary: akiflowPrimary,
+            readOnly: readOnly,
+            url: url,
+            color: color,
+            icon: icon,
+            isAkiflowCalendar: isAkiflowCalendar,
+            globalUpdatedAt: globalUpdatedAt,
+            globalCreatedAt: globalCreatedAt,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
+            remoteUpdatedAt: remoteUpdatedAt);
     replace(_$result);
     return _$result;
   }

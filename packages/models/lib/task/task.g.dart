@@ -20,177 +20,134 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
     final result = <Object?>[];
     Object? value;
     value = object.id;
-    if (value != null) {
-      result
-        ..add('id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.title;
-    if (value != null) {
-      result
-        ..add('title')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.date;
-    if (value != null) {
-      result
-        ..add('date')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.description;
-    if (value != null) {
-      result
-        ..add('description')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('description')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.duration;
-    if (value != null) {
-      result
-        ..add('duration')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
-    }
+
+    result
+      ..add('duration')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     value = object.status;
-    if (value != null) {
-      result
-        ..add('status')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
-    }
+
+    result
+      ..add('status')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     value = object.createdAt;
-    if (value != null) {
-      result
-        ..add('created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.updatedAt;
-    if (value != null) {
-      result
-        ..add('updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.deletedAt;
-    if (value != null) {
-      result
-        ..add('deleted_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.dailyGoal;
-    if (value != null) {
-      result
-        ..add('daily_goal')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
-    }
-    value = object.sorting;
-    if (value != null) {
-      result
-        ..add('sorting')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('deleted_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.done;
-    if (value != null) {
-      result
-        ..add('done')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
+    result
+      ..add('done')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
     value = object.doneAt;
-    if (value != null) {
-      result
-        ..add('done_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('done_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.readAt;
-    if (value != null) {
-      result
-        ..add('read_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('read_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalUpdatedAt;
-    if (value != null) {
-      result
-        ..add('global_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalCreatedAt;
-    if (value != null) {
-      result
-        ..add('global_created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.activationDatetime;
-    if (value != null) {
-      result
-        ..add('activation_datetime')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.sortingLabel;
-    if (value != null) {
-      result
-        ..add('sorting_label')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('activation_datetime')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.dueDate;
-    if (value != null) {
-      result
-        ..add('due_date')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('due_date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.remoteUpdatedAt;
-    if (value != null) {
-      result
-        ..add('remote_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('remote_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.recurringId;
-    if (value != null) {
-      result
-        ..add('recurring_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('recurring_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.priority;
-    if (value != null) {
-      result
-        ..add('priority')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('priority')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     value = object.listId;
-    if (value != null) {
-      result
-        ..add('list_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('list_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.sectionId;
-    if (value != null) {
-      result
-        ..add('section_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('section_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.origin;
-    if (value != null) {
-      result
-        ..add('origin')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('origin')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
@@ -241,14 +198,6 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.deletedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'daily_goal':
-          result.dailyGoal = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
-          break;
-        case 'sorting':
-          result.sorting = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime?;
-          break;
         case 'done':
           result.done = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool?;
@@ -273,10 +222,6 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.activationDatetime = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'sorting_label':
-          result.sortingLabel = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime?;
-          break;
         case 'due_date':
           result.dueDate = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
@@ -291,7 +236,7 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           break;
         case 'priority':
           result.priority = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'list_id':
           result.listId = serializers.deserialize(value,
@@ -332,12 +277,6 @@ class _$Task extends Task {
   @override
   final DateTime? deletedAt;
   @override
-  final Content? content;
-  @override
-  final int? dailyGoal;
-  @override
-  final DateTime? sorting;
-  @override
   final bool? done;
   @override
   final DateTime? doneAt;
@@ -350,23 +289,17 @@ class _$Task extends Task {
   @override
   final DateTime? activationDatetime;
   @override
-  final DateTime? sortingLabel;
-  @override
   final DateTime? dueDate;
   @override
   final DateTime? remoteUpdatedAt;
   @override
   final String? recurringId;
   @override
-  final JsonObject? recurrence;
-  @override
-  final String? priority;
+  final int? priority;
   @override
   final String? listId;
   @override
   final String? sectionId;
-  @override
-  final List<String>? links;
   @override
   final String? origin;
 
@@ -383,24 +316,18 @@ class _$Task extends Task {
       this.createdAt,
       this.updatedAt,
       this.deletedAt,
-      this.content,
-      this.dailyGoal,
-      this.sorting,
       this.done,
       this.doneAt,
       this.readAt,
       this.globalUpdatedAt,
       this.globalCreatedAt,
       this.activationDatetime,
-      this.sortingLabel,
       this.dueDate,
       this.remoteUpdatedAt,
       this.recurringId,
-      this.recurrence,
       this.priority,
       this.listId,
       this.sectionId,
-      this.links,
       this.origin})
       : super._();
 
@@ -424,24 +351,18 @@ class _$Task extends Task {
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt &&
         deletedAt == other.deletedAt &&
-        content == other.content &&
-        dailyGoal == other.dailyGoal &&
-        sorting == other.sorting &&
         done == other.done &&
         doneAt == other.doneAt &&
         readAt == other.readAt &&
         globalUpdatedAt == other.globalUpdatedAt &&
         globalCreatedAt == other.globalCreatedAt &&
         activationDatetime == other.activationDatetime &&
-        sortingLabel == other.sortingLabel &&
         dueDate == other.dueDate &&
         remoteUpdatedAt == other.remoteUpdatedAt &&
         recurringId == other.recurringId &&
-        recurrence == other.recurrence &&
         priority == other.priority &&
         listId == other.listId &&
         sectionId == other.sectionId &&
-        links == other.links &&
         origin == other.origin;
   }
 
@@ -465,25 +386,25 @@ class _$Task extends Task {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode), updatedAt.hashCode), deletedAt.hashCode),
-                                                                                content.hashCode),
-                                                                            dailyGoal.hashCode),
-                                                                        sorting.hashCode),
-                                                                    done.hashCode),
-                                                                doneAt.hashCode),
-                                                            readAt.hashCode),
-                                                        globalUpdatedAt.hashCode),
-                                                    globalCreatedAt.hashCode),
-                                                activationDatetime.hashCode),
-                                            sortingLabel.hashCode),
-                                        dueDate.hashCode),
-                                    remoteUpdatedAt.hashCode),
-                                recurringId.hashCode),
-                            recurrence.hashCode),
-                        priority.hashCode),
-                    listId.hashCode),
-                sectionId.hashCode),
-            links.hashCode),
+                                                                            $jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode),
+                                                                                description.hashCode),
+                                                                            duration.hashCode),
+                                                                        status.hashCode),
+                                                                    createdAt.hashCode),
+                                                                updatedAt.hashCode),
+                                                            deletedAt.hashCode),
+                                                        done.hashCode),
+                                                    doneAt.hashCode),
+                                                readAt.hashCode),
+                                            globalUpdatedAt.hashCode),
+                                        globalCreatedAt.hashCode),
+                                    activationDatetime.hashCode),
+                                dueDate.hashCode),
+                            remoteUpdatedAt.hashCode),
+                        recurringId.hashCode),
+                    priority.hashCode),
+                listId.hashCode),
+            sectionId.hashCode),
         origin.hashCode));
   }
 
@@ -499,24 +420,18 @@ class _$Task extends Task {
           ..add('createdAt', createdAt)
           ..add('updatedAt', updatedAt)
           ..add('deletedAt', deletedAt)
-          ..add('content', content)
-          ..add('dailyGoal', dailyGoal)
-          ..add('sorting', sorting)
           ..add('done', done)
           ..add('doneAt', doneAt)
           ..add('readAt', readAt)
           ..add('globalUpdatedAt', globalUpdatedAt)
           ..add('globalCreatedAt', globalCreatedAt)
           ..add('activationDatetime', activationDatetime)
-          ..add('sortingLabel', sortingLabel)
           ..add('dueDate', dueDate)
           ..add('remoteUpdatedAt', remoteUpdatedAt)
           ..add('recurringId', recurringId)
-          ..add('recurrence', recurrence)
           ..add('priority', priority)
           ..add('listId', listId)
           ..add('sectionId', sectionId)
-          ..add('links', links)
           ..add('origin', origin))
         .toString();
   }
@@ -561,18 +476,6 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   DateTime? get deletedAt => _$this._deletedAt;
   set deletedAt(DateTime? deletedAt) => _$this._deletedAt = deletedAt;
 
-  ContentBuilder? _content;
-  ContentBuilder get content => _$this._content ??= new ContentBuilder();
-  set content(ContentBuilder? content) => _$this._content = content;
-
-  int? _dailyGoal;
-  int? get dailyGoal => _$this._dailyGoal;
-  set dailyGoal(int? dailyGoal) => _$this._dailyGoal = dailyGoal;
-
-  DateTime? _sorting;
-  DateTime? get sorting => _$this._sorting;
-  set sorting(DateTime? sorting) => _$this._sorting = sorting;
-
   bool? _done;
   bool? get done => _$this._done;
   set done(bool? done) => _$this._done = done;
@@ -600,11 +503,6 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   set activationDatetime(DateTime? activationDatetime) =>
       _$this._activationDatetime = activationDatetime;
 
-  DateTime? _sortingLabel;
-  DateTime? get sortingLabel => _$this._sortingLabel;
-  set sortingLabel(DateTime? sortingLabel) =>
-      _$this._sortingLabel = sortingLabel;
-
   DateTime? _dueDate;
   DateTime? get dueDate => _$this._dueDate;
   set dueDate(DateTime? dueDate) => _$this._dueDate = dueDate;
@@ -618,13 +516,9 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   String? get recurringId => _$this._recurringId;
   set recurringId(String? recurringId) => _$this._recurringId = recurringId;
 
-  JsonObject? _recurrence;
-  JsonObject? get recurrence => _$this._recurrence;
-  set recurrence(JsonObject? recurrence) => _$this._recurrence = recurrence;
-
-  String? _priority;
-  String? get priority => _$this._priority;
-  set priority(String? priority) => _$this._priority = priority;
+  int? _priority;
+  int? get priority => _$this._priority;
+  set priority(int? priority) => _$this._priority = priority;
 
   String? _listId;
   String? get listId => _$this._listId;
@@ -633,10 +527,6 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   String? _sectionId;
   String? get sectionId => _$this._sectionId;
   set sectionId(String? sectionId) => _$this._sectionId = sectionId;
-
-  List<String>? _links;
-  List<String>? get links => _$this._links;
-  set links(List<String>? links) => _$this._links = links;
 
   String? _origin;
   String? get origin => _$this._origin;
@@ -656,24 +546,18 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
       _deletedAt = $v.deletedAt;
-      _content = $v.content?.toBuilder();
-      _dailyGoal = $v.dailyGoal;
-      _sorting = $v.sorting;
       _done = $v.done;
       _doneAt = $v.doneAt;
       _readAt = $v.readAt;
       _globalUpdatedAt = $v.globalUpdatedAt;
       _globalCreatedAt = $v.globalCreatedAt;
       _activationDatetime = $v.activationDatetime;
-      _sortingLabel = $v.sortingLabel;
       _dueDate = $v.dueDate;
       _remoteUpdatedAt = $v.remoteUpdatedAt;
       _recurringId = $v.recurringId;
-      _recurrence = $v.recurrence;
       _priority = $v.priority;
       _listId = $v.listId;
       _sectionId = $v.sectionId;
-      _links = $v.links;
       _origin = $v.origin;
       _$v = null;
     }
@@ -693,49 +577,30 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
 
   @override
   _$Task build() {
-    _$Task _$result;
-    try {
-      _$result = _$v ??
-          new _$Task._(
-              id: id,
-              title: title,
-              date: date,
-              description: description,
-              duration: duration,
-              status: status,
-              createdAt: createdAt,
-              updatedAt: updatedAt,
-              deletedAt: deletedAt,
-              content: _content?.build(),
-              dailyGoal: dailyGoal,
-              sorting: sorting,
-              done: done,
-              doneAt: doneAt,
-              readAt: readAt,
-              globalUpdatedAt: globalUpdatedAt,
-              globalCreatedAt: globalCreatedAt,
-              activationDatetime: activationDatetime,
-              sortingLabel: sortingLabel,
-              dueDate: dueDate,
-              remoteUpdatedAt: remoteUpdatedAt,
-              recurringId: recurringId,
-              recurrence: recurrence,
-              priority: priority,
-              listId: listId,
-              sectionId: sectionId,
-              links: links,
-              origin: origin);
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'content';
-        _content?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'Task', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result = _$v ??
+        new _$Task._(
+            id: id,
+            title: title,
+            date: date,
+            description: description,
+            duration: duration,
+            status: status,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
+            done: done,
+            doneAt: doneAt,
+            readAt: readAt,
+            globalUpdatedAt: globalUpdatedAt,
+            globalCreatedAt: globalCreatedAt,
+            activationDatetime: activationDatetime,
+            dueDate: dueDate,
+            remoteUpdatedAt: remoteUpdatedAt,
+            recurringId: recurringId,
+            priority: priority,
+            listId: listId,
+            sectionId: sectionId,
+            origin: origin);
     replace(_$result);
     return _$result;
   }

@@ -32,21 +32,6 @@ abstract class Label extends Object
   @BuiltValueField(wireName: 'remote_updated_at')
   DateTime? get remoteUpdatedAt;
 
-  @BuiltValueField(wireName: 'sorting')
-  DateTime? get sorting;
-
-  @BuiltValueField(wireName: 'parent_id')
-  String? get parentId;
-
-  @BuiltValueField(wireName: 'system')
-  String? get system;
-
-  @BuiltValueField(wireName: 'is_folder')
-  String? get isFolder;
-
-  @BuiltValueField(wireName: 'type')
-  String? get type;
-
   @BuiltValueField(wireName: 'global_updated_at')
   DateTime? get globalUpdatedAt;
 
@@ -68,10 +53,6 @@ abstract class Label extends Object
     Map<String, dynamic> data = serializers.serializeWith(
         Label.serializer, this) as Map<String, dynamic>;
 
-    if (sorting != null) {
-      data['sorting'] = sorting?.microsecondsSinceEpoch;
-    }
-
     return data;
   }
 
@@ -86,14 +67,6 @@ abstract class Label extends Object
       "title": title,
       "icon": icon,
       "color": color,
-      "sorting": sorting != null
-          ? sorting!.toIso8601String()
-          : (createdAt != null
-              ? createdAt!.toIso8601String()
-              : DateTime.now().toUtc()),
-      "parent_id": parentId,
-      "type": type,
-      "system": system,
       "updated_at": updatedAt?.toIso8601String(),
       "created_at": createdAt?.toIso8601String(),
       "deleted_at": deletedAt?.toIso8601String(),
@@ -113,5 +86,6 @@ abstract class Label extends Object
     return serializers.deserializeWith(Label.serializer, data)!;
   }
 
+  @BuiltValueSerializer(serializeNulls: true)
   static Serializer<Label> get serializer => _$labelSerializer;
 }

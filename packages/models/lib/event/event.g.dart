@@ -20,348 +20,271 @@ class _$EventSerializer implements StructuredSerializer<Event> {
     final result = <Object?>[];
     Object? value;
     value = object.id;
-    if (value != null) {
-      result
-        ..add('id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.originId;
-    if (value != null) {
-      result
-        ..add('origin_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('origin_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.customOriginId;
-    if (value != null) {
-      result
-        ..add('custom_origin_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('custom_origin_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.connectorId;
-    if (value != null) {
-      result
-        ..add('connector_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('connector_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.accountId;
-    if (value != null) {
-      result
-        ..add('account_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('account_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.akiflowAccountId;
-    if (value != null) {
-      result
-        ..add('akiflow_account_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('akiflow_account_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.originAccountId;
-    if (value != null) {
-      result
-        ..add('origin_account_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('origin_account_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.recurringId;
-    if (value != null) {
-      result
-        ..add('recurring_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('recurring_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.originRecurringId;
-    if (value != null) {
-      result
-        ..add('origin_recurring_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('origin_recurring_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.calendarId;
-    if (value != null) {
-      result
-        ..add('calendar_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('calendar_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.originCalendarId;
-    if (value != null) {
-      result
-        ..add('origin_calendar_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('origin_calendar_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.creatorId;
-    if (value != null) {
-      result
-        ..add('creator_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('creator_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.organizerId;
-    if (value != null) {
-      result
-        ..add('organizer_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('organizer_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.originalStartTime;
-    if (value != null) {
-      result
-        ..add('original_start_time')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('original_start_time')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.originalStartDate;
-    if (value != null) {
-      result
-        ..add('original_start_date')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('original_start_date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.startTime;
-    if (value != null) {
-      result
-        ..add('start_time')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('start_time')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.endTime;
-    if (value != null) {
-      result
-        ..add('end_time')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('end_time')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.originUpdatedAt;
-    if (value != null) {
-      result
-        ..add('origin_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.etag;
-    if (value != null) {
-      result
-        ..add('etag')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('origin_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.title;
-    if (value != null) {
-      result
-        ..add('title')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.description;
-    if (value != null) {
-      result
-        ..add('description')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('description')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.recurrenceException;
-    if (value != null) {
-      result
-        ..add('recurrence_exception')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
+    result
+      ..add('recurrence_exception')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
     value = object.declined;
-    if (value != null) {
-      result
-        ..add('declined')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
+    result
+      ..add('declined')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
     value = object.readOnly;
-    if (value != null) {
-      result
-        ..add('read_only')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
+    result
+      ..add('read_only')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
     value = object.hidden;
-    if (value != null) {
-      result
-        ..add('hidden')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
+    result
+      ..add('hidden')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
     value = object.recurrenceExceptionDelete;
-    if (value != null) {
-      result
-        ..add('recurrence_exception_delete')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
+    result
+      ..add('recurrence_exception_delete')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
     value = object.url;
-    if (value != null) {
-      result
-        ..add('url')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.meetingStatus;
-    if (value != null) {
-      result
-        ..add('meeting_status')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('meeting_status')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.meetingUrl;
-    if (value != null) {
-      result
-        ..add('meeting_url')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('meeting_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.meetingIcon;
-    if (value != null) {
-      result
-        ..add('meeting_icon')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('meeting_icon')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.meetingSolution;
-    if (value != null) {
-      result
-        ..add('meeting_solution')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('meeting_solution')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.color;
-    if (value != null) {
-      result
-        ..add('color')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('color')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.calendarColor;
-    if (value != null) {
-      result
-        ..add('calendar_color')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('calendar_color')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.taskId;
-    if (value != null) {
-      result
-        ..add('task_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.attendees;
-    if (value != null) {
-      result
-        ..add('attendees')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(ListJsonObject)));
-    }
-    value = object.recurrence;
-    if (value != null) {
-      result
-        ..add('recurrence')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(ListJsonObject)));
-    }
-    value = object.fingerprints;
-    if (value != null) {
-      result
-        ..add('fingerprints')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(JsonObject)));
-    }
+
+    result
+      ..add('task_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.startDate;
-    if (value != null) {
-      result
-        ..add('start_date')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('start_date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.endDate;
-    if (value != null) {
-      result
-        ..add('end_date')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('end_date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.startDateTimeTz;
-    if (value != null) {
-      result
-        ..add('start_date_time_tz')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('start_date_time_tz')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.endDateTimeTz;
-    if (value != null) {
-      result
-        ..add('end_date_time_tz')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('end_date_time_tz')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.remoteUpdatedAt;
-    if (value != null) {
-      result
-        ..add('remote_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('remote_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.createdAt;
-    if (value != null) {
-      result
-        ..add('created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.updatedAt;
-    if (value != null) {
-      result
-        ..add('updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.deletedAt;
-    if (value != null) {
-      result
-        ..add('deleted_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('deleted_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.untilDateTime;
-    if (value != null) {
-      result
-        ..add('until_date_time')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('until_date_time')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.recurrenceSyncRetry;
-    if (value != null) {
-      result
-        ..add('recurrence_sync_retry')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('recurrence_sync_retry')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalUpdatedAt;
-    if (value != null) {
-      result
-        ..add('global_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalCreatedAt;
-    if (value != null) {
-      result
-        ..add('global_created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
+
     return result;
   }
 
@@ -448,10 +371,6 @@ class _$EventSerializer implements StructuredSerializer<Event> {
           result.originUpdatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'etag':
-          result.etag = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
         case 'title':
           result.title = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
@@ -511,18 +430,6 @@ class _$EventSerializer implements StructuredSerializer<Event> {
         case 'task_id':
           result.taskId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
-          break;
-        case 'attendees':
-          result.attendees = serializers.deserialize(value,
-              specifiedType: const FullType(ListJsonObject)) as ListJsonObject?;
-          break;
-        case 'recurrence':
-          result.recurrence = serializers.deserialize(value,
-              specifiedType: const FullType(ListJsonObject)) as ListJsonObject?;
-          break;
-        case 'fingerprints':
-          result.fingerprints = serializers.deserialize(value,
-              specifiedType: const FullType(JsonObject)) as JsonObject?;
           break;
         case 'start_date':
           result.startDate = serializers.deserialize(value,
@@ -617,8 +524,6 @@ class _$Event extends Event {
   @override
   final DateTime? originUpdatedAt;
   @override
-  final String? etag;
-  @override
   final String? title;
   @override
   final String? description;
@@ -648,14 +553,6 @@ class _$Event extends Event {
   final String? calendarColor;
   @override
   final String? taskId;
-  @override
-  final Content? content;
-  @override
-  final ListJsonObject? attendees;
-  @override
-  final ListJsonObject? recurrence;
-  @override
-  final JsonObject? fingerprints;
   @override
   final DateTime? startDate;
   @override
@@ -703,7 +600,6 @@ class _$Event extends Event {
       this.startTime,
       this.endTime,
       this.originUpdatedAt,
-      this.etag,
       this.title,
       this.description,
       this.recurrenceException,
@@ -719,10 +615,6 @@ class _$Event extends Event {
       this.color,
       this.calendarColor,
       this.taskId,
-      this.content,
-      this.attendees,
-      this.recurrence,
-      this.fingerprints,
       this.startDate,
       this.endDate,
       this.startDateTimeTz,
@@ -766,7 +658,6 @@ class _$Event extends Event {
         startTime == other.startTime &&
         endTime == other.endTime &&
         originUpdatedAt == other.originUpdatedAt &&
-        etag == other.etag &&
         title == other.title &&
         description == other.description &&
         recurrenceException == other.recurrenceException &&
@@ -782,10 +673,6 @@ class _$Event extends Event {
         color == other.color &&
         calendarColor == other.calendarColor &&
         taskId == other.taskId &&
-        content == other.content &&
-        attendees == other.attendees &&
-        recurrence == other.recurrence &&
-        fingerprints == other.fingerprints &&
         startDate == other.startDate &&
         endDate == other.endDate &&
         startDateTimeTz == other.startDateTimeTz &&
@@ -820,14 +707,14 @@ class _$Event extends Event {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), originId.hashCode), customOriginId.hashCode), connectorId.hashCode), accountId.hashCode), akiflowAccountId.hashCode), originAccountId.hashCode), recurringId.hashCode), originRecurringId.hashCode), calendarId.hashCode), originCalendarId.hashCode), creatorId.hashCode), organizerId.hashCode), originalStartTime.hashCode), originalStartDate.hashCode), startTime.hashCode), endTime.hashCode), originUpdatedAt.hashCode), etag.hashCode), title.hashCode), description.hashCode), recurrenceException.hashCode), declined.hashCode), readOnly.hashCode), hidden.hashCode), recurrenceExceptionDelete.hashCode), url.hashCode), meetingStatus.hashCode), meetingUrl.hashCode), meetingIcon.hashCode), meetingSolution.hashCode),
-                                                                                color.hashCode),
-                                                                            calendarColor.hashCode),
-                                                                        taskId.hashCode),
-                                                                    content.hashCode),
-                                                                attendees.hashCode),
-                                                            recurrence.hashCode),
-                                                        fingerprints.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), originId.hashCode), customOriginId.hashCode), connectorId.hashCode), accountId.hashCode), akiflowAccountId.hashCode), originAccountId.hashCode), recurringId.hashCode), originRecurringId.hashCode), calendarId.hashCode), originCalendarId.hashCode), creatorId.hashCode), organizerId.hashCode), originalStartTime.hashCode), originalStartDate.hashCode), startTime.hashCode), endTime.hashCode), originUpdatedAt.hashCode), title.hashCode), description.hashCode), recurrenceException.hashCode), declined.hashCode), readOnly.hashCode), hidden.hashCode), recurrenceExceptionDelete.hashCode), url.hashCode),
+                                                                                meetingStatus.hashCode),
+                                                                            meetingUrl.hashCode),
+                                                                        meetingIcon.hashCode),
+                                                                    meetingSolution.hashCode),
+                                                                color.hashCode),
+                                                            calendarColor.hashCode),
+                                                        taskId.hashCode),
                                                     startDate.hashCode),
                                                 endDate.hashCode),
                                             startDateTimeTz.hashCode),
@@ -863,7 +750,6 @@ class _$Event extends Event {
           ..add('startTime', startTime)
           ..add('endTime', endTime)
           ..add('originUpdatedAt', originUpdatedAt)
-          ..add('etag', etag)
           ..add('title', title)
           ..add('description', description)
           ..add('recurrenceException', recurrenceException)
@@ -879,10 +765,6 @@ class _$Event extends Event {
           ..add('color', color)
           ..add('calendarColor', calendarColor)
           ..add('taskId', taskId)
-          ..add('content', content)
-          ..add('attendees', attendees)
-          ..add('recurrence', recurrence)
-          ..add('fingerprints', fingerprints)
           ..add('startDate', startDate)
           ..add('endDate', endDate)
           ..add('startDateTimeTz', startDateTimeTz)
@@ -982,10 +864,6 @@ class EventBuilder implements Builder<Event, EventBuilder> {
   set originUpdatedAt(DateTime? originUpdatedAt) =>
       _$this._originUpdatedAt = originUpdatedAt;
 
-  String? _etag;
-  String? get etag => _$this._etag;
-  set etag(String? etag) => _$this._etag = etag;
-
   String? _title;
   String? get title => _$this._title;
   set title(String? title) => _$this._title = title;
@@ -1050,23 +928,6 @@ class EventBuilder implements Builder<Event, EventBuilder> {
   String? _taskId;
   String? get taskId => _$this._taskId;
   set taskId(String? taskId) => _$this._taskId = taskId;
-
-  ContentBuilder? _content;
-  ContentBuilder get content => _$this._content ??= new ContentBuilder();
-  set content(ContentBuilder? content) => _$this._content = content;
-
-  ListJsonObject? _attendees;
-  ListJsonObject? get attendees => _$this._attendees;
-  set attendees(ListJsonObject? attendees) => _$this._attendees = attendees;
-
-  ListJsonObject? _recurrence;
-  ListJsonObject? get recurrence => _$this._recurrence;
-  set recurrence(ListJsonObject? recurrence) => _$this._recurrence = recurrence;
-
-  JsonObject? _fingerprints;
-  JsonObject? get fingerprints => _$this._fingerprints;
-  set fingerprints(JsonObject? fingerprints) =>
-      _$this._fingerprints = fingerprints;
 
   DateTime? _startDate;
   DateTime? get startDate => _$this._startDate;
@@ -1146,7 +1007,6 @@ class EventBuilder implements Builder<Event, EventBuilder> {
       _startTime = $v.startTime;
       _endTime = $v.endTime;
       _originUpdatedAt = $v.originUpdatedAt;
-      _etag = $v.etag;
       _title = $v.title;
       _description = $v.description;
       _recurrenceException = $v.recurrenceException;
@@ -1162,10 +1022,6 @@ class EventBuilder implements Builder<Event, EventBuilder> {
       _color = $v.color;
       _calendarColor = $v.calendarColor;
       _taskId = $v.taskId;
-      _content = $v.content?.toBuilder();
-      _attendees = $v.attendees;
-      _recurrence = $v.recurrence;
-      _fingerprints = $v.fingerprints;
       _startDate = $v.startDate;
       _endDate = $v.endDate;
       _startDateTimeTz = $v.startDateTimeTz;
@@ -1196,71 +1052,53 @@ class EventBuilder implements Builder<Event, EventBuilder> {
 
   @override
   _$Event build() {
-    _$Event _$result;
-    try {
-      _$result = _$v ??
-          new _$Event._(
-              id: id,
-              originId: originId,
-              customOriginId: customOriginId,
-              connectorId: connectorId,
-              accountId: accountId,
-              akiflowAccountId: akiflowAccountId,
-              originAccountId: originAccountId,
-              recurringId: recurringId,
-              originRecurringId: originRecurringId,
-              calendarId: calendarId,
-              originCalendarId: originCalendarId,
-              creatorId: creatorId,
-              organizerId: organizerId,
-              originalStartTime: originalStartTime,
-              originalStartDate: originalStartDate,
-              startTime: startTime,
-              endTime: endTime,
-              originUpdatedAt: originUpdatedAt,
-              etag: etag,
-              title: title,
-              description: description,
-              recurrenceException: recurrenceException,
-              declined: declined,
-              readOnly: readOnly,
-              hidden: hidden,
-              recurrenceExceptionDelete: recurrenceExceptionDelete,
-              url: url,
-              meetingStatus: meetingStatus,
-              meetingUrl: meetingUrl,
-              meetingIcon: meetingIcon,
-              meetingSolution: meetingSolution,
-              color: color,
-              calendarColor: calendarColor,
-              taskId: taskId,
-              content: _content?.build(),
-              attendees: attendees,
-              recurrence: recurrence,
-              fingerprints: fingerprints,
-              startDate: startDate,
-              endDate: endDate,
-              startDateTimeTz: startDateTimeTz,
-              endDateTimeTz: endDateTimeTz,
-              remoteUpdatedAt: remoteUpdatedAt,
-              createdAt: createdAt,
-              updatedAt: updatedAt,
-              deletedAt: deletedAt,
-              untilDateTime: untilDateTime,
-              recurrenceSyncRetry: recurrenceSyncRetry,
-              globalUpdatedAt: globalUpdatedAt,
-              globalCreatedAt: globalCreatedAt);
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'content';
-        _content?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'Event', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result = _$v ??
+        new _$Event._(
+            id: id,
+            originId: originId,
+            customOriginId: customOriginId,
+            connectorId: connectorId,
+            accountId: accountId,
+            akiflowAccountId: akiflowAccountId,
+            originAccountId: originAccountId,
+            recurringId: recurringId,
+            originRecurringId: originRecurringId,
+            calendarId: calendarId,
+            originCalendarId: originCalendarId,
+            creatorId: creatorId,
+            organizerId: organizerId,
+            originalStartTime: originalStartTime,
+            originalStartDate: originalStartDate,
+            startTime: startTime,
+            endTime: endTime,
+            originUpdatedAt: originUpdatedAt,
+            title: title,
+            description: description,
+            recurrenceException: recurrenceException,
+            declined: declined,
+            readOnly: readOnly,
+            hidden: hidden,
+            recurrenceExceptionDelete: recurrenceExceptionDelete,
+            url: url,
+            meetingStatus: meetingStatus,
+            meetingUrl: meetingUrl,
+            meetingIcon: meetingIcon,
+            meetingSolution: meetingSolution,
+            color: color,
+            calendarColor: calendarColor,
+            taskId: taskId,
+            startDate: startDate,
+            endDate: endDate,
+            startDateTimeTz: startDateTimeTz,
+            endDateTimeTz: endDateTimeTz,
+            remoteUpdatedAt: remoteUpdatedAt,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
+            untilDateTime: untilDateTime,
+            recurrenceSyncRetry: recurrenceSyncRetry,
+            globalUpdatedAt: globalUpdatedAt,
+            globalCreatedAt: globalCreatedAt);
     replace(_$result);
     return _$result;
   }

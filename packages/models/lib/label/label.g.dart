@@ -20,110 +20,66 @@ class _$LabelSerializer implements StructuredSerializer<Label> {
     final result = <Object?>[];
     Object? value;
     value = object.id;
-    if (value != null) {
-      result
-        ..add('id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.title;
-    if (value != null) {
-      result
-        ..add('title')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.icon;
-    if (value != null) {
-      result
-        ..add('icon')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('icon')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.color;
-    if (value != null) {
-      result
-        ..add('color')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('color')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.createdAt;
-    if (value != null) {
-      result
-        ..add('created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.updatedAt;
-    if (value != null) {
-      result
-        ..add('updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.deletedAt;
-    if (value != null) {
-      result
-        ..add('deleted_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('deleted_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.remoteUpdatedAt;
-    if (value != null) {
-      result
-        ..add('remote_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.sorting;
-    if (value != null) {
-      result
-        ..add('sorting')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.parentId;
-    if (value != null) {
-      result
-        ..add('parent_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.system;
-    if (value != null) {
-      result
-        ..add('system')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.isFolder;
-    if (value != null) {
-      result
-        ..add('is_folder')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.type;
-    if (value != null) {
-      result
-        ..add('type')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
+
+    result
+      ..add('remote_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalUpdatedAt;
-    if (value != null) {
-      result
-        ..add('global_updated_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_updated_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.globalCreatedAt;
-    if (value != null) {
-      result
-        ..add('global_created_at')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
+
+    result
+      ..add('global_created_at')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
+
     return result;
   }
 
@@ -170,26 +126,6 @@ class _$LabelSerializer implements StructuredSerializer<Label> {
           result.remoteUpdatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'sorting':
-          result.sorting = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime?;
-          break;
-        case 'parent_id':
-          result.parentId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'system':
-          result.system = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'is_folder':
-          result.isFolder = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'type':
-          result.type = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
         case 'global_updated_at':
           result.globalUpdatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
@@ -223,16 +159,6 @@ class _$Label extends Label {
   @override
   final DateTime? remoteUpdatedAt;
   @override
-  final DateTime? sorting;
-  @override
-  final String? parentId;
-  @override
-  final String? system;
-  @override
-  final String? isFolder;
-  @override
-  final String? type;
-  @override
   final DateTime? globalUpdatedAt;
   @override
   final DateTime? globalCreatedAt;
@@ -249,11 +175,6 @@ class _$Label extends Label {
       this.updatedAt,
       this.deletedAt,
       this.remoteUpdatedAt,
-      this.sorting,
-      this.parentId,
-      this.system,
-      this.isFolder,
-      this.type,
       this.globalUpdatedAt,
       this.globalCreatedAt})
       : super._();
@@ -277,11 +198,6 @@ class _$Label extends Label {
         updatedAt == other.updatedAt &&
         deletedAt == other.deletedAt &&
         remoteUpdatedAt == other.remoteUpdatedAt &&
-        sorting == other.sorting &&
-        parentId == other.parentId &&
-        system == other.system &&
-        isFolder == other.isFolder &&
-        type == other.type &&
         globalUpdatedAt == other.globalUpdatedAt &&
         globalCreatedAt == other.globalCreatedAt;
   }
@@ -295,25 +211,13 @@ class _$Label extends Label {
                     $jc(
                         $jc(
                             $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc($jc(0, id.hashCode),
-                                                            title.hashCode),
-                                                        icon.hashCode),
-                                                    color.hashCode),
-                                                createdAt.hashCode),
-                                            updatedAt.hashCode),
-                                        deletedAt.hashCode),
-                                    remoteUpdatedAt.hashCode),
-                                sorting.hashCode),
-                            parentId.hashCode),
-                        system.hashCode),
-                    isFolder.hashCode),
-                type.hashCode),
+                                $jc($jc($jc(0, id.hashCode), title.hashCode),
+                                    icon.hashCode),
+                                color.hashCode),
+                            createdAt.hashCode),
+                        updatedAt.hashCode),
+                    deletedAt.hashCode),
+                remoteUpdatedAt.hashCode),
             globalUpdatedAt.hashCode),
         globalCreatedAt.hashCode));
   }
@@ -329,11 +233,6 @@ class _$Label extends Label {
           ..add('updatedAt', updatedAt)
           ..add('deletedAt', deletedAt)
           ..add('remoteUpdatedAt', remoteUpdatedAt)
-          ..add('sorting', sorting)
-          ..add('parentId', parentId)
-          ..add('system', system)
-          ..add('isFolder', isFolder)
-          ..add('type', type)
           ..add('globalUpdatedAt', globalUpdatedAt)
           ..add('globalCreatedAt', globalCreatedAt))
         .toString();
@@ -376,26 +275,6 @@ class LabelBuilder implements Builder<Label, LabelBuilder> {
   set remoteUpdatedAt(DateTime? remoteUpdatedAt) =>
       _$this._remoteUpdatedAt = remoteUpdatedAt;
 
-  DateTime? _sorting;
-  DateTime? get sorting => _$this._sorting;
-  set sorting(DateTime? sorting) => _$this._sorting = sorting;
-
-  String? _parentId;
-  String? get parentId => _$this._parentId;
-  set parentId(String? parentId) => _$this._parentId = parentId;
-
-  String? _system;
-  String? get system => _$this._system;
-  set system(String? system) => _$this._system = system;
-
-  String? _isFolder;
-  String? get isFolder => _$this._isFolder;
-  set isFolder(String? isFolder) => _$this._isFolder = isFolder;
-
-  String? _type;
-  String? get type => _$this._type;
-  set type(String? type) => _$this._type = type;
-
   DateTime? _globalUpdatedAt;
   DateTime? get globalUpdatedAt => _$this._globalUpdatedAt;
   set globalUpdatedAt(DateTime? globalUpdatedAt) =>
@@ -419,11 +298,6 @@ class LabelBuilder implements Builder<Label, LabelBuilder> {
       _updatedAt = $v.updatedAt;
       _deletedAt = $v.deletedAt;
       _remoteUpdatedAt = $v.remoteUpdatedAt;
-      _sorting = $v.sorting;
-      _parentId = $v.parentId;
-      _system = $v.system;
-      _isFolder = $v.isFolder;
-      _type = $v.type;
       _globalUpdatedAt = $v.globalUpdatedAt;
       _globalCreatedAt = $v.globalCreatedAt;
       _$v = null;
@@ -454,11 +328,6 @@ class LabelBuilder implements Builder<Label, LabelBuilder> {
             updatedAt: updatedAt,
             deletedAt: deletedAt,
             remoteUpdatedAt: remoteUpdatedAt,
-            sorting: sorting,
-            parentId: parentId,
-            system: system,
-            isFolder: isFolder,
-            type: type,
             globalUpdatedAt: globalUpdatedAt,
             globalCreatedAt: globalCreatedAt);
     replace(_$result);

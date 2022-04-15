@@ -1,13 +1,9 @@
 library calendar;
 
-import 'dart:convert';
-
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:models/base.dart';
-import 'package:models/calendar/settings.dart';
 import 'package:models/serializers.dart';
-import 'package:models/task/content.dart';
 
 part 'calendar.g.dart';
 
@@ -24,8 +20,6 @@ abstract class Calendar extends Object
   String? get akiflowCalendarId;
   @BuiltValueField(wireName: 'origin_account_id')
   String? get originCalendarId;
-  @BuiltValueField(wireName: 'etag')
-  String? get etag;
   @BuiltValueField(wireName: 'title')
   String? get title;
   @BuiltValueField(wireName: 'description')
@@ -34,8 +28,6 @@ abstract class Calendar extends Object
   String? get akiflowAccountId;
   @BuiltValueField(wireName: 'origin_account_id')
   String? get originAccountId;
-  @BuiltValueField(wireName: 'content', serialize: false)
-  Content? get content;
 
   @BuiltValueField(wireName: 'primary')
   bool? get primary;
@@ -50,14 +42,10 @@ abstract class Calendar extends Object
   String? get color;
   @BuiltValueField(wireName: 'icon')
   String? get icon;
-  @BuiltValueField(wireName: 'sync_status')
-  String? get syncStatus;
 
   @BuiltValueField(wireName: 'is_akiflow_calendar')
   bool? get isAkiflowCalendar;
 
-  @BuiltValueField(wireName: 'settings', serialize: false)
-  Settings? get settings;
   @BuiltValueField(wireName: 'global_updated_at')
   DateTime? get globalUpdatedAt;
   @BuiltValueField(wireName: 'global_created_at')
@@ -93,19 +81,15 @@ abstract class Calendar extends Object
       "connector_id": connectorId,
       "akiflow_account_id": akiflowAccountId,
       "origin_account_id": originAccountId,
-      "etag": etag,
       "title": title,
       "description": description,
-      "content": jsonEncode(content?.toMap() ?? {}),
       "primary": primary == true ? 1 : 0,
       "akiflow_primary": akiflowPrimary == true ? 1 : 0,
       "read_only": readOnly == true ? 1 : 0,
       "url": url,
       "color": color,
       "icon": icon,
-      "sync_status": syncStatus,
       "is_akiflow_calendar": isAkiflowCalendar == null,
-      "settings": jsonEncode(settings?.toMap() ?? {}),
       "updated_at": updatedAt?.toIso8601String(),
       "created_at": createdAt?.toIso8601String(),
       "deleted_at": deletedAt?.toIso8601String(),
@@ -129,16 +113,6 @@ abstract class Calendar extends Object
           break;
         case "is_akiflow_calendar":
           data[key] = (data[key] == 1);
-          break;
-        case "content":
-          data[key] = data[key] is String
-              ? Content.fromMap(jsonDecode(data[key] as String))
-              : null;
-          break;
-        case "settings":
-          data[key] = data[key] is String
-              ? Settings.fromMap(jsonDecode(data[key] as String))
-              : null;
           break;
         default:
       }
