@@ -21,14 +21,14 @@ class SyncService {
   });
 
   Future<void> start() async {
-    print('${api.runtimeType}: start sync ---');
+    print('${api.runtimeType}: start sync');
 
     await _remoteToLocal();
     await _localToRemote();
   }
 
   Future<void> _remoteToLocal() async {
-    print('${api.runtimeType}: remote to local lastSync $lastSyncAt ---');
+    print('${api.runtimeType}: remote to local lastSync $lastSyncAt');
 
     var remoteItems = await api.get(
       perPage: 2500,
@@ -44,14 +44,13 @@ class SyncService {
           '${api.runtimeType}: remote to local: ${remoteItems.length} items to sync');
     }
 
-    DateTime? maxRemoteUpdatedAt;
+    int maxRemoteUpdateAtMillis = 0;
 
     for (var item in remoteItems) {
-      DateTime remoteTaskUpdatedAt = item.updatedAt;
+      int newUpdatedAtMillis = item.updatedAt?.millisecondsSinceEpoch ?? 0;
 
-      if (maxRemoteUpdatedAt == null ||
-          remoteTaskUpdatedAt.isAfter(maxRemoteUpdatedAt)) {
-        maxRemoteUpdatedAt = remoteTaskUpdatedAt;
+      if (newUpdatedAtMillis > maxRemoteUpdateAtMillis) {
+        maxRemoteUpdateAtMillis = newUpdatedAtMillis;
       }
     }
 
@@ -59,18 +58,21 @@ class SyncService {
 
     await _upsertItems(remoteItems);
 
-    if (maxRemoteUpdatedAt != null) {
-      lastSyncAtUpdated = maxRemoteUpdatedAt;
+    if (maxRemoteUpdateAtMillis != 0) {
+      lastSyncAtUpdated =
+          DateTime.fromMillisecondsSinceEpoch(maxRemoteUpdateAtMillis).toUtc();
     }
+
+    print('${api.runtimeType}: update lastSyncAt to $lastSyncAtUpdated');
   }
 
   Future<void> _localToRemote() async {
-    print('${api.runtimeType}: local to remote ---');
+    print('${api.runtimeType}: local to remote');
 
     List<dynamic> unsynced = await databaseRepository.unsynced();
 
     if (unsynced.isEmpty) {
-      print('${api.runtimeType}: local no data to sync ---');
+      print('${api.runtimeType}: local no data to sync');
       return;
     } else {
       print(
@@ -98,8 +100,6 @@ class SyncService {
       });
 
       unsynced[i] = item;
-
-      print('${api.runtimeType}: local to remote item: ${item.id}');
     }
 
     try {
@@ -143,8 +143,6 @@ class SyncService {
           });
 
           remoteItems[i] = remoteItem;
-
-          print('${api.runtimeType}: save item to db ${remoteItem.id}');
 
           await _updateLocalTask(id: remoteItem.id!, remoteItem: remoteItem);
         } else {

@@ -66,13 +66,11 @@ class MainCubit extends Cubit<MainCubitState> {
       }
 
       await _sync(Entity.accounts);
-      // await _sync(Entity.calendars);
       await _sync(Entity.tasks);
+
+      // await _sync(Entity.calendars);
       // await _sync(Entity.labels);
       // await _sync(Entity.events);
-
-      await _accountsRepository.updateById(localAkiflowAccount!.id!,
-          data: localAkiflowAccount);
 
       _tasksCubit.refresh();
     }
@@ -181,6 +179,9 @@ class MainCubit extends Cubit<MainCubitState> {
         }
         break;
     }
+
+    await _accountsRepository.updateById(localAkiflowAccount!.id!,
+        data: localAkiflowAccount);
   }
 
   void changeHomeView(int index) {
@@ -201,9 +202,6 @@ class MainCubit extends Cubit<MainCubitState> {
     await _sync(Entity.tasks);
     // await _sync(Entity.labels);
     // await _sync(Entity.events);
-
-    await _accountsRepository.updateById(localAkiflowAccount!.id!,
-        data: localAkiflowAccount);
 
     _tasksCubit.refresh();
   }
