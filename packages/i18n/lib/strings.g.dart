@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 31 
+ * Strings: 33 
  *
- * Built on 2022-04-08 at 12:10 UTC
+ * Built on 2022-04-16 at 12:25 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -313,6 +313,7 @@ class _StringsEn {
 	late final _StringsBottomBarEn bottom_bar = _StringsBottomBarEn._(_root);
 	late final _StringsNoticeEn notice = _StringsNoticeEn._(_root);
 	late final _StringsSettingsEn settings = _StringsSettingsEn._(_root);
+	late final _StringsAddTaskEn addTask = _StringsAddTaskEn._(_root);
 }
 
 // Path: onboarding
@@ -381,6 +382,18 @@ class _StringsSettingsEn {
 	String get join_our_community => 'Join our community';
 }
 
+// Path: addTask
+class _StringsAddTaskEn {
+	_StringsAddTaskEn._(this._root);
+
+	// ignore: unused_field
+	final _StringsEn _root;
+
+	// Translations
+	String get titleHint => 'Try: review financials today 9am';
+	String get descriptionHint => 'Description';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -418,6 +431,8 @@ extension on _StringsEn {
 			'settings.about': 'About',
 			'settings.follow_us_on_twitter': 'Follow Us on Twitter',
 			'settings.join_our_community': 'Join our community',
+			'addTask.titleHint': 'Try: review financials today 9am',
+			'addTask.descriptionHint': 'Description',
 		};
 	}
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/_components/calendar_appbar.dart';
 import 'package:mobile/features/main/views/_components/inbox_appbar.dart';
@@ -25,8 +26,16 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<MainCubit>().syncClick(),
-        child: const Icon(SFSymbols.arrow_2_circlepath),
+        onPressed: () => showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          builder: (context) => const AddTaskModal(),
+        ),
+        child: const Icon(SFSymbols.plus),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

@@ -37,5 +37,9 @@
     "about": "About",
     "follow_us_on_twitter": "Follow Us on Twitter",
     "join_our_community": "Join our community"
+  },
+  "addTask": {
+    "titleHint": "Try: review financials today 9am",
+    "descriptionHint": "Description"
   }
 }

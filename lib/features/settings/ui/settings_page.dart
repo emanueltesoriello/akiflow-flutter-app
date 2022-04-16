@@ -7,6 +7,7 @@ import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,11 +25,13 @@ class SettingsPage extends StatelessWidget {
             actions: [
               IconButton(
                 icon: Icon(
-                  SFSymbols.ellipsis,
+                  SFSymbols.arrow_2_circlepath,
                   size: 18,
                   color: ColorsExt.grey2(context),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.read<MainCubit>().syncClick();
+                },
               ),
             ],
           ),

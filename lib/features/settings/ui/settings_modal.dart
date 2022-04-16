@@ -4,6 +4,7 @@ import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_selectable.dart';
+import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
@@ -32,19 +33,7 @@ class SettingsModal extends StatelessWidget {
           padding: const EdgeInsets.only(top: 16),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 6,
-                    width: 36,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      color: ColorsExt.grey4(context),
-                    ),
-                  ),
-                ],
-              ),
+              const ScrollChip(),
               const SizedBox(height: 19),
               Expanded(
                 child: ListView(
