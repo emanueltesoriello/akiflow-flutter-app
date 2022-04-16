@@ -199,11 +199,7 @@ class MainCubit extends Cubit<MainCubitState> {
   }
 
   syncClick() async {
-    await _sync(Entity.tasks);
-    // await _sync(Entity.labels);
-    // await _sync(Entity.events);
-
-    _tasksCubit.refresh();
+    init();
   }
 
   void logout() {

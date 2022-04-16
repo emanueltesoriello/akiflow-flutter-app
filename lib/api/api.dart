@@ -73,8 +73,6 @@ class Api implements IBaseApi {
       }
     }
 
-    print(result.length);
-
     return result;
   }
 
