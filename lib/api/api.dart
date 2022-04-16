@@ -20,11 +20,14 @@ class Api implements IBaseApi {
     int perPage = 2500,
     bool withDeleted = true,
     DateTime? updatedAfter,
-    bool allPages = false,
+    bool allPages = true,
   }) async {
+    int page = 1;
+
     Map<String, dynamic> params = {
       "per_page": perPage.toString(),
       "with_deleted": withDeleted.toString(),
+      "page": page.toString(),
     };
 
     if (updatedAfter != null) {
@@ -32,6 +35,8 @@ class Api implements IBaseApi {
     }
 
     Uri urlWithQueryParameters = url.replace(queryParameters: params);
+
+    print(urlWithQueryParameters);
 
     Response responseRaw = await _httpClient.get(urlWithQueryParameters);
 
@@ -43,28 +48,32 @@ class Api implements IBaseApi {
 
     List<dynamic> items = response["data"];
 
-    String? nextPage = response["nextPage"];
-
-    if (nextPage != null && allPages) {
-      print("nextPage: $nextPage");
-
-      List<T> moreItems = await get(
-        perPage: perPage,
-        withDeleted: withDeleted,
-        updatedAfter: updatedAfter,
-        allPages: allPages,
-      );
-
-      items.addAll(moreItems);
-
-      print("items: ${items.length}");
-    }
-
     List<T> result = [];
 
     for (dynamic item in items) {
       result.add(fromMap(item));
     }
+
+    if (allPages && response["next_page_url"] != null) {
+      while (response["next_page_url"] != null) {
+        page++;
+
+        params["page"] = page.toString();
+        urlWithQueryParameters = url.replace(queryParameters: params);
+
+        responseRaw = await _httpClient.get(urlWithQueryParameters);
+
+        response = jsonDecode(responseRaw.body);
+
+        items = response["data"];
+
+        for (dynamic item in items) {
+          result.add(fromMap(item));
+        }
+      }
+    }
+
+    print(result.length);
 
     return result;
   }
