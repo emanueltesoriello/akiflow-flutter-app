@@ -118,36 +118,15 @@ class SyncService {
         var localTask =
             localItems.firstWhere((element) => element.id == remoteItem.id);
 
-        DateTime? remoteGlobalUpdateAt = remoteItem.globalUpdatedAt;
-        DateTime? localUpdatedAt = localTask.updatedAt;
+        int remoteGlobalUpdateAtMillis =
+            remoteItem.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
+        int localUpdatedAtMillis =
+            localTask.updatedAt?.millisecondsSinceEpoch ?? 0;
 
-        bool notYetUpdated =
-            localUpdatedAt == null || remoteGlobalUpdateAt == null;
-
-        // parse with microseconds
-        if (localUpdatedAt != null) {
-          localUpdatedAt = localUpdatedAt.subtract(
-            Duration(
-                microseconds: localUpdatedAt.microsecondsSinceEpoch % 1000),
-          );
-        }
-
-        if (remoteGlobalUpdateAt != null) {
-          remoteGlobalUpdateAt = remoteGlobalUpdateAt.subtract(
-            Duration(
-                microseconds:
-                    remoteGlobalUpdateAt.microsecondsSinceEpoch % 1000),
-          );
-        }
-
-        bool remoteItemIsRecentThanLocal = notYetUpdated ||
-            remoteGlobalUpdateAt!.isAfter(localUpdatedAt!) ||
-            remoteGlobalUpdateAt.isAtSameMomentAs(localUpdatedAt);
-
-        if (remoteItemIsRecentThanLocal) {
+        if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
           remoteItem = remoteItem.rebuild((t) {
-            t.updatedAt = remoteGlobalUpdateAt;
-            t.remoteUpdatedAt = remoteGlobalUpdateAt;
+            t.updatedAt = remoteItem.globalUpdatedAt;
+            t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
           });
 
           remoteItems[i] = remoteItem;
