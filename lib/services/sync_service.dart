@@ -15,7 +15,7 @@ class SyncService {
 
   // Returns the last sync time updated.
   Future<DateTime?> start(DateTime? lastSyncAt) async {
-    print('${api.runtimeType}: start sync');
+    print('${api.runtimeType}: start sync, last sync at: $lastSyncAt');
 
     DateTime? updatedLastSync = await _remoteToLocal(lastSyncAt);
 
@@ -25,8 +25,6 @@ class SyncService {
   }
 
   Future<DateTime?> _remoteToLocal(DateTime? lastSyncAt) async {
-    print('${api.runtimeType}: remote to local lastSync $lastSyncAt');
-
     var remoteItems = await api.get(
       perPage: 2500,
       withDeleted: true,
@@ -35,41 +33,32 @@ class SyncService {
     );
 
     if (remoteItems.isEmpty) {
+      print('${api.runtimeType}: remote to local no items');
       return null;
-    } else {
-      print(
-          '${api.runtimeType}: remote to local: ${remoteItems.length} items to sync');
-    }
-
-    int maxRemoteUpdateAtMillis = 0;
-
-    for (var item in remoteItems) {
-      int newUpdatedAtMillis = item.updatedAt?.millisecondsSinceEpoch ?? 0;
-
-      if (newUpdatedAtMillis > maxRemoteUpdateAtMillis) {
-        maxRemoteUpdateAtMillis = newUpdatedAtMillis;
-      }
     }
 
     print('${api.runtimeType}: remote to local item: ${remoteItems.length}');
 
-    await _upsertItems(remoteItems);
+    DateTime? maxRemoteUpdateAt;
 
-    DateTime? lastSyncAtUpdated;
+    for (var item in remoteItems) {
+      DateTime? newUpdatedAt = item.updatedAt;
 
-    if (maxRemoteUpdateAtMillis != 0) {
-      lastSyncAtUpdated =
-          DateTime.fromMillisecondsSinceEpoch(maxRemoteUpdateAtMillis).toUtc();
+      if (maxRemoteUpdateAt == null ||
+          (newUpdatedAt != null && newUpdatedAt.isAfter(maxRemoteUpdateAt))) {
+        maxRemoteUpdateAt = newUpdatedAt;
+      }
     }
 
-    print('${api.runtimeType}: update lastSyncAt to $lastSyncAtUpdated');
+    print('${api.runtimeType}: update lastSyncAt to $maxRemoteUpdateAt');
 
-    return lastSyncAtUpdated;
+    // Upsert only after retrieved max remote update at.
+    await _upsertItems(remoteItems);
+
+    return maxRemoteUpdateAt;
   }
 
   Future<void> _localToRemote() async {
-    print('${api.runtimeType}: local to remote');
-
     List<dynamic> unsynced = await databaseRepository.unsynced();
 
     if (unsynced.isEmpty) {
@@ -106,7 +95,9 @@ class SyncService {
     try {
       List<dynamic> updated = await api.post(unsynced: unsynced);
 
-      await _upsertItems(updated);
+      if (updated.isNotEmpty) {
+        await _upsertItems(updated);
+      }
 
       print('${api.runtimeType}: local to remote: done');
     } on ApiException catch (e) {
@@ -133,8 +124,24 @@ class SyncService {
         bool notYetUpdated =
             localUpdatedAt == null || remoteGlobalUpdateAt == null;
 
+        // parse with microseconds
+        if (localUpdatedAt != null) {
+          localUpdatedAt = localUpdatedAt.subtract(
+            Duration(
+                microseconds: localUpdatedAt.microsecondsSinceEpoch % 1000),
+          );
+        }
+
+        if (remoteGlobalUpdateAt != null) {
+          remoteGlobalUpdateAt = remoteGlobalUpdateAt.subtract(
+            Duration(
+                microseconds:
+                    remoteGlobalUpdateAt.microsecondsSinceEpoch % 1000),
+          );
+        }
+
         bool remoteItemIsRecentThanLocal = notYetUpdated ||
-            remoteGlobalUpdateAt.isAfter(localUpdatedAt) ||
+            remoteGlobalUpdateAt!.isAfter(localUpdatedAt!) ||
             remoteGlobalUpdateAt.isAtSameMomentAs(localUpdatedAt);
 
         if (remoteItemIsRecentThanLocal) {

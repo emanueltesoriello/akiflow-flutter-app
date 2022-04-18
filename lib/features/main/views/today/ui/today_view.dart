@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/inbox/task.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/today/cubit/today_cubit.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -28,7 +28,7 @@ class _View extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<MainCubit>().syncClick();
+        context.read<SyncCubit>().syncTasks();
       },
       child: ListView.separated(
         padding: const EdgeInsets.all(16),
