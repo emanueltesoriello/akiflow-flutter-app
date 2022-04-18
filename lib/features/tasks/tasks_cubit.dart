@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 import 'package:models/user.dart';
-import 'package:uuid/uuid.dart';
 
 part 'tasks_state.dart';
 
@@ -35,22 +35,21 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void setCompleted(Task task) {
-    // TESTING
+    int index = state.tasks.indexOf(task);
+
+    DateTime? now = DateTime.now().toUtc();
+
     task = task.rebuild(
       (b) => b
-        ..title = const Uuid().v4()
-        ..updatedAt = DateTime.now().toUtc(),
+        ..done = true
+        ..doneAt = now
+        ..status = TaskStatusType.completed.id
+        ..updatedAt = now,
     );
 
     List<Task> all = state.tasks.toList();
 
-    all = all.map((t) {
-      if (t.id == task.id) {
-        return task;
-      }
-
-      return t;
-    }).toList();
+    all[index] = task;
 
     emit(state.copyWith(tasks: all));
 
