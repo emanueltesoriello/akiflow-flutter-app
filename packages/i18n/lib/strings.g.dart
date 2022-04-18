@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 34 
+ * Strings: 35 
  *
- * Built on 2022-04-18 at 10:45 UTC
+ * Built on 2022-04-18 at 21:28 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -393,6 +393,7 @@ class _StringsAddTaskEn {
 	// Translations
 	String get titleHint => 'Try: review financials today 9am';
 	String get descriptionHint => 'Description';
+	String get plan => 'Plan';
 }
 
 // Path: errors
@@ -445,6 +446,7 @@ extension on _StringsEn {
 			'settings.join_our_community': 'Join our community',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
+			'addTask.plan': 'Plan',
 			'errors.no_accounts_found': 'No accounts found',
 		};
 	}

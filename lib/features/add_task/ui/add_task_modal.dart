@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/button_iconed.dart';
 import 'package:mobile/style/colors.dart';
 
 class AddTaskModal extends StatelessWidget {
@@ -67,7 +68,29 @@ class AddTaskModal extends StatelessWidget {
                     const SizedBox(height: 16),
                     Row(
                       children: [
+                        ButtonIconed(
+                          icon: SFSymbols.calendar,
+                          text: t.addTask.plan,
+                          onPressed: () {
+                            // TODO task plan
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        ButtonIconed(
+                          icon: SFSymbols.hourglass,
+                          onPressed: () {
+                            // TODO task duration
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        ButtonIconed(
+                          icon: SFSymbols.number,
+                          onPressed: () {
+                            // TODO task label
+                          },
+                        ),
                         const Spacer(),
+                        const SizedBox(width: 8),
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
                           child: Material(
