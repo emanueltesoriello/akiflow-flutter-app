@@ -49,6 +49,16 @@ extension TaskExt on Task {
     return false;
   }
 
+  bool get isTodayOrBefore {
+    if (date != null) {
+      return date!.day <= DateTime.now().day &&
+          date!.month <= DateTime.now().month &&
+          date!.year <= DateTime.now().year;
+    }
+
+    return false;
+  }
+
   TaskStatusType? get statusType {
     switch (status) {
       case 1:
@@ -93,7 +103,7 @@ extension TaskExt on Task {
 
     tasks.removeWhere((element) => element.doneAt != null);
 
-    tasks.removeWhere((task) => !task.isToday);
+    tasks.removeWhere((task) => !task.isTodayOrBefore);
 
     return tasks;
   }
