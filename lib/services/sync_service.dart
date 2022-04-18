@@ -3,31 +3,28 @@ import 'dart:async';
 import 'package:mobile/api/api.dart';
 import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
-import 'package:models/account/account.dart';
 
 class SyncService {
   final Api api;
-  final Account akiflowAccount;
   final DatabaseRepository databaseRepository;
-  final DateTime? lastSyncAt;
-
-  DateTime? lastSyncAtUpdated;
 
   SyncService({
     required this.api,
-    required this.akiflowAccount,
     required this.databaseRepository,
-    required this.lastSyncAt,
   });
 
-  Future<void> start() async {
+  // Returns the last sync time updated.
+  Future<DateTime?> start(DateTime? lastSyncAt) async {
     print('${api.runtimeType}: start sync');
 
-    await _remoteToLocal();
+    DateTime? updatedLastSync = await _remoteToLocal(lastSyncAt);
+
     await _localToRemote();
+
+    return updatedLastSync;
   }
 
-  Future<void> _remoteToLocal() async {
+  Future<DateTime?> _remoteToLocal(DateTime? lastSyncAt) async {
     print('${api.runtimeType}: remote to local lastSync $lastSyncAt');
 
     var remoteItems = await api.get(
@@ -38,7 +35,7 @@ class SyncService {
     );
 
     if (remoteItems.isEmpty) {
-      return;
+      return null;
     } else {
       print(
           '${api.runtimeType}: remote to local: ${remoteItems.length} items to sync');
@@ -58,12 +55,16 @@ class SyncService {
 
     await _upsertItems(remoteItems);
 
+    DateTime? lastSyncAtUpdated;
+
     if (maxRemoteUpdateAtMillis != 0) {
       lastSyncAtUpdated =
           DateTime.fromMillisecondsSinceEpoch(maxRemoteUpdateAtMillis).toUtc();
     }
 
     print('${api.runtimeType}: update lastSyncAt to $lastSyncAtUpdated');
+
+    return lastSyncAtUpdated;
   }
 
   Future<void> _localToRemote() async {

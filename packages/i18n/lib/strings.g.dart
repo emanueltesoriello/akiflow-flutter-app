@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 33 
+ * Strings: 34 
  *
- * Built on 2022-04-16 at 12:25 UTC
+ * Built on 2022-04-18 at 10:45 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -314,6 +314,7 @@ class _StringsEn {
 	late final _StringsNoticeEn notice = _StringsNoticeEn._(_root);
 	late final _StringsSettingsEn settings = _StringsSettingsEn._(_root);
 	late final _StringsAddTaskEn addTask = _StringsAddTaskEn._(_root);
+	late final _StringsErrorsEn errors = _StringsErrorsEn._(_root);
 }
 
 // Path: onboarding
@@ -394,6 +395,17 @@ class _StringsAddTaskEn {
 	String get descriptionHint => 'Description';
 }
 
+// Path: errors
+class _StringsErrorsEn {
+	_StringsErrorsEn._(this._root);
+
+	// ignore: unused_field
+	final _StringsEn _root;
+
+	// Translations
+	String get no_accounts_found => 'No accounts found';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -433,6 +445,7 @@ extension on _StringsEn {
 			'settings.join_our_community': 'Join our community',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
+			'errors.no_accounts_found': 'No accounts found',
 		};
 	}
 }

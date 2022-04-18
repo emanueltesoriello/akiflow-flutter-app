@@ -41,5 +41,8 @@
   "addTask": {
     "titleHint": "Try: review financials today 9am",
     "descriptionHint": "Description"
+  },
+  "errors": {
+    "no_accounts_found": "No accounts found"
   }
 }

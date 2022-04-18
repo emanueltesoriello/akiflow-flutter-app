@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/calendar_api.dart';
 import 'package:mobile/api/event_api.dart';
@@ -20,35 +21,67 @@ import 'package:models/user.dart';
 
 part 'main_state.dart';
 
-enum Entity {
-  accounts,
-  calendars,
-  tasks,
-  labels,
-  events,
-}
+enum Entity { accounts, calendars, tasks, labels, events }
 
 class MainCubit extends Cubit<MainCubitState> {
-  final PreferencesRepository _preferencesRepository =
+  static final PreferencesRepository _preferencesRepository =
       locator<PreferencesRepository>();
   final DialogService _dialogService = locator<DialogService>();
 
-  final AccountApi _accountApi = locator<AccountApi>();
-  final TaskApi _taskApi = locator<TaskApi>();
-  final CalendarApi _calendarApi = locator<CalendarApi>();
-  final LabelApi _labelApi = locator<LabelApi>();
-  final EventApi _eventApi = locator<EventApi>();
+  static final AccountApi _accountApi = locator<AccountApi>();
+  static final TaskApi _taskApi = locator<TaskApi>();
+  static final CalendarApi _calendarApi = locator<CalendarApi>();
+  static final LabelApi _labelApi = locator<LabelApi>();
+  static final EventApi _eventApi = locator<EventApi>();
 
-  final AccountsRepository _accountsRepository = locator<AccountsRepository>();
-  final TasksRepository _tasksRepository = locator<TasksRepository>();
-  final CalendarsRepository _calendarsRepository =
+  static final AccountsRepository _accountsRepository =
+      locator<AccountsRepository>();
+  static final TasksRepository _tasksRepository = locator<TasksRepository>();
+  static final CalendarsRepository _calendarsRepository =
       locator<CalendarsRepository>();
-  final LabelsRepository _labelsRepository = locator<LabelsRepository>();
-  final EventsRepository _eventsRepository = locator<EventsRepository>();
+  static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
+  static final EventsRepository _eventsRepository = locator<EventsRepository>();
 
   final TasksCubit _tasksCubit;
 
-  Account? localAkiflowAccount;
+  final Map<Entity, SyncService> _syncServices = {
+    Entity.accounts: SyncService(
+      api: _accountApi,
+      databaseRepository: _accountsRepository,
+    ),
+    Entity.calendars: SyncService(
+      api: _calendarApi,
+      databaseRepository: _calendarsRepository,
+    ),
+    Entity.tasks: SyncService(
+      api: _taskApi,
+      databaseRepository: _tasksRepository,
+    ),
+    Entity.labels: SyncService(
+      api: _labelApi,
+      databaseRepository: _labelsRepository,
+    ),
+    Entity.events: SyncService(
+      api: _eventApi,
+      databaseRepository: _eventsRepository,
+    ),
+  };
+
+  final Map<Entity, Function()> _getLastSyncFromPreferences = {
+    Entity.accounts: () => _preferencesRepository.lastAccountsSyncAt,
+    Entity.calendars: () => _preferencesRepository.lastCalendarsSyncAt,
+    Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
+    Entity.labels: () => _preferencesRepository.lastLabelsSyncAt,
+    Entity.events: () => _preferencesRepository.lastEventsSyncAt,
+  };
+
+  final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
+    Entity.accounts: _preferencesRepository.setLastAccountsSyncAt,
+    Entity.calendars: _preferencesRepository.setLastCalendarsSyncAt,
+    Entity.tasks: _preferencesRepository.setLastTasksSyncAt,
+    Entity.labels: _preferencesRepository.setLastLabelsSyncAt,
+    Entity.events: _preferencesRepository.setLastEventsSyncAt,
+  };
 
   MainCubit(this._tasksCubit) : super(const MainCubitState()) {
     init();
@@ -58,14 +91,15 @@ class MainCubit extends Cubit<MainCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await refreshLocalAkiflowAccount();
+      await _sync(Entity.accounts);
 
-      if (localAkiflowAccount == null) {
-        _dialogService.showMessage("No accounts found");
+      List<Account> accounts = await _accountsRepository.get();
+
+      if (accounts.isEmpty) {
+        _dialogService.showMessage(t.errors.no_accounts_found);
         return;
       }
 
-      await _sync(Entity.accounts);
       await _sync(Entity.tasks);
 
       // await _sync(Entity.calendars);
@@ -76,112 +110,14 @@ class MainCubit extends Cubit<MainCubitState> {
     }
   }
 
-  Future<void> refreshLocalAkiflowAccount() async {
-    if (localAkiflowAccount == null) {
-      List<Account> accountsData = await _accountApi.get();
-
-      if (accountsData.isEmpty) {
-        return;
-      }
-
-      Account akiflowAccount = accountsData
-          .firstWhere((account) => account.connectorId == 'akiflow');
-
-      try {
-        localAkiflowAccount =
-            await _accountsRepository.byId(akiflowAccount.id!);
-      } catch (_) {
-        await _accountsRepository.add([akiflowAccount]);
-        localAkiflowAccount =
-            await _accountsRepository.byId(akiflowAccount.id!);
-      }
-    } else {
-      localAkiflowAccount =
-          await _accountsRepository.byId(localAkiflowAccount!.id!);
-    }
-  }
-
   Future<void> _sync(Entity entity) async {
-    switch (entity) {
-      case Entity.accounts:
-        SyncService service = SyncService(
-          akiflowAccount: localAkiflowAccount!,
-          api: _accountApi,
-          databaseRepository: _accountsRepository,
-          lastSyncAt: localAkiflowAccount!.lastAccountsSyncAt,
-        );
+    SyncService syncService = _syncServices[entity]!;
 
-        await service.start();
+    DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
 
-        if (service.lastSyncAtUpdated != null) {
-          localAkiflowAccount = localAkiflowAccount!.rebuild(
-              (b) => b..lastAccountsSyncAt = service.lastSyncAtUpdated);
-        }
-        break;
-      case Entity.calendars:
-        SyncService service = SyncService(
-          akiflowAccount: localAkiflowAccount!,
-          api: _calendarApi,
-          databaseRepository: _calendarsRepository,
-          lastSyncAt: localAkiflowAccount!.lastCalendarsSyncAt,
-        );
+    DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
-        await service.start();
-
-        if (service.lastSyncAtUpdated != null) {
-          localAkiflowAccount = localAkiflowAccount!.rebuild(
-              (b) => b..lastCalendarsSyncAt = service.lastSyncAtUpdated);
-        }
-        break;
-      case Entity.tasks:
-        SyncService service = SyncService(
-          akiflowAccount: localAkiflowAccount!,
-          api: _taskApi,
-          databaseRepository: _tasksRepository,
-          lastSyncAt: localAkiflowAccount!.lastTasksSyncAt,
-        );
-
-        await service.start();
-
-        if (service.lastSyncAtUpdated != null) {
-          localAkiflowAccount = localAkiflowAccount!
-              .rebuild((b) => b..lastTasksSyncAt = service.lastSyncAtUpdated);
-        }
-        break;
-      case Entity.labels:
-        SyncService service = SyncService(
-          akiflowAccount: localAkiflowAccount!,
-          api: _labelApi,
-          databaseRepository: _labelsRepository,
-          lastSyncAt: localAkiflowAccount!.lastLabelsSyncAt,
-        );
-
-        await service.start();
-
-        if (service.lastSyncAtUpdated != null) {
-          localAkiflowAccount = localAkiflowAccount!
-              .rebuild((b) => b..lastLabelsSyncAt = service.lastSyncAtUpdated);
-        }
-        break;
-      case Entity.events:
-        SyncService service = SyncService(
-          akiflowAccount: localAkiflowAccount!,
-          api: _eventApi,
-          databaseRepository: _eventsRepository,
-          lastSyncAt: localAkiflowAccount!.lastEventsSyncAt,
-        );
-
-        await service.start();
-
-        if (service.lastSyncAtUpdated != null) {
-          localAkiflowAccount = localAkiflowAccount!
-              .rebuild((b) => b..lastEventsSyncAt = service.lastSyncAtUpdated);
-        }
-        break;
-    }
-
-    await _accountsRepository.updateById(localAkiflowAccount!.id!,
-        data: localAkiflowAccount);
+    await _setLastSyncPreferences[entity]!(lastSyncUpdated);
   }
 
   void changeHomeView(int index) {
@@ -200,9 +136,5 @@ class MainCubit extends Cubit<MainCubitState> {
 
   syncClick() async {
     init();
-  }
-
-  void logout() {
-    localAkiflowAccount = null;
   }
 }

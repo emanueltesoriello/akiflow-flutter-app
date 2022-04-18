@@ -75,13 +75,7 @@ CREATE TABLE IF NOT EXISTS accounts(
   `autologin_token` VARCHAR(255),
   `status` VARCHAR(255),
   `sync_status` VARCHAR(255),
-  `id` UUID,
-  `first_time_sync_executed` TEXT,
-  `last_accounts_sync_at` TEXT,
-  `last_labels_sync_at` TEXT,
-  `last_tasks_sync_at` TEXT,
-  `last_calendars_sync_at` TEXT,
-  `last_events_sync_at` TEXT
+  `id` UUID
 )
     ''');
     await txn.execute('''

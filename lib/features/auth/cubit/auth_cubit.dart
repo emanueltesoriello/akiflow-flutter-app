@@ -81,7 +81,5 @@ class AuthCubit extends Cubit<AuthCubitState> {
     emit(state.copyWith(user: Nullable(null)));
 
     _tasksCubit.logout();
-
-    _mainCubit.logout();
   }
 }

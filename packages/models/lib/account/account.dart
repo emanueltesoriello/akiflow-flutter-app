@@ -57,24 +57,6 @@ abstract class Account extends Object
   @BuiltValueField(wireName: 'remote_updated_at')
   DateTime? get remoteUpdatedAt;
 
-  @BuiltValueField(wireName: 'first_time_sync_executed')
-  bool? get firstTimeSyncExecuted;
-
-  @BuiltValueField(wireName: 'last_accounts_sync_at')
-  DateTime? get lastAccountsSyncAt;
-
-  @BuiltValueField(wireName: 'last_labels_sync_at')
-  DateTime? get lastLabelsSyncAt;
-
-  @BuiltValueField(wireName: 'last_tasks_sync_at')
-  DateTime? get lastTasksSyncAt;
-
-  @BuiltValueField(wireName: 'last_calendars_sync_at')
-  DateTime? get lastCalendarsSyncAt;
-
-  @BuiltValueField(wireName: 'last_events_sync_at')
-  DateTime? get lastEventsSyncAt;
-
   Account._();
 
   factory Account([void Function(AccountBuilder) updates]) = _$Account;
@@ -113,11 +95,6 @@ abstract class Account extends Object
       "created_at": createdAt?.toIso8601String(),
       "deleted_at": deletedAt?.toIso8601String(),
       "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
-      "last_accounts_sync_at": lastAccountsSyncAt?.toIso8601String(),
-      "last_labels_sync_at": lastLabelsSyncAt?.toIso8601String(),
-      "last_tasks_sync_at": lastTasksSyncAt?.toIso8601String(),
-      "last_calendars_sync_at": lastCalendarsSyncAt?.toIso8601String(),
-      "last_events_sync_at": lastEventsSyncAt?.toIso8601String(),
     };
   }
 
