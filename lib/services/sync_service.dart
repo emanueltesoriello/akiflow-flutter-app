@@ -62,7 +62,7 @@ class SyncService {
     List<dynamic> unsynced = await databaseRepository.unsynced();
 
     if (unsynced.isEmpty) {
-      print('${api.runtimeType}: local no data to sync');
+      print('${api.runtimeType}: local to remote no items');
       return;
     } else {
       print(
@@ -86,7 +86,8 @@ class SyncService {
       }
 
       item = item.rebuild((t) {
-        t.globalUpdatedAt = maxDate;
+        t.globalUpdatedAt = maxDate ?? DateTime.now().toUtc();
+        t.updatedAt = maxDate ?? DateTime.now().toUtc();
       });
 
       unsynced[i] = item;
@@ -137,6 +138,13 @@ class SyncService {
               '${api.runtimeType}: skip upsert item, remote is not recent than local');
         }
       } else {
+        remoteItem = remoteItem.rebuild((t) {
+          t.updatedAt = remoteItem.globalUpdatedAt;
+          t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
+        });
+
+        remoteItems[i] = remoteItem;
+
         await _addRemoteTaskToLocalDb(remoteItem);
       }
     }
