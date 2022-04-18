@@ -42,8 +42,8 @@ class _View extends StatelessWidget {
                 return Visibility(
                   visible: state.showInboxNotice,
                   child: Notice(
-                    title: t.notice.inbox_title,
-                    subtitle: t.notice.inbox_subtitle,
+                    title: t.notice.inboxTitle,
+                    subtitle: t.notice.inboxSubtitle,
                     icon: Icons.info_outline,
                     onClose: () {
                       context.read<InboxCubit>().inboxNoticeClosed();

@@ -10,7 +10,7 @@ class InboxAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBarComp(
-      title: t.bottom_bar.inbox,
+      title: t.bottomBar.inbox,
       leading: Icon(
         SFSymbols.tray,
         size: 26,

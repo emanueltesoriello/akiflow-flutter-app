@@ -88,7 +88,7 @@ class _GoogleButtonState extends State<GoogleButton>
                   children: [
                     Flexible(
                         child: Text(
-                      t.onboarding.sign_in_with_google,
+                      t.onboarding.signInWithGoogle,
                       style: TextStyle(
                         fontSize: 17,
                         color: ColorsExt.grey2_5(context),

@@ -48,7 +48,7 @@ class AuthPage extends StatelessWidget {
                   ),
                   const Space(16),
                   Text(
-                    t.onboarding.welcome_to_akiflow,
+                    t.onboarding.welcomeToAkiflow,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,
@@ -58,7 +58,7 @@ class AuthPage extends StatelessWidget {
                   ),
                   const Space(8),
                   Text(
-                    t.onboarding.welcome_to_akiflow_subtitle,
+                    t.onboarding.welcomeToAkiflowSubtitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 17,
@@ -89,7 +89,7 @@ class AuthPage extends StatelessWidget {
                   const Space(8),
                   const Space(24),
                   HtmlWidget(
-                    t.onboarding.continuing_accept_terms_privacy,
+                    t.onboarding.continuingAcceptTermsPrivacy,
                     enableCaching: false,
                     textStyle: TextStyle(
                       fontSize: 13,

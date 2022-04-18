@@ -42,10 +42,10 @@ class MainPage extends StatelessWidget {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: const Icon(SFSymbols.line_horizontal_3),
-            label: t.bottom_bar.menu,
+            label: t.bottomBar.menu,
           ),
           BottomNavigationBarItem(
-              icon: const Icon(SFSymbols.tray), label: t.bottom_bar.inbox),
+              icon: const Icon(SFSymbols.tray), label: t.bottomBar.inbox),
           BottomNavigationBarItem(
             icon: Image.asset(
               "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
@@ -57,11 +57,11 @@ class MainPage extends StatelessWidget {
               height: 19,
               color: Theme.of(context).primaryColor,
             ),
-            label: t.bottom_bar.today,
+            label: t.bottomBar.today,
           ),
           BottomNavigationBarItem(
             icon: const Icon(SFSymbols.calendar),
-            label: t.bottom_bar.calendar,
+            label: t.bottomBar.calendar,
           ),
         ],
         currentIndex: () {

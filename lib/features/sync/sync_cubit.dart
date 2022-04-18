@@ -96,7 +96,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
       List<Account> accounts = await _accountsRepository.get();
 
       if (accounts.isEmpty) {
-        _dialogService.showMessage(t.errors.no_accounts_found);
+        _dialogService.showMessage(t.errors.noAccountsFound);
         return;
       }
 

@@ -5,38 +5,38 @@
   "dismiss": "Dismiss",
   "ok": "OK",
   "onboarding": {
-    "welcome_to_akiflow": "Welcome to Akiflow",
+    "welcomeToAkiflow": "Welcome to Akiflow",
     "login": "Login",
     "register": "Register",
-    "welcome_to_akiflow_subtitle": "Where your tasks and calendars\nstays together.",
+    "welcomeToAkiflowSubtitle": "Where your tasks and calendars\nstays together.",
     "or": "or",
-    "sign_in_with_google": "Sign in with Google",
-    "continuing_accept_terms_privacy": "<center>Continuing you accept the <a url=\"https://google.com\">Terms and Conditions</a><br/> and the <a url=\"https://google.com\">Privacy Policy</a> of Akiflow</center>"
+    "signInWithGoogle": "Sign in with Google",
+    "continuingAcceptTermsPrivacy": "<center>Continuing you accept the <a url=\"https://google.com\">Terms and Conditions</a><br/> and the <a url=\"https://google.com\">Privacy Policy</a> of Akiflow</center>"
   },
-  "bottom_bar": {
+  "bottomBar": {
     "menu": "Menu",
     "inbox": "Inbox",
     "today": "Today",
     "calendar": "Calendar"
   },
   "notice": {
-    "inbox_title": "Inbox is where magic happens",
-    "inbox_subtitle": "In Inbox you will find all the tasks"
+    "inboxTitle": "Inbox is where magic happens",
+    "inboxSubtitle": "In Inbox you will find all the tasks"
   },
   "settings": {
     "title": "Settings",
     "logout": "Log out",
-    "upgrade_to_pro": "Upgrade to pro",
-    "my_account": "My account",
+    "upgradeToPro": "Upgrade to pro",
+    "myAccount": "My account",
     "general": "General",
     "tasks": "Tasks",
     "notifications": "Notifications",
     "integrations": "Integrations",
-    "refer_your_friends": "Refer your friends",
-    "help_center": "Help center",
+    "referYourFriends": "Refer your friends",
+    "helpCenter": "Help center",
     "about": "About",
-    "follow_us_on_twitter": "Follow Us on Twitter",
-    "join_our_community": "Join our community"
+    "followUsOnTwitter": "Follow Us on Twitter",
+    "joinOurCommunity": "Join our community"
   },
   "addTask": {
     "titleHint": "Try: review financials today 9am",
@@ -44,6 +44,6 @@
     "plan": "Plan"
   },
   "errors": {
-    "no_accounts_found": "No accounts found"
+    "noAccountsFound": "No accounts found"
   }
 }

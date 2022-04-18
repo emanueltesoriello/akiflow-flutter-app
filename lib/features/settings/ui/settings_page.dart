@@ -42,7 +42,7 @@ class SettingsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   ButtonList(
-                    title: t.settings.upgrade_to_pro,
+                    title: t.settings.upgradeToPro,
                     position: ButtonListPosition.top,
                     leading: SFSymbols.person, // TODO  svg for crown icons
                     leadingColor: Theme.of(context).primaryColor,
@@ -52,7 +52,7 @@ class SettingsPage extends StatelessWidget {
                     },
                   ),
                   ButtonList(
-                    title: t.settings.my_account,
+                    title: t.settings.myAccount,
                     position: ButtonListPosition.center,
                     leading: SFSymbols.person_circle,
                     onPressed: () {
@@ -95,7 +95,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
-                    title: t.settings.refer_your_friends,
+                    title: t.settings.referYourFriends,
                     leading: SFSymbols
                         .person, // TODO  svg for refer_your_friends icons
                     position: ButtonListPosition.top,
@@ -104,7 +104,7 @@ class SettingsPage extends StatelessWidget {
                     },
                   ),
                   ButtonList(
-                    title: t.settings.help_center,
+                    title: t.settings.helpCenter,
                     leading:
                         SFSymbols.person, // TODO  svg for help center icons
                     position: ButtonListPosition.center,
@@ -122,7 +122,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
-                    title: t.settings.follow_us_on_twitter,
+                    title: t.settings.followUsOnTwitter,
                     leading: SFSymbols.person, // TODO  svg for twitter icon
                     position: ButtonListPosition.top,
                     showShevron: false,
@@ -132,7 +132,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const ButtonListDivider(),
                   ButtonList(
-                    title: t.settings.join_our_community,
+                    title: t.settings.joinOurCommunity,
                     leading: SFSymbols.info_circle, // TODO  svg for slack icon
                     position: ButtonListPosition.bottom,
                     showShevron: false,

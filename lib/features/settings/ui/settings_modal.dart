@@ -109,7 +109,7 @@ class SettingsModal extends StatelessWidget {
                         HomeViewType homeViewType = state.homeViewType;
 
                         return ButtonSelectable(
-                          title: t.bottom_bar.inbox,
+                          title: t.bottomBar.inbox,
                           leading: Icon(
                             SFSymbols.tray,
                             size: 24,
@@ -144,7 +144,7 @@ class SettingsModal extends StatelessWidget {
                         HomeViewType homeViewType = state.homeViewType;
 
                         return ButtonSelectable(
-                          title: t.bottom_bar.today,
+                          title: t.bottomBar.today,
                           leading: Image.asset(
                             "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
                             height: 19,

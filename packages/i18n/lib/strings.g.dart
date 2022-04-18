@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 35 
  *
- * Built on 2022-04-18 at 21:28 UTC
+ * Built on 2022-04-18 at 22:06 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -310,7 +310,7 @@ class _StringsEn {
 	String get dismiss => 'Dismiss';
 	String get ok => 'OK';
 	late final _StringsOnboardingEn onboarding = _StringsOnboardingEn._(_root);
-	late final _StringsBottomBarEn bottom_bar = _StringsBottomBarEn._(_root);
+	late final _StringsBottomBarEn bottomBar = _StringsBottomBarEn._(_root);
 	late final _StringsNoticeEn notice = _StringsNoticeEn._(_root);
 	late final _StringsSettingsEn settings = _StringsSettingsEn._(_root);
 	late final _StringsAddTaskEn addTask = _StringsAddTaskEn._(_root);
@@ -325,16 +325,16 @@ class _StringsOnboardingEn {
 	final _StringsEn _root;
 
 	// Translations
-	String get welcome_to_akiflow => 'Welcome to Akiflow';
+	String get welcomeToAkiflow => 'Welcome to Akiflow';
 	String get login => 'Login';
 	String get register => 'Register';
-	String get welcome_to_akiflow_subtitle => 'Where your tasks and calendars\nstays together.';
+	String get welcomeToAkiflowSubtitle => 'Where your tasks and calendars\nstays together.';
 	String get or => 'or';
-	String get sign_in_with_google => 'Sign in with Google';
-	String get continuing_accept_terms_privacy => '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>';
+	String get signInWithGoogle => 'Sign in with Google';
+	String get continuingAcceptTermsPrivacy => '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>';
 }
 
-// Path: bottom_bar
+// Path: bottomBar
 class _StringsBottomBarEn {
 	_StringsBottomBarEn._(this._root);
 
@@ -356,8 +356,8 @@ class _StringsNoticeEn {
 	final _StringsEn _root;
 
 	// Translations
-	String get inbox_title => 'Inbox is where magic happens';
-	String get inbox_subtitle => 'In Inbox you will find all the tasks';
+	String get inboxTitle => 'Inbox is where magic happens';
+	String get inboxSubtitle => 'In Inbox you will find all the tasks';
 }
 
 // Path: settings
@@ -370,17 +370,17 @@ class _StringsSettingsEn {
 	// Translations
 	String get title => 'Settings';
 	String get logout => 'Log out';
-	String get upgrade_to_pro => 'Upgrade to pro';
-	String get my_account => 'My account';
+	String get upgradeToPro => 'Upgrade to pro';
+	String get myAccount => 'My account';
 	String get general => 'General';
 	String get tasks => 'Tasks';
 	String get notifications => 'Notifications';
 	String get integrations => 'Integrations';
-	String get refer_your_friends => 'Refer your friends';
-	String get help_center => 'Help center';
+	String get referYourFriends => 'Refer your friends';
+	String get helpCenter => 'Help center';
 	String get about => 'About';
-	String get follow_us_on_twitter => 'Follow Us on Twitter';
-	String get join_our_community => 'Join our community';
+	String get followUsOnTwitter => 'Follow Us on Twitter';
+	String get joinOurCommunity => 'Join our community';
 }
 
 // Path: addTask
@@ -404,7 +404,7 @@ class _StringsErrorsEn {
 	final _StringsEn _root;
 
 	// Translations
-	String get no_accounts_found => 'No accounts found';
+	String get noAccountsFound => 'No accounts found';
 }
 
 /// Flat map(s) containing all translations.
@@ -418,36 +418,36 @@ extension on _StringsEn {
 			'typeHere': 'Type here',
 			'dismiss': 'Dismiss',
 			'ok': 'OK',
-			'onboarding.welcome_to_akiflow': 'Welcome to Akiflow',
+			'onboarding.welcomeToAkiflow': 'Welcome to Akiflow',
 			'onboarding.login': 'Login',
 			'onboarding.register': 'Register',
-			'onboarding.welcome_to_akiflow_subtitle': 'Where your tasks and calendars\nstays together.',
+			'onboarding.welcomeToAkiflowSubtitle': 'Where your tasks and calendars\nstays together.',
 			'onboarding.or': 'or',
-			'onboarding.sign_in_with_google': 'Sign in with Google',
-			'onboarding.continuing_accept_terms_privacy': '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>',
-			'bottom_bar.menu': 'Menu',
-			'bottom_bar.inbox': 'Inbox',
-			'bottom_bar.today': 'Today',
-			'bottom_bar.calendar': 'Calendar',
-			'notice.inbox_title': 'Inbox is where magic happens',
-			'notice.inbox_subtitle': 'In Inbox you will find all the tasks',
+			'onboarding.signInWithGoogle': 'Sign in with Google',
+			'onboarding.continuingAcceptTermsPrivacy': '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>',
+			'bottomBar.menu': 'Menu',
+			'bottomBar.inbox': 'Inbox',
+			'bottomBar.today': 'Today',
+			'bottomBar.calendar': 'Calendar',
+			'notice.inboxTitle': 'Inbox is where magic happens',
+			'notice.inboxSubtitle': 'In Inbox you will find all the tasks',
 			'settings.title': 'Settings',
 			'settings.logout': 'Log out',
-			'settings.upgrade_to_pro': 'Upgrade to pro',
-			'settings.my_account': 'My account',
+			'settings.upgradeToPro': 'Upgrade to pro',
+			'settings.myAccount': 'My account',
 			'settings.general': 'General',
 			'settings.tasks': 'Tasks',
 			'settings.notifications': 'Notifications',
 			'settings.integrations': 'Integrations',
-			'settings.refer_your_friends': 'Refer your friends',
-			'settings.help_center': 'Help center',
+			'settings.referYourFriends': 'Refer your friends',
+			'settings.helpCenter': 'Help center',
 			'settings.about': 'About',
-			'settings.follow_us_on_twitter': 'Follow Us on Twitter',
-			'settings.join_our_community': 'Join our community',
+			'settings.followUsOnTwitter': 'Follow Us on Twitter',
+			'settings.joinOurCommunity': 'Join our community',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',
-			'errors.no_accounts_found': 'No accounts found',
+			'errors.noAccountsFound': 'No accounts found',
 		};
 	}
 }
