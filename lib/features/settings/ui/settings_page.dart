@@ -7,7 +7,7 @@ import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
                   color: ColorsExt.grey2(context),
                 ),
                 onPressed: () {
-                  context.read<SyncCubit>().syncAll();
+                  context.read<TasksCubit>().refresh();
                 },
               ),
             ],

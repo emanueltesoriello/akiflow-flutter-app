@@ -59,14 +59,14 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => DialogCubit(),
         ),
-        BlocProvider<TasksCubit>(
-          lazy: false,
-          create: (BuildContext context) => TasksCubit(),
-        ),
         BlocProvider<SyncCubit>(
           lazy: false,
-          create: (BuildContext context) => SyncCubit(
-            context.read<TasksCubit>(),
+          create: (BuildContext context) => SyncCubit(),
+        ),
+        BlocProvider<TasksCubit>(
+          lazy: false,
+          create: (BuildContext context) => TasksCubit(
+            context.read<SyncCubit>(),
           ),
         ),
         BlocProvider<MainCubit>(
@@ -77,7 +77,6 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => AuthCubit(
             context.read<TasksCubit>(),
-            context.read<SyncCubit>(),
           ),
         ),
         BlocProvider<SettingsCubit>(

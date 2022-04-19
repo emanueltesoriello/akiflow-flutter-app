@@ -4,7 +4,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/notice.dart';
 import 'package:mobile/components/inbox/task.dart';
 import 'package:mobile/features/main/views/inbox/cubit/view_cubit.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -30,7 +29,7 @@ class _View extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<SyncCubit>().syncTasks();
+        context.read<TasksCubit>().refresh();
       },
       child: ListView.separated(
         padding: const EdgeInsets.all(16),

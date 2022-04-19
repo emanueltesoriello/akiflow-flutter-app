@@ -7,7 +7,6 @@ import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
@@ -24,9 +23,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final DatabaseService _databaseService = locator<DatabaseService>();
 
   final TasksCubit _tasksCubit;
-  final SyncCubit _syncCubit;
 
-  AuthCubit(this._tasksCubit, this._syncCubit) : super(const AuthCubitState()) {
+  AuthCubit(this._tasksCubit) : super(const AuthCubitState()) {
     _init();
   }
 
@@ -65,9 +63,9 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _preferencesRepository.saveUser(user);
 
-      _syncCubit.init();
-
       emit(state.copyWith(user: Nullable(user)));
+
+      _tasksCubit.refresh();
     } else {
       _dialogService.showGenericError();
     }

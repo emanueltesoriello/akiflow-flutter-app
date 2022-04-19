@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_iconed.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
+import 'package:models/task/task.dart';
 
 class AddTaskModal extends StatelessWidget {
-  const AddTaskModal({Key? key}) : super(key: key);
+  AddTaskModal({Key? key}) : super(key: key);
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +37,7 @@ class AddTaskModal extends StatelessWidget {
                   children: [
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _titleController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.zero,
                         isDense: true,
@@ -49,6 +57,7 @@ class AddTaskModal extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     TextField(
+                      controller: _descriptionController,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.only(bottom: 16),
                         isDense: true,
@@ -92,6 +101,18 @@ class AddTaskModal extends StatelessWidget {
                         const Spacer(),
                         const SizedBox(width: 8),
                         InkWell(
+                          onTap: () {
+                            Task task = Task(
+                              (task) => task
+                                ..title = _titleController.text
+                                ..description = _descriptionController.text
+                                ..status = TaskStatusType.inbox.id,
+                            );
+
+                            context.read<TasksCubit>().addTask(task);
+
+                            Navigator.pop(context);
+                          },
                           borderRadius: BorderRadius.circular(8),
                           child: Material(
                             color: Theme.of(context).primaryColor,

@@ -8,7 +8,6 @@ import 'package:mobile/api/label_api.dart';
 import 'package:mobile/api/task_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/calendars_repository.dart';
 import 'package:mobile/repository/events_repository.dart';
@@ -41,8 +40,6 @@ class SyncCubit extends Cubit<SyncCubitState> {
       locator<CalendarsRepository>();
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
-
-  final TasksCubit _tasksCubit;
 
   final Map<Entity, SyncService> _syncServices = {
     Entity.accounts: SyncService(
@@ -83,11 +80,9 @@ class SyncCubit extends Cubit<SyncCubitState> {
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
   };
 
-  SyncCubit(this._tasksCubit) : super(const SyncCubitState()) {
-    init();
-  }
+  SyncCubit() : super(const SyncCubitState());
 
-  init() async {
+  refresh() async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
@@ -106,7 +101,6 @@ class SyncCubit extends Cubit<SyncCubitState> {
       // await _sync(Entity.labels);
       // await _sync(Entity.events);
 
-      _tasksCubit.refresh();
     }
   }
 
@@ -118,14 +112,5 @@ class SyncCubit extends Cubit<SyncCubitState> {
     DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
     await _setLastSyncPreferences[entity]!(lastSyncUpdated);
-  }
-
-  syncTasks() async {
-    await _sync(Entity.tasks);
-    _tasksCubit.refresh();
-  }
-
-  Future<void> syncAll() async {
-    await init();
   }
 }

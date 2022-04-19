@@ -30,7 +30,7 @@ class MainPage extends StatelessWidget {
           context: context,
           backgroundColor: Colors.transparent,
           isScrollControlled: true,
-          builder: (context) => const AddTaskModal(),
+          builder: (context) => AddTaskModal(),
         ),
         child: const Icon(SFSymbols.plus),
         shape: RoundedRectangleBorder(
