@@ -15,6 +15,7 @@ import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
+import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
@@ -24,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 GetIt locator = GetIt.instance;
 
+// Order of the registration is important
 void setupLocator({
   required SharedPreferences preferences,
   required DatabaseService databaseService,
@@ -33,10 +35,8 @@ void setupLocator({
 
   /// Core
   locator.registerSingleton<HttpClient>(HttpClient(preferencesRepository));
-
-  /// Utils
-  locator.registerSingleton<DialogService>(DialogService());
   locator.registerSingleton<DatabaseService>(databaseService);
+  locator.registerSingleton<DialogService>(DialogService());
 
   /// Apis
   locator.registerSingleton<AuthApi>(AuthApi());
@@ -61,4 +61,5 @@ void setupLocator({
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
+  locator.registerSingleton<SyncControllerService>(SyncControllerService());
 }

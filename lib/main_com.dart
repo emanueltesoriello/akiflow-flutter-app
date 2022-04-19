@@ -14,7 +14,6 @@ import 'package:mobile/features/dialog/dialog_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/style/colors.dart';
@@ -59,15 +58,9 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => DialogCubit(),
         ),
-        BlocProvider<SyncCubit>(
-          lazy: false,
-          create: (BuildContext context) => SyncCubit(),
-        ),
         BlocProvider<TasksCubit>(
           lazy: false,
-          create: (BuildContext context) => TasksCubit(
-            context.read<SyncCubit>(),
-          ),
+          create: (BuildContext context) => TasksCubit(),
         ),
         BlocProvider<MainCubit>(
           lazy: false,

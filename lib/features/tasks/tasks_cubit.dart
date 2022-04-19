@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 import 'package:models/user.dart';
@@ -16,9 +16,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
       locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
 
-  final SyncCubit _syncCubit;
+  final SyncControllerService _syncControllerService =
+      locator<SyncControllerService>();
 
-  TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
+  TasksCubit() : super(const TasksCubitState()) {
     refresh();
   }
 
@@ -26,7 +27,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncCubit.refresh();
+      await _syncControllerService.sync();
 
       List<Task> all = await _tasksRepository.get();
 
@@ -59,7 +60,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     await _tasksRepository.updateById(task.id, data: task);
 
-    await _syncCubit.refresh();
+    await _syncControllerService.sync();
 
     refresh();
   }
@@ -82,7 +83,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     await _tasksRepository.add([task]);
 
-    await _syncCubit.refresh();
+    await _syncControllerService.sync();
 
     refresh();
   }

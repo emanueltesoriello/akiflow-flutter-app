@@ -1,5 +1,3 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/calendar_api.dart';
@@ -18,11 +16,9 @@ import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/user.dart';
 
-part 'sync_state.dart';
-
 enum Entity { accounts, calendars, tasks, labels, events }
 
-class SyncCubit extends Cubit<SyncCubitState> {
+class SyncControllerService {
   static final PreferencesRepository _preferencesRepository =
       locator<PreferencesRepository>();
   final DialogService _dialogService = locator<DialogService>();
@@ -80,13 +76,11 @@ class SyncCubit extends Cubit<SyncCubitState> {
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
   };
 
-  SyncCubit() : super(const SyncCubitState());
-
-  refresh() async {
+  sync() async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _sync(Entity.accounts);
+      await _syncEntity(Entity.accounts);
 
       List<Account> accounts = await _accountsRepository.get();
 
@@ -95,7 +89,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
         return;
       }
 
-      await _sync(Entity.tasks);
+      await _syncEntity(Entity.tasks);
 
       // await _sync(Entity.calendars);
       // await _sync(Entity.labels);
@@ -104,7 +98,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
     }
   }
 
-  Future<void> _sync(Entity entity) async {
+  Future<void> _syncEntity(Entity entity) async {
     SyncService syncService = _syncServices[entity]!;
 
     DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
