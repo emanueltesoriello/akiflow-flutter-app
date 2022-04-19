@@ -5,11 +5,11 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:models/task/task.dart';
 
-class TaskRow extends StatelessWidget {
+class TaskBorderedRow extends StatelessWidget {
   final Task task;
   final Function() completed;
 
-  const TaskRow({
+  const TaskBorderedRow({
     Key? key,
     required this.task,
     required this.completed,

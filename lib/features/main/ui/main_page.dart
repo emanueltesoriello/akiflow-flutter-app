@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
+import 'package:mobile/features/inbox/ui/view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/main/views/_components/calendar_appbar.dart';
-import 'package:mobile/features/main/views/_components/inbox_appbar.dart';
-import 'package:mobile/features/main/views/_components/today_appbar.dart';
-import 'package:mobile/features/main/views/inbox/ui/view.dart';
-import 'package:mobile/features/main/views/today/ui/today_view.dart';
+import 'package:mobile/features/main/views/calendar_appbar.dart';
+import 'package:mobile/features/main/views/inbox_appbar.dart';
+import 'package:mobile/features/main/views/today_appbar.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
+import 'package:mobile/features/today/ui/today_view.dart';
 import 'package:mobile/style/colors.dart';
 
 class MainPage extends StatelessWidget {

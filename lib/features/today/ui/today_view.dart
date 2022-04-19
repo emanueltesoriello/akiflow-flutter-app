@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/components/inbox/task.dart';
-import 'package:mobile/features/main/views/today/cubit/today_cubit.dart';
+import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
