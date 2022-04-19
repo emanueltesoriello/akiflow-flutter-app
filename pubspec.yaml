@@ -67,6 +67,22 @@ flutter:
     - assets/images/logo/
     - assets/images/onboarding/
     - assets/images/popup/
+    - assets/images/icons/
+    - assets/images/icons/_common/
+    - assets/images/icons/asana/
+    - assets/images/icons/clickup/
+    - assets/images/icons/dropbox/
+    - assets/images/icons/google/
+    - assets/images/icons/jira/
+    - assets/images/icons/microsoft/
+    - assets/images/icons/notion/
+    - assets/images/icons/slack/
+    - assets/images/icons/superhuman/
+    - assets/images/icons/todoist/
+    - assets/images/icons/trello/
+    - assets/images/icons/twitter/
+    - assets/images/icons/zapier/
+    - assets/images/icons/zoom/
 
   fonts:
     - family: sficonsets

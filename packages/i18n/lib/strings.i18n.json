@@ -44,7 +44,8 @@
     "plan": "Plan"
   },
   "task": {
-    "description": "Description"
+    "description": "Description",
+    "linkedContent": "Linked content"
   },
   "errors": {
     "noAccountsFound": "No accounts found"
