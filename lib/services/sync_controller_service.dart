@@ -1,6 +1,7 @@
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/calendar_api.dart';
+import 'package:mobile/api/docs_api.dart';
 import 'package:mobile/api/event_api.dart';
 import 'package:mobile/api/label_api.dart';
 import 'package:mobile/api/task_api.dart';
@@ -8,6 +9,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/calendars_repository.dart';
+import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/events_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
@@ -16,7 +18,7 @@ import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/user.dart';
 
-enum Entity { accounts, calendars, tasks, labels, events }
+enum Entity { accounts, calendars, tasks, labels, events, docs }
 
 class SyncControllerService {
   static final PreferencesRepository _preferencesRepository =
@@ -28,6 +30,7 @@ class SyncControllerService {
   static final CalendarApi _calendarApi = locator<CalendarApi>();
   static final LabelApi _labelApi = locator<LabelApi>();
   static final EventApi _eventApi = locator<EventApi>();
+  static final DocsApi _docsApi = locator<DocsApi>();
 
   static final AccountsRepository _accountsRepository =
       locator<AccountsRepository>();
@@ -36,6 +39,7 @@ class SyncControllerService {
       locator<CalendarsRepository>();
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
+  static final DocsRepository _docsRepository = locator<DocsRepository>();
 
   final Map<Entity, SyncService> _syncServices = {
     Entity.accounts: SyncService(
@@ -58,6 +62,10 @@ class SyncControllerService {
       api: _eventApi,
       databaseRepository: _eventsRepository,
     ),
+    Entity.docs: SyncService(
+      api: _docsApi,
+      databaseRepository: _docsRepository,
+    ),
   };
 
   final Map<Entity, Function()> _getLastSyncFromPreferences = {
@@ -66,6 +74,7 @@ class SyncControllerService {
     Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
     Entity.labels: () => _preferencesRepository.lastLabelsSyncAt,
     Entity.events: () => _preferencesRepository.lastEventsSyncAt,
+    Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
   };
 
   final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
@@ -74,6 +83,7 @@ class SyncControllerService {
     Entity.tasks: _preferencesRepository.setLastTasksSyncAt,
     Entity.labels: _preferencesRepository.setLastLabelsSyncAt,
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
+    Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
   sync() async {
@@ -91,6 +101,7 @@ class SyncControllerService {
 
       await _syncEntity(Entity.tasks);
       await _syncEntity(Entity.labels);
+      await _syncEntity(Entity.docs);
 
       // await _sync(Entity.calendars);
       // await _sync(Entity.events);
@@ -99,12 +110,16 @@ class SyncControllerService {
   }
 
   Future<void> _syncEntity(Entity entity) async {
-    SyncService syncService = _syncServices[entity]!;
+    try {
+      SyncService syncService = _syncServices[entity]!;
 
-    DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
+      DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
 
-    DateTime? lastSyncUpdated = await syncService.start(lastSync);
+      DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
-    await _setLastSyncPreferences[entity]!(lastSyncUpdated);
+      await _setLastSyncPreferences[entity]!(lastSyncUpdated);
+    } catch (e) {
+      print("Error syncing $entity: $e");
+    }
   }
 }

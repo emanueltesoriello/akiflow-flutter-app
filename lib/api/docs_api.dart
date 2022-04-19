@@ -1,0 +1,11 @@
+import 'package:mobile/api/api.dart';
+import 'package:mobile/core/config.dart';
+import 'package:models/doc/doc.dart';
+
+class DocsApi extends Api {
+  DocsApi()
+      : super(
+          Uri.parse(Config.endpoint + "/v2/docs"),
+          fromMap: Doc.fromMap,
+        );
+}

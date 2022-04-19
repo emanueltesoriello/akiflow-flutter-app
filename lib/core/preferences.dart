@@ -33,6 +33,10 @@ abstract class PreferencesRepository {
   DateTime? get lastEventsSyncAt;
 
   Future<void> setLastEventsSyncAt(DateTime? value);
+
+  DateTime? get lastDocsSyncAt;
+
+  Future<void> setLastDocsSyncAt(DateTime? value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -133,6 +137,19 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   Future<void> setLastEventsSyncAt(DateTime? value) async {
     if (value != null) {
       await _prefs.setString("lastEventsSyncAt", value.toIso8601String());
+    }
+  }
+
+  @override
+  DateTime? get lastDocsSyncAt {
+    String? value = _prefs.getString("lastDocsSyncAt");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastDocsSyncAt(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastDocsSyncAt", value.toIso8601String());
     }
   }
 }

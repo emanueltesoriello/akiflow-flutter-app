@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS docs(
   `id` UUID PRIMARY KEY,
   `connector_id` VARCHAR(50),
   `origin_id` VARCHAR(255),
-  `accountId` VARCHAR(100),
+  `account_id` VARCHAR(100),
   `origin_account_id` VARCHAR(50),
   `origin_updated_at` TEXT,
   `task_id` UUID,

@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/api/calendar_api.dart';
+import 'package:mobile/api/docs_api.dart';
 import 'package:mobile/api/event_api.dart';
 import 'package:mobile/api/label_api.dart';
 import 'package:mobile/api/task_api.dart';
@@ -9,6 +10,7 @@ import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/calendars_repository.dart';
+import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/events_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
@@ -18,6 +20,7 @@ import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/calendar/calendar.dart';
+import 'package:models/doc/doc.dart';
 import 'package:models/event/event.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
@@ -45,6 +48,7 @@ void setupLocator({
   locator.registerSingleton<CalendarApi>(CalendarApi());
   locator.registerSingleton<LabelApi>(LabelApi());
   locator.registerSingleton<EventApi>(EventApi());
+  locator.registerSingleton<DocsApi>(DocsApi());
 
   /// Repositories
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);
@@ -58,6 +62,8 @@ void setupLocator({
       LabelsRepository(fromSql: Label.fromSql));
   locator.registerSingleton<EventsRepository>(
       EventsRepository(fromSql: Event.fromSql));
+  locator
+      .registerSingleton<DocsRepository>(DocsRepository(fromSql: Doc.fromSql));
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
