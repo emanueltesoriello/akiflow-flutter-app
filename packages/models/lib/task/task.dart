@@ -96,11 +96,11 @@ abstract class Task extends Object
       data['date'] = DateFormat('yyyy-MM-dd').format(date!);
     }
 
-    return data;
-  }
+    if (dueDate != null) {
+      data['due_date'] = DateFormat('yyyy-MM-dd').format(dueDate!);
+    }
 
-  static Map<String, dynamic> toMapS(data) {
-    return data.toMap();
+    return data;
   }
 
   static Task fromMap(Map<String, dynamic> json) {
