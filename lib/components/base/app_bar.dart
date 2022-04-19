@@ -7,7 +7,6 @@ class AppBarComp extends StatelessWidget {
   final bool showBack;
   final String title;
   final List<Widget> actions;
-  final Color? backgroundColor;
   final Function()? onBackClick;
   final bool showLogo;
   final Widget? leading;
@@ -15,7 +14,6 @@ class AppBarComp extends StatelessWidget {
   const AppBarComp({
     Key? key,
     required this.title,
-    this.backgroundColor,
     this.showBack = false,
     this.actions = const [],
     this.onBackClick,
@@ -25,47 +23,32 @@ class AppBarComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color _background;
-
-    if (backgroundColor == null) {
-      _background = Theme.of(context).backgroundColor;
-    } else {
-      _background = backgroundColor!;
-    }
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Container(
-          color: _background,
-          child: Column(
-            children: [
-              Space(MediaQuery.of(context).padding.top),
-              Row(
-                children: [
-                  const Space(16),
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _buildLeading(context),
-                        _buildTitle(context),
-                        const Spacer(),
-                        _buildActions(context),
-                      ],
-                    ),
+        Column(
+          children: [
+            Space(MediaQuery.of(context).padding.top),
+            Row(
+              children: [
+                const Space(16),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildLeading(context),
+                      _buildTitle(context),
+                      const Spacer(),
+                      _buildActions(context),
+                    ],
                   ),
-                  const Space(16),
-                ],
-              ),
-              const Space(2),
-            ],
-          ),
-        ),
-        Container(
-          height: 1,
-          color: Theme.of(context).dividerColor,
+                ),
+                const Space(16),
+              ],
+            ),
+            const Space(2),
+          ],
         ),
       ],
     );

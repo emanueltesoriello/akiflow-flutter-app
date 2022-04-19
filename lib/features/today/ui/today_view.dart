@@ -29,8 +29,8 @@ class _View extends StatelessWidget {
       onRefresh: () async {
         context.read<TasksCubit>().refresh();
       },
-      child: ListView.separated(
-        padding: const EdgeInsets.all(16),
+      child: ListView.builder(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         itemCount: tasks.length,
         itemBuilder: (context, index) {
           Task task = tasks[index];
@@ -41,9 +41,6 @@ class _View extends StatelessWidget {
               context.read<TasksCubit>().setCompleted(task);
             },
           );
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 4);
         },
       ),
     );

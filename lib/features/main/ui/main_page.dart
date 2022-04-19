@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
-import 'package:mobile/features/inbox/ui/view.dart';
+import 'package:mobile/features/inbox/ui/inbox_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/calendar_appbar.dart';
 import 'package:mobile/features/main/views/inbox_appbar.dart';
@@ -108,8 +109,7 @@ class MainPage extends StatelessWidget {
             },
           ),
           Expanded(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
+            child: ContainerInnerShadow(
               child: BlocBuilder<MainCubit, MainCubitState>(
                 builder: (context, state) {
                   switch (state.homeViewType) {

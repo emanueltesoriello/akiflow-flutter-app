@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/button_list_divider.dart';
+import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -36,8 +37,8 @@ class SettingsPage extends StatelessWidget {
             ],
           ),
           Expanded(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
+            child: ContainerInnerShadow(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [

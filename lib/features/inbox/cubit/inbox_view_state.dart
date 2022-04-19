@@ -1,4 +1,4 @@
-part of 'view_cubit.dart';
+part of 'inbox_view_cubit.dart';
 
 class InboxCubitState extends Equatable {
   final bool loading;

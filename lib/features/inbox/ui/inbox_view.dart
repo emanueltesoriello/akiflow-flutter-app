@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/notice.dart';
 import 'package:mobile/components/task/task_row.dart';
-import 'package:mobile/features/inbox/cubit/view_cubit.dart';
+import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -31,8 +31,8 @@ class _View extends StatelessWidget {
       onRefresh: () async {
         context.read<TasksCubit>().refresh();
       },
-      child: ListView.separated(
-        padding: const EdgeInsets.all(16),
+      child: ListView.builder(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         itemCount: tasks.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
@@ -63,20 +63,6 @@ class _View extends StatelessWidget {
               context.read<TasksCubit>().setCompleted(task);
             },
           );
-        },
-        separatorBuilder: (context, index) {
-          if (index == 0) {
-            return BlocBuilder<InboxCubit, InboxCubitState>(
-              builder: (context, state) {
-                return Visibility(
-                  visible: state.showInboxNotice,
-                  child: const SizedBox(height: 16),
-                );
-              },
-            );
-          } else {
-            return const SizedBox(height: 4);
-          }
         },
       ),
     );

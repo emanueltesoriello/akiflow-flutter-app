@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 
-part 'view_state.dart';
+part 'inbox_view_state.dart';
 
 class InboxCubit extends Cubit<InboxCubitState> {
   final PreferencesRepository _preferencesRepository =
