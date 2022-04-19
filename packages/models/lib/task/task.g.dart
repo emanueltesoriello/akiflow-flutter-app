@@ -132,7 +132,7 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
     value = object.listId;
 
     result
-      ..add('list_id')
+      ..add('listId')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.sectionId;
@@ -238,7 +238,7 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.priority = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
-        case 'list_id':
+        case 'listId':
           result.listId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;

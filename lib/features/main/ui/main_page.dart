@@ -39,6 +39,7 @@ class MainPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 16,
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

@@ -90,9 +90,9 @@ class SyncControllerService {
       }
 
       await _syncEntity(Entity.tasks);
+      await _syncEntity(Entity.labels);
 
       // await _sync(Entity.calendars);
-      // await _sync(Entity.labels);
       // await _sync(Entity.events);
 
     }

@@ -37,6 +37,12 @@ extension ColorsExt on Colors {
         : ColorsDark.grey5;
   }
 
+  static Color grey6(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.grey6
+        : ColorsDark.grey6;
+  }
+
   static green(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.green
@@ -47,6 +53,48 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.green20
         : ColorsDark.green20;
+  }
+
+  static cyan25(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.cyan25
+        : ColorsDark.cyan25;
+  }
+
+  static akiflow10(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.akiflow10
+        : ColorsDark.akiflow10;
+  }
+
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
+  static Map<String, String> paletteColors = {
+    'palette-comet': '#586284',
+    'palette-grey': '#B3C0C7',
+    'palette-orange': '#FF9F2E',
+    'palette-yellow': '#FFE642',
+    'palette-red': '#EE2435',
+    'palette-pink': '#FA7CA2',
+    'palette-purple': '#6C2B68',
+    'palette-finn': '#BA3872',
+    'palette-violet': '#AF38F9',
+    'palette-mauve': '#FDA0FF',
+    'palette-blue': '#4775C7',
+    'palette-cyan': '#5ECDDE',
+    'palette-green': '#248C73',
+    'palette-wildwillow': '#A4C674',
+    'palette-chico': '#925454',
+    'palette-brown': '#D99385',
+  };
+
+  static Color getFromName(String name) {
+    return fromHex(paletteColors[name] ?? "#ffffff");
   }
 }
 
@@ -61,6 +109,7 @@ extension ColorsLight on Colors {
 
   static const Color cyan = Color(0xFFC8E9FC);
   static const Color cyan20 = Color(0xFFECF8FF);
+  static const Color cyan25 = Color(0xFFD8EDFA);
 
   static const Color red = Color(0xFFEB5757);
   static const Color red20 = Color(0xFFFBDDDD);
@@ -94,6 +143,7 @@ extension ColorsDark on Colors {
 
   static const Color cyan = Color(0xFFC8E9FC);
   static const Color cyan20 = Color(0xFFECF8FF);
+  static const Color cyan25 = Color(0xFFD8EDFA);
 
   static const Color red = Color(0xFFEB5757);
   static const Color red20 = Color(0xFFFBDDDD);

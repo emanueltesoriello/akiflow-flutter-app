@@ -5,12 +5,16 @@ class ButtonIconed extends StatelessWidget {
   final IconData icon;
   final String? text;
   final Function() onPressed;
+  final Color? backgroundColor;
+  final Color? iconColor;
 
   const ButtonIconed({
     Key? key,
     required this.icon,
     this.text,
     required this.onPressed,
+    this.backgroundColor,
+    this.iconColor,
   }) : super(key: key);
 
   @override
@@ -20,39 +24,43 @@ class ButtonIconed extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
         decoration: BoxDecoration(
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            color: ColorsExt.grey4(context),
-            width: 1,
-          ),
         ),
-        child: Wrap(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
               icon,
-              color: ColorsExt.grey3(context),
-              size: 18,
+              color: iconColor,
+              size: 12,
             ),
-            Builder(builder: (context) {
-              if (text == null) {
-                return const SizedBox();
-              }
+            Flexible(
+              child: Builder(builder: (context) {
+                if (text == null) {
+                  return const SizedBox();
+                }
 
-              return Row(
-                children: [
-                  const SizedBox(width: 4),
-                  Text(
-                    text!,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
-                      color: ColorsExt.grey3(context),
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(width: 3),
+                    Flexible(
+                      child: Text(
+                        text!,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          color: ColorsExt.grey2(context),
+                        ),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
-                    textAlign: TextAlign.end,
-                  ),
-                ],
-              );
-            }),
+                  ],
+                );
+              }),
+            ),
           ],
         ),
       ),

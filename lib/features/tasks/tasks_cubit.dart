@@ -2,9 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -15,6 +17,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final PreferencesRepository _preferencesRepository =
       locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
+  final LabelsRepository _labelsRepository = locator<LabelsRepository>();
 
   final SyncControllerService _syncControllerService =
       locator<SyncControllerService>();
@@ -29,9 +32,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
     if (user != null) {
       await _syncControllerService.sync();
 
-      List<Task> all = await _tasksRepository.get();
+      List<Task> tasks = await _tasksRepository.get();
+      emit(state.copyWith(tasks: tasks));
 
-      emit(state.copyWith(tasks: all));
+      List<Label> labels = await _labelsRepository.get();
+      emit(state.copyWith(labels: labels));
     }
   }
 

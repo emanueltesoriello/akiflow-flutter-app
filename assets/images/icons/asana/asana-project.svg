@@ -1,1 +1,9 @@
-<svg fill="none" height="22" viewBox="0 0 22 22" width="22" xmlns="http://www.w3.org/2000/svg"><rect fill="#fc636b" height="22" rx="3" width="22"/><circle cx="7.15" cy="8.067" fill="#253653" r=".55"/><circle cx="7.15" cy="10.633" fill="#253653" r=".55"/><circle cx="7.15" cy="13.2" fill="#253653" r=".55"/><g fill="#fff"><rect height="1.1" rx=".55" width="6.233" x="9.167" y="7.517"/><rect height="1.1" rx=".55" width="6.233" x="9.167" y="10.083"/><rect height="1.1" rx=".55" width="6.233" x="9.167" y="12.65"/><rect height="1.1" rx=".55" width="6.233" x="9.167" y="10.083"/><rect height="1.1" rx=".55" width="6.233" x="9.167" y="12.65"/></g></svg>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="2" y="3" width="12" height="11" rx="2" fill="#F25CFF"/>
+<rect x="7" y="6" width="5" height="1" rx="0.5" fill="white"/>
+<rect x="7" y="8" width="5" height="1" rx="0.5" fill="white"/>
+<rect x="7" y="10" width="5" height="1" rx="0.5" fill="white"/>
+<circle cx="4.5" cy="6.5" r="0.5" fill="#37404A"/>
+<circle cx="4.5" cy="8.5" r="0.5" fill="#37404A"/>
+<circle cx="4.5" cy="10.5" r="0.5" fill="#37404A"/>
+</svg>

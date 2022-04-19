@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
-import 'package:intl/intl.dart';
+import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/button_iconed.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/string_ext.dart';
+import 'package:mobile/utils/task_extension.dart';
+import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
 class TaskRow extends StatelessWidget {
@@ -43,23 +49,119 @@ class TaskRow extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Builder(builder: (context) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 5),
-                      Text(
-                        DateFormat("dd MMM 'at' HH:mm")
-                            .format(task.createdAt!.toLocal()),
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  );
-                }),
+                _description(context),
+                Wrap(
+                  spacing: 4,
+                  children: [
+                    _status(context),
+                    _label(context),
+                  ],
+                ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _status(BuildContext context) {
+    if (task.statusType == null) {
+      return const SizedBox();
+    }
+
+    String text = task.statusType!.name;
+    Color color;
+
+    switch (task.statusType) {
+      case TaskStatusType.someday:
+      case TaskStatusType.snoozed:
+        color = ColorsExt.akiflow10(context);
+        break;
+      case TaskStatusType.completed:
+        color = ColorsExt.green20(context);
+        break;
+      case TaskStatusType.deleted:
+      case TaskStatusType.permanentlyDeleted:
+        color = ColorsExt.grey6(context);
+        break;
+      default:
+        color = ColorsExt.cyan25(context);
+    }
+
+    return Column(
+      children: [
+        const SizedBox(height: 10.5),
+        ButtonIconed(
+          icon: SFSymbols.number,
+          text: text.capitalizeFirstCharacter(),
+          backgroundColor: color,
+          onPressed: () {
+            // TODO label click
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _label(BuildContext context) {
+    if (task.listId == null || task.listId!.isEmpty) {
+      return const SizedBox();
+    }
+
+    List<Label> labels = context.watch<TasksCubit>().state.labels;
+
+    if (labels.isEmpty) {
+      return const SizedBox();
+    }
+
+    Label label = labels.firstWhere(
+      (label) => task.listId!.contains(label.id!),
+    );
+
+    return Column(
+      children: [
+        const SizedBox(height: 10.5),
+        ButtonIconed(
+          icon: SFSymbols.number,
+          text: label.title,
+          backgroundColor: label.color != null
+              ? ColorsExt.getFromName(label.color!).withOpacity(0.1)
+              : null,
+          iconColor: label.color != null
+              ? ColorsExt.getFromName(label.color!)
+              : ColorsExt.grey3(context),
+          onPressed: () {
+            // TODO label click
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _description(BuildContext context) {
+    if (task.description == null || task.description!.isEmpty) {
+      return const SizedBox();
+    }
+
+    return Column(
+      children: [
+        const SizedBox(height: 0.5),
+        Row(
+          children: [
+            Icon(
+              SFSymbols.arrow_turn_down_right,
+              color: ColorsExt.grey3(context),
+              size: 16,
+            ),
+            const SizedBox(width: 4.5),
+            Text(
+              t.task.description,
+              style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

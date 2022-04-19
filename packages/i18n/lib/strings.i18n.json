@@ -43,6 +43,9 @@
     "descriptionHint": "Description",
     "plan": "Plan"
   },
+  "task": {
+    "description": "Description"
+  },
   "errors": {
     "noAccountsFound": "No accounts found"
   }

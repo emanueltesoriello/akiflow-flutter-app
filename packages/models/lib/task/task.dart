@@ -68,7 +68,7 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'priority')
   int? get priority;
 
-  @BuiltValueField(wireName: 'list_id')
+  @BuiltValueField(wireName: 'listId')
   String? get listId;
 
   @BuiltValueField(wireName: 'section_id')
@@ -135,7 +135,9 @@ abstract class Task extends Object
   static Task fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
-    for (var key in data.keys) {
+    List<String> keys = data.keys.toList();
+
+    for (var key in keys) {
       if (key == "done" && data[key] != null) {
         data[key] = (data[key] == 1);
       }
@@ -144,6 +146,10 @@ abstract class Task extends Object
         data[key] = data["links"] is String
             ? jsonDecode(data["links"] as String)
             : null;
+      }
+
+      if (key == "list_id") {
+        data["listId"] = data["list_id"];
       }
     }
 
