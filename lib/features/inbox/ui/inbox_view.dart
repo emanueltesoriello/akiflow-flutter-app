@@ -29,12 +29,21 @@ class _View extends StatelessWidget {
 
     return TaskList(
       tasks: tasks,
-      notice: Notice(
-        title: t.notice.inboxTitle,
-        subtitle: t.notice.inboxSubtitle,
-        icon: Icons.info_outline,
-        onClose: () {
-          context.read<InboxCubit>().inboxNoticeClosed();
+      hideInboxLabel: true,
+      notice: BlocBuilder<InboxCubit, InboxCubitState>(
+        builder: (context, state) {
+          if (!state.showInboxNotice) {
+            return const SizedBox();
+          }
+
+          return Notice(
+            title: t.notice.inboxTitle,
+            subtitle: t.notice.inboxSubtitle,
+            icon: Icons.info_outline,
+            onClose: () {
+              context.read<InboxCubit>().inboxNoticeClosed();
+            },
+          );
         },
       ),
     );

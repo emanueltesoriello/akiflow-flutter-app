@@ -27,7 +27,7 @@ class AkiChip extends StatelessWidget {
     return InkWell(
       onTap: (() => onPressed()),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+        padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(4),

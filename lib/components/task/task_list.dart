@@ -8,11 +8,13 @@ import 'package:models/task/task.dart';
 class TaskList extends StatelessWidget {
   final List<Task> tasks;
   final Widget? notice;
+  final bool hideInboxLabel;
 
   const TaskList({
     Key? key,
     required this.tasks,
     this.notice,
+    this.hideInboxLabel = false,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class TaskList extends StatelessWidget {
 
             return TaskRow(
               task: task,
+              hideInboxLabel: hideInboxLabel,
               completedClick: () {
                 context.read<TasksCubit>().setCompleted(task);
               },

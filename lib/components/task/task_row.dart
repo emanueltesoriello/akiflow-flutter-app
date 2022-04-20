@@ -19,6 +19,7 @@ class TaskRow extends StatelessWidget {
   final Function() planClick;
   final Function() selectLabelClick;
   final Function() snoozeClick;
+  final bool hideInboxLabel;
 
   const TaskRow({
     Key? key,
@@ -27,6 +28,7 @@ class TaskRow extends StatelessWidget {
     required this.planClick,
     required this.selectLabelClick,
     required this.snoozeClick,
+    this.hideInboxLabel = false,
   }) : super(key: key);
 
   @override
@@ -52,7 +54,8 @@ class TaskRow extends StatelessWidget {
                   Builder(builder: (context) {
                     if (task.statusType == null &&
                         !task.isOverdue &&
-                        task.listId == null) {
+                        task.listId == null &&
+                        !hideInboxLabel) {
                       return const SizedBox();
                     }
 
@@ -78,8 +81,17 @@ class TaskRow extends StatelessWidget {
           if (task.statusType == null) {
             return const SizedBox();
           }
+          if (task.statusType == TaskStatusType.inbox && hideInboxLabel) {
+            return const SizedBox();
+          }
 
-          return _status(context);
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _status(context),
+              const SizedBox(width: 4),
+            ],
+          );
         }),
         _label(context),
       ],
@@ -319,11 +331,17 @@ class TaskRow extends StatelessWidget {
 
   Widget _overdue(BuildContext context) {
     if (task.isOverdue) {
-      return SvgPicture.asset(
-        "assets/images/icons/_common/Clock_alert.svg",
-        width: 20,
-        height: 20,
-        color: ColorsExt.red(context),
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            "assets/images/icons/_common/Clock_alert.svg",
+            width: 20,
+            height: 20,
+            color: ColorsExt.red(context),
+          ),
+          const SizedBox(width: 4),
+        ],
       );
     }
 
