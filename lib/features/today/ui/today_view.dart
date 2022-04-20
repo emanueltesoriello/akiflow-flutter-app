@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/components/task/task_row.dart';
+import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -25,24 +25,6 @@ class _View extends StatelessWidget {
 
     tasks = TaskExt.filterTodayTasks(tasks);
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<TasksCubit>().refresh();
-      },
-      child: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          Task task = tasks[index];
-
-          return TaskRow(
-            task: task,
-            completed: () {
-              context.read<TasksCubit>().setCompleted(task);
-            },
-          );
-        },
-      ),
-    );
+    return TaskList(tasks: tasks);
   }
 }

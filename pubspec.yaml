@@ -16,6 +16,7 @@ dependencies:
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter
+  flutter_slidable: ^1.2.0
   flutter_svg: ^1.0.3
   flutter_widget_from_html: ^0.8.5
   get_it: ^7.2.0

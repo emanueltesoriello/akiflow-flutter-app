@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
@@ -14,83 +15,304 @@ import 'package:models/task/task.dart';
 
 class TaskRow extends StatelessWidget {
   final Task task;
-  final Function() completed;
+  final Function() completedClick;
+  final Function() planClick;
+  final Function() selectLabelClick;
+  final Function() snoozeClick;
 
   const TaskRow({
     Key? key,
     required this.task,
-    required this.completed,
+    required this.completedClick,
+    required this.planClick,
+    required this.selectLabelClick,
+    required this.snoozeClick,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InkWell(
-            onTap: completed,
-            child: Builder(builder: (context) {
-              bool completed = task.isCompletedComputed;
+    return Slidable(
+      key: ValueKey(task.id),
+      groupTag: "task",
+      startActionPane: _startActions(context),
+      endActionPane: _endActions(context),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _completeCheckbox(),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _firstLine(context),
+                  _secondLine(context),
+                  Builder(builder: (context) {
+                    if (task.statusType == null &&
+                        !task.isOverdue &&
+                        task.listId == null) {
+                      return const SizedBox();
+                    }
 
-              return SvgPicture.asset(
-                completed || (task.temporaryDone ?? false)
-                    ? "assets/images/icons/_common/Check-done.svg"
-                    : "assets/images/icons/_common/Check-empty.svg",
-                width: 20,
-                height: 20,
-                color: completed || (task.temporaryDone ?? false)
-                    ? ColorsExt.grey2(context)
-                    : ColorsExt.grey3(context),
-              );
-            }),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  task.title ?? "",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: task.statusType == TaskStatusType.deleted ||
-                            task.deletedAt != null
-                        ? ColorsExt.grey3(context)
-                        : ColorsExt.grey1(context),
-                  ),
+                    return const SizedBox(height: 10.5);
+                  }),
+                  _thirdLine(context),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Wrap _thirdLine(BuildContext context) {
+    return Wrap(
+      spacing: 4,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        _overdue(context),
+        Builder(builder: (context) {
+          if (task.statusType == null) {
+            return const SizedBox();
+          }
+
+          return _status(context);
+        }),
+        _label(context),
+      ],
+    );
+  }
+
+  Text _firstLine(BuildContext context) {
+    return Text(
+      task.title ?? "",
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w500,
+        color:
+            task.statusType == TaskStatusType.deleted || task.deletedAt != null
+                ? ColorsExt.grey3(context)
+                : ColorsExt.grey1(context),
+      ),
+    );
+  }
+
+  InkWell _completeCheckbox() {
+    return InkWell(
+      onTap: completedClick,
+      child: Builder(builder: (context) {
+        bool completed = task.isCompletedComputed;
+
+        return SvgPicture.asset(
+          completed || (task.temporaryDone ?? false)
+              ? "assets/images/icons/_common/Check-done.svg"
+              : "assets/images/icons/_common/Check-empty.svg",
+          width: 20,
+          height: 20,
+          color: completed || (task.temporaryDone ?? false)
+              ? ColorsExt.grey2(context)
+              : ColorsExt.grey3(context),
+        );
+      }),
+    );
+  }
+
+  ActionPane _startActions(BuildContext context) {
+    return ActionPane(
+      motion: const ScrollMotion(),
+      extentRatio: 0.3,
+      children: [
+        Flexible(
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                const BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.06),
                 ),
-                _secondLine(context),
-                Builder(builder: (context) {
-                  if (task.statusType == null &&
-                      !task.isOverdue &&
-                      task.listId == null) {
-                    return const SizedBox();
-                  }
-
-                  return const SizedBox(height: 10.5);
-                }),
-                Wrap(
-                  spacing: 4,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    _overdue(context),
-                    Builder(builder: (context) {
-                      if (task.statusType == null) {
-                        return const SizedBox();
-                      }
-
-                      return _status(context);
-                    }),
-                    _label(context),
-                  ],
+                BoxShadow(
+                  offset: const Offset(2, 4),
+                  blurRadius: 16,
+                  color: ColorsExt.grey7(context),
                 ),
               ],
             ),
+            width: double.infinity,
+            height: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Builder(builder: (context) {
+                    return _slidableActionLabel(
+                      backColor: ColorsExt.green20(context),
+                      topColor: ColorsExt.green(context),
+                      icon: 'assets/images/icons/_common/Check-done.svg',
+                      label: t.task.done.toUpperCase(),
+                      click: () {
+                        Slidable.of(context)?.close();
+                        completedClick();
+                      },
+                    );
+                  }),
+                ),
+                const SizedBox(width: 16),
+              ],
+            ),
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  ActionPane _endActions(BuildContext context) {
+    return ActionPane(
+      dismissible: DismissiblePane(onDismissed: () {}),
+      motion: const ScrollMotion(),
+      extentRatio: 0.6,
+      children: [
+        Flexible(
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                const BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.06),
+                ),
+                BoxShadow(
+                  offset: const Offset(2, 4),
+                  blurRadius: 16,
+                  color: ColorsExt.grey7(context),
+                ),
+              ],
+            ),
+            width: double.infinity,
+            height: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(width: 16),
+                Builder(builder: (context) {
+                  return _slidableAction(
+                    backColor: ColorsExt.grey5(context),
+                    topColor: ColorsExt.grey3(context),
+                    icon: 'assets/images/icons/_common/number.svg',
+                    click: () {
+                      Slidable.of(context)?.close();
+                      selectLabelClick();
+                    },
+                  );
+                }),
+                const SizedBox(width: 16),
+                Builder(builder: (context) {
+                  return _slidableAction(
+                    backColor: ColorsExt.pink30(context),
+                    topColor: ColorsExt.pink(context),
+                    icon: 'assets/images/icons/_common/clock.svg',
+                    click: () {
+                      Slidable.of(context)?.close();
+                      snoozeClick();
+                    },
+                  );
+                }),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Builder(builder: (context) {
+                    return _slidableActionLabel(
+                      backColor: ColorsExt.cyan25(context),
+                      topColor: ColorsExt.cyan(context),
+                      icon: 'assets/images/icons/_common/calendar.svg',
+                      label: t.task.plan.toUpperCase(),
+                      click: () {
+                        Slidable.of(context)?.close();
+                        planClick();
+                      },
+                    );
+                  }),
+                ),
+                const SizedBox(width: 16),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _slidableAction({
+    required Color backColor,
+    required Color topColor,
+    required String icon,
+    required Function() click,
+  }) {
+    return InkWell(
+      onTap: click,
+      child: Center(
+        child: Container(
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: backColor,
+          ),
+          child: Center(
+            child: SvgPicture.asset(
+              icon,
+              color: topColor,
+              width: 21,
+              height: 21,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _slidableActionLabel({
+    required Color backColor,
+    required Color topColor,
+    required String icon,
+    required String label,
+    required Function() click,
+  }) {
+    return InkWell(
+      onTap: click,
+      child: Center(
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: backColor,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: SvgPicture.asset(
+                  icon,
+                  color: topColor,
+                  width: 21,
+                  height: 21,
+                ),
+              ),
+              const SizedBox(width: 4.5),
+              Flexible(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: topColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

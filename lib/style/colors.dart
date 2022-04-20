@@ -43,6 +43,12 @@ extension ColorsExt on Colors {
         : ColorsDark.grey6;
   }
 
+  static Color grey7(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.grey7
+        : ColorsDark.grey7;
+  }
+
   static green(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.green
@@ -55,6 +61,12 @@ extension ColorsExt on Colors {
         : ColorsDark.green20;
   }
 
+  static cyan(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.cyan
+        : ColorsDark.cyan;
+  }
+
   static cyan25(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.cyan25
@@ -65,6 +77,18 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.akiflow10
         : ColorsDark.akiflow10;
+  }
+
+  static pink(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.pink
+        : ColorsDark.pink;
+  }
+
+  static pink30(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.pink30
+        : ColorsDark.pink30;
   }
 
   static red(BuildContext context) {
@@ -113,7 +137,7 @@ extension ColorsLight on Colors {
   static const Color green = Color(0xFF6FCF97);
   static const Color green20 = Color(0xFFE2F5EA);
 
-  static const Color cyan = Color(0xFFC8E9FC);
+  static const Color cyan = Color(0xFF59B6EB);
   static const Color cyan20 = Color(0xFFECF8FF);
   static const Color cyan25 = Color(0xFFD8EDFA);
 
@@ -136,6 +160,9 @@ extension ColorsLight on Colors {
   static const Color grey6 = Color(0xFFF1F6F9);
   static const Color grey7 = Color(0xFFFAFBFD);
   static const Color white = Color(0xFFFFFFFF);
+
+  static const Color pink = Color(0xFFF195C1);
+  static const Color pink30 = Color(0xFFFFE9F0);
 }
 
 extension ColorsDark on Colors {
@@ -147,7 +174,7 @@ extension ColorsDark on Colors {
   static const Color green = Color(0xFF6FCF97);
   static const Color green20 = Color(0xFFE2F5EA);
 
-  static const Color cyan = Color(0xFFC8E9FC);
+  static const Color cyan = Color(0xFF59B6EB);
   static const Color cyan20 = Color(0xFFECF8FF);
   static const Color cyan25 = Color(0xFFD8EDFA);
 
@@ -169,4 +196,7 @@ extension ColorsDark on Colors {
   static const Color grey5 = Color(0xFFE4EDF3);
   static const Color grey6 = Color(0xFFF1F6F9);
   static const Color grey7 = Color(0xFFFAFBFD);
+
+  static const Color pink = Color(0xFFF195C1);
+  static const Color pink30 = Color(0xFFFFE9F0);
 }

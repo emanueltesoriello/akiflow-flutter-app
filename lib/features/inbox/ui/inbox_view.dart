@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/notice.dart';
-import 'package:mobile/components/task/task_row.dart';
+import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -27,45 +27,14 @@ class _View extends StatelessWidget {
 
     tasks = TaskExt.filterInboxTasks(tasks);
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<TasksCubit>().refresh();
-      },
-      child: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        itemCount: tasks.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return BlocBuilder<InboxCubit, InboxCubitState>(
-              builder: (context, state) {
-                return Visibility(
-                  visible: state.showInboxNotice,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Notice(
-                      title: t.notice.inboxTitle,
-                      subtitle: t.notice.inboxSubtitle,
-                      icon: Icons.info_outline,
-                      onClose: () {
-                        context.read<InboxCubit>().inboxNoticeClosed();
-                      },
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-
-          index -= 1;
-
-          Task task = tasks[index];
-
-          return TaskRow(
-            task: task,
-            completed: () {
-              context.read<TasksCubit>().setCompleted(task);
-            },
-          );
+    return TaskList(
+      tasks: tasks,
+      notice: Notice(
+        title: t.notice.inboxTitle,
+        subtitle: t.notice.inboxSubtitle,
+        icon: Icons.info_outline,
+        onClose: () {
+          context.read<InboxCubit>().inboxNoticeClosed();
         },
       ),
     );
