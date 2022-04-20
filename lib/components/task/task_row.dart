@@ -39,6 +39,7 @@ class TaskRow extends StatelessWidget {
       startActionPane: _startActions(context),
       endActionPane: _endActions(context),
       child: Container(
+        constraints: const BoxConstraints(minHeight: 78),
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
