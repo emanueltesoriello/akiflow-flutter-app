@@ -45,7 +45,8 @@
   },
   "task": {
     "description": "Description",
-    "linkedContent": "Linked content"
+    "linkedContent": "Linked content",
+    "today": "Today"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

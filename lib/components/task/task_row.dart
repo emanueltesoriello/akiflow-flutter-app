@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/button_iconed.dart';
+import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
@@ -33,12 +33,20 @@ class TaskRow extends StatelessWidget {
             onTap: () {
               completed();
             },
-            child: SvgPicture.asset(
-              "assets/images/icons/_common/square.svg",
-              width: 20,
-              height: 20,
-              color: ColorsExt.grey3(context),
-            ),
+            child: Builder(builder: (context) {
+              bool completed = task.isCompletedComputed;
+
+              return SvgPicture.asset(
+                completed
+                    ? "assets/images/icons/_common/Check-done.svg"
+                    : "assets/images/icons/_common/Check-empty.svg",
+                width: 20,
+                height: 20,
+                color: completed
+                    ? ColorsExt.grey2(context)
+                    : ColorsExt.grey3(context),
+              );
+            }),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -47,16 +55,37 @@ class TaskRow extends StatelessWidget {
               children: [
                 Text(
                   task.title ?? "",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
+                    color: task.statusType == TaskStatusType.deleted ||
+                            task.deletedAt != null
+                        ? ColorsExt.grey3(context)
+                        : ColorsExt.grey1(context),
                   ),
                 ),
                 _secondLine(context),
+                Builder(builder: (context) {
+                  if (task.statusType == null &&
+                      !task.isOverdue &&
+                      task.listId == null) {
+                    return const SizedBox();
+                  }
+
+                  return const SizedBox(height: 10.5);
+                }),
                 Wrap(
                   spacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    _status(context),
+                    _overdue(context),
+                    Builder(builder: (context) {
+                      if (task.statusType == null) {
+                        return const SizedBox();
+                      }
+
+                      return _status(context);
+                    }),
                     _label(context),
                   ],
                 ),
@@ -68,43 +97,72 @@ class TaskRow extends StatelessWidget {
     );
   }
 
-  Widget _status(BuildContext context) {
-    if (task.statusType == null) {
-      return const SizedBox();
+  Widget _overdue(BuildContext context) {
+    if (task.isOverdue) {
+      return SvgPicture.asset(
+        "assets/images/icons/_common/Clock_alert.svg",
+        width: 20,
+        height: 20,
+        color: ColorsExt.red(context),
+      );
     }
 
-    String text = task.statusType!.name;
-    Color color;
+    return const SizedBox();
+  }
+
+  Widget _status(BuildContext context) {
+    void statusClick() {
+      print(task.status);
+    }
+
+    if (task.deletedAt != null ||
+        task.statusType == TaskStatusType.deleted ||
+        task.statusType == TaskStatusType.permanentlyDeleted) {
+      return AkiChip(
+        icon: "assets/images/icons/_common/trash.svg",
+        backgroundColor: ColorsExt.grey6(context),
+        text: task.statusType!.name.capitalizeFirstCharacter(),
+        onPressed: statusClick,
+        foregroundColor: ColorsExt.grey3(context),
+      );
+    }
+
+    if (task.isCompletedComputed) {
+      return AkiChip(
+        backgroundColor: ColorsExt.green20(context),
+        text: task.doneAtFormatted,
+        onPressed: statusClick,
+      );
+    }
 
     switch (task.statusType) {
       case TaskStatusType.someday:
+        return AkiChip(
+          icon: "assets/images/icons/_common/archivebox.svg",
+          backgroundColor: ColorsExt.akiflow10(context),
+          text: task.statusType!.name.capitalizeFirstCharacter(),
+          onPressed: statusClick,
+        );
       case TaskStatusType.snoozed:
-        color = ColorsExt.akiflow10(context);
-        break;
-      case TaskStatusType.completed:
-        color = ColorsExt.green20(context);
-        break;
-      case TaskStatusType.deleted:
-      case TaskStatusType.permanentlyDeleted:
-        color = ColorsExt.grey6(context);
-        break;
+        return AkiChip(
+          icon: "assets/images/icons/_common/clock.svg",
+          backgroundColor: ColorsExt.akiflow10(context),
+          text: task.datetimeFormatted,
+          onPressed: statusClick,
+        );
+      case TaskStatusType.planned:
+        return AkiChip(
+          backgroundColor: ColorsExt.cyan25(context),
+          text: task.shortDate,
+          onPressed: statusClick,
+        );
       default:
-        color = ColorsExt.cyan25(context);
+        return AkiChip(
+          backgroundColor: ColorsExt.cyan25(context),
+          text: task.statusType!.name.capitalizeFirstCharacter(),
+          onPressed: statusClick,
+        );
     }
-
-    return Column(
-      children: [
-        const SizedBox(height: 10.5),
-        ButtonIconed(
-          icon: "assets/images/icons/_common/number.svg",
-          text: text.capitalizeFirstCharacter(),
-          backgroundColor: color,
-          onPressed: () {
-            // TODO status click
-          },
-        ),
-      ],
-    );
   }
 
   Widget _label(BuildContext context) {
@@ -122,23 +180,18 @@ class TaskRow extends StatelessWidget {
       (label) => task.listId!.contains(label.id!),
     );
 
-    return Column(
-      children: [
-        const SizedBox(height: 10.5),
-        ButtonIconed(
-          icon: "assets/images/icons/_common/number.svg",
-          text: label.title,
-          backgroundColor: label.color != null
-              ? ColorsExt.getFromName(label.color!).withOpacity(0.1)
-              : null,
-          iconColor: label.color != null
-              ? ColorsExt.getFromName(label.color!)
-              : ColorsExt.grey3(context),
-          onPressed: () {
-            // TODO label click
-          },
-        ),
-      ],
+    return AkiChip(
+      icon: "assets/images/icons/_common/number.svg",
+      text: label.title,
+      backgroundColor: label.color != null
+          ? ColorsExt.getFromName(label.color!).withOpacity(0.1)
+          : null,
+      iconColor: label.color != null
+          ? ColorsExt.getFromName(label.color!)
+          : ColorsExt.grey3(context),
+      onPressed: () {
+        // TODO label click
+      },
     );
   }
 

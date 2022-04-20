@@ -67,6 +67,12 @@ extension ColorsExt on Colors {
         : ColorsDark.akiflow10;
   }
 
+  static red(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.red
+        : ColorsDark.red;
+  }
+
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

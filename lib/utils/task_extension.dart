@@ -1,4 +1,7 @@
+import 'package:i18n/strings.g.dart';
+import 'package:intl/intl.dart';
 import 'package:models/task/task.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -57,6 +60,50 @@ extension TaskExt on Task {
     }
 
     return false;
+  }
+
+  bool get isOverdue {
+    if (date != null) {
+      return date!.day < DateTime.now().day;
+    }
+
+    return false;
+  }
+
+  bool get isCompletedComputed {
+    return (statusType == TaskStatusType.completed ||
+        (done ?? false) ||
+        doneAt != null);
+  }
+
+  String get shortDate {
+    if (date != null) {
+      if (isToday) {
+        return t.task.today;
+      } else if (date!.isBefore(DateTime.now().add(const Duration(days: 6)))) {
+        return DateFormat.E().format(date!.toLocal());
+      } else {
+        return DateFormat.MMMd().format(date!.toLocal());
+      }
+    }
+
+    return '';
+  }
+
+  String get datetimeFormatted {
+    if (datetime != null) {
+      return DateFormat("EEE hh:mm").format(datetime!.toLocal());
+    }
+
+    return '';
+  }
+
+  String get doneAtFormatted {
+    if (doneAt != null) {
+      return timeago.format(doneAt!.toLocal());
+    }
+
+    return '';
   }
 
   TaskStatusType? get statusType {

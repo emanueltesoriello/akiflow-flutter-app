@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/button_iconed.dart';
+import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -77,7 +77,7 @@ class AddTaskModal extends StatelessWidget {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        ButtonIconed(
+                        AkiChip(
                           icon: "assets/images/icons/_common/calendar.svg",
                           iconSize: 18,
                           text: t.addTask.plan,
@@ -86,7 +86,7 @@ class AddTaskModal extends StatelessWidget {
                           },
                         ),
                         const SizedBox(width: 8),
-                        ButtonIconed(
+                        AkiChip(
                           icon: "assets/images/icons/_common/hourglass.svg",
                           iconSize: 18,
                           onPressed: () {
@@ -94,7 +94,7 @@ class AddTaskModal extends StatelessWidget {
                           },
                         ),
                         const SizedBox(width: 8),
-                        ButtonIconed(
+                        AkiChip(
                           icon: "assets/images/icons/_common/number.svg",
                           iconSize: 18,
                           onPressed: () {

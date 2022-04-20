@@ -44,6 +44,9 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'done_at')
   DateTime? get doneAt;
 
+  @BuiltValueField(wireName: 'datetime')
+  DateTime? get datetime;
+
   @BuiltValueField(wireName: 'read_at')
   DateTime? get readAt;
 
@@ -121,6 +124,7 @@ abstract class Task extends Object
       "list_id": listId,
       "section_id": sectionId,
       "done": done == true ? 1 : 0,
+      "datetime": datetime?.toIso8601String(),
       "done_at": doneAt?.toIso8601String(),
       "read_at": readAt?.toIso8601String(),
       "due_date": dueDate?.toIso8601String(),

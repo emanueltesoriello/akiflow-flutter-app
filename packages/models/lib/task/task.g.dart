@@ -82,6 +82,12 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
       ..add('done_at')
       ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
+    value = object.datetime;
+
+    result
+      ..add('datetime')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
     value = object.readAt;
 
     result
@@ -206,6 +212,10 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.doneAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
+        case 'datetime':
+          result.datetime = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime?;
+          break;
         case 'read_at':
           result.readAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
@@ -281,6 +291,8 @@ class _$Task extends Task {
   @override
   final DateTime? doneAt;
   @override
+  final DateTime? datetime;
+  @override
   final DateTime? readAt;
   @override
   final DateTime? globalUpdatedAt;
@@ -318,6 +330,7 @@ class _$Task extends Task {
       this.deletedAt,
       this.done,
       this.doneAt,
+      this.datetime,
       this.readAt,
       this.globalUpdatedAt,
       this.globalCreatedAt,
@@ -353,6 +366,7 @@ class _$Task extends Task {
         deletedAt == other.deletedAt &&
         done == other.done &&
         doneAt == other.doneAt &&
+        datetime == other.datetime &&
         readAt == other.readAt &&
         globalUpdatedAt == other.globalUpdatedAt &&
         globalCreatedAt == other.globalCreatedAt &&
@@ -386,15 +400,15 @@ class _$Task extends Task {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode),
-                                                                                description.hashCode),
-                                                                            duration.hashCode),
-                                                                        status.hashCode),
-                                                                    createdAt.hashCode),
-                                                                updatedAt.hashCode),
-                                                            deletedAt.hashCode),
-                                                        done.hashCode),
-                                                    doneAt.hashCode),
+                                                                            $jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode),
+                                                                                duration.hashCode),
+                                                                            status.hashCode),
+                                                                        createdAt.hashCode),
+                                                                    updatedAt.hashCode),
+                                                                deletedAt.hashCode),
+                                                            done.hashCode),
+                                                        doneAt.hashCode),
+                                                    datetime.hashCode),
                                                 readAt.hashCode),
                                             globalUpdatedAt.hashCode),
                                         globalCreatedAt.hashCode),
@@ -422,6 +436,7 @@ class _$Task extends Task {
           ..add('deletedAt', deletedAt)
           ..add('done', done)
           ..add('doneAt', doneAt)
+          ..add('datetime', datetime)
           ..add('readAt', readAt)
           ..add('globalUpdatedAt', globalUpdatedAt)
           ..add('globalCreatedAt', globalCreatedAt)
@@ -483,6 +498,10 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   DateTime? _doneAt;
   DateTime? get doneAt => _$this._doneAt;
   set doneAt(DateTime? doneAt) => _$this._doneAt = doneAt;
+
+  DateTime? _datetime;
+  DateTime? get datetime => _$this._datetime;
+  set datetime(DateTime? datetime) => _$this._datetime = datetime;
 
   DateTime? _readAt;
   DateTime? get readAt => _$this._readAt;
@@ -548,6 +567,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _deletedAt = $v.deletedAt;
       _done = $v.done;
       _doneAt = $v.doneAt;
+      _datetime = $v.datetime;
       _readAt = $v.readAt;
       _globalUpdatedAt = $v.globalUpdatedAt;
       _globalCreatedAt = $v.globalCreatedAt;
@@ -590,6 +610,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
             deletedAt: deletedAt,
             done: done,
             doneAt: doneAt,
+            datetime: datetime,
             readAt: readAt,
             globalUpdatedAt: globalUpdatedAt,
             globalCreatedAt: globalCreatedAt,

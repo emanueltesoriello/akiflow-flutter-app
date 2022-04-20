@@ -322,7 +322,7 @@ CREATE TABLE IF NOT EXISTS tasks(
   `id` UUID PRIMARY KEY,
   `title` VARCHAR(255),
   `date` TEXT,
-  `date_time` TEXT,
+  `datetime` TEXT,
   `recurring_id` UUID,
   `recurrence` TEXT,
   `description` TEXT,
