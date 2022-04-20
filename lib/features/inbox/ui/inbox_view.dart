@@ -33,16 +33,19 @@ class _View extends StatelessWidget {
       notice: BlocBuilder<InboxCubit, InboxCubitState>(
         builder: (context, state) {
           if (!state.showInboxNotice) {
-            return const SizedBox();
+            return const SizedBox(height: 16);
           }
 
-          return Notice(
-            title: t.notice.inboxTitle,
-            subtitle: t.notice.inboxSubtitle,
-            icon: Icons.info_outline,
-            onClose: () {
-              context.read<InboxCubit>().inboxNoticeClosed();
-            },
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Notice(
+              title: t.notice.inboxTitle,
+              subtitle: t.notice.inboxSubtitle,
+              icon: Icons.info_outline,
+              onClose: () {
+                context.read<InboxCubit>().inboxNoticeClosed();
+              },
+            ),
           );
         },
       ),

@@ -30,13 +30,10 @@ class TaskList extends StatelessWidget {
           itemBuilder: (context, index) {
             if (index == 0) {
               if (notice == null) {
-                return const SizedBox(height: 16);
+                return const SizedBox(height: 0);
               }
 
-              return Padding(
-                padding: const EdgeInsets.all(16),
-                child: notice!,
-              );
+              return notice!;
             }
 
             index -= 1;
