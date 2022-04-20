@@ -30,19 +30,17 @@ class TaskRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: () {
-              completed();
-            },
+            onTap: completed,
             child: Builder(builder: (context) {
               bool completed = task.isCompletedComputed;
 
               return SvgPicture.asset(
-                completed
+                completed || (task.temporaryDone ?? false)
                     ? "assets/images/icons/_common/Check-done.svg"
                     : "assets/images/icons/_common/Check-empty.svg",
                 width: 20,
                 height: 20,
-                color: completed
+                color: completed || (task.temporaryDone ?? false)
                     ? ColorsExt.grey2(context)
                     : ColorsExt.grey3(context),
               );

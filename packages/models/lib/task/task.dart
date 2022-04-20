@@ -80,6 +80,9 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'origin')
   String? get origin;
 
+  @BuiltValueField(serialize: false)
+  bool? get temporaryDone;
+
   Task._();
 
   factory Task([void Function(TaskBuilder) updates]) = _$Task;

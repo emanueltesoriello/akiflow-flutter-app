@@ -314,6 +314,8 @@ class _$Task extends Task {
   final String? sectionId;
   @override
   final String? origin;
+  @override
+  final bool? temporaryDone;
 
   factory _$Task([void Function(TaskBuilder)? updates]) =>
       (new TaskBuilder()..update(updates)).build();
@@ -341,7 +343,8 @@ class _$Task extends Task {
       this.priority,
       this.listId,
       this.sectionId,
-      this.origin})
+      this.origin,
+      this.temporaryDone})
       : super._();
 
   @override
@@ -377,7 +380,8 @@ class _$Task extends Task {
         priority == other.priority &&
         listId == other.listId &&
         sectionId == other.sectionId &&
-        origin == other.origin;
+        origin == other.origin &&
+        temporaryDone == other.temporaryDone;
   }
 
   @override
@@ -400,26 +404,26 @@ class _$Task extends Task {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode),
-                                                                                duration.hashCode),
-                                                                            status.hashCode),
-                                                                        createdAt.hashCode),
-                                                                    updatedAt.hashCode),
-                                                                deletedAt.hashCode),
-                                                            done.hashCode),
-                                                        doneAt.hashCode),
-                                                    datetime.hashCode),
-                                                readAt.hashCode),
-                                            globalUpdatedAt.hashCode),
-                                        globalCreatedAt.hashCode),
-                                    activationDatetime.hashCode),
-                                dueDate.hashCode),
-                            remoteUpdatedAt.hashCode),
-                        recurringId.hashCode),
-                    priority.hashCode),
-                listId.hashCode),
-            sectionId.hashCode),
-        origin.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode),
+                                                                                status.hashCode),
+                                                                            createdAt.hashCode),
+                                                                        updatedAt.hashCode),
+                                                                    deletedAt.hashCode),
+                                                                done.hashCode),
+                                                            doneAt.hashCode),
+                                                        datetime.hashCode),
+                                                    readAt.hashCode),
+                                                globalUpdatedAt.hashCode),
+                                            globalCreatedAt.hashCode),
+                                        activationDatetime.hashCode),
+                                    dueDate.hashCode),
+                                remoteUpdatedAt.hashCode),
+                            recurringId.hashCode),
+                        priority.hashCode),
+                    listId.hashCode),
+                sectionId.hashCode),
+            origin.hashCode),
+        temporaryDone.hashCode));
   }
 
   @override
@@ -447,7 +451,8 @@ class _$Task extends Task {
           ..add('priority', priority)
           ..add('listId', listId)
           ..add('sectionId', sectionId)
-          ..add('origin', origin))
+          ..add('origin', origin)
+          ..add('temporaryDone', temporaryDone))
         .toString();
   }
 }
@@ -551,6 +556,11 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   String? get origin => _$this._origin;
   set origin(String? origin) => _$this._origin = origin;
 
+  bool? _temporaryDone;
+  bool? get temporaryDone => _$this._temporaryDone;
+  set temporaryDone(bool? temporaryDone) =>
+      _$this._temporaryDone = temporaryDone;
+
   TaskBuilder();
 
   TaskBuilder get _$this {
@@ -579,6 +589,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _listId = $v.listId;
       _sectionId = $v.sectionId;
       _origin = $v.origin;
+      _temporaryDone = $v.temporaryDone;
       _$v = null;
     }
     return this;
@@ -621,7 +632,8 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
             priority: priority,
             listId: listId,
             sectionId: sectionId,
-            origin: origin);
+            origin: origin,
+            temporaryDone: temporaryDone);
     replace(_$result);
     return _$result;
   }

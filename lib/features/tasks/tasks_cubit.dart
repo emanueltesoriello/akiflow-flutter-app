@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
@@ -50,18 +52,18 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(tasks: []));
   }
 
+  Timer? completedDebounce;
+
   Future<void> setCompleted(Task task) async {
+    completedDebounce?.cancel();
+
     int index = state.tasks.indexOf(task);
 
-    DateTime? now = DateTime.now().toUtc();
-
-    task = task.rebuild(
-      (b) => b
-        ..done = true
-        ..doneAt = now
-        ..status = TaskStatusType.completed.id
-        ..updatedAt = now,
-    );
+    if (task.isCompletedComputed || (task.temporaryDone ?? false)) {
+      task = task.rebuild((b) => b..temporaryDone = false);
+    } else {
+      task = task.rebuild((b) => b..temporaryDone = true);
+    }
 
     List<Task> all = state.tasks.toList();
 
@@ -69,11 +71,39 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(tasks: all));
 
-    await _tasksRepository.updateById(task.id, data: task);
+    // debounce
+    completedDebounce = Timer(const Duration(seconds: 2), () async {
+      bool temporaryDone = (task.temporaryDone ?? false) == true;
 
-    await _syncControllerService.sync();
+      if (temporaryDone == task.isCompletedComputed) {
+        // same original value, not update
+        return;
+      }
 
-    refresh();
+      DateTime? now = DateTime.now().toUtc();
+
+      if (temporaryDone) {
+        task = task.rebuild((b) => b
+          ..done = true
+          ..doneAt = now
+          ..updatedAt = now
+          ..status = TaskStatusType.completed.id);
+      } else {
+        task = task.rebuild(
+          (b) => b
+            ..done = false
+            ..doneAt = null
+            ..updatedAt = now
+            ..status = TaskStatusType.inbox.id,
+        );
+      }
+
+      await _tasksRepository.updateById(task.id, data: task);
+
+      await _syncControllerService.sync();
+
+      refresh();
+    });
   }
 
   Future<void> addTask(Task task) async {
