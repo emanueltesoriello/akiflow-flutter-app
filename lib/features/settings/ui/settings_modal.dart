@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_selectable.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
@@ -79,8 +79,8 @@ class SettingsModal extends StatelessWidget {
                         ),
                         const SizedBox(width: 12),
                         InkWell(
-                          child: Icon(
-                            SFSymbols.search,
+                          child: SvgPicture.asset(
+                            "assets/images/icons/_common/search.svg",
                             color: ColorsExt.grey3(context),
                           ),
                           onTap: () {
@@ -89,8 +89,8 @@ class SettingsModal extends StatelessWidget {
                         ),
                         const SizedBox(width: 12),
                         InkWell(
-                          child: Icon(
-                            SFSymbols.gear_alt,
+                          child: SvgPicture.asset(
+                            "assets/images/icons/_common/gear_alt.svg",
                             color: ColorsExt.grey3(context),
                           ),
                           onTap: () {
@@ -110,9 +110,10 @@ class SettingsModal extends StatelessWidget {
 
                         return ButtonSelectable(
                           title: t.bottomBar.inbox,
-                          leading: Icon(
-                            SFSymbols.tray,
-                            size: 24,
+                          leading: SvgPicture.asset(
+                            "assets/images/icons/_common/tray.svg",
+                            width: 24,
+                            height: 24,
                             color: ColorsExt.grey2(context),
                           ),
                           selected: homeViewType == HomeViewType.inbox,
@@ -145,8 +146,8 @@ class SettingsModal extends StatelessWidget {
 
                         return ButtonSelectable(
                           title: t.bottomBar.today,
-                          leading: Image.asset(
-                            "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
+                          leading: SvgPicture.asset(
+                            "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
                             height: 19,
                             color: ColorsExt.grey1(context),
                           ),

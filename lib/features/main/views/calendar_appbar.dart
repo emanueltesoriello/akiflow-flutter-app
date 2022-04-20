@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/style/colors.dart';
@@ -11,16 +11,18 @@ class CalendarAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBarComp(
       title: DateFormat('EEE').format(DateTime.now()),
-      leading: Icon(
-        SFSymbols.calendar,
-        size: 26,
+      leading: SvgPicture.asset(
+        "assets/images/icons/_common/calendar.svg",
+        width: 26,
+        height: 26,
         color: ColorsExt.grey2(context),
       ),
       actions: [
         IconButton(
-          icon: Icon(
-            SFSymbols.ellipsis,
-            size: 18,
+          icon: SvgPicture.asset(
+            "assets/images/icons/_common/ellipsis.svg",
+            width: 26,
+            height: 26,
             color: ColorsExt.grey2(context),
           ),
           onPressed: () {},

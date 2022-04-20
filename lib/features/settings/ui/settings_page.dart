@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
@@ -25,9 +25,10 @@ class SettingsPage extends StatelessWidget {
             showBack: true,
             actions: [
               IconButton(
-                icon: Icon(
-                  SFSymbols.arrow_2_circlepath,
-                  size: 18,
+                icon: SvgPicture.asset(
+                  "assets/images/icons/_common/arrow_2_circlepath.svg",
+                  width: 18,
+                  height: 18,
                   color: ColorsExt.grey2(context),
                 ),
                 onPressed: () {
@@ -45,7 +46,8 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.upgradeToPro,
                     position: ButtonListPosition.top,
-                    leading: SFSymbols.person, // TODO  svg for crown icons
+                    leading:
+                        "assets/images/icons/_common/xmark_square.svg", // TODO needed crown icon
                     leadingColor: Theme.of(context).primaryColor,
                     showShevron: false,
                     onPressed: () {
@@ -55,7 +57,7 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.myAccount,
                     position: ButtonListPosition.center,
-                    leading: SFSymbols.person_circle,
+                    leading: "assets/images/icons/_common/person_circle.svg",
                     onPressed: () {
                       // TODO my account settings event
                     },
@@ -63,7 +65,7 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.general,
                     position: ButtonListPosition.onlyHorizontalPadding,
-                    leading: SFSymbols.gear_alt,
+                    leading: "assets/images/icons/_common/gear_alt.svg",
                     onPressed: () {
                       // TODO general settings event
                     },
@@ -71,7 +73,8 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.tasks,
                     position: ButtonListPosition.center,
-                    leading: SFSymbols.checkmark,
+                    leading:
+                        "assets/images/icons/_common/Check-done-outline.svg",
                     onPressed: () {
                       // TODO tasks settings event
                     },
@@ -79,7 +82,7 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.notifications,
                     position: ButtonListPosition.bottom,
-                    leading: SFSymbols.bell,
+                    leading: "assets/images/icons/_common/bell.svg",
                     onPressed: () {
                       // TODO notifications settings event
                     },
@@ -88,7 +91,7 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.integrations,
                     leading:
-                        SFSymbols.person, // TODO svg for integrations icons
+                        "assets/images/icons/_common/xmark_square.svg", // TODO needed crown icon
                     position: ButtonListPosition.single,
                     onPressed: () {
                       // TODO logout event
@@ -97,8 +100,7 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   ButtonList(
                     title: t.settings.referYourFriends,
-                    leading: SFSymbols
-                        .person, // TODO  svg for refer_your_friends icons
+                    leading: "assets/images/icons/_common/gift.svg",
                     position: ButtonListPosition.top,
                     onPressed: () {
                       // TODO refer friend event
@@ -107,7 +109,7 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.helpCenter,
                     leading:
-                        SFSymbols.person, // TODO  svg for help center icons
+                        "assets/images/icons/_common/xmark_square.svg", // TODO text.book.closed icon
                     position: ButtonListPosition.center,
                     onPressed: () {
                       // TODO refer help center event
@@ -115,7 +117,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   ButtonList(
                     title: t.settings.about,
-                    leading: SFSymbols.info_circle,
+                    leading: "assets/images/icons/_common/info_circle.svg",
                     position: ButtonListPosition.bottom,
                     onPressed: () {
                       // TODO refer about event
@@ -124,7 +126,7 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   ButtonList(
                     title: t.settings.followUsOnTwitter,
-                    leading: SFSymbols.person, // TODO  svg for twitter icon
+                    leading: "assets/images/icons/twitter/twitter.svg",
                     position: ButtonListPosition.top,
                     showShevron: false,
                     onPressed: () {
@@ -134,7 +136,7 @@ class SettingsPage extends StatelessWidget {
                   const ButtonListDivider(),
                   ButtonList(
                     title: t.settings.joinOurCommunity,
-                    leading: SFSymbols.info_circle, // TODO  svg for slack icon
+                    leading: "assets/images/icons/slack/slack.svg",
                     position: ButtonListPosition.bottom,
                     showShevron: false,
                     onPressed: () {

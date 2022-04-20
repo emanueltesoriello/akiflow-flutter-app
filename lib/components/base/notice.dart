@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
@@ -54,7 +54,12 @@ class Notice extends StatelessWidget {
           Stack(
             alignment: Alignment.topRight,
             children: [
-              Icon(SFSymbols.xmark, size: 20, color: ColorsExt.grey1(context)),
+              SvgPicture.asset(
+                "assets/images/icons/_common/xmark.svg",
+                width: 20,
+                height: 20,
+                color: ColorsExt.grey1(context),
+              ),
               InkWell(
                 onTap: onClose,
                 child: const SizedBox(width: 36, height: 36),

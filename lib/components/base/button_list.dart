@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
@@ -9,7 +9,7 @@ enum ButtonListPosition { single, top, center, bottom, onlyHorizontalPadding }
 class ButtonList extends StatefulWidget {
   final String title;
   final Function() onPressed;
-  final IconData? leading;
+  final String? leading;
   final Color? leadingColor;
   final ButtonListPosition position;
   final bool showShevron;
@@ -122,9 +122,10 @@ class _ButtonListState extends State<ButtonList>
                                 return const SizedBox();
                               }
 
-                              return Icon(
-                                SFSymbols.chevron_right,
-                                size: 20,
+                              return SvgPicture.asset(
+                                "assets/images/icons/_common/chevron_right.svg",
+                                width: 20,
+                                height: 20,
                                 color: ColorsExt.grey3(context),
                               );
                             }),
@@ -147,9 +148,10 @@ class _ButtonListState extends State<ButtonList>
 
     return Row(
       children: [
-        Icon(
+        SvgPicture.asset(
           widget.leading!,
-          size: 24,
+          width: 24,
+          height: 24,
           color: widget.leadingColor ?? ColorsExt.grey2(context),
         ),
         const SizedBox(width: 8),

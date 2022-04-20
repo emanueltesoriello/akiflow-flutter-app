@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
@@ -33,7 +34,10 @@ class MainPage extends StatelessWidget {
           isScrollControlled: true,
           builder: (context) => AddTaskModal(),
         ),
-        child: const Icon(SFSymbols.plus),
+        child: SvgPicture.asset(
+          "assets/images/icons/_common/plus.svg",
+          color: Theme.of(context).backgroundColor,
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -43,26 +47,36 @@ class MainPage extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: const Icon(SFSymbols.line_horizontal_3),
+            icon: SvgPicture.asset(
+                "assets/images/icons/_common/line_horizontal_3.svg"),
             label: t.bottomBar.menu,
           ),
           BottomNavigationBarItem(
-              icon: const Icon(SFSymbols.tray), label: t.bottomBar.inbox),
+              icon: SvgPicture.asset("assets/images/icons/_common/tray.svg"),
+              activeIcon: SvgPicture.asset(
+                "assets/images/icons/_common/tray.svg",
+                color: Theme.of(context).primaryColor,
+              ),
+              label: t.bottomBar.inbox),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
+            icon: SvgPicture.asset(
+              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
               height: 19,
               color: ColorsExt.grey1(context),
             ),
-            activeIcon: Image.asset(
-              "assets/images/icons/_common/14.square@2x.png", // TODO SFSymbols.14 not available
+            activeIcon: SvgPicture.asset(
+              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
               height: 19,
               color: Theme.of(context).primaryColor,
             ),
             label: t.bottomBar.today,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(SFSymbols.calendar),
+            icon: SvgPicture.asset("assets/images/icons/_common/calendar.svg"),
+            activeIcon: SvgPicture.asset(
+              "assets/images/icons/_common/calendar.svg",
+              color: Theme.of(context).primaryColor,
+            ),
             label: t.bottomBar.calendar,
           ),
         ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mobile/components/base/space.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -63,9 +63,10 @@ class AppBarComp extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: (() => Navigator.pop(context)),
-                  child: Icon(
-                    SFSymbols.arrow_left,
-                    size: 26,
+                  child: SvgPicture.asset(
+                    "assets/images/icons/_common/arrow_left.svg",
+                    height: 26,
+                    width: 26,
                     color: ColorsExt.grey2(context),
                   ),
                 ),

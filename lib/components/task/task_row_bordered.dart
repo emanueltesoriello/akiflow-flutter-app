@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
@@ -34,9 +34,10 @@ class TaskBorderedRow extends StatelessWidget {
             onTap: () {
               completed();
             },
-            child: Icon(
-              SFSymbols.square,
-              size: 20,
+            child: SvgPicture.asset(
+              "assets/images/icons/_common/square.svg",
+              width: 20,
+              height: 20,
               color: ColorsExt.grey3(context),
             ),
           ),

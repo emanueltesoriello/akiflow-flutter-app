@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mobile/style/colors.dart';
 
 class ButtonIconed extends StatelessWidget {
-  final IconData icon;
+  final String icon;
+  final double? iconSize;
   final String? text;
   final Function() onPressed;
   final Color? backgroundColor;
@@ -11,6 +13,7 @@ class ButtonIconed extends StatelessWidget {
   const ButtonIconed({
     Key? key,
     required this.icon,
+    this.iconSize,
     this.text,
     required this.onPressed,
     this.backgroundColor,
@@ -31,10 +34,11 @@ class ButtonIconed extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
+            SvgPicture.asset(
               icon,
               color: iconColor,
-              size: 12,
+              width: iconSize ?? 12,
+              height: iconSize ?? 12,
             ),
             Flexible(
               child: Builder(builder: (context) {

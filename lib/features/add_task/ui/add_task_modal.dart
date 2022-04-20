@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_iconed.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -78,7 +78,8 @@ class AddTaskModal extends StatelessWidget {
                     Row(
                       children: [
                         ButtonIconed(
-                          icon: SFSymbols.calendar,
+                          icon: "assets/images/icons/_common/calendar.svg",
+                          iconSize: 18,
                           text: t.addTask.plan,
                           onPressed: () {
                             // TODO task plan
@@ -86,14 +87,16 @@ class AddTaskModal extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         ButtonIconed(
-                          icon: SFSymbols.hourglass,
+                          icon: "assets/images/icons/_common/hourglass.svg",
+                          iconSize: 18,
                           onPressed: () {
                             // TODO task duration
                           },
                         ),
                         const SizedBox(width: 8),
                         ButtonIconed(
-                          icon: SFSymbols.number,
+                          icon: "assets/images/icons/_common/number.svg",
+                          iconSize: 18,
                           onPressed: () {
                             // TODO task label
                           },
@@ -117,14 +120,14 @@ class AddTaskModal extends StatelessWidget {
                           child: Material(
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              decoration: const BoxDecoration(),
-                              child: SizedBox(
-                                height: 36,
-                                width: 36,
-                                child: Icon(
-                                  SFSymbols.paperplane,
-                                  size: 18,
+                            child: SizedBox(
+                              height: 36,
+                              width: 36,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  "assets/images/icons/_common/paperplane_send.svg",
+                                  width: 24,
+                                  height: 24,
                                   color: Theme.of(context).backgroundColor,
                                 ),
                               ),

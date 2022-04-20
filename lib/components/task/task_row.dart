@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_iconed.dart';
@@ -34,9 +33,10 @@ class TaskRow extends StatelessWidget {
             onTap: () {
               completed();
             },
-            child: Icon(
-              SFSymbols.square,
-              size: 20,
+            child: SvgPicture.asset(
+              "assets/images/icons/_common/square.svg",
+              width: 20,
+              height: 20,
               color: ColorsExt.grey3(context),
             ),
           ),
@@ -96,7 +96,7 @@ class TaskRow extends StatelessWidget {
       children: [
         const SizedBox(height: 10.5),
         ButtonIconed(
-          icon: SFSymbols.number,
+          icon: "assets/images/icons/_common/number.svg",
           text: text.capitalizeFirstCharacter(),
           backgroundColor: color,
           onPressed: () {
@@ -126,7 +126,7 @@ class TaskRow extends StatelessWidget {
       children: [
         const SizedBox(height: 10.5),
         ButtonIconed(
-          icon: SFSymbols.number,
+          icon: "assets/images/icons/_common/number.svg",
           text: label.title,
           backgroundColor: label.color != null
               ? ColorsExt.getFromName(label.color!).withOpacity(0.1)
@@ -176,10 +176,11 @@ class TaskRow extends StatelessWidget {
           } else {
             return Row(
               children: [
-                Icon(
-                  SFSymbols.arrow_turn_down_right,
+                SvgPicture.asset(
+                  "assets/images/icons/_common/arrow_turn_down_right.svg",
                   color: ColorsExt.grey3(context),
-                  size: 16,
+                  width: 16,
+                  height: 16,
                 ),
                 const SizedBox(width: 4.5),
                 Text(
