@@ -30,7 +30,7 @@ class TaskList extends StatelessWidget {
           itemBuilder: (context, index) {
             if (index == 0) {
               if (notice == null) {
-                return const SizedBox(height: 0);
+                return const SizedBox(height: 16);
               }
 
               return notice!;
