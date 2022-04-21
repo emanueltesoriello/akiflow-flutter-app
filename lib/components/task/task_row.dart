@@ -4,6 +4,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
+import 'package:mobile/components/task/slidable_container.dart';
+import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
@@ -141,52 +143,41 @@ class TaskRow extends StatelessWidget {
 
   ActionPane _startActions(BuildContext context) {
     return ActionPane(
-      motion: const ScrollMotion(),
-      extentRatio: 0.3,
+      motion: const BehindMotion(),
+      extentRatio: 0.2,
       dismissible: DismissiblePane(
         closeOnCancel: true,
-        dismissThreshold: 0.1,
+        dismissThreshold: 0.5,
         confirmDismiss: () async {
           completedClick();
           return false;
         },
         onDismissed: () {},
-      ),
-      children: [
-        Flexible(
-          child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                const BoxShadow(
-                  color: Color.fromRGBO(0, 0, 0, 0.06),
-                ),
-                BoxShadow(
-                  offset: const Offset(2, 4),
-                  blurRadius: 16,
-                  color: ColorsExt.grey7(context),
-                ),
-              ],
-            ),
-            width: double.infinity,
-            height: double.infinity,
-            child: _doneButton(),
+        motion: SlidableContainer(
+          child: SlidableMotion(
+            dismissThreshold: 0.5,
+            motionChild: _doneButton(withLabel: true),
+            staticChild: _doneButton(),
           ),
         ),
+      ),
+      children: [
+        Flexible(child: SlidableContainer(child: _doneButton())),
       ],
     );
   }
 
-  Widget _doneButton() {
+  Widget _doneButton({bool withLabel = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(width: 16),
         Builder(builder: (context) {
-          return _slidableActionLabel(
+          return _slidableAction(
             backColor: ColorsExt.green20(context),
             topColor: ColorsExt.green(context),
             icon: 'assets/images/icons/_common/Check-done.svg',
-            label: t.task.done.toUpperCase(),
+            label: withLabel ? t.task.done.toUpperCase() : null,
             click: () {
               Slidable.of(context)?.close();
               completedClick();
@@ -208,25 +199,11 @@ class TaskRow extends StatelessWidget {
         },
         onDismissed: () {},
       ),
-      motion: const ScrollMotion(),
+      motion: const BehindMotion(),
       extentRatio: 0.6,
       children: [
         Flexible(
-          child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                const BoxShadow(
-                  color: Color.fromRGBO(0, 0, 0, 0.06),
-                ),
-                BoxShadow(
-                  offset: const Offset(2, 4),
-                  blurRadius: 16,
-                  color: ColorsExt.grey7(context),
-                ),
-              ],
-            ),
-            width: double.infinity,
-            height: double.infinity,
+          child: SlidableContainer(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -256,7 +233,7 @@ class TaskRow extends StatelessWidget {
                 }),
                 const SizedBox(width: 16),
                 Builder(builder: (context) {
-                  return _slidableActionLabel(
+                  return _slidableAction(
                     backColor: ColorsExt.cyan25(context),
                     topColor: ColorsExt.cyan(context),
                     icon: 'assets/images/icons/_common/calendar.svg',
@@ -280,6 +257,7 @@ class TaskRow extends StatelessWidget {
     required Color backColor,
     required Color topColor,
     required String icon,
+    String? label,
     required Function() click,
   }) {
     return InkWell(
@@ -287,37 +265,7 @@ class TaskRow extends StatelessWidget {
       child: Center(
         child: Container(
           height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: backColor,
-          ),
-          child: Center(
-            child: SvgPicture.asset(
-              icon,
-              color: topColor,
-              width: 21,
-              height: 21,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _slidableActionLabel({
-    required Color backColor,
-    required Color topColor,
-    required String icon,
-    required String label,
-    required Function() click,
-  }) {
-    return InkWell(
-      onTap: click,
-      child: Center(
-        child: Container(
-          height: 40,
-          width: 86,
+          width: label == null || label.isEmpty ? 40 : 86,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: backColor,
@@ -333,16 +281,28 @@ class TaskRow extends StatelessWidget {
                   height: 21,
                 ),
               ),
-              const SizedBox(width: 4.5),
               Flexible(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: topColor,
-                  ),
-                ),
+                child: Builder(builder: (context) {
+                  if (label == null || label.isEmpty) {
+                    return const SizedBox();
+                  }
+
+                  return Row(
+                    children: [
+                      const SizedBox(width: 4.5),
+                      Flexible(
+                        child: Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: topColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
               ),
             ],
           ),
