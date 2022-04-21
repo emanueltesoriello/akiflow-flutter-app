@@ -52,16 +52,6 @@ class TaskRow extends StatelessWidget {
                 children: [
                   _firstLine(context),
                   _secondLine(context),
-                  Builder(builder: (context) {
-                    if (task.statusType == null &&
-                        !task.isOverdue &&
-                        task.listId == null &&
-                        !hideInboxLabel) {
-                      return const SizedBox();
-                    }
-
-                    return const SizedBox(height: 10.5);
-                  }),
                   _thirdLine(context),
                 ],
               ),
@@ -72,29 +62,43 @@ class TaskRow extends StatelessWidget {
     );
   }
 
-  Wrap _thirdLine(BuildContext context) {
-    return Wrap(
-      spacing: 4,
-      crossAxisAlignment: WrapCrossAlignment.center,
+  Widget _thirdLine(BuildContext context) {
+    return Column(
       children: [
-        _overdue(context),
         Builder(builder: (context) {
-          if (task.statusType == null) {
-            return const SizedBox();
-          }
-          if (task.statusType == TaskStatusType.inbox && hideInboxLabel) {
+          if (task.statusType == null &&
+              !task.isOverdue &&
+              task.listId == null &&
+              !hideInboxLabel) {
             return const SizedBox();
           }
 
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _status(context),
-              const SizedBox(width: 4),
-            ],
-          );
+          return const SizedBox(height: 10.5);
         }),
-        _label(context),
+        Wrap(
+          spacing: 4,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            _overdue(context),
+            Builder(builder: (context) {
+              if (task.statusType == null) {
+                return const SizedBox();
+              }
+              if (task.statusType == TaskStatusType.inbox && hideInboxLabel) {
+                return const SizedBox();
+              }
+
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _status(context),
+                  const SizedBox(width: 4),
+                ],
+              );
+            }),
+            _label(context),
+          ],
+        ),
       ],
     );
   }
@@ -139,6 +143,15 @@ class TaskRow extends StatelessWidget {
     return ActionPane(
       motion: const ScrollMotion(),
       extentRatio: 0.3,
+      dismissible: DismissiblePane(
+        closeOnCancel: true,
+        dismissThreshold: 0.1,
+        confirmDismiss: () async {
+          completedClick();
+          return false;
+        },
+        onDismissed: () {},
+      ),
       children: [
         Flexible(
           child: Container(
@@ -156,28 +169,32 @@ class TaskRow extends StatelessWidget {
             ),
             width: double.infinity,
             height: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Builder(builder: (context) {
-                    return _slidableActionLabel(
-                      backColor: ColorsExt.green20(context),
-                      topColor: ColorsExt.green(context),
-                      icon: 'assets/images/icons/_common/Check-done.svg',
-                      label: t.task.done.toUpperCase(),
-                      click: () {
-                        Slidable.of(context)?.close();
-                        completedClick();
-                      },
-                    );
-                  }),
-                ),
-                const SizedBox(width: 16),
-              ],
-            ),
+            child: _doneButton(),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _doneButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const SizedBox(width: 16),
+        SizedBox(
+          width: 86,
+          child: Builder(builder: (context) {
+            return _slidableActionLabel(
+              backColor: ColorsExt.green20(context),
+              topColor: ColorsExt.green(context),
+              icon: 'assets/images/icons/_common/Check-done.svg',
+              label: t.task.done.toUpperCase(),
+              click: () {
+                Slidable.of(context)?.close();
+                completedClick();
+              },
+            );
+          }),
         ),
       ],
     );
