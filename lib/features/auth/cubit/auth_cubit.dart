@@ -65,7 +65,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       emit(state.copyWith(user: Nullable(user)));
 
-      _tasksCubit.refresh();
+      _tasksCubit.syncAllAndRefresh();
     } else {
       _dialogService.showGenericError();
     }

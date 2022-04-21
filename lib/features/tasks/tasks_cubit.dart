@@ -28,24 +28,27 @@ class TasksCubit extends Cubit<TasksCubitState> {
       locator<SyncControllerService>();
 
   TasksCubit() : super(const TasksCubitState()) {
-    refresh();
+    syncAllAndRefresh();
   }
 
-  refresh() async {
+  syncAllAndRefresh() async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncControllerService.sync();
-
-      List<Task> tasks = await _tasksRepository.get();
-      emit(state.copyWith(tasks: tasks));
-
-      List<Label> labels = await _labelsRepository.get();
-      emit(state.copyWith(labels: labels));
-
-      List<Doc> docs = await _docsRepository.get();
-      emit(state.copyWith(docs: docs));
+      await _syncControllerService.syncAll();
+      await refreshTasks();
     }
+  }
+
+  refreshTasks() async {
+    List<Task> tasks = await _tasksRepository.get();
+    emit(state.copyWith(tasks: tasks));
+
+    List<Label> labels = await _labelsRepository.get();
+    emit(state.copyWith(labels: labels));
+
+    List<Doc> docs = await _docsRepository.get();
+    emit(state.copyWith(docs: docs));
   }
 
   void logout() {
@@ -100,9 +103,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       await _tasksRepository.updateById(task.id, data: task);
 
-      await _syncControllerService.sync();
+      await _syncControllerService.syncTasks();
 
-      refresh();
+      refreshTasks();
     });
   }
 
@@ -124,8 +127,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     await _tasksRepository.add([task]);
 
-    await _syncControllerService.sync();
+    await _syncControllerService.syncTasks();
 
-    refresh();
+    refreshTasks();
   }
 }

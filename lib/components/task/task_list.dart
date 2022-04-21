@@ -21,7 +21,7 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<TasksCubit>().refresh();
+        await context.read<TasksCubit>().syncAllAndRefresh();
       },
       child: SlidableAutoCloseBehavior(
         child: ListView.separated(

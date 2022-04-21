@@ -86,7 +86,7 @@ class SyncControllerService {
     Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
-  sync() async {
+  syncAll() async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
@@ -103,10 +103,15 @@ class SyncControllerService {
       await _syncEntity(Entity.labels);
       await _syncEntity(Entity.docs);
 
-      // await _sync(Entity.calendars);
-      // await _sync(Entity.events);
-
+      // await _syncEntity(Entity.calendars);
+      // await _syncEntity(Entity.events);
     }
+  }
+
+  syncTasks() async {
+    await _syncEntity(Entity.tasks);
+    await _syncEntity(Entity.labels);
+    await _syncEntity(Entity.docs);
   }
 
   Future<void> _syncEntity(Entity entity) async {

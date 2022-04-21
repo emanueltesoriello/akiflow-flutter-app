@@ -32,7 +32,7 @@ class SettingsPage extends StatelessWidget {
                   color: ColorsExt.grey2(context),
                 ),
                 onPressed: () {
-                  context.read<TasksCubit>().refresh();
+                  context.read<TasksCubit>().syncAllAndRefresh();
                 },
               ),
             ],
