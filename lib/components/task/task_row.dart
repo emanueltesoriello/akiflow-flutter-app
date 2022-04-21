@@ -181,28 +181,33 @@ class TaskRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(width: 16),
-        SizedBox(
-          width: 86,
-          child: Builder(builder: (context) {
-            return _slidableActionLabel(
-              backColor: ColorsExt.green20(context),
-              topColor: ColorsExt.green(context),
-              icon: 'assets/images/icons/_common/Check-done.svg',
-              label: t.task.done.toUpperCase(),
-              click: () {
-                Slidable.of(context)?.close();
-                completedClick();
-              },
-            );
-          }),
-        ),
+        Builder(builder: (context) {
+          return _slidableActionLabel(
+            backColor: ColorsExt.green20(context),
+            topColor: ColorsExt.green(context),
+            icon: 'assets/images/icons/_common/Check-done.svg',
+            label: t.task.done.toUpperCase(),
+            click: () {
+              Slidable.of(context)?.close();
+              completedClick();
+            },
+          );
+        }),
       ],
     );
   }
 
   ActionPane _endActions(BuildContext context) {
     return ActionPane(
-      dismissible: DismissiblePane(onDismissed: () {}),
+      dismissible: DismissiblePane(
+        closeOnCancel: true,
+        dismissThreshold: 0.1,
+        confirmDismiss: () async {
+          planClick();
+          return false;
+        },
+        onDismissed: () {},
+      ),
       motion: const ScrollMotion(),
       extentRatio: 0.6,
       children: [
@@ -223,7 +228,7 @@ class TaskRow extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const SizedBox(width: 16),
                 Builder(builder: (context) {
@@ -250,20 +255,18 @@ class TaskRow extends StatelessWidget {
                   );
                 }),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: Builder(builder: (context) {
-                    return _slidableActionLabel(
-                      backColor: ColorsExt.cyan25(context),
-                      topColor: ColorsExt.cyan(context),
-                      icon: 'assets/images/icons/_common/calendar.svg',
-                      label: t.task.plan.toUpperCase(),
-                      click: () {
-                        Slidable.of(context)?.close();
-                        planClick();
-                      },
-                    );
-                  }),
-                ),
+                Builder(builder: (context) {
+                  return _slidableActionLabel(
+                    backColor: ColorsExt.cyan25(context),
+                    topColor: ColorsExt.cyan(context),
+                    icon: 'assets/images/icons/_common/calendar.svg',
+                    label: t.task.plan.toUpperCase(),
+                    click: () {
+                      Slidable.of(context)?.close();
+                      planClick();
+                    },
+                  );
+                }),
                 const SizedBox(width: 16),
               ],
             ),
@@ -314,6 +317,7 @@ class TaskRow extends StatelessWidget {
       child: Center(
         child: Container(
           height: 40,
+          width: 86,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: backColor,
