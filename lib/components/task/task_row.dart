@@ -158,6 +158,7 @@ class TaskRow extends StatelessWidget {
             dismissThreshold: 0.5,
             motionChild: _doneButton(withLabel: true),
             staticChild: _doneButton(),
+            leftToRight: true,
           ),
         ),
       ),
@@ -190,67 +191,79 @@ class TaskRow extends StatelessWidget {
 
   ActionPane _endActions(BuildContext context) {
     return ActionPane(
+      motion: const BehindMotion(),
+      extentRatio: 0.5,
       dismissible: DismissiblePane(
         closeOnCancel: true,
-        dismissThreshold: 0.1,
+        dismissThreshold: 0.75,
         confirmDismiss: () async {
           planClick();
           return false;
         },
         onDismissed: () {},
-      ),
-      motion: const BehindMotion(),
-      extentRatio: 0.6,
-      children: [
-        Flexible(
-          child: SlidableContainer(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const SizedBox(width: 16),
-                Builder(builder: (context) {
-                  return _slidableAction(
-                    backColor: ColorsExt.grey5(context),
-                    topColor: ColorsExt.grey3(context),
-                    icon: 'assets/images/icons/_common/number.svg',
-                    click: () {
-                      Slidable.of(context)?.close();
-                      selectLabelClick();
-                    },
-                  );
-                }),
-                const SizedBox(width: 16),
-                Builder(builder: (context) {
-                  return _slidableAction(
-                    backColor: ColorsExt.pink30(context),
-                    topColor: ColorsExt.pink(context),
-                    icon: 'assets/images/icons/_common/clock.svg',
-                    click: () {
-                      Slidable.of(context)?.close();
-                      snoozeClick();
-                    },
-                  );
-                }),
-                const SizedBox(width: 16),
-                Builder(builder: (context) {
-                  return _slidableAction(
-                    backColor: ColorsExt.cyan25(context),
-                    topColor: ColorsExt.cyan(context),
-                    icon: 'assets/images/icons/_common/calendar.svg',
-                    label: t.task.plan.toUpperCase(),
-                    click: () {
-                      Slidable.of(context)?.close();
-                      planClick();
-                    },
-                  );
-                }),
-                const SizedBox(width: 16),
-              ],
-            ),
+        motion: SlidableContainer(
+          child: SlidableMotion(
+            dismissThreshold: 0.75,
+            motionChild: _endActionsPane(withLabel: true),
+            staticChild: _endActionsPane(),
+            leftToRight: false,
           ),
         ),
+      ),
+      children: [
+        Flexible(child: SlidableContainer(child: _endActionsPane())),
       ],
     );
+  }
+
+  Widget _endActionsPane({bool withLabel = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        const SizedBox(width: 16),
+        Builder(builder: (context) {
+          return _slidableAction(
+            backColor: ColorsExt.grey5(context),
+            topColor: ColorsExt.grey3(context),
+            icon: 'assets/images/icons/_common/number.svg',
+            click: () {
+              Slidable.of(context)?.close();
+              selectLabelClick();
+            },
+          );
+        }),
+        const SizedBox(width: 16),
+        Builder(builder: (context) {
+          return _slidableAction(
+            backColor: ColorsExt.pink30(context),
+            topColor: ColorsExt.pink(context),
+            icon: 'assets/images/icons/_common/clock.svg',
+            click: () {
+              Slidable.of(context)?.close();
+              snoozeClick();
+            },
+          );
+        }),
+        const SizedBox(width: 16),
+        _planButton(withLabel: withLabel),
+        const SizedBox(width: 16),
+      ],
+    );
+  }
+
+  Widget _planButton({bool withLabel = false}) {
+    return Builder(builder: (context) {
+      return _slidableAction(
+        backColor: ColorsExt.cyan25(context),
+        topColor: ColorsExt.cyan(context),
+        icon: 'assets/images/icons/_common/calendar.svg',
+        label: withLabel ? t.task.plan.toUpperCase() : null,
+        click: () {
+          Slidable.of(context)?.close();
+          planClick();
+        },
+      );
+    });
   }
 
   Widget _slidableAction({

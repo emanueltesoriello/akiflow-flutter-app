@@ -5,12 +5,14 @@ class SlidableMotion extends StatefulWidget {
   final double dismissThreshold;
   final Widget motionChild;
   final Widget staticChild;
+  final bool leftToRight;
 
   const SlidableMotion({
     Key? key,
     required this.dismissThreshold,
     required this.motionChild,
     required this.staticChild,
+    required this.leftToRight,
   }) : super(key: key);
 
   @override
@@ -32,11 +34,18 @@ class _SlidableMotionState extends State<SlidableMotion> {
     return ValueListenableBuilder(
         valueListenable: animationRationNotifier,
         builder: (context, double value, child) {
-          if (value < widget.dismissThreshold) {
-            // controller?.close();
-            return widget.staticChild;
+          if (widget.leftToRight) {
+            if (value < widget.dismissThreshold) {
+              return widget.staticChild;
+            } else {
+              return widget.motionChild;
+            }
           } else {
-            return widget.motionChild;
+            if (value < -widget.dismissThreshold) {
+              return widget.motionChild;
+            } else {
+              return widget.staticChild;
+            }
           }
         });
   }
