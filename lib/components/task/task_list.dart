@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:models/task/task.dart';
@@ -22,42 +23,44 @@ class TaskList extends StatelessWidget {
       onRefresh: () async {
         await context.read<TasksCubit>().syncAllAndRefresh();
       },
-      child: ListView.separated(
-        padding: EdgeInsets.zero,
-        itemCount: tasks.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            if (notice == null) {
-              return const SizedBox(height: 16);
+      child: SlidableAutoCloseBehavior(
+        child: ListView.separated(
+          padding: EdgeInsets.zero,
+          itemCount: tasks.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              if (notice == null) {
+                return const SizedBox(height: 16);
+              }
+
+              return notice!;
             }
 
-            return notice!;
-          }
+            index -= 1;
 
-          index -= 1;
+            Task task = tasks[index];
 
-          Task task = tasks[index];
-
-          return TaskRow(
-            task: task,
-            hideInboxLabel: hideInboxLabel,
-            completedClick: () {
-              context.read<TasksCubit>().setCompleted(task);
-            },
-            planClick: () {
-              // TODO plan task
-            },
-            selectLabelClick: () {
-              // TODO select label of task
-            },
-            snoozeClick: () {
-              // TODO snooze task
-            },
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox();
-        },
+            return TaskRow(
+              task: task,
+              hideInboxLabel: hideInboxLabel,
+              completedClick: () {
+                context.read<TasksCubit>().setCompleted(task);
+              },
+              planClick: () {
+                // TODO plan task
+              },
+              selectLabelClick: () {
+                // TODO select label of task
+              },
+              snoozeClick: () {
+                // TODO snooze task
+              },
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }
