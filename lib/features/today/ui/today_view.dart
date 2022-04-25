@@ -25,6 +25,9 @@ class _View extends StatelessWidget {
 
     tasks = TaskExt.filterTodayTasks(tasks);
 
-    return TaskList(tasks: tasks);
+    return TaskList(
+      tasks: tasks,
+      updatedTasks: context.watch<TasksCubit>().state.updatedTasks,
+    );
   }
 }

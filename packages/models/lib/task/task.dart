@@ -81,9 +81,6 @@ abstract class Task extends Object
   String? get origin;
 
   @BuiltValueField(serialize: false)
-  bool? get temporaryDone;
-
-  @BuiltValueField(serialize: false)
   bool? get selected;
 
   Task._();

@@ -119,54 +119,27 @@ class TasksCubit extends Cubit<TasksCubitState> {
       List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
 
       for (Task taskSelected in tasks) {
-        Task computedTask = _computePreDone(taskSelected);
-        await _updateInRepository(computedTask);
+        _computeDone(taskSelected);
       }
     } else {
-      Task computedTask = _computePreDone(task);
-
-      Debouncer.process(ifNotCancelled: () async {
-        await _updateInRepository(computedTask);
-
-        await _syncControllerService.syncTasks();
-
-        refreshTasks();
-      });
+      _computeDone(task);
     }
+
+    Debouncer.process(ifNotCancelled: () async {
+      await _updateInRepository();
+
+      await _syncControllerService.syncTasks();
+
+      refreshTasks();
+    });
   }
 
-  Task _computePreDone(Task task) {
-    int index = state.tasks.indexOf(task);
-
-    bool temporaryDone = task.temporaryDone != null && task.temporaryDone!;
-
-    if (temporaryDone || task.isCompletedComputed) {
-      task = task.rebuild((b) => b..temporaryDone = false);
-    } else {
-      task = task.rebuild((b) => b..temporaryDone = true);
-    }
-
-    List<Task> all = state.tasks.toList();
-
-    all[index] = task;
-
-    emit(state.copyWith(tasks: all));
-
-    return task;
-  }
-
-  _updateInRepository(Task task) async {
-    bool done = task.temporaryDone ?? false;
-
-    if (done == task.isCompletedComputed) {
-      return;
-    }
-
-    int index = state.tasks.indexOf(task);
+  void _computeDone(Task task) {
+    bool done = task.isCompletedComputed;
 
     DateTime? now = DateTime.now().toUtc();
 
-    if (done) {
+    if (!done) {
       task = task.rebuild(
         (b) => b
           ..done = true
@@ -184,12 +157,35 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
     }
 
-    List<Task> all = state.tasks.toList();
+    List<Task> updatedTasks = state.updatedTasks.toList();
 
-    all[index] = task;
+    int index =
+        state.updatedTasks.indexWhere((element) => element.id == task.id);
 
-    emit(state.copyWith(tasks: all));
+    if (index != -1) {
+      updatedTasks[index] = task;
+    } else {
+      updatedTasks.add(task);
+    }
 
-    await _tasksRepository.updateById(task.id, data: task);
+    emit(state.copyWith(updatedTasks: updatedTasks));
+  }
+
+  Future<void> _updateInRepository() async {
+    List<Task> updatedTasks = state.updatedTasks;
+
+    for (Task task in updatedTasks) {
+      Task originalTask =
+          state.tasks.firstWhere((element) => element.id == task.id);
+
+      if (originalTask == task) {
+        print("not changed continue");
+        continue;
+      }
+
+      await _tasksRepository.updateById(task.id, data: task);
+
+      emit(state.copyWith(updatedTasks: []));
+    }
   }
 }

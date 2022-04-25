@@ -17,6 +17,10 @@ import 'package:models/task/task.dart';
 
 class TaskRow extends StatelessWidget {
   final Task task;
+
+  // Used to show done tasks, before debounce update it
+  final Task? updatedTask;
+
   final Function() completedClick;
   final Function() planClick;
   final Function() selectLabelClick;
@@ -28,6 +32,7 @@ class TaskRow extends StatelessWidget {
   const TaskRow({
     Key? key,
     required this.task,
+    required this.updatedTask,
     required this.completedClick,
     required this.planClick,
     required this.selectLabelClick,
@@ -146,17 +151,18 @@ class TaskRow extends StatelessWidget {
     return InkWell(
       onTap: completedClick,
       child: Builder(builder: (context) {
-        bool completed = task.isCompletedComputed;
+        bool completed =
+            (updatedTask != null && (updatedTask!.isCompletedComputed)) ||
+                (task.isCompletedComputed);
 
         return SvgPicture.asset(
-          completed || (task.temporaryDone ?? false)
+          completed
               ? "assets/images/icons/_common/Check-done.svg"
               : "assets/images/icons/_common/Check-empty.svg",
           width: 20,
           height: 20,
-          color: completed || (task.temporaryDone ?? false)
-              ? ColorsExt.grey2(context)
-              : ColorsExt.grey3(context),
+          color:
+              completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
         );
       }),
     );

@@ -31,6 +31,7 @@ class _View extends StatelessWidget {
       builder: (context, state) {
         return TaskList(
           tasks: tasks,
+          updatedTasks: context.watch<TasksCubit>().state.updatedTasks,
           hideInboxLabel: true,
           notice: () {
             if (!state.showInboxNotice) {

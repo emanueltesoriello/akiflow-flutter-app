@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -7,12 +8,17 @@ import 'package:models/task/task.dart';
 
 class TaskList extends StatelessWidget {
   final List<Task> tasks;
+
+  // Used to show done tasks, before debounce update it
+  final List<Task> updatedTasks;
+
   final Widget? notice;
   final bool hideInboxLabel;
 
   const TaskList({
     Key? key,
     required this.tasks,
+    required this.updatedTasks,
     this.notice,
     this.hideInboxLabel = false,
   }) : super(key: key);
@@ -42,12 +48,16 @@ class TaskList extends StatelessWidget {
 
                 Task task = tasks[index];
 
+                Task? updatedTask = updatedTasks
+                    .firstWhereOrNull((element) => element.id == task.id);
+
                 return TaskRow(
                   task: task,
+                  updatedTask: updatedTask,
                   hideInboxLabel: hideInboxLabel,
                   selectMode: tasks.any((element) => element.selected ?? false),
                   completedClick: () {
-                    context.read<TasksCubit>().done(task);
+                    context.read<TasksCubit>().done(updatedTask ?? task);
                   },
                   longClick: () {
                     context.read<TasksCubit>().select(task);
