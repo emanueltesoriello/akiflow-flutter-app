@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
+import 'package:mobile/components/base/button_action.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -214,7 +215,7 @@ class TaskRow extends StatelessWidget {
       children: [
         const SizedBox(width: 16),
         Builder(builder: (context) {
-          return _slidableAction(
+          return ButtonAction(
             backColor: ColorsExt.green20(context),
             topColor: ColorsExt.green(context),
             icon: 'assets/images/icons/_common/Check-done.svg',
@@ -262,7 +263,7 @@ class TaskRow extends StatelessWidget {
       children: [
         const SizedBox(width: 16),
         Builder(builder: (context) {
-          return _slidableAction(
+          return ButtonAction(
             backColor: ColorsExt.grey5(context),
             topColor: ColorsExt.grey3(context),
             icon: 'assets/images/icons/_common/number.svg',
@@ -274,7 +275,7 @@ class TaskRow extends StatelessWidget {
         }),
         const SizedBox(width: 16),
         Builder(builder: (context) {
-          return _slidableAction(
+          return ButtonAction(
             backColor: ColorsExt.pink30(context),
             topColor: ColorsExt.pink(context),
             icon: 'assets/images/icons/_common/clock.svg',
@@ -293,7 +294,7 @@ class TaskRow extends StatelessWidget {
 
   Widget _planButton({bool withLabel = false}) {
     return Builder(builder: (context) {
-      return _slidableAction(
+      return ButtonAction(
         backColor: ColorsExt.cyan25(context),
         topColor: ColorsExt.cyan(context),
         icon: 'assets/images/icons/_common/calendar.svg',
@@ -304,64 +305,6 @@ class TaskRow extends StatelessWidget {
         },
       );
     });
-  }
-
-  Widget _slidableAction({
-    required Color backColor,
-    required Color topColor,
-    required String icon,
-    String? label,
-    required Function() click,
-  }) {
-    return InkWell(
-      onTap: click,
-      child: Center(
-        child: Container(
-          height: 40,
-          width: label == null || label.isEmpty ? 40 : 86,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: backColor,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: SvgPicture.asset(
-                  icon,
-                  color: topColor,
-                  width: 21,
-                  height: 21,
-                ),
-              ),
-              Flexible(
-                child: Builder(builder: (context) {
-                  if (label == null || label.isEmpty) {
-                    return const SizedBox();
-                  }
-
-                  return Row(
-                    children: [
-                      const SizedBox(width: 4.5),
-                      Flexible(
-                        child: Text(
-                          label,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: topColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Widget _overdue(BuildContext context) {

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/style/colors.dart';
 
 class BottomTaskActions extends StatelessWidget {
   const BottomTaskActions({Key? key}) : super(key: key);
@@ -13,41 +12,49 @@ class BottomTaskActions extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _button(
-            icon: "assets/images/icons/_common/Check-done.svg",
-            label: t.task.done,
-            click: () => context.read<TasksCubit>().done(),
+          ButtonAction(
+            backColor: ColorsExt.cyan25(context),
+            topColor: ColorsExt.cyan(context),
+            icon: 'assets/images/icons/_common/calendar.svg',
+            click: () {
+              // TODO plan selected
+            },
           ),
-          _button(
-            icon: "assets/images/icons/_common/calendar.svg",
-            label: t.task.plan,
-            click: () => context.read<TasksCubit>().plan(),
+          ButtonAction(
+            backColor: ColorsExt.pink30(context),
+            topColor: ColorsExt.pink(context),
+            icon: 'assets/images/icons/_common/clock.svg',
+            click: () {
+              // TODO snooze selected
+            },
           ),
-          _button(
-            icon: "assets/images/icons/_common/clock.svg",
-            label: t.task.snooze,
-            click: () => context.read<TasksCubit>().snooze(),
+          ButtonAction(
+            backColor: ColorsExt.grey5(context),
+            topColor: ColorsExt.grey3(context),
+            icon: 'assets/images/icons/_common/number.svg',
+            click: () {
+              // TODO label selected
+            },
           ),
-          const Text("3"),
-          const Text("4"),
-          const Text("5"),
-        ],
-      ),
-    );
-  }
-
-  Widget _button({
-    required String icon,
-    required String label,
-    required Function() click,
-  }) {
-    return InkWell(
-      onTap: click,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(icon),
-          Flexible(child: Text(label)),
+          ButtonAction(
+            backColor: ColorsExt.grey5(context),
+            topColor: ColorsExt.grey3(context),
+            icon: 'assets/images/icons/_common/exclamationmark.svg',
+            click: () {
+              // TODO priority selected
+            },
+          ),
+          IconButton(
+            icon: SvgPicture.asset(
+              "assets/images/icons/_common/ellipsis.svg",
+              width: 26,
+              height: 26,
+              color: ColorsExt.grey2(context),
+            ),
+            onPressed: () {
+              // TODO open dropdown
+            },
+          ),
         ],
       ),
     );
