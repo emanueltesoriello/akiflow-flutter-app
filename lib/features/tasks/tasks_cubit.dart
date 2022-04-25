@@ -121,17 +121,31 @@ class TasksCubit extends Cubit<TasksCubitState> {
       for (Task taskSelected in tasks) {
         _computeDone(taskSelected);
       }
+
+      _updateWith(debounce: false);
     } else {
       _computeDone(task);
+
+      _updateWith(debounce: true);
     }
+  }
 
-    Debouncer.process(ifNotCancelled: () async {
-      await _updateInRepository();
+  void _updateWith({required bool debounce}) {
+    if (debounce) {
+      Debouncer.process(ifNotCancelled: () async {
+        _update();
+      });
+    } else {
+      _update();
+    }
+  }
 
-      await _syncControllerService.syncTasks();
+  Future<void> _update() async {
+    await _updateInRepository();
 
-      refreshTasks();
-    });
+    await _syncControllerService.syncTasks();
+
+    refreshTasks();
   }
 
   void _computeDone(Task task) {
