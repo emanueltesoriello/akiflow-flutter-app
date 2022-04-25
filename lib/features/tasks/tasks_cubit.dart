@@ -8,6 +8,7 @@ import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
+import 'package:mobile/utils/debouncer.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/label/label.dart';
@@ -55,14 +56,91 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(tasks: []));
   }
 
-  Timer? completedDebounce;
+  Future<void> addTask(Task task) async {
+    DateTime? now = DateTime.now().toUtc();
 
-  Future<void> setCompleted(Task task) async {
-    completedDebounce?.cancel();
+    List<Task> all = state.tasks.toList();
 
+    Task newTask = task.rebuild(
+      (b) => b
+        ..id = const Uuid().v4()
+        ..updatedAt = now
+        ..createdAt = now,
+    );
+
+    all.add(newTask);
+
+    emit(state.copyWith(tasks: all));
+
+    await _tasksRepository.add([newTask]);
+
+    await _syncControllerService.syncTasks();
+
+    refreshTasks();
+  }
+
+  void select(Task task) {
     int index = state.tasks.indexOf(task);
 
-    if (task.isCompletedComputed || (task.temporaryDone ?? false)) {
+    task = task.rebuild((b) => b..selected = !(task.selected ?? false));
+
+    List<Task> all = state.tasks.toList();
+
+    all[index] = task;
+
+    emit(state.copyWith(tasks: all));
+  }
+
+  void plan({Task? task}) {
+    bool isSelectMode = state.tasks.any((t) => t.selected ?? false);
+
+    if (task == null || isSelectMode) {
+      // TODO plan all
+    } else {
+      // TODO plan selected task only
+    }
+  }
+
+  void snooze({Task? task}) {
+    bool isSelectMode = state.tasks.any((t) => t.selected ?? false);
+
+    if (task == null || isSelectMode) {
+      // TODO snooze all
+    } else {
+      // TODO snooze selected task only
+    }
+  }
+
+  done([Task? task]) async {
+    bool isSelectMode =
+        task == null || state.tasks.any((t) => t.selected ?? false);
+
+    if (isSelectMode) {
+      List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+
+      for (Task taskSelected in tasks) {
+        Task computedTask = _computePreDone(taskSelected);
+        await _updateInRepository(computedTask);
+      }
+    } else {
+      Task computedTask = _computePreDone(task);
+
+      Debouncer.process(ifNotCancelled: () async {
+        await _updateInRepository(computedTask);
+
+        await _syncControllerService.syncTasks();
+
+        refreshTasks();
+      });
+    }
+  }
+
+  Task _computePreDone(Task task) {
+    int index = state.tasks.indexOf(task);
+
+    bool temporaryDone = task.temporaryDone != null && task.temporaryDone!;
+
+    if (temporaryDone || task.isCompletedComputed) {
       task = task.rebuild((b) => b..temporaryDone = false);
     } else {
       task = task.rebuild((b) => b..temporaryDone = true);
@@ -74,61 +152,44 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(tasks: all));
 
-    // debounce
-    completedDebounce = Timer(const Duration(seconds: 2), () async {
-      bool temporaryDone = (task.temporaryDone ?? false) == true;
+    return task;
+  }
 
-      if (temporaryDone == task.isCompletedComputed) {
-        // same original value, not update
-        return;
-      }
+  _updateInRepository(Task task) async {
+    bool done = task.temporaryDone ?? false;
 
-      DateTime? now = DateTime.now().toUtc();
+    if (done == task.isCompletedComputed) {
+      return;
+    }
 
-      if (temporaryDone) {
-        task = task.rebuild((b) => b
+    int index = state.tasks.indexOf(task);
+
+    DateTime? now = DateTime.now().toUtc();
+
+    if (done) {
+      task = task.rebuild(
+        (b) => b
           ..done = true
           ..doneAt = now
           ..updatedAt = now
-          ..status = TaskStatusType.completed.id);
-      } else {
-        task = task.rebuild(
-          (b) => b
-            ..done = false
-            ..doneAt = null
-            ..updatedAt = now
-            ..status = TaskStatusType.inbox.id,
-        );
-      }
-
-      await _tasksRepository.updateById(task.id, data: task);
-
-      await _syncControllerService.syncTasks();
-
-      refreshTasks();
-    });
-  }
-
-  Future<void> addTask(Task task) async {
-    DateTime? now = DateTime.now().toUtc();
-
-    task = task.rebuild(
-      (b) => b
-        ..id = const Uuid().v4()
-        ..updatedAt = now
-        ..createdAt = now,
-    );
+          ..status = TaskStatusType.completed.id,
+      );
+    } else {
+      task = task.rebuild(
+        (b) => b
+          ..done = false
+          ..doneAt = null
+          ..updatedAt = now
+          ..status = TaskStatusType.inbox.id,
+      );
+    }
 
     List<Task> all = state.tasks.toList();
 
-    all.add(task);
+    all[index] = task;
 
     emit(state.copyWith(tasks: all));
 
-    await _tasksRepository.add([task]);
-
-    await _syncControllerService.syncTasks();
-
-    refreshTasks();
+    await _tasksRepository.updateById(task.id, data: task);
   }
 }

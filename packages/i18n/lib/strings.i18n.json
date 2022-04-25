@@ -48,7 +48,8 @@
     "linkedContent": "Linked content",
     "today": "Today",
     "plan": "Plan",
-    "done": "Done"
+    "done": "Done",
+    "snooze": "Snooze"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

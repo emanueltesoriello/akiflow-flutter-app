@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -141,7 +142,39 @@ class Application extends StatelessWidget {
                 );
               }
             },
-            child: userLogged ? MainPage() : const AuthPage(),
+            child: Builder(
+              builder: (context) {
+                if (userLogged) {
+                  return Stack(
+                    children: [
+                      MainPage(),
+                      BlocBuilder<TasksCubit, TasksCubitState>(
+                        builder: (context, state) {
+                          if (state.tasks
+                              .any((element) => element.selected ?? false)) {
+                            return SafeArea(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: kBottomNavigationBarHeight,
+                                  width: double.infinity,
+                                  color: Colors.red.withOpacity(0.4),
+                                  child: const BottomTaskActions(),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                } else {
+                  return const AuthPage();
+                }
+              },
+            ),
           )),
     );
   }

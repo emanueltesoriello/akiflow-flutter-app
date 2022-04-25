@@ -83,6 +83,9 @@ abstract class Task extends Object
   @BuiltValueField(serialize: false)
   bool? get temporaryDone;
 
+  @BuiltValueField(serialize: false)
+  bool? get selected;
+
   Task._();
 
   factory Task([void Function(TaskBuilder) updates]) = _$Task;

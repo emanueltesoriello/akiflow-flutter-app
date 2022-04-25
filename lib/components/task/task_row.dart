@@ -21,7 +21,9 @@ class TaskRow extends StatelessWidget {
   final Function() planClick;
   final Function() selectLabelClick;
   final Function() snoozeClick;
+  final Function() longClick;
   final bool hideInboxLabel;
+  final bool selectMode;
 
   const TaskRow({
     Key? key,
@@ -30,7 +32,9 @@ class TaskRow extends StatelessWidget {
     required this.planClick,
     required this.selectLabelClick,
     required this.snoozeClick,
+    required this.longClick,
     this.hideInboxLabel = false,
+    this.selectMode = false,
   }) : super(key: key);
 
   @override
@@ -40,25 +44,42 @@ class TaskRow extends StatelessWidget {
       groupTag: "task",
       startActionPane: _startActions(context),
       endActionPane: _endActions(context),
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 78),
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _completeCheckbox(),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _firstLine(context),
-                  _secondLine(context),
-                  _thirdLine(context),
-                ],
+      child: InkWell(
+        onLongPress: longClick,
+        onTap: () {
+          if (selectMode) {
+            context.read<TasksCubit>().select(task);
+          }
+        },
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 78),
+          padding: const EdgeInsets.all(16),
+          color: (task.selected ?? false)
+              ? ColorsExt.grey6(context)
+              : Colors.transparent,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Builder(builder: (context) {
+                if (selectMode) {
+                  return _radio(context);
+                } else {
+                  return _checkbox();
+                }
+              }),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _firstLine(context),
+                    _secondLine(context),
+                    _thirdLine(context),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -121,7 +142,7 @@ class TaskRow extends StatelessWidget {
     );
   }
 
-  InkWell _completeCheckbox() {
+  InkWell _checkbox() {
     return InkWell(
       onTap: completedClick,
       child: Builder(builder: (context) {
@@ -138,6 +159,19 @@ class TaskRow extends StatelessWidget {
               : ColorsExt.grey3(context),
         );
       }),
+    );
+  }
+
+  Widget _radio(BuildContext context) {
+    bool selected = task.selected ?? false;
+
+    return SvgPicture.asset(
+      selected
+          ? "assets/images/icons/_common/largecircle_fill_circle.svg"
+          : "assets/images/icons/_common/circle.svg",
+      width: 20,
+      height: 20,
+      color: ColorsExt.grey3(context),
     );
   }
 

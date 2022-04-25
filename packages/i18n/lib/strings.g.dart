@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 40 
+ * Strings: 41 
  *
- * Built on 2022-04-20 at 14:25 UTC
+ * Built on 2022-04-22 at 08:34 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -410,6 +410,7 @@ class _StringsTaskEn {
 	String get today => 'Today';
 	String get plan => 'Plan';
 	String get done => 'Done';
+	String get snooze => 'Snooze';
 }
 
 // Path: errors
@@ -468,6 +469,7 @@ extension on _StringsEn {
 			'task.today': 'Today',
 			'task.plan': 'Plan',
 			'task.done': 'Done',
+			'task.snooze': 'Snooze',
 			'errors.noAccountsFound': 'No accounts found',
 		};
 	}
