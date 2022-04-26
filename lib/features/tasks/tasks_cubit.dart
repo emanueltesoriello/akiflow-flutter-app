@@ -141,11 +141,34 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> _update() async {
-    await _updateInRepository();
+    List<Task> updatedTasks = state.updatedTasks;
 
-    await _syncControllerService.syncTasks();
+    bool taskChanged = _tasksHaveChanged(updatedTasks);
 
-    refreshTasks();
+    if (updatedTasks.isNotEmpty && taskChanged) {
+      await _updateInRepository();
+
+      await _syncControllerService.syncTasks();
+
+      refreshTasks();
+    } else {
+      print('No tasks to update');
+    }
+  }
+
+  bool _tasksHaveChanged(List<Task> updatedTasks) {
+    for (Task updatedTask in updatedTasks) {
+      Task originalTask = state.tasks.firstWhere((t) => t.id == updatedTask.id);
+
+      Task updatedTaskWithSameUpdateDate =
+          updatedTask.rebuild((b) => b..updatedAt = originalTask.updatedAt);
+
+      if (originalTask != updatedTaskWithSameUpdateDate) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   void _computeDone(Task task) {
@@ -189,14 +212,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> updatedTasks = state.updatedTasks;
 
     for (Task task in updatedTasks) {
-      Task originalTask =
-          state.tasks.firstWhere((element) => element.id == task.id);
-
-      if (originalTask == task) {
-        print("not changed continue");
-        continue;
-      }
-
       await _tasksRepository.updateById(task.id, data: task);
 
       emit(state.copyWith(updatedTasks: []));
