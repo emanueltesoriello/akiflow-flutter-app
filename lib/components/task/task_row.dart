@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -388,13 +389,13 @@ class TaskRow extends StatelessWidget {
 
     List<Label> labels = context.watch<TasksCubit>().state.labels;
 
-    if (labels.isEmpty) {
-      return const SizedBox();
-    }
-
-    Label label = labels.firstWhere(
+    Label? label = labels.firstWhereOrNull(
       (label) => task.listId!.contains(label.id!),
     );
+
+    if (label == null) {
+      return const SizedBox();
+    }
 
     return AkiChip(
       icon: "assets/images/icons/_common/number.svg",
