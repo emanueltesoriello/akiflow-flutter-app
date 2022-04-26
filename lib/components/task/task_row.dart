@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/components/base/button_action.dart';
@@ -415,23 +416,25 @@ class TaskRow extends StatelessWidget {
   Widget _secondLine(BuildContext context) {
     List<Doc> docs = context.watch<TasksCubit>().state.docs;
 
-    int index = docs.indexWhere(
+    Doc? doc = docs.firstWhereOrNull(
       (doc) => doc.taskId == task.id,
     );
 
     if ((task.description == null || task.description!.isEmpty) &&
-        index == -1) {
+        doc == null) {
       return const SizedBox();
     }
+
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: 4),
         Builder(builder: (context) {
-          if (index != -1) {
+          if (doc != null) {
             return Row(
               children: [
                 SvgPicture.asset(
-                  docs[index].computedIcon,
+                  doc.computedIcon,
                   width: 18,
                   height: 18,
                 ),
@@ -453,10 +456,32 @@ class TaskRow extends StatelessWidget {
                   height: 16,
                 ),
                 const SizedBox(width: 4.5),
-                Text(
-                  t.task.description,
-                  style:
-                      TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                Expanded(
+                  child: HtmlWidget(
+                    task.description!,
+                    enableCaching: false,
+                    customWidgetBuilder: (element) {
+                      String text = element.text.trim();
+
+                      if (text.isEmpty) {
+                        return const SizedBox();
+                      }
+
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              text,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: ColorsExt.grey3(context)),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ],
             );
