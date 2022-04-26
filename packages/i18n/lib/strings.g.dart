@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 41 
+ * Strings: 43 
  *
- * Built on 2022-04-22 at 08:34 UTC
+ * Built on 2022-04-26 at 16:20 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -411,6 +411,8 @@ class _StringsTaskEn {
 	String get plan => 'Plan';
 	String get done => 'Done';
 	String get snooze => 'Snooze';
+	String get assign => 'Assign';
+	String get priority => 'Priority';
 }
 
 // Path: errors
@@ -470,6 +472,8 @@ extension on _StringsEn {
 			'task.plan': 'Plan',
 			'task.done': 'Done',
 			'task.snooze': 'Snooze',
+			'task.assign': 'Assign',
+			'task.priority': 'Priority',
 			'errors.noAccountsFound': 'No accounts found',
 		};
 	}

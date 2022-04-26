@@ -49,7 +49,9 @@
     "today": "Today",
     "plan": "Plan",
     "done": "Done",
-    "snooze": "Snooze"
+    "snooze": "Snooze",
+    "assign": "Assign",
+    "priority": "Priority"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

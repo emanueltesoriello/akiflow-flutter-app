@@ -152,15 +152,10 @@ class Application extends StatelessWidget {
                         builder: (context, state) {
                           if (state.tasks
                               .any((element) => element.selected ?? false)) {
-                            return SafeArea(
+                            return const SafeArea(
                               child: Align(
                                 alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  height: kBottomNavigationBarHeight,
-                                  width: double.infinity,
-                                  color: Colors.red.withOpacity(0.4),
-                                  child: const BottomTaskActions(),
-                                ),
+                                child: BottomTaskActions(),
                               ),
                             );
                           } else {
