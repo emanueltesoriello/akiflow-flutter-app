@@ -55,9 +55,7 @@ class TaskRow extends StatelessWidget {
       child: InkWell(
         onLongPress: longClick,
         onTap: () {
-          if (selectMode) {
-            context.read<TasksCubit>().select(task);
-          }
+          context.read<TasksCubit>().open(task);
         },
         child: Container(
           constraints: const BoxConstraints(minHeight: 78),

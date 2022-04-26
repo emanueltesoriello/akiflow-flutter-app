@@ -217,4 +217,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
       emit(state.copyWith(updatedTasks: []));
     }
   }
+
+  void open(Task task) {
+    // TODO open task edit page
+  }
 }
