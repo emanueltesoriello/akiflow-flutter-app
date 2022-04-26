@@ -8,7 +8,7 @@ import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/calendar_appbar.dart';
-import 'package:mobile/features/main/views/inbox_appbar.dart';
+import 'package:mobile/features/main/views/tasks_list_appbar.dart';
 import 'package:mobile/features/main/views/today_appbar.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/features/today/ui/today_view.dart';
@@ -113,9 +113,12 @@ class MainPage extends StatelessWidget {
             builder: (context, state) {
               switch (state.homeViewType) {
                 case HomeViewType.inbox:
-                  return const InboxAppBar();
+                  return TasksListAppBar(
+                    title: t.bottomBar.inbox,
+                    leadingAsset: "assets/images/icons/_common/tray.svg",
+                  );
                 case HomeViewType.today:
-                  return const TodayAppBar();
+                  return TodayAppBar();
                 case HomeViewType.calendar:
                   return const CalendarAppBar();
                 default:

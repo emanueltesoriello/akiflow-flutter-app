@@ -221,4 +221,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
   void open(Task task) {
     // TODO open task edit page
   }
+
+  void clearSelected() {
+    List<Task> all = state.tasks.toList();
+
+    for (Task task in all) {
+      int index = all.indexOf(task);
+
+      all[index] = task.rebuild((b) => b..selected = false);
+    }
+
+    emit(state.copyWith(tasks: all));
+  }
 }
