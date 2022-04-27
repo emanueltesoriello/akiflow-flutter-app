@@ -80,6 +80,12 @@ abstract class Task extends Object
   @BuiltValueField(wireName: 'origin')
   String? get origin;
 
+  @BuiltValueField(wireName: 'sorting')
+  int? get sorting;
+
+  @BuiltValueField(wireName: 'sorting_label')
+  int? get sortingLabel;
+
   @BuiltValueField(serialize: false)
   bool? get selected;
 
@@ -136,6 +142,8 @@ abstract class Task extends Object
       "deleted_at": deletedAt?.toIso8601String(),
       "origin": origin,
       "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
+      "sorting": sorting,
+      "sorting_label": sortingLabel,
     };
   }
 

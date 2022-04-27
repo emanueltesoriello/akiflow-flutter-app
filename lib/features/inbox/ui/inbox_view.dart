@@ -33,6 +33,7 @@ class _View extends StatelessWidget {
           tasks: tasks,
           updatedTasks: context.watch<TasksCubit>().state.updatedTasks,
           hideInboxLabel: true,
+          sorting: TaskListSorting.ascending,
           notice: () {
             if (!state.showInboxNotice) {
               return null;

@@ -4,8 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 import 'package:reorderables/reorderables.dart';
+
+enum TaskListSorting { ascending, descending }
 
 class TaskList extends StatelessWidget {
   final List<Task> tasks;
@@ -15,17 +19,23 @@ class TaskList extends StatelessWidget {
 
   final Widget? notice;
   final bool hideInboxLabel;
+  final TaskListSorting sorting;
 
   const TaskList({
     Key? key,
     required this.tasks,
     required this.updatedTasks,
+    required this.sorting,
     this.notice,
     this.hideInboxLabel = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Task> tasks = List.from(this.tasks);
+
+    tasks = TaskExt.sort(tasks, sorting: sorting);
+
     return Stack(
       children: [
         RefreshIndicator(
@@ -34,6 +44,7 @@ class TaskList extends StatelessWidget {
           },
           child: SlidableAutoCloseBehavior(
             child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               controller:
                   PrimaryScrollController.of(context) ?? ScrollController(),
               slivers: [
@@ -51,12 +62,18 @@ class TaskList extends StatelessWidget {
                     return Material(
                       child: ConstrainedBox(
                           constraints: constraints, child: child),
-                      color: Colors.transparent,
+                      elevation: 1,
+                      color: ColorsExt.grey6(context),
                       borderRadius: BorderRadius.zero,
                     );
                   },
                   onReorder: (int oldIndex, int newIndex) {
-                    context.read<TasksCubit>().reorder(oldIndex, newIndex);
+                    context.read<TasksCubit>().reorder(
+                          oldIndex - 1,
+                          newIndex - 1,
+                          newTasksListOrdered: tasks,
+                          sorting: sorting,
+                        );
                   },
                   delegate: ReorderableSliverChildBuilderDelegate(
                     (BuildContext context, int index) {
@@ -99,7 +116,7 @@ class TaskList extends StatelessWidget {
                         },
                       );
                     },
-                    childCount: tasks.length,
+                    childCount: tasks.length + 1,
                   ),
                 ),
               ],

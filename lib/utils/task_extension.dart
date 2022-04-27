@@ -1,5 +1,6 @@
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/components/task/task_list.dart';
 import 'package:models/task/task.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -151,6 +152,25 @@ extension TaskExt on Task {
     tasks.removeWhere((element) => element.doneAt != null);
 
     tasks.removeWhere((task) => !task.isTodayOrBefore);
+
+    return tasks;
+  }
+
+  static List<Task> sort(
+    List<Task> tasks, {
+    required TaskListSorting? sorting,
+  }) {
+    tasks.sort((a, b) {
+      try {
+        if (sorting == TaskListSorting.ascending) {
+          return a.sorting! < b.sorting! ? 1 : -1;
+        } else {
+          return a.sorting! > b.sorting! ? 1 : -1;
+        }
+      } catch (_) {
+        return 0;
+      }
+    });
 
     return tasks;
   }

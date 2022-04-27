@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/docs_repository.dart';
@@ -143,32 +144,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> _update() async {
     List<Task> updatedTasks = state.updatedTasks;
 
-    bool taskChanged = _tasksHaveChanged(updatedTasks);
-
-    if (updatedTasks.isNotEmpty && taskChanged) {
+    if (updatedTasks.isNotEmpty) {
       await _updateInRepository();
 
-      await _syncControllerService.syncTasks();
-
       refreshTasks();
+
+      await _syncControllerService.syncTasks();
     } else {
       print('No tasks to update');
     }
-  }
-
-  bool _tasksHaveChanged(List<Task> updatedTasks) {
-    for (Task updatedTask in updatedTasks) {
-      Task originalTask = state.tasks.firstWhere((t) => t.id == updatedTask.id);
-
-      Task updatedTaskWithSameUpdateDate =
-          updatedTask.rebuild((b) => b..updatedAt = originalTask.updatedAt);
-
-      if (originalTask != updatedTaskWithSameUpdateDate) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   void _computeDone(Task task) {
@@ -234,9 +218,42 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(tasks: all));
   }
 
-  void reorder(int oldIndex, int newIndex) {
-    clearSelected();
+  void reorder(
+    int oldIndex,
+    int newIndex, {
+    required List<Task> newTasksListOrdered,
+    required TaskListSorting sorting,
+  }) {
+    // move element to position
+    Task task = newTasksListOrdered.removeAt(oldIndex);
 
-    // TODO reorder logic
+    newTasksListOrdered.insert(newIndex, task);
+
+    DateTime now = DateTime.now().toUtc();
+    int millis = now.millisecondsSinceEpoch;
+
+    if (sorting == TaskListSorting.descending) {
+      newTasksListOrdered = newTasksListOrdered.reversed.toList();
+    }
+
+    List<Task> ordered = newTasksListOrdered
+        .map((t) => t.rebuild(
+              (b) => b
+                ..sorting = millis - (1 * newTasksListOrdered.indexOf(t) + 1)
+                ..selected = false,
+            ))
+        .toList();
+
+    emit(state.copyWith(tasks: ordered));
+
+    List<Task> updated = ordered
+        .map((t) => t.rebuild(
+              (b) => b..updatedAt = now,
+            ))
+        .toList();
+
+    emit(state.copyWith(updatedTasks: updated));
+
+    _updateWith(debounce: false);
   }
 }

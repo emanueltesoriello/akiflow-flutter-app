@@ -153,6 +153,16 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
       ..add('origin')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.sorting;
+
+    result
+      ..add('sorting')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.sortingLabel;
+
+    result
+      ..add('sorting_label')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
 
     return result;
   }
@@ -260,6 +270,14 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.origin = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'sorting':
+          result.sorting = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'sorting_label':
+          result.sortingLabel = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
       }
     }
 
@@ -315,6 +333,10 @@ class _$Task extends Task {
   @override
   final String? origin;
   @override
+  final int? sorting;
+  @override
+  final int? sortingLabel;
+  @override
   final bool? selected;
 
   factory _$Task([void Function(TaskBuilder)? updates]) =>
@@ -344,6 +366,8 @@ class _$Task extends Task {
       this.listId,
       this.sectionId,
       this.origin,
+      this.sorting,
+      this.sortingLabel,
       this.selected})
       : super._();
 
@@ -381,6 +405,8 @@ class _$Task extends Task {
         listId == other.listId &&
         sectionId == other.sectionId &&
         origin == other.origin &&
+        sorting == other.sorting &&
+        sortingLabel == other.sortingLabel &&
         selected == other.selected;
   }
 
@@ -404,25 +430,25 @@ class _$Task extends Task {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode),
-                                                                                status.hashCode),
-                                                                            createdAt.hashCode),
-                                                                        updatedAt.hashCode),
-                                                                    deletedAt.hashCode),
-                                                                done.hashCode),
-                                                            doneAt.hashCode),
-                                                        datetime.hashCode),
-                                                    readAt.hashCode),
-                                                globalUpdatedAt.hashCode),
-                                            globalCreatedAt.hashCode),
-                                        activationDatetime.hashCode),
-                                    dueDate.hashCode),
-                                remoteUpdatedAt.hashCode),
-                            recurringId.hashCode),
-                        priority.hashCode),
-                    listId.hashCode),
-                sectionId.hashCode),
-            origin.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode),
+                                                                                updatedAt.hashCode),
+                                                                            deletedAt.hashCode),
+                                                                        done.hashCode),
+                                                                    doneAt.hashCode),
+                                                                datetime.hashCode),
+                                                            readAt.hashCode),
+                                                        globalUpdatedAt.hashCode),
+                                                    globalCreatedAt.hashCode),
+                                                activationDatetime.hashCode),
+                                            dueDate.hashCode),
+                                        remoteUpdatedAt.hashCode),
+                                    recurringId.hashCode),
+                                priority.hashCode),
+                            listId.hashCode),
+                        sectionId.hashCode),
+                    origin.hashCode),
+                sorting.hashCode),
+            sortingLabel.hashCode),
         selected.hashCode));
   }
 
@@ -452,6 +478,8 @@ class _$Task extends Task {
           ..add('listId', listId)
           ..add('sectionId', sectionId)
           ..add('origin', origin)
+          ..add('sorting', sorting)
+          ..add('sortingLabel', sortingLabel)
           ..add('selected', selected))
         .toString();
   }
@@ -556,6 +584,14 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   String? get origin => _$this._origin;
   set origin(String? origin) => _$this._origin = origin;
 
+  int? _sorting;
+  int? get sorting => _$this._sorting;
+  set sorting(int? sorting) => _$this._sorting = sorting;
+
+  int? _sortingLabel;
+  int? get sortingLabel => _$this._sortingLabel;
+  set sortingLabel(int? sortingLabel) => _$this._sortingLabel = sortingLabel;
+
   bool? _selected;
   bool? get selected => _$this._selected;
   set selected(bool? selected) => _$this._selected = selected;
@@ -588,6 +624,8 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _listId = $v.listId;
       _sectionId = $v.sectionId;
       _origin = $v.origin;
+      _sorting = $v.sorting;
+      _sortingLabel = $v.sortingLabel;
       _selected = $v.selected;
       _$v = null;
     }
@@ -632,6 +670,8 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
             listId: listId,
             sectionId: sectionId,
             origin: origin,
+            sorting: sorting,
+            sortingLabel: sortingLabel,
             selected: selected);
     replace(_$result);
     return _$result;
