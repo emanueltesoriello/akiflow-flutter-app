@@ -295,8 +295,29 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _updateWith(debounce: false);
   }
 
-  void duplicate() {
-    // TODO duplicate tasks
+  Future<void> duplicate() async {
+    List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+
+    List<Task> duplicates = [];
+
+    DateTime? now = DateTime.now().toUtc();
+
+    for (Task task in tasks) {
+      duplicates.add(task.rebuild(
+        (b) => b
+          ..id = const Uuid().v4()
+          ..updatedAt = now
+          ..createdAt = now,
+      ));
+    }
+
+    tasks.addAll(duplicates);
+
+    await _tasksRepository.add(duplicates);
+
+    emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
+
+    _updateWith(debounce: false);
   }
 
   void delete() {
