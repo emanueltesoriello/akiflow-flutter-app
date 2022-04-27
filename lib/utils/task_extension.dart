@@ -147,6 +147,8 @@ extension TaskExt on Task {
   static List<Task> filterTodayTasks(List<Task> tasks) {
     tasks.removeWhere((task) => task.deletedAt != null);
 
+    tasks.removeWhere((task) => task.status == TaskStatusType.deleted.id);
+
     tasks.removeWhere((element) => element.done == true);
 
     tasks.removeWhere((element) => element.doneAt != null);
