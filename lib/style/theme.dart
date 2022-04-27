@@ -18,61 +18,68 @@ const double border = 1;
 
 /// Light Theme
 final ThemeData lightTheme = ThemeData.light().copyWith(
-    primaryColor: ColorsLight.akiflow,
-    primaryColorLight: ColorsLight.akiflow10,
-    backgroundColor: ColorsLight.white,
-    scaffoldBackgroundColor: ColorsLight.grey7,
-    appBarTheme: const AppBarTheme(
-      color: ColorsLight.akiflow10,
-      iconTheme: IconThemeData(color: ColorsLight.akiflow),
-      actionsIconTheme: IconThemeData(color: ColorsLight.akiflow),
-      foregroundColor: ColorsLight.akiflow,
+  primaryColor: ColorsLight.akiflow,
+  primaryColorLight: ColorsLight.akiflow10,
+  backgroundColor: ColorsLight.white,
+  scaffoldBackgroundColor: ColorsLight.grey7,
+  appBarTheme: const AppBarTheme(
+    color: ColorsLight.akiflow10,
+    iconTheme: IconThemeData(color: ColorsLight.akiflow),
+    actionsIconTheme: IconThemeData(color: ColorsLight.akiflow),
+    foregroundColor: ColorsLight.akiflow,
+  ),
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: ColorsLight.akiflow,
+    selectionColor: ColorsLight.akiflow,
+    selectionHandleColor: ColorsLight.akiflow,
+  ),
+  textTheme: const TextTheme(
+    bodyText1: TextStyle(),
+    bodyText2: TextStyle(),
+  ).apply(
+    fontFamily: "Inter",
+    bodyColor: ColorsLight.grey1,
+    displayColor: ColorsLight.grey1,
+  ),
+  colorScheme: ColorScheme.fromSwatch().copyWith(
+    primary: ColorsLight.akiflow,
+    secondary: ColorsLight.akiflow,
+  ),
+  cardTheme: CardTheme(
+    margin: EdgeInsets.zero,
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0),
     ),
-    textSelectionTheme: const TextSelectionThemeData(
-      cursorColor: ColorsLight.akiflow,
-      selectionColor: ColorsLight.akiflow,
-      selectionHandleColor: ColorsLight.akiflow,
-    ),
-    textTheme: const TextTheme(
-      bodyText1: TextStyle(),
-      bodyText2: TextStyle(),
-    ).apply(
-      fontFamily: "Inter",
-      bodyColor: ColorsLight.grey1,
-      displayColor: ColorsLight.grey1,
-    ),
-    colorScheme: ColorScheme.fromSwatch().copyWith(
+  ),
+  checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
       primary: ColorsLight.akiflow,
-      secondary: ColorsLight.akiflow,
+      textStyle: const TextStyle(
+          fontWeight: FontWeight.bold, color: ColorsLight.akiflow),
     ),
-    cardTheme: CardTheme(
-      margin: EdgeInsets.zero,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-      ),
-    ),
-    checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        primary: ColorsLight.akiflow,
-        textStyle: const TextStyle(
-            fontWeight: FontWeight.bold, color: ColorsLight.akiflow),
-      ),
-    ),
-    pageTransitionsTheme: const PageTransitionsTheme(
-      builders: <TargetPlatform, PageTransitionsBuilder>{
-        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-      },
-    ),
-    iconTheme: const IconThemeData(
+  ),
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      TargetPlatform.android: ZoomPageTransitionsBuilder(),
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    },
+  ),
+  iconTheme: const IconThemeData(
+    color: ColorsLight.grey2,
+  ),
+  dividerColor: ColorsLight.grey5,
+  dividerTheme: const DividerThemeData(color: ColorsLight.grey5, thickness: 1),
+  popupMenuTheme: const PopupMenuThemeData(
+    color: ColorsLight.grey7,
+    textStyle: TextStyle(
+      fontWeight: FontWeight.w500,
       color: ColorsLight.grey2,
     ),
-    dividerColor: ColorsLight.grey5,
-    dividerTheme:
-        const DividerThemeData(color: ColorsLight.grey5, thickness: 1));
+  ),
+);
 
 /// Dark Theme
 // final ThemeData darkTheme = ThemeData.light().copyWith(

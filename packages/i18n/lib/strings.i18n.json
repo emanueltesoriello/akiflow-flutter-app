@@ -51,7 +51,13 @@
     "done": "Done",
     "snooze": "Snooze",
     "assign": "Assign",
-    "priority": "Priority"
+    "priority": "Priority",
+    "moveToInbox": "Move to inbox",
+    "planForToday": "Plan for today",
+    "setDeadline": "Set deadline",
+    "duplicate": "Duplicate",
+    "markAsDone": "Mark as done",
+    "delete": "Delete"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

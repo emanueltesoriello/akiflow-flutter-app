@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 43 
+ * Strings: 49 
  *
- * Built on 2022-04-26 at 16:20 UTC
+ * Built on 2022-04-27 at 13:42 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -413,6 +413,12 @@ class _StringsTaskEn {
 	String get snooze => 'Snooze';
 	String get assign => 'Assign';
 	String get priority => 'Priority';
+	String get moveToInbox => 'Move to inbox';
+	String get planForToday => 'Plan for today';
+	String get setDeadline => 'Set deadline';
+	String get duplicate => 'Duplicate';
+	String get markAsDone => 'Mark as done';
+	String get delete => 'Delete';
 }
 
 // Path: errors
@@ -474,6 +480,12 @@ extension on _StringsEn {
 			'task.snooze': 'Snooze',
 			'task.assign': 'Assign',
 			'task.priority': 'Priority',
+			'task.moveToInbox': 'Move to inbox',
+			'task.planForToday': 'Plan for today',
+			'task.setDeadline': 'Set deadline',
+			'task.duplicate': 'Duplicate',
+			'task.markAsDone': 'Mark as done',
+			'task.delete': 'Delete',
 			'errors.noAccountsFound': 'No accounts found',
 		};
 	}
