@@ -38,6 +38,7 @@ class AddTaskModal extends StatelessWidget {
                     const SizedBox(height: 16),
                     TextField(
                       controller: _titleController,
+                      focusNode: FocusNode()..requestFocus(),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.zero,
                         isDense: true,
