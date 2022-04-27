@@ -277,7 +277,22 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void planForToday() {
-    // TODO plan tasks for today
+    List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+
+    for (Task task in tasks) {
+      int index = tasks.indexOf(task);
+
+      tasks[index] = task.rebuild(
+        (b) => b
+          ..status = TaskStatusType.planned.id
+          ..date = DateTime.now().toUtc()
+          ..updatedAt = DateTime.now().toUtc(),
+      );
+    }
+
+    emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
+
+    _updateWith(debounce: false);
   }
 
   void duplicate() {
