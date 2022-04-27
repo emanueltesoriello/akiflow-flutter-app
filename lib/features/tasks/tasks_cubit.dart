@@ -112,7 +112,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  done([Task? task]) async {
+  markAsDone([Task? task]) async {
     bool isSelectMode =
         task == null || state.tasks.any((t) => t.selected ?? false);
 
@@ -255,5 +255,36 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(updatedTasks: updated));
 
     _updateWith(debounce: false);
+  }
+
+  void moveToInbox() {
+    List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+
+    for (Task task in tasks) {
+      int index = tasks.indexOf(task);
+
+      tasks[index] = task.rebuild(
+        (b) => b
+          ..status = TaskStatusType.inbox.id
+          ..date = null
+          ..updatedAt = DateTime.now().toUtc(),
+      );
+    }
+
+    emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
+
+    _updateWith(debounce: false);
+  }
+
+  void planForToday() {
+    // TODO plan tasks for today
+  }
+
+  void duplicate() {
+    // TODO duplicate tasks
+  }
+
+  void delete() {
+    // TODO delete tasks
   }
 }

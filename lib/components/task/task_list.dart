@@ -103,7 +103,9 @@ class TaskList extends StatelessWidget {
                         selectMode:
                             tasks.any((element) => element.selected ?? false),
                         completedClick: () {
-                          context.read<TasksCubit>().done(updatedTask ?? task);
+                          context
+                              .read<TasksCubit>()
+                              .markAsDone(updatedTask ?? task);
                         },
                         planClick: () {
                           // TODO plan task
