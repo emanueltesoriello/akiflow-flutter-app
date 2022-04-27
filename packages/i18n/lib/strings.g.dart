@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 49 
  *
- * Built on 2022-04-27 at 13:42 UTC
+ * Built on 2022-04-27 at 15:00 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -415,7 +415,7 @@ class _StringsTaskEn {
 	String get priority => 'Priority';
 	String get moveToInbox => 'Move to inbox';
 	String get planForToday => 'Plan for today';
-	String get setDeadline => 'Set deadline';
+	String get setDeadline => 'Set Deadline';
 	String get duplicate => 'Duplicate';
 	String get markAsDone => 'Mark as done';
 	String get delete => 'Delete';
@@ -482,7 +482,7 @@ extension on _StringsEn {
 			'task.priority': 'Priority',
 			'task.moveToInbox': 'Move to inbox',
 			'task.planForToday': 'Plan for today',
-			'task.setDeadline': 'Set deadline',
+			'task.setDeadline': 'Set Deadline',
 			'task.duplicate': 'Duplicate',
 			'task.markAsDone': 'Mark as done',
 			'task.delete': 'Delete',
