@@ -10,6 +10,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
+import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/utils/nullable.dart';
 import 'package:models/user.dart';
 
@@ -21,6 +22,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final DialogService _dialogService = locator<DialogService>();
   final AuthApi _authApi = locator<AuthApi>();
   final DatabaseService _databaseService = locator<DatabaseService>();
+  final SentryService _sentryService = locator<SentryService>();
 
   final TasksCubit _tasksCubit;
 
@@ -62,6 +64,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
           code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
 
       await _preferencesRepository.saveUser(user);
+
+      _sentryService.authenticate(user.id.toString(), user.email);
 
       emit(state.copyWith(user: Nullable(user)));
 
