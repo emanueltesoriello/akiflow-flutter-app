@@ -28,7 +28,6 @@ class TaskRow extends StatelessWidget {
   final Function() planClick;
   final Function() selectLabelClick;
   final Function() snoozeClick;
-  final Function() longClick;
   final bool hideInboxLabel;
   final bool selectMode;
 
@@ -40,7 +39,6 @@ class TaskRow extends StatelessWidget {
     required this.planClick,
     required this.selectLabelClick,
     required this.snoozeClick,
-    required this.longClick,
     this.hideInboxLabel = false,
     this.selectMode = false,
   }) : super(key: key);
@@ -53,7 +51,6 @@ class TaskRow extends StatelessWidget {
       startActionPane: _startActions(context),
       endActionPane: _endActions(context),
       child: InkWell(
-        onLongPress: longClick,
         onTap: () {
           context.read<TasksCubit>().open(task);
         },

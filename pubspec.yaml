@@ -30,6 +30,7 @@ dependencies:
     path: ./packages/models
   path: ^1.8.0
   path_provider: ^2.0.9
+  reorderables: ^0.4.4
   sentry_flutter: ^6.4.0
   shared_preferences: ^2.0.13
   sqflite: ^2.0.2

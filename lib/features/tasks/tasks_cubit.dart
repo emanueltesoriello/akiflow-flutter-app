@@ -233,4 +233,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(tasks: all));
   }
+
+  void reorder(int oldIndex, int newIndex) {
+    clearSelected();
+
+    // TODO reorder logic
+  }
 }

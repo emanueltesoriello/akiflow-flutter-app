@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:models/task/task.dart';
+import 'package:reorderables/reorderables.dart';
 
 class TaskList extends StatelessWidget {
   final List<Task> tasks;
@@ -32,50 +33,76 @@ class TaskList extends StatelessWidget {
             await context.read<TasksCubit>().syncAllAndRefresh();
           },
           child: SlidableAutoCloseBehavior(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              itemCount: tasks.length + 1,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  if (notice == null) {
-                    return const SizedBox(height: 0);
-                  }
+            child: CustomScrollView(
+              controller:
+                  PrimaryScrollController.of(context) ?? ScrollController(),
+              slivers: [
+                // TODO Use ReorderableListView.builder when onReorderStart will
+                //be available in flutter stable branch
+                ReorderableSliverList(
+                  onReorderStarted: (index) {
+                    int indexWithoutHeaderWidget = index - 1;
 
-                  return notice!;
-                }
+                    context
+                        .read<TasksCubit>()
+                        .select(tasks[indexWithoutHeaderWidget]);
+                  },
+                  buildDraggableFeedback: (context, constraints, child) {
+                    return Material(
+                      child: ConstrainedBox(
+                          constraints: constraints, child: child),
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.zero,
+                    );
+                  },
+                  onReorder: (int oldIndex, int newIndex) {
+                    context.read<TasksCubit>().reorder(oldIndex, newIndex);
+                  },
+                  delegate: ReorderableSliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      if (index == 0) {
+                        if (notice == null) {
+                          return const SizedBox(key: ObjectKey(0), height: 0);
+                        }
 
-                index -= 1;
+                        return Container(
+                          key: ObjectKey(notice),
+                          child: notice!,
+                        );
+                      }
 
-                Task task = tasks[index];
+                      index -= 1;
 
-                Task? updatedTask = updatedTasks
-                    .firstWhereOrNull((element) => element.id == task.id);
+                      Task task = tasks[index];
 
-                return TaskRow(
-                  task: task,
-                  updatedTask: updatedTask,
-                  hideInboxLabel: hideInboxLabel,
-                  selectMode: tasks.any((element) => element.selected ?? false),
-                  completedClick: () {
-                    context.read<TasksCubit>().done(updatedTask ?? task);
-                  },
-                  longClick: () {
-                    context.read<TasksCubit>().select(task);
-                  },
-                  planClick: () {
-                    // TODO plan task
-                  },
-                  selectLabelClick: () {
-                    // TODO select label of task
-                  },
-                  snoozeClick: () {
-                    // TODO snooze task
-                  },
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox();
-              },
+                      Task? updatedTask = updatedTasks
+                          .firstWhereOrNull((element) => element.id == task.id);
+
+                      return TaskRow(
+                        key: ObjectKey(task),
+                        task: task,
+                        updatedTask: updatedTask,
+                        hideInboxLabel: hideInboxLabel,
+                        selectMode:
+                            tasks.any((element) => element.selected ?? false),
+                        completedClick: () {
+                          context.read<TasksCubit>().done(updatedTask ?? task);
+                        },
+                        planClick: () {
+                          // TODO plan task
+                        },
+                        selectLabelClick: () {
+                          // TODO select label of task
+                        },
+                        snoozeClick: () {
+                          // TODO snooze task
+                        },
+                      );
+                    },
+                    childCount: tasks.length,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
