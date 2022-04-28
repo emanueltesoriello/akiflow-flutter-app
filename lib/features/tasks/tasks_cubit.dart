@@ -132,8 +132,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
+  TaskStatusType? lastDoneTaskStatus;
+
   void _computeDone(Task task) {
     bool done = task.isCompletedComputed;
+
+    if (task.status != TaskStatusType.completed.id) {
+      lastDoneTaskStatus = TaskStatusTypeExt.fromId(task.status);
+    }
 
     DateTime? now = DateTime.now().toUtc();
 
@@ -151,7 +157,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
           ..done = false
           ..doneAt = null
           ..updatedAt = now
-          ..status = TaskStatusType.inbox.id,
+          ..status = lastDoneTaskStatus?.id,
       );
     }
 

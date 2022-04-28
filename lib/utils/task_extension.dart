@@ -40,6 +40,31 @@ extension TaskStatusTypeExt on TaskStatusType {
         return 9;
     }
   }
+
+  static TaskStatusType? fromId(int? id) {
+    switch (id) {
+      case 1:
+        return TaskStatusType.inbox;
+      case 2:
+        return TaskStatusType.planned;
+      case 3:
+        return TaskStatusType.completed;
+      case 4:
+        return TaskStatusType.snoozed;
+      case 5:
+        return TaskStatusType.archived;
+      case 6:
+        return TaskStatusType.deleted;
+      case 7:
+        return TaskStatusType.someday;
+      case 8:
+        return TaskStatusType.hidden;
+      case 9:
+        return TaskStatusType.permanentlyDeleted;
+      default:
+        return null;
+    }
+  }
 }
 
 extension TaskExt on Task {
