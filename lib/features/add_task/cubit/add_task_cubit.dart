@@ -101,4 +101,24 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
   void selectDate(DateTime selectedDate) {
     emit(state.copyWith(selectedDate: selectedDate));
   }
+
+  void setDuration(double value) {
+    emit(state.copyWith(selectedDuration: value));
+
+    double seconds = value * 3600;
+
+    Task updated = state.newTask.rebuild((b) => b..duration = seconds.toInt());
+
+    emit(state.copyWith(newTask: updated));
+  }
+
+  void toggleDuration() {
+    emit(state.copyWith(setDuration: !state.setDuration));
+
+    if (state.setDuration == false) {
+      Task updated = state.newTask.rebuild((b) => b..duration = null);
+
+      emit(state.copyWith(newTask: updated));
+    }
+  }
 }

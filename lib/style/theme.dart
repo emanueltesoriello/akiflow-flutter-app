@@ -79,6 +79,17 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       color: ColorsLight.grey2,
     ),
   ),
+  sliderTheme: const SliderThemeData(
+    activeTrackColor: Color(0xff007AFF),
+    inactiveTrackColor: Color(0x33787880),
+    trackShape: RoundedRectSliderTrackShape(),
+    trackHeight: 4.0,
+    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12),
+    thumbColor: Colors.transparent,
+    overlayColor: Colors.transparent,
+    activeTickMarkColor: Colors.transparent,
+    inactiveTickMarkColor: Colors.transparent,
+  ),
 );
 
 /// Dark Theme
