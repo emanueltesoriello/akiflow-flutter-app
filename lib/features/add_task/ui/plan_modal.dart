@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
+import 'package:mobile/features/add_task/ui/add_task_calendar.dart';
 import 'package:mobile/features/add_task/ui/add_task_top_action_item.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -15,7 +16,6 @@ class PlanModal extends StatelessWidget {
     return Wrap(
       children: [
         Container(
-          height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
             color: Colors.transparent,
           ),
@@ -33,6 +33,7 @@ class PlanModal extends StatelessWidget {
                   children: [
                     _planType(),
                     _predefinedDate(context),
+                    const AddTaskCalendar(),
                     const SizedBox(height: 16),
                   ],
                 ),
@@ -88,7 +89,7 @@ class PlanModal extends StatelessWidget {
                 color: Theme.of(context).dividerColor,
                 width: double.infinity,
                 height: 1,
-              )
+              ),
             ],
           );
         },

@@ -348,6 +348,14 @@ class TaskRow extends StatelessWidget {
       );
     }
 
+    if (task.isOverdue) {
+      return AkiChip(
+        backgroundColor: ColorsExt.cyan25(context),
+        text: task.overdueFormatted,
+        onPressed: statusClick,
+      );
+    }
+
     switch (task.statusType) {
       case TaskStatusType.someday:
         return AkiChip(

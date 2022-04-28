@@ -38,11 +38,8 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
   }) async {
     DateTime? now = DateTime.now().toUtc();
 
-    List<Task> all = _tasksCubit.state.tasks.toList();
-
     Task updated = state.newTask.rebuild(
       (b) => b
-        ..status = TaskStatusType.inbox.id
         ..title = title
         ..description = description
         ..updatedAt = now
@@ -50,6 +47,8 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
     );
 
     emit(state.copyWith(newTask: updated));
+
+    List<Task> all = _tasksCubit.state.tasks.toList();
 
     all.add(updated);
 
@@ -71,7 +70,9 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
       (b) => b
         ..date = date.toUtc()
         ..datetime = dateTime?.toUtc()
-        ..status = TaskStatusType.planned.id,
+        ..status = state.planType == AddTaskPlanType.plan
+            ? TaskStatusType.planned.id
+            : TaskStatusType.snoozed.id,
     );
 
     emit(state.copyWith(newTask: updated));
@@ -95,5 +96,9 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
     );
 
     emit(state.copyWith(newTask: updated));
+  }
+
+  void selectDate(DateTime selectedDate) {
+    emit(state.copyWith(selectedDate: selectedDate));
   }
 }

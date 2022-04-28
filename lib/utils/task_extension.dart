@@ -102,16 +102,41 @@ extension TaskExt on Task {
   }
 
   String get datetimeFormatted {
-    if (datetime != null) {
-      return DateFormat("EEE hh:mm").format(datetime!.toLocal());
+    DateTime? datetimeOrDate = datetime ?? date;
+
+    String prefix;
+    String? formatted;
+
+    if (datetimeOrDate != null) {
+      formatted = DateFormat("HH:mm").format(datetimeOrDate.toLocal());
     }
 
-    return '';
+    if (isToday) {
+      prefix = t.task.today;
+    } else if (isTomorrow) {
+      prefix = t.addTask.tmw;
+    } else {
+      prefix = "";
+    }
+
+    if (formatted != null) {
+      return "$prefix $formatted";
+    } else {
+      return prefix;
+    }
   }
 
   String get doneAtFormatted {
     if (doneAt != null) {
       return timeago.format(doneAt!.toLocal());
+    }
+
+    return '';
+  }
+
+  String get overdueFormatted {
+    if (isOverdue) {
+      return DateFormat("EEE, d MMM").format(date!.toLocal());
     }
 
     return '';
@@ -158,6 +183,8 @@ extension TaskExt on Task {
     tasks.removeWhere((task) => task.deletedAt != null);
 
     tasks.removeWhere((task) => task.status == TaskStatusType.deleted.id);
+
+    tasks.removeWhere((task) => task.status == TaskStatusType.inbox.id);
 
     tasks.removeWhere((element) => element.done == true);
 
