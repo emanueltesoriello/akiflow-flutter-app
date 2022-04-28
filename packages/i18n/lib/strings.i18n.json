@@ -42,7 +42,8 @@
     "titleHint": "Try: review financials today 9am",
     "descriptionHint": "Description",
     "plan": "Plan",
-    "label": "Label"
+    "label": "Label",
+    "snooze": "Snooze"
   },
   "task": {
     "description": "Description",

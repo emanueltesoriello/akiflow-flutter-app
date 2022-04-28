@@ -2,14 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
+import 'package:mobile/features/add_task/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
 class AddTaskModal extends StatelessWidget {
-  AddTaskModal({Key? key}) : super(key: key);
+  const AddTaskModal({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AddTaskCubit(context.read<TasksCubit>()),
+      child: AddTaskModalView(),
+    );
+  }
+}
+
+class AddTaskModalView extends StatelessWidget {
+  AddTaskModalView({Key? key}) : super(key: key);
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -85,7 +99,18 @@ class AddTaskModal extends StatelessWidget {
                               "assets/images/icons/_common/tray.svg",
                           active: true,
                           onPressed: () {
-                            // TODO CREATE TASK - task plan
+                            AddTaskCubit cubit = context.read<AddTaskCubit>();
+
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: Colors.transparent,
+                              barrierColor: Colors.transparent,
+                              isScrollControlled: true,
+                              builder: (context) => BlocProvider.value(
+                                value: cubit,
+                                child: const PlanModal(),
+                              ),
+                            );
                           },
                         ),
                         const SizedBox(width: 8),

@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 52 
+ * Strings: 53 
  *
- * Built on 2022-04-28 at 09:17 UTC
+ * Built on 2022-04-28 at 09:27 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -397,6 +397,7 @@ class _StringsAddTaskEn {
 	String get descriptionHint => 'Description';
 	String get plan => 'Plan';
 	String get label => 'Label';
+	String get snooze => 'Snooze';
 }
 
 // Path: task
@@ -487,6 +488,7 @@ extension on _StringsEn {
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',
 			'addTask.label': 'Label',
+			'addTask.snooze': 'Snooze',
 			'task.description': 'Description',
 			'task.linkedContent': 'Linked content',
 			'task.today': 'Today',

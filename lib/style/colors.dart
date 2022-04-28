@@ -97,6 +97,12 @@ extension ColorsExt on Colors {
         : ColorsDark.red;
   }
 
+  static background(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.white
+        : ColorsDark.grey1;
+  }
+
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/style/colors.dart';
 
-class AddTaskActionItem extends StatelessWidget {
+class AddTaskTopActionItem extends StatelessWidget {
   final Function() onPressed;
   final String? text;
   final String leadingIconAsset;
   final Color color;
   final bool active;
 
-  const AddTaskActionItem({
+  const AddTaskTopActionItem({
     Key? key,
     required this.onPressed,
     required this.leadingIconAsset,
@@ -23,19 +23,23 @@ class AddTaskActionItem extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        padding: const EdgeInsets.all(6),
+        height: 38,
+        padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
         decoration: BoxDecoration(
-          color: active ? color : ColorsExt.grey7(context),
-          borderRadius: BorderRadius.circular(4),
+          color: active ? color : ColorsExt.background(context),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
                 leadingIconAsset,
                 width: 22,
                 height: 22,
-                color: ColorsExt.grey2(context),
+                color: active
+                    ? ColorsExt.grey2(context)
+                    : ColorsExt.grey3(context),
               ),
               _text(context),
             ],
@@ -58,7 +62,7 @@ class AddTaskActionItem extends StatelessWidget {
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w500,
-            color: ColorsExt.grey2(context),
+            color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
           ),
         ),
       ],
