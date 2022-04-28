@@ -84,7 +84,7 @@ class SettingsModal extends StatelessWidget {
                             color: ColorsExt.grey3(context),
                           ),
                           onTap: () {
-                            // TODO search
+                            // TODO SETTINGS - search
                           },
                         ),
                         const SizedBox(width: 12),

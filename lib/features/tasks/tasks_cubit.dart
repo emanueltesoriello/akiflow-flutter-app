@@ -96,9 +96,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     bool isSelectMode = state.tasks.any((t) => t.selected ?? false);
 
     if (task == null || isSelectMode) {
-      // TODO plan all
+      // TODO: EDIT TASK - plan all
     } else {
-      // TODO plan selected task only
+      // plan selected task only
     }
   }
 
@@ -106,9 +106,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     bool isSelectMode = state.tasks.any((t) => t.selected ?? false);
 
     if (task == null || isSelectMode) {
-      // TODO snooze all
+      // TODO: EDIT TASK - snooze all
     } else {
-      // TODO snooze selected task only
+      // snooze selected task only
     }
   }
 
@@ -203,7 +203,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void open(Task task) {
-    // TODO open task edit page
+    // TODO: EDIT TASK - open task edit page
   }
 
   void clearSelected() {
@@ -337,5 +337,17 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
 
     _updateWith(debounce: false);
+  }
+
+  void assignLabel({Task? task}) {
+    // TODO: EDIT TASK - assign label to task
+  }
+
+  void selectPriority({Task? task}) {
+    // TODO: EDIT TASK - select priority for task
+  }
+
+  void setDeadline({Task? task}) {
+    // TODO: EDIT TASK - set deadline for task
   }
 }

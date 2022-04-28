@@ -83,7 +83,7 @@ class AddTaskModal extends StatelessWidget {
                           iconSize: 18,
                           text: t.addTask.plan,
                           onPressed: () {
-                            // TODO task plan
+                            // TODO CREATE TASK - task plan
                           },
                         ),
                         const SizedBox(width: 8),
@@ -91,7 +91,7 @@ class AddTaskModal extends StatelessWidget {
                           icon: "assets/images/icons/_common/hourglass.svg",
                           iconSize: 18,
                           onPressed: () {
-                            // TODO task duration
+                            // TODO CREATE TASK - task duration
                           },
                         ),
                         const SizedBox(width: 8),
@@ -99,7 +99,7 @@ class AddTaskModal extends StatelessWidget {
                           icon: "assets/images/icons/_common/number.svg",
                           iconSize: 18,
                           onPressed: () {
-                            // TODO task label
+                            // TODO CREATE TASK - task label
                           },
                         ),
                         const Spacer(),

@@ -35,7 +35,7 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/calendar.svg',
                   bottomLabel: t.task.plan,
                   click: () {
-                    // TODO plan selected
+                    context.read<TasksCubit>().plan();
                   },
                 ),
               ),
@@ -46,7 +46,7 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/clock.svg',
                   bottomLabel: t.task.snooze,
                   click: () {
-                    // TODO snooze selected
+                    context.read<TasksCubit>().snooze();
                   },
                 ),
               ),
@@ -57,7 +57,7 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/number.svg',
                   bottomLabel: t.task.assign,
                   click: () {
-                    // TODO label selected
+                    context.read<TasksCubit>().assignLabel();
                   },
                 ),
               ),
@@ -68,7 +68,7 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/exclamationmark.svg',
                   bottomLabel: t.task.priority,
                   click: () {
-                    // TODO priority selected
+                    context.read<TasksCubit>().selectPriority();
                   },
                 ),
               ),
@@ -89,7 +89,7 @@ class BottomTaskActions extends StatelessWidget {
                         context.read<TasksCubit>().planForToday();
                         break;
                       case BottomTaskAdditionalActions.setDeadline:
-                        // TODO deadline
+                        context.read<TasksCubit>().setDeadline();
                         break;
                       case BottomTaskAdditionalActions.duplicate:
                         context.read<TasksCubit>().duplicate();

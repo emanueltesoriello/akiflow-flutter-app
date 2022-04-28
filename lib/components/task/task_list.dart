@@ -48,7 +48,7 @@ class TaskList extends StatelessWidget {
               controller:
                   PrimaryScrollController.of(context) ?? ScrollController(),
               slivers: [
-                // TODO Use ReorderableListView.builder when onReorderStart will
+                // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
                 //be available in flutter stable branch
                 ReorderableSliverList(
                   onReorderStarted: (index) {
@@ -108,13 +108,13 @@ class TaskList extends StatelessWidget {
                               .markAsDone(updatedTask ?? task);
                         },
                         planClick: () {
-                          // TODO plan task
+                          context.read<TasksCubit>().plan(task: task);
                         },
                         selectLabelClick: () {
-                          // TODO select label of task
+                          context.read<TasksCubit>().assignLabel(task: task);
                         },
                         snoozeClick: () {
-                          // TODO snooze task
+                          context.read<TasksCubit>().snooze(task: task);
                         },
                       );
                     },

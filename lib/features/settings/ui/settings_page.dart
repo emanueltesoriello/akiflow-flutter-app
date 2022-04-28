@@ -46,12 +46,11 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.upgradeToPro,
                     position: ButtonListPosition.top,
-                    leading:
-                        "assets/images/icons/_common/xmark_square.svg", // TODO needed crown icon
+                    leading: "assets/images/icons/_common/crown.svg",
                     leadingColor: Theme.of(context).primaryColor,
                     showShevron: false,
                     onPressed: () {
-                      // TODO upgrade to pro event
+                      // TODO SETTINGS - upgrade to pro event
                     },
                   ),
                   ButtonList(
@@ -59,7 +58,7 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.center,
                     leading: "assets/images/icons/_common/person_circle.svg",
                     onPressed: () {
-                      // TODO my account settings event
+                      // TODO SETTINGS - my account settings event
                     },
                   ),
                   ButtonList(
@@ -67,7 +66,7 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.onlyHorizontalPadding,
                     leading: "assets/images/icons/_common/gear_alt.svg",
                     onPressed: () {
-                      // TODO general settings event
+                      // TODO SETTINGS - general settings event
                     },
                   ),
                   ButtonList(
@@ -76,7 +75,7 @@ class SettingsPage extends StatelessWidget {
                     leading:
                         "assets/images/icons/_common/Check-done-outline.svg",
                     onPressed: () {
-                      // TODO tasks settings event
+                      // TODO SETTINGS - tasks settings event
                     },
                   ),
                   ButtonList(
@@ -84,17 +83,16 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.bottom,
                     leading: "assets/images/icons/_common/bell.svg",
                     onPressed: () {
-                      // TODO notifications settings event
+                      // TODO SETTINGS - notifications settings event
                     },
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
                     title: t.settings.integrations,
-                    leading:
-                        "assets/images/icons/_common/xmark_square.svg", // TODO needed crown icon
+                    leading: "assets/images/icons/_common/puzzle.svg",
                     position: ButtonListPosition.single,
                     onPressed: () {
-                      // TODO logout event
+                      // TODO SETTINGS - integrations
                     },
                   ),
                   const SizedBox(height: 16),
@@ -103,16 +101,15 @@ class SettingsPage extends StatelessWidget {
                     leading: "assets/images/icons/_common/gift.svg",
                     position: ButtonListPosition.top,
                     onPressed: () {
-                      // TODO refer friend event
+                      // TODO SETTINGS - refer friend event
                     },
                   ),
                   ButtonList(
                     title: t.settings.helpCenter,
-                    leading:
-                        "assets/images/icons/_common/xmark_square.svg", // TODO text.book.closed icon
+                    leading: "assets/images/icons/_common/guidebook.svg",
                     position: ButtonListPosition.center,
                     onPressed: () {
-                      // TODO refer help center event
+                      // TODO SETTINGS - help center event
                     },
                   ),
                   ButtonList(
@@ -120,7 +117,7 @@ class SettingsPage extends StatelessWidget {
                     leading: "assets/images/icons/_common/info_circle.svg",
                     position: ButtonListPosition.bottom,
                     onPressed: () {
-                      // TODO refer about event
+                      // TODO SETTINGS - about event
                     },
                   ),
                   const SizedBox(height: 16),

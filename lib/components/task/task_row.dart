@@ -402,9 +402,7 @@ class TaskRow extends StatelessWidget {
       iconColor: label.color != null
           ? ColorsExt.getFromName(label.color!)
           : ColorsExt.grey3(context),
-      onPressed: () {
-        // TODO label click
-      },
+      onPressed: () {},
     );
   }
 
