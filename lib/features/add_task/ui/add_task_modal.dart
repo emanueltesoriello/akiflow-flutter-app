@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/aki_chip.dart';
+import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -78,26 +78,33 @@ class AddTaskModal extends StatelessWidget {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        AkiChip(
-                          icon: "assets/images/icons/_common/calendar.svg",
-                          iconSize: 18,
+                        AddTaskActionItem(
                           text: t.addTask.plan,
+                          color: ColorsExt.cyan25(context),
+                          leadingIconAsset:
+                              "assets/images/icons/_common/tray.svg",
+                          active: true,
                           onPressed: () {
                             // TODO CREATE TASK - task plan
                           },
                         ),
                         const SizedBox(width: 8),
-                        AkiChip(
-                          icon: "assets/images/icons/_common/hourglass.svg",
-                          iconSize: 18,
+                        AddTaskActionItem(
+                          leadingIconAsset:
+                              "assets/images/icons/_common/hourglass.svg",
+                          color: ColorsExt.grey6(context),
+                          active: false,
                           onPressed: () {
                             // TODO CREATE TASK - task duration
                           },
                         ),
                         const SizedBox(width: 8),
-                        AkiChip(
-                          icon: "assets/images/icons/_common/number.svg",
-                          iconSize: 18,
+                        AddTaskActionItem(
+                          leadingIconAsset:
+                              "assets/images/icons/_common/number.svg",
+                          color: ColorsExt.grey6(context),
+                          active: false,
+                          text: t.addTask.label,
                           onPressed: () {
                             // TODO CREATE TASK - task label
                           },

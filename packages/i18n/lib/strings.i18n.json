@@ -41,7 +41,8 @@
   "addTask": {
     "titleHint": "Try: review financials today 9am",
     "descriptionHint": "Description",
-    "plan": "Plan"
+    "plan": "Plan",
+    "label": "Label"
   },
   "task": {
     "description": "Description",
