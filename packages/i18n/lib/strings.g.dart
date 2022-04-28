@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 49 
+ * Strings: 51 
  *
- * Built on 2022-04-27 at 15:00 UTC
+ * Built on 2022-04-28 at 08:45 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -316,6 +316,7 @@ class _StringsEn {
 	late final _StringsAddTaskEn addTask = _StringsAddTaskEn._(_root);
 	late final _StringsTaskEn task = _StringsTaskEn._(_root);
 	late final _StringsErrorsEn errors = _StringsErrorsEn._(_root);
+	late final _StringsCalendarEn calendar = _StringsCalendarEn._(_root);
 }
 
 // Path: onboarding
@@ -432,6 +433,18 @@ class _StringsErrorsEn {
 	String get noAccountsFound => 'No accounts found';
 }
 
+// Path: calendar
+class _StringsCalendarEn {
+	_StringsCalendarEn._(this._root);
+
+	// ignore: unused_field
+	final _StringsEn _root;
+
+	// Translations
+	String get comingSoon => 'Calendar is coming in the near future!';
+	String get goToToday => 'Go to Today';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -487,6 +500,8 @@ extension on _StringsEn {
 			'task.markAsDone': 'Mark as done',
 			'task.delete': 'Delete',
 			'errors.noAccountsFound': 'No accounts found',
+			'calendar.comingSoon': 'Calendar is coming in the near future!',
+			'calendar.goToToday': 'Go to Today',
 		};
 	}
 }

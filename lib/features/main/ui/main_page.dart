@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
+import 'package:mobile/features/calendar/ui/calendar_view.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/main/views/calendar_appbar.dart';
 import 'package:mobile/features/main/views/tasks_list_appbar.dart';
 import 'package:mobile/features/main/views/today_appbar.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
@@ -21,7 +21,7 @@ class MainPage extends StatelessWidget {
     const SizedBox(),
     const InboxView(),
     const TodayView(),
-    const SizedBox(),
+    const CalendarView(),
   ];
 
   MainPage({Key? key}) : super(key: key);
@@ -126,7 +126,7 @@ class MainPage extends StatelessWidget {
                     case HomeViewType.today:
                       return TodayAppBar();
                     case HomeViewType.calendar:
-                      return const CalendarAppBar();
+                      return const SizedBox();
                     default:
                       return const SizedBox();
                   }

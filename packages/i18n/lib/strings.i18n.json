@@ -61,5 +61,9 @@
   },
   "errors": {
     "noAccountsFound": "No accounts found"
+  },
+  "calendar": {
+    "comingSoon": "Calendar is coming in the near future!",
+    "goToToday": "Go to Today"
   }
 }
