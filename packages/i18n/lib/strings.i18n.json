@@ -43,7 +43,17 @@
     "descriptionHint": "Description",
     "plan": "Plan",
     "label": "Label",
-    "snooze": "Snooze"
+    "snooze": "Snooze",
+    "today": "Today",
+    "tmw": "Tmw",
+    "tomorrow": "Tomorrow",
+    "nextWeek": "Next week",
+    "remove": "Remove",
+    "laterToday": "Later today",
+    "someday": "Someday",
+    "noDate": "No date",
+    "addTime": "Add time",
+    "repeat": "Repeat"
   },
   "task": {
     "description": "Description",

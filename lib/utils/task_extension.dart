@@ -53,6 +53,16 @@ extension TaskExt on Task {
     return false;
   }
 
+  bool get isTomorrow {
+    if (date != null) {
+      return date!.day == DateTime.now().day + 1 &&
+          date!.month == DateTime.now().month &&
+          date!.year == DateTime.now().year;
+    }
+
+    return false;
+  }
+
   bool get isTodayOrBefore {
     if (date != null) {
       return date!.day <= DateTime.now().day &&

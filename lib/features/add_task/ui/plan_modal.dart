@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
 import 'package:mobile/features/add_task/ui/add_task_top_action_item.dart';
 import 'package:mobile/style/colors.dart';
@@ -30,7 +32,7 @@ class PlanModal extends StatelessWidget {
                 child: Column(
                   children: [
                     _planType(),
-                    _predefinedDate(),
+                    _predefinedDate(context),
                     const SizedBox(height: 16),
                   ],
                 ),
@@ -94,7 +96,162 @@ class PlanModal extends StatelessWidget {
     );
   }
 
-  Widget _predefinedDate() {
-    return Container();
+  Widget _predefinedDate(BuildContext context) {
+    DateTime now = DateTime.now();
+
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+          child: Column(children: [
+            BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+              builder: (context, state) {
+                switch (state.planType) {
+                  case AddTaskPlanType.plan:
+                    return _predefinedDateItem(
+                      context,
+                      iconAsset:
+                          "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
+                      text: t.addTask.today,
+                      trailingText: DateFormat("EEE").format(DateTime.now()),
+                      onPressed: () {
+                        context.read<AddTaskCubit>().planFor(now);
+                        Navigator.pop(context);
+                      },
+                    );
+                  case AddTaskPlanType.snooze:
+                    DateTime laterToday =
+                        DateTime(now.year, now.month, now.day, now.hour + 3);
+
+                    return _predefinedDateItem(
+                      context,
+                      iconAsset: "assets/images/icons/_common/clock.svg",
+                      text: t.addTask.laterToday,
+                      trailingText: DateFormat("EEE HH:mm").format(laterToday),
+                      onPressed: () {
+                        context
+                            .read<AddTaskCubit>()
+                            .planFor(laterToday, dateTime: laterToday);
+                        Navigator.pop(context);
+                      },
+                    );
+                }
+              },
+            ),
+            const SizedBox(height: 2),
+            _predefinedDateItem(
+              context,
+              iconAsset:
+                  "assets/images/icons/_common/${DateFormat("dd").format(now.add(const Duration(days: 1)))}_square.svg",
+              text: t.addTask.tomorrow,
+              trailingText:
+                  DateFormat("EEE").format(now.add(const Duration(days: 1))),
+              onPressed: () {
+                context
+                    .read<AddTaskCubit>()
+                    .planFor(now.add(const Duration(days: 1)));
+                Navigator.pop(context);
+              },
+            ),
+            const SizedBox(height: 2),
+            Builder(builder: (context) {
+              DateTime nextMonday =
+                  now.add(Duration(days: 7 - now.weekday + 1));
+
+              return _predefinedDateItem(
+                context,
+                iconAsset:
+                    "assets/images/icons/_common/${DateFormat("dd").format(nextMonday)}_square.svg",
+                text: t.addTask.nextWeek,
+                trailingText: DateFormat("EEE").format(nextMonday),
+                onPressed: () {
+                  context.read<AddTaskCubit>().planFor(nextMonday);
+                  Navigator.pop(context);
+                },
+              );
+            }),
+            const SizedBox(height: 2),
+            BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+              builder: (context, state) {
+                switch (state.planType) {
+                  case AddTaskPlanType.plan:
+                    return _predefinedDateItem(
+                      context,
+                      iconAsset: "assets/images/icons/_common/slash_circle.svg",
+                      text: t.addTask.remove,
+                      trailingText: t.bottomBar.inbox,
+                      onPressed: () {
+                        context.read<AddTaskCubit>().setForInbox();
+                        Navigator.pop(context);
+                      },
+                    );
+                  case AddTaskPlanType.snooze:
+                    return _predefinedDateItem(
+                      context,
+                      iconAsset: "assets/images/icons/_common/archivebox.svg",
+                      text: t.addTask.someday,
+                      trailingText: t.addTask.noDate,
+                      onPressed: () {
+                        context.read<AddTaskCubit>().setSomeday();
+                        Navigator.pop(context);
+                      },
+                    );
+                }
+              },
+            ),
+          ]),
+        ),
+        Container(
+          color: Theme.of(context).dividerColor,
+          width: double.infinity,
+          height: 1,
+        )
+      ],
+    );
+  }
+
+  Widget _predefinedDateItem(
+    BuildContext context, {
+    required String iconAsset,
+    required String text,
+    required String trailingText,
+    required Function() onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      child: SizedBox(
+        height: 40,
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              iconAsset,
+              width: 24,
+              height: 24,
+              color: ColorsExt.grey2(context),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey2(context),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              trailingText,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey3(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

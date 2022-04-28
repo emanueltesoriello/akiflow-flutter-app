@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 53 
+ * Strings: 63 
  *
- * Built on 2022-04-28 at 09:27 UTC
+ * Built on 2022-04-28 at 13:00 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -398,6 +398,16 @@ class _StringsAddTaskEn {
 	String get plan => 'Plan';
 	String get label => 'Label';
 	String get snooze => 'Snooze';
+	String get today => 'Today';
+	String get tmw => 'Tmw';
+	String get tomorrow => 'Tomorrow';
+	String get nextWeek => 'Next week';
+	String get remove => 'Remove';
+	String get laterToday => 'Later today';
+	String get someday => 'Someday';
+	String get noDate => 'No date';
+	String get addTime => 'Add time';
+	String get repeat => 'Repeat';
 }
 
 // Path: task
@@ -489,6 +499,16 @@ extension on _StringsEn {
 			'addTask.plan': 'Plan',
 			'addTask.label': 'Label',
 			'addTask.snooze': 'Snooze',
+			'addTask.today': 'Today',
+			'addTask.tmw': 'Tmw',
+			'addTask.tomorrow': 'Tomorrow',
+			'addTask.nextWeek': 'Next week',
+			'addTask.remove': 'Remove',
+			'addTask.laterToday': 'Later today',
+			'addTask.someday': 'Someday',
+			'addTask.noDate': 'No date',
+			'addTask.addTime': 'Add time',
+			'addTask.repeat': 'Repeat',
 			'task.description': 'Description',
 			'task.linkedContent': 'Linked content',
 			'task.today': 'Today',

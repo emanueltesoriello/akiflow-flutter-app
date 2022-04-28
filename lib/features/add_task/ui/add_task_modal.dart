@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/add_task/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
-import 'package:models/task/task.dart';
 
 class AddTaskModal extends StatelessWidget {
   const AddTaskModal({Key? key}) : super(key: key);
@@ -92,27 +92,7 @@ class AddTaskModalView extends StatelessWidget {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        AddTaskActionItem(
-                          text: t.addTask.plan,
-                          color: ColorsExt.cyan25(context),
-                          leadingIconAsset:
-                              "assets/images/icons/_common/tray.svg",
-                          active: true,
-                          onPressed: () {
-                            AddTaskCubit cubit = context.read<AddTaskCubit>();
-
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: Colors.transparent,
-                              barrierColor: Colors.transparent,
-                              isScrollControlled: true,
-                              builder: (context) => BlocProvider.value(
-                                value: cubit,
-                                child: const PlanModal(),
-                              ),
-                            );
-                          },
-                        ),
+                        _plannedFor(context),
                         const SizedBox(width: 8),
                         AddTaskActionItem(
                           leadingIconAsset:
@@ -138,14 +118,9 @@ class AddTaskModalView extends StatelessWidget {
                         const SizedBox(width: 8),
                         InkWell(
                           onTap: () {
-                            Task task = Task(
-                              (task) => task
-                                ..title = _titleController.text
-                                ..description = _descriptionController.text
-                                ..status = TaskStatusType.inbox.id,
-                            );
-
-                            context.read<TasksCubit>().addTask(task);
+                            context.read<AddTaskCubit>().create(
+                                title: _titleController.text,
+                                description: _descriptionController.text);
 
                             Navigator.pop(context);
                           },
@@ -177,6 +152,72 @@ class AddTaskModalView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _plannedFor(BuildContext context) {
+    return BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+      builder: (context, state) {
+        String leadingIconAsset;
+        String text;
+        Color color;
+
+        if (state.planType == AddTaskPlanType.plan) {
+          color = ColorsExt.cyan25(context);
+          leadingIconAsset = "assets/images/icons/_common/calendar.svg";
+        } else {
+          color = ColorsExt.pink30(context);
+          leadingIconAsset = "assets/images/icons/_common/clock.svg";
+        }
+
+        if (state.newTask.date != null) {
+          if (state.newTask.datetime != null) {
+            if (state.newTask.isToday) {
+              text = DateFormat("HH:mm").format(state.newTask.date!.toLocal());
+            } else if (state.newTask.isTomorrow) {
+              text = t.addTask.tmw +
+                  DateFormat(" - HH:mm").format(state.newTask.date!.toLocal());
+            } else {
+              text = DateFormat("EEE, d MMM")
+                  .format(state.newTask.date!.toLocal());
+            }
+          } else {
+            if (state.newTask.isToday) {
+              text = t.addTask.today;
+            } else if (state.newTask.isTomorrow) {
+              text = t.addTask.tmw;
+            } else {
+              text = DateFormat("EEE, d MMM")
+                  .format(state.newTask.date!.toLocal());
+            }
+          }
+        } else if (state.newTask.status == TaskStatusType.someday.id) {
+          text = t.addTask.someday;
+        } else {
+          text = t.bottomBar.inbox;
+        }
+
+        return AddTaskActionItem(
+          text: text,
+          color: color,
+          leadingIconAsset: leadingIconAsset,
+          active: true,
+          onPressed: () {
+            AddTaskCubit cubit = context.read<AddTaskCubit>();
+
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              barrierColor: Colors.transparent,
+              isScrollControlled: true,
+              builder: (context) => BlocProvider.value(
+                value: cubit,
+                child: const PlanModal(),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

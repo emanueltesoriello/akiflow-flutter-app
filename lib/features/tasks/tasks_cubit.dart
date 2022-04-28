@@ -57,29 +57,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(tasks: []));
   }
 
-  Future<void> addTask(Task task) async {
-    DateTime? now = DateTime.now().toUtc();
-
-    List<Task> all = state.tasks.toList();
-
-    Task newTask = task.rebuild(
-      (b) => b
-        ..id = const Uuid().v4()
-        ..updatedAt = now
-        ..createdAt = now,
-    );
-
-    all.add(newTask);
-
-    emit(state.copyWith(tasks: all));
-
-    await _tasksRepository.add([newTask]);
-
-    await _syncControllerService.syncTasks();
-
-    refreshTasks();
-  }
-
   void select(Task task) {
     int index = state.tasks.indexOf(task);
 
