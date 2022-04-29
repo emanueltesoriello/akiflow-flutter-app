@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         applicationId "com.akiflow.mobile"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion localProperties.getProperty('flutter.minSdkVersion')
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

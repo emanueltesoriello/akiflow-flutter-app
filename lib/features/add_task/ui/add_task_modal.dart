@@ -18,16 +18,29 @@ class AddTaskModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddTaskCubit(context.read<TasksCubit>()),
-      child: AddTaskModalView(),
+      child: const AddTaskModalView(),
     );
   }
 }
 
-class AddTaskModalView extends StatelessWidget {
-  AddTaskModalView({Key? key}) : super(key: key);
+class AddTaskModalView extends StatefulWidget {
+  const AddTaskModalView({Key? key}) : super(key: key);
 
+  @override
+  State<AddTaskModalView> createState() => _AddTaskModalViewState();
+}
+
+class _AddTaskModalViewState extends State<AddTaskModalView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+
+  final FocusNode _titleFocus = FocusNode();
+
+  @override
+  void initState() {
+    _titleFocus.requestFocus();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,104 +76,11 @@ class AddTaskModalView extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         children: [
-                          TextField(
-                            controller: _titleController,
-                            focusNode: FocusNode()..requestFocus(),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.zero,
-                              isDense: true,
-                              hintText: t.addTask.titleHint,
-                              border: InputBorder.none,
-                              hintStyle: TextStyle(
-                                color: ColorsExt.grey3(context),
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            style: TextStyle(
-                              color: ColorsExt.grey2(context),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          _title(context),
                           const SizedBox(height: 8),
-                          TextField(
-                            controller: _descriptionController,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.only(bottom: 16),
-                              isDense: true,
-                              hintText: t.addTask.descriptionHint,
-                              border: InputBorder.none,
-                              hintStyle: TextStyle(
-                                color: ColorsExt.grey3(context),
-                                fontSize: 17,
-                              ),
-                            ),
-                            style: TextStyle(
-                              color: ColorsExt.grey2(context),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          _description(context),
                           const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              _plannedFor(context),
-                              const SizedBox(width: 8),
-                              AddTaskActionItem(
-                                leadingIconAsset:
-                                    "assets/images/icons/_common/hourglass.svg",
-                                color: ColorsExt.grey6(context),
-                                active: context
-                                    .watch<AddTaskCubit>()
-                                    .state
-                                    .setDuration,
-                                onPressed: () {
-                                  context.read<AddTaskCubit>().toggleDuration();
-                                },
-                              ),
-                              const SizedBox(width: 8),
-                              AddTaskActionItem(
-                                leadingIconAsset:
-                                    "assets/images/icons/_common/number.svg",
-                                color: ColorsExt.grey6(context),
-                                active: false,
-                                text: t.addTask.label,
-                                onPressed: () {
-                                  // TODO CREATE TASK - task label
-                                },
-                              ),
-                              const Spacer(),
-                              const SizedBox(width: 8),
-                              InkWell(
-                                onTap: () {
-                                  context.read<AddTaskCubit>().create(
-                                      title: _titleController.text,
-                                      description: _descriptionController.text);
-
-                                  Navigator.pop(context);
-                                },
-                                borderRadius: BorderRadius.circular(8),
-                                child: Material(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: SizedBox(
-                                    height: 36,
-                                    width: 36,
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        "assets/images/icons/_common/paperplane_send.svg",
-                                        width: 24,
-                                        height: 24,
-                                        color:
-                                            Theme.of(context).backgroundColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          _actions(context),
                           const SizedBox(height: 16),
                         ],
                       ),
@@ -172,6 +92,105 @@ class AddTaskModalView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Row _actions(BuildContext context) {
+    return Row(
+      children: [
+        _plannedFor(context),
+        const SizedBox(width: 8),
+        AddTaskActionItem(
+          leadingIconAsset: "assets/images/icons/_common/hourglass.svg",
+          color: ColorsExt.grey6(context),
+          active: context.watch<AddTaskCubit>().state.setDuration,
+          onPressed: () {
+            context.read<AddTaskCubit>().toggleDuration();
+          },
+        ),
+        const SizedBox(width: 8),
+        AddTaskActionItem(
+          leadingIconAsset: "assets/images/icons/_common/number.svg",
+          color: ColorsExt.grey6(context),
+          active: false,
+          text: t.addTask.label,
+          onPressed: () {
+            // TODO CREATE TASK - task label
+          },
+        ),
+        const Spacer(),
+        const SizedBox(width: 8),
+        InkWell(
+          onTap: () {
+            context.read<AddTaskCubit>().create(
+                title: _titleController.text,
+                description: _descriptionController.text);
+
+            Navigator.pop(context);
+          },
+          borderRadius: BorderRadius.circular(8),
+          child: Material(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(8),
+            child: SizedBox(
+              height: 36,
+              width: 36,
+              child: Center(
+                child: SvgPicture.asset(
+                  "assets/images/icons/_common/paperplane_send.svg",
+                  width: 24,
+                  height: 24,
+                  color: Theme.of(context).backgroundColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  TextField _description(BuildContext context) {
+    return TextField(
+      controller: _descriptionController,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.only(bottom: 16),
+        isDense: true,
+        hintText: t.addTask.descriptionHint,
+        border: InputBorder.none,
+        hintStyle: TextStyle(
+          color: ColorsExt.grey3(context),
+          fontSize: 17,
+        ),
+      ),
+      style: TextStyle(
+        color: ColorsExt.grey2(context),
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  TextField _title(BuildContext context) {
+    return TextField(
+      controller: _titleController,
+      focusNode: _titleFocus,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.zero,
+        isDense: true,
+        hintText: t.addTask.titleHint,
+        border: InputBorder.none,
+        hintStyle: TextStyle(
+          color: ColorsExt.grey3(context),
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      style: TextStyle(
+        color: ColorsExt.grey2(context),
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
     );
   }
 
@@ -223,6 +242,8 @@ class AddTaskModalView extends StatelessWidget {
           leadingIconAsset: leadingIconAsset,
           active: true,
           onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+
             AddTaskCubit cubit = context.read<AddTaskCubit>();
 
             showModalBottomSheet(
