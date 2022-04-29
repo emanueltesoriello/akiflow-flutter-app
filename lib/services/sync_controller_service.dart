@@ -14,6 +14,7 @@ import 'package:mobile/repository/events_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/dialog_service.dart';
+import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/user.dart';
@@ -40,6 +41,8 @@ class SyncControllerService {
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
   static final DocsRepository _docsRepository = locator<DocsRepository>();
+
+  final SentryService _sentryService = locator<SentryService>();
 
   final Map<Entity, SyncService> _syncServices = {
     Entity.accounts: SyncService(
@@ -96,6 +99,7 @@ class SyncControllerService {
 
       if (accounts.isEmpty) {
         _dialogService.showMessage(t.errors.noAccountsFound);
+        _sentryService.captureException(Exception(t.errors.noAccountsFound));
         return;
       }
 
@@ -123,8 +127,9 @@ class SyncControllerService {
       DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
       await _setLastSyncPreferences[entity]!(lastSyncUpdated);
-    } catch (e) {
+    } catch (e, s) {
       print("Error syncing $entity: $e");
+      _sentryService.captureException(e, stackTrace: s);
     }
   }
 }

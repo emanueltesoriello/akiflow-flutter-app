@@ -40,6 +40,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
         log(user.accessToken?.toString() ?? "");
       }
 
+      _sentryService.authenticate(user.id.toString(), user.email);
+
       emit(AuthCubitState(user: user));
     }
   }

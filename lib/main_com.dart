@@ -16,11 +16,21 @@ import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/database_service.dart';
+import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
+FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
+  if (Config.development || SentryService.ignoreException(event.throwable)) {
+    return null;
+  }
+
+  return event;
+}
 
 Future<void> mainCom() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -33,7 +43,14 @@ Future<void> mainCom() async {
 
   bool userLogged = locator<PreferencesRepository>().user != null;
 
-  runApp(Application(userLogged: userLogged));
+  await SentryFlutter.init(
+    (options) {
+      options.beforeSend = beforeSend;
+      options.dsn = Config.sentryDsn;
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(Application(userLogged: userLogged)),
+  );
 }
 
 bool dialogShown = false;
