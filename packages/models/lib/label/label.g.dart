@@ -43,6 +43,12 @@ class _$LabelSerializer implements StructuredSerializer<Label> {
       ..add('color')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.type;
+
+    result
+      ..add('type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.createdAt;
 
     result
@@ -110,6 +116,10 @@ class _$LabelSerializer implements StructuredSerializer<Label> {
           result.color = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'type':
+          result.type = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
         case 'created_at':
           result.createdAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
@@ -151,6 +161,8 @@ class _$Label extends Label {
   @override
   final String? color;
   @override
+  final String? type;
+  @override
   final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
@@ -171,6 +183,7 @@ class _$Label extends Label {
       this.title,
       this.icon,
       this.color,
+      this.type,
       this.createdAt,
       this.updatedAt,
       this.deletedAt,
@@ -194,6 +207,7 @@ class _$Label extends Label {
         title == other.title &&
         icon == other.icon &&
         color == other.color &&
+        type == other.type &&
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt &&
         deletedAt == other.deletedAt &&
@@ -211,9 +225,13 @@ class _$Label extends Label {
                     $jc(
                         $jc(
                             $jc(
-                                $jc($jc($jc(0, id.hashCode), title.hashCode),
-                                    icon.hashCode),
-                                color.hashCode),
+                                $jc(
+                                    $jc(
+                                        $jc($jc(0, id.hashCode),
+                                            title.hashCode),
+                                        icon.hashCode),
+                                    color.hashCode),
+                                type.hashCode),
                             createdAt.hashCode),
                         updatedAt.hashCode),
                     deletedAt.hashCode),
@@ -229,6 +247,7 @@ class _$Label extends Label {
           ..add('title', title)
           ..add('icon', icon)
           ..add('color', color)
+          ..add('type', type)
           ..add('createdAt', createdAt)
           ..add('updatedAt', updatedAt)
           ..add('deletedAt', deletedAt)
@@ -257,6 +276,10 @@ class LabelBuilder implements Builder<Label, LabelBuilder> {
   String? _color;
   String? get color => _$this._color;
   set color(String? color) => _$this._color = color;
+
+  String? _type;
+  String? get type => _$this._type;
+  set type(String? type) => _$this._type = type;
 
   DateTime? _createdAt;
   DateTime? get createdAt => _$this._createdAt;
@@ -294,6 +317,7 @@ class LabelBuilder implements Builder<Label, LabelBuilder> {
       _title = $v.title;
       _icon = $v.icon;
       _color = $v.color;
+      _type = $v.type;
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
       _deletedAt = $v.deletedAt;
@@ -324,6 +348,7 @@ class LabelBuilder implements Builder<Label, LabelBuilder> {
             title: title,
             icon: icon,
             color: color,
+            type: type,
             createdAt: createdAt,
             updatedAt: updatedAt,
             deletedAt: deletedAt,

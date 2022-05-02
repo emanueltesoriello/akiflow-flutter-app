@@ -20,6 +20,9 @@ abstract class Label extends Object
   @BuiltValueField(wireName: 'color')
   String? get color;
 
+  @BuiltValueField(wireName: 'type')
+  String? get type;
+
   @BuiltValueField(wireName: 'created_at')
   DateTime? get createdAt;
 
@@ -67,6 +70,7 @@ abstract class Label extends Object
       "title": title,
       "icon": icon,
       "color": color,
+      "type": type,
       "updated_at": updatedAt?.toIso8601String(),
       "created_at": createdAt?.toIso8601String(),
       "deleted_at": deletedAt?.toIso8601String(),

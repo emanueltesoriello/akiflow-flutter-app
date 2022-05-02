@@ -54,7 +54,8 @@
     "someday": "Someday",
     "noDate": "No date",
     "addTime": "Add time",
-    "repeat": "Repeat"
+    "repeat": "Repeat",
+    "folder": "Folder"
   },
   "task": {
     "description": "Description",

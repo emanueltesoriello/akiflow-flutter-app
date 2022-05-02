@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 64 
+ * Strings: 65 
  *
- * Built on 2022-05-02 at 08:26 UTC
+ * Built on 2022-05-02 at 13:04 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -409,6 +409,7 @@ class _StringsAddTaskEn {
 	String get noDate => 'No date';
 	String get addTime => 'Add time';
 	String get repeat => 'Repeat';
+	String get folder => 'Folder';
 }
 
 // Path: task
@@ -511,6 +512,7 @@ extension on _StringsEn {
 			'addTask.noDate': 'No date',
 			'addTask.addTime': 'Add time',
 			'addTask.repeat': 'Repeat',
+			'addTask.folder': 'Folder',
 			'task.description': 'Description',
 			'task.linkedContent': 'Linked content',
 			'task.today': 'Today',

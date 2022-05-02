@@ -9,6 +9,8 @@ class AddTaskCubitState extends Equatable {
   final DateTime? selectedDate;
   final double? selectedDuration;
   final bool setDuration;
+  final bool showLabelsList;
+  final Label? selectedLabel;
 
   const AddTaskCubitState({
     this.loading = false,
@@ -17,6 +19,8 @@ class AddTaskCubitState extends Equatable {
     this.selectedDate,
     this.selectedDuration,
     this.setDuration = false,
+    this.showLabelsList = false,
+    this.selectedLabel,
   });
 
   AddTaskCubitState copyWith({
@@ -26,6 +30,8 @@ class AddTaskCubitState extends Equatable {
     DateTime? selectedDate,
     double? selectedDuration,
     bool? setDuration,
+    bool? showLabelsList,
+    Label? selectedLabel,
   }) {
     return AddTaskCubitState(
       loading: loading ?? this.loading,
@@ -34,10 +40,20 @@ class AddTaskCubitState extends Equatable {
       selectedDate: selectedDate ?? this.selectedDate,
       selectedDuration: selectedDuration ?? this.selectedDuration,
       setDuration: setDuration ?? this.setDuration,
+      showLabelsList: showLabelsList ?? this.showLabelsList,
+      selectedLabel: selectedLabel ?? this.selectedLabel,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [loading, planType, newTask, selectedDate, selectedDuration, setDuration];
+  List<Object?> get props => [
+        loading,
+        planType,
+        newTask,
+        selectedDate,
+        selectedDuration,
+        setDuration,
+        showLabelsList,
+        selectedLabel,
+      ];
 }

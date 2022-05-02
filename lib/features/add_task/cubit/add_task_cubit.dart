@@ -5,6 +5,7 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:uuid/uuid.dart';
 
@@ -43,7 +44,8 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
         ..title = title
         ..description = description
         ..updatedAt = now
-        ..createdAt = now,
+        ..createdAt = now
+        ..listId = state.selectedLabel?.id,
     );
 
     emit(state.copyWith(newTask: updated));
@@ -120,5 +122,13 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
 
       emit(state.copyWith(newTask: updated));
     }
+  }
+
+  void toggleLabels() {
+    emit(state.copyWith(showLabelsList: !state.showLabelsList));
+  }
+
+  void setLabel(Label label) {
+    emit(state.copyWith(selectedLabel: label, showLabelsList: false));
   }
 }

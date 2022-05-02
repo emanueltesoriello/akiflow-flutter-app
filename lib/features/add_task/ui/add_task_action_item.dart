@@ -7,6 +7,7 @@ class AddTaskActionItem extends StatelessWidget {
   final String? text;
   final String leadingIconAsset;
   final Color color;
+  final Color? leadingIconColor;
   final bool active;
 
   const AddTaskActionItem({
@@ -15,6 +16,7 @@ class AddTaskActionItem extends StatelessWidget {
     required this.leadingIconAsset,
     required this.color,
     required this.active,
+    this.leadingIconColor,
     this.text,
   }) : super(key: key);
 
@@ -35,7 +37,7 @@ class AddTaskActionItem extends StatelessWidget {
                 leadingIconAsset,
                 width: 22,
                 height: 22,
-                color: ColorsExt.grey2(context),
+                color: leadingIconColor ?? ColorsExt.grey2(context),
               ),
               _text(context),
             ],

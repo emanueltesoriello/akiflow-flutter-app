@@ -5,7 +5,8 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
-import 'package:mobile/features/add_task/ui/add_task_duration_item.dart';
+import 'package:mobile/features/add_task/ui/add_task_duration.dart';
+import 'package:mobile/features/add_task/ui/add_task_labels.dart';
 import 'package:mobile/features/add_task/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -47,6 +48,11 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
     return Wrap(
       children: [
         Container(
+          height: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+              .padding
+              .top,
+        ),
+        Container(
           decoration: const BoxDecoration(
             color: Colors.transparent,
           ),
@@ -66,6 +72,15 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                       builder: (context, state) {
                         if (state.setDuration) {
                           return const AddTaskDurationItem();
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
+                    BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+                      builder: (context, state) {
+                        if (state.showLabelsList) {
+                          return const AddTaskLabels();
                         } else {
                           return const SizedBox();
                         }
@@ -109,13 +124,26 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
           },
         ),
         const SizedBox(width: 8),
-        AddTaskActionItem(
-          leadingIconAsset: "assets/images/icons/_common/number.svg",
-          color: ColorsExt.grey6(context),
-          active: false,
-          text: t.addTask.label,
-          onPressed: () {
-            // TODO CREATE TASK - task label
+        BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+          builder: (context, state) {
+            Color? background;
+
+            if (state.selectedLabel?.color != null) {
+              background = ColorsExt.getFromName(state.selectedLabel!.color!);
+            }
+
+            return AddTaskActionItem(
+              leadingIconAsset: "assets/images/icons/_common/number.svg",
+              leadingIconColor: background ?? ColorsExt.grey2(context),
+              color: background != null
+                  ? background.withOpacity(0.1)
+                  : ColorsExt.grey6(context),
+              active: true,
+              text: state.selectedLabel?.title ?? t.addTask.label,
+              onPressed: () {
+                context.read<AddTaskCubit>().toggleLabels();
+              },
+            );
           },
         ),
         const Spacer(),
