@@ -8,6 +8,7 @@ import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
+import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -138,6 +139,14 @@ class SettingsPage extends StatelessWidget {
                     showShevron: false,
                     onPressed: () {
                       launch("https://akiflow-community.slack.com");
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  ButtonList(
+                    title: t.settings.bugReport,
+                    position: ButtonListPosition.single,
+                    onPressed: () {
+                      context.read<SettingsCubit>().bugReport();
                     },
                   ),
                   const SizedBox(height: 16),
