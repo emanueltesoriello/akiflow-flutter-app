@@ -25,9 +25,8 @@ class AuthPage extends StatelessWidget {
       child: BlocListener<AuthCubit, AuthCubitState>(
         listener: (context, state) {
           if (state.user != null) {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => MainPage()),
-                (Route<dynamic> route) => false);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainPage()));
           }
         },
         child: Scaffold(
