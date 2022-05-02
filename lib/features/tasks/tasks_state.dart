@@ -6,6 +6,7 @@ class TasksCubitState extends Equatable {
   final List<Task> updatedTasks;
   final List<Label> labels;
   final List<Doc> docs;
+  final String? syncStatus;
 
   const TasksCubitState({
     this.loading = false,
@@ -13,6 +14,7 @@ class TasksCubitState extends Equatable {
     this.updatedTasks = const [],
     this.labels = const [],
     this.docs = const [],
+    this.syncStatus,
   });
 
   TasksCubitState copyWith({
@@ -21,6 +23,7 @@ class TasksCubitState extends Equatable {
     List<Task>? updatedTasks,
     List<Label>? labels,
     List<Doc>? docs,
+    String? syncStatus,
   }) {
     return TasksCubitState(
       loading: loading ?? this.loading,
@@ -28,9 +31,17 @@ class TasksCubitState extends Equatable {
       updatedTasks: updatedTasks ?? this.updatedTasks,
       labels: labels ?? this.labels,
       docs: docs ?? this.docs,
+      syncStatus: syncStatus ?? this.syncStatus,
     );
   }
 
   @override
-  List<Object?> get props => [loading, tasks, updatedTasks, labels, docs];
+  List<Object?> get props => [
+        loading,
+        tasks,
+        updatedTasks,
+        labels,
+        docs,
+        syncStatus,
+      ];
 }

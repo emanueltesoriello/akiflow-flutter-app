@@ -8,6 +8,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/debouncer.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -25,6 +26,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
+  final SentryService _sentryService = locator<SentryService>();
 
   final SyncControllerService _syncControllerService =
       locator<SyncControllerService>();
@@ -37,7 +39,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncControllerService.syncAll();
+      emit(state.copyWith(syncStatus: "start sync"));
+
+      await _syncControllerService.syncAll(syncStatus: (status) {
+        _sentryService.addBreadcrumb(category: "sync", message: status);
+        emit(state.copyWith(syncStatus: status));
+      });
+
       await refreshTasks();
     }
   }
@@ -126,7 +134,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       refreshTasks();
 
-      await _syncControllerService.syncTasks();
+      await _syncControllerService.syncTasks(
+        syncStatus: (status) {
+          emit(state.copyWith(syncStatus: status));
+        },
+      );
     } else {
       print('No tasks to update');
     }

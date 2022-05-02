@@ -36,7 +36,8 @@
     "helpCenter": "Help center",
     "about": "About",
     "followUsOnTwitter": "Follow Us on Twitter",
-    "joinOurCommunity": "Join our community"
+    "joinOurCommunity": "Join our community",
+    "bugReport": "Bug report"
   },
   "addTask": {
     "titleHint": "Try: review financials today 9am",

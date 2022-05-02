@@ -1,12 +1,18 @@
 import 'dart:async';
 
 import 'package:mobile/api/api.dart';
+import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
+import 'package:mobile/services/sentry_service.dart';
 
 class SyncService {
+  final SentryService _sentryService = locator<SentryService>();
+
   final Api api;
   final DatabaseRepository databaseRepository;
+
+  Function(String)? _setSyncStatus;
 
   SyncService({
     required this.api,
@@ -14,17 +20,25 @@ class SyncService {
   });
 
   // Returns the last sync time updated.
-  Future<DateTime?> start(DateTime? lastSyncAt) async {
-    print('${api.runtimeType}: start sync, last sync at: $lastSyncAt');
+  Future<DateTime?> start(
+    DateTime? lastSyncAt, {
+    required Function(String) setSyncStatus,
+  }) async {
+    _setSyncStatus = setSyncStatus;
 
     DateTime? updatedLastSync = await _remoteToLocal(lastSyncAt);
 
     await _localToRemote();
 
+    setSyncStatusIfNotNull("completed sync at: $updatedLastSync");
+
     return updatedLastSync;
   }
 
   Future<DateTime?> _remoteToLocal(DateTime? lastSyncAt) async {
+    setSyncStatusIfNotNull(
+        "last sync at: $lastSyncAt, starting remote to local");
+
     var remoteItems = await api.get(
       perPage: 2500,
       withDeleted: true,
@@ -32,12 +46,12 @@ class SyncService {
       allPages: true,
     );
 
+    setSyncStatusIfNotNull(
+        "remote to local retrieved: ${remoteItems.length} items");
+
     if (remoteItems.isEmpty) {
-      print('${api.runtimeType}: remote to local no items');
       return null;
     }
-
-    print('${api.runtimeType}: remote to local item: ${remoteItems.length}');
 
     DateTime? maxRemoteUpdateAt;
 
@@ -50,7 +64,8 @@ class SyncService {
       }
     }
 
-    print('${api.runtimeType}: update lastSyncAt to $maxRemoteUpdateAt');
+    setSyncStatusIfNotNull(
+        "${api.runtimeType}: update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
 
     // Upsert only after retrieved max remote update at.
     await _upsertItems(remoteItems);
@@ -59,14 +74,14 @@ class SyncService {
   }
 
   Future<void> _localToRemote() async {
+    setSyncStatusIfNotNull("starting local to remote, getting unsynced items");
+
     List<dynamic> unsynced = await databaseRepository.unsynced();
 
+    setSyncStatusIfNotNull("local to remote, sync ${unsynced.length} items");
+
     if (unsynced.isEmpty) {
-      print('${api.runtimeType}: local to remote no items');
       return;
-    } else {
-      print(
-          '${api.runtimeType}: local to remote: ${unsynced.length} items to sync');
     }
 
     for (int i = 0; i < unsynced.length; i++) {
@@ -94,20 +109,26 @@ class SyncService {
     }
 
     try {
+      setSyncStatusIfNotNull("posting to api ${unsynced.length} items");
+
       List<dynamic> updated = await api.post(unsynced: unsynced);
+
+      setSyncStatusIfNotNull("posted to api ${updated.length} items");
 
       if (updated.isNotEmpty) {
         await _upsertItems(updated);
       }
 
-      print('${api.runtimeType}: local to remote: done');
+      setSyncStatusIfNotNull("local to remote: done");
     } on ApiException catch (e) {
-      print('${api.runtimeType}: ${e.runtimeType}: ${e.message}');
+      setSyncStatusIfNotNull("error posting to api: ${e.message}");
     }
   }
 
   Future<void> _upsertItems<T>(List<dynamic> remoteItems) async {
     List<dynamic> localItems = await databaseRepository.get();
+
+    setSyncStatusIfNotNull("upsert remote items: ${remoteItems.length} to db");
 
     for (int i = 0; i < remoteItems.length; i++) {
       var remoteItem = remoteItems[i];
@@ -134,8 +155,11 @@ class SyncService {
 
           await _updateLocalTask(id: remoteItem.id!, remoteItem: remoteItem);
         } else {
-          print(
-              '${api.runtimeType}: skip upsert item, remote is not recent than local');
+          _sentryService.addBreadcrumb(
+            category: "sync",
+            message:
+                '${api.runtimeType}: skip upsert item, remote is not recent than local',
+          );
         }
       } else {
         remoteItem = remoteItem.rebuild((t) {
@@ -148,6 +172,8 @@ class SyncService {
         await _addRemoteTaskToLocalDb(remoteItem);
       }
     }
+
+    setSyncStatusIfNotNull("upsert remote items: done");
   }
 
   Future<void> _updateLocalTask(
@@ -157,5 +183,11 @@ class SyncService {
 
   Future<void> _addRemoteTaskToLocalDb(var remoteItem) async {
     await databaseRepository.add([remoteItem]);
+  }
+
+  void setSyncStatusIfNotNull(String message) {
+    if (_setSyncStatus != null) {
+      _setSyncStatus!(message);
+    }
   }
 }

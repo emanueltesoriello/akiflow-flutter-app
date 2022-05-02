@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 63 
+ * Strings: 64 
  *
- * Built on 2022-04-28 at 13:00 UTC
+ * Built on 2022-05-02 at 08:26 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -383,6 +383,7 @@ class _StringsSettingsEn {
 	String get about => 'About';
 	String get followUsOnTwitter => 'Follow Us on Twitter';
 	String get joinOurCommunity => 'Join our community';
+	String get bugReport => 'Bug report';
 }
 
 // Path: addTask
@@ -494,6 +495,7 @@ extension on _StringsEn {
 			'settings.about': 'About',
 			'settings.followUsOnTwitter': 'Follow Us on Twitter',
 			'settings.joinOurCommunity': 'Join our community',
+			'settings.bugReport': 'Bug report',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',

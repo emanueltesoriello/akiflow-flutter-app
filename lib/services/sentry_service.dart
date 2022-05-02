@@ -18,6 +18,30 @@ class SentryService {
     }
   }
 
+  void addBreadcrumb({
+    String? message,
+    DateTime? timestamp,
+    String? category,
+    Map<String, dynamic>? data,
+    SentryLevel? level,
+    String? type,
+  }) async {
+    Breadcrumb breadcrumb = Breadcrumb(
+      message: message,
+      timestamp: timestamp,
+      category: category,
+      data: data,
+      level: level,
+      type: type,
+    );
+
+    if (Config.development) {
+      print(breadcrumb.message);
+    } else {
+      Sentry.addBreadcrumb(breadcrumb);
+    }
+  }
+
   void authenticate(String uid, String? email) {
     print("auth sentry $uid");
 
@@ -27,8 +51,6 @@ class SentryService {
   }
 
   static bool ignoreException(throwable) {
-    print(throwable);
-
     if (throwable is StateError &&
         throwable.message
             .contains("Cannot emit new states after calling close")) {

@@ -89,22 +89,25 @@ class SyncControllerService {
     Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
-  syncAll() async {
+  syncAll({required Function(String) syncStatus}) async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncEntity(Entity.accounts);
+      await _syncEntity(Entity.accounts, syncStatus: syncStatus);
 
       List<Account> accounts = await _accountsRepository.get();
 
       if (accounts.isEmpty) {
         _dialogService.showMessage(t.errors.noAccountsFound);
         _sentryService.captureException(Exception(t.errors.noAccountsFound));
+        syncStatus(t.errors.noAccountsFound);
         return;
       }
 
-      await _syncEntity(Entity.tasks);
+      await _syncEntity(Entity.tasks, syncStatus: syncStatus);
+
       await _syncEntity(Entity.labels);
+
       await _syncEntity(Entity.docs);
 
       // await _syncEntity(Entity.calendars);
@@ -112,23 +115,34 @@ class SyncControllerService {
     }
   }
 
-  syncTasks() async {
-    await _syncEntity(Entity.tasks);
+  syncTasks({Function(String)? syncStatus}) async {
+    await _syncEntity(Entity.tasks, syncStatus: syncStatus);
     await _syncEntity(Entity.labels);
     await _syncEntity(Entity.docs);
   }
 
-  Future<void> _syncEntity(Entity entity) async {
+  Future<void> _syncEntity(Entity entity,
+      {Function(String)? syncStatus}) async {
     try {
       SyncService syncService = _syncServices[entity]!;
 
       DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
 
-      DateTime? lastSyncUpdated = await syncService.start(lastSync);
+      DateTime? lastSyncUpdated = await syncService.start(
+        lastSync,
+        setSyncStatus: (status) {
+          if (syncStatus != null) {
+            syncStatus(status);
+          }
+        },
+      );
 
       await _setLastSyncPreferences[entity]!(lastSyncUpdated);
     } catch (e, s) {
-      print("Error syncing $entity: $e");
+      if (syncStatus != null) {
+        syncStatus("Error syncing $entity: $e");
+      }
+
       _sentryService.captureException(e, stackTrace: s);
     }
   }
