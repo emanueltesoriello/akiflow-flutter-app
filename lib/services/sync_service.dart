@@ -26,11 +26,14 @@ class SyncService {
   }) async {
     _setSyncStatus = setSyncStatus;
 
+    setSyncStatusIfNotNull("${api.runtimeType} start syncing");
+
     DateTime? updatedLastSync = await _remoteToLocal(lastSyncAt);
 
     await _localToRemote();
 
-    setSyncStatusIfNotNull("completed sync at: $updatedLastSync");
+    setSyncStatusIfNotNull(
+        "${api.runtimeType} completed sync at: $updatedLastSync");
 
     return updatedLastSync;
   }
