@@ -7,7 +7,10 @@ import 'package:mobile/main_com.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Config.initialize(true, 'assets/config/prod.json');
+  await Config.initialize(
+    configFile: 'assets/config/prod.json',
+    production: true,
+  );
 
   await mainCom();
 }

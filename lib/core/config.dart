@@ -10,10 +10,13 @@ abstract class Config {
   ///
   /// Pass [development] true when launch production main (main_prod.dart) and
   /// and the config file of interest
-  static Future<void> initialize(bool development, String configFile) async {
+  static Future<void> initialize({
+    required bool production,
+    required String configFile,
+  }) async {
     final configString = await rootBundle.loadString(configFile);
     _config = json.decode(configString) as Map<String, dynamic>;
-    _development = development;
+    _development = production == false;
   }
 
   static String get endpoint {

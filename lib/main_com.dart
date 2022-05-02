@@ -43,6 +43,8 @@ Future<void> mainCom() async {
 
   bool userLogged = locator<PreferencesRepository>().user != null;
 
+  print("environment: ${Config.development ? "dev" : "prod"}");
+
   await SentryFlutter.init(
     (options) {
       options.beforeSend = beforeSend;
