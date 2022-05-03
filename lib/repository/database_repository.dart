@@ -3,6 +3,7 @@ import 'package:mobile/exceptions/database_exception.dart';
 import 'package:mobile/repository/base_database_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:models/base.dart';
+import 'package:sqflite/sql.dart';
 
 class DatabaseRepository implements IBaseDatabaseRepository {
   final DatabaseService _databaseService = locator<DatabaseService>();
@@ -30,7 +31,11 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     var batch = _databaseService.database!.batch();
 
     for (T item in items) {
-      batch.insert(tableName, (item as Base).toSql());
+      batch.insert(
+        tableName,
+        (item as Base).toSql(),
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
     }
 
     await batch.commit();
