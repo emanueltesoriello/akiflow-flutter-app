@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/edit_task_bottom_actions.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_linked_content.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_links.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_row.dart';
@@ -36,7 +37,7 @@ class _EditTaskModalViewState extends State<EditTaskModalView> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.5,
+      initialChildSize: 0.55,
       maxChildSize: 0.95,
       minChildSize: 0.4,
       builder: (BuildContext context, ScrollController scrollController) {
@@ -70,6 +71,8 @@ class _EditTaskModalViewState extends State<EditTaskModalView> {
                         Separator(),
                         EditTaskLinkedContent(),
                         EditTaskLinks(),
+                        EditTaskBottomActions(),
+                        Separator(),
                       ],
                     ),
                   ),

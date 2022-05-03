@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 66 
+ * Strings: 69 
  *
- * Built on 2022-05-03 at 08:12 UTC
+ * Built on 2022-05-03 at 15:56 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -435,6 +435,9 @@ class _StringsTaskEn {
 	String get markAsDone => 'Mark as done';
 	String get delete => 'Delete';
 	String get noTitle => '(No title)';
+	String get snoozeTomorrow => 'Snooze - Tomorrow';
+	String get snoozeNextWeek => 'Snooze - Next Week';
+	String get someday => 'Someday';
 }
 
 // Path: errors
@@ -529,6 +532,9 @@ extension on _StringsEn {
 			'task.markAsDone': 'Mark as done',
 			'task.delete': 'Delete',
 			'task.noTitle': '(No title)',
+			'task.snoozeTomorrow': 'Snooze - Tomorrow',
+			'task.snoozeNextWeek': 'Snooze - Next Week',
+			'task.someday': 'Someday',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

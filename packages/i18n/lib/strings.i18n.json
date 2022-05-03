@@ -72,7 +72,10 @@
     "duplicate": "Duplicate",
     "markAsDone": "Mark as done",
     "delete": "Delete",
-    "noTitle": "(No title)"
+    "noTitle": "(No title)",
+    "snoozeTomorrow": "Snooze - Tomorrow",
+    "snoozeNextWeek": "Snooze - Next Week",
+    "someday": "Someday"
   },
   "errors": {
     "noAccountsFound": "No accounts found"
