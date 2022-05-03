@@ -17,6 +17,9 @@ class SyncStatusItem extends StatelessWidget {
                 child: Text(
                   state.syncStatus ?? "",
                   textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12),
                 ),
               ),
             ],
