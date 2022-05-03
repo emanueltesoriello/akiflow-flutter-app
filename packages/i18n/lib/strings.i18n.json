@@ -71,7 +71,8 @@
     "setDeadline": "Set Deadline",
     "duplicate": "Duplicate",
     "markAsDone": "Mark as done",
-    "delete": "Delete"
+    "delete": "Delete",
+    "noTitle": "(No title)"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

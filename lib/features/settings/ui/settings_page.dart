@@ -162,6 +162,12 @@ class SettingsPage extends StatelessWidget {
                           (Route<dynamic> route) => false);
                     },
                   ),
+                  BlocBuilder<SettingsCubit, SettingsCubitState>(
+                    builder: (context, state) {
+                      return Text(state.appVersion ?? "");
+                    },
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

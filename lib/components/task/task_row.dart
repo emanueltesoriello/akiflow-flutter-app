@@ -130,8 +130,14 @@ class TaskRow extends StatelessWidget {
   }
 
   Text _firstLine(BuildContext context) {
+    String? text = task.title;
+
+    if (text == null || text.isEmpty) {
+      text = t.task.noTitle;
+    }
+
     return Text(
-      task.title ?? "",
+      text,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
