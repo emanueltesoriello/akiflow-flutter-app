@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 65 
+ * Strings: 66 
  *
- * Built on 2022-05-03 at 07:57 UTC
+ * Built on 2022-05-03 at 08:12 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -434,6 +434,7 @@ class _StringsTaskEn {
 	String get duplicate => 'Duplicate';
 	String get markAsDone => 'Mark as done';
 	String get delete => 'Delete';
+	String get noTitle => '(No title)';
 }
 
 // Path: errors
@@ -527,6 +528,7 @@ extension on _StringsEn {
 			'task.duplicate': 'Duplicate',
 			'task.markAsDone': 'Mark as done',
 			'task.delete': 'Delete',
+			'task.noTitle': '(No title)',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

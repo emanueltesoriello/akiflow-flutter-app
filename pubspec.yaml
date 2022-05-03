@@ -28,6 +28,7 @@ dependencies:
   jiffy: ^5.0.0
   models:
     path: ./packages/models
+  package_info_plus: ^1.4.2
   path: ^1.8.0
   path_provider: ^2.0.9
   reorderables: ^0.4.4
