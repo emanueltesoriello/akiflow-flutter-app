@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:intl/intl.dart';
@@ -89,6 +88,8 @@ abstract class Task extends Object
   @BuiltValueField(serialize: false)
   bool? get selected;
 
+  BuiltList<String>? get links;
+
   Task._();
 
   factory Task([void Function(TaskBuilder) updates]) = _$Task;
@@ -144,31 +145,32 @@ abstract class Task extends Object
       "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
       "sorting": sorting,
       "sorting_label": sortingLabel,
+      "links": links?.toList().join(','),
     };
   }
 
   static Task fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
-    List<String> keys = data.keys.toList();
-
-    for (var key in keys) {
-      if (key == "done" && data[key] != null) {
-        data[key] = (data[key] == 1);
-      }
-
-      if (key == "links") {
-        data[key] = data["links"] is String
-            ? jsonDecode(data["links"] as String)
-            : null;
-      }
-
-      if (key == "list_id") {
-        data["listId"] = data["list_id"];
-      }
+    if (data.containsKey("done") && data["done"] != null) {
+      data["done"] = (data["done"] == 1);
     }
 
-    return serializers.deserializeWith(Task.serializer, data)!;
+    BuiltList<String> linksList = BuiltList();
+
+    if (data.containsKey("links") && data["links"] != null) {
+      String links = data["links"] as String;
+      linksList = BuiltList(links.split(','));
+      data.remove("links");
+    }
+
+    Task task = serializers.deserializeWith(Task.serializer, data)!;
+
+    task = task.rebuild((t) {
+      t.links = linksList.toBuilder();
+    });
+
+    return task;
   }
 
   @BuiltValueSerializer(serializeNulls: true)

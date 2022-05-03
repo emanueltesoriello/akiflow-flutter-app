@@ -163,6 +163,13 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
     result
       ..add('sorting_label')
       ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.links;
+
+    result
+      ..add('links')
+      ..add(serializers.serialize(value,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])));
 
     return result;
   }
@@ -278,6 +285,12 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.sortingLabel = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
+        case 'links':
+          result.links.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
+          break;
       }
     }
 
@@ -338,6 +351,8 @@ class _$Task extends Task {
   final int? sortingLabel;
   @override
   final bool? selected;
+  @override
+  final BuiltList<String>? links;
 
   factory _$Task([void Function(TaskBuilder)? updates]) =>
       (new TaskBuilder()..update(updates)).build();
@@ -368,7 +383,8 @@ class _$Task extends Task {
       this.origin,
       this.sorting,
       this.sortingLabel,
-      this.selected})
+      this.selected,
+      this.links})
       : super._();
 
   @override
@@ -407,7 +423,8 @@ class _$Task extends Task {
         origin == other.origin &&
         sorting == other.sorting &&
         sortingLabel == other.sortingLabel &&
-        selected == other.selected;
+        selected == other.selected &&
+        links == other.links;
   }
 
   @override
@@ -430,26 +447,26 @@ class _$Task extends Task {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode),
-                                                                                updatedAt.hashCode),
-                                                                            deletedAt.hashCode),
-                                                                        done.hashCode),
-                                                                    doneAt.hashCode),
-                                                                datetime.hashCode),
-                                                            readAt.hashCode),
-                                                        globalUpdatedAt.hashCode),
-                                                    globalCreatedAt.hashCode),
-                                                activationDatetime.hashCode),
-                                            dueDate.hashCode),
-                                        remoteUpdatedAt.hashCode),
-                                    recurringId.hashCode),
-                                priority.hashCode),
-                            listId.hashCode),
-                        sectionId.hashCode),
-                    origin.hashCode),
-                sorting.hashCode),
-            sortingLabel.hashCode),
-        selected.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode), updatedAt.hashCode),
+                                                                                deletedAt.hashCode),
+                                                                            done.hashCode),
+                                                                        doneAt.hashCode),
+                                                                    datetime.hashCode),
+                                                                readAt.hashCode),
+                                                            globalUpdatedAt.hashCode),
+                                                        globalCreatedAt.hashCode),
+                                                    activationDatetime.hashCode),
+                                                dueDate.hashCode),
+                                            remoteUpdatedAt.hashCode),
+                                        recurringId.hashCode),
+                                    priority.hashCode),
+                                listId.hashCode),
+                            sectionId.hashCode),
+                        origin.hashCode),
+                    sorting.hashCode),
+                sortingLabel.hashCode),
+            selected.hashCode),
+        links.hashCode));
   }
 
   @override
@@ -480,7 +497,8 @@ class _$Task extends Task {
           ..add('origin', origin)
           ..add('sorting', sorting)
           ..add('sortingLabel', sortingLabel)
-          ..add('selected', selected))
+          ..add('selected', selected)
+          ..add('links', links))
         .toString();
   }
 }
@@ -596,6 +614,10 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   bool? get selected => _$this._selected;
   set selected(bool? selected) => _$this._selected = selected;
 
+  ListBuilder<String>? _links;
+  ListBuilder<String> get links => _$this._links ??= new ListBuilder<String>();
+  set links(ListBuilder<String>? links) => _$this._links = links;
+
   TaskBuilder();
 
   TaskBuilder get _$this {
@@ -627,6 +649,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _sorting = $v.sorting;
       _sortingLabel = $v.sortingLabel;
       _selected = $v.selected;
+      _links = $v.links?.toBuilder();
       _$v = null;
     }
     return this;
@@ -645,34 +668,48 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
 
   @override
   _$Task build() {
-    final _$result = _$v ??
-        new _$Task._(
-            id: id,
-            title: title,
-            date: date,
-            description: description,
-            duration: duration,
-            status: status,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            deletedAt: deletedAt,
-            done: done,
-            doneAt: doneAt,
-            datetime: datetime,
-            readAt: readAt,
-            globalUpdatedAt: globalUpdatedAt,
-            globalCreatedAt: globalCreatedAt,
-            activationDatetime: activationDatetime,
-            dueDate: dueDate,
-            remoteUpdatedAt: remoteUpdatedAt,
-            recurringId: recurringId,
-            priority: priority,
-            listId: listId,
-            sectionId: sectionId,
-            origin: origin,
-            sorting: sorting,
-            sortingLabel: sortingLabel,
-            selected: selected);
+    _$Task _$result;
+    try {
+      _$result = _$v ??
+          new _$Task._(
+              id: id,
+              title: title,
+              date: date,
+              description: description,
+              duration: duration,
+              status: status,
+              createdAt: createdAt,
+              updatedAt: updatedAt,
+              deletedAt: deletedAt,
+              done: done,
+              doneAt: doneAt,
+              datetime: datetime,
+              readAt: readAt,
+              globalUpdatedAt: globalUpdatedAt,
+              globalCreatedAt: globalCreatedAt,
+              activationDatetime: activationDatetime,
+              dueDate: dueDate,
+              remoteUpdatedAt: remoteUpdatedAt,
+              recurringId: recurringId,
+              priority: priority,
+              listId: listId,
+              sectionId: sectionId,
+              origin: origin,
+              sorting: sorting,
+              sortingLabel: sortingLabel,
+              selected: selected,
+              links: _links?.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'links';
+        _links?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'Task', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

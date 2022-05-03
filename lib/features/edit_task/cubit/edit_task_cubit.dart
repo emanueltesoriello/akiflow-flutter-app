@@ -164,4 +164,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(newTask: task));
   }
+
+  void removeLink(String link) {
+    Task task = state.newTask.rebuild((b) => b..links.remove(link));
+
+    emit(state.copyWith(newTask: task));
+  }
 }

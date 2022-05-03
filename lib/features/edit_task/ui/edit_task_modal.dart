@@ -4,6 +4,7 @@ import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_linked_content.dart';
+import 'package:mobile/features/edit_task/ui/edit_task_links.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_row.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_top_actions.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -68,6 +69,7 @@ class _EditTaskModalViewState extends State<EditTaskModalView> {
                         SizedBox(height: 12),
                         Separator(),
                         EditTaskLinkedContent(),
+                        EditTaskLinks(),
                       ],
                     ),
                   ),

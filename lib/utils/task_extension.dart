@@ -238,4 +238,44 @@ extension TaskExt on Task {
 
     return tasks;
   }
+
+  static String iconAssetFromUrl(String? url) {
+    if (url != null) {
+      if (url.contains('asana.com') || url.startsWith('asanadesktop://')) {
+        return 'assets/images/icons/asana/asana.svg';
+      }
+      if (url.contains('notion.so') || url.startsWith('notion://')) {
+        return 'assets/images/icons/notion/notion.svg';
+      }
+      if (url.contains('.todoist.com') || url.startsWith('todoist://')) {
+        return 'assets/images/icons/todoist/todoist.svg';
+      }
+      if (url.contains('.clickup.com') || url.startsWith('clickup://')) {
+        return 'assets/images/icons/clickup/clickup.svg';
+      }
+      if (url.startsWith('superhuman://')) {
+        return 'assets/images/icons/superhuman/superhuman.png';
+      }
+      if (url.contains('mail.google.com')) {
+        return 'assets/images/icons/google/gmail.svg';
+      }
+      if (url.contains('docs.google.com/spreadsheets')) {
+        return 'assets/images/favicons/google-spreadsheets.png';
+      }
+      if (url.contains('docs.google.com/presentation')) {
+        return 'assets/images/favicons/google-presentation.png';
+      }
+      if (url.contains('docs.google.com/document')) {
+        return 'assets/images/favicons/google-document.png';
+      }
+      if (url.contains('docs.google.com/forms')) {
+        return 'assets/images/favicons/google-forms.png';
+      }
+      if (url.contains('google.com')) {
+        return 'assets/images/icons/google/google.svg';
+      }
+    }
+
+    return 'assets/images/icons/_common/circle.svg';
+  }
 }
