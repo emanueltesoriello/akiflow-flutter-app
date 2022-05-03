@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/label/label.dart';
@@ -64,7 +64,7 @@ class _LabelItem extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.read<AddTaskCubit>().setLabel(label);
+        context.read<EditTaskCubit>().setLabel(label);
       },
       child: Container(
         padding: const EdgeInsets.all(8),

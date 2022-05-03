@@ -197,10 +197,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  void open(Task task) {
-    // TODO: EDIT TASK - open task edit page
-  }
-
   void clearSelected() {
     List<Task> all = state.tasks.toList();
 

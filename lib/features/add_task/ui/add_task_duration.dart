@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
 class AddTaskDurationItem extends StatelessWidget {
@@ -12,7 +12,7 @@ class AddTaskDurationItem extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-          child: BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+          child: BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
               double hours = state.selectedDuration ?? 4;
               double minutes = (hours - hours.floor()) * 60;
@@ -29,13 +29,13 @@ class AddTaskDurationItem extends StatelessWidget {
           ),
         ),
         Slider(
-          value: context.watch<AddTaskCubit>().state.selectedDuration ?? 4,
+          value: context.watch<EditTaskCubit>().state.selectedDuration ?? 4,
           min: 0,
           max: 8,
           divisions: 16,
           thumbColor: ColorsExt.background(context),
           onChanged: (double value) {
-            context.read<AddTaskCubit>().setDuration(value);
+            context.read<EditTaskCubit>().setDuration(value);
           },
         ),
         const SizedBox(height: 10),

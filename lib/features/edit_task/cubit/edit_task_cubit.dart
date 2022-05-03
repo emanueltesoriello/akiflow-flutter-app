@@ -9,23 +9,26 @@ import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:uuid/uuid.dart';
 
-part 'add_task_state.dart';
+part 'edit_task_state.dart';
 
-class AddTaskCubit extends Cubit<AddTaskCubitState> {
+class EditTaskCubit extends Cubit<EditTaskCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final SyncControllerService _syncControllerService =
       locator<SyncControllerService>();
 
   final TasksCubit _tasksCubit;
 
-  AddTaskCubit(this._tasksCubit)
+  TaskStatusType? lastDoneTaskStatus;
+
+  EditTaskCubit(this._tasksCubit, {Task? task})
       : super(
-          AddTaskCubitState(
-            newTask: Task().rebuild(
-              (b) => b
-                ..id = const Uuid().v4()
-                ..status = TaskStatusType.inbox.id,
-            ),
+          EditTaskCubitState(
+            newTask: task ??
+                Task().rebuild(
+                  (b) => b
+                    ..id = const Uuid().v4()
+                    ..status = TaskStatusType.inbox.id,
+                ),
           ),
         ) {
     _init();
@@ -63,7 +66,7 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
     _tasksCubit.refreshTasks();
   }
 
-  void selectPlanType(AddTaskPlanType type) {
+  void selectPlanType(EditTaskPlanType type) {
     emit(state.copyWith(planType: type));
   }
 
@@ -72,7 +75,7 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
       (b) => b
         ..date = date.toUtc()
         ..datetime = dateTime?.toUtc()
-        ..status = state.planType == AddTaskPlanType.plan
+        ..status = state.planType == EditTaskPlanType.plan
             ? TaskStatusType.planned.id
             : TaskStatusType.snoozed.id,
     );
@@ -130,5 +133,35 @@ class AddTaskCubit extends Cubit<AddTaskCubitState> {
 
   void setLabel(Label label) {
     emit(state.copyWith(selectedLabel: label, showLabelsList: false));
+  }
+
+  void markAsDone(Task task) {
+    bool done = task.isCompletedComputed;
+
+    if (task.status != TaskStatusType.completed.id) {
+      lastDoneTaskStatus = TaskStatusTypeExt.fromId(task.status);
+    }
+
+    DateTime? now = DateTime.now().toUtc();
+
+    if (!done) {
+      task = task.rebuild(
+        (b) => b
+          ..done = true
+          ..doneAt = now
+          ..updatedAt = now
+          ..status = TaskStatusType.completed.id,
+      );
+    } else {
+      task = task.rebuild(
+        (b) => b
+          ..done = false
+          ..doneAt = null
+          ..updatedAt = now
+          ..status = lastDoneTaskStatus?.id,
+      );
+    }
+
+    emit(state.copyWith(newTask: task));
   }
 }

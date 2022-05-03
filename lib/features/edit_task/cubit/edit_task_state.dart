@@ -1,10 +1,10 @@
-part of 'add_task_cubit.dart';
+part of 'edit_task_cubit.dart';
 
-enum AddTaskPlanType { plan, snooze }
+enum EditTaskPlanType { plan, snooze }
 
-class AddTaskCubitState extends Equatable {
+class EditTaskCubitState extends Equatable {
   final bool loading;
-  final AddTaskPlanType planType;
+  final EditTaskPlanType planType;
   final Task newTask;
   final DateTime? selectedDate;
   final double? selectedDuration;
@@ -12,9 +12,9 @@ class AddTaskCubitState extends Equatable {
   final bool showLabelsList;
   final Label? selectedLabel;
 
-  const AddTaskCubitState({
+  const EditTaskCubitState({
     this.loading = false,
-    this.planType = AddTaskPlanType.plan,
+    this.planType = EditTaskPlanType.plan,
     required this.newTask,
     this.selectedDate,
     this.selectedDuration,
@@ -23,9 +23,9 @@ class AddTaskCubitState extends Equatable {
     this.selectedLabel,
   });
 
-  AddTaskCubitState copyWith({
+  EditTaskCubitState copyWith({
     bool? loading,
-    AddTaskPlanType? planType,
+    EditTaskPlanType? planType,
     Task? newTask,
     DateTime? selectedDate,
     double? selectedDuration,
@@ -33,7 +33,7 @@ class AddTaskCubitState extends Equatable {
     bool? showLabelsList,
     Label? selectedLabel,
   }) {
-    return AddTaskCubitState(
+    return EditTaskCubitState(
       loading: loading ?? this.loading,
       planType: planType ?? this.planType,
       newTask: newTask ?? this.newTask,

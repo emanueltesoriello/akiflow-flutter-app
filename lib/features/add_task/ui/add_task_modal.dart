@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/add_task/ui/add_task_duration.dart';
 import 'package:mobile/features/add_task/ui/add_task_labels.dart';
 import 'package:mobile/features/add_task/ui/plan_modal.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -18,7 +18,7 @@ class AddTaskModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AddTaskCubit(context.read<TasksCubit>()),
+      create: (context) => EditTaskCubit(context.read<TasksCubit>()),
       child: const AddTaskModalView(),
     );
   }
@@ -68,7 +68,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               child: SafeArea(
                 child: Column(
                   children: [
-                    BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+                    BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                       builder: (context, state) {
                         if (state.setDuration) {
                           return const AddTaskDurationItem();
@@ -77,7 +77,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                         }
                       },
                     ),
-                    BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+                    BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                       builder: (context, state) {
                         if (state.showLabelsList) {
                           return const AddTaskLabels();
@@ -90,6 +90,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _title(context),
                           const SizedBox(height: 8),
@@ -97,6 +98,35 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                           const SizedBox(height: 16),
                           _actions(context),
                           const SizedBox(height: 16),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(
+                              onTap: () {
+                                context.read<EditTaskCubit>().create(
+                                    title: _titleController.text,
+                                    description: _descriptionController.text);
+
+                                Navigator.pop(context);
+                              },
+                              borderRadius: BorderRadius.circular(8),
+                              child: Material(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(8),
+                                child: SizedBox(
+                                  height: 36,
+                                  width: 36,
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      "assets/images/icons/_common/paperplane_send.svg",
+                                      width: 24,
+                                      height: 24,
+                                      color: Theme.of(context).backgroundColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -110,21 +140,21 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
     );
   }
 
-  Row _actions(BuildContext context) {
-    return Row(
+  Widget _actions(BuildContext context) {
+    return Wrap(
       children: [
         _plannedFor(context),
         const SizedBox(width: 8),
         AddTaskActionItem(
           leadingIconAsset: "assets/images/icons/_common/hourglass.svg",
           color: ColorsExt.grey6(context),
-          active: context.watch<AddTaskCubit>().state.setDuration,
+          active: context.watch<EditTaskCubit>().state.setDuration,
           onPressed: () {
-            context.read<AddTaskCubit>().toggleDuration();
+            context.read<EditTaskCubit>().toggleDuration();
           },
         ),
         const SizedBox(width: 8),
-        BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+        BlocBuilder<EditTaskCubit, EditTaskCubitState>(
           builder: (context, state) {
             Color? background;
 
@@ -141,38 +171,10 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               active: true,
               text: state.selectedLabel?.title ?? t.addTask.label,
               onPressed: () {
-                context.read<AddTaskCubit>().toggleLabels();
+                context.read<EditTaskCubit>().toggleLabels();
               },
             );
           },
-        ),
-        const Spacer(),
-        const SizedBox(width: 8),
-        InkWell(
-          onTap: () {
-            context.read<AddTaskCubit>().create(
-                title: _titleController.text,
-                description: _descriptionController.text);
-
-            Navigator.pop(context);
-          },
-          borderRadius: BorderRadius.circular(8),
-          child: Material(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(8),
-            child: SizedBox(
-              height: 36,
-              width: 36,
-              child: Center(
-                child: SvgPicture.asset(
-                  "assets/images/icons/_common/paperplane_send.svg",
-                  width: 24,
-                  height: 24,
-                  color: Theme.of(context).backgroundColor,
-                ),
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -193,7 +195,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
       ),
       style: TextStyle(
         color: ColorsExt.grey2(context),
-        fontSize: 20,
+        fontSize: 17,
         fontWeight: FontWeight.w500,
       ),
     );
@@ -223,13 +225,13 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
   }
 
   Widget _plannedFor(BuildContext context) {
-    return BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         String leadingIconAsset;
         String text;
         Color color;
 
-        if (state.planType == AddTaskPlanType.plan) {
+        if (state.planType == EditTaskPlanType.plan) {
           color = ColorsExt.cyan25(context);
           leadingIconAsset = "assets/images/icons/_common/calendar.svg";
         } else {
@@ -272,7 +274,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
           onPressed: () {
             FocusManager.instance.primaryFocus?.unfocus();
 
-            AddTaskCubit cubit = context.read<AddTaskCubit>();
+            EditTaskCubit cubit = context.read<EditTaskCubit>();
 
             showModalBottomSheet(
               context: context,

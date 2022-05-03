@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/features/add_task/cubit/add_task_cubit.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -23,7 +23,7 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
 
     return Column(
       children: [
-        BlocBuilder<AddTaskCubit, AddTaskCubitState>(
+        BlocBuilder<EditTaskCubit, EditTaskCubitState>(
           builder: (context, state) {
             return TableCalendar(
               onCalendarCreated: (pageController) {
@@ -36,7 +36,7 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
                 return isSameDay(state.selectedDate, day);
               },
               onDaySelected: (selectedDay, focusedDay) {
-                context.read<AddTaskCubit>().selectDate(selectedDay);
+                context.read<EditTaskCubit>().selectDate(selectedDay);
               },
               headerStyle: const HeaderStyle(
                 leftChevronVisible: false,
@@ -167,10 +167,10 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
         InkWell(
           onTap: () {
             DateTime? selectedDate =
-                context.read<AddTaskCubit>().state.selectedDate;
+                context.read<EditTaskCubit>().state.selectedDate;
 
             if (selectedDate != null) {
-              context.read<AddTaskCubit>().planFor(selectedDate);
+              context.read<EditTaskCubit>().planFor(selectedDate);
               Navigator.pop(context);
             }
           },
