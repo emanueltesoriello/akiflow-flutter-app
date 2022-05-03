@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 65 
  *
- * Built on 2022-05-02 at 13:04 UTC
+ * Built on 2022-05-03 at 07:57 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -358,8 +358,8 @@ class _StringsNoticeEn {
 	final _StringsEn _root;
 
 	// Translations
-	String get inboxTitle => 'Inbox is where magic happens';
-	String get inboxSubtitle => 'In Inbox you will find all the tasks';
+	String get inboxTitle => 'Here is where the magic happens';
+	String get inboxSubtitle => 'Inbox is where all your new tasks are collected';
 }
 
 // Path: settings
@@ -481,8 +481,8 @@ extension on _StringsEn {
 			'bottomBar.inbox': 'Inbox',
 			'bottomBar.today': 'Today',
 			'bottomBar.calendar': 'Calendar',
-			'notice.inboxTitle': 'Inbox is where magic happens',
-			'notice.inboxSubtitle': 'In Inbox you will find all the tasks',
+			'notice.inboxTitle': 'Here is where the magic happens',
+			'notice.inboxSubtitle': 'Inbox is where all your new tasks are collected',
 			'settings.title': 'Settings',
 			'settings.logout': 'Log out',
 			'settings.upgradeToPro': 'Upgrade to pro',
