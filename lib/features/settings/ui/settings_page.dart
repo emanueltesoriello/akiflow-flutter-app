@@ -164,7 +164,13 @@ class SettingsPage extends StatelessWidget {
                   ),
                   BlocBuilder<SettingsCubit, SettingsCubitState>(
                     builder: (context, state) {
-                      return Text(state.appVersion ?? "");
+                      return Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          state.appVersion ?? "",
+                          textAlign: TextAlign.end,
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 16),
