@@ -44,7 +44,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 active: task.duration != null,
                 text: text,
                 onPressed: () {
-                  context.read<EditTaskCubit>().toggleDuration();
+                  // TODO edit duration
                 },
               );
             },

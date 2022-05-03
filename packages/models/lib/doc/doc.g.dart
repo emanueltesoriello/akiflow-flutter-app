@@ -103,6 +103,12 @@ class _$DocSerializer implements StructuredSerializer<Doc> {
       ..add('remote_updated_at')
       ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
+    value = object.content;
+
+    result
+      ..add('content')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(Content)));
 
     return result;
   }
@@ -174,6 +180,10 @@ class _$DocSerializer implements StructuredSerializer<Doc> {
           result.remoteUpdatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
+        case 'content':
+          result.content.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Content))! as Content);
+          break;
       }
     }
 
@@ -210,6 +220,8 @@ class _$Doc extends Doc {
   final DateTime? globalCreatedAt;
   @override
   final DateTime? remoteUpdatedAt;
+  @override
+  final Content? content;
 
   factory _$Doc([void Function(DocBuilder)? updates]) =>
       (new DocBuilder()..update(updates)).build();
@@ -228,7 +240,8 @@ class _$Doc extends Doc {
       this.deletedAt,
       this.globalUpdatedAt,
       this.globalCreatedAt,
-      this.remoteUpdatedAt})
+      this.remoteUpdatedAt,
+      this.content})
       : super._();
 
   @override
@@ -255,7 +268,8 @@ class _$Doc extends Doc {
         deletedAt == other.deletedAt &&
         globalUpdatedAt == other.globalUpdatedAt &&
         globalCreatedAt == other.globalCreatedAt &&
-        remoteUpdatedAt == other.remoteUpdatedAt;
+        remoteUpdatedAt == other.remoteUpdatedAt &&
+        content == other.content;
   }
 
   @override
@@ -272,20 +286,22 @@ class _$Doc extends Doc {
                                         $jc(
                                             $jc(
                                                 $jc(
-                                                    $jc($jc(0, id.hashCode),
-                                                        taskId.hashCode),
-                                                    connectorId.hashCode),
-                                                originId.hashCode),
-                                            accountId.hashCode),
-                                        url.hashCode),
-                                    localUrl.hashCode),
-                                type.hashCode),
-                            icon.hashCode),
-                        updatedAt.hashCode),
-                    deletedAt.hashCode),
-                globalUpdatedAt.hashCode),
-            globalCreatedAt.hashCode),
-        remoteUpdatedAt.hashCode));
+                                                    $jc(
+                                                        $jc($jc(0, id.hashCode),
+                                                            taskId.hashCode),
+                                                        connectorId.hashCode),
+                                                    originId.hashCode),
+                                                accountId.hashCode),
+                                            url.hashCode),
+                                        localUrl.hashCode),
+                                    type.hashCode),
+                                icon.hashCode),
+                            updatedAt.hashCode),
+                        deletedAt.hashCode),
+                    globalUpdatedAt.hashCode),
+                globalCreatedAt.hashCode),
+            remoteUpdatedAt.hashCode),
+        content.hashCode));
   }
 
   @override
@@ -304,7 +320,8 @@ class _$Doc extends Doc {
           ..add('deletedAt', deletedAt)
           ..add('globalUpdatedAt', globalUpdatedAt)
           ..add('globalCreatedAt', globalCreatedAt)
-          ..add('remoteUpdatedAt', remoteUpdatedAt))
+          ..add('remoteUpdatedAt', remoteUpdatedAt)
+          ..add('content', content))
         .toString();
   }
 }
@@ -371,6 +388,10 @@ class DocBuilder implements Builder<Doc, DocBuilder> {
   set remoteUpdatedAt(DateTime? remoteUpdatedAt) =>
       _$this._remoteUpdatedAt = remoteUpdatedAt;
 
+  ContentBuilder? _content;
+  ContentBuilder get content => _$this._content ??= new ContentBuilder();
+  set content(ContentBuilder? content) => _$this._content = content;
+
   DocBuilder();
 
   DocBuilder get _$this {
@@ -390,6 +411,7 @@ class DocBuilder implements Builder<Doc, DocBuilder> {
       _globalUpdatedAt = $v.globalUpdatedAt;
       _globalCreatedAt = $v.globalCreatedAt;
       _remoteUpdatedAt = $v.remoteUpdatedAt;
+      _content = $v.content?.toBuilder();
       _$v = null;
     }
     return this;
@@ -408,22 +430,36 @@ class DocBuilder implements Builder<Doc, DocBuilder> {
 
   @override
   _$Doc build() {
-    final _$result = _$v ??
-        new _$Doc._(
-            id: id,
-            taskId: taskId,
-            connectorId: connectorId,
-            originId: originId,
-            accountId: accountId,
-            url: url,
-            localUrl: localUrl,
-            type: type,
-            icon: icon,
-            updatedAt: updatedAt,
-            deletedAt: deletedAt,
-            globalUpdatedAt: globalUpdatedAt,
-            globalCreatedAt: globalCreatedAt,
-            remoteUpdatedAt: remoteUpdatedAt);
+    _$Doc _$result;
+    try {
+      _$result = _$v ??
+          new _$Doc._(
+              id: id,
+              taskId: taskId,
+              connectorId: connectorId,
+              originId: originId,
+              accountId: accountId,
+              url: url,
+              localUrl: localUrl,
+              type: type,
+              icon: icon,
+              updatedAt: updatedAt,
+              deletedAt: deletedAt,
+              globalUpdatedAt: globalUpdatedAt,
+              globalCreatedAt: globalCreatedAt,
+              remoteUpdatedAt: remoteUpdatedAt,
+              content: _content?.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'content';
+        _content?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'Doc', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

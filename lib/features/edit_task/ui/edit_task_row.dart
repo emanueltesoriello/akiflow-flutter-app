@@ -39,7 +39,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     Task task = context.watch<EditTaskCubit>().state.newTask;
 
     return Container(
-      constraints: const BoxConstraints(minHeight: 78),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       color: (task.selected ?? false)
           ? ColorsExt.grey6(context)
           : Colors.transparent,
@@ -70,7 +70,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
       maxLines: null,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.only(bottom: 16),
         isDense: true,
         hintText: t.addTask.descriptionHint,
         border: InputBorder.none,
@@ -90,33 +89,20 @@ class _EditTaskRowState extends State<EditTaskRow> {
   Widget _thirdLine(BuildContext context) {
     Task task = context.watch<EditTaskCubit>().state.newTask;
 
-    return Column(
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Builder(builder: (context) {
-          if (task.statusType == null &&
-              task.isOverdue &&
-              task.listId == null) {
+          if (task.statusType == null) {
+            return const SizedBox();
+          }
+          if (task.statusType == TaskStatusType.inbox) {
             return const SizedBox();
           }
 
-          return const SizedBox(height: 10.5);
+          return _status(context);
         }),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Builder(builder: (context) {
-              if (task.statusType == null) {
-                return const SizedBox();
-              }
-              if (task.statusType == TaskStatusType.inbox) {
-                return const SizedBox();
-              }
-
-              return _status(context);
-            }),
-            _label(context),
-          ],
-        ),
+        _label(context),
       ],
     );
   }
@@ -165,27 +151,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
         );
       }),
     );
-  }
-
-  Widget _overdue(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
-
-    if (task.isOverdue) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            "assets/images/icons/_common/Clock_alert.svg",
-            width: 20,
-            height: 20,
-            color: ColorsExt.red(context),
-          ),
-          const SizedBox(width: 4),
-        ],
-      );
-    }
-
-    return const SizedBox();
   }
 
   Widget _status(BuildContext context) {

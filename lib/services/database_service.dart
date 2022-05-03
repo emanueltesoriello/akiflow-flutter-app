@@ -179,7 +179,10 @@ CREATE TABLE IF NOT EXISTS docs(
   `created_at` TEXT,
   `updated_at` TEXT,
   `deleted_at` TEXT,
-  `remote_updated_at` TEXT
+  `remote_updated_at` TEXT,
+  `from` TEXT,
+  `internalDate` TEXT,
+  `initialSyncMode` INTEGER
 )
     ''');
     await txn.execute(

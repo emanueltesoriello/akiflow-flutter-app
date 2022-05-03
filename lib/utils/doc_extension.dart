@@ -11,6 +11,8 @@ extension DocExt on Doc {
         return "assets/images/icons/dropbox/dropbox.svg";
       case "google":
         return "assets/images/icons/google/google.svg";
+      case "gmail":
+        return "assets/images/icons/google/gmail.svg";
       case "jira":
         return "assets/images/icons/jira/jira.svg";
       case "skype":

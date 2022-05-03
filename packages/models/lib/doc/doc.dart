@@ -1,6 +1,7 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:models/base.dart';
+import 'package:models/content.dart';
 import 'package:models/serializers.dart';
 
 part 'doc.g.dart';
@@ -48,6 +49,9 @@ abstract class Doc extends Object with Base implements Built<Doc, DocBuilder> {
   @BuiltValueField(wireName: 'remote_updated_at')
   DateTime? get remoteUpdatedAt;
 
+  @BuiltValueField(wireName: 'content')
+  Content? get content;
+
   Doc._();
 
   factory Doc([void Function(DocBuilder) updates]) = _$Doc;
@@ -85,14 +89,23 @@ abstract class Doc extends Object with Base implements Built<Doc, DocBuilder> {
       "updated_at": globalUpdatedAt?.toIso8601String(),
       "created_at": globalCreatedAt?.toIso8601String(),
       "deleted_at": deletedAt?.toIso8601String(),
-      "remote_updated_at": globalUpdatedAt?.toIso8601String()
+      "remote_updated_at": globalUpdatedAt?.toIso8601String(),
+      "from": content?.from,
+      "internalDate": content?.internalDate,
+      "initialSyncMode": content?.initialSyncMode,
     };
   }
 
   static Doc fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
-    return serializers.deserializeWith(Doc.serializer, data)!;
+    Content content = Content.fromSql(data);
+
+    Doc doc = serializers.deserializeWith(Doc.serializer, data)!;
+
+    doc = doc.rebuild((d) => d..content = content.toBuilder());
+
+    return doc;
   }
 
   @BuiltValueSerializer(serializeNulls: true)

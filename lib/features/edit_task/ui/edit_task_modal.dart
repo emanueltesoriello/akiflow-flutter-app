@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/edit_task_linked_content.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_row.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_top_actions.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -54,25 +55,19 @@ class _EditTaskModalViewState extends State<EditTaskModalView> {
                   Expanded(
                     child: ListView(
                       controller: scrollController,
-                      children: [
-                        const SizedBox(height: 12),
-                        const ScrollChip(),
-                        const SizedBox(height: 12),
-                        const Padding(
+                      children: const [
+                        SizedBox(height: 12),
+                        ScrollChip(),
+                        SizedBox(height: 12),
+                        Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
                           child: EditTaskTopActions(),
                         ),
-                        const SizedBox(height: 12),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                            builder: (context, state) {
-                              return const EditTaskRow();
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        const Separator(),
+                        SizedBox(height: 12),
+                        EditTaskRow(),
+                        SizedBox(height: 12),
+                        Separator(),
+                        EditTaskLinkedContent(),
                       ],
                     ),
                   ),
