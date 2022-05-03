@@ -30,18 +30,17 @@ class AddTaskActionItem extends StatelessWidget {
           color: active ? color : ColorsExt.grey7(context),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Center(
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                leadingIconAsset,
-                width: 22,
-                height: 22,
-                color: leadingIconColor ?? ColorsExt.grey2(context),
-              ),
-              _text(context),
-            ],
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              leadingIconAsset,
+              width: 22,
+              height: 22,
+              color: leadingIconColor ?? ColorsExt.grey2(context),
+            ),
+            Flexible(child: _text(context)),
+          ],
         ),
       ),
     );
@@ -53,14 +52,17 @@ class AddTaskActionItem extends StatelessWidget {
     }
 
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(width: 6),
-        Text(
-          text!,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-            color: ColorsExt.grey2(context),
+        Flexible(
+          child: Text(
+            text!,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey2(context),
+            ),
           ),
         ),
       ],
