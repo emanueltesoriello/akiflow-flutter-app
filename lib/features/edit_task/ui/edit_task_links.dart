@@ -5,6 +5,7 @@ import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EditTaskLinks extends StatelessWidget {
   const EditTaskLinks({Key? key}) : super(key: key);
@@ -34,33 +35,38 @@ class EditTaskLinks extends StatelessWidget {
 
                 return Row(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        color: ColorsExt.grey6(context),
-                      ),
-                      padding: const EdgeInsets.all(6),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            iconAsset,
-                            width: 22,
-                            height: 22,
-                          ),
-                          const SizedBox(width: 9),
-                          Flexible(
-                            child: Text(
-                              link,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: ColorsExt.grey3(context),
-                              ),
+                    InkWell(
+                      onTap: () {
+                        launch(link);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3),
+                          color: ColorsExt.grey6(context),
+                        ),
+                        padding: const EdgeInsets.all(6),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              iconAsset,
+                              width: 22,
+                              height: 22,
                             ),
-                          )
-                        ],
+                            const SizedBox(width: 9),
+                            Flexible(
+                              child: Text(
+                                link,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: ColorsExt.grey3(context),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     const Spacer(),
