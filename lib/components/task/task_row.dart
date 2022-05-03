@@ -9,6 +9,7 @@ import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/components/base/button_action.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
+import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
@@ -52,7 +53,12 @@ class TaskRow extends StatelessWidget {
       endActionPane: _endActions(context),
       child: InkWell(
         onTap: () {
-          context.read<TasksCubit>().open(task);
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            builder: (context) => EditTaskModal(task: task),
+          );
         },
         child: Container(
           constraints: const BoxConstraints(minHeight: 78),
