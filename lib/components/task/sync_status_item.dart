@@ -22,6 +22,17 @@ class SyncStatusItem extends StatelessWidget {
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
+              Builder(builder: (context) {
+                if (state.loading == false) {
+                  return const SizedBox();
+                }
+
+                return const SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: CircularProgressIndicator(strokeWidth: 1),
+                );
+              }),
             ],
           ),
         );

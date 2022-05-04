@@ -39,6 +39,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
+      emit(state.copyWith(loading: true));
+
       emit(state.copyWith(syncStatus: "start sync"));
 
       await _syncControllerService.syncAll(syncStatus: (status) {
@@ -47,6 +49,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
       });
 
       await refreshTasks();
+
+      emit(state.copyWith(loading: false));
     }
   }
 
