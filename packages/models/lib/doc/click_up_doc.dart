@@ -27,20 +27,20 @@ class ClickupDoc extends Doc implements DocBase {
   @override
   String get getLinkedContentSummary {
     final summaryPieces = [];
-    if (content?["teamName"]) {
+    if (content?["teamName"] != null && content?["teamName"] != '') {
       summaryPieces.add(content?["teamName"]);
     }
-    if (content?["spaceName"]) {
+    if (content?["spaceName"] != null && content?["spaceName"] != '') {
       summaryPieces.add(content?["spaceName"]);
     }
-    if (content?["folderName"]) {
+    if (content?["folderName"] != null && content?["folderName"] != '') {
       summaryPieces.add(content?["folderName"]);
     }
-    if (content?["listName"]) {
+    if (content?["listName"] != null && content?["listName"] != '') {
       summaryPieces.add(content?["listName"]);
     }
-    if (content?["parentTaskName"]) {
-      summaryPieces.add(content?["parentTaskName"]);
+    if (title != null && title != '') {
+      summaryPieces.add(title);
     }
     return summaryPieces.join(' - ');
   }

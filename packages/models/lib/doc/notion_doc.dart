@@ -25,7 +25,7 @@ class NotionDoc extends Doc implements DocBase {
         );
   @override
   String get getLinkedContentSummary {
-    return content?["workspaceName"] != null ? content!["workspaceName"] : '';
+    return content?["workspaceName"] ?? '';
   }
 
   @override

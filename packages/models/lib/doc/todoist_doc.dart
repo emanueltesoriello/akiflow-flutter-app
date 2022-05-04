@@ -23,18 +23,29 @@ class TodoistDoc extends Doc implements DocBase {
           remoteUpdatedAt: doc.remoteUpdatedAt,
           content: doc.content,
         );
+
+  @override
+  String get getSummary {
+    return (content?["parentTaskTitle"] ?? content?["projectName"]) ??
+        super.getSummary;
+  }
+
   @override
   String get getLinkedContentSummary {
     final summaryPieces = [];
-    if (content?["projectName"]) {
+
+    if (content?["projectName"] != null && content?["projectName"] != '') {
       summaryPieces.add(content?["projectName"]);
     }
-    if (content?["parentTaskTitle"]) {
-      summaryPieces.add(content?["parentTaskTitle"]);
+
+    if (title != null && title != '') {
+      summaryPieces.add(title);
     }
-    if (content?["title"]) {
+
+    if (content?["title"] != null && content?["title"] != '') {
       summaryPieces.add(content?["title"]);
     }
+
     return summaryPieces.join(' - ');
   }
 }

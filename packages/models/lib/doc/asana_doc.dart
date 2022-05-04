@@ -27,14 +27,14 @@ class AsanaDoc extends Doc implements DocBase {
   @override
   String get getLinkedContentSummary {
     final summaryPieces = [];
-    if (content?["workspaceName"]) {
+    if (content?["workspaceName"] != null && content?["workspaceName"] != '') {
       summaryPieces.add(content?["workspaceName"]);
     }
-    if (content?["projectName"]) {
+    if (content?["projectName"] != null && content?["projectName"] != '') {
       summaryPieces.add(content?["projectName"]);
     }
-    if (content?["parentTaskTitle"]) {
-      summaryPieces.add(content?["parentTaskTitle"]);
+    if (title != null && title != '') {
+      summaryPieces.add(title);
     }
     return summaryPieces.join(' - ');
   }
