@@ -65,10 +65,12 @@ class Api implements IBaseApi {
 
         response = jsonDecode(responseRaw.body);
 
-        items = response["data"];
+        if (response.containsKey("data") && response["data"] != null) {
+          items = response["data"];
 
-        for (dynamic item in items) {
-          result.add(fromMap(item));
+          for (dynamic item in items) {
+            result.add(fromMap(item));
+          }
         }
       }
     }
