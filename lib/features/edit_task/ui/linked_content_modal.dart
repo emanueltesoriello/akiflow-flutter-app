@@ -4,7 +4,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/content_ext.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:models/doc/doc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,45 +41,49 @@ class LinkedContentModal extends StatelessWidget {
                     const SizedBox(height: 12),
                     const ScrollChip(),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      height: 58,
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            doc.computedIcon,
-                            width: 18,
-                            height: 18,
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              doc.getLinkedContentSummary,
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey2(context)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     Column(
                       children: [
-                        _item(
-                          context,
-                          title: t.linkedContent.subject,
-                          value: doc.title ?? t.task.noTitle,
+                        SizedBox(
+                          height: 58,
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                doc.computedIcon,
+                                width: 18,
+                                height: 18,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  doc.getSummary,
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorsExt.grey2(context)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        _item(
-                          context,
-                          title: t.linkedContent.from,
-                          value: doc.content?.from ?? '',
-                        ),
-                        _item(
-                          context,
-                          title: t.linkedContent.date,
-                          value: doc.content?.internalDateFormatted ?? '',
-                        ),
+                        // Column(
+                        //   children: [
+                        //     _item(
+                        //       context,
+                        //       title: t.linkedContent.subject,
+                        //       value: doc.title ?? t.task.noTitle,
+                        //     ),
+                        //     _item(
+                        //       context,
+                        //       title: t.linkedContent.from,
+                        //       value: doc.content?.from ?? '',
+                        //     ),
+                        //     _item(
+                        //       context,
+                        //       title: t.linkedContent.date,
+                        //       value: doc.content?.internalDateFormatted ?? '',
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ],

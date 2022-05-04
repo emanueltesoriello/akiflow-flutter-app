@@ -9,6 +9,7 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/doc/gmail_doc.dart';
 import 'package:models/task/task.dart';
 
 class EditTaskLinkedContent extends StatelessWidget {
@@ -30,13 +31,15 @@ class EditTaskLinkedContent extends StatelessWidget {
           return const SizedBox();
         }
 
+        GmailDoc gmailDoc = GmailDoc(doc!);
+
         return InkWell(
           onTap: () {
             showModalBottomSheet(
               context: context,
               backgroundColor: Colors.transparent,
               isScrollControlled: true,
-              builder: (context) => LinkedContentModal(doc: doc!),
+              builder: (context) => LinkedContentModal(doc: GmailDoc(doc)),
             );
           },
           child: Column(
@@ -47,14 +50,14 @@ class EditTaskLinkedContent extends StatelessWidget {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      doc!.computedIcon,
+                      gmailDoc.computedIcon,
                       width: 18,
                       height: 18,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        doc.content?.from ?? 'no user',
+                        gmailDoc.getSummary,
                         style: TextStyle(
                             fontSize: 17, color: ColorsExt.grey2(context)),
                       ),

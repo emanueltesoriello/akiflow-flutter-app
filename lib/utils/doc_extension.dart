@@ -1,28 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:models/doc/doc.dart';
 
 extension DocExt on Doc {
-  String get getLinkedContentSummary {
-    final summaryPieces = [];
-    if (content?.from != null && content!.from!.isNotEmpty) {
-      // regexp ^(.*?)\s*<(.*?)>
-      final matches = RegExp(r'^(.*?)\s*<(.*?)>').allMatches(content!.from!);
-
-      String? name = matches.isEmpty ? content!.from : matches.first.group(1);
-      String? email = matches.isEmpty ? content!.from! : matches.first.group(2);
-
-      if (name != null && name.isNotEmpty) {
-        summaryPieces.add(name);
-      } else if (email != null && email.isNotEmpty) {
-        summaryPieces.add(email);
-      }
-    }
-    if (title != null && title!.isNotEmpty) {
-      summaryPieces.add(title);
-    }
-
-    return summaryPieces.join(' - ');
-  }
-
   String get computedIcon {
     switch (connectorId) {
       case "asana":
@@ -60,5 +39,17 @@ extension DocExt on Doc {
       default:
         return "assets/images/icons/_common/info.svg";
     }
+  }
+
+  String? get internalDateFormatted {
+    if (content?["internalDate"] == null) {
+      return null;
+    }
+
+    int millis = int.parse(content!["internalDate"]!);
+
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(millis).toLocal();
+
+    return DateFormat("dd MMM yyyy").format(date);
   }
 }

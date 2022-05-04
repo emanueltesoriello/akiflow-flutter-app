@@ -6,6 +6,7 @@ import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
+import 'package:models/doc/doc.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -104,10 +105,17 @@ class SyncService {
         maxDate = deletedAt;
       }
 
-      item = item.rebuild((t) {
-        t.globalUpdatedAt = maxDate ?? DateTime.now().toUtc();
-        t.updatedAt = maxDate ?? DateTime.now().toUtc();
-      });
+      if (item is Doc) {
+        item = item.copyWith(
+          globalUpdatedAt: maxDate ?? DateTime.now().toUtc(),
+          updatedAt: maxDate ?? DateTime.now().toUtc(),
+        );
+      } else {
+        item = item.rebuild((t) {
+          t.globalUpdatedAt = maxDate ?? DateTime.now().toUtc();
+          t.updatedAt = maxDate ?? DateTime.now().toUtc();
+        });
+      }
 
       unsynced[i] = item;
     }
@@ -152,10 +160,17 @@ class SyncService {
             localTask.updatedAt?.millisecondsSinceEpoch ?? 0;
 
         if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
-          remoteItem = remoteItem.rebuild((t) {
-            t.updatedAt = remoteItem.globalUpdatedAt;
-            t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
-          });
+          if (remoteItem is Doc) {
+            remoteItem = remoteItem.copyWith(
+              globalUpdatedAt: remoteItem.globalUpdatedAt,
+              updatedAt: remoteItem.globalUpdatedAt,
+            );
+          } else {
+            remoteItem = remoteItem.rebuild((t) {
+              t.updatedAt = remoteItem.globalUpdatedAt;
+              t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
+            });
+          }
 
           remoteItems[i] = remoteItem;
 
@@ -168,10 +183,17 @@ class SyncService {
           );
         }
       } else {
-        remoteItem = remoteItem.rebuild((t) {
-          t.updatedAt = remoteItem.globalUpdatedAt;
-          t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
-        });
+        if (remoteItem is Doc) {
+          remoteItem = remoteItem.copyWith(
+            globalUpdatedAt: remoteItem.globalUpdatedAt,
+            updatedAt: remoteItem.globalUpdatedAt,
+          );
+        } else {
+          remoteItem = remoteItem.rebuild((t) {
+            t.updatedAt = remoteItem.globalUpdatedAt;
+            t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
+          });
+        }
 
         remoteItems[i] = remoteItem;
 

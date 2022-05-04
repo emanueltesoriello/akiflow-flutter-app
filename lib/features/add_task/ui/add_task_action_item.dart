@@ -59,9 +59,10 @@ class AddTaskActionItem extends StatelessWidget {
           child: Text(
             text!,
             style: TextStyle(
-              fontSize: 17,
+              fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: ColorsExt.grey2(context),
+              color:
+                  active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
             ),
           ),
         ),
