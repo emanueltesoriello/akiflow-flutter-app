@@ -169,14 +169,6 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             text: t.task.delete,
           ),
         ),
-        PopupMenuItem<EditTaskAdditionalAction>(
-          value: EditTaskAdditionalAction.delete,
-          child: _additionalActionMenuItem(
-            context,
-            iconAsset: "assets/images/icons/_common/trash.svg",
-            text: t.task.delete,
-          ),
-        ),
       ],
     );
   }

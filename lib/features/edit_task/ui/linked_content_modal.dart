@@ -38,6 +38,8 @@ class LinkedContentModal extends StatelessWidget {
             children: [
               Expanded(
                 child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
                     const SizedBox(height: 12),
