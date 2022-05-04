@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:mobile/api/api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
+import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 
@@ -133,6 +134,8 @@ class SyncService {
 
     setSyncStatusIfNotNull("upsert remote items: ${remoteItems.length} to db");
 
+    bool anyInsertErrors = false;
+
     for (int i = 0; i < remoteItems.length; i++) {
       var remoteItem = remoteItems[i];
 
@@ -156,7 +159,7 @@ class SyncService {
 
           remoteItems[i] = remoteItem;
 
-          await _updateLocalTask(id: remoteItem.id!, remoteItem: remoteItem);
+          await databaseRepository.updateById(remoteItem.id!, data: remoteItem);
         } else {
           _sentryService.addBreadcrumb(
             category: "sync",
@@ -172,20 +175,35 @@ class SyncService {
 
         remoteItems[i] = remoteItem;
 
-        await _addRemoteTaskToLocalDb(remoteItem);
+        anyInsertErrors = await _addRemoteTaskToLocalDb(remoteItem);
       }
+    }
+
+    if (anyInsertErrors) {
+      _sentryService
+          .captureException(UpsertDatabaseException("upsert items error"));
     }
 
     setSyncStatusIfNotNull("upsert remote items: done");
   }
 
-  Future<void> _updateLocalTask(
-      {required String id, required var remoteItem}) async {
-    await databaseRepository.updateById(id, data: remoteItem);
-  }
+  Future<bool> _addRemoteTaskToLocalDb(remoteItem) async {
+    try {
+      List<Object?> result = await databaseRepository.add([remoteItem]);
 
-  Future<void> _addRemoteTaskToLocalDb(var remoteItem) async {
-    await databaseRepository.add([remoteItem]);
+      if (result.isEmpty) {
+        throw UpsertDatabaseException('result empty');
+      }
+    } catch (e) {
+      _sentryService.addBreadcrumb(
+        category: "sync",
+        message: '${api.runtimeType}: upsert item $remoteItem, exception: $e',
+      );
+
+      return true;
+    }
+
+    return false;
   }
 
   void setSyncStatusIfNotNull(String message) {

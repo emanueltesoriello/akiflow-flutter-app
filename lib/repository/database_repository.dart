@@ -4,6 +4,7 @@ import 'package:mobile/repository/base_database_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:models/base.dart';
 import 'package:sqflite/sql.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class DatabaseRepository implements IBaseDatabaseRepository {
   final DatabaseService _databaseService = locator<DatabaseService>();
@@ -27,7 +28,8 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     return result;
   }
 
-  Future<void> add<T>(List<T> items) async {
+  @override
+  Future<List<Object?>> add<T>(List<T> items) async {
     var batch = _databaseService.database!.batch();
 
     for (T item in items) {
@@ -38,7 +40,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
       );
     }
 
-    await batch.commit();
+    return await batch.commit();
   }
 
   @override
