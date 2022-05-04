@@ -54,7 +54,7 @@ class LinkedContentModal extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              doc.content?.from ?? 'no user',
+                              doc.getLinkedContentSummary,
                               style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w500,
