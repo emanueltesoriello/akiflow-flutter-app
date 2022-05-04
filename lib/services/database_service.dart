@@ -12,6 +12,10 @@ class DatabaseService {
   DatabaseService();
 
   Future<sql.Database> open() async {
+    if (database != null) {
+      database = null;
+    }
+
     var databsePath = await sql.getDatabasesPath();
     var path = join(databsePath, _databaseName);
 
