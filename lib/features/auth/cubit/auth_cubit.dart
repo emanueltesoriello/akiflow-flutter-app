@@ -78,6 +78,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   void logout() {
+    _sentryService.addBreadcrumb(category: "action", message: "logout");
+
     _preferencesRepository.clear();
 
     _databaseService.delete();
