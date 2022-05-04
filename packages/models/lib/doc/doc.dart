@@ -13,6 +13,9 @@ abstract class Doc extends Object with Base implements Built<Doc, DocBuilder> {
   @BuiltValueField(wireName: 'task_id')
   String? get taskId;
 
+  @BuiltValueField(wireName: 'title')
+  String? get title;
+
   @BuiltValueField(wireName: 'connector_id')
   String? get connectorId;
 

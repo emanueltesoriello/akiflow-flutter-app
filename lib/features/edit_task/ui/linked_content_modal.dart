@@ -4,19 +4,16 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/content_ext.dart';
 import 'package:mobile/utils/doc_extension.dart';
-import 'package:mobile/utils/task_extension.dart';
 import 'package:models/doc/doc.dart';
-import 'package:models/task/task.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LinkedContentModal extends StatelessWidget {
-  final Task task;
   final Doc doc;
 
   const LinkedContentModal({
     Key? key,
-    required this.task,
     required this.doc,
   }) : super(key: key);
 
@@ -72,17 +69,17 @@ class LinkedContentModal extends StatelessWidget {
                         _item(
                           context,
                           title: t.linkedContent.subject,
-                          value: task.title ?? t.task.noTitle,
+                          value: doc.title ?? t.task.noTitle,
                         ),
                         _item(
                           context,
                           title: t.linkedContent.from,
-                          value: doc.content?.from ?? t.task.noTitle,
+                          value: doc.content?.from ?? '',
                         ),
                         _item(
                           context,
                           title: t.linkedContent.date,
-                          value: task.createdAtFormatted,
+                          value: doc.content?.internalDateFormatted ?? '',
                         ),
                       ],
                     ),

@@ -36,10 +36,7 @@ class EditTaskLinkedContent extends StatelessWidget {
               context: context,
               backgroundColor: Colors.transparent,
               isScrollControlled: true,
-              builder: (context) => LinkedContentModal(
-                doc: doc!,
-                task: task,
-              ),
+              builder: (context) => LinkedContentModal(doc: doc!),
             );
           },
           child: Column(

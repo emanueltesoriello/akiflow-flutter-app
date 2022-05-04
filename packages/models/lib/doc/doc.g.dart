@@ -31,6 +31,12 @@ class _$DocSerializer implements StructuredSerializer<Doc> {
       ..add('task_id')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.title;
+
+    result
+      ..add('title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.connectorId;
 
     result
@@ -132,6 +138,10 @@ class _$DocSerializer implements StructuredSerializer<Doc> {
           result.taskId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'title':
+          result.title = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
         case 'connector_id':
           result.connectorId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
@@ -197,6 +207,8 @@ class _$Doc extends Doc {
   @override
   final String? taskId;
   @override
+  final String? title;
+  @override
   final String? connectorId;
   @override
   final String? originId;
@@ -229,6 +241,7 @@ class _$Doc extends Doc {
   _$Doc._(
       {this.id,
       this.taskId,
+      this.title,
       this.connectorId,
       this.originId,
       this.accountId,
@@ -257,6 +270,7 @@ class _$Doc extends Doc {
     return other is Doc &&
         id == other.id &&
         taskId == other.taskId &&
+        title == other.title &&
         connectorId == other.connectorId &&
         originId == other.originId &&
         accountId == other.accountId &&
@@ -287,8 +301,12 @@ class _$Doc extends Doc {
                                             $jc(
                                                 $jc(
                                                     $jc(
-                                                        $jc($jc(0, id.hashCode),
-                                                            taskId.hashCode),
+                                                        $jc(
+                                                            $jc(
+                                                                $jc(0,
+                                                                    id.hashCode),
+                                                                taskId.hashCode),
+                                                            title.hashCode),
                                                         connectorId.hashCode),
                                                     originId.hashCode),
                                                 accountId.hashCode),
@@ -309,6 +327,7 @@ class _$Doc extends Doc {
     return (newBuiltValueToStringHelper('Doc')
           ..add('id', id)
           ..add('taskId', taskId)
+          ..add('title', title)
           ..add('connectorId', connectorId)
           ..add('originId', originId)
           ..add('accountId', accountId)
@@ -336,6 +355,10 @@ class DocBuilder implements Builder<Doc, DocBuilder> {
   String? _taskId;
   String? get taskId => _$this._taskId;
   set taskId(String? taskId) => _$this._taskId = taskId;
+
+  String? _title;
+  String? get title => _$this._title;
+  set title(String? title) => _$this._title = title;
 
   String? _connectorId;
   String? get connectorId => _$this._connectorId;
@@ -399,6 +422,7 @@ class DocBuilder implements Builder<Doc, DocBuilder> {
     if ($v != null) {
       _id = $v.id;
       _taskId = $v.taskId;
+      _title = $v.title;
       _connectorId = $v.connectorId;
       _originId = $v.originId;
       _accountId = $v.accountId;
@@ -436,6 +460,7 @@ class DocBuilder implements Builder<Doc, DocBuilder> {
           new _$Doc._(
               id: id,
               taskId: taskId,
+              title: title,
               connectorId: connectorId,
               originId: originId,
               accountId: accountId,
