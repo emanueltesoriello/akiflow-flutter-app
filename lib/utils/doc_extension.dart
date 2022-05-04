@@ -22,7 +22,7 @@ extension DocExt on Doc {
         return "assets/images/icons/teams/teams.svg";
       case "notion":
         // TODO icon notion svg not supported
-        return "";
+        return "assets/images/icons/_common/info.svg";
         return "assets/images/icons/notion/notion.svg";
       case "slack":
         return "assets/images/icons/slack/slack.svg";
