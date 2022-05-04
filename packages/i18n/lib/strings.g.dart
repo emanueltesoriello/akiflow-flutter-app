@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 73 
+ * Strings: 88 
  *
- * Built on 2022-05-04 at 09:57 UTC
+ * Built on 2022-05-04 at 16:52 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -476,6 +476,21 @@ class _StringsLinkedContentEn {
 	String get from => 'From:';
 	String get date => 'Date:';
 	String get open => 'Open';
+	String get parentTask => 'Parent task';
+	String get project => 'Project';
+	String get workspace => 'Workspace';
+	String get title => 'Title';
+	String get space => 'Space';
+	String get folder => 'Folder';
+	String get list => 'List';
+	String get created => 'Created';
+	String get lastEdit => 'Last edit';
+	String get channel => 'Channel';
+	String get message => 'Message';
+	String get user => 'User';
+	String get starredAt => 'Starred at';
+	String get dueDate => 'Due date';
+	String get board => 'Board';
 }
 
 /// Flat map(s) containing all translations.
@@ -557,6 +572,21 @@ extension on _StringsEn {
 			'linkedContent.from': 'From:',
 			'linkedContent.date': 'Date:',
 			'linkedContent.open': 'Open',
+			'linkedContent.parentTask': 'Parent task',
+			'linkedContent.project': 'Project',
+			'linkedContent.workspace': 'Workspace',
+			'linkedContent.title': 'Title',
+			'linkedContent.space': 'Space',
+			'linkedContent.folder': 'Folder',
+			'linkedContent.list': 'List',
+			'linkedContent.created': 'Created',
+			'linkedContent.lastEdit': 'Last edit',
+			'linkedContent.channel': 'Channel',
+			'linkedContent.message': 'Message',
+			'linkedContent.user': 'User',
+			'linkedContent.starredAt': 'Starred at',
+			'linkedContent.dueDate': 'Due date',
+			'linkedContent.board': 'Board',
 		};
 	}
 }

@@ -88,6 +88,21 @@
     "subject": "Subject:",
     "from": "From:",
     "date": "Date:",
-    "open": "Open"
+    "open": "Open",
+    "parentTask": "Parent task",
+    "project": "Project",
+    "workspace": "Workspace",
+    "title": "Title",
+    "space": "Space",
+    "folder": "Folder",
+    "list": "List",
+    "created": "Created",
+    "lastEdit": "Last edit",
+    "channel": "Channel",
+    "message": "Message",
+    "user": "User",
+    "starredAt": "Starred at",
+    "dueDate": "Due date",
+    "board": "Board"
   }
 }

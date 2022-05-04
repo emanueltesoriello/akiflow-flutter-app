@@ -21,6 +21,8 @@ extension DocExt on Doc {
       case "teams":
         return "assets/images/icons/teams/teams.svg";
       case "notion":
+        // TODO icon notion svg not supported
+        return "";
         return "assets/images/icons/notion/notion.svg";
       case "slack":
         return "assets/images/icons/slack/slack.svg";
@@ -51,5 +53,54 @@ extension DocExt on Doc {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(millis).toLocal();
 
     return DateFormat("dd MMM yyyy").format(date);
+  }
+
+  String? get dueDateTimeFormatted {
+    if (content?["dueDateTime"] != null) {
+      return content?["dueDateTime"];
+    }
+
+    if (content?["dueDate"] != null) {
+      return content?["dueDate"];
+    }
+
+    return '';
+  }
+
+  String? get createdAtFormatted {
+    if (content?["createdAt"] != null) {
+      return DateFormat("dd MMM yyyy")
+          .format(DateTime.parse(content!["createdAt"]!).toLocal());
+    }
+
+    return '';
+  }
+
+  String? get modifiedAtFormatted {
+    if (content?["modifiedAt"] != null) {
+      return DateFormat("dd MMM yyyy")
+          .format(DateTime.parse(content!["modifiedAt"]!).toLocal());
+    }
+
+    return '';
+  }
+
+  String? get starredAtFormatted {
+    if (content?["starredAt"] != null) {
+      return DateFormat("dd MMM yyyy").format(
+          DateTime.fromMillisecondsSinceEpoch(content!["starredAt"]! * 1000)
+              .toLocal());
+    }
+
+    return '';
+  }
+
+  String? get dueFormatted {
+    if (content?["due"] != null) {
+      return DateFormat("dd MMM yyyy")
+          .format(DateTime.parse(content!["due"]!).toLocal());
+    }
+
+    return '';
   }
 }

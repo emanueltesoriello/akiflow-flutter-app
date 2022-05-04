@@ -3,16 +3,33 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
+import 'package:mobile/features/edit_task/ui/integrations/asana.dart';
+import 'package:mobile/features/edit_task/ui/integrations/clickup.dart';
+import 'package:mobile/features/edit_task/ui/integrations/gmail.dart';
+import 'package:mobile/features/edit_task/ui/integrations/notion.dart';
+import 'package:mobile/features/edit_task/ui/integrations/slack.dart';
+import 'package:mobile/features/edit_task/ui/integrations/todoist.dart';
+import 'package:mobile/features/edit_task/ui/integrations/trello.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
+import 'package:models/doc/asana_doc.dart';
+import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/doc/gmail_doc.dart';
+import 'package:models/doc/notion_doc.dart';
+import 'package:models/doc/slack_doc.dart';
+import 'package:models/doc/todoist_doc.dart';
+import 'package:models/doc/trello_doc.dart';
+import 'package:models/task/task.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LinkedContentModal extends StatelessWidget {
+  final Task task;
   final Doc doc;
 
   const LinkedContentModal({
     Key? key,
+    required this.task,
     required this.doc,
   }) : super(key: key);
 
@@ -55,7 +72,7 @@ class LinkedContentModal extends StatelessWidget {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  doc.getSummary,
+                                  doc.getLinkedContentSummary,
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w500,
@@ -65,25 +82,33 @@ class LinkedContentModal extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // Column(
-                        //   children: [
-                        //     _item(
-                        //       context,
-                        //       title: t.linkedContent.subject,
-                        //       value: doc.title ?? t.task.noTitle,
-                        //     ),
-                        //     _item(
-                        //       context,
-                        //       title: t.linkedContent.from,
-                        //       value: doc.content?.from ?? '',
-                        //     ),
-                        //     _item(
-                        //       context,
-                        //       title: t.linkedContent.date,
-                        //       value: doc.content?.internalDateFormatted ?? '',
-                        //     ),
-                        //   ],
-                        // ),
+                        Builder(
+                          builder: (context) {
+                            if (doc is AsanaDoc) {
+                              return AsanaLinkedContent(
+                                  doc: doc, itemBuilder: _item, task: task);
+                            } else if (doc is GmailDoc) {
+                              return GmailLinkedContent(
+                                  doc: doc, itemBuilder: _item);
+                            } else if (doc is SlackDoc) {
+                              return SlackLinkedContent(
+                                  task: task, doc: doc, itemBuilder: _item);
+                            } else if (doc is TodoistDoc) {
+                              return TodoistLinkedContent(
+                                  task: task, doc: doc, itemBuilder: _item);
+                            } else if (doc is TrelloDoc) {
+                              return TrelloLinkedContent(
+                                  doc: doc, task: task, itemBuilder: _item);
+                            } else if (doc is ClickupDoc) {
+                              return ClickupLinkedContent(
+                                  doc: doc, task: task, itemBuilder: _item);
+                            } else if (doc is NotionDoc) {
+                              return NotionLinkedContent(
+                                  task: task, doc: doc, itemBuilder: _item);
+                            }
+                            return const SizedBox();
+                          },
+                        ),
                       ],
                     ),
                   ],

@@ -72,7 +72,10 @@ class EditTaskLinkedContent extends StatelessWidget {
               context: context,
               backgroundColor: Colors.transparent,
               isScrollControlled: true,
-              builder: (context) => LinkedContentModal(doc: GmailDoc(doc)),
+              builder: (context) => LinkedContentModal(
+                task: task,
+                doc: docWithType,
+              ),
             );
           },
           child: Column(
