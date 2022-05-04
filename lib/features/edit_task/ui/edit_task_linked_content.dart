@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/linked_content_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
@@ -25,54 +26,57 @@ class EditTaskLinkedContent extends StatelessWidget {
           (doc) => doc.taskId == task.id,
         );
 
-        if ((task.description == null || task.description!.isEmpty) &&
-            doc == null) {
+        if (doc?.content == null) {
           return const SizedBox();
         }
 
-        if (doc != null) {
-          return InkWell(
-            onTap: () {
-              // TODO open linked content modal
-            },
-            child: Column(
-              children: [
-                const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        doc.computedIcon,
-                        width: 18,
-                        height: 18,
+        return InkWell(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              isScrollControlled: true,
+              builder: (context) => LinkedContentModal(
+                doc: doc!,
+                task: task,
+              ),
+            );
+          },
+          child: Column(
+            children: [
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      doc!.computedIcon,
+                      width: 18,
+                      height: 18,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        doc.content?.from ?? 'no user',
+                        style: TextStyle(
+                            fontSize: 17, color: ColorsExt.grey2(context)),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          doc.content?.from ?? 'no user',
-                          style: TextStyle(
-                              fontSize: 17, color: ColorsExt.grey2(context)),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      SvgPicture.asset(
-                        "assets/images/icons/_common/info_circle.svg",
-                        color: ColorsExt.grey3(context),
-                        width: 18,
-                        height: 18,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 10),
+                    SvgPicture.asset(
+                      "assets/images/icons/_common/info_circle.svg",
+                      color: ColorsExt.grey3(context),
+                      width: 18,
+                      height: 18,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                const Separator(),
-              ],
-            ),
-          );
-        } else {
-          return const SizedBox();
-        }
+              ),
+              const SizedBox(height: 12),
+              const Separator(),
+            ],
+          ),
+        );
       },
     );
   }

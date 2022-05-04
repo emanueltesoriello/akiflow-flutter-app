@@ -13,6 +13,7 @@ class ButtonList extends StatefulWidget {
   final Color? leadingColor;
   final ButtonListPosition position;
   final bool showShevron;
+  final String? leadingTextIconAsset;
 
   const ButtonList({
     Key? key,
@@ -22,6 +23,7 @@ class ButtonList extends StatefulWidget {
     this.leadingColor,
     this.position = ButtonListPosition.single,
     this.showShevron = true,
+    this.leadingTextIconAsset,
   }) : super(key: key);
 
   @override
@@ -102,15 +104,23 @@ class _ButtonListState extends State<ButtonList>
                           children: [
                             _buildLeadingIcon(),
                             Expanded(
-                              child: Text(
-                                widget.title,
-                                textAlign: widget.leading == null
-                                    ? TextAlign.center
-                                    : TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: ColorsExt.grey2(context),
-                                ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _buildLeadingTextIcon(),
+                                  Flexible(
+                                    child: Text(
+                                      widget.title,
+                                      textAlign: widget.leading == null
+                                          ? TextAlign.center
+                                          : TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: ColorsExt.grey2(context),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Builder(builder: (context) {
@@ -150,6 +160,24 @@ class _ButtonListState extends State<ButtonList>
       children: [
         SvgPicture.asset(
           widget.leading!,
+          width: 24,
+          height: 24,
+          color: widget.leadingColor ?? ColorsExt.grey2(context),
+        ),
+        const SizedBox(width: 8),
+      ],
+    );
+  }
+
+  Widget _buildLeadingTextIcon() {
+    if (widget.leadingTextIconAsset == null) {
+      return const SizedBox();
+    }
+
+    return Row(
+      children: [
+        SvgPicture.asset(
+          widget.leadingTextIconAsset!,
           width: 24,
           height: 24,
           color: widget.leadingColor ?? ColorsExt.grey2(context),

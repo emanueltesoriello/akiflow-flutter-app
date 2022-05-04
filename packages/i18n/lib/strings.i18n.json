@@ -83,5 +83,11 @@
   "calendar": {
     "comingSoon": "Calendar is coming in the near future!",
     "goToToday": "Go to Today"
+  },
+  "linkedContent": {
+    "subject": "Subject:",
+    "from": "From:",
+    "date": "Date:",
+    "open": "Open"
   }
 }
