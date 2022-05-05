@@ -8,7 +8,12 @@ import 'package:mobile/style/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AddTaskCalendar extends StatefulWidget {
-  const AddTaskCalendar({Key? key}) : super(key: key);
+  final Function(DateTime) onDateSelected;
+
+  const AddTaskCalendar({
+    Key? key,
+    required this.onDateSelected,
+  }) : super(key: key);
 
   @override
   State<AddTaskCalendar> createState() => _AddTaskCalendarState();
@@ -36,7 +41,7 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
                 return isSameDay(state.selectedDate, day);
               },
               onDaySelected: (selectedDay, focusedDay) {
-                context.read<EditTaskCubit>().selectDate(selectedDay);
+                widget.onDateSelected(selectedDay);
               },
               headerStyle: const HeaderStyle(
                 leftChevronVisible: false,

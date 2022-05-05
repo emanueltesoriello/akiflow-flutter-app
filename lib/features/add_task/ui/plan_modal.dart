@@ -33,7 +33,11 @@ class PlanModal extends StatelessWidget {
                   children: [
                     _planType(),
                     _predefinedDate(context),
-                    const AddTaskCalendar(),
+                    AddTaskCalendar(
+                      onDateSelected: (DateTime date) {
+                        context.read<EditTaskCubit>().selectDate(date);
+                      },
+                    ),
                     const SizedBox(height: 16),
                   ],
                 ),

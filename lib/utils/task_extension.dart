@@ -134,6 +134,14 @@ extension TaskExt on Task {
     return '';
   }
 
+  String get dueDateFormatted {
+    if (createdAt != null) {
+      return DateFormat('dd MMM yyyy').format(dueDate!.toLocal());
+    }
+
+    return '';
+  }
+
   String get datetimeFormatted {
     DateTime? datetimeOrDate = datetime ?? date;
 

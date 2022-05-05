@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 92 
+ * Strings: 94 
  *
- * Built on 2022-05-05 at 09:51 UTC
+ * Built on 2022-05-05 at 10:12 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -405,6 +405,7 @@ class _StringsAddTaskEn {
 	String get tmw => 'Tmw';
 	String get tomorrow => 'Tomorrow';
 	String get nextWeek => 'Next week';
+	String get nextWeekend => 'Next weekend';
 	String get remove => 'Remove';
 	String get laterToday => 'Later today';
 	String get someday => 'Someday';
@@ -506,6 +507,7 @@ class _StringsEditTaskEn {
 	String get assignLabel => 'Assign Label';
 	String get createOrSearchALabel => 'Create or search a label';
 	String get noLabel => 'No label';
+	String get deadline => 'Deadline';
 }
 
 /// Flat map(s) containing all translations.
@@ -555,6 +557,7 @@ extension on _StringsEn {
 			'addTask.tmw': 'Tmw',
 			'addTask.tomorrow': 'Tomorrow',
 			'addTask.nextWeek': 'Next week',
+			'addTask.nextWeekend': 'Next weekend',
 			'addTask.remove': 'Remove',
 			'addTask.laterToday': 'Later today',
 			'addTask.someday': 'Someday',
@@ -606,6 +609,7 @@ extension on _StringsEn {
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.createOrSearchALabel': 'Create or search a label',
 			'editTask.noLabel': 'No label',
+			'editTask.deadline': 'Deadline',
 		};
 	}
 }

@@ -49,6 +49,7 @@
     "tmw": "Tmw",
     "tomorrow": "Tomorrow",
     "nextWeek": "Next week",
+    "nextWeekend": "Next weekend",
     "remove": "Remove",
     "laterToday": "Later today",
     "someday": "Someday",
@@ -109,6 +110,7 @@
     "add": "Add",
     "assignLabel": "Assign Label",
     "createOrSearchALabel": "Create or search a label",
-    "noLabel": "No label"
+    "noLabel": "No label",
+    "deadline": "Deadline"
   }
 }

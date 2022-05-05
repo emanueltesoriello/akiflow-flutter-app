@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
+import 'package:models/task/task.dart';
 
 enum EditTaskAdditionalAction {
   duplicate,
@@ -45,11 +48,28 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             },
           ),
           const SizedBox(width: 11),
-          _button(
-            iconAsset: "assets/images/icons/_common/flags.svg",
-            active: false,
-            onPressed: () {
-              // TODO edit deadline
+          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+            builder: (context, state) {
+              Task task = state.newTask;
+
+              return _button(
+                iconAsset: "assets/images/icons/_common/flags.svg",
+                active: task.dueDate != null,
+                text: task.dueDateFormatted,
+                onPressed: () {
+                  var cubit = context.read<EditTaskCubit>();
+
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    builder: (context) => BlocProvider.value(
+                      value: cubit,
+                      child: const DeadlineModal(),
+                    ),
+                  );
+                },
+              );
             },
           ),
           const SizedBox(width: 11),
@@ -81,19 +101,44 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
     required String iconAsset,
     required bool active,
     required Function() onPressed,
+    String? text,
   }) {
     return InkWell(
       onTap: () => onPressed(),
       child: Container(
-        height: 32,
-        width: 32,
+        constraints: const BoxConstraints(
+          minHeight: 32,
+          minWidth: 28,
+        ),
         color: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
         child: Center(
-          child: SvgPicture.asset(
-            iconAsset,
-            width: 22,
-            height: 22,
-            color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  iconAsset,
+                  width: 22,
+                  height: 22,
+                  color: active
+                      ? ColorsExt.grey2(context)
+                      : ColorsExt.grey3(context),
+                ),
+                Builder(builder: (context) {
+                  if (text == null) {
+                    return const SizedBox();
+                  } else {
+                    return Row(
+                      children: [
+                        const SizedBox(width: 4),
+                        Text(text),
+                      ],
+                    );
+                  }
+                }),
+              ],
+            ),
           ),
         ),
       ),

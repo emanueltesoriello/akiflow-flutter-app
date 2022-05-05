@@ -188,4 +188,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void delete() {
     // TODO delete
   }
+
+  void setDeadline(DateTime date) {
+    Task task = state.newTask.rebuild((b) => b..dueDate = date);
+
+    emit(state.copyWith(newTask: task));
+  }
 }
