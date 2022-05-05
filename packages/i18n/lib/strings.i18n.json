@@ -108,6 +108,7 @@
   "editTask": {
     "add": "Add",
     "assignLabel": "Assign Label",
-    "createOrSearchALabel": "Create or search a label"
+    "createOrSearchALabel": "Create or search a label",
+    "noLabel": "No label"
   }
 }

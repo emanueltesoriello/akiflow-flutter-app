@@ -62,7 +62,7 @@ class _LabelsModalState extends State<LabelsModal> {
                           return ListView.builder(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(16),
-                            itemCount: labelsFiltered.length + 2,
+                            itemCount: labelsFiltered.length + 3,
                             itemBuilder: (context, index) {
                               if (index == 0) {
                                 return Padding(
@@ -89,7 +89,26 @@ class _LabelsModalState extends State<LabelsModal> {
                                 );
                               }
 
-                              index -= 2;
+                              if (index == 2) {
+                                Label noLabel = Label(
+                                  (l) => l
+                                    ..id = null
+                                    ..title = t.editTask.noLabel,
+                                );
+
+                                return LabelItem(
+                                  noLabel,
+                                  onTap: () {
+                                    context
+                                        .read<EditTaskCubit>()
+                                        .setLabel(noLabel);
+
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              }
+
+                              index -= 3;
 
                               Label label = labels[index];
 

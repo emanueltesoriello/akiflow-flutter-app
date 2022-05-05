@@ -220,28 +220,24 @@ class _EditTaskRowState extends State<EditTaskRow> {
   Widget _label(BuildContext context) {
     Task task = context.watch<EditTaskCubit>().state.newTask;
 
-    if (task.listId == null || task.listId!.isEmpty) {
-      return const SizedBox();
-    }
-
     List<Label> labels = context.watch<TasksCubit>().state.labels;
 
-    Label? label = labels.firstWhereOrNull(
-      (label) => task.listId!.contains(label.id!),
-    );
+    Label? label;
 
-    if (label == null) {
-      return const SizedBox();
+    if (task.listId != null) {
+      label = labels.firstWhereOrNull(
+        (label) => task.listId!.contains(label.id!),
+      );
     }
 
     return AkiChip(
       icon: "assets/images/icons/_common/number.svg",
-      text: label.title,
-      backgroundColor: label.color != null
-          ? ColorsExt.getFromName(label.color!).withOpacity(0.1)
-          : null,
-      iconColor: label.color != null
-          ? ColorsExt.getFromName(label.color!)
+      text: label?.title ?? t.editTask.noLabel,
+      backgroundColor: label?.color != null
+          ? ColorsExt.getFromName(label!.color!).withOpacity(0.1)
+          : ColorsExt.grey6(context),
+      iconColor: label?.color != null
+          ? ColorsExt.getFromName(label!.color!)
           : ColorsExt.grey3(context),
       onPressed: () {
         var cubit = context.read<EditTaskCubit>();

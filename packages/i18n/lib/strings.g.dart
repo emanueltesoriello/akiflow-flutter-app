@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 91 
+ * Strings: 92 
  *
- * Built on 2022-05-05 at 08:59 UTC
+ * Built on 2022-05-05 at 09:51 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -505,6 +505,7 @@ class _StringsEditTaskEn {
 	String get add => 'Add';
 	String get assignLabel => 'Assign Label';
 	String get createOrSearchALabel => 'Create or search a label';
+	String get noLabel => 'No label';
 }
 
 /// Flat map(s) containing all translations.
@@ -604,6 +605,7 @@ extension on _StringsEn {
 			'editTask.add': 'Add',
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.createOrSearchALabel': 'Create or search a label',
+			'editTask.noLabel': 'No label',
 		};
 	}
 }
