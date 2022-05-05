@@ -290,29 +290,54 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _updateWith(debounce: false);
   }
 
-  Future<void> duplicate() async {
-    List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
-
-    List<Task> duplicates = [];
-
+  Future<void> duplicate([Task? task]) async {
     DateTime? now = DateTime.now().toUtc();
 
-    for (Task task in tasks) {
-      duplicates.add(task.rebuild(
+    if (task != null) {
+      Task duplicated = (task.rebuild(
         (b) => b
           ..id = const Uuid().v4()
           ..updatedAt = now
           ..createdAt = now,
       ));
+
+      List<Task> tasks = state.tasks.toList();
+
+      tasks.addAll([duplicated]);
+
+      await _tasksRepository.add([duplicated]);
+
+      emit(state.copyWith(tasks: tasks));
+
+      refreshTasks();
+
+      await _syncControllerService.syncTasks(
+        syncStatus: (status) {
+          emit(state.copyWith(syncStatus: status));
+        },
+      );
+    } else {
+      List<Task> duplicates = [];
+
+      List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+
+      for (Task task in tasks) {
+        duplicates.add(task.rebuild(
+          (b) => b
+            ..id = const Uuid().v4()
+            ..updatedAt = now
+            ..createdAt = now,
+        ));
+      }
+
+      tasks.addAll(duplicates);
+
+      await _tasksRepository.add(duplicates);
+
+      emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
+
+      _updateWith(debounce: false);
     }
-
-    tasks.addAll(duplicates);
-
-    await _tasksRepository.add(duplicates);
-
-    emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
-
-    _updateWith(debounce: false);
   }
 
   void delete() {

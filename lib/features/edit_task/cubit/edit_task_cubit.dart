@@ -177,10 +177,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(newTask: task));
   }
 
-  void duplicate() {
-    // TODO duplicate
-  }
-
   void snooze(DateTime date) {
     // TODO snooze
   }

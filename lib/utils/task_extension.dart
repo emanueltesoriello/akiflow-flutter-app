@@ -135,7 +135,7 @@ extension TaskExt on Task {
   }
 
   String get dueDateFormatted {
-    if (createdAt != null) {
+    if (dueDate != null) {
       return DateFormat('dd MMM yyyy').format(dueDate!.toLocal());
     }
 

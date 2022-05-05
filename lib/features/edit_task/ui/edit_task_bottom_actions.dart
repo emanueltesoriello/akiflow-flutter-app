@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -159,11 +160,16 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
   }
 
   Widget _menu(BuildContext context) {
+    Task task = context.watch<EditTaskCubit>().state.newTask;
+
     return PopupMenuButton<EditTaskAdditionalAction>(
       icon: Container(
         height: 32,
         width: 32,
-        color: ColorsExt.grey6(context),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3),
+          color: ColorsExt.grey6(context),
+        ),
         child: Center(
           child: SvgPicture.asset(
             "assets/images/icons/_common/ellipsis.svg",
@@ -176,7 +182,8 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
       onSelected: (EditTaskAdditionalAction result) {
         switch (result) {
           case EditTaskAdditionalAction.duplicate:
-            context.read<EditTaskCubit>().duplicate();
+            context.read<TasksCubit>().duplicate(task);
+            Navigator.pop(context);
             break;
           case EditTaskAdditionalAction.snoozeTomorrow:
             context.read<EditTaskCubit>().snooze(
