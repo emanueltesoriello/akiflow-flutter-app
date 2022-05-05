@@ -132,7 +132,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setLabel(Label label) {
-    emit(state.copyWith(selectedLabel: label, showLabelsList: false));
+    Task updated = state.newTask.rebuild((b) => b..listId = label.id);
+
+    emit(state.copyWith(
+      selectedLabel: label,
+      showLabelsList: false,
+      newTask: updated,
+    ));
   }
 
   void markAsDone(Task task) {

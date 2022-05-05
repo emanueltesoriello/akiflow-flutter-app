@@ -106,6 +106,8 @@
     "board": "Board"
   },
   "editTask": {
-    "add": "Add"
+    "add": "Add",
+    "assignLabel": "Assign Label",
+    "createOrSearchALabel": "Create or search a label"
   }
 }

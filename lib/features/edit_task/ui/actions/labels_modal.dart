@@ -1,0 +1,159 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/scroll_chip.dart';
+import 'package:mobile/components/task/label_item.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/style/colors.dart';
+import 'package:models/label/label.dart';
+
+class LabelsModal extends StatefulWidget {
+  const LabelsModal({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<LabelsModal> createState() => _LabelsModalState();
+}
+
+class _LabelsModalState extends State<LabelsModal> {
+  final ValueNotifier<String> _searchNotifier = ValueNotifier<String>('');
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+      ),
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+        child: Container(
+          color: Theme.of(context).backgroundColor,
+          child: Column(
+            children: [
+              const SizedBox(height: 12),
+              const ScrollChip(),
+              const SizedBox(height: 12),
+              BlocBuilder<TasksCubit, TasksCubitState>(
+                builder: (context, state) {
+                  List<Label> labels = state.labels.toList();
+
+                  return Expanded(
+                    child: ValueListenableBuilder<String>(
+                        valueListenable: _searchNotifier,
+                        builder: (context, value, child) {
+                          List<Label> labelsFiltered = labels.toList();
+
+                          labelsFiltered = labelsFiltered.where((label) {
+                            if (label.title == null || label.title!.isEmpty) {
+                              return false;
+                            }
+
+                            return (label.title!)
+                                .toLowerCase()
+                                .contains(value.toLowerCase());
+                          }).toList();
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(16),
+                            itemCount: labelsFiltered.length + 2,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: Text(
+                                    t.editTask.assignLabel,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorsExt.grey2(context),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              if (index == 1) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _Search(
+                                    onChanged: (value) {
+                                      _searchNotifier.value = value;
+                                    },
+                                  ),
+                                );
+                              }
+
+                              index -= 2;
+
+                              Label label = labels[index];
+
+                              return LabelItem(
+                                label,
+                                onTap: () {
+                                  context.read<EditTaskCubit>().setLabel(label);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                        }),
+                  );
+                },
+              ),
+              const SizedBox(height: 50),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Search extends StatelessWidget {
+  final Function(String) onChanged;
+
+  const _Search({
+    Key? key,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: ColorsExt.grey4(context),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: TextField(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.zero,
+            isDense: true,
+            hintText: t.editTask.createOrSearchALabel,
+            border: InputBorder.none,
+            hintStyle: TextStyle(
+              color: ColorsExt.grey3(context),
+              fontSize: 17,
+            ),
+          ),
+          style: TextStyle(
+            color: ColorsExt.grey2(context),
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+          ),
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
+}

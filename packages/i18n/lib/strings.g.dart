@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 89 
+ * Strings: 91 
  *
- * Built on 2022-05-05 at 08:20 UTC
+ * Built on 2022-05-05 at 08:59 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -503,6 +503,8 @@ class _StringsEditTaskEn {
 
 	// Translations
 	String get add => 'Add';
+	String get assignLabel => 'Assign Label';
+	String get createOrSearchALabel => 'Create or search a label';
 }
 
 /// Flat map(s) containing all translations.
@@ -600,6 +602,8 @@ extension on _StringsEn {
 			'linkedContent.dueDate': 'Due date',
 			'linkedContent.board': 'Board',
 			'editTask.add': 'Add',
+			'editTask.assignLabel': 'Assign Label',
+			'editTask.createOrSearchALabel': 'Create or search a label',
 		};
 	}
 }

@@ -156,6 +156,8 @@ abstract class Task extends Object
       data["done"] = (data["done"] == 1);
     }
 
+    data["listId"] = data["list_id"];
+
     BuiltList<String> linksList = BuiltList();
 
     if (data.containsKey("links") && data["links"] != null) {

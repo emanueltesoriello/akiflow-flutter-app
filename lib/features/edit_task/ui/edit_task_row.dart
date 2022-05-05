@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/string_ext.dart';
@@ -55,6 +56,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
                 _firstLine(context),
                 const SizedBox(height: 8),
                 _description(context),
+                const SizedBox(height: 32),
                 _thirdLine(context),
               ],
             ),
@@ -91,6 +93,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 4,
       children: [
         Builder(builder: (context) {
           if (task.statusType == null) {
@@ -241,7 +244,17 @@ class _EditTaskRowState extends State<EditTaskRow> {
           ? ColorsExt.getFromName(label.color!)
           : ColorsExt.grey3(context),
       onPressed: () {
-        context.read<EditTaskCubit>().toggleLabels();
+        var cubit = context.read<EditTaskCubit>();
+
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          builder: (context) => BlocProvider.value(
+            value: cubit,
+            child: const LabelsModal(),
+          ),
+        );
       },
     );
   }
