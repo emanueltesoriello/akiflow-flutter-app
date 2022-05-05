@@ -97,6 +97,12 @@ extension ColorsExt on Colors {
         : ColorsDark.pink30;
   }
 
+  static yellow(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? ColorsLight.yellow
+        : ColorsDark.yellow;
+  }
+
   static red(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? ColorsLight.red

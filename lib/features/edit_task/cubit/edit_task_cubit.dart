@@ -203,4 +203,18 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(newTask: task));
   }
+
+  void changePriority() {
+    int currentPriority = state.newTask.priority ?? 0;
+
+    if (currentPriority + 1 > 3) {
+      currentPriority = 0;
+    } else {
+      currentPriority++;
+    }
+
+    Task task = state.newTask.rebuild((b) => b..priority = currentPriority);
+
+    emit(state.copyWith(newTask: task));
+  }
 }

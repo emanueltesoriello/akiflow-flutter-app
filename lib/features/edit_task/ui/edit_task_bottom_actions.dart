@@ -36,9 +36,21 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
         children: [
           _button(
             iconAsset: "assets/images/icons/_common/exclamationmark.svg",
-            active: false,
+            iconColor: () {
+              switch (task.priority) {
+                case 1:
+                  return ColorsExt.green(context);
+                case 2:
+                  return ColorsExt.yellow(context);
+                case 3:
+                  return ColorsExt.red(context);
+                default:
+                  return ColorsExt.grey3(context);
+              }
+            }(),
+            active: task.priority != null && task.priority != 0,
             onPressed: () {
-              // TODO edit priority
+              context.read<EditTaskCubit>().changePriority();
             },
           ),
           const SizedBox(width: 11),
@@ -98,6 +110,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
     required bool active,
     required Function() onPressed,
     String? text,
+    Color? iconColor,
   }) {
     return InkWell(
       onTap: () => onPressed(),
@@ -120,9 +133,10 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                   iconAsset,
                   width: 22,
                   height: 22,
-                  color: active
-                      ? ColorsExt.grey2(context)
-                      : ColorsExt.grey3(context),
+                  color: iconColor ??
+                      (active
+                          ? ColorsExt.grey2(context)
+                          : ColorsExt.grey3(context)),
                 ),
                 Builder(builder: (context) {
                   if (text == null) {
