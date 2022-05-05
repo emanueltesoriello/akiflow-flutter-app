@@ -350,7 +350,7 @@ CREATE TABLE IF NOT EXISTS tasks(
   `created_at` TEXT,
   `updated_at` TEXT,
   `deleted_at` TEXT,
-  `daily_goal` TEXT,
+  `daily_goal` INTEGER,
   `origin` TEXT,
   `remote_updated_at` TEXT,
   `section_id` UUID,

@@ -27,6 +27,8 @@ class EditTaskBottomActions extends StatefulWidget {
 class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
   @override
   Widget build(BuildContext context) {
+    Task task = context.watch<EditTaskCubit>().state.newTask;
+
     return Container(
       constraints: const BoxConstraints(minHeight: 64),
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -42,33 +44,27 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           const SizedBox(width: 11),
           _button(
             iconAsset: "assets/images/icons/_common/target.svg",
-            active: false,
+            active: task.dailyGoal != null && task.dailyGoal == 1,
             onPressed: () {
-              // TODO edit focus
+              context.read<EditTaskCubit>().toggleDailyGoal();
             },
           ),
           const SizedBox(width: 11),
-          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-            builder: (context, state) {
-              Task task = state.newTask;
+          _button(
+            iconAsset: "assets/images/icons/_common/flags.svg",
+            active: task.dueDate != null,
+            text: task.dueDateFormatted,
+            onPressed: () {
+              var cubit = context.read<EditTaskCubit>();
 
-              return _button(
-                iconAsset: "assets/images/icons/_common/flags.svg",
-                active: task.dueDate != null,
-                text: task.dueDateFormatted,
-                onPressed: () {
-                  var cubit = context.read<EditTaskCubit>();
-
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    builder: (context) => BlocProvider.value(
-                      value: cubit,
-                      child: const DeadlineModal(),
-                    ),
-                  );
-                },
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (context) => BlocProvider.value(
+                  value: cubit,
+                  child: const DeadlineModal(),
+                ),
               );
             },
           ),
@@ -110,7 +106,10 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           minHeight: 32,
           minWidth: 28,
         ),
-        color: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3),
+          color: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+        ),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(4),

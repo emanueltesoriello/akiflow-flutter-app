@@ -88,6 +88,8 @@ abstract class Task extends Object
   @BuiltValueField(serialize: false)
   bool? get selected;
 
+  int? get dailyGoal;
+
   BuiltList<String>? get links;
 
   Task._();
@@ -146,6 +148,7 @@ abstract class Task extends Object
       "sorting": sorting,
       "sorting_label": sortingLabel,
       "links": links?.toList().join(','),
+      "daily_goal": dailyGoal,
     };
   }
 
@@ -157,6 +160,7 @@ abstract class Task extends Object
     }
 
     data["listId"] = data["list_id"];
+    data["dailyGoal"] = data["daily_goal"];
 
     BuiltList<String> linksList = BuiltList();
 

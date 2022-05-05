@@ -194,4 +194,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(newTask: task));
   }
+
+  void toggleDailyGoal() {
+    int currentDailyGoal = state.newTask.dailyGoal ?? 0;
+
+    Task task = state.newTask
+        .rebuild((b) => b..dailyGoal = currentDailyGoal == 0 ? 1 : 0);
+
+    emit(state.copyWith(newTask: task));
+  }
 }

@@ -163,6 +163,11 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
     result
       ..add('sorting_label')
       ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.dailyGoal;
+
+    result
+      ..add('dailyGoal')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     value = object.links;
 
     result
@@ -285,6 +290,10 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
           result.sortingLabel = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
+        case 'dailyGoal':
+          result.dailyGoal = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
         case 'links':
           result.links.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -352,6 +361,8 @@ class _$Task extends Task {
   @override
   final bool? selected;
   @override
+  final int? dailyGoal;
+  @override
   final BuiltList<String>? links;
 
   factory _$Task([void Function(TaskBuilder)? updates]) =>
@@ -384,6 +395,7 @@ class _$Task extends Task {
       this.sorting,
       this.sortingLabel,
       this.selected,
+      this.dailyGoal,
       this.links})
       : super._();
 
@@ -424,6 +436,7 @@ class _$Task extends Task {
         sorting == other.sorting &&
         sortingLabel == other.sortingLabel &&
         selected == other.selected &&
+        dailyGoal == other.dailyGoal &&
         links == other.links;
   }
 
@@ -447,25 +460,25 @@ class _$Task extends Task {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode), updatedAt.hashCode),
-                                                                                deletedAt.hashCode),
-                                                                            done.hashCode),
-                                                                        doneAt.hashCode),
-                                                                    datetime.hashCode),
-                                                                readAt.hashCode),
-                                                            globalUpdatedAt.hashCode),
-                                                        globalCreatedAt.hashCode),
-                                                    activationDatetime.hashCode),
-                                                dueDate.hashCode),
-                                            remoteUpdatedAt.hashCode),
-                                        recurringId.hashCode),
-                                    priority.hashCode),
-                                listId.hashCode),
-                            sectionId.hashCode),
-                        origin.hashCode),
-                    sorting.hashCode),
-                sortingLabel.hashCode),
-            selected.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode), updatedAt.hashCode), deletedAt.hashCode),
+                                                                                done.hashCode),
+                                                                            doneAt.hashCode),
+                                                                        datetime.hashCode),
+                                                                    readAt.hashCode),
+                                                                globalUpdatedAt.hashCode),
+                                                            globalCreatedAt.hashCode),
+                                                        activationDatetime.hashCode),
+                                                    dueDate.hashCode),
+                                                remoteUpdatedAt.hashCode),
+                                            recurringId.hashCode),
+                                        priority.hashCode),
+                                    listId.hashCode),
+                                sectionId.hashCode),
+                            origin.hashCode),
+                        sorting.hashCode),
+                    sortingLabel.hashCode),
+                selected.hashCode),
+            dailyGoal.hashCode),
         links.hashCode));
   }
 
@@ -498,6 +511,7 @@ class _$Task extends Task {
           ..add('sorting', sorting)
           ..add('sortingLabel', sortingLabel)
           ..add('selected', selected)
+          ..add('dailyGoal', dailyGoal)
           ..add('links', links))
         .toString();
   }
@@ -614,6 +628,10 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   bool? get selected => _$this._selected;
   set selected(bool? selected) => _$this._selected = selected;
 
+  int? _dailyGoal;
+  int? get dailyGoal => _$this._dailyGoal;
+  set dailyGoal(int? dailyGoal) => _$this._dailyGoal = dailyGoal;
+
   ListBuilder<String>? _links;
   ListBuilder<String> get links => _$this._links ??= new ListBuilder<String>();
   set links(ListBuilder<String>? links) => _$this._links = links;
@@ -649,6 +667,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _sorting = $v.sorting;
       _sortingLabel = $v.sortingLabel;
       _selected = $v.selected;
+      _dailyGoal = $v.dailyGoal;
       _links = $v.links?.toBuilder();
       _$v = null;
     }
@@ -698,6 +717,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
               sorting: sorting,
               sortingLabel: sortingLabel,
               selected: selected,
+              dailyGoal: dailyGoal,
               links: _links?.build());
     } catch (_) {
       late String _$failedField;
