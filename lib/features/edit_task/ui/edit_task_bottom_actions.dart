@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
 import 'package:mobile/style/colors.dart';
 
 enum EditTaskAdditionalAction {
@@ -54,9 +55,19 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           const SizedBox(width: 11),
           _button(
             iconAsset: "assets/images/icons/_common/link.svg",
-            active: false,
+            active: true,
             onPressed: () {
-              // TODO edit link
+              var cubit = context.read<EditTaskCubit>();
+
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (context) => BlocProvider.value(
+                  value: cubit,
+                  child: const LinksModal(),
+                ),
+              );
             },
           ),
           const Spacer(),

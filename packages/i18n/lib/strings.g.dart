@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 88 
+ * Strings: 89 
  *
- * Built on 2022-05-04 at 16:52 UTC
+ * Built on 2022-05-05 at 08:20 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -318,6 +318,7 @@ class _StringsEn {
 	late final _StringsErrorsEn errors = _StringsErrorsEn._(_root);
 	late final _StringsCalendarEn calendar = _StringsCalendarEn._(_root);
 	late final _StringsLinkedContentEn linkedContent = _StringsLinkedContentEn._(_root);
+	late final _StringsEditTaskEn editTask = _StringsEditTaskEn._(_root);
 }
 
 // Path: onboarding
@@ -493,6 +494,17 @@ class _StringsLinkedContentEn {
 	String get board => 'Board';
 }
 
+// Path: editTask
+class _StringsEditTaskEn {
+	_StringsEditTaskEn._(this._root);
+
+	// ignore: unused_field
+	final _StringsEn _root;
+
+	// Translations
+	String get add => 'Add';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -587,6 +599,7 @@ extension on _StringsEn {
 			'linkedContent.starredAt': 'Starred at',
 			'linkedContent.dueDate': 'Due date',
 			'linkedContent.board': 'Board',
+			'editTask.add': 'Add',
 		};
 	}
 }
