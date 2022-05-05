@@ -200,6 +200,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             break;
           case EditTaskAdditionalAction.delete:
             context.read<EditTaskCubit>().delete();
+            Navigator.pop(context);
             break;
         }
       },

@@ -181,8 +181,32 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     // TODO snooze
   }
 
-  void delete() {
-    // TODO delete
+  Future<void> delete() async {
+    List<Task> all = _tasksCubit.state.tasks.toList();
+    Task taskToDelete = state.newTask;
+
+    taskToDelete = taskToDelete.rebuild(
+      (b) => b
+        ..status = TaskStatusType.deleted.id
+        ..deletedAt = DateTime.now().toUtc()
+        ..updatedAt = DateTime.now().toUtc(),
+    );
+
+    int index = all.indexWhere((element) => element.id == taskToDelete.id);
+
+    all[index] = taskToDelete;
+
+    _tasksCubit.emit(_tasksCubit.state.copyWith(tasks: all));
+
+    await _tasksRepository.updateById(taskToDelete.id!, data: taskToDelete);
+
+    _tasksCubit.refreshTasks();
+
+    _syncControllerService.syncTasks(
+      syncStatus: (status) {
+        _tasksCubit.emit(_tasksCubit.state.copyWith(syncStatus: status));
+      },
+    );
   }
 
   void setDeadline(DateTime date) {
