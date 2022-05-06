@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 94 
+ * Strings: 103 
  *
- * Built on 2022-05-05 at 10:12 UTC
+ * Built on 2022-05-06 at 14:30 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -508,6 +508,15 @@ class _StringsEditTaskEn {
 	String get createOrSearchALabel => 'Create or search a label';
 	String get noLabel => 'No label';
 	String get deadline => 'Deadline';
+	String get repeat => 'Repeat';
+	String get noRepeat => 'No Repeat';
+	String get everyDay => 'Every Day';
+	String everyCurrentDay({required Object day}) => 'Every ${day}';
+	String everyFirstCurrentDayOfTheMonth({required Object day}) => 'Every first ${day} of the month';
+	String everyYearOn({required Object date}) => 'Every year on ${date}';
+	String get everyWeekday => 'Every weekday';
+	String get custom => 'Custom';
+	String get comingSoon => 'Coming soon';
 }
 
 /// Flat map(s) containing all translations.
@@ -610,6 +619,15 @@ extension on _StringsEn {
 			'editTask.createOrSearchALabel': 'Create or search a label',
 			'editTask.noLabel': 'No label',
 			'editTask.deadline': 'Deadline',
+			'editTask.repeat': 'Repeat',
+			'editTask.noRepeat': 'No Repeat',
+			'editTask.everyDay': 'Every Day',
+			'editTask.everyCurrentDay': ({required Object day}) => 'Every ${day}',
+			'editTask.everyFirstCurrentDayOfTheMonth': ({required Object day}) => 'Every first ${day} of the month',
+			'editTask.everyYearOn': ({required Object date}) => 'Every year on ${date}',
+			'editTask.everyWeekday': 'Every weekday',
+			'editTask.custom': 'Custom',
+			'editTask.comingSoon': 'Coming soon',
 		};
 	}
 }

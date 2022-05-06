@@ -91,6 +91,7 @@ abstract class Task extends Object
   int? get dailyGoal;
 
   BuiltList<String>? get links;
+  BuiltList<String>? get recurrence;
 
   Task._();
 
@@ -149,6 +150,7 @@ abstract class Task extends Object
       "sorting_label": sortingLabel,
       "links": links?.toList().join(','),
       "daily_goal": dailyGoal,
+      "recurrence": recurrence?.toList().join(';'),
     };
   }
 
@@ -170,10 +172,19 @@ abstract class Task extends Object
       data.remove("links");
     }
 
+    BuiltList<String> recurrenceList = BuiltList();
+
+    if (data.containsKey("recurrence") && data["recurrence"] != null) {
+      String recurrence = data["recurrence"] as String;
+      recurrenceList = BuiltList(recurrence.split(';'));
+      data.remove("recurrence");
+    }
+
     Task task = serializers.deserializeWith(Task.serializer, data)!;
 
     task = task.rebuild((t) {
       t.links = linksList.toBuilder();
+      t.recurrence = recurrenceList.toBuilder();
     });
 
     return task;

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -6,6 +7,7 @@ import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:rrule/src/recurrence_rule.dart';
 import 'package:uuid/uuid.dart';
 
 part 'edit_task_state.dart';
@@ -298,5 +300,25 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     await _tasksRepository.updateById(task.id!, data: task);
 
     _tasksCubit.syncTasks();
+  }
+
+  void setRecurrence(RecurrenceRule? rule) {
+    ListBuilder<String>? recurrence;
+
+    if (rule != null) {
+      String recurrenceString = rule.toString();
+      List<String> recList = recurrenceString.split(';');
+      recurrence = ListBuilder(recList);
+    }
+
+    Task task = state.newTask.rebuild(
+      (b) => b
+        ..recurrence = recurrence
+        ..updatedAt = DateTime.now().toUtc(),
+    );
+
+    emit(state.copyWith(newTask: task));
+
+    _updateUiRepositoryAndSync(task);
   }
 }

@@ -107,7 +107,7 @@ packages:
     source: hosted
     version: "7.2.3"
   built_collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: built_collection
       url: "https://pub.dartlang.org"
@@ -840,6 +840,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.4"
+  rrule:
+    dependency: "direct main"
+    description:
+      name: rrule
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.8"
   rxdart:
     dependency: transitive
     description:
@@ -1020,6 +1027,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.8"
+  time:
+    dependency: transitive
+    description:
+      name: time
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   timeago:
     dependency: "direct main"
     description:

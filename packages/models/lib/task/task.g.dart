@@ -175,6 +175,13 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
       ..add(serializers.serialize(value,
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])));
+    value = object.recurrence;
+
+    result
+      ..add('recurrence')
+      ..add(serializers.serialize(value,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])));
 
     return result;
   }
@@ -300,6 +307,12 @@ class _$TaskSerializer implements StructuredSerializer<Task> {
                       BuiltList, const [const FullType(String)]))!
               as BuiltList<Object?>);
           break;
+        case 'recurrence':
+          result.recurrence.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
+          break;
       }
     }
 
@@ -364,6 +377,8 @@ class _$Task extends Task {
   final int? dailyGoal;
   @override
   final BuiltList<String>? links;
+  @override
+  final BuiltList<String>? recurrence;
 
   factory _$Task([void Function(TaskBuilder)? updates]) =>
       (new TaskBuilder()..update(updates)).build();
@@ -396,7 +411,8 @@ class _$Task extends Task {
       this.sortingLabel,
       this.selected,
       this.dailyGoal,
-      this.links})
+      this.links,
+      this.recurrence})
       : super._();
 
   @override
@@ -437,7 +453,8 @@ class _$Task extends Task {
         sortingLabel == other.sortingLabel &&
         selected == other.selected &&
         dailyGoal == other.dailyGoal &&
-        links == other.links;
+        links == other.links &&
+        recurrence == other.recurrence;
   }
 
   @override
@@ -460,26 +477,26 @@ class _$Task extends Task {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode), updatedAt.hashCode), deletedAt.hashCode),
-                                                                                done.hashCode),
-                                                                            doneAt.hashCode),
-                                                                        datetime.hashCode),
-                                                                    readAt.hashCode),
-                                                                globalUpdatedAt.hashCode),
-                                                            globalCreatedAt.hashCode),
-                                                        activationDatetime.hashCode),
-                                                    dueDate.hashCode),
-                                                remoteUpdatedAt.hashCode),
-                                            recurringId.hashCode),
-                                        priority.hashCode),
-                                    listId.hashCode),
-                                sectionId.hashCode),
-                            origin.hashCode),
-                        sorting.hashCode),
-                    sortingLabel.hashCode),
-                selected.hashCode),
-            dailyGoal.hashCode),
-        links.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), date.hashCode), description.hashCode), duration.hashCode), status.hashCode), createdAt.hashCode), updatedAt.hashCode), deletedAt.hashCode), done.hashCode),
+                                                                                doneAt.hashCode),
+                                                                            datetime.hashCode),
+                                                                        readAt.hashCode),
+                                                                    globalUpdatedAt.hashCode),
+                                                                globalCreatedAt.hashCode),
+                                                            activationDatetime.hashCode),
+                                                        dueDate.hashCode),
+                                                    remoteUpdatedAt.hashCode),
+                                                recurringId.hashCode),
+                                            priority.hashCode),
+                                        listId.hashCode),
+                                    sectionId.hashCode),
+                                origin.hashCode),
+                            sorting.hashCode),
+                        sortingLabel.hashCode),
+                    selected.hashCode),
+                dailyGoal.hashCode),
+            links.hashCode),
+        recurrence.hashCode));
   }
 
   @override
@@ -512,7 +529,8 @@ class _$Task extends Task {
           ..add('sortingLabel', sortingLabel)
           ..add('selected', selected)
           ..add('dailyGoal', dailyGoal)
-          ..add('links', links))
+          ..add('links', links)
+          ..add('recurrence', recurrence))
         .toString();
   }
 }
@@ -636,6 +654,12 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
   ListBuilder<String> get links => _$this._links ??= new ListBuilder<String>();
   set links(ListBuilder<String>? links) => _$this._links = links;
 
+  ListBuilder<String>? _recurrence;
+  ListBuilder<String> get recurrence =>
+      _$this._recurrence ??= new ListBuilder<String>();
+  set recurrence(ListBuilder<String>? recurrence) =>
+      _$this._recurrence = recurrence;
+
   TaskBuilder();
 
   TaskBuilder get _$this {
@@ -669,6 +693,7 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
       _selected = $v.selected;
       _dailyGoal = $v.dailyGoal;
       _links = $v.links?.toBuilder();
+      _recurrence = $v.recurrence?.toBuilder();
       _$v = null;
     }
     return this;
@@ -718,12 +743,15 @@ class TaskBuilder implements Builder<Task, TaskBuilder> {
               sortingLabel: sortingLabel,
               selected: selected,
               dailyGoal: dailyGoal,
-              links: _links?.build());
+              links: _links?.build(),
+              recurrence: _recurrence?.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'links';
         _links?.build();
+        _$failedField = 'recurrence';
+        _recurrence?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Task', _$failedField, e.toString());

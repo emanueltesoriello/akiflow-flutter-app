@@ -1,7 +1,9 @@
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list.dart';
+import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
 import 'package:models/task/task.dart';
+import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 enum TaskStatusType {
@@ -140,6 +142,36 @@ extension TaskExt on Task {
     }
 
     return '';
+  }
+
+  RecurrenceModalType? get recurrenceComputed {
+    if (recurrence != null) {
+      try {
+        List<String> parts = recurrence!.toList();
+
+        parts.removeWhere((part) => part.startsWith('UNTIL'));
+        parts.removeWhere((part) => part.startsWith('DTSTART'));
+
+        String recurrenceString = parts.join(';');
+
+        RecurrenceRule rule = RecurrenceRule.fromString(recurrenceString);
+
+        if (rule.frequency == Frequency.daily) {
+          return RecurrenceModalType.daily;
+        } else if (rule.frequency == Frequency.weekly &&
+            rule.byWeekDays.length == 5) {
+          return RecurrenceModalType.everyWeekday;
+        } else if (rule.frequency == Frequency.yearly) {
+          return RecurrenceModalType.everyYearOnThisDay;
+        } else if (rule.frequency == Frequency.weekly) {
+          return RecurrenceModalType.everyCurrentDay;
+        }
+      } catch (e) {
+        print("Recurrence parsing error: $e");
+      }
+    }
+
+    return RecurrenceModalType.none;
   }
 
   String get datetimeFormatted {

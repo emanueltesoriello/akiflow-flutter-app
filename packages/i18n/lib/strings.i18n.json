@@ -111,6 +111,15 @@
     "assignLabel": "Assign Label",
     "createOrSearchALabel": "Create or search a label",
     "noLabel": "No label",
-    "deadline": "Deadline"
+    "deadline": "Deadline",
+    "repeat": "Repeat",
+    "noRepeat": "No Repeat",
+    "everyDay": "Every Day",
+    "everyCurrentDay": "Every ${day}",
+    "everyFirstCurrentDayOfTheMonth": "Every first ${day} of the month",
+    "everyYearOn": "Every year on ${date}",
+    "everyWeekday": "Every weekday",
+    "custom": "Custom",
+    "comingSoon": "Coming soon"
   }
 }
