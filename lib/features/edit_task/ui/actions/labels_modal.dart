@@ -24,108 +24,111 @@ class _LabelsModalState extends State<LabelsModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-      ),
-      height: MediaQuery.of(context).size.height * 0.5,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
         ),
-        child: Container(
-          color: Theme.of(context).backgroundColor,
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              const ScrollChip(),
-              const SizedBox(height: 12),
-              BlocBuilder<TasksCubit, TasksCubitState>(
-                builder: (context, state) {
-                  List<Label> labels = state.labels.toList();
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16.0),
+            topRight: Radius.circular(16.0),
+          ),
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            child: Column(
+              children: [
+                const SizedBox(height: 12),
+                const ScrollChip(),
+                const SizedBox(height: 12),
+                BlocBuilder<TasksCubit, TasksCubitState>(
+                  builder: (context, state) {
+                    List<Label> labels = state.labels.toList();
 
-                  return Expanded(
-                    child: ValueListenableBuilder<String>(
-                        valueListenable: _searchNotifier,
-                        builder: (context, value, child) {
-                          List<Label> labelsFiltered = labels.toList();
+                    return Expanded(
+                      child: ValueListenableBuilder<String>(
+                          valueListenable: _searchNotifier,
+                          builder: (context, value, child) {
+                            List<Label> labelsFiltered = labels.toList();
 
-                          labelsFiltered = labelsFiltered.where((label) {
-                            if (label.title == null || label.title!.isEmpty) {
-                              return false;
-                            }
+                            labelsFiltered = labelsFiltered.where((label) {
+                              if (label.title == null || label.title!.isEmpty) {
+                                return false;
+                              }
 
-                            return (label.title!)
-                                .toLowerCase()
-                                .contains(value.toLowerCase());
-                          }).toList();
+                              return (label.title!)
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase());
+                            }).toList();
 
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(16),
-                            itemCount: labelsFiltered.length + 3,
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: Text(
-                                    t.editTask.assignLabel,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorsExt.grey2(context),
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(16),
+                              itemCount: labelsFiltered.length + 3,
+                              itemBuilder: (context, index) {
+                                if (index == 0) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                      t.editTask.assignLabel,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: ColorsExt.grey2(context),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
+                                  );
+                                }
 
-                              if (index == 1) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: _Search(
-                                    onChanged: (value) {
-                                      _searchNotifier.value = value;
+                                if (index == 1) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: _Search(
+                                      onChanged: (value) {
+                                        _searchNotifier.value = value;
+                                      },
+                                    ),
+                                  );
+                                }
+
+                                if (index == 2) {
+                                  Label noLabel = Label(
+                                    (l) => l
+                                      ..id = null
+                                      ..title = t.editTask.noLabel,
+                                  );
+
+                                  return LabelItem(
+                                    noLabel,
+                                    onTap: () {
+                                      widget.selectLabel(noLabel);
+                                      Navigator.pop(context);
                                     },
-                                  ),
-                                );
-                              }
+                                  );
+                                }
 
-                              if (index == 2) {
-                                Label noLabel = Label(
-                                  (l) => l
-                                    ..id = null
-                                    ..title = t.editTask.noLabel,
-                                );
+                                index -= 3;
+
+                                Label label = labels[index];
 
                                 return LabelItem(
-                                  noLabel,
+                                  label,
                                   onTap: () {
-                                    widget.selectLabel(noLabel);
+                                    widget.selectLabel(label);
                                     Navigator.pop(context);
                                   },
                                 );
-                              }
-
-                              index -= 3;
-
-                              Label label = labels[index];
-
-                              return LabelItem(
-                                label,
-                                onTap: () {
-                                  widget.selectLabel(label);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
-                        }),
-                  );
-                },
-              ),
-              const SizedBox(height: 50),
-            ],
+                              },
+                            );
+                          }),
+                    );
+                  },
+                ),
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
       ),

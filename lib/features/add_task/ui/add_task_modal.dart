@@ -11,6 +11,7 @@ import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddTaskModal extends StatelessWidget {
   const AddTaskModal({Key? key}) : super(key: key);
@@ -45,98 +46,97 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        Container(
-          height: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
-              .padding
-              .top,
-        ),
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
+    return Material(
+      color: Colors.transparent,
+      child: Wrap(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
             ),
-            child: Container(
-              color: Theme.of(context).backgroundColor,
-              margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                      builder: (context, state) {
-                        if (state.setDuration) {
-                          return const AddTaskDurationItem();
-                        } else {
-                          return const SizedBox();
-                        }
-                      },
-                    ),
-                    BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                      builder: (context, state) {
-                        if (state.showLabelsList) {
-                          return const AddTaskLabels();
-                        } else {
-                          return const SizedBox();
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _title(context),
-                          const SizedBox(height: 8),
-                          _description(context),
-                          const SizedBox(height: 16),
-                          _actions(context),
-                          const SizedBox(height: 16),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: InkWell(
-                              onTap: () {
-                                context.read<EditTaskCubit>().create(
-                                    title: _titleController.text,
-                                    description: _descriptionController.text);
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+              ),
+              child: Container(
+                color: Theme.of(context).backgroundColor,
+                margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                        builder: (context, state) {
+                          if (state.setDuration) {
+                            return const AddTaskDurationItem();
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                      BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                        builder: (context, state) {
+                          if (state.showLabelsList) {
+                            return const AddTaskLabels();
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _title(context),
+                            const SizedBox(height: 8),
+                            _description(context),
+                            const SizedBox(height: 16),
+                            _actions(context),
+                            const SizedBox(height: 16),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () {
+                                  context.read<EditTaskCubit>().create(
+                                      title: _titleController.text,
+                                      description: _descriptionController.text);
 
-                                Navigator.pop(context);
-                              },
-                              borderRadius: BorderRadius.circular(8),
-                              child: Material(
-                                color: Theme.of(context).primaryColor,
+                                  Navigator.pop(context);
+                                },
                                 borderRadius: BorderRadius.circular(8),
-                                child: SizedBox(
-                                  height: 36,
-                                  width: 36,
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      "assets/images/icons/_common/paperplane_send.svg",
-                                      width: 24,
-                                      height: 24,
-                                      color: Theme.of(context).backgroundColor,
+                                child: Material(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: SizedBox(
+                                    height: 36,
+                                    width: 36,
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        "assets/images/icons/_common/paperplane_send.svg",
+                                        width: 24,
+                                        height: 24,
+                                        color:
+                                            Theme.of(context).backgroundColor,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -282,11 +282,8 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
 
             var editTaskCubit = context.read<EditTaskCubit>();
 
-            showModalBottomSheet(
+            showCupertinoModalBottomSheet(
               context: context,
-              backgroundColor: Colors.transparent,
-              barrierColor: Colors.transparent,
-              isScrollControlled: true,
               builder: (context) => PlanModal(
                 onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
                   editTaskCubit.planFor(date,

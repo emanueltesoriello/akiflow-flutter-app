@@ -50,47 +50,50 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
+    return Material(
+      color: Colors.transparent,
+      child: Wrap(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
             ),
-            child: Container(
-              color: Theme.of(context).backgroundColor,
-              margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    _planType(),
-                    _predefinedDate(context),
-                    AddTaskCalendar(
-                      selectedDate:
-                          context.watch<PlanModalCubit>().state.selectedDate,
-                      onDateSelected: (DateTime? date) {
-                        context.read<PlanModalCubit>().selectDate(date);
-                      },
-                      onAddTimeClick: (DateTime? date) {
-                        TaskStatusType statusType =
-                            context.read<PlanModalCubit>().state.statusType;
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+              ),
+              child: Container(
+                color: Theme.of(context).backgroundColor,
+                margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      _planType(),
+                      _predefinedDate(context),
+                      AddTaskCalendar(
+                        selectedDate:
+                            context.watch<PlanModalCubit>().state.selectedDate,
+                        onDateSelected: (DateTime? date) {
+                          context.read<PlanModalCubit>().selectDate(date);
+                        },
+                        onAddTimeClick: (DateTime? date) {
+                          TaskStatusType statusType =
+                              context.read<PlanModalCubit>().state.statusType;
 
-                        onAddTimeClick(date, statusType);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                  ],
+                          onAddTimeClick(date, statusType);
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

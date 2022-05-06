@@ -8,6 +8,7 @@ import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:reorderables/reorderables.dart';
@@ -110,10 +111,8 @@ class TaskList extends StatelessWidget {
                         swipeActionSelectLabelClick: () {
                           var cubit = context.read<TasksCubit>();
 
-                          showModalBottomSheet(
+                          showCupertinoModalBottomSheet(
                             context: context,
-                            backgroundColor: Colors.transparent,
-                            isScrollControlled: true,
                             builder: (context) => LabelsModal(
                               selectLabel: (Label label) {
                                 cubit.assignLabel(label, task: task);
@@ -140,10 +139,8 @@ class TaskList extends StatelessWidget {
   void _showPlan(BuildContext context, Task task, TaskStatusType statusType) {
     TasksCubit cubit = context.read<TasksCubit>();
 
-    showModalBottomSheet(
+    showCupertinoModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
       builder: (context) => BlocProvider.value(
         value: cubit,
         child: PlanModal(

@@ -21,73 +21,75 @@ class DeadlineModal extends StatefulWidget {
 class _DeadlineModalState extends State<DeadlineModal> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
             ),
-            child: Container(
-              color: Theme.of(context).backgroundColor,
-              child: Column(
-                children: [
-                  const SizedBox(height: 12),
-                  const ScrollChip(),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/icons/_common/flags.svg",
-                          width: 28,
-                          height: 28,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          t.editTask.deadline,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+              ),
+              child: Container(
+                color: Theme.of(context).backgroundColor,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    const ScrollChip(),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/icons/_common/flags.svg",
+                            width: 28,
+                            height: 28,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          Text(
+                            t.editTask.deadline,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey2(context),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const Separator(),
-                  _predefinedDate(context),
-                  const Separator(),
-                  AddTaskCalendar(
-                    selectedDate:
-                        context.watch<EditTaskCubit>().state.newTask.dueDate,
-                    onDateSelected: (DateTime? date) {
-                      context
-                          .read<EditTaskCubit>()
-                          .setDeadline(date, update: false);
+                    const Separator(),
+                    _predefinedDate(context),
+                    const Separator(),
+                    AddTaskCalendar(
+                      selectedDate:
+                          context.watch<EditTaskCubit>().state.newTask.dueDate,
+                      onDateSelected: (DateTime? date) {
+                        context
+                            .read<EditTaskCubit>()
+                            .setDeadline(date, update: false);
 
-                      Navigator.pop(context);
-                    },
-                    onAddTimeClick: (DateTime? date) {
-                      context
-                          .read<EditTaskCubit>()
-                          .setDeadline(date, update: true);
-                    },
-                  ),
-                  const Separator(),
-                  const SizedBox(height: 50),
-                ],
+                        Navigator.pop(context);
+                      },
+                      onAddTimeClick: (DateTime? date) {
+                        context
+                            .read<EditTaskCubit>()
+                            .setDeadline(date, update: true);
+                      },
+                    ),
+                    const Separator(),
+                    const SizedBox(height: 50),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

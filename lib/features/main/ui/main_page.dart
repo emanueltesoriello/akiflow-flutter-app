@@ -15,6 +15,7 @@ import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/ui/today_view.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MainPage extends StatelessWidget {
   final List<Widget> _views = [
@@ -36,10 +37,8 @@ class MainPage extends StatelessWidget {
         children: [
           Scaffold(
             floatingActionButton: FloatingActionButton(
-              onPressed: () => showModalBottomSheet(
+              onPressed: () => showCupertinoModalBottomSheet(
                 context: context,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
                 builder: (context) => const AddTaskModal(),
               ),
               child: SvgPicture.asset(
@@ -106,10 +105,8 @@ class MainPage extends StatelessWidget {
               selectedItemColor: Theme.of(context).primaryColor,
               onTap: (index) {
                 if (index == 0) {
-                  showModalBottomSheet(
+                  showCupertinoModalBottomSheet(
                     context: context,
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
                     builder: (context) => const SettingsModal(),
                   );
                 } else {

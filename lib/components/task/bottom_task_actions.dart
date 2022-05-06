@@ -9,6 +9,7 @@ import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 
 enum BottomTaskAdditionalActions {
@@ -39,10 +40,8 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/calendar.svg',
                   bottomLabel: t.task.plan,
                   click: () {
-                    showModalBottomSheet(
+                    showCupertinoModalBottomSheet(
                       context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
                       builder: (context) => PlanModal(
                         onAddTimeClick:
                             (DateTime? date, TaskStatusType statusType) {
@@ -71,10 +70,8 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/clock.svg',
                   bottomLabel: t.task.snooze,
                   click: () {
-                    showModalBottomSheet(
+                    showCupertinoModalBottomSheet(
                       context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
                       builder: (context) => PlanModal(
                         statusType: TaskStatusType.snoozed,
                         onAddTimeClick:
@@ -106,10 +103,8 @@ class BottomTaskActions extends StatelessWidget {
                   click: () {
                     var cubit = context.read<TasksCubit>();
 
-                    showModalBottomSheet(
+                    showCupertinoModalBottomSheet(
                       context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
                       builder: (context) => LabelsModal(
                         selectLabel: (Label label) {
                           cubit.assignLabel(label);

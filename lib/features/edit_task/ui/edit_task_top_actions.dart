@@ -7,6 +7,7 @@ import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/task/task.dart';
 
 class EditTaskTopActions extends StatefulWidget {
@@ -111,11 +112,8 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
 
             EditTaskCubit cubit = context.read<EditTaskCubit>();
 
-            showModalBottomSheet(
+            showCupertinoModalBottomSheet(
               context: context,
-              backgroundColor: Colors.transparent,
-              barrierColor: Colors.transparent,
-              isScrollControlled: true,
               builder: (context) => BlocProvider.value(
                 value: cubit,
                 child: PlanModal(

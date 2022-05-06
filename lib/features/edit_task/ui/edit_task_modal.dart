@@ -36,52 +36,42 @@ class EditTaskModalView extends StatefulWidget {
 class _EditTaskModalViewState extends State<EditTaskModalView> {
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.55,
-      maxChildSize: 0.95,
-      minChildSize: 0.4,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16.0),
+            topRight: Radius.circular(16.0),
           ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
-            ),
-            child: Container(
-              color: Theme.of(context).backgroundColor,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      controller: scrollController,
-                      children: const [
-                        SizedBox(height: 12),
-                        ScrollChip(),
-                        SizedBox(height: 12),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: EditTaskTopActions(),
-                        ),
-                        SizedBox(height: 12),
-                        EditTaskRow(),
-                        SizedBox(height: 12),
-                        Separator(),
-                        EditTaskLinkedContent(),
-                        EditTaskLinks(),
-                        EditTaskBottomActions(),
-                        Separator(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            child: ListView(
+              shrinkWrap: true,
+              children: const [
+                SizedBox(height: 12),
+                ScrollChip(),
+                SizedBox(height: 12),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: EditTaskTopActions(),
+                ),
+                SizedBox(height: 12),
+                EditTaskRow(),
+                SizedBox(height: 12),
+                Separator(),
+                EditTaskLinkedContent(),
+                EditTaskLinks(),
+                EditTaskBottomActions(),
+                Separator(),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:mobile/features/edit_task/ui/actions/linked_content_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
@@ -68,10 +69,8 @@ class EditTaskLinkedContent extends StatelessWidget {
 
         return InkWell(
           onTap: () {
-            showModalBottomSheet(
+            showCupertinoModalBottomSheet(
               context: context,
-              backgroundColor: Colors.transparent,
-              isScrollControlled: true,
               builder: (context) => LinkedContentModal(
                 task: task,
                 doc: docWithType,

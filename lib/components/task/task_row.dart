@@ -14,6 +14,7 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
@@ -48,10 +49,8 @@ class TaskRow extends StatelessWidget {
       endActionPane: _endActions(context),
       child: InkWell(
         onTap: () {
-          showModalBottomSheet(
+          showCupertinoModalBottomSheet(
             context: context,
-            backgroundColor: Colors.transparent,
-            isScrollControlled: true,
             builder: (context) => EditTaskModal(task: task),
           );
         },
