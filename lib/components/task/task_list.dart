@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/components/task/sync_status_item.dart';
 import 'package:mobile/components/task/task_row.dart';
+import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
+import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -101,14 +104,25 @@ class TaskList extends StatelessWidget {
                         completedClick: () {
                           context.read<TasksCubit>().markAsDone(task);
                         },
-                        planClick: () {
-                          // TODO open calendar and plan
+                        swipeActionPlanClick: () {
+                          _showPlan(context, task, TaskStatusType.planned);
                         },
-                        selectLabelClick: () {
-                          // TODO open labels and save
+                        swipeActionSelectLabelClick: () {
+                          var cubit = context.read<TasksCubit>();
+
+                          showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            builder: (context) => LabelsModal(
+                              selectLabel: (Label label) {
+                                cubit.assignLabel(label, task: task);
+                              },
+                            ),
+                          );
                         },
-                        snoozeClick: () {
-                          // TODO open calendar and snooze
+                        swipeActionSnoozeClick: () {
+                          _showPlan(context, task, TaskStatusType.snoozed);
                         },
                       );
                     },
@@ -120,6 +134,43 @@ class TaskList extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showPlan(BuildContext context, Task task, TaskStatusType statusType) {
+    TasksCubit cubit = context.read<TasksCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => BlocProvider.value(
+        value: cubit,
+        child: PlanModal(
+          statusType: statusType,
+          onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
+            cubit.planFor(
+              date,
+              statusType: statusType,
+              task: task,
+            );
+          },
+          setForInbox: () {
+            cubit.planFor(
+              null,
+              statusType: TaskStatusType.inbox,
+              task: task,
+            );
+          },
+          setForSomeday: () {
+            cubit.planFor(
+              null,
+              statusType: TaskStatusType.someday,
+              task: task,
+            );
+          },
+        ),
+      ),
     );
   }
 }

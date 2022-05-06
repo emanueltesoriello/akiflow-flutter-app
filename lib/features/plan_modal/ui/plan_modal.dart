@@ -20,7 +20,7 @@ class PlanModal extends StatelessWidget {
     required this.onAddTimeClick,
     required this.setForInbox,
     required this.setForSomeday,
-    this.statusType = TaskStatusType.inbox,
+    this.statusType = TaskStatusType.planned,
   }) : super(key: key);
 
   @override

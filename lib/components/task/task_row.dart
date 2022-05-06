@@ -22,9 +22,9 @@ class TaskRow extends StatelessWidget {
   final Task task;
 
   final Function() completedClick;
-  final Function() planClick;
-  final Function() selectLabelClick;
-  final Function() snoozeClick;
+  final Function() swipeActionPlanClick;
+  final Function() swipeActionSelectLabelClick;
+  final Function() swipeActionSnoozeClick;
   final bool hideInboxLabel;
   final bool selectMode;
 
@@ -32,9 +32,9 @@ class TaskRow extends StatelessWidget {
     Key? key,
     required this.task,
     required this.completedClick,
-    required this.planClick,
-    required this.selectLabelClick,
-    required this.snoozeClick,
+    required this.swipeActionPlanClick,
+    required this.swipeActionSelectLabelClick,
+    required this.swipeActionSnoozeClick,
     this.hideInboxLabel = false,
     this.selectMode = false,
   }) : super(key: key);
@@ -272,7 +272,7 @@ class TaskRow extends StatelessWidget {
         closeOnCancel: true,
         dismissThreshold: 0.75,
         confirmDismiss: () async {
-          planClick();
+          swipeActionPlanClick();
           return false;
         },
         onDismissed: () {},
@@ -303,7 +303,7 @@ class TaskRow extends StatelessWidget {
             icon: 'assets/images/icons/_common/number.svg',
             click: () {
               Slidable.of(context)?.close();
-              selectLabelClick();
+              swipeActionSelectLabelClick();
             },
           );
         }),
@@ -315,7 +315,7 @@ class TaskRow extends StatelessWidget {
             icon: 'assets/images/icons/_common/clock.svg',
             click: () {
               Slidable.of(context)?.close();
-              snoozeClick();
+              swipeActionSnoozeClick();
             },
           );
         }),
@@ -335,7 +335,7 @@ class TaskRow extends StatelessWidget {
         label: withLabel ? t.task.plan.toUpperCase() : null,
         click: () {
           Slidable.of(context)?.close();
-          planClick();
+          swipeActionPlanClick();
         },
       );
     });

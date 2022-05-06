@@ -129,32 +129,4 @@ class LinksModal extends StatelessWidget {
       ),
     );
   }
-
-  SizedBox _item(
-    BuildContext context, {
-    required String title,
-    required String value,
-  }) {
-    return SizedBox(
-      height: 40,
-      child: Center(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style:
-                    TextStyle(fontSize: 17, color: ColorsExt.grey3(context))),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style:
-                      TextStyle(fontSize: 17, color: ColorsExt.grey2(context))),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

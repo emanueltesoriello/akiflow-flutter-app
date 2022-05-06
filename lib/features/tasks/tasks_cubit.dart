@@ -199,7 +199,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  void assignLabel(Label label) {
+  void assignLabel(Label label, {Task? task}) {
+    if (task != null) {
+      task = task.rebuild((b) => b..selected = true);
+      int index = state.tasks.indexWhere((t) => t.id == task!.id);
+      state.tasks[index] = task;
+    }
+
     List<Task> tasksSelected =
         state.tasks.where((t) => t.selected ?? false).toList();
 
@@ -216,6 +222,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       updated[index] = updatedTask;
     }
+
+    clearSelected();
 
     emit(state.copyWith(tasks: updated));
 
@@ -319,7 +327,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     DateTime? date, {
     DateTime? dateTime,
     required TaskStatusType statusType,
+    Task? task,
   }) async {
+    if (task != null) {
+      task = task.rebuild((b) => b..selected = true);
+      int index = state.tasks.indexWhere((t) => t.id == task!.id);
+      state.tasks[index] = task;
+    }
+
     List<Task> tasksSelected =
         state.tasks.where((t) => t.selected ?? false).toList();
 
