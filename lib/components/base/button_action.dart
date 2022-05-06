@@ -24,61 +24,59 @@ class ButtonAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: click,
-      child: Center(
-        child: SizedBox(
-          height: bottomLabel != null && bottomLabel!.isNotEmpty ? 72 : null,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: label == null || label!.isEmpty ? 40 : 86,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: backColor,
-                ),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: SvgPicture.asset(
-                          icon,
-                          color: topColor,
-                          width: 21,
-                          height: 21,
-                        ),
+      child: SizedBox(
+        height: bottomLabel != null && bottomLabel!.isNotEmpty ? 56 : null,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: label == null || label!.isEmpty ? 40 : 86,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: backColor,
+              ),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: SvgPicture.asset(
+                        icon,
+                        color: topColor,
+                        width: 21,
+                        height: 21,
                       ),
-                      Flexible(
-                        child: Builder(builder: (context) {
-                          if (label == null || label!.isEmpty) {
-                            return const SizedBox();
-                          }
+                    ),
+                    Flexible(
+                      child: Builder(builder: (context) {
+                        if (label == null || label!.isEmpty) {
+                          return const SizedBox();
+                        }
 
-                          return Row(
-                            children: [
-                              const SizedBox(width: 4.5),
-                              Flexible(
-                                child: Text(
-                                  label!,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: topColor,
-                                  ),
+                        return Row(
+                          children: [
+                            const SizedBox(width: 4.5),
+                            Flexible(
+                              child: Text(
+                                label!,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: topColor,
                                 ),
                               ),
-                            ],
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ],
                 ),
               ),
-              _bottomLabel(context),
-            ],
-          ),
+            ),
+            _bottomLabel(context),
+          ],
         ),
       ),
     );
