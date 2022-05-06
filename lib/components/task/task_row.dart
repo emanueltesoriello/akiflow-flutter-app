@@ -158,14 +158,30 @@ class TaskRow extends StatelessWidget {
       child: Builder(builder: (context) {
         bool completed = task.isCompletedComputed;
 
+        Color color;
+
+        switch (task.priority) {
+          case 1:
+            color = ColorsExt.green(context);
+            break;
+          case 2:
+            color = ColorsExt.yellow(context);
+            break;
+          case 3:
+            color = ColorsExt.red(context);
+            break;
+          default:
+            color =
+                completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context);
+        }
+
         return SvgPicture.asset(
           completed
               ? "assets/images/icons/_common/Check-done.svg"
               : "assets/images/icons/_common/Check-empty.svg",
           width: 20,
           height: 20,
-          color:
-              completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+          color: color,
         );
       }),
     );
@@ -174,13 +190,29 @@ class TaskRow extends StatelessWidget {
   Widget _radio(BuildContext context) {
     bool selected = task.selected ?? false;
 
+    Color color;
+
+    switch (task.priority) {
+      case 1:
+        color = ColorsExt.green(context);
+        break;
+      case 2:
+        color = ColorsExt.yellow(context);
+        break;
+      case 3:
+        color = ColorsExt.red(context);
+        break;
+      default:
+        color = ColorsExt.grey3(context);
+    }
+
     return SvgPicture.asset(
       selected
           ? "assets/images/icons/_common/largecircle_fill_circle.svg"
           : "assets/images/icons/_common/circle.svg",
       width: 20,
       height: 20,
-      color: ColorsExt.grey3(context),
+      color: color,
     );
   }
 
