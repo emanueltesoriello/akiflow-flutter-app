@@ -37,13 +37,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   @override
   Widget build(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: (task.selected ?? false)
-          ? ColorsExt.grey6(context)
-          : Colors.transparent,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -198,7 +193,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       case TaskStatusType.snoozed:
         return AkiChip(
           icon: "assets/images/icons/_common/clock.svg",
-          backgroundColor: ColorsExt.akiflow10(context),
+          backgroundColor: ColorsExt.pink30(context),
           text: task.datetimeFormatted,
           onPressed: statusClick,
         );

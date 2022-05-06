@@ -43,9 +43,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 color: ColorsExt.grey6(context),
                 active: task.duration != null,
                 text: text,
-                onPressed: () {
-                  // TODO edit duration
-                },
+                onPressed: () {},
               );
             },
           ),
