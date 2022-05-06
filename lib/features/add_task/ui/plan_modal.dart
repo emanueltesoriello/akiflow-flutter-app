@@ -9,7 +9,12 @@ import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
 class PlanModal extends StatelessWidget {
-  const PlanModal({Key? key}) : super(key: key);
+  final bool updateTasksAfterSelected;
+
+  const PlanModal({
+    Key? key,
+    required this.updateTasksAfterSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +40,14 @@ class PlanModal extends StatelessWidget {
                     _predefinedDate(context),
                     AddTaskCalendar(
                       onDateSelected: (DateTime date) {
-                        context.read<EditTaskCubit>().selectDate(date);
+                        context
+                            .read<EditTaskCubit>()
+                            .selectDate(date, update: false);
+                      },
+                      onAddTimeClick: (DateTime date) {
+                        context
+                            .read<EditTaskCubit>()
+                            .selectDate(date, update: true);
                       },
                     ),
                     const SizedBox(height: 16),

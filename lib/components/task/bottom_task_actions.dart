@@ -35,7 +35,7 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/calendar.svg',
                   bottomLabel: t.task.plan,
                   click: () {
-                    context.read<TasksCubit>().plan();
+                    // TODO open calendar and plan
                   },
                 ),
               ),
@@ -46,7 +46,7 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/clock.svg',
                   bottomLabel: t.task.snooze,
                   click: () {
-                    context.read<TasksCubit>().snooze();
+                    // TODO open calendar and snooze
                   },
                 ),
               ),
@@ -57,7 +57,7 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/number.svg',
                   bottomLabel: t.task.assign,
                   click: () {
-                    context.read<TasksCubit>().assignLabel();
+                    // TODO open labels and select
                   },
                 ),
               ),
@@ -86,7 +86,7 @@ class BottomTaskActions extends StatelessWidget {
                         context.read<TasksCubit>().moveToInbox();
                         break;
                       case BottomTaskAdditionalActions.planForToday:
-                        context.read<TasksCubit>().planForToday();
+                        context.read<TasksCubit>().planFor(DateTime.now());
                         break;
                       case BottomTaskAdditionalActions.setDeadline:
                         context.read<TasksCubit>().setDeadline();

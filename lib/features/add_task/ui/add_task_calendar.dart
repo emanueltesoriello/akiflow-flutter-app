@@ -9,10 +9,12 @@ import 'package:table_calendar/table_calendar.dart';
 
 class AddTaskCalendar extends StatefulWidget {
   final Function(DateTime) onDateSelected;
+  final Function(DateTime) onAddTimeClick;
 
   const AddTaskCalendar({
     Key? key,
     required this.onDateSelected,
+    required this.onAddTimeClick,
   }) : super(key: key);
 
   @override
@@ -175,7 +177,8 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
                 context.read<EditTaskCubit>().state.selectedDate;
 
             if (selectedDate != null) {
-              context.read<EditTaskCubit>().planFor(selectedDate);
+              widget.onAddTimeClick(selectedDate);
+
               Navigator.pop(context);
             }
           },

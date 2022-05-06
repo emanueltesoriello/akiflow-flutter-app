@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -15,9 +14,6 @@ enum TaskListSorting { ascending, descending }
 class TaskList extends StatelessWidget {
   final List<Task> tasks;
 
-  // Used to show done tasks, before debounce update it
-  final List<Task> updatedTasks;
-
   final Widget? notice;
   final bool hideInboxLabel;
   final TaskListSorting sorting;
@@ -25,7 +21,6 @@ class TaskList extends StatelessWidget {
   const TaskList({
     Key? key,
     required this.tasks,
-    required this.updatedTasks,
     required this.sorting,
     this.notice,
     this.hideInboxLabel = false,
@@ -97,29 +92,23 @@ class TaskList extends StatelessWidget {
 
                       Task task = tasks[index];
 
-                      Task? updatedTask = updatedTasks
-                          .firstWhereOrNull((element) => element.id == task.id);
-
                       return TaskRow(
                         key: ObjectKey(task),
                         task: task,
-                        updatedTask: updatedTask,
                         hideInboxLabel: hideInboxLabel,
                         selectMode:
                             tasks.any((element) => element.selected ?? false),
                         completedClick: () {
-                          context
-                              .read<TasksCubit>()
-                              .markAsDone(updatedTask ?? task);
+                          context.read<TasksCubit>().markAsDone(task);
                         },
                         planClick: () {
-                          context.read<TasksCubit>().plan(task: task);
+                          // TODO open calendar and plan
                         },
                         selectLabelClick: () {
-                          context.read<TasksCubit>().assignLabel(task: task);
+                          // TODO open labels and save
                         },
                         snoozeClick: () {
-                          context.read<TasksCubit>().snooze(task: task);
+                          // TODO open calendar and snooze
                         },
                       );
                     },

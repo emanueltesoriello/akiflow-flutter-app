@@ -29,7 +29,9 @@ class AddTaskLabels extends StatelessWidget {
                   return LabelItem(
                     label,
                     onTap: () {
-                      context.read<EditTaskCubit>().setLabel(label);
+                      context
+                          .read<EditTaskCubit>()
+                          .setLabel(label, update: false);
                     },
                   );
                 },

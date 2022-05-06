@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/components/base/button_action.dart';
@@ -22,9 +21,6 @@ import 'package:models/task/task.dart';
 class TaskRow extends StatelessWidget {
   final Task task;
 
-  // Used to show done tasks, before debounce update it
-  final Task? updatedTask;
-
   final Function() completedClick;
   final Function() planClick;
   final Function() selectLabelClick;
@@ -35,7 +31,6 @@ class TaskRow extends StatelessWidget {
   const TaskRow({
     Key? key,
     required this.task,
-    required this.updatedTask,
     required this.completedClick,
     required this.planClick,
     required this.selectLabelClick,
@@ -161,9 +156,7 @@ class TaskRow extends StatelessWidget {
     return InkWell(
       onTap: completedClick,
       child: Builder(builder: (context) {
-        bool completed =
-            (updatedTask != null && (updatedTask!.isCompletedComputed)) ||
-                (task.isCompletedComputed);
+        bool completed = task.isCompletedComputed;
 
         return SvgPicture.asset(
           completed
@@ -470,30 +463,18 @@ class TaskRow extends StatelessWidget {
                 ),
                 const SizedBox(width: 4.5),
                 Expanded(
-                  child: HtmlWidget(
-                    task.description!,
-                    enableCaching: false,
-                    customWidgetBuilder: (element) {
-                      String text = element.text.trim();
-
-                      if (text.isEmpty) {
-                        return const SizedBox();
-                      }
-
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              text,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: ColorsExt.grey3(context)),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          task.description ?? "",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 15, color: ColorsExt.grey3(context)),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

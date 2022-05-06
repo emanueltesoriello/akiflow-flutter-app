@@ -10,7 +10,6 @@ import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
-import 'package:mobile/utils/debouncer.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/label/label.dart';
@@ -48,13 +47,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
         emit(state.copyWith(syncStatus: status));
       });
 
-      await refreshTasks();
+      await refreshTasksFromRepository();
 
       emit(state.copyWith(loading: false));
     }
   }
 
-  refreshTasks() async {
+  refreshTasksFromRepository() async {
     List<Task> tasks = await _tasksRepository.get();
     emit(state.copyWith(tasks: tasks));
 
@@ -70,195 +69,79 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void select(Task task) {
-    int index = state.tasks.indexOf(task);
+    List<Task> tasksUpdated = state.tasks.toList();
+
+    int index = tasksUpdated.indexWhere((t) => t.id == task.id);
 
     task = task.rebuild((b) => b..selected = !(task.selected ?? false));
 
-    List<Task> all = state.tasks.toList();
+    tasksUpdated[index] = task;
 
-    all[index] = task;
-
-    emit(state.copyWith(tasks: all));
-  }
-
-  void plan({Task? task}) {
-    bool isSelectMode = state.tasks.any((t) => t.selected ?? false);
-
-    if (task == null || isSelectMode) {
-      // TODO: EDIT TASK - plan all
-    } else {
-      // plan selected task only
-    }
-  }
-
-  void snooze({Task? task}) {
-    bool isSelectMode = state.tasks.any((t) => t.selected ?? false);
-
-    if (task == null || isSelectMode) {
-      // TODO: EDIT TASK - snooze all
-    } else {
-      // snooze selected task only
-    }
-  }
-
-  markAsDone([Task? task]) async {
-    bool isSelectMode =
-        task == null || state.tasks.any((t) => t.selected ?? false);
-
-    if (isSelectMode) {
-      List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
-
-      for (Task taskSelected in tasks) {
-        _computeDone(taskSelected);
-      }
-
-      _updateWith(debounce: false);
-    } else {
-      _computeDone(task);
-
-      _updateWith(debounce: true);
-    }
-  }
-
-  void _updateWith({required bool debounce}) {
-    if (debounce) {
-      Debouncer.process(ifNotCancelled: () async {
-        _update();
-      });
-    } else {
-      _update();
-    }
-  }
-
-  Future<void> _update() async {
-    List<Task> updatedTasks = state.updatedTasks;
-
-    if (updatedTasks.isNotEmpty) {
-      await _updateInRepository();
-
-      refreshTasks();
-
-      await _syncControllerService.syncTasks(
-        syncStatus: (status) {
-          emit(state.copyWith(syncStatus: status));
-        },
-      );
-    } else {
-      print('No tasks to update');
-    }
+    emit(state.copyWith(tasks: tasksUpdated));
   }
 
   TaskStatusType? lastDoneTaskStatus;
 
-  void _computeDone(Task task) {
-    bool done = task.isCompletedComputed;
+  void markAsDone([Task? task]) async {
+    bool isSelectMode =
+        task == null || state.tasks.any((t) => t.selected ?? false);
 
-    if (task.status != TaskStatusType.completed.id) {
-      lastDoneTaskStatus = TaskStatusTypeExt.fromId(task.status);
-    }
+    if (isSelectMode) {
+      List<Task> tasksSelected =
+          state.tasks.where((t) => t.selected ?? false).toList();
 
-    DateTime? now = DateTime.now().toUtc();
+      for (Task taskSelected in tasksSelected) {
+        Task updated = taskSelected.rebuild((p0) => p0);
 
-    if (!done) {
-      task = task.rebuild(
-        (b) => b
-          ..done = true
-          ..doneAt = now
-          ..updatedAt = now
-          ..status = TaskStatusType.completed.id,
-      );
+        updated = updated.markAsDone(
+          lastDoneTaskStatus: lastDoneTaskStatus,
+          onDone: (status) {
+            lastDoneTaskStatus = status;
+          },
+        );
+
+        int index = state.tasks.indexWhere((t) => t.id == updated.id);
+
+        state.tasks[index] = updated;
+
+        await _tasksRepository.updateById(taskSelected.id, data: updated);
+      }
+
+      emit(state.copyWith(tasks: state.tasks));
     } else {
-      task = task.rebuild(
-        (b) => b
-          ..done = false
-          ..doneAt = null
-          ..updatedAt = now
-          ..status = lastDoneTaskStatus?.id,
+      Task updated = task.rebuild((p0) => p0);
+
+      updated = updated.markAsDone(
+        lastDoneTaskStatus: lastDoneTaskStatus,
+        onDone: (status) {
+          lastDoneTaskStatus = status;
+        },
       );
+
+      updateUiOfTask(updated);
+
+      await _tasksRepository.updateById(updated.id, data: updated);
     }
 
-    List<Task> updatedTasks = state.updatedTasks.toList();
-
-    int index =
-        state.updatedTasks.indexWhere((element) => element.id == task.id);
-
-    if (index != -1) {
-      updatedTasks[index] = task;
-    } else {
-      updatedTasks.add(task);
-    }
-
-    emit(state.copyWith(updatedTasks: updatedTasks));
+    syncTasks();
   }
 
-  Future<void> _updateInRepository() async {
-    List<Task> updatedTasks = state.updatedTasks;
-
-    for (Task task in updatedTasks) {
-      await _tasksRepository.updateById(task.id, data: task);
-
-      emit(state.copyWith(updatedTasks: []));
-    }
-  }
-
-  void clearSelected() {
-    List<Task> all = state.tasks.toList();
-
-    for (Task task in all) {
-      int index = all.indexOf(task);
-
-      all[index] = task.rebuild((b) => b..selected = false);
-    }
-
-    emit(state.copyWith(tasks: all));
-  }
-
-  void reorder(
-    int oldIndex,
-    int newIndex, {
-    required List<Task> newTasksListOrdered,
-    required TaskListSorting sorting,
-  }) {
-    // move element to position
-    Task task = newTasksListOrdered.removeAt(oldIndex);
-
-    newTasksListOrdered.insert(newIndex, task);
-
-    DateTime now = DateTime.now().toUtc();
-    int millis = now.millisecondsSinceEpoch;
-
-    if (sorting == TaskListSorting.descending) {
-      newTasksListOrdered = newTasksListOrdered.reversed.toList();
-    }
-
-    List<Task> ordered = newTasksListOrdered
-        .map((t) => t.rebuild(
-              (b) => b
-                ..sorting = millis - (1 * newTasksListOrdered.indexOf(t) + 1)
-                ..selected = false,
-            ))
-        .toList();
-
-    emit(state.copyWith(tasks: ordered));
-
-    List<Task> updated = ordered
-        .map((t) => t.rebuild(
-              (b) => b..updatedAt = now,
-            ))
-        .toList();
-
-    emit(state.copyWith(updatedTasks: updated));
-
-    _updateWith(debounce: false);
+  Future<void> syncTasks() async {
+    await _syncControllerService.syncTasks(
+      syncStatus: (status) {
+        emit(state.copyWith(syncStatus: status));
+      },
+    );
   }
 
   void moveToInbox() {
-    List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected =
+        state.tasks.where((t) => t.selected ?? false).toList();
 
-    for (Task task in tasks) {
-      int index = tasks.indexOf(task);
+    for (Task task in tasksSelected) {
+      int index = state.tasks.indexWhere((t) => t.id == task.id);
 
-      tasks[index] = task.rebuild(
+      state.tasks[index] = task.rebuild(
         (b) => b
           ..status = TaskStatusType.inbox.id
           ..date = null
@@ -266,32 +149,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
     }
 
-    emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
+    clearSelected();
 
-    _updateWith(debounce: false);
-  }
-
-  void planForToday() {
-    List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
-
-    for (Task task in tasks) {
-      int index = tasks.indexOf(task);
-
-      tasks[index] = task.rebuild(
-        (b) => b
-          ..status = TaskStatusType.planned.id
-          ..date = DateTime.now().toUtc()
-          ..updatedAt = DateTime.now().toUtc(),
-      );
-    }
-
-    emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
-
-    _updateWith(debounce: false);
+    emit(state.copyWith(tasks: state.tasks));
   }
 
   Future<void> duplicate([Task? task]) async {
     DateTime? now = DateTime.now().toUtc();
+
+    List<Task> updated = state.tasks.toList();
 
     if (task != null) {
       Task duplicated = (task.rebuild(
@@ -301,27 +167,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
           ..createdAt = now,
       ));
 
-      List<Task> tasks = state.tasks.toList();
-
-      tasks.addAll([duplicated]);
+      updated.addAll([duplicated]);
 
       await _tasksRepository.add([duplicated]);
-
-      emit(state.copyWith(tasks: tasks));
-
-      refreshTasks();
-
-      await _syncControllerService.syncTasks(
-        syncStatus: (status) {
-          emit(state.copyWith(syncStatus: status));
-        },
-      );
     } else {
       List<Task> duplicates = [];
 
-      List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+      List<Task> tasksSelected =
+          updated.where((t) => t.selected ?? false).toList();
 
-      for (Task task in tasks) {
+      for (Task task in tasksSelected) {
         duplicates.add(task.rebuild(
           (b) => b
             ..id = const Uuid().v4()
@@ -330,44 +185,124 @@ class TasksCubit extends Cubit<TasksCubitState> {
         ));
       }
 
-      tasks.addAll(duplicates);
+      updated.addAll(duplicates);
 
       await _tasksRepository.add(duplicates);
-
-      emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
-
-      _updateWith(debounce: false);
     }
+
+    emit(state.copyWith(tasks: updated));
+
+    syncTasks();
   }
 
-  void delete() {
-    List<Task> tasks = state.tasks.where((t) => t.selected ?? false).toList();
+  Future<void> delete() async {
+    List<Task> tasksSelected =
+        state.tasks.where((t) => t.selected ?? false).toList();
 
-    for (Task task in tasks) {
-      int index = tasks.indexOf(task);
+    List<Task> updated = state.tasks.toList();
 
-      tasks[index] = task.rebuild(
-        (b) => b
-          ..status = TaskStatusType.deleted.id
-          ..deletedAt = DateTime.now().toUtc()
-          ..updatedAt = DateTime.now().toUtc(),
+    for (Task task in tasksSelected) {
+      int index = updated.indexWhere((t) => t.id == task.id);
+
+      task = task.delete();
+
+      updated[index] = task;
+
+      await _tasksRepository.updateById(
+        updated[index].id,
+        data: updated[index],
       );
     }
 
-    emit(state.copyWith(tasks: tasks, updatedTasks: tasks));
+    emit(state.copyWith(tasks: updated));
 
-    _updateWith(debounce: false);
+    syncTasks();
   }
 
   void assignLabel({Task? task}) {
-    // TODO: EDIT TASK - assign label to task
+    // TODO TasksHelper.assignLabel(task: task);
   }
 
   void selectPriority({Task? task}) {
-    // TODO: EDIT TASK - select priority for task
+    // TODO TasksHelper.selectPriority(task: task);
   }
 
   void setDeadline({Task? task}) {
-    // TODO: EDIT TASK - set deadline for task
+    // TODO TasksHelper.setDeadline(task: task);
+  }
+
+  void clearSelected() {
+    List<Task> updated = state.tasks.toList();
+
+    for (Task task in updated) {
+      int index = updated.indexWhere((t) => t.id == task.id);
+
+      updated[index] = task.rebuild((b) => b..selected = false);
+    }
+
+    emit(state.copyWith(tasks: updated));
+  }
+
+  Future<void> reorder(
+    int oldIndex,
+    int newIndex, {
+    required List<Task> newTasksListOrdered,
+    required TaskListSorting sorting,
+  }) async {
+    List<Task> updated = state.tasks.toList();
+
+    Task task = updated.removeAt(oldIndex);
+
+    updated.insert(newIndex, task);
+
+    DateTime now = DateTime.now().toUtc();
+    int millis = now.millisecondsSinceEpoch;
+
+    if (sorting == TaskListSorting.descending) {
+      updated = updated.reversed.toList();
+    }
+
+    List<Task> ordered = updated
+        .map((t) => t.rebuild(
+              (b) => b
+                ..sorting =
+                    millis - (1 * updated.indexWhere((e) => e.id == t.id) + 1)
+                ..updatedAt = now
+                ..selected = false,
+            ))
+        .toList();
+
+    for (Task task in ordered) {
+      await _tasksRepository.updateById(task.id, data: task);
+    }
+
+    syncTasks();
+  }
+
+  void updateUiOfTask(Task task) {
+    int index = state.tasks.indexWhere((t) => t.id == task.id);
+
+    state.tasks[index] = task;
+
+    List<Task> tasksUpdated = state.tasks.toList();
+
+    emit(state.copyWith(tasks: tasksUpdated));
+  }
+
+  void planFor(DateTime date, {DateTime? dateTime}) {
+    List<Task> tasksSelected =
+        state.tasks.where((t) => t.selected ?? false).toList();
+
+    for (Task task in tasksSelected) {
+      task = task.planFor(
+        date: date,
+        dateTime: dateTime,
+        status: TaskStatusType.planned.id,
+      );
+    }
+
+    clearSelected();
+
+    emit(state.copyWith(tasks: state.tasks));
   }
 }

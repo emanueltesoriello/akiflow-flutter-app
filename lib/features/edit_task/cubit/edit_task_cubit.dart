@@ -61,69 +61,117 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.add([updated]);
 
-    await _syncControllerService.syncTasks();
-
-    _tasksCubit.refreshTasks();
+    _tasksCubit.syncTasks();
   }
 
   void selectPlanType(EditTaskPlanType type) {
     emit(state.copyWith(planType: type));
   }
 
-  void planFor(DateTime date, {DateTime? dateTime}) {
+  Future<void> planFor(
+    DateTime date, {
+    DateTime? dateTime,
+    bool? update = true,
+  }) async {
     Task updated = state.newTask.rebuild(
-      (b) => b
-        ..date = date.toUtc()
-        ..datetime = dateTime?.toUtc()
-        ..status = state.planType == EditTaskPlanType.plan
-            ? TaskStatusType.planned.id
-            : TaskStatusType.snoozed.id,
+      (b) => b..updatedAt = DateTime.now().toUtc(),
+    );
+
+    updated = updated.planFor(
+      date: date,
+      dateTime: dateTime,
+      status: state.planType == EditTaskPlanType.plan
+          ? TaskStatusType.planned.id
+          : TaskStatusType.snoozed.id,
     );
 
     emit(state.copyWith(newTask: updated));
+
+    if (update!) {
+      _updateUiRepositoryAndSync(updated);
+    }
   }
 
-  void setForInbox() {
+  Future<void> setForInbox() async {
     Task updated = state.newTask.rebuild(
       (b) => b
         ..date = null
+        ..updatedAt = DateTime.now().toUtc()
         ..status = TaskStatusType.inbox.id,
     );
 
     emit(state.copyWith(newTask: updated));
+
+    _updateUiRepositoryAndSync(updated);
   }
 
-  void setSomeday() {
+  Future<void> setSomeday() async {
     Task updated = state.newTask.rebuild(
       (b) => b
         ..date = null
+        ..updatedAt = DateTime.now().toUtc()
         ..status = TaskStatusType.someday.id,
     );
 
     emit(state.copyWith(newTask: updated));
   }
 
-  void selectDate(DateTime selectedDate) {
+  Future<void> selectDate(
+    DateTime selectedDate, {
+    bool update = true,
+  }) async {
     emit(state.copyWith(selectedDate: selectedDate));
+
+    Task updated = state.newTask.rebuild(
+      (b) => b..updatedAt = DateTime.now().toUtc(),
+    );
+
+    updated =
+        updated.planFor(date: selectedDate, status: TaskStatusType.planned.id);
+
+    emit(state.copyWith(newTask: updated));
+
+    if (update) {
+      _updateUiRepositoryAndSync(updated);
+    }
   }
 
-  void setDuration(double value) {
+  void setDuration(
+    double value, {
+    bool update = true,
+  }) {
     emit(state.copyWith(selectedDuration: value));
 
     double seconds = value * 3600;
 
-    Task updated = state.newTask.rebuild((b) => b..duration = seconds.toInt());
+    Task updated = state.newTask.rebuild(
+      (b) => b
+        ..duration = seconds.toInt()
+        ..updatedAt = DateTime.now().toUtc(),
+    );
 
     emit(state.copyWith(newTask: updated));
+
+    if (update) {
+      _updateUiRepositoryAndSync(updated);
+    }
   }
 
-  void toggleDuration() {
+  void toggleDuration({bool update = true}) {
     emit(state.copyWith(setDuration: !state.setDuration));
 
     if (state.setDuration == false) {
-      Task updated = state.newTask.rebuild((b) => b..duration = null);
+      Task updated = state.newTask.rebuild(
+        (b) => b
+          ..duration = null
+          ..updatedAt = DateTime.now().toUtc(),
+      );
 
       emit(state.copyWith(newTask: updated));
+
+      if (update) {
+        _updateUiRepositoryAndSync(updated);
+      }
     }
   }
 
@@ -131,97 +179,105 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(showLabelsList: !state.showLabelsList));
   }
 
-  void setLabel(Label label) {
-    Task updated = state.newTask.rebuild((b) => b..listId = label.id);
+  void setLabel(Label label, {bool update = true}) {
+    Task updated = state.newTask.rebuild(
+      (b) => b
+        ..listId = label.id
+        ..updatedAt = DateTime.now().toUtc(),
+    );
 
     emit(state.copyWith(
       selectedLabel: label,
       showLabelsList: false,
       newTask: updated,
     ));
+
+    if (update) {
+      _updateUiRepositoryAndSync(updated);
+    }
   }
 
   void markAsDone(Task task) {
-    bool done = task.isCompletedComputed;
+    Task updated = task.rebuild(
+      (b) => b..updatedAt = DateTime.now().toUtc(),
+    );
 
-    if (task.status != TaskStatusType.completed.id) {
-      lastDoneTaskStatus = TaskStatusTypeExt.fromId(task.status);
-    }
+    updated = task.markAsDone(
+      lastDoneTaskStatus: lastDoneTaskStatus,
+      onDone: (status) {
+        lastDoneTaskStatus = status;
+      },
+    );
 
-    DateTime? now = DateTime.now().toUtc();
+    print(updated);
 
-    if (!done) {
-      task = task.rebuild(
-        (b) => b
-          ..done = true
-          ..doneAt = now
-          ..updatedAt = now
-          ..status = TaskStatusType.completed.id,
-      );
-    } else {
-      task = task.rebuild(
-        (b) => b
-          ..done = false
-          ..doneAt = null
-          ..updatedAt = now
-          ..status = lastDoneTaskStatus?.id,
-      );
-    }
+    emit(state.copyWith(newTask: updated));
 
-    emit(state.copyWith(newTask: task));
+    _updateUiRepositoryAndSync(updated);
   }
 
   void removeLink(String link) {
-    Task task = state.newTask.rebuild((b) => b..links.remove(link));
-
-    emit(state.copyWith(newTask: task));
-  }
-
-  void snooze(DateTime date) {
-    // TODO snooze
-  }
-
-  Future<void> delete() async {
-    List<Task> all = _tasksCubit.state.tasks.toList();
-    Task taskToDelete = state.newTask;
-
-    taskToDelete = taskToDelete.rebuild(
+    Task task = state.newTask.rebuild(
       (b) => b
-        ..status = TaskStatusType.deleted.id
-        ..deletedAt = DateTime.now().toUtc()
+        ..links.remove(link)
         ..updatedAt = DateTime.now().toUtc(),
     );
 
-    int index = all.indexWhere((element) => element.id == taskToDelete.id);
+    emit(state.copyWith(newTask: task));
 
-    all[index] = taskToDelete;
-
-    _tasksCubit.emit(_tasksCubit.state.copyWith(tasks: all));
-
-    await _tasksRepository.updateById(taskToDelete.id!, data: taskToDelete);
-
-    _tasksCubit.refreshTasks();
-
-    _syncControllerService.syncTasks(
-      syncStatus: (status) {
-        _tasksCubit.emit(_tasksCubit.state.copyWith(syncStatus: status));
-      },
-    );
+    _updateUiRepositoryAndSync(task);
   }
 
-  void setDeadline(DateTime date) {
-    Task task = state.newTask.rebuild((b) => b..dueDate = date);
+  void snooze(DateTime date) {
+    Task updated = state.newTask.rebuild(
+      (b) => b..updatedAt = DateTime.now().toUtc(),
+    );
+
+    updated = updated.planFor(date: date, status: TaskStatusType.snoozed.id);
+
+    emit(state.copyWith(newTask: updated));
+
+    _updateUiRepositoryAndSync(updated);
+  }
+
+  Future<void> delete() async {
+    Task updated = state.newTask.rebuild(
+      (b) => b..updatedAt = DateTime.now().toUtc(),
+    );
+
+    updated = updated.delete();
+
+    emit(state.copyWith(newTask: updated));
+
+    _updateUiRepositoryAndSync(updated);
+  }
+
+  void setDeadline(DateTime date, {bool update = true}) {
+    Task task = state.newTask.rebuild(
+      (b) => b
+        ..dueDate = date
+        ..updatedAt = DateTime.now().toUtc(),
+    );
 
     emit(state.copyWith(newTask: task));
+
+    if (update) {
+      _updateUiRepositoryAndSync(task);
+    }
   }
 
   void toggleDailyGoal() {
     int currentDailyGoal = state.newTask.dailyGoal ?? 0;
 
-    Task task = state.newTask
-        .rebuild((b) => b..dailyGoal = currentDailyGoal == 0 ? 1 : 0);
+    Task task = state.newTask.rebuild(
+      (b) => b
+        ..dailyGoal = currentDailyGoal == 0 ? 1 : 0
+        ..updatedAt = DateTime.now().toUtc(),
+    );
 
     emit(state.copyWith(newTask: task));
+
+    _updateUiRepositoryAndSync(task);
   }
 
   void changePriority() {
@@ -233,8 +289,22 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       currentPriority++;
     }
 
-    Task task = state.newTask.rebuild((b) => b..priority = currentPriority);
+    Task task = state.newTask.rebuild(
+      (b) => b
+        ..priority = currentPriority
+        ..updatedAt = DateTime.now().toUtc(),
+    );
 
     emit(state.copyWith(newTask: task));
+
+    _updateUiRepositoryAndSync(task);
+  }
+
+  _updateUiRepositoryAndSync(Task task) async {
+    _tasksCubit.updateUiOfTask(task);
+
+    await _tasksRepository.updateById(task.id!, data: task);
+
+    _tasksCubit.syncTasks();
   }
 }

@@ -27,7 +27,6 @@ class _View extends StatelessWidget {
 
     return TaskList(
       tasks: tasks,
-      updatedTasks: context.watch<TasksCubit>().state.updatedTasks,
       sorting: TaskListSorting.descending,
     );
   }

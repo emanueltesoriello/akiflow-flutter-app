@@ -294,4 +294,66 @@ extension TaskExt on Task {
 
     return 'assets/images/icons/_common/circle.svg';
   }
+
+  Task planFor({
+    required DateTime date,
+    DateTime? dateTime,
+    required int status,
+  }) {
+    return rebuild(
+      (b) => b
+        ..date = date.toUtc()
+        ..datetime = dateTime?.toUtc()
+        ..status = status,
+    );
+  }
+
+  Task markAsDone({
+    TaskStatusType? lastDoneTaskStatus,
+    required Function(TaskStatusType?) onDone,
+  }) {
+    print(isCompletedComputed);
+
+    bool done = isCompletedComputed;
+
+    DateTime? now = DateTime.now().toUtc();
+
+    if (lastDoneTaskStatus != null &&
+        lastDoneTaskStatus.id != TaskStatusType.completed.id) {
+      lastDoneTaskStatus = TaskStatusTypeExt.fromId(lastDoneTaskStatus.id);
+    }
+
+    Task updated;
+
+    if (!done) {
+      updated = rebuild(
+        (b) => b
+          ..done = true
+          ..doneAt = now
+          ..updatedAt = now
+          ..status = TaskStatusType.completed.id,
+      );
+    } else {
+      updated = rebuild(
+        (b) => b
+          ..done = false
+          ..doneAt = null
+          ..updatedAt = now
+          ..status = lastDoneTaskStatus?.id,
+      );
+    }
+
+    onDone(lastDoneTaskStatus);
+
+    return updated;
+  }
+
+  Task delete() {
+    return rebuild(
+      (b) => b
+        ..status = TaskStatusType.deleted.id
+        ..deletedAt = DateTime.now().toUtc()
+        ..updatedAt = DateTime.now().toUtc(),
+    );
+  }
 }

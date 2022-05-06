@@ -150,7 +150,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
           color: ColorsExt.grey6(context),
           active: context.watch<EditTaskCubit>().state.setDuration,
           onPressed: () {
-            context.read<EditTaskCubit>().toggleDuration();
+            context.read<EditTaskCubit>().toggleDuration(update: false);
           },
         ),
         const SizedBox(width: 8),
@@ -283,7 +283,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               isScrollControlled: true,
               builder: (context) => BlocProvider.value(
                 value: cubit,
-                child: const PlanModal(),
+                child: const PlanModal(updateTasksAfterSelected: false),
               ),
             );
           },

@@ -114,7 +114,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               isScrollControlled: true,
               builder: (context) => BlocProvider.value(
                 value: cubit,
-                child: const PlanModal(),
+                child: const PlanModal(updateTasksAfterSelected: true),
               ),
             );
           },
