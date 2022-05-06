@@ -84,7 +84,14 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           const SizedBox(width: 11),
           _button(
             iconAsset: "assets/images/icons/_common/link.svg",
-            active: true,
+            active: () {
+              try {
+                return task.links!.toList().isNotEmpty &&
+                    task.links!.toList().every((element) => element.isNotEmpty);
+              } catch (e) {
+                return false;
+              }
+            }(),
             onPressed: () {
               var cubit = context.read<EditTaskCubit>();
 
