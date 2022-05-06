@@ -126,6 +126,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 8),
                           ],
                         ),
                       ),
