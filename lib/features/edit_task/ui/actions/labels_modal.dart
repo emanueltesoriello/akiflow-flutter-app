@@ -5,6 +5,7 @@ import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/task/label_item.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/label_ext.dart';
 import 'package:models/label/label.dart';
 
 class LabelsModal extends StatefulWidget {
@@ -46,6 +47,8 @@ class _LabelsModalState extends State<LabelsModal> {
                 BlocBuilder<TasksCubit, TasksCubitState>(
                   builder: (context, state) {
                     List<Label> labels = state.labels.toList();
+
+                    labels = LabelExt.filter(labels);
 
                     return Expanded(
                       child: ValueListenableBuilder<String>(
