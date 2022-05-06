@@ -199,8 +199,27 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  void assignLabel({Task? task}) {
-    // TODO TasksHelper.assignLabel(task: task);
+  void assignLabel(Label label) {
+    List<Task> tasksSelected =
+        state.tasks.where((t) => t.selected ?? false).toList();
+
+    List<Task> updated = state.tasks.toList();
+
+    for (Task task in tasksSelected) {
+      int index = updated.indexWhere((t) => t.id == task.id);
+
+      Task updatedTask = task.rebuild(
+        (b) => b
+          ..listId = label.id
+          ..updatedAt = DateTime.now().toUtc(),
+      );
+
+      updated[index] = updatedTask;
+    }
+
+    emit(state.copyWith(tasks: updated));
+
+    syncTasks();
   }
 
   void selectPriority() {

@@ -3,14 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/task/label_item.dart';
-import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/label/label.dart';
 
 class LabelsModal extends StatefulWidget {
+  final Function(Label) selectLabel;
+
   const LabelsModal({
     Key? key,
+    required this.selectLabel,
   }) : super(key: key);
 
   @override
@@ -99,10 +101,7 @@ class _LabelsModalState extends State<LabelsModal> {
                                 return LabelItem(
                                   noLabel,
                                   onTap: () {
-                                    context
-                                        .read<EditTaskCubit>()
-                                        .setLabel(noLabel);
-
+                                    widget.selectLabel(noLabel);
                                     Navigator.pop(context);
                                   },
                                 );
@@ -115,7 +114,7 @@ class _LabelsModalState extends State<LabelsModal> {
                               return LabelItem(
                                 label,
                                 onTap: () {
-                                  context.read<EditTaskCubit>().setLabel(label);
+                                  widget.selectLabel(label);
                                   Navigator.pop(context);
                                 },
                               );

@@ -246,9 +246,10 @@ class _EditTaskRowState extends State<EditTaskRow> {
           context: context,
           backgroundColor: Colors.transparent,
           isScrollControlled: true,
-          builder: (context) => BlocProvider.value(
-            value: cubit,
-            child: const LabelsModal(),
+          builder: (context) => LabelsModal(
+            selectLabel: (Label label) {
+              cubit.setLabel(label);
+            },
           ),
         );
       },

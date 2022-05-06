@@ -4,10 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:models/label/label.dart';
 
 enum BottomTaskAdditionalActions {
   moveToInbox,
@@ -102,7 +104,18 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/number.svg',
                   bottomLabel: t.task.assign,
                   click: () {
-                    // TODO open labels and select
+                    var cubit = context.read<TasksCubit>();
+
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (context) => LabelsModal(
+                        selectLabel: (Label label) {
+                          cubit.assignLabel(label);
+                        },
+                      ),
+                    );
                   },
                 ),
               ),
