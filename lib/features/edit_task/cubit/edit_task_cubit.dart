@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
-import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
@@ -13,8 +12,6 @@ part 'edit_task_state.dart';
 
 class EditTaskCubit extends Cubit<EditTaskCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
-  final SyncControllerService _syncControllerService =
-      locator<SyncControllerService>();
 
   final TasksCubit _tasksCubit;
 
@@ -64,14 +61,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.syncTasks();
   }
 
-  void selectPlanType(EditTaskPlanType type) {
-    emit(state.copyWith(planType: type));
-  }
-
   Future<void> planFor(
-    DateTime date, {
+    DateTime? date, {
     DateTime? dateTime,
     bool? update = true,
+    required TaskStatusType statusType,
   }) async {
     Task updated = state.newTask.rebuild(
       (b) => b..updatedAt = DateTime.now().toUtc(),
@@ -80,9 +74,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     updated = updated.planFor(
       date: date,
       dateTime: dateTime,
-      status: state.planType == EditTaskPlanType.plan
-          ? TaskStatusType.planned.id
-          : TaskStatusType.snoozed.id,
+      status: statusType.id,
     );
 
     emit(state.copyWith(newTask: updated));
@@ -252,7 +244,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _updateUiRepositoryAndSync(updated);
   }
 
-  void setDeadline(DateTime date, {bool update = true}) {
+  void setDeadline(DateTime? date, {bool update = true}) {
     Task task = state.newTask.rebuild(
       (b) => b
         ..dueDate = date

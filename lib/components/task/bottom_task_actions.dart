@@ -4,8 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
 
 enum BottomTaskAdditionalActions {
   moveToInbox,
@@ -35,7 +37,28 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/calendar.svg',
                   bottomLabel: t.task.plan,
                   click: () {
-                    // TODO open calendar and plan
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (context) => PlanModal(
+                        onAddTimeClick:
+                            (DateTime? date, TaskStatusType statusType) {
+                          context
+                              .read<TasksCubit>()
+                              .planFor(date, statusType: statusType);
+                        },
+                        setForInbox: () {
+                          context
+                              .read<TasksCubit>()
+                              .planFor(null, statusType: TaskStatusType.inbox);
+                        },
+                        setForSomeday: () {
+                          context.read<TasksCubit>().planFor(null,
+                              statusType: TaskStatusType.someday);
+                        },
+                      ),
+                    );
                   },
                 ),
               ),
@@ -46,7 +69,29 @@ class BottomTaskActions extends StatelessWidget {
                   icon: 'assets/images/icons/_common/clock.svg',
                   bottomLabel: t.task.snooze,
                   click: () {
-                    // TODO open calendar and snooze
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (context) => PlanModal(
+                        statusType: TaskStatusType.snoozed,
+                        onAddTimeClick:
+                            (DateTime? date, TaskStatusType statusType) {
+                          context
+                              .read<TasksCubit>()
+                              .planFor(date, statusType: statusType);
+                        },
+                        setForInbox: () {
+                          context
+                              .read<TasksCubit>()
+                              .planFor(null, statusType: TaskStatusType.inbox);
+                        },
+                        setForSomeday: () {
+                          context.read<TasksCubit>().planFor(null,
+                              statusType: TaskStatusType.someday);
+                        },
+                      ),
+                    );
                   },
                 ),
               ),
@@ -83,10 +128,13 @@ class BottomTaskActions extends StatelessWidget {
                   onSelected: (BottomTaskAdditionalActions result) {
                     switch (result) {
                       case BottomTaskAdditionalActions.moveToInbox:
-                        context.read<TasksCubit>().moveToInbox();
+                        context
+                            .read<TasksCubit>()
+                            .planFor(null, statusType: TaskStatusType.inbox);
                         break;
                       case BottomTaskAdditionalActions.planForToday:
-                        context.read<TasksCubit>().planFor(DateTime.now());
+                        context.read<TasksCubit>().planFor(DateTime.now(),
+                            statusType: TaskStatusType.inbox);
                         break;
                       case BottomTaskAdditionalActions.setDeadline:
                         context.read<TasksCubit>().setDeadline();

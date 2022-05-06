@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/add_task/ui/add_task_duration.dart';
 import 'package:mobile/features/add_task/ui/add_task_labels.dart';
-import 'package:mobile/features/add_task/ui/plan_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -231,7 +231,13 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
         String text;
         Color color;
 
-        if (state.planType == EditTaskPlanType.plan) {
+        TaskStatusType? status =
+            TaskStatusTypeExt.fromId(state.newTask.status) ??
+                TaskStatusType.inbox;
+
+        if ((status == TaskStatusType.inbox ||
+                status == TaskStatusType.planned) &&
+            status != TaskStatusType.someday) {
           color = ColorsExt.cyan25(context);
           leadingIconAsset = "assets/images/icons/_common/calendar.svg";
         } else {
@@ -274,16 +280,26 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
           onPressed: () {
             FocusManager.instance.primaryFocus?.unfocus();
 
-            EditTaskCubit cubit = context.read<EditTaskCubit>();
+            var editTaskCubit = context.read<EditTaskCubit>();
 
             showModalBottomSheet(
               context: context,
               backgroundColor: Colors.transparent,
               barrierColor: Colors.transparent,
               isScrollControlled: true,
-              builder: (context) => BlocProvider.value(
-                value: cubit,
-                child: const PlanModal(updateTasksAfterSelected: false),
+              builder: (context) => PlanModal(
+                onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
+                  editTaskCubit.planFor(date,
+                      statusType: statusType, update: false);
+                },
+                setForInbox: () {
+                  editTaskCubit.planFor(null,
+                      statusType: TaskStatusType.inbox, update: false);
+                },
+                setForSomeday: () {
+                  editTaskCubit.planFor(null,
+                      statusType: TaskStatusType.someday, update: false);
+                },
               ),
             );
           },

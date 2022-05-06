@@ -5,15 +5,47 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/features/add_task/ui/add_task_calendar.dart';
 import 'package:mobile/features/add_task/ui/add_task_top_action_item.dart';
-import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/plan_modal/cubit/plan_modal_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
 
 class PlanModal extends StatelessWidget {
-  final bool updateTasksAfterSelected;
+  final Function(DateTime?, TaskStatusType statusType) onAddTimeClick;
+  final Function() setForInbox;
+  final Function() setForSomeday;
+  final TaskStatusType? statusType;
 
   const PlanModal({
     Key? key,
-    required this.updateTasksAfterSelected,
+    required this.onAddTimeClick,
+    required this.setForInbox,
+    required this.setForSomeday,
+    this.statusType = TaskStatusType.inbox,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => PlanModalCubit(statusType!),
+      child: _View(
+        onAddTimeClick: onAddTimeClick,
+        setForInbox: setForInbox,
+        setForSomeday: setForSomeday,
+      ),
+    );
+  }
+}
+
+class _View extends StatelessWidget {
+  final Function(DateTime?, TaskStatusType statusType) onAddTimeClick;
+  final Function() setForInbox;
+  final Function() setForSomeday;
+
+  const _View({
+    Key? key,
+    required this.onAddTimeClick,
+    required this.setForInbox,
+    required this.setForSomeday,
   }) : super(key: key);
 
   @override
@@ -39,15 +71,16 @@ class PlanModal extends StatelessWidget {
                     _planType(),
                     _predefinedDate(context),
                     AddTaskCalendar(
-                      onDateSelected: (DateTime date) {
-                        context
-                            .read<EditTaskCubit>()
-                            .selectDate(date, update: false);
+                      selectedDate:
+                          context.watch<PlanModalCubit>().state.selectedDate,
+                      onDateSelected: (DateTime? date) {
+                        context.read<PlanModalCubit>().selectDate(date);
                       },
-                      onAddTimeClick: (DateTime date) {
-                        context
-                            .read<EditTaskCubit>()
-                            .selectDate(date, update: true);
+                      onAddTimeClick: (DateTime? date) {
+                        TaskStatusType statusType =
+                            context.read<PlanModalCubit>().state.statusType;
+
+                        onAddTimeClick(date, statusType);
                       },
                     ),
                     const SizedBox(height: 16),
@@ -65,7 +98,7 @@ class PlanModal extends StatelessWidget {
     return SizedBox(
       height: 70,
       width: double.infinity,
-      child: BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+      child: BlocBuilder<PlanModalCubit, PlanModalCubitState>(
         builder: (context, state) {
           return Column(
             children: [
@@ -79,11 +112,11 @@ class PlanModal extends StatelessWidget {
                       color: ColorsExt.cyan25(context),
                       leadingIconAsset:
                           "assets/images/icons/_common/calendar.svg",
-                      active: state.planType == EditTaskPlanType.plan,
+                      active: state.statusType == TaskStatusType.planned,
                       onPressed: () {
                         context
-                            .read<EditTaskCubit>()
-                            .selectPlanType(EditTaskPlanType.plan);
+                            .read<PlanModalCubit>()
+                            .selectPlanType(TaskStatusType.planned);
                       },
                     ),
                     const SizedBox(width: 24),
@@ -91,11 +124,11 @@ class PlanModal extends StatelessWidget {
                       text: t.addTask.snooze,
                       color: ColorsExt.pink30(context),
                       leadingIconAsset: "assets/images/icons/_common/clock.svg",
-                      active: state.planType == EditTaskPlanType.snooze,
+                      active: state.statusType == TaskStatusType.snoozed,
                       onPressed: () {
                         context
-                            .read<EditTaskCubit>()
-                            .selectPlanType(EditTaskPlanType.snooze);
+                            .read<PlanModalCubit>()
+                            .selectPlanType(TaskStatusType.snoozed);
                       },
                     ),
                   ],
@@ -121,37 +154,42 @@ class PlanModal extends StatelessWidget {
         Container(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: Column(children: [
-            BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+            BlocBuilder<PlanModalCubit, PlanModalCubitState>(
               builder: (context, state) {
-                switch (state.planType) {
-                  case EditTaskPlanType.plan:
-                    return _predefinedDateItem(
-                      context,
-                      iconAsset:
-                          "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
-                      text: t.addTask.today,
-                      trailingText: DateFormat("EEE").format(DateTime.now()),
-                      onPressed: () {
-                        context.read<EditTaskCubit>().planFor(now);
-                        Navigator.pop(context);
-                      },
-                    );
-                  case EditTaskPlanType.snooze:
-                    DateTime laterToday =
-                        DateTime(now.year, now.month, now.day, now.hour + 3);
+                if (state.statusType == TaskStatusType.planned) {
+                  return _predefinedDateItem(
+                    context,
+                    iconAsset:
+                        "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
+                    text: t.addTask.today,
+                    trailingText: DateFormat("EEE").format(DateTime.now()),
+                    onPressed: () {
+                      onAddTimeClick(
+                        now,
+                        TaskStatusType.planned,
+                      );
 
-                    return _predefinedDateItem(
-                      context,
-                      iconAsset: "assets/images/icons/_common/clock.svg",
-                      text: t.addTask.laterToday,
-                      trailingText: DateFormat("EEE HH:mm").format(laterToday),
-                      onPressed: () {
-                        context
-                            .read<EditTaskCubit>()
-                            .planFor(laterToday, dateTime: laterToday);
-                        Navigator.pop(context);
-                      },
-                    );
+                      Navigator.pop(context);
+                    },
+                  );
+                } else {
+                  DateTime laterToday =
+                      DateTime(now.year, now.month, now.day, now.hour + 3);
+
+                  return _predefinedDateItem(
+                    context,
+                    iconAsset: "assets/images/icons/_common/clock.svg",
+                    text: t.addTask.laterToday,
+                    trailingText: DateFormat("EEE HH:mm").format(laterToday),
+                    onPressed: () {
+                      onAddTimeClick(
+                        laterToday,
+                        TaskStatusType.snoozed,
+                      );
+
+                      Navigator.pop(context);
+                    },
+                  );
                 }
               },
             ),
@@ -164,9 +202,11 @@ class PlanModal extends StatelessWidget {
               trailingText:
                   DateFormat("EEE").format(now.add(const Duration(days: 1))),
               onPressed: () {
-                context
-                    .read<EditTaskCubit>()
-                    .planFor(now.add(const Duration(days: 1)));
+                onAddTimeClick(
+                  now.add(const Duration(days: 1)),
+                  context.read<PlanModalCubit>().state.statusType,
+                );
+
                 Navigator.pop(context);
               },
             ),
@@ -182,37 +222,40 @@ class PlanModal extends StatelessWidget {
                 text: t.addTask.nextWeek,
                 trailingText: DateFormat("EEE").format(nextMonday),
                 onPressed: () {
-                  context.read<EditTaskCubit>().planFor(nextMonday);
+                  onAddTimeClick(
+                    nextMonday,
+                    context.read<PlanModalCubit>().state.statusType,
+                  );
+
                   Navigator.pop(context);
                 },
               );
             }),
             const SizedBox(height: 2),
-            BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+            BlocBuilder<PlanModalCubit, PlanModalCubitState>(
               builder: (context, state) {
-                switch (state.planType) {
-                  case EditTaskPlanType.plan:
-                    return _predefinedDateItem(
-                      context,
-                      iconAsset: "assets/images/icons/_common/slash_circle.svg",
-                      text: t.addTask.remove,
-                      trailingText: t.bottomBar.inbox,
-                      onPressed: () {
-                        context.read<EditTaskCubit>().setForInbox();
-                        Navigator.pop(context);
-                      },
-                    );
-                  case EditTaskPlanType.snooze:
-                    return _predefinedDateItem(
-                      context,
-                      iconAsset: "assets/images/icons/_common/archivebox.svg",
-                      text: t.addTask.someday,
-                      trailingText: t.addTask.noDate,
-                      onPressed: () {
-                        context.read<EditTaskCubit>().setSomeday();
-                        Navigator.pop(context);
-                      },
-                    );
+                if (state.statusType == TaskStatusType.planned) {
+                  return _predefinedDateItem(
+                    context,
+                    iconAsset: "assets/images/icons/_common/slash_circle.svg",
+                    text: t.addTask.remove,
+                    trailingText: t.bottomBar.inbox,
+                    onPressed: () {
+                      setForInbox();
+                      Navigator.pop(context);
+                    },
+                  );
+                } else {
+                  return _predefinedDateItem(
+                    context,
+                    iconAsset: "assets/images/icons/_common/archivebox.svg",
+                    text: t.addTask.someday,
+                    trailingText: t.addTask.noDate,
+                    onPressed: () {
+                      setForSomeday();
+                      Navigator.pop(context);
+                    },
+                  );
                 }
               },
             ),

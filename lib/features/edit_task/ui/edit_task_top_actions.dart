@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
-import 'package:mobile/features/add_task/ui/plan_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -62,7 +62,13 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
         String text;
         Color color;
 
-        if (state.planType == EditTaskPlanType.plan) {
+        TaskStatusType? status =
+            TaskStatusTypeExt.fromId(state.newTask.status) ??
+                TaskStatusType.inbox;
+
+        if ((status == TaskStatusType.inbox ||
+                status == TaskStatusType.planned) &&
+            status != TaskStatusType.someday) {
           color = ColorsExt.cyan25(context);
           leadingIconAsset = "assets/images/icons/_common/calendar.svg";
         } else {
@@ -114,7 +120,17 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               isScrollControlled: true,
               builder: (context) => BlocProvider.value(
                 value: cubit,
-                child: const PlanModal(updateTasksAfterSelected: true),
+                child: PlanModal(
+                  onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
+                    cubit.planFor(date, statusType: statusType);
+                  },
+                  setForInbox: () {
+                    cubit.planFor(null, statusType: TaskStatusType.inbox);
+                  },
+                  setForSomeday: () {
+                    cubit.planFor(null, statusType: TaskStatusType.someday);
+                  },
+                ),
               ),
             );
           },

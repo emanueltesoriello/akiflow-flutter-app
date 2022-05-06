@@ -296,13 +296,13 @@ extension TaskExt on Task {
   }
 
   Task planFor({
-    required DateTime date,
+    required DateTime? date,
     DateTime? dateTime,
     required int status,
   }) {
     return rebuild(
       (b) => b
-        ..date = date.toUtc()
+        ..date = date?.toUtc()
         ..datetime = dateTime?.toUtc()
         ..status = status,
     );

@@ -134,26 +134,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     );
   }
 
-  void moveToInbox() {
-    List<Task> tasksSelected =
-        state.tasks.where((t) => t.selected ?? false).toList();
-
-    for (Task task in tasksSelected) {
-      int index = state.tasks.indexWhere((t) => t.id == task.id);
-
-      state.tasks[index] = task.rebuild(
-        (b) => b
-          ..status = TaskStatusType.inbox.id
-          ..date = null
-          ..updatedAt = DateTime.now().toUtc(),
-      );
-    }
-
-    clearSelected();
-
-    emit(state.copyWith(tasks: state.tasks));
-  }
-
   Future<void> duplicate([Task? task]) async {
     DateTime? now = DateTime.now().toUtc();
 
@@ -223,8 +203,35 @@ class TasksCubit extends Cubit<TasksCubitState> {
     // TODO TasksHelper.assignLabel(task: task);
   }
 
-  void selectPriority({Task? task}) {
-    // TODO TasksHelper.selectPriority(task: task);
+  void selectPriority() {
+    List<Task> tasksSelected =
+        state.tasks.where((t) => t.selected ?? false).toList();
+
+    List<Task> updated = state.tasks.toList();
+
+    for (Task task in tasksSelected) {
+      int index = updated.indexWhere((t) => t.id == task.id);
+
+      int currentPriority = task.priority ?? 0;
+
+      if (currentPriority + 1 > 3) {
+        currentPriority = 0;
+      } else {
+        currentPriority++;
+      }
+
+      Task updatedTask = task.rebuild(
+        (b) => b
+          ..priority = currentPriority
+          ..updatedAt = DateTime.now().toUtc(),
+      );
+
+      updated[index] = updatedTask;
+    }
+
+    emit(state.copyWith(tasks: updated));
+
+    syncTasks();
   }
 
   void setDeadline({Task? task}) {
@@ -289,20 +296,36 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(tasks: tasksUpdated));
   }
 
-  void planFor(DateTime date, {DateTime? dateTime}) {
+  Future<void> planFor(
+    DateTime? date, {
+    DateTime? dateTime,
+    required TaskStatusType statusType,
+  }) async {
     List<Task> tasksSelected =
         state.tasks.where((t) => t.selected ?? false).toList();
 
     for (Task task in tasksSelected) {
-      task = task.planFor(
+      int index = state.tasks.indexWhere((t) => t.id == task.id);
+
+      Task updated = task.rebuild(
+        (b) => b..updatedAt = DateTime.now().toUtc(),
+      );
+
+      updated = updated.planFor(
         date: date,
         dateTime: dateTime,
-        status: TaskStatusType.planned.id,
+        status: statusType.id,
       );
+
+      state.tasks[index] = updated;
+
+      await _tasksRepository.updateById(task.id, data: updated);
     }
 
     clearSelected();
 
     emit(state.copyWith(tasks: state.tasks));
+
+    syncTasks();
   }
 }

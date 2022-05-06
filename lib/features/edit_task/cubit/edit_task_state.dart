@@ -4,7 +4,6 @@ enum EditTaskPlanType { plan, snooze }
 
 class EditTaskCubitState extends Equatable {
   final bool loading;
-  final EditTaskPlanType planType;
   final Task newTask;
   final DateTime? selectedDate;
   final double? selectedDuration;
@@ -14,7 +13,6 @@ class EditTaskCubitState extends Equatable {
 
   const EditTaskCubitState({
     this.loading = false,
-    this.planType = EditTaskPlanType.plan,
     required this.newTask,
     this.selectedDate,
     this.selectedDuration,
@@ -25,7 +23,6 @@ class EditTaskCubitState extends Equatable {
 
   EditTaskCubitState copyWith({
     bool? loading,
-    EditTaskPlanType? planType,
     Task? newTask,
     DateTime? selectedDate,
     double? selectedDuration,
@@ -35,7 +32,6 @@ class EditTaskCubitState extends Equatable {
   }) {
     return EditTaskCubitState(
       loading: loading ?? this.loading,
-      planType: planType ?? this.planType,
       newTask: newTask ?? this.newTask,
       selectedDate: selectedDate ?? this.selectedDate,
       selectedDuration: selectedDuration ?? this.selectedDuration,
@@ -48,7 +44,6 @@ class EditTaskCubitState extends Equatable {
   @override
   List<Object?> get props => [
         loading,
-        planType,
         newTask,
         selectedDate,
         selectedDuration,
