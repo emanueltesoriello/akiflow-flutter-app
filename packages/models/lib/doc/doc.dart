@@ -167,11 +167,10 @@ class Doc extends DocBase implements Base {
   static Doc fromSql(Map<String, dynamic> json) {
     Map<String, dynamic>? copy = Map<String, dynamic>.from(json);
 
-    Map<String, dynamic> content = json['content'] != null
-        ? jsonDecode(json['content'] as String) as Map<String, dynamic>
-        : <String, dynamic>{};
-
-    copy['content'] = content;
+    try {
+      copy['content'] =
+          jsonDecode(json['content'] as String) as Map<String, dynamic>;
+    } catch (_) {}
 
     return Doc.fromMap(copy);
   }
