@@ -256,12 +256,17 @@ class Task extends Equatable implements Base {
   static Task fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
-    if (data.containsKey("done") && data["done"] != null) {
+    try {
       data["done"] = (data["done"] == 1);
-    }
+    } catch (_) {}
 
-    data["listId"] = data["list_id"];
-    data["dailyGoal"] = data["daily_goal"];
+    try {
+      data["listId"] = data["list_id"] as String?;
+    } catch (_) {}
+
+    try {
+      data["dailyGoal"] = data["daily_goal"] as int?;
+    } catch (_) {}
 
     List<String> linksList = [];
 

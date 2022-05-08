@@ -22,7 +22,11 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     List<T> result = [];
 
     for (dynamic item in items) {
-      result.add(fromSql(item));
+      try {
+        result.add(fromSql(item));
+      } catch (e) {
+        print("Failed to parse item: $item exception $e");
+      }
     }
 
     return result;
