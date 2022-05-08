@@ -163,8 +163,8 @@ class SyncService {
         if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
           if (remoteItem is Doc || remoteItem is Task) {
             remoteItem = remoteItem.copyWith(
-              globalUpdatedAt: remoteItem.globalUpdatedAt,
               updatedAt: remoteItem.globalUpdatedAt,
+              remoteUpdatedAt: remoteItem.globalUpdatedAt,
             );
           } else {
             remoteItem = remoteItem.rebuild((t) {
@@ -186,8 +186,8 @@ class SyncService {
       } else {
         if (remoteItem is Doc || remoteItem is Task) {
           remoteItem = remoteItem.copyWith(
-            globalUpdatedAt: remoteItem.globalUpdatedAt,
             updatedAt: remoteItem.globalUpdatedAt,
+            remoteUpdatedAt: remoteItem.globalUpdatedAt,
           );
         } else {
           remoteItem = remoteItem.rebuild((t) {

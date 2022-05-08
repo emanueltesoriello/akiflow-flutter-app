@@ -196,8 +196,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       },
     );
 
-    print(updated);
-
     emit(state.copyWith(newTask: updated));
 
     _updateUiRepositoryAndSync(updated);
