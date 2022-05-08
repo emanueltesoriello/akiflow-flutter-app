@@ -2,6 +2,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
+import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -332,11 +333,10 @@ extension TaskExt on Task {
     DateTime? dateTime,
     required int status,
   }) {
-    return rebuild(
-      (b) => b
-        ..date = date?.toUtc()
-        ..datetime = dateTime?.toUtc()
-        ..status = status,
+    return copyWith(
+      date: Nullable(date?.toUtc()),
+      datetime: dateTime?.toUtc(),
+      status: status,
     );
   }
 
@@ -358,20 +358,18 @@ extension TaskExt on Task {
     Task updated;
 
     if (!done) {
-      updated = rebuild(
-        (b) => b
-          ..done = true
-          ..doneAt = now
-          ..updatedAt = now
-          ..status = TaskStatusType.completed.id,
+      updated = copyWith(
+        done: true,
+        doneAt: Nullable(now),
+        updatedAt: now,
+        status: TaskStatusType.completed.id,
       );
     } else {
-      updated = rebuild(
-        (b) => b
-          ..done = false
-          ..doneAt = null
-          ..updatedAt = now
-          ..status = lastDoneTaskStatus?.id,
+      updated = copyWith(
+        done: false,
+        doneAt: Nullable(null),
+        updatedAt: now,
+        status: lastDoneTaskStatus?.id,
       );
     }
 
@@ -381,11 +379,10 @@ extension TaskExt on Task {
   }
 
   Task delete() {
-    return rebuild(
-      (b) => b
-        ..status = TaskStatusType.deleted.id
-        ..deletedAt = DateTime.now().toUtc()
-        ..updatedAt = DateTime.now().toUtc(),
+    return copyWith(
+      status: TaskStatusType.deleted.id,
+      deletedAt: DateTime.now().toUtc(),
+      updatedAt: DateTime.now().toUtc(),
     );
   }
 }

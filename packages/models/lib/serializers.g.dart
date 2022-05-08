@@ -11,7 +11,6 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Calendar.serializer)
       ..add(Event.serializer)
       ..add(Label.serializer)
-      ..add(Task.serializer)
       ..add(User.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),

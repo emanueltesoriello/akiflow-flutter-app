@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/src/recurrence_rule.dart';
 import 'package:uuid/uuid.dart';
@@ -23,10 +23,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       : super(
           EditTaskCubitState(
             newTask: task ??
-                Task().rebuild(
-                  (b) => b
-                    ..id = const Uuid().v4()
-                    ..status = TaskStatusType.inbox.id,
+                const Task().copyWith(
+                  id: const Uuid().v4(),
+                  status: TaskStatusType.inbox.id,
                 ),
           ),
         ) {
@@ -41,13 +40,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }) async {
     DateTime? now = DateTime.now().toUtc();
 
-    Task updated = state.newTask.rebuild(
-      (b) => b
-        ..title = title
-        ..description = description
-        ..updatedAt = now
-        ..createdAt = now
-        ..listId = state.selectedLabel?.id,
+    Task updated = state.newTask.copyWith(
+      title: title,
+      description: description,
+      updatedAt: now,
+      createdAt: now,
+      listId: state.selectedLabel?.id,
     );
 
     emit(state.copyWith(newTask: updated));
@@ -69,8 +67,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     bool? update = true,
     required TaskStatusType statusType,
   }) async {
-    Task updated = state.newTask.rebuild(
-      (b) => b..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      updatedAt: DateTime.now().toUtc(),
     );
 
     updated = updated.planFor(
@@ -87,11 +85,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   Future<void> setForInbox() async {
-    Task updated = state.newTask.rebuild(
-      (b) => b
-        ..date = null
-        ..updatedAt = DateTime.now().toUtc()
-        ..status = TaskStatusType.inbox.id,
+    Task updated = state.newTask.copyWith(
+      date: Nullable(null),
+      updatedAt: DateTime.now().toUtc(),
+      status: TaskStatusType.inbox.id,
     );
 
     emit(state.copyWith(newTask: updated));
@@ -100,11 +97,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   Future<void> setSomeday() async {
-    Task updated = state.newTask.rebuild(
-      (b) => b
-        ..date = null
-        ..updatedAt = DateTime.now().toUtc()
-        ..status = TaskStatusType.someday.id,
+    Task updated = state.newTask.copyWith(
+      date: Nullable(null),
+      updatedAt: DateTime.now().toUtc(),
+      status: TaskStatusType.someday.id,
     );
 
     emit(state.copyWith(newTask: updated));
@@ -116,8 +112,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }) async {
     emit(state.copyWith(selectedDate: selectedDate));
 
-    Task updated = state.newTask.rebuild(
-      (b) => b..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      updatedAt: DateTime.now().toUtc(),
     );
 
     updated =
@@ -138,10 +134,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     double seconds = value * 3600;
 
-    Task updated = state.newTask.rebuild(
-      (b) => b
-        ..duration = seconds.toInt()
-        ..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      duration: Nullable(seconds.toInt()),
+      updatedAt: DateTime.now().toUtc(),
     );
 
     emit(state.copyWith(newTask: updated));
@@ -155,10 +150,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(setDuration: !state.setDuration));
 
     if (state.setDuration == false) {
-      Task updated = state.newTask.rebuild(
-        (b) => b
-          ..duration = null
-          ..updatedAt = DateTime.now().toUtc(),
+      Task updated = state.newTask.copyWith(
+        duration: Nullable(null),
+        updatedAt: DateTime.now().toUtc(),
       );
 
       emit(state.copyWith(newTask: updated));
@@ -174,10 +168,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setLabel(Label label, {bool update = true}) {
-    Task updated = state.newTask.rebuild(
-      (b) => b
-        ..listId = label.id
-        ..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      listId: label.id,
+      updatedAt: DateTime.now().toUtc(),
     );
 
     emit(state.copyWith(
@@ -192,8 +185,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void markAsDone(Task task) {
-    Task updated = task.rebuild(
-      (b) => b..updatedAt = DateTime.now().toUtc(),
+    Task updated = task.copyWith(
+      updatedAt: DateTime.now().toUtc(),
     );
 
     updated = task.markAsDone(
@@ -211,10 +204,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void removeLink(String link) {
-    Task task = state.newTask.rebuild(
-      (b) => b
-        ..links.remove(link)
-        ..updatedAt = DateTime.now().toUtc(),
+    Task task = state.newTask.copyWith(
+      links: (state.newTask.links ?? []).where((l) => l != link).toList(),
+      updatedAt: DateTime.now().toUtc(),
     );
 
     emit(state.copyWith(newTask: task));
@@ -223,8 +215,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void snooze(DateTime date) {
-    Task updated = state.newTask.rebuild(
-      (b) => b..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      updatedAt: DateTime.now().toUtc(),
     );
 
     updated = updated.planFor(date: date, status: TaskStatusType.snoozed.id);
@@ -235,8 +227,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   Future<void> delete() async {
-    Task updated = state.newTask.rebuild(
-      (b) => b..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      updatedAt: DateTime.now().toUtc(),
     );
 
     updated = updated.delete();
@@ -247,26 +239,24 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setDeadline(DateTime? date, {bool update = true}) {
-    Task task = state.newTask.rebuild(
-      (b) => b
-        ..dueDate = date
-        ..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      dueDate: date,
+      updatedAt: DateTime.now().toUtc(),
     );
 
-    emit(state.copyWith(newTask: task));
+    emit(state.copyWith(newTask: updated));
 
     if (update) {
-      _updateUiRepositoryAndSync(task);
+      _updateUiRepositoryAndSync(updated);
     }
   }
 
   void toggleDailyGoal() {
     int currentDailyGoal = state.newTask.dailyGoal ?? 0;
 
-    Task task = state.newTask.rebuild(
-      (b) => b
-        ..dailyGoal = currentDailyGoal == 0 ? 1 : 0
-        ..updatedAt = DateTime.now().toUtc(),
+    Task task = state.newTask.copyWith(
+      dailyGoal: currentDailyGoal == 0 ? 1 : 0,
+      updatedAt: DateTime.now().toUtc(),
     );
 
     emit(state.copyWith(newTask: task));
@@ -283,15 +273,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       currentPriority++;
     }
 
-    Task task = state.newTask.rebuild(
-      (b) => b
-        ..priority = currentPriority
-        ..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      priority: currentPriority,
+      updatedAt: DateTime.now().toUtc(),
     );
 
-    emit(state.copyWith(newTask: task));
+    emit(state.copyWith(newTask: updated));
 
-    _updateUiRepositoryAndSync(task);
+    _updateUiRepositoryAndSync(updated);
   }
 
   _updateUiRepositoryAndSync(Task task) async {
@@ -303,22 +292,20 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setRecurrence(RecurrenceRule? rule) {
-    ListBuilder<String>? recurrence;
+    List<String>? recurrence;
 
     if (rule != null) {
       String recurrenceString = rule.toString();
-      List<String> recList = recurrenceString.split(';');
-      recurrence = ListBuilder(recList);
+      recurrence = recurrenceString.split(';');
     }
 
-    Task task = state.newTask.rebuild(
-      (b) => b
-        ..recurrence = recurrence
-        ..updatedAt = DateTime.now().toUtc(),
+    Task updated = state.newTask.copyWith(
+      recurrence: recurrence,
+      updatedAt: DateTime.now().toUtc(),
     );
 
-    emit(state.copyWith(newTask: task));
+    emit(state.copyWith(newTask: updated));
 
-    _updateUiRepositoryAndSync(task);
+    _updateUiRepositoryAndSync(updated);
   }
 }

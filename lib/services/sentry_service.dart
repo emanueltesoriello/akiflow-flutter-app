@@ -7,6 +7,8 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 class SentryService {
   Future<void> captureException(exception, {stackTrace}) async {
     if (Config.development) {
+      print(exception);
+      print(stackTrace);
       throw exception;
     } else {
       if (SentryService.ignoreException(exception)) {

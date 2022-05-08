@@ -73,7 +73,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     int index = tasksUpdated.indexWhere((t) => t.id == task.id);
 
-    task = task.rebuild((b) => b..selected = !(task.selected ?? false));
+    task = task.copyWith(selected: !(task.selected ?? false));
 
     tasksUpdated[index] = task;
 
@@ -91,7 +91,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
           state.tasks.where((t) => t.selected ?? false).toList();
 
       for (Task taskSelected in tasksSelected) {
-        Task updated = taskSelected.rebuild((p0) => p0);
+        Task updated = taskSelected.copyWith();
 
         updated = updated.markAsDone(
           lastDoneTaskStatus: lastDoneTaskStatus,
@@ -109,7 +109,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       emit(state.copyWith(tasks: state.tasks));
     } else {
-      Task updated = task.rebuild((p0) => p0);
+      Task updated = task.copyWith();
 
       updated = updated.markAsDone(
         lastDoneTaskStatus: lastDoneTaskStatus,
@@ -140,16 +140,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> updated = state.tasks.toList();
 
     if (task != null) {
-      Task duplicated = (task.rebuild(
-        (b) => b
-          ..id = const Uuid().v4()
-          ..updatedAt = now
-          ..createdAt = now,
-      ));
+      Task newTaskDuplicated = task.copyWith(
+        id: const Uuid().v4(),
+        updatedAt: now,
+        createdAt: now,
+      );
 
-      updated.addAll([duplicated]);
+      updated.addAll([newTaskDuplicated]);
 
-      await _tasksRepository.add([duplicated]);
+      await _tasksRepository.add([newTaskDuplicated]);
     } else {
       List<Task> duplicates = [];
 
@@ -157,12 +156,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
           updated.where((t) => t.selected ?? false).toList();
 
       for (Task task in tasksSelected) {
-        duplicates.add(task.rebuild(
-          (b) => b
-            ..id = const Uuid().v4()
-            ..updatedAt = now
-            ..createdAt = now,
-        ));
+        Task newTaskDuplicated = task.copyWith(
+          id: const Uuid().v4(),
+          updatedAt: now,
+          createdAt: now,
+        );
+
+        duplicates.add(newTaskDuplicated);
       }
 
       updated.addAll(duplicates);
@@ -201,7 +201,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void assignLabel(Label label, {Task? task}) {
     if (task != null) {
-      task = task.rebuild((b) => b..selected = true);
+      task = task.copyWith(selected: true);
       int index = state.tasks.indexWhere((t) => t.id == task!.id);
       state.tasks[index] = task;
     }
@@ -214,10 +214,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in tasksSelected) {
       int index = updated.indexWhere((t) => t.id == task.id);
 
-      Task updatedTask = task.rebuild(
-        (b) => b
-          ..listId = label.id
-          ..updatedAt = DateTime.now().toUtc(),
+      Task updatedTask = task.copyWith(
+        listId: label.id,
+        updatedAt: DateTime.now().toUtc(),
       );
 
       updated[index] = updatedTask;
@@ -247,10 +246,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
         currentPriority++;
       }
 
-      Task updatedTask = task.rebuild(
-        (b) => b
-          ..priority = currentPriority
-          ..updatedAt = DateTime.now().toUtc(),
+      Task updatedTask = task.copyWith(
+        priority: currentPriority,
+        updatedAt: DateTime.now().toUtc(),
       );
 
       updated[index] = updatedTask;
@@ -271,7 +269,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in updated) {
       int index = updated.indexWhere((t) => t.id == task.id);
 
-      updated[index] = task.rebuild((b) => b..selected = false);
+      updated[index] = task.copyWith(selected: false);
     }
 
     emit(state.copyWith(tasks: updated));
@@ -297,12 +295,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
 
     List<Task> ordered = updated
-        .map((t) => t.rebuild(
-              (b) => b
-                ..sorting =
-                    millis - (1 * updated.indexWhere((e) => e.id == t.id) + 1)
-                ..updatedAt = now
-                ..selected = false,
+        .map((t) => t.copyWith(
+              sorting:
+                  millis - (1 * updated.indexWhere((e) => e.id == t.id) + 1),
+              updatedAt: now,
+              selected: false,
             ))
         .toList();
 
@@ -330,7 +327,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     Task? task,
   }) async {
     if (task != null) {
-      task = task.rebuild((b) => b..selected = true);
+      task = task.copyWith(selected: true);
       int index = state.tasks.indexWhere((t) => t.id == task!.id);
       state.tasks[index] = task;
     }
@@ -341,8 +338,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in tasksSelected) {
       int index = state.tasks.indexWhere((t) => t.id == task.id);
 
-      Task updated = task.rebuild(
-        (b) => b..updatedAt = DateTime.now().toUtc(),
+      Task updated = task.copyWith(
+        updatedAt: DateTime.now().toUtc(),
       );
 
       updated = updated.planFor(

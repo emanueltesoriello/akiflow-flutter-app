@@ -7,6 +7,7 @@ import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/task/task.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -105,7 +106,7 @@ class SyncService {
         maxDate = deletedAt;
       }
 
-      if (item is Doc) {
+      if (item is Doc || item is Task) {
         item = item.copyWith(
           globalUpdatedAt: maxDate ?? DateTime.now().toUtc(),
           updatedAt: maxDate ?? DateTime.now().toUtc(),
@@ -160,7 +161,7 @@ class SyncService {
             localTask.updatedAt?.millisecondsSinceEpoch ?? 0;
 
         if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
-          if (remoteItem is Doc) {
+          if (remoteItem is Doc || remoteItem is Task) {
             remoteItem = remoteItem.copyWith(
               globalUpdatedAt: remoteItem.globalUpdatedAt,
               updatedAt: remoteItem.globalUpdatedAt,
@@ -183,7 +184,7 @@ class SyncService {
           );
         }
       } else {
-        if (remoteItem is Doc) {
+        if (remoteItem is Doc || remoteItem is Task) {
           remoteItem = remoteItem.copyWith(
             globalUpdatedAt: remoteItem.globalUpdatedAt,
             updatedAt: remoteItem.globalUpdatedAt,

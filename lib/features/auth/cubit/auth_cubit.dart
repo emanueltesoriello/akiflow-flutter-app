@@ -11,7 +11,7 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
-import 'package:mobile/utils/nullable.dart';
+import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 
 part 'auth_state.dart';
@@ -55,8 +55,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
         Config.oauthRedirectUrl,
         // preferEphemeralSession: true,
         serviceConfiguration: AuthorizationServiceConfiguration(
-          authorizationEndpoint: Config.oauthEndpoint + '/oauth/authorize',
-          tokenEndpoint: Config.oauthEndpoint + '/oauth/authorize',
+          authorizationEndpoint: '${Config.oauthEndpoint}/oauth/authorize',
+          tokenEndpoint: '${Config.oauthEndpoint}/oauth/authorize',
         ),
       ),
     );
