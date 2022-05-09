@@ -12,7 +12,7 @@ import 'package:mobile/utils/converters_isolate.dart';
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
 
-  final Api api;
+  final ApiClient api;
   final DatabaseRepository databaseRepository;
 
   SyncService({
@@ -28,25 +28,22 @@ class SyncService {
 
     await _localToRemote();
 
-    setSyncStatusIfNotNull(
-        "${api.runtimeType} completed sync at: $updatedLastSync");
+    setSyncStatusIfNotNull("${api.runtimeType} completed sync at: $updatedLastSync");
 
     return updatedLastSync;
   }
 
   Future<DateTime?> _remoteToLocal(DateTime? lastSyncAt) async {
-    setSyncStatusIfNotNull(
-        "last sync at: $lastSyncAt, starting remote to local");
+    setSyncStatusIfNotNull("last sync at: $lastSyncAt, starting remote to local");
 
     var remoteItems = await api.get(
       perPage: 2500,
-      withDeleted: true,
+      withDeleted: lastSyncAt != null ? true : false,
       updatedAfter: lastSyncAt,
       allPages: true,
     );
 
-    setSyncStatusIfNotNull(
-        "remote to local retrieved: ${remoteItems.length} items");
+    setSyncStatusIfNotNull("remote to local retrieved: ${remoteItems.length} items");
 
     if (remoteItems.isEmpty) {
       return null;
@@ -54,8 +51,7 @@ class SyncService {
 
     DateTime? maxRemoteUpdateAt = await compute(getMaxUpdatedAt, remoteItems);
 
-    setSyncStatusIfNotNull(
-        "${api.runtimeType}: update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
+    setSyncStatusIfNotNull("${api.runtimeType}: update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
 
     // Upsert only after retrieved max remote update at.
     await _upsertItems(remoteItems);
@@ -100,15 +96,14 @@ class SyncService {
 
     bool anyInsertErrors = false;
 
-    var itemsToInsert = await compute(filterItemsToInsert,
-        PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
-    var itemsToUpdate = await compute(filterItemsToUpdate,
-        PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
+    var itemsToInsert =
+        await compute(filterItemsToInsert, PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
+    var itemsToUpdate =
+        await compute(filterItemsToUpdate, PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
 
     _sentryService.addBreadcrumb(
       category: "sync",
-      message:
-          'itemToInsert length: ${itemsToInsert.length}, itemToUpdate length: ${itemsToUpdate.length}',
+      message: 'itemToInsert length: ${itemsToInsert.length}, itemToUpdate length: ${itemsToUpdate.length}',
     );
 
     if (itemsToInsert.isNotEmpty) {
@@ -127,8 +122,7 @@ class SyncService {
     );
 
     if (anyInsertErrors) {
-      _sentryService
-          .captureException(UpsertDatabaseException("upsert items error"));
+      _sentryService.captureException(UpsertDatabaseException("upsert items error"));
     }
 
     setSyncStatusIfNotNull("upsert remote items: done");

@@ -8,13 +8,13 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/utils/converters_isolate.dart';
 
-class Api implements IBaseApi {
+class ApiClient implements IBaseApi {
   final HttpClient _httpClient = locator<HttpClient>();
 
   final Uri url;
   final Function(Map<String, dynamic>) fromMap;
 
-  Api(this.url, {required this.fromMap});
+  ApiClient(this.url, {required this.fromMap});
 
   @override
   Future<List<T>> get<T>({
@@ -35,42 +35,28 @@ class Api implements IBaseApi {
       params["updatedAfter"] = updatedAfter.toIso8601String();
     }
 
-    Uri urlWithQueryParameters = url.replace(queryParameters: params);
+    Map<String, dynamic> response;
 
-    print(urlWithQueryParameters);
+    List<T> result = [];
 
-    Response responseRaw = await _httpClient.get(urlWithQueryParameters);
+    do {
+      params["page"] = page.toString();
+      Uri urlWithQueryParameters = url.replace(queryParameters: params);
 
-    Map<String, dynamic> response = jsonDecode(responseRaw.body);
+      print(urlWithQueryParameters);
 
-    if (response.containsKey("errors")) {
-      throw ApiException(response);
-    }
+      Response responseRaw = await _httpClient.get(urlWithQueryParameters);
 
-    List<dynamic> items = response["data"];
-
-    List<T> result = await compute(
-        convertToObjList, RawListConvert(items: items, converter: fromMap));
-
-    if (allPages && response["next_page_url"] != null) {
-      while (response["next_page_url"] != null) {
-        page++;
-
-        params["page"] = page.toString();
-        urlWithQueryParameters = url.replace(queryParameters: params);
-
-        responseRaw = await _httpClient.get(urlWithQueryParameters);
-
-        response = jsonDecode(responseRaw.body);
-
-        if (response.containsKey("data") && response["data"] != null) {
-          items = response["data"];
-
-          result = await compute(convertToObjList,
-              RawListConvert(items: items, converter: fromMap));
-        }
+      response = jsonDecode(responseRaw.body);
+      if (response.containsKey("errors")) {
+        throw ApiException(response);
       }
-    }
+      if (response.containsKey("data") && response["data"] != null) {
+        List<dynamic> items = response["data"];
+        result = await compute(convertToObjList, RawListConvert(items: items, converter: fromMap));
+      }
+      page++;
+    } while (response["next_page_url"] != null);
 
     return result;
   }
@@ -94,8 +80,7 @@ class Api implements IBaseApi {
 
     List<dynamic> items = response["data"];
 
-    List<T> result = await compute(
-        convertToObjList, RawListConvert(items: items, converter: fromMap));
+    List<T> result = await compute(convertToObjList, RawListConvert(items: items, converter: fromMap));
 
     return result;
   }
