@@ -29,12 +29,17 @@ class SlackDoc extends Doc implements DocBase {
 
     // check workspace (SlackDocModel.ts)
 
-    if (content?["channelName"]) {
-      summaryPieces.add(content?["channelName"]);
-    }
-    if (content?["userName"]) {
-      summaryPieces.add(content?["userName"]);
-    }
+    try {
+      if (content?["channelName"]) {
+        summaryPieces.add(content?["channelName"]);
+      }
+    } catch (_) {}
+
+    try {
+      if (content?["userName"]) {
+        summaryPieces.add(content?["userName"]);
+      }
+    } catch (_) {}
 
     return summaryPieces.join(' - ');
   }
