@@ -148,6 +148,11 @@ class SyncService {
     var itemsToInsert = [];
 
     for (int i = 0; i < remoteItems.length; i++) {
+      _sentryService.addBreadcrumb(
+        category: "sync",
+        message: 'process item: $i/${remoteItems.length}',
+      );
+
       var remoteItem = remoteItems[i];
 
       bool hasAlreadyInLocalDatabase =
@@ -204,9 +209,19 @@ class SyncService {
       }
     }
 
+    _sentryService.addBreadcrumb(
+      category: "sync",
+      message: 'itemToInsert length: ${itemsToInsert.length}',
+    );
+
     if (itemsToInsert.isNotEmpty) {
       anyInsertErrors = await _addRemoteTaskToLocalDb(itemsToInsert);
     }
+
+    _sentryService.addBreadcrumb(
+      category: "sync",
+      message: 'anyInsertErrors: $anyInsertErrors',
+    );
 
     if (anyInsertErrors) {
       _sentryService
@@ -219,6 +234,11 @@ class SyncService {
   Future<bool> _addRemoteTaskToLocalDb(itemsToInsert) async {
     try {
       List<Object?> result = await databaseRepository.add(itemsToInsert);
+
+      _sentryService.addBreadcrumb(
+        category: "sync",
+        message: 'databaseRepository add result: $result',
+      );
 
       if (result.isEmpty) {
         throw UpsertDatabaseException('result empty');
