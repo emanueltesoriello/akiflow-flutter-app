@@ -101,12 +101,30 @@ extension TaskExt on Task {
     return false;
   }
 
+  DateTime? get endTime {
+    try {
+      return datetime!.add(Duration(seconds: duration!));
+    } catch (_) {}
+    return null;
+  }
+
+  bool get isPlanned {
+    return status == TaskStatusType.planned.id && date != null;
+  }
+
   bool get isOverdue {
-    if (date != null) {
-      return date!.day < DateTime.now().day;
+    final DateTime now = DateTime.now();
+
+    bool isOverdueDate = false;
+
+    if (endTime != null) {
+      DateTime endTimePlus1h = endTime!.add(const Duration(hours: 1));
+      isOverdueDate = endTimePlus1h.isBefore(now);
+    } else if (date != null) {
+      isOverdueDate = date!.isBefore(now);
     }
 
-    return false;
+    return isPlanned && !isCompletedComputed && isOverdueDate;
   }
 
   bool get isCompletedComputed {
