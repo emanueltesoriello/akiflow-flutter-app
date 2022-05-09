@@ -54,7 +54,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   refreshTasksFromRepository() async {
-    List<Task> tasks = await _tasksRepository.get();
+    List<Task> tasks = await _tasksRepository.getUndone();
     emit(state.copyWith(tasks: tasks));
 
     List<Label> labels = await _labelsRepository.get();

@@ -242,30 +242,13 @@ extension TaskExt on Task {
   }
 
   static List<Task> filterInboxTasks(List<Task> tasks) {
-    tasks.removeWhere((task) => task.deletedAt != null);
-
-    tasks.removeWhere((element) => element.done == true);
-
-    tasks.removeWhere((element) => element.doneAt != null);
-
     tasks.removeWhere((element) => element.statusType != TaskStatusType.inbox);
-
     return tasks;
   }
 
   static List<Task> filterTodayTasks(List<Task> tasks) {
-    tasks.removeWhere((task) => task.deletedAt != null);
-
-    tasks.removeWhere((task) => task.status == TaskStatusType.deleted.id);
-
     tasks.removeWhere((task) => task.status == TaskStatusType.inbox.id);
-
-    tasks.removeWhere((element) => element.done == true);
-
-    tasks.removeWhere((element) => element.doneAt != null);
-
     tasks.removeWhere((task) => !task.isTodayOrBefore);
-
     return tasks;
   }
 
