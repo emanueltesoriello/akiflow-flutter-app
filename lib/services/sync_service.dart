@@ -145,6 +145,8 @@ class SyncService {
 
     bool anyInsertErrors = false;
 
+    var itemsToInsert = [];
+
     for (int i = 0; i < remoteItems.length; i++) {
       var remoteItem = remoteItems[i];
 
@@ -198,8 +200,12 @@ class SyncService {
 
         remoteItems[i] = remoteItem;
 
-        anyInsertErrors = await _addRemoteTaskToLocalDb(remoteItem);
+        itemsToInsert.add(remoteItem);
       }
+    }
+
+    if (itemsToInsert.isNotEmpty) {
+      anyInsertErrors = await _addRemoteTaskToLocalDb(itemsToInsert);
     }
 
     if (anyInsertErrors) {
@@ -210,9 +216,9 @@ class SyncService {
     setSyncStatusIfNotNull("upsert remote items: done");
   }
 
-  Future<bool> _addRemoteTaskToLocalDb(remoteItem) async {
+  Future<bool> _addRemoteTaskToLocalDb(itemsToInsert) async {
     try {
-      List<Object?> result = await databaseRepository.add([remoteItem]);
+      List<Object?> result = await databaseRepository.add(itemsToInsert);
 
       if (result.isEmpty) {
         throw UpsertDatabaseException('result empty');
@@ -220,7 +226,7 @@ class SyncService {
     } catch (e) {
       _sentryService.addBreadcrumb(
         category: "sync",
-        message: '${api.runtimeType}: upsert item $remoteItem, exception: $e',
+        message: '${api.runtimeType}: upsert item, exception: $e',
       );
 
       return true;
