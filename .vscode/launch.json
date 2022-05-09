@@ -12,6 +12,13 @@
           "type": "dart",
           "request": "launch",
           "program": "lib/main.dart"
-      }
+      },
+      {
+          "name": "Profile",
+          "type": "dart",
+          "request": "launch",
+          "program": "lib/main_dev.dart",
+          "flutterMode": "profile"
+              }
   ]
 }

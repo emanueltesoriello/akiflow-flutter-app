@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/database_exception.dart';
 import 'package:mobile/repository/base_database_repository.dart';
 import 'package:mobile/services/database_service.dart';
+import 'package:mobile/utils/converters_isolate.dart';
 import 'package:models/base.dart';
-import 'package:sqflite/sql.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class DatabaseRepository implements IBaseDatabaseRepository {
@@ -19,30 +20,20 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     List<Map<String, Object?>> items =
         await _databaseService.database!.query(tableName);
 
-    List<T> result = [];
-
-    for (dynamic item in items) {
-      try {
-        result.add(fromSql(item));
-      } catch (e) {
-        print("Failed to parse item: $item exception $e");
-      }
-    }
+    List<T> result = await compute(
+        convertToObjList, RawListConvert(items: items, converter: fromSql));
 
     return result;
   }
 
   @override
   Future<List<Object?>> add<T>(List<T> items) async {
-    var batch = _databaseService.database!.batch();
+    Batch batch = _databaseService.database!.batch();
 
-    for (T item in items) {
-      batch.insert(
-        tableName,
-        (item as Base).toSql(),
-        conflictAlgorithm: ConflictAlgorithm.ignore,
-      );
-    }
+    List<dynamic> result = await compute(fromObjToSqlList, items);
+
+    batch = await compute(prepareBatchInsert,
+        BatchInsertModel(items: result, batch: batch, tableName: tableName));
 
     return await batch.commit();
   }
@@ -80,11 +71,8 @@ class DatabaseRepository implements IBaseDatabaseRepository {
           '$withoutRemoteUpdatedAt OR $deletedAtLaterThanRemoteUpdatedAt OR $updatedAtLaterThanRemoteUpdatedAt',
     );
 
-    List<T> result = [];
-
-    for (dynamic item in items) {
-      result.add(fromSql(item));
-    }
+    List<T> result = await compute(
+        convertToObjList, RawListConvert(items: items, converter: fromSql));
 
     return result;
   }

@@ -128,14 +128,7 @@ class SyncControllerService {
 
       DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
 
-      DateTime? lastSyncUpdated = await syncService.start(
-        lastSync,
-        setSyncStatus: (status) {
-          if (syncStatus != null) {
-            syncStatus(status);
-          }
-        },
-      );
+      DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
       await _setLastSyncPreferences[entity]!(lastSyncUpdated);
     } catch (e, s) {

@@ -1,11 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:mobile/api/base_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
-import 'package:models/base.dart';
+import 'package:mobile/utils/converters_isolate.dart';
 
 class Api implements IBaseApi {
   final HttpClient _httpClient = locator<HttpClient>();
@@ -48,11 +49,8 @@ class Api implements IBaseApi {
 
     List<dynamic> items = response["data"];
 
-    List<T> result = [];
-
-    for (dynamic item in items) {
-      result.add(fromMap(item));
-    }
+    List<T> result = await compute(
+        convertToObjList, RawListConvert(items: items, converter: fromMap));
 
     if (allPages && response["next_page_url"] != null) {
       while (response["next_page_url"] != null) {
@@ -68,9 +66,8 @@ class Api implements IBaseApi {
         if (response.containsKey("data") && response["data"] != null) {
           items = response["data"];
 
-          for (dynamic item in items) {
-            result.add(fromMap(item));
-          }
+          result = await compute(convertToObjList,
+              RawListConvert(items: items, converter: fromMap));
         }
       }
     }
@@ -82,11 +79,7 @@ class Api implements IBaseApi {
   Future<List<T>> post<T>({
     required List<T> unsynced,
   }) async {
-    List<dynamic> jsonList = [];
-
-    for (T item in unsynced) {
-      jsonList.add((item as Base).toMap());
-    }
+    List<dynamic> jsonList = await compute(fromObjToMapList, unsynced);
 
     String json = jsonEncode(jsonList);
 
@@ -101,11 +94,8 @@ class Api implements IBaseApi {
 
     List<dynamic> items = response["data"];
 
-    List<T> result = [];
-
-    for (dynamic item in items) {
-      result.add(fromMap(item));
-    }
+    List<T> result = await compute(
+        convertToObjList, RawListConvert(items: items, converter: fromMap));
 
     return result;
   }

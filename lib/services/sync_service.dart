@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:mobile/api/api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
 import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
-import 'package:models/doc/doc.dart';
-import 'package:models/task/task.dart';
+import 'package:mobile/utils/converters_isolate.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -15,20 +15,13 @@ class SyncService {
   final Api api;
   final DatabaseRepository databaseRepository;
 
-  Function(String)? _setSyncStatus;
-
   SyncService({
     required this.api,
     required this.databaseRepository,
   });
 
   // Returns the last sync time updated.
-  Future<DateTime?> start(
-    DateTime? lastSyncAt, {
-    required Function(String) setSyncStatus,
-  }) async {
-    _setSyncStatus = setSyncStatus;
-
+  Future<DateTime?> start(DateTime? lastSyncAt) async {
     setSyncStatusIfNotNull("${api.runtimeType} start syncing");
 
     DateTime? updatedLastSync = await _remoteToLocal(lastSyncAt);
@@ -59,16 +52,7 @@ class SyncService {
       return null;
     }
 
-    DateTime? maxRemoteUpdateAt;
-
-    for (var item in remoteItems) {
-      DateTime? newUpdatedAt = item.updatedAt;
-
-      if (maxRemoteUpdateAt == null ||
-          (newUpdatedAt != null && newUpdatedAt.isAfter(maxRemoteUpdateAt))) {
-        maxRemoteUpdateAt = newUpdatedAt;
-      }
-    }
+    DateTime? maxRemoteUpdateAt = await compute(getMaxUpdatedAt, remoteItems);
 
     setSyncStatusIfNotNull(
         "${api.runtimeType}: update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
@@ -90,36 +74,7 @@ class SyncService {
       return;
     }
 
-    for (int i = 0; i < unsynced.length; i++) {
-      var item = unsynced[i];
-
-      DateTime? updatedAt = item.updatedAt;
-      DateTime? deletedAt = item.deletedAt;
-
-      DateTime? maxDate;
-
-      if (updatedAt != null && deletedAt != null) {
-        maxDate = updatedAt.isAfter(deletedAt) ? updatedAt : deletedAt;
-      } else if (updatedAt != null) {
-        maxDate = updatedAt;
-      } else if (deletedAt != null) {
-        maxDate = deletedAt;
-      }
-
-      if (item is Doc || item is Task) {
-        item = item.copyWith(
-          globalUpdatedAt: maxDate ?? DateTime.now().toUtc(),
-          updatedAt: maxDate ?? DateTime.now().toUtc(),
-        );
-      } else {
-        item = item.rebuild((t) {
-          t.globalUpdatedAt = maxDate ?? DateTime.now().toUtc();
-          t.updatedAt = maxDate ?? DateTime.now().toUtc();
-        });
-      }
-
-      unsynced[i] = item;
-    }
+    unsynced = await compute(prepareItemsForRemote, unsynced);
 
     try {
       setSyncStatusIfNotNull("posting to api ${unsynced.length} items");
@@ -145,77 +100,25 @@ class SyncService {
 
     bool anyInsertErrors = false;
 
-    var itemsToInsert = [];
-
-    for (int i = 0; i < remoteItems.length; i++) {
-      _sentryService.addBreadcrumb(
-        category: "sync",
-        message: 'process item: $i/${remoteItems.length}',
-      );
-
-      var remoteItem = remoteItems[i];
-
-      bool hasAlreadyInLocalDatabase =
-          localItems.any((element) => element.id == remoteItem.id);
-
-      if (hasAlreadyInLocalDatabase) {
-        var localTask =
-            localItems.firstWhere((element) => element.id == remoteItem.id);
-
-        int remoteGlobalUpdateAtMillis =
-            remoteItem.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
-        int localUpdatedAtMillis =
-            localTask.updatedAt?.millisecondsSinceEpoch ?? 0;
-
-        if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
-          if (remoteItem is Doc || remoteItem is Task) {
-            remoteItem = remoteItem.copyWith(
-              updatedAt: remoteItem.globalUpdatedAt,
-              remoteUpdatedAt: remoteItem.globalUpdatedAt,
-            );
-          } else {
-            remoteItem = remoteItem.rebuild((t) {
-              t.updatedAt = remoteItem.globalUpdatedAt;
-              t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
-            });
-          }
-
-          remoteItems[i] = remoteItem;
-
-          await databaseRepository.updateById(remoteItem.id!, data: remoteItem);
-        } else {
-          _sentryService.addBreadcrumb(
-            category: "sync",
-            message:
-                '${api.runtimeType}: skip upsert item, remote is not recent than local',
-          );
-        }
-      } else {
-        if (remoteItem is Doc || remoteItem is Task) {
-          remoteItem = remoteItem.copyWith(
-            updatedAt: remoteItem.globalUpdatedAt,
-            remoteUpdatedAt: remoteItem.globalUpdatedAt,
-          );
-        } else {
-          remoteItem = remoteItem.rebuild((t) {
-            t.updatedAt = remoteItem.globalUpdatedAt;
-            t.remoteUpdatedAt = remoteItem.globalUpdatedAt;
-          });
-        }
-
-        remoteItems[i] = remoteItem;
-
-        itemsToInsert.add(remoteItem);
-      }
-    }
+    var itemsToInsert = await compute(filterItemsToInsert,
+        PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
+    var itemsToUpdate = await compute(filterItemsToUpdate,
+        PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
 
     _sentryService.addBreadcrumb(
       category: "sync",
-      message: 'itemToInsert length: ${itemsToInsert.length}',
+      message:
+          'itemToInsert length: ${itemsToInsert.length}, itemToUpdate length: ${itemsToUpdate.length}',
     );
 
     if (itemsToInsert.isNotEmpty) {
       anyInsertErrors = await _addRemoteTaskToLocalDb(itemsToInsert);
+    }
+
+    if (itemsToUpdate.isNotEmpty) {
+      for (var item in itemsToUpdate) {
+        await databaseRepository.updateById(item.id!, data: item);
+      }
     }
 
     _sentryService.addBreadcrumb(
@@ -237,7 +140,7 @@ class SyncService {
 
       _sentryService.addBreadcrumb(
         category: "sync",
-        message: 'databaseRepository add result: $result',
+        message: 'databaseRepository add result: ${result.length} items',
       );
 
       if (result.isEmpty) {
@@ -256,8 +159,6 @@ class SyncService {
   }
 
   void setSyncStatusIfNotNull(String message) {
-    if (_setSyncStatus != null) {
-      _setSyncStatus!(message);
-    }
+    print(message);
   }
 }
