@@ -95,6 +95,8 @@ class SyncControllerService {
     if (user != null) {
       await _syncEntity(Entity.accounts, syncStatus: syncStatus);
 
+      syncStatus("Syncing accounts...");
+
       List<Account> accounts = await _accountsRepository.get();
 
       if (accounts.isEmpty) {
@@ -104,9 +106,15 @@ class SyncControllerService {
         return;
       }
 
+      syncStatus("Syncing tasks...");
+
       await _syncEntity(Entity.tasks, syncStatus: syncStatus);
 
+      syncStatus("Syncing labels...");
+
       await _syncEntity(Entity.labels);
+
+      syncStatus("Syncing docs...");
 
       await _syncEntity(Entity.docs);
 

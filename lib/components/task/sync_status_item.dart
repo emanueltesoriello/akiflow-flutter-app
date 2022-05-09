@@ -9,6 +9,10 @@ class SyncStatusItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
+        if (state.loading == false) {
+          return const SizedBox();
+        }
+
         return Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -22,17 +26,11 @@ class SyncStatusItem extends StatelessWidget {
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
-              Builder(builder: (context) {
-                if (state.loading == false) {
-                  return const SizedBox();
-                }
-
-                return const SizedBox(
-                  height: 16,
-                  width: 16,
-                  child: CircularProgressIndicator(strokeWidth: 1),
-                );
-              }),
+              const SizedBox(
+                height: 16,
+                width: 16,
+                child: CircularProgressIndicator(strokeWidth: 1),
+              ),
             ],
           ),
         );
