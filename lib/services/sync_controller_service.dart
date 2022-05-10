@@ -22,8 +22,7 @@ import 'package:models/user.dart';
 enum Entity { accounts, calendars, tasks, labels, events, docs }
 
 class SyncControllerService {
-  static final PreferencesRepository _preferencesRepository =
-      locator<PreferencesRepository>();
+  static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final DialogService _dialogService = locator<DialogService>();
 
   static final AccountApi _accountApi = locator<AccountApi>();
@@ -33,11 +32,9 @@ class SyncControllerService {
   static final EventApi _eventApi = locator<EventApi>();
   static final DocsApi _docsApi = locator<DocsApi>();
 
-  static final AccountsRepository _accountsRepository =
-      locator<AccountsRepository>();
+  static final AccountsRepository _accountsRepository = locator<AccountsRepository>();
   static final TasksRepository _tasksRepository = locator<TasksRepository>();
-  static final CalendarsRepository _calendarsRepository =
-      locator<CalendarsRepository>();
+  static final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
   static final DocsRepository _docsRepository = locator<DocsRepository>();
@@ -129,8 +126,7 @@ class SyncControllerService {
     await _syncEntity(Entity.docs);
   }
 
-  Future<void> _syncEntity(Entity entity,
-      {Function(String)? syncStatus}) async {
+  Future<void> _syncEntity(Entity entity, {Function(String)? syncStatus}) async {
     try {
       SyncService syncService = _syncServices[entity]!;
 

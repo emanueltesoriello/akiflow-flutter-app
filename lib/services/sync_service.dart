@@ -8,6 +8,7 @@ import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/utils/converters_isolate.dart';
+import 'package:flutter/widgets.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -90,28 +91,36 @@ class SyncService {
   }
 
   Future<void> _upsertItems<T>(List<dynamic> remoteItems) async {
-    List<dynamic> localItems = await databaseRepository.get();
+
 
     setSyncStatusIfNotNull("upsert remote items: ${remoteItems.length} to db");
 
     bool anyInsertErrors = false;
 
-    var itemsToInsert =
-        await compute(filterItemsToInsert, PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
-    var itemsToUpdate =
-        await compute(filterItemsToUpdate, PrepareItemsModel(remoteItems: remoteItems, localItems: localItems));
+    var result = [];
+    try {
+      List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
+      List<dynamic> existingModels = await databaseRepository.getByIds(localIds);
+      result = await compute(partitionItemsToUpsert,
+          {'allModels': remoteItems, 'existingModels': existingModels, 'databaseRepository': databaseRepository});
+    } catch (e) {
+      print(e);
+    }
+    var changedModels = result[0];
+    // var unchangedModels = result[1];
+    var nonExistingModels = result[2];
 
     _sentryService.addBreadcrumb(
       category: "sync",
-      message: 'itemToInsert length: ${itemsToInsert.length}, itemToUpdate length: ${itemsToUpdate.length}',
+      message: 'nonExistingModels length: ${nonExistingModels.length}, itemToUpdate length: ${changedModels.length}',
     );
 
-    if (itemsToInsert.isNotEmpty) {
-      anyInsertErrors = await _addRemoteTaskToLocalDb(itemsToInsert);
+    if (nonExistingModels.isNotEmpty) {
+      anyInsertErrors = await _addRemoteTaskToLocalDb(nonExistingModels);
     }
 
-    if (itemsToUpdate.isNotEmpty) {
-      for (var item in itemsToUpdate) {
+    if (changedModels.isNotEmpty) {
+      for (var item in changedModels) {
         await databaseRepository.updateById(item.id!, data: item);
       }
     }

@@ -14,8 +14,7 @@ class TasksRepository extends DatabaseRepository {
   }) : super(tableName: table, fromSql: fromSql);
 
   Future<List<Task>> getUndone<Task>() async {
-    List<Map<String, Object?>> items =
-        await _databaseService.database!.rawQuery("""
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
 SELECT * FROM tasks
 WHERE tasks.done IS NULL
 OR tasks.done = 0
@@ -23,9 +22,10 @@ AND tasks.deleted_at IS NULL
 ORDER BY sorting DESC
 """);
 
-    List<Task> result = await compute(
-        convertToObjList, RawListConvert(items: items, converter: fromSql));
+    List<Task> result = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 
     return result;
   }
+
+
 }

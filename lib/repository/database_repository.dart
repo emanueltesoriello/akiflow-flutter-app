@@ -17,13 +17,31 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
   @override
   Future<List<T>> get<T>() async {
-    List<Map<String, Object?>> items =
-        await _databaseService.database!.query(tableName);
+    List<Map<String, Object?>> items = await _databaseService.database!.query(tableName);
 
-    List<T> result = await compute(
-        convertToObjList, RawListConvert(items: items, converter: fromSql));
+    List<T> result = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 
     return result;
+  }
+
+  @override
+  Future<T?> getById<T>(id) async {
+    List<Map<String, Object?>> items =
+    await _databaseService.database!.rawQuery("SELECT * FROM " + tableName + " WHERE id=? ", [id]);
+    if (items.isEmpty) {
+      return null;
+    } else {
+      return (await compute(convertToObjList, RawListConvert(items: items, converter: fromSql)))[0];
+    }
+  }
+
+  @override
+  Future<List<T>> getByIds<T>(List<dynamic> ids) async {
+    String ins = ids.map((el) => '?').join(',');
+    List<Map<String, Object?>> items =
+    await _databaseService.database!.rawQuery("SELECT * FROM " + tableName + " WHERE id in ("+ins+") ", ids);
+
+    return (await compute(convertToObjList, RawListConvert(items: items, converter: fromSql)));
   }
 
   @override
@@ -32,8 +50,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
     List<dynamic> result = await compute(fromObjToSqlList, items);
 
-    batch = await compute(prepareBatchInsert,
-        BatchInsertModel(items: result, batch: batch, tableName: tableName));
+    batch = await compute(prepareBatchInsert, BatchInsertModel(items: result, batch: batch, tableName: tableName));
 
     return await batch.commit();
   }
@@ -49,8 +66,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   }
 
   @override
-  Future<void> setFieldByName<T>(String? id,
-      {required String field, required T value}) async {
+  Future<void> setFieldByName<T>(String? id, {required String field, required T value}) async {
     await _databaseService.database!.update(
       tableName,
       {field: value},
@@ -67,12 +83,10 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
     var items = await _databaseService.database!.query(
       tableName,
-      where:
-          '$withoutRemoteUpdatedAt OR $deletedAtLaterThanRemoteUpdatedAt OR $updatedAtLaterThanRemoteUpdatedAt',
+      where: '$withoutRemoteUpdatedAt OR $deletedAtLaterThanRemoteUpdatedAt OR $updatedAtLaterThanRemoteUpdatedAt',
     );
 
-    List<T> result = await compute(
-        convertToObjList, RawListConvert(items: items, converter: fromSql));
+    List<T> result = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 
     return result;
   }

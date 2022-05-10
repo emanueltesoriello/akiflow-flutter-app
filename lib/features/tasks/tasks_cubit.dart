@@ -20,15 +20,13 @@ import 'package:uuid/uuid.dart';
 part 'tasks_state.dart';
 
 class TasksCubit extends Cubit<TasksCubitState> {
-  final PreferencesRepository _preferencesRepository =
-      locator<PreferencesRepository>();
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
   final SentryService _sentryService = locator<SentryService>();
 
-  final SyncControllerService _syncControllerService =
-      locator<SyncControllerService>();
+  final SyncControllerService _syncControllerService = locator<SyncControllerService>();
 
   TasksCubit() : super(const TasksCubitState()) {
     syncAllAndRefresh();
@@ -89,12 +87,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
   TaskStatusType? lastDoneTaskStatus;
 
   void markAsDone([Task? task]) async {
-    bool isSelectMode =
-        task == null || state.tasks.any((t) => t.selected ?? false);
+    bool isSelectMode = task == null || state.tasks.any((t) => t.selected ?? false);
 
     if (isSelectMode) {
-      List<Task> tasksSelected =
-          state.tasks.where((t) => t.selected ?? false).toList();
+      List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
 
       for (Task taskSelected in tasksSelected) {
         Task updated = taskSelected.copyWith();
@@ -158,8 +154,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     } else {
       List<Task> duplicates = [];
 
-      List<Task> tasksSelected =
-          updated.where((t) => t.selected ?? false).toList();
+      List<Task> tasksSelected = updated.where((t) => t.selected ?? false).toList();
 
       for (Task task in tasksSelected) {
         Task newTaskDuplicated = task.copyWith(
@@ -182,8 +177,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> delete() async {
-    List<Task> tasksSelected =
-        state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
 
     List<Task> updated = state.tasks.toList();
 
@@ -212,8 +206,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       state.tasks[index] = task;
     }
 
-    List<Task> tasksSelected =
-        state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
 
     List<Task> updated = state.tasks.toList();
 
@@ -236,8 +229,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void selectPriority() {
-    List<Task> tasksSelected =
-        state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
 
     List<Task> updated = state.tasks.toList();
 
@@ -302,8 +294,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     List<Task> ordered = updated
         .map((t) => t.copyWith(
-              sorting:
-                  millis - (1 * updated.indexWhere((e) => e.id == t.id) + 1),
+              sorting: millis - (1 * updated.indexWhere((e) => e.id == t.id) + 1),
               updatedAt: now,
               selected: false,
             ))
@@ -338,8 +329,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       state.tasks[index] = task;
     }
 
-    List<Task> tasksSelected =
-        state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
 
     for (Task task in tasksSelected) {
       int index = state.tasks.indexWhere((t) => t.id == task.id);

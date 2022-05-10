@@ -2,6 +2,8 @@ import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:mobile/repository/database_repository.dart';
+
 
 class RawListConvert {
   final List<dynamic> items;
@@ -166,9 +168,9 @@ List<dynamic> filterItemsToUpdate<T>(PrepareItemsModel prepareItemsModel) {
   for (int i = 0; i < prepareItemsModel.remoteItems.length; i++) {
     var remoteItem = prepareItemsModel.remoteItems[i];
 
-    bool hasAlreadyInLocalDatabase = prepareItemsModel.localItems.any((element) => element.id == remoteItem.id);
+    bool isExistingInLocalDatabase = prepareItemsModel.localItems.any((element) => element.id == remoteItem.id);
 
-    if (hasAlreadyInLocalDatabase) {
+    if (isExistingInLocalDatabase) {
       var localTask = prepareItemsModel.localItems.firstWhere((element) => element.id == remoteItem.id);
 
       int remoteGlobalUpdateAtMillis = remoteItem.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
@@ -193,6 +195,44 @@ List<dynamic> filterItemsToUpdate<T>(PrepareItemsModel prepareItemsModel) {
       }
     }
   }
-
   return itemsToUpdate;
+}
+
+Future<List<List<dynamic>>> partitionItemsToUpsert<T>(input) async {
+
+
+  List<dynamic> allModels = input['allModels'];
+  List<dynamic> existingModels = input['existingModels'];
+  List<dynamic> changedModels = [];
+  List<dynamic> unchangedModels = [];
+  List<dynamic> nonExistingModels = [];
+
+  Map<String, dynamic> existingModelsById = Map.fromIterable(existingModels, key: (model) => model.id);
+
+  for (var model in allModels) {
+    if (existingModelsById.containsKey(model.id)) {
+      int remoteGlobalUpdateAtMillis = model.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
+      int localUpdatedAtMillis = existingModelsById[model.id].updatedAt?.millisecondsSinceEpoch ?? 0;
+
+      if (remoteGlobalUpdateAtMillis > localUpdatedAtMillis) {
+        changedModels.add(model);
+      } else {
+        unchangedModels.add(model);
+      }
+    } else {
+      nonExistingModels.add(model);
+    }
+    if (model is Doc || model is Task) {
+      model = model.copyWith(
+        updatedAt: model.globalUpdatedAt,
+        remoteUpdatedAt: model.globalUpdatedAt,
+      );
+    } else {
+      model = model.rebuild((t) {
+        t.updatedAt = model.globalUpdatedAt;
+        t.remoteUpdatedAt = model.globalUpdatedAt;
+      });
+    }
+  }
+  return [changedModels, unchangedModels, nonExistingModels];
 }

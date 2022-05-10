@@ -5,11 +5,11 @@ import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
-class TasksListAppBar extends StatelessWidget {
+class InboxAppBar extends StatelessWidget {
   final String title;
   final String? leadingAsset;
 
-  const TasksListAppBar({
+  const InboxAppBar({
     Key? key,
     required this.title,
     this.leadingAsset,
