@@ -121,5 +121,10 @@
     "everyWeekday": "Every weekday",
     "custom": "Custom",
     "comingSoon": "Coming soon"
+  },
+  "today": {
+    "toDos": "To-dos",
+    "pinnedInCalendar": "Pinned in calendar",
+    "done": "Done"
   }
 }

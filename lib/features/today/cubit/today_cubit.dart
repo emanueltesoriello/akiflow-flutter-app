@@ -23,4 +23,16 @@ class TodayCubit extends Cubit<TodayCubitState> {
   todayClick() {
     emit(state.copyWith(selectedDate: DateTime.now()));
   }
+
+  void openTodoList() {
+    emit(state.copyWith(todosListOpen: true));
+  }
+
+  void openPinnedList() {
+    emit(state.copyWith(pinnedListOpen: true));
+  }
+
+  void openCompletedList() {
+    emit(state.copyWith(completedListOpen: true));
+  }
 }

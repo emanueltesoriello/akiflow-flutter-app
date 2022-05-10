@@ -57,8 +57,7 @@ class SettingsModal extends StatelessWidget {
                             children: [
                               Text(
                                 state.user?.name ?? "n/d",
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500),
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                               ),
                               const SizedBox(height: 4),
                               Text(
@@ -90,10 +89,7 @@ class SettingsModal extends StatelessWidget {
                         color: ColorsExt.grey3(context),
                       ),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SettingsPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
                       },
                     ),
                   ],
@@ -113,8 +109,7 @@ class SettingsModal extends StatelessWidget {
                       ),
                       selected: homeViewType == HomeViewType.inbox,
                       trailing: Builder(builder: (context) {
-                        List<Task> tasks =
-                            List.from(context.watch<TasksCubit>().state.tasks);
+                        List<Task> tasks = List.from(context.watch<TasksCubit>().state.tasks);
 
                         tasks = TaskExt.filterInboxTasks(tasks);
 
@@ -148,10 +143,9 @@ class SettingsModal extends StatelessWidget {
                       ),
                       selected: homeViewType == HomeViewType.today,
                       trailing: Builder(builder: (context) {
-                        List<Task> tasks =
-                            List.from(context.watch<TasksCubit>().state.tasks);
+                        List<Task> tasks = List.from(context.watch<TasksCubit>().state.tasks);
 
-                        tasks = TaskExt.filterTodayTasks(tasks);
+                        tasks = TaskExt.filterTodayTodoTasks(tasks);
 
                         return Text(
                           tasks.length.toString(),

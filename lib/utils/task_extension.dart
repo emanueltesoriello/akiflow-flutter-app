@@ -266,7 +266,7 @@ extension TaskExt on Task {
     return tasks;
   }
 
-  static List<Task> filterTodayTasks(List<Task> tasks) {
+  static List<Task> filterTodayTodoTasks(List<Task> tasks) {
     tasks.removeWhere((task) => task.status == TaskStatusType.inbox.id);
     tasks.removeWhere((task) => task.status == TaskStatusType.someday.id);
     tasks.removeWhere((task) => task.status == TaskStatusType.snoozed.id);

@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 103 
+ * Strings: 106 
  *
- * Built on 2022-05-06 at 14:30 UTC
+ * Built on 2022-05-10 at 10:35 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -319,6 +319,7 @@ class _StringsEn {
 	late final _StringsCalendarEn calendar = _StringsCalendarEn._(_root);
 	late final _StringsLinkedContentEn linkedContent = _StringsLinkedContentEn._(_root);
 	late final _StringsEditTaskEn editTask = _StringsEditTaskEn._(_root);
+	late final _StringsTodayEn today = _StringsTodayEn._(_root);
 }
 
 // Path: onboarding
@@ -519,6 +520,19 @@ class _StringsEditTaskEn {
 	String get comingSoon => 'Coming soon';
 }
 
+// Path: today
+class _StringsTodayEn {
+	_StringsTodayEn._(this._root);
+
+	// ignore: unused_field
+	final _StringsEn _root;
+
+	// Translations
+	String get toDos => 'To-dos';
+	String get pinnedInCalendar => 'Pinned in calendar';
+	String get done => 'Done';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -628,6 +642,9 @@ extension on _StringsEn {
 			'editTask.everyWeekday': 'Every weekday',
 			'editTask.custom': 'Custom',
 			'editTask.comingSoon': 'Coming soon',
+			'today.toDos': 'To-dos',
+			'today.pinnedInCalendar': 'Pinned in calendar',
+			'today.done': 'Done',
 		};
 	}
 }
