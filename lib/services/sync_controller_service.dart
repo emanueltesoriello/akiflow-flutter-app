@@ -90,30 +90,12 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncEntity(Entity.accounts, syncStatus: syncStatus);
-
-      syncStatus("Syncing accounts...");
-
-      List<Account> accounts = await _accountsRepository.get();
-
-      if (accounts.isEmpty) {
-        _dialogService.showMessage(t.errors.noAccountsFound);
-        _sentryService.captureException(Exception(t.errors.noAccountsFound));
-        syncStatus(t.errors.noAccountsFound);
-        return;
-      }
-
-      syncStatus("Syncing tasks...");
-
-      await _syncEntity(Entity.tasks, syncStatus: syncStatus);
-
-      syncStatus("Syncing labels...");
-
-      await _syncEntity(Entity.labels);
-
-      syncStatus("Syncing docs...");
-
-      await _syncEntity(Entity.docs);
+      await Future.wait([
+        _syncEntity(Entity.accounts, syncStatus: syncStatus),
+        _syncEntity(Entity.tasks, syncStatus: syncStatus),
+        _syncEntity(Entity.labels),
+        _syncEntity(Entity.docs)
+      ]);
 
       // await _syncEntity(Entity.calendars);
       // await _syncEntity(Entity.events);
@@ -128,6 +110,7 @@ class SyncControllerService {
 
   Future<void> _syncEntity(Entity entity, {Function(String)? syncStatus}) async {
     try {
+      print("Syncing $entity...");
       SyncService syncService = _syncServices[entity]!;
 
       DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
