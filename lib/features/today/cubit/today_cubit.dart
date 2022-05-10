@@ -19,4 +19,8 @@ class TodayCubit extends Cubit<TodayCubitState> {
         calendarFormat:
             state.calendarFormat == CalendarFormatState.month ? CalendarFormatState.week : CalendarFormatState.month));
   }
+
+  todayClick() {
+    emit(state.copyWith(selectedDate: DateTime.now()));
+  }
 }

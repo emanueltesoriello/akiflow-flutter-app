@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -51,12 +52,17 @@ class _TodayAppBarState extends State<TodayAppBar> {
           ),
           leading: _leading(context),
           actions: [
+            InkWell(
+              onTap: () => context.read<TodayCubit>().todayClick(),
+              child: Text(t.bottomBar.today,
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.grey3(context))),
+            ),
             IconButton(
               icon: SvgPicture.asset(
                 "assets/images/icons/_common/ellipsis.svg",
-                width: 26,
-                height: 26,
-                color: ColorsExt.grey2(context),
+                width: 24,
+                height: 24,
+                color: ColorsExt.grey3(context),
               ),
               onPressed: () {},
             ),
