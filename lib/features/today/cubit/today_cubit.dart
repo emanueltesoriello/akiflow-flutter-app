@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 part 'today_state.dart';
 
 class TodayCubit extends Cubit<TodayCubitState> {
-  TodayCubit() : super(const TodayCubitState()) {
+  TodayCubit() : super(TodayCubitState(selectedDate: DateTime.now())) {
     _init();
   }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/components/calendar/calendar_selected_day.dart';
+import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -77,35 +79,10 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
               );
             },
             selectedBuilder: (context, day, focusedDay) {
-              return Center(
-                child: Text(
-                  DateFormat("d").format(day),
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: ColorsExt.akiflow(context),
-                  ),
-                ),
-              );
+              return CalendarSelectedDay(day);
             },
             todayBuilder: (context, day, focusedDay) {
-              return Center(
-                child: Container(
-                  padding: const EdgeInsets.all(3.5),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    DateFormat("d").format(day),
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.background(context),
-                    ),
-                  ),
-                ),
-              );
+              return CalendarToday(day);
             },
             headerTitleBuilder: (context, day) {
               return Padding(
@@ -115,8 +92,7 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
                   children: [
                     InkWell(
                       onTap: () {
-                        _pageController
-                            ?.jumpToPage((_pageController!.page! - 1).toInt());
+                        _pageController?.jumpToPage((_pageController!.page! - 1).toInt());
                       },
                       child: RotatedBox(
                         quarterTurns: 2,
@@ -146,8 +122,7 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
                     const SizedBox(width: 12),
                     InkWell(
                       onTap: () {
-                        _pageController
-                            ?.jumpToPage((_pageController!.page! + 1).toInt());
+                        _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
                       },
                       child: SvgPicture.asset(
                         "assets/images/icons/_common/chevron_right.svg",

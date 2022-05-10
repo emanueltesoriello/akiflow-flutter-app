@@ -7,12 +7,12 @@ enum CalendarFormatState {
 
 class TodayCubitState extends Equatable {
   final bool loading;
-  final DateTime? selectedDate;
+  final DateTime selectedDate;
   final CalendarFormatState calendarFormat;
 
   const TodayCubitState({
     this.loading = false,
-    this.selectedDate,
+    required this.selectedDate,
     this.calendarFormat = CalendarFormatState.week,
   });
 

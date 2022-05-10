@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
+import 'package:mobile/components/calendar/calendar_selected_day.dart';
+import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -79,7 +81,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
               onCalendarCreated: (pageController) {
                 _pageController = pageController;
               },
-              focusedDay: state.selectedDate ?? now,
+              focusedDay: state.selectedDate,
               firstDay: now.subtract(const Duration(days: 365)),
               lastDay: now.add(const Duration(days: 365)),
               selectedDayPredicate: (day) {
@@ -118,35 +120,10 @@ class _TodayAppBarState extends State<TodayAppBar> {
                   );
                 },
                 selectedBuilder: (context, day, focusedDay) {
-                  return Center(
-                    child: Text(
-                      DateFormat("d").format(day),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.akiflow(context),
-                      ),
-                    ),
-                  );
+                  return CalendarSelectedDay(day);
                 },
                 todayBuilder: (context, day, focusedDay) {
-                  return Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(3.5),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        DateFormat("d").format(day),
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: ColorsExt.background(context),
-                        ),
-                      ),
-                    ),
-                  );
+                  return CalendarToday(day);
                 },
                 headerTitleBuilder: (context, day) {
                   return Padding(
