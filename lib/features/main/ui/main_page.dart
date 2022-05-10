@@ -54,13 +54,11 @@ class MainPage extends StatelessWidget {
               type: BottomNavigationBarType.fixed,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                      "assets/images/icons/_common/line_horizontal_3.svg"),
+                  icon: SvgPicture.asset("assets/images/icons/_common/line_horizontal_3.svg"),
                   label: t.bottomBar.menu,
                 ),
                 BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                        "assets/images/icons/_common/tray.svg"),
+                    icon: SvgPicture.asset("assets/images/icons/_common/tray.svg"),
                     activeIcon: SvgPicture.asset(
                       "assets/images/icons/_common/tray.svg",
                       color: Theme.of(context).primaryColor,
@@ -80,8 +78,7 @@ class MainPage extends StatelessWidget {
                   label: t.bottomBar.today,
                 ),
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                      "assets/images/icons/_common/calendar.svg"),
+                  icon: SvgPicture.asset("assets/images/icons/_common/calendar.svg"),
                   activeIcon: SvgPicture.asset(
                     "assets/images/icons/_common/calendar.svg",
                     color: Theme.of(context).primaryColor,
@@ -125,7 +122,7 @@ class MainPage extends StatelessWidget {
                           leadingAsset: "assets/images/icons/_common/tray.svg",
                         );
                       case HomeViewType.today:
-                        return TodayAppBar();
+                        return const TodayAppBar();
                       case HomeViewType.calendar:
                         return const SizedBox();
                       default:

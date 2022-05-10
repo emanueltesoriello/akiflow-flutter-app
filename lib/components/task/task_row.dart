@@ -57,9 +57,7 @@ class TaskRow extends StatelessWidget {
         child: Container(
           constraints: const BoxConstraints(minHeight: 78),
           padding: const EdgeInsets.all(16),
-          color: (task.selected ?? false)
-              ? ColorsExt.grey6(context)
-              : Colors.transparent,
+          color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -92,10 +90,7 @@ class TaskRow extends StatelessWidget {
     return Column(
       children: [
         Builder(builder: (context) {
-          if (task.statusType == null &&
-              !task.isOverdue &&
-              task.listId == null &&
-              !hideInboxLabel) {
+          if (task.statusType == null && !task.isOverdue && task.listId == null && !hideInboxLabel) {
             return const SizedBox();
           }
 
@@ -143,10 +138,9 @@ class TaskRow extends StatelessWidget {
       style: TextStyle(
         fontSize: 17,
         fontWeight: FontWeight.w500,
-        color:
-            task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                ? ColorsExt.grey3(context)
-                : ColorsExt.grey1(context),
+        color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
+            ? ColorsExt.grey3(context)
+            : ColorsExt.grey1(context),
       ),
     );
   }
@@ -170,14 +164,11 @@ class TaskRow extends StatelessWidget {
             color = ColorsExt.red(context);
             break;
           default:
-            color =
-                completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context);
+            color = completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context);
         }
 
         return SvgPicture.asset(
-          completed
-              ? "assets/images/icons/_common/Check-done.svg"
-              : "assets/images/icons/_common/Check-empty.svg",
+          completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
           width: 20,
           height: 20,
           color: color,
@@ -206,9 +197,7 @@ class TaskRow extends StatelessWidget {
     }
 
     return SvgPicture.asset(
-      selected
-          ? "assets/images/icons/_common/largecircle_fill_circle.svg"
-          : "assets/images/icons/_common/circle.svg",
+      selected ? "assets/images/icons/_common/largecircle_fill_circle.svg" : "assets/images/icons/_common/circle.svg",
       width: 20,
       height: 20,
       color: color,
@@ -440,12 +429,8 @@ class TaskRow extends StatelessWidget {
     return AkiChip(
       icon: "assets/images/icons/_common/number.svg",
       text: label.title,
-      backgroundColor: label.color != null
-          ? ColorsExt.getFromName(label.color!).withOpacity(0.1)
-          : null,
-      iconColor: label.color != null
-          ? ColorsExt.getFromName(label.color!)
-          : ColorsExt.grey3(context),
+      backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
+      iconColor: label.color != null ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
       onPressed: () {},
     );
   }
@@ -457,8 +442,7 @@ class TaskRow extends StatelessWidget {
       (doc) => doc.taskId == task.id,
     );
 
-    if ((task.description == null || task.description!.isEmpty) &&
-        doc == null) {
+    if ((task.description == null || task.description!.isEmpty) && doc == null) {
       return const SizedBox();
     }
 
@@ -478,8 +462,7 @@ class TaskRow extends StatelessWidget {
                 const SizedBox(width: 7),
                 Text(
                   t.task.linkedContent,
-                  style:
-                      TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                  style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
                 ),
               ],
             );
@@ -501,8 +484,7 @@ class TaskRow extends StatelessWidget {
                           task.description ?? "",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 15, color: ColorsExt.grey3(context)),
+                          style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
                         ),
                       ),
                     ],

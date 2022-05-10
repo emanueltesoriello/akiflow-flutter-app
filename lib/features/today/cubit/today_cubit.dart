@@ -9,4 +9,14 @@ class TodayCubit extends Cubit<TodayCubitState> {
   }
 
   _init() async {}
+
+  void onDateSelected(DateTime selectedDay) {
+    emit(state.copyWith(selectedDate: selectedDay));
+  }
+
+  toggleCalendarFormat() {
+    emit(state.copyWith(
+        calendarFormat:
+            state.calendarFormat == CalendarFormatState.month ? CalendarFormatState.week : CalendarFormatState.month));
+  }
 }

@@ -5,20 +5,22 @@ import 'package:mobile/style/colors.dart';
 
 class AppBarComp extends StatelessWidget {
   final bool showBack;
-  final String title;
+  final String? title;
   final List<Widget> actions;
   final Function()? onBackClick;
   final bool showLogo;
   final Widget? leading;
+  final Widget? customTitle;
 
   const AppBarComp({
     Key? key,
-    required this.title,
+    this.title,
     this.showBack = false,
     this.actions = const [],
     this.onBackClick,
     this.showLogo = false,
     this.leading,
+    this.customTitle,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class AppBarComp extends StatelessWidget {
       children: <Widget>[
         Column(
           children: [
-            Space(MediaQuery.of(context).padding.top),
+            Space(MediaQuery.of(context).padding.top + 6),
             Row(
               children: [
                 const Space(16),
@@ -96,15 +98,20 @@ class AppBarComp extends StatelessWidget {
   }
 
   Widget _buildTitle(BuildContext context) {
+    if (customTitle != null) {
+      return customTitle!;
+    }
+
+    if (title == null) {
+      return const SizedBox();
+    }
+
     return Text(
-      title,
+      title!,
       textAlign: TextAlign.start,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 24,
-          color: ColorsExt.grey2(context)),
+      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: ColorsExt.grey2(context)),
     );
   }
 

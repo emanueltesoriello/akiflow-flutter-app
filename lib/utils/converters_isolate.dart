@@ -75,8 +75,7 @@ DateTime? getMaxUpdatedAt(List<dynamic> items) {
   for (var item in items) {
     DateTime? newUpdatedAt = item.updatedAt;
 
-    if (maxRemoteUpdateAt == null ||
-        (newUpdatedAt != null && newUpdatedAt.isAfter(maxRemoteUpdateAt))) {
+    if (maxRemoteUpdateAt == null || (newUpdatedAt != null && newUpdatedAt.isAfter(maxRemoteUpdateAt))) {
       maxRemoteUpdateAt = newUpdatedAt;
     }
   }
@@ -137,8 +136,7 @@ List<dynamic> filterItemsToInsert<T>(PrepareItemsModel prepareItemsModel) {
   for (int i = 0; i < prepareItemsModel.remoteItems.length; i++) {
     var remoteItem = prepareItemsModel.remoteItems[i];
 
-    bool hasAlreadyInLocalDatabase = prepareItemsModel.localItems
-        .any((element) => element.id == remoteItem.id);
+    bool hasAlreadyInLocalDatabase = prepareItemsModel.localItems.any((element) => element.id == remoteItem.id);
 
     if (!hasAlreadyInLocalDatabase) {
       if (remoteItem is Doc || remoteItem is Task) {
@@ -163,22 +161,18 @@ List<dynamic> filterItemsToInsert<T>(PrepareItemsModel prepareItemsModel) {
 }
 
 List<dynamic> filterItemsToUpdate<T>(PrepareItemsModel prepareItemsModel) {
-  List<dynamic> itemsToInsert = [];
+  List<dynamic> itemsToUpdate = [];
 
   for (int i = 0; i < prepareItemsModel.remoteItems.length; i++) {
     var remoteItem = prepareItemsModel.remoteItems[i];
 
-    bool hasAlreadyInLocalDatabase = prepareItemsModel.localItems
-        .any((element) => element.id == remoteItem.id);
+    bool hasAlreadyInLocalDatabase = prepareItemsModel.localItems.any((element) => element.id == remoteItem.id);
 
     if (hasAlreadyInLocalDatabase) {
-      var localTask = prepareItemsModel.localItems
-          .firstWhere((element) => element.id == remoteItem.id);
+      var localTask = prepareItemsModel.localItems.firstWhere((element) => element.id == remoteItem.id);
 
-      int remoteGlobalUpdateAtMillis =
-          remoteItem.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
-      int localUpdatedAtMillis =
-          localTask.updatedAt?.millisecondsSinceEpoch ?? 0;
+      int remoteGlobalUpdateAtMillis = remoteItem.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
+      int localUpdatedAtMillis = localTask.updatedAt?.millisecondsSinceEpoch ?? 0;
 
       if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
         if (remoteItem is Doc || remoteItem is Task) {
@@ -194,9 +188,11 @@ List<dynamic> filterItemsToUpdate<T>(PrepareItemsModel prepareItemsModel) {
         }
 
         prepareItemsModel.remoteItems[i] = remoteItem;
+
+        itemsToUpdate.add(remoteItem);
       }
     }
   }
 
-  return itemsToInsert;
+  return itemsToUpdate;
 }

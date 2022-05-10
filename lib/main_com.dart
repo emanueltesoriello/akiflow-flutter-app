@@ -15,6 +15,7 @@ import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
@@ -95,6 +96,10 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => SettingsCubit(),
         ),
+        BlocProvider<TodayCubit>(
+          lazy: false,
+          create: (BuildContext context) => TodayCubit(),
+        ),
       ],
       child: MaterialApp(
           title: t.appName,
@@ -129,17 +134,14 @@ class Application extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
-                    title: Text(state.action.title,
-                        style: TextStyle(color: ColorsExt.grey1(context))),
+                    title: Text(state.action.title, style: TextStyle(color: ColorsExt.grey1(context))),
                     content: state.action.content != null
-                        ? Text(state.action.content!,
-                            style: TextStyle(color: ColorsExt.grey1(context)))
+                        ? Text(state.action.content!, style: TextStyle(color: ColorsExt.grey1(context)))
                         : null,
                     actions: <Widget>[
                       state.action.dismiss != null
                           ? TextButton(
-                              child:
-                                  Text(state.action.dismissTitle ?? t.dismiss),
+                              child: Text(state.action.dismissTitle ?? t.dismiss),
                               onPressed: () {
                                 Navigator.pop(context);
                                 state.action.dismiss!();

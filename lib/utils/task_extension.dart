@@ -128,9 +128,7 @@ extension TaskExt on Task {
   }
 
   bool get isCompletedComputed {
-    return (statusType == TaskStatusType.completed ||
-        (done ?? false) ||
-        doneAt != null);
+    return (statusType == TaskStatusType.completed || (done ?? false) || doneAt != null);
   }
 
   String get shortDate {
@@ -177,8 +175,7 @@ extension TaskExt on Task {
 
         if (rule.frequency == Frequency.daily) {
           return RecurrenceModalType.daily;
-        } else if (rule.frequency == Frequency.weekly &&
-            rule.byWeekDays.length == 5) {
+        } else if (rule.frequency == Frequency.weekly && rule.byWeekDays.length == 5) {
           return RecurrenceModalType.everyWeekday;
         } else if (rule.frequency == Frequency.yearly) {
           return RecurrenceModalType.everyYearOnThisDay;
@@ -234,6 +231,10 @@ extension TaskExt on Task {
     return '';
   }
 
+  bool get isDeleted {
+    return status == TaskStatusType.deleted.id || deletedAt != null;
+  }
+
   TaskStatusType? get statusType {
     switch (status) {
       case 1:
@@ -261,12 +262,18 @@ extension TaskExt on Task {
 
   static List<Task> filterInboxTasks(List<Task> tasks) {
     tasks.removeWhere((element) => element.statusType != TaskStatusType.inbox);
+    tasks.removeWhere((task) => task.isDeleted);
     return tasks;
   }
 
   static List<Task> filterTodayTasks(List<Task> tasks) {
     tasks.removeWhere((task) => task.status == TaskStatusType.inbox.id);
+    tasks.removeWhere((task) => task.status == TaskStatusType.someday.id);
+    tasks.removeWhere((task) => task.status == TaskStatusType.snoozed.id);
     tasks.removeWhere((task) => !task.isTodayOrBefore);
+    tasks.removeWhere((task) => task.endTime != null && (task.endTime!.isBefore(DateTime.now())));
+    tasks.removeWhere((task) => task.datetime != null);
+
     return tasks;
   }
 
@@ -351,8 +358,7 @@ extension TaskExt on Task {
 
     DateTime? now = DateTime.now().toUtc();
 
-    if (lastDoneTaskStatus != null &&
-        lastDoneTaskStatus.id != TaskStatusType.completed.id) {
+    if (lastDoneTaskStatus != null && lastDoneTaskStatus.id != TaskStatusType.completed.id) {
       lastDoneTaskStatus = TaskStatusTypeExt.fromId(lastDoneTaskStatus.id);
     }
 
