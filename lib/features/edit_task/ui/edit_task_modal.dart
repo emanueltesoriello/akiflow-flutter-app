@@ -19,8 +19,7 @@ class EditTaskModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          EditTaskCubit(context.read<TasksCubit>(), task: task),
+      create: (context) => EditTaskCubit(context.read<TasksCubit>(), task: task),
       child: const EditTaskModalView(),
     );
   }
@@ -42,6 +41,7 @@ class _EditTaskModalViewState extends State<EditTaskModalView> {
         decoration: const BoxDecoration(
           color: Colors.transparent,
         ),
+        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
