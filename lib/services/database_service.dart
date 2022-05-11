@@ -189,22 +189,15 @@ CREATE TABLE IF NOT EXISTS docs(
   `initialSyncMode` INTEGER
 )
     ''');
-    await txn.execute(
-        'CREATE UNIQUE INDEX IF NOT EXISTS docs_connector_id_origin_id ON docs(`connector_id`,`origin_id`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS docs_custom_index1 ON docs(`custom_index1`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS docs_important ON docs(`important`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS docs_priority ON docs(`priority`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS docs_search_text ON docs(`search_text`)');
     await txn
-        .execute('CREATE INDEX IF NOT EXISTS docs_sorting ON docs(`sorting`)');
-    await txn
-        .execute('CREATE INDEX IF NOT EXISTS docs_task_id ON docs(`task_id`)');
-    await txn
-        .execute('CREATE INDEX IF NOT EXISTS docs_usages ON docs(`usages`)');
+        .execute('CREATE UNIQUE INDEX IF NOT EXISTS docs_connector_id_origin_id ON docs(`connector_id`,`origin_id`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS docs_custom_index1 ON docs(`custom_index1`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS docs_important ON docs(`important`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS docs_priority ON docs(`priority`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS docs_search_text ON docs(`search_text`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS docs_sorting ON docs(`sorting`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS docs_task_id ON docs(`task_id`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS docs_usages ON docs(`usages`)');
   }
 
   Future<void> _setupEventModifiers(txn) async {
@@ -283,18 +276,12 @@ CREATE TABLE IF NOT EXISTS events(
   `recurrence_sync_retry` INTEGER
 )
     ''');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS events_end_time ON events(`end_time`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS events_recurring_id ON events(`recurring_id`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS events_start_date ON events(`start_date`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS events_start_time ON events(`start_time`)');
-    await txn.execute(
-        'CREATE INDEX IF NOT EXISTS events_task_id ON events(`task_id`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS events_end_time ON events(`end_time`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS events_recurring_id ON events(`recurring_id`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS events_start_date ON events(`start_date`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS events_start_time ON events(`start_time`)');
+    await txn.execute('CREATE INDEX IF NOT EXISTS events_task_id ON events(`task_id`)');
   }
 
   Future<void> _setupList(txn) async {

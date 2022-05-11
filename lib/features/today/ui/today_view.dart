@@ -25,15 +25,12 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> _tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
+    List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
 
-    List<Task> todos = TaskExt.filterTodayTodoTasks(_tasks);
-    todos = TaskExt.sort(todos, sorting: TaskListSorting.descending);
+    List<Task> todos = List.from(todayTasks.where((element) => !element.isCompletedComputed));
+    List<Task> completed = List.from(todayTasks.where((element) => element.isCompletedComputed && element.isToday));
 
-    List<Task> pinned = TaskExt.filterPinnedTasks(_tasks);
-    pinned = TaskExt.sort(pinned, sorting: TaskListSorting.descending);
-
-    // List completed = TaskExt.filterTodayCompletedTasks(tasks);
+    List<Task> pinned = TaskExt.filterPinnedTasks(todos);
 
     return Stack(
       children: [
@@ -73,12 +70,12 @@ class _View extends StatelessWidget {
                   ),
                 ),
                 TodayTaskList(
-                  tasks: pinned,
+                  tasks: completed,
                   sorting: TaskListSorting.descending,
                   showTasks: context.watch<TodayCubit>().state.completedListOpen,
                   header: _Header(
                     t.today.done,
-                    tasks: pinned,
+                    tasks: completed,
                     onClick: () {
                       context.read<TodayCubit>().openCompletedList();
                     },

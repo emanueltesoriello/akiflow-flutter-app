@@ -1,4 +1,3 @@
-import 'package:i18n/strings.g.dart';
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/calendar_api.dart';
 import 'package:mobile/api/docs_api.dart';
@@ -16,7 +15,6 @@ import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_service.dart';
-import 'package:models/account/account.dart';
 import 'package:models/user.dart';
 
 enum Entity { accounts, calendars, tasks, labels, events, docs }

@@ -72,6 +72,12 @@ extension TaskStatusTypeExt on TaskStatusType {
 
 extension TaskExt on Task {
   bool get isToday {
+    if (datetime != null) {
+      return datetime!.day == DateTime.now().day &&
+          datetime!.month == DateTime.now().month &&
+          datetime!.year == DateTime.now().year;
+    }
+
     if (date != null) {
       return date!.day == DateTime.now().day &&
           date!.month == DateTime.now().month &&
@@ -92,6 +98,12 @@ extension TaskExt on Task {
   }
 
   bool get isTodayOrBefore {
+    if (datetime != null) {
+      return datetime!.day <= DateTime.now().day &&
+          datetime!.month <= DateTime.now().month &&
+          datetime!.year <= DateTime.now().year;
+    }
+
     if (date != null) {
       return date!.day <= DateTime.now().day &&
           date!.month <= DateTime.now().month &&
@@ -404,5 +416,10 @@ extension TaskExt on Task {
       deletedAt: DateTime.now().toUtc(),
       updatedAt: DateTime.now().toUtc(),
     );
+  }
+
+  static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {
+    List<Task> completed = List.from(tasks.where((element) => element.isCompletedComputed));
+    return completed.where((element) => element.isTodayOrBefore).toList();
   }
 }
