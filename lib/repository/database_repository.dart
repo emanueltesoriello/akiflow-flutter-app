@@ -78,12 +78,12 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   @override
   Future<List<T>> unsynced<T>() async {
     const withoutRemoteUpdatedAt = 'remote_updated_at IS NULL';
-    const deletedAtLaterThanRemoteUpdatedAt = 'deleted_at > remote_updated_at';
-    const updatedAtLaterThanRemoteUpdatedAt = 'updated_at > remote_updated_at';
+    const deletedAtGreaterThanRemoteUpdatedAt = 'deleted_at > remote_updated_at';
+    const updatedAtGreaterThanRemoteUpdatedAt = 'updated_at > remote_updated_at';
 
     var items = await _databaseService.database!.query(
       tableName,
-      where: '$withoutRemoteUpdatedAt OR $deletedAtLaterThanRemoteUpdatedAt OR $updatedAtLaterThanRemoteUpdatedAt',
+      where: '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
     );
 
     List<T> result = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));

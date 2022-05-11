@@ -95,27 +95,23 @@ class SyncService {
     bool anyInsertErrors = false;
 
     var result = [];
-    try {
-      List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
-      List<dynamic> existingModels = await databaseRepository.getByIds(localIds);
-      result = await compute(partitionItemsToUpsert,
-          {'allModels': remoteItems, 'existingModels': existingModels, 'databaseRepository': databaseRepository});
-    } catch (e) {
-      print(e);
-    }
 
-    if (result.isEmpty) {
+    List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
+    List<dynamic> existingModels = await databaseRepository.getByIds(localIds);
+    result = await compute(partitionItemsToUpsert,
+        {'allModels': remoteItems, 'existingModels': existingModels, 'databaseRepository': databaseRepository});
+
+    var changedModels = result[0];
+    // var unchangedModels = result[1];
+    var nonExistingModels = result[2];
+
+    if (changedModels.isEmpty && nonExistingModels.isEmpty) {
       _sentryService.addBreadcrumb(
         category: "sync",
         message: "no items to upsert",
       );
       return;
     }
-
-    var changedModels = result[0];
-    // var unchangedModels = result[1];
-    var nonExistingModels = result[2];
-
     _sentryService.addBreadcrumb(
       category: "sync",
       message: 'nonExistingModels length: ${nonExistingModels.length}, itemToUpdate length: ${changedModels.length}',

@@ -101,9 +101,8 @@ class SyncControllerService {
   }
 
   syncTasks({Function(String)? syncStatus}) async {
-    await _syncEntity(Entity.tasks, syncStatus: syncStatus);
-    await _syncEntity(Entity.labels);
-    await _syncEntity(Entity.docs);
+    await Future.wait(
+        [_syncEntity(Entity.tasks, syncStatus: syncStatus), _syncEntity(Entity.labels), _syncEntity(Entity.docs)]);
   }
 
   Future<void> _syncEntity(Entity entity, {Function(String)? syncStatus}) async {
