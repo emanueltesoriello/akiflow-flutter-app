@@ -2,7 +2,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:models/base.dart';
-import 'package:models/date_parse.dart';
 import 'package:models/nullable.dart';
 
 class Task extends Equatable implements Base {
@@ -151,8 +150,7 @@ class Task extends Equatable implements Base {
       'global_updated_at': globalUpdatedAt?.toIso8601String(),
       'global_created_at': globalCreatedAt?.toIso8601String(),
       'activation_datetime': activationDatetime?.toIso8601String(),
-      'due_date':
-          dueDate != null ? DateFormat('yyyy-MM-dd').format(dueDate!) : null,
+      'due_date': dueDate != null ? DateFormat('yyyy-MM-dd').format(dueDate!) : null,
       'remote_updated_at': remoteUpdatedAt?.toIso8601String(),
       'recurring_id': recurringId,
       'priority': priority,
@@ -172,53 +170,33 @@ class Task extends Equatable implements Base {
     return Task(
       id: map['id'] != null ? map['id'] as String : null,
       title: map['title'] != null ? map['title'] as String : null,
-      date: map['date'] != null ? DateParse.parse(map['date']) : null,
-      description:
-          map['description'] != null ? map['description'] as String : null,
+      date: map['date'] != null ? DateTime.tryParse(map['date']) : null,
+      description: map['description'] != null ? map['description'] as String : null,
       duration: map['duration'] != null ? map['duration'] as int : null,
       status: map['status'] != null ? map['status'] as int : null,
-      createdAt:
-          map['created_at'] != null ? DateParse.parse(map['created_at']) : null,
-      updatedAt:
-          map['updated_at'] != null ? DateParse.parse(map['updated_at']) : null,
-      deletedAt:
-          map['deleted_at'] != null ? DateParse.parse(map['deleted_at']) : null,
+      createdAt: map['created_at'] != null ? DateTime.tryParse(map['created_at']) : null,
+      updatedAt: map['updated_at'] != null ? DateTime.tryParse(map['updated_at']) : null,
+      deletedAt: map['deleted_at'] != null ? DateTime.tryParse(map['deleted_at']) : null,
       done: map['done'] != null ? map['done'] as bool : null,
-      doneAt: map['done_at'] != null ? DateParse.parse(map['done_t']) : null,
-      datetime:
-          map['datetime'] != null ? DateParse.parse(map['datetime']) : null,
-      readAt: map['read_at'] != null ? DateParse.parse(map['read_at']) : null,
-      globalCreatedAt: map['global_created_at'] != null
-          ? DateParse.parse(map['global_created_at'])
-          : null,
-      globalUpdatedAt: map['global_updated_at'] != null
-          ? DateParse.parse(map['global_updated_at'])
-          : null,
-      activationDatetime: map['activation_datetime'] != null
-          ? DateParse.parse(map['activation_datetime'])
-          : null,
-      dueDate:
-          map['due_date'] != null ? DateParse.parse(map['due_date']) : null,
-      remoteUpdatedAt: map['remote_updated_at'] != null
-          ? DateParse.parse(map['remote_updated_at'])
-          : null,
-      recurringId:
-          map['recurring_id'] != null ? map['recurring_id'] as String : null,
+      doneAt: map['done_at'] != null ? DateTime.tryParse(map['done_t']) : null,
+      datetime: map['datetime'] != null ? DateTime.tryParse(map['datetime']) : null,
+      readAt: map['read_at'] != null ? DateTime.tryParse(map['read_at']) : null,
+      globalCreatedAt: map['global_created_at'] != null ? DateTime.tryParse(map['global_created_at']) : null,
+      globalUpdatedAt: map['global_updated_at'] != null ? DateTime.tryParse(map['global_updated_at']) : null,
+      activationDatetime: map['activation_datetime'] != null ? DateTime.tryParse(map['activation_datetime']) : null,
+      dueDate: map['due_date'] != null ? DateTime.tryParse(map['due_date']) : null,
+      remoteUpdatedAt: map['remote_updated_at'] != null ? DateTime.tryParse(map['remote_updated_at']) : null,
+      recurringId: map['recurring_id'] != null ? map['recurring_id'] as String : null,
       priority: map['priority'] != null ? map['priority'] as int : null,
       listId: map['listId'] != null ? map['listId'] as String : null,
       sectionId: map['section_id'] != null ? map['section_id'] as String : null,
       origin: map['origin'] != null ? map['origin'] as String : null,
       sorting: map['sorting'] != null ? map['sorting'] as int : null,
-      sortingLabel:
-          map['sorting_label'] != null ? map['sorting_label'] as int : null,
+      sortingLabel: map['sorting_label'] != null ? map['sorting_label'] as int : null,
       selected: map['selected'] != null ? map['selected'] as bool : null,
       dailyGoal: map['dailyGoal'] != null ? map['dailyGoal'] as int : null,
-      links: map['links'] != null
-          ? List<String>.from(map['links'] as List<dynamic>)
-          : null,
-      recurrence: map['recurrence'] != null
-          ? List<String>.from(map['recurrence'] as List<dynamic>)
-          : null,
+      links: map['links'] != null ? List<String>.from(map['links'] as List<dynamic>) : null,
+      recurrence: map['recurrence'] != null ? List<String>.from(map['recurrence'] as List<dynamic>) : null,
     );
   }
 
