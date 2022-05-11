@@ -137,7 +137,7 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(input) async {
 
   for (var model in allModels) {
     int remoteGlobalUpdateAtMillis = model.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
-    int localUpdatedAtMillis = existingModelsById[model.id].updatedAt?.millisecondsSinceEpoch ?? 0;
+    int localUpdatedAtMillis = existingModelsById[model.id]?.updatedAt?.millisecondsSinceEpoch ?? 0;
 
     if (model is Doc || model is Task) {
       model = model.copyWith(
