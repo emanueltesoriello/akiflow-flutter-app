@@ -8,7 +8,6 @@ import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/utils/converters_isolate.dart';
-import 'package:flutter/widgets.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -91,8 +90,6 @@ class SyncService {
   }
 
   Future<void> _upsertItems<T>(List<dynamic> remoteItems) async {
-
-
     setSyncStatusIfNotNull("upsert remote items: ${remoteItems.length} to db");
 
     bool anyInsertErrors = false;
@@ -106,6 +103,15 @@ class SyncService {
     } catch (e) {
       print(e);
     }
+
+    if (result.isEmpty) {
+      _sentryService.addBreadcrumb(
+        category: "sync",
+        message: "no items to upsert",
+      );
+      return;
+    }
+
     var changedModels = result[0];
     // var unchangedModels = result[1];
     var nonExistingModels = result[2];

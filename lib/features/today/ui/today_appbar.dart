@@ -43,12 +43,18 @@ class _TodayAppBarState extends State<TodayAppBar> {
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: ColorsExt.grey2(context)),
                 ),
                 const SizedBox(width: 10),
-                SvgPicture.asset(
-                  "assets/images/icons/_common/chevron_down.svg",
-                  width: 16,
-                  height: 16,
-                  color: ColorsExt.grey3(context),
-                ),
+                BlocBuilder<TodayCubit, TodayCubitState>(
+                  builder: (context, state) {
+                    return SvgPicture.asset(
+                      state.calendarFormat == CalendarFormatState.month
+                          ? "assets/images/icons/_common/chevron_up.svg"
+                          : "assets/images/icons/_common/chevron_down.svg",
+                      width: 16,
+                      height: 16,
+                      color: ColorsExt.grey3(context),
+                    );
+                  },
+                )
               ],
             ),
           ),
@@ -185,7 +191,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
   }
 
   Widget _leading(BuildContext context) {
-    bool selectMode = context.watch<TasksCubit>().state.tasks.any((element) => element.selected ?? false);
+    bool selectMode = context.watch<TasksCubit>().state.inboxTasks.any((element) => element.selected ?? false);
 
     if (selectMode) {
       return InkWell(

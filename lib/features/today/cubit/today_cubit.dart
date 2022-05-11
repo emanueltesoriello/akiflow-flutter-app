@@ -25,14 +25,14 @@ class TodayCubit extends Cubit<TodayCubitState> {
   }
 
   void openTodoList() {
-    emit(state.copyWith(todosListOpen: true));
+    emit(state.copyWith(todosListOpen: !state.todosListOpen));
   }
 
   void openPinnedList() {
-    emit(state.copyWith(pinnedListOpen: true));
+    emit(state.copyWith(pinnedListOpen: !state.pinnedListOpen));
   }
 
   void openCompletedList() {
-    emit(state.copyWith(completedListOpen: true));
+    emit(state.copyWith(completedListOpen: !state.completedListOpen));
   }
 }

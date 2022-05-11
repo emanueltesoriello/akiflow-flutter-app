@@ -13,8 +13,7 @@ class InboxView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => InboxCubit(), child: const _View());
+    return BlocProvider(create: (context) => InboxCubit(), child: const _View());
   }
 }
 
@@ -23,7 +22,7 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> tasks = List.from(context.watch<TasksCubit>().state.tasks);
+    List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
     tasks = TaskExt.filterInboxTasks(tasks);
 

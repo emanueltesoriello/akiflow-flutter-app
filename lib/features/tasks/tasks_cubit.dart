@@ -55,7 +55,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(syncStatus: "Get tasks from repository"));
 
     List<Task> tasks = await _tasksRepository.getUndone();
-    emit(state.copyWith(tasks: tasks));
+    emit(state.copyWith(inboxTasks: tasks));
 
     emit(state.copyWith(syncStatus: "Get labels from repository"));
 
@@ -69,11 +69,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void logout() {
-    emit(state.copyWith(tasks: []));
+    emit(state.copyWith(inboxTasks: []));
   }
 
   void select(Task task) {
-    List<Task> tasksUpdated = state.tasks.toList();
+    List<Task> tasksUpdated = state.inboxTasks.toList();
 
     int index = tasksUpdated.indexWhere((t) => t.id == task.id);
 
@@ -81,16 +81,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     tasksUpdated[index] = task;
 
-    emit(state.copyWith(tasks: tasksUpdated));
+    emit(state.copyWith(inboxTasks: tasksUpdated));
   }
 
   TaskStatusType? lastDoneTaskStatus;
 
   void markAsDone([Task? task]) async {
-    bool isSelectMode = task == null || state.tasks.any((t) => t.selected ?? false);
+    bool isSelectMode = task == null || state.inboxTasks.any((t) => t.selected ?? false);
 
     if (isSelectMode) {
-      List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
+      List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
       for (Task taskSelected in tasksSelected) {
         Task updated = taskSelected.copyWith();
@@ -102,14 +102,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
           },
         );
 
-        int index = state.tasks.indexWhere((t) => t.id == updated.id);
+        int index = state.inboxTasks.indexWhere((t) => t.id == updated.id);
 
-        state.tasks[index] = updated;
+        state.inboxTasks[index] = updated;
 
         await _tasksRepository.updateById(taskSelected.id, data: updated);
       }
 
-      emit(state.copyWith(tasks: state.tasks));
+      emit(state.copyWith(inboxTasks: state.inboxTasks));
     } else {
       Task updated = task.copyWith();
 
@@ -139,7 +139,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> duplicate([Task? task]) async {
     DateTime? now = DateTime.now().toUtc();
 
-    List<Task> updated = state.tasks.toList();
+    List<Task> updated = state.inboxTasks.toList();
 
     if (task != null) {
       Task newTaskDuplicated = task.copyWith(
@@ -171,15 +171,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
       await _tasksRepository.add(duplicates);
     }
 
-    emit(state.copyWith(tasks: updated));
+    emit(state.copyWith(inboxTasks: updated));
 
     syncTasks();
   }
 
   Future<void> delete() async {
-    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> updated = state.tasks.toList();
+    List<Task> updated = state.inboxTasks.toList();
 
     for (Task task in tasksSelected) {
       int index = updated.indexWhere((t) => t.id == task.id);
@@ -194,7 +194,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
     }
 
-    emit(state.copyWith(tasks: updated));
+    emit(state.copyWith(inboxTasks: updated));
 
     syncTasks();
   }
@@ -202,13 +202,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
   void assignLabel(Label label, {Task? task}) {
     if (task != null) {
       task = task.copyWith(selected: true);
-      int index = state.tasks.indexWhere((t) => t.id == task!.id);
-      state.tasks[index] = task;
+      int index = state.inboxTasks.indexWhere((t) => t.id == task!.id);
+      state.inboxTasks[index] = task;
     }
 
-    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> updated = state.tasks.toList();
+    List<Task> updated = state.inboxTasks.toList();
 
     for (Task task in tasksSelected) {
       int index = updated.indexWhere((t) => t.id == task.id);
@@ -223,15 +223,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    emit(state.copyWith(tasks: updated));
+    emit(state.copyWith(inboxTasks: updated));
 
     syncTasks();
   }
 
   void selectPriority() {
-    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> updated = state.tasks.toList();
+    List<Task> updated = state.inboxTasks.toList();
 
     for (Task task in tasksSelected) {
       int index = updated.indexWhere((t) => t.id == task.id);
@@ -252,7 +252,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       updated[index] = updatedTask;
     }
 
-    emit(state.copyWith(tasks: updated));
+    emit(state.copyWith(inboxTasks: updated));
 
     syncTasks();
   }
@@ -262,7 +262,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void clearSelected() {
-    List<Task> updated = state.tasks.toList();
+    List<Task> updated = state.inboxTasks.toList();
 
     for (Task task in updated) {
       int index = updated.indexWhere((t) => t.id == task.id);
@@ -270,7 +270,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       updated[index] = task.copyWith(selected: false);
     }
 
-    emit(state.copyWith(tasks: updated));
+    emit(state.copyWith(inboxTasks: updated));
   }
 
   Future<void> reorder(
@@ -279,7 +279,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     required List<Task> newTasksListOrdered,
     required TaskListSorting sorting,
   }) async {
-    List<Task> updated = state.tasks.toList();
+    List<Task> updated = state.inboxTasks.toList();
 
     Task task = updated.removeAt(oldIndex);
 
@@ -308,13 +308,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void updateUiOfTask(Task task) {
-    int index = state.tasks.indexWhere((t) => t.id == task.id);
+    int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
 
-    state.tasks[index] = task;
+    state.inboxTasks[index] = task;
 
-    List<Task> tasksUpdated = state.tasks.toList();
+    List<Task> tasksUpdated = state.inboxTasks.toList();
 
-    emit(state.copyWith(tasks: tasksUpdated));
+    emit(state.copyWith(inboxTasks: tasksUpdated));
   }
 
   Future<void> planFor(
@@ -325,14 +325,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }) async {
     if (task != null) {
       task = task.copyWith(selected: true);
-      int index = state.tasks.indexWhere((t) => t.id == task!.id);
-      state.tasks[index] = task;
+      int index = state.inboxTasks.indexWhere((t) => t.id == task!.id);
+      state.inboxTasks[index] = task;
     }
 
-    List<Task> tasksSelected = state.tasks.where((t) => t.selected ?? false).toList();
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
     for (Task task in tasksSelected) {
-      int index = state.tasks.indexWhere((t) => t.id == task.id);
+      int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
 
       Task updated = task.copyWith(
         updatedAt: DateTime.now().toUtc(),
@@ -344,14 +344,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
         status: statusType.id,
       );
 
-      state.tasks[index] = updated;
+      state.inboxTasks[index] = updated;
 
       await _tasksRepository.updateById(task.id, data: updated);
     }
 
     clearSelected();
 
-    emit(state.copyWith(tasks: state.tasks));
+    emit(state.copyWith(inboxTasks: state.inboxTasks));
 
     syncTasks();
   }

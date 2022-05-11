@@ -235,6 +235,10 @@ extension TaskExt on Task {
     return status == TaskStatusType.deleted.id || deletedAt != null;
   }
 
+  bool get isPinnedInCalendar {
+    return date != null && datetime != null;
+  }
+
   TaskStatusType? get statusType {
     switch (status) {
       case 1:
@@ -263,18 +267,27 @@ extension TaskExt on Task {
   static List<Task> filterInboxTasks(List<Task> tasks) {
     tasks.removeWhere((element) => element.statusType != TaskStatusType.inbox);
     tasks.removeWhere((task) => task.isDeleted);
-    return tasks;
+    return List.from(tasks);
   }
 
   static List<Task> filterTodayTodoTasks(List<Task> tasks) {
-    tasks.removeWhere((task) => task.status == TaskStatusType.inbox.id);
-    tasks.removeWhere((task) => task.status == TaskStatusType.someday.id);
-    tasks.removeWhere((task) => task.status == TaskStatusType.snoozed.id);
-    tasks.removeWhere((task) => !task.isTodayOrBefore);
-    tasks.removeWhere((task) => task.endTime != null && (task.endTime!.isBefore(DateTime.now())));
-    tasks.removeWhere((task) => task.datetime != null);
+    List<Task> todos = tasks
+        .where((element) =>
+            (!element.isCompletedComputed && element.datetime == null) ||
+            (element.isOverdue && element.datetime != null))
+        .toList();
 
-    return tasks;
+    return List.from(todos);
+  }
+
+  static List<Task> filterPinnedTasks(List<Task> tasks) {
+    List<Task> pinnedTasks = tasks
+        .where((element) => element.datetime != null && !element.isOverdue && !element.isCompletedComputed)
+        .toList();
+
+    pinnedTasks.sort((a, b) => a.datetime!.compareTo(b.datetime!));
+
+    return List.from(pinnedTasks);
   }
 
   static List<Task> sort(

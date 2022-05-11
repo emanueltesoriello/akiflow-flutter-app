@@ -2,8 +2,6 @@ import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:mobile/repository/database_repository.dart';
-
 
 class RawListConvert {
   final List<dynamic> items;
@@ -199,8 +197,6 @@ List<dynamic> filterItemsToUpdate<T>(PrepareItemsModel prepareItemsModel) {
 }
 
 Future<List<List<dynamic>>> partitionItemsToUpsert<T>(input) async {
-
-
   List<dynamic> allModels = input['allModels'];
   List<dynamic> existingModels = input['existingModels'];
   List<dynamic> changedModels = [];

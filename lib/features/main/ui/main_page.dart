@@ -153,7 +153,7 @@ class MainPage extends StatelessWidget {
           ),
           BlocBuilder<TasksCubit, TasksCubitState>(
             builder: (context, state) {
-              if (state.tasks.any((element) => element.selected ?? false)) {
+              if (state.inboxTasks.any((element) => element.selected ?? false)) {
                 return const SafeArea(
                   child: Align(
                     alignment: Alignment.bottomCenter,

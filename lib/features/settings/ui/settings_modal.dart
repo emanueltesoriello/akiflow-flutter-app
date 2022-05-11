@@ -109,7 +109,7 @@ class SettingsModal extends StatelessWidget {
                       ),
                       selected: homeViewType == HomeViewType.inbox,
                       trailing: Builder(builder: (context) {
-                        List<Task> tasks = List.from(context.watch<TasksCubit>().state.tasks);
+                        List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
                         tasks = TaskExt.filterInboxTasks(tasks);
 
@@ -143,7 +143,7 @@ class SettingsModal extends StatelessWidget {
                       ),
                       selected: homeViewType == HomeViewType.today,
                       trailing: Builder(builder: (context) {
-                        List<Task> tasks = List.from(context.watch<TasksCubit>().state.tasks);
+                        List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
                         tasks = TaskExt.filterTodayTodoTasks(tasks);
 

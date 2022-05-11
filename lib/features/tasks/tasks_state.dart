@@ -2,14 +2,14 @@ part of 'tasks_cubit.dart';
 
 class TasksCubitState extends Equatable {
   final bool loading;
-  final List<Task> tasks;
+  final List<Task> inboxTasks;
   final List<Label> labels;
   final List<Doc> docs;
   final String? syncStatus;
 
   const TasksCubitState({
     this.loading = false,
-    this.tasks = const [],
+    this.inboxTasks = const [],
     this.labels = const [],
     this.docs = const [],
     this.syncStatus,
@@ -17,14 +17,14 @@ class TasksCubitState extends Equatable {
 
   TasksCubitState copyWith({
     bool? loading,
-    List<Task>? tasks,
+    List<Task>? inboxTasks,
     List<Label>? labels,
     List<Doc>? docs,
     String? syncStatus,
   }) {
     return TasksCubitState(
       loading: loading ?? this.loading,
-      tasks: tasks ?? this.tasks,
+      inboxTasks: inboxTasks ?? this.inboxTasks,
       labels: labels ?? this.labels,
       docs: docs ?? this.docs,
       syncStatus: syncStatus ?? this.syncStatus,
@@ -34,7 +34,7 @@ class TasksCubitState extends Equatable {
   @override
   List<Object?> get props => [
         loading,
-        tasks,
+        inboxTasks,
         labels,
         docs,
         syncStatus,

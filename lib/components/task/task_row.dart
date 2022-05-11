@@ -373,6 +373,14 @@ class TaskRow extends StatelessWidget {
       );
     }
 
+    if (task.isPinnedInCalendar) {
+      return AkiChip(
+        backgroundColor: ColorsExt.cyan25(context),
+        text: task.datetimeFormatted,
+        onPressed: statusClick,
+      );
+    }
+
     if (task.isOverdue) {
       return AkiChip(
         backgroundColor: ColorsExt.cyan25(context),

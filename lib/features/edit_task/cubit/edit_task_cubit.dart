@@ -50,11 +50,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(newTask: updated));
 
-    List<Task> all = _tasksCubit.state.tasks.toList();
+    List<Task> all = _tasksCubit.state.inboxTasks.toList();
 
     all.add(updated);
 
-    _tasksCubit.emit(_tasksCubit.state.copyWith(tasks: all));
+    _tasksCubit.emit(_tasksCubit.state.copyWith(inboxTasks: all));
 
     await _tasksRepository.add([updated]);
 
@@ -116,8 +116,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: DateTime.now().toUtc(),
     );
 
-    updated =
-        updated.planFor(date: selectedDate, status: TaskStatusType.planned.id);
+    updated = updated.planFor(date: selectedDate, status: TaskStatusType.planned.id);
 
     emit(state.copyWith(newTask: updated));
 

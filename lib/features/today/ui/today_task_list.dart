@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/components/task/sync_status_item.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
@@ -16,15 +15,15 @@ import 'package:reorderables/reorderables.dart';
 class TodayTaskList extends StatelessWidget {
   final List<Task> tasks;
   final Widget header;
-  final bool hideInboxLabel;
   final TaskListSorting sorting;
+  final bool showTasks;
 
   const TodayTaskList({
     Key? key,
     required this.tasks,
     required this.sorting,
     required this.header,
-    this.hideInboxLabel = false,
+    required this.showTasks,
   }) : super(key: key);
 
   @override
@@ -33,7 +32,7 @@ class TodayTaskList extends StatelessWidget {
     //be available in flutter stable branch
     return ReorderableSliverList(
       onReorderStarted: (index) {
-        int indexWithoutHeaderWidget = index - 2;
+        int indexWithoutHeaderWidget = index - 1;
 
         context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
       },
@@ -47,10 +46,10 @@ class TodayTaskList extends StatelessWidget {
       },
       onReorder: (int oldIndex, int newIndex) {
         context.read<TasksCubit>().reorder(
-              oldIndex - 2,
-              newIndex - 2,
+              oldIndex - 1,
+              newIndex - 1,
               newTasksListOrdered: tasks,
-              sorting: TaskListSorting.descending,
+              sorting: sorting,
             );
       },
       delegate: ReorderableSliverChildBuilderDelegate(
@@ -59,11 +58,11 @@ class TodayTaskList extends StatelessWidget {
             return header;
           }
 
-          if (index == 1) {
-            return const SyncStatusItem();
-          }
+          index -= 1;
 
-          index -= 2;
+          if (showTasks == false) {
+            return const SizedBox();
+          }
 
           Task task = tasks[index];
 
@@ -95,7 +94,7 @@ class TodayTaskList extends StatelessWidget {
             },
           );
         },
-        childCount: tasks.length + 2,
+        childCount: tasks.length + 1,
       ),
     );
   }

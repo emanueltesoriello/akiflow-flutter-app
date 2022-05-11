@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -24,10 +25,14 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> _tasks = List.from(context.watch<TasksCubit>().state.tasks);
+    List<Task> _tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
-    List<Task> todos = TaskExt.filterTodayTodoTasks(_tasks).toList();
-    // List pinned = TaskExt.filterTodayPinnedTasks(tasks);
+    List<Task> todos = TaskExt.filterTodayTodoTasks(_tasks);
+    todos = TaskExt.sort(todos, sorting: TaskListSorting.descending);
+
+    List<Task> pinned = TaskExt.filterPinnedTasks(_tasks);
+    pinned = TaskExt.sort(pinned, sorting: TaskListSorting.descending);
+
     // List completed = TaskExt.filterTodayCompletedTasks(tasks);
 
     return Stack(
@@ -44,6 +49,7 @@ class _View extends StatelessWidget {
                 TodayTaskList(
                   tasks: todos,
                   sorting: TaskListSorting.descending,
+                  showTasks: context.watch<TodayCubit>().state.todosListOpen,
                   header: _Header(
                     t.today.toDos,
                     tasks: todos,
@@ -54,11 +60,12 @@ class _View extends StatelessWidget {
                   ),
                 ),
                 TodayTaskList(
-                  tasks: todos,
+                  tasks: pinned,
                   sorting: TaskListSorting.descending,
+                  showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
                   header: _Header(
                     t.today.pinnedInCalendar,
-                    tasks: todos,
+                    tasks: pinned,
                     onClick: () {
                       context.read<TodayCubit>().openPinnedList();
                     },
@@ -66,11 +73,12 @@ class _View extends StatelessWidget {
                   ),
                 ),
                 TodayTaskList(
-                  tasks: todos,
+                  tasks: pinned,
                   sorting: TaskListSorting.descending,
+                  showTasks: context.watch<TodayCubit>().state.completedListOpen,
                   header: _Header(
                     t.today.done,
-                    tasks: todos,
+                    tasks: pinned,
                     onClick: () {
                       context.read<TodayCubit>().openCompletedList();
                     },
@@ -134,6 +142,15 @@ class _Header extends StatelessWidget {
             const SizedBox(width: 4),
             Text("(${tasks.length})",
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+            const Spacer(),
+            SvgPicture.asset(
+              listOpened
+                  ? "assets/images/icons/_common/chevron_up.svg"
+                  : "assets/images/icons/_common/chevron_down.svg",
+              color: ColorsExt.grey3(context),
+              width: 20,
+              height: 20,
+            )
           ],
         ),
       ),

@@ -35,11 +35,7 @@ class InboxAppBar extends StatelessWidget {
   }
 
   Widget _leading(BuildContext context) {
-    bool selectMode = context
-        .watch<TasksCubit>()
-        .state
-        .tasks
-        .any((element) => element.selected ?? false);
+    bool selectMode = context.watch<TasksCubit>().state.inboxTasks.any((element) => element.selected ?? false);
 
     if (selectMode) {
       return InkWell(
