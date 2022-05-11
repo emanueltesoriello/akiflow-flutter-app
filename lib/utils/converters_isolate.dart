@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
@@ -5,7 +7,7 @@ import 'package:sqflite/sqflite.dart';
 
 class RawListConvert {
   final List<dynamic> items;
-  final Function converter;
+  final Function(Map<String, dynamic>) converter;
 
   RawListConvert({
     required this.items,
@@ -25,28 +27,22 @@ class BatchInsertModel {
   });
 }
 
-class PrepareItemsModel {
-  final List<dynamic> remoteItems;
-  final List<dynamic> localItems;
+Future<List<T>> convertToObjListIsolate<T>(List<dynamic> args) async {
+  SendPort responsePort = args[0];
+  RawListConvert rawListConvert = args[1];
 
-  PrepareItemsModel({
-    required this.remoteItems,
-    required this.localItems,
-  });
-}
-
-List<T> convertToObjList<T>(RawListConvert rawListConvert) {
   List<T> result = [];
 
   for (dynamic item in rawListConvert.items) {
     try {
-      result.add(rawListConvert.converter(item));
+      result.add(rawListConvert.converter(item) as T);
     } catch (e) {
       print(e);
     }
   }
 
-  return result;
+  // return list directly is broken
+  Isolate.exit(responsePort, {"data": List.from(result)});
 }
 
 List<dynamic> fromObjToMapList<T>(List<T> items) {
@@ -102,12 +98,12 @@ List<dynamic> prepareItemsForRemote<T>(List<dynamic> items) {
 
     if (item is Doc || item is Task) {
       item = item.copyWith(
-        globalUpdatedAt: maxDate ?? DateTime.now().toUtc(),
+        remoteUpdatedAt: maxDate ?? DateTime.now().toUtc(),
         updatedAt: maxDate ?? DateTime.now().toUtc(),
       );
     } else {
       item = item.rebuild((t) {
-        t.globalUpdatedAt = maxDate ?? DateTime.now().toUtc();
+        t.remoteUpdatedAt = maxDate ?? DateTime.now().toUtc();
         t.updatedAt = maxDate ?? DateTime.now().toUtc();
       });
     }
@@ -140,18 +136,9 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(input) async {
   Map<String, dynamic> existingModelsById = Map.fromIterable(existingModels, key: (model) => model.id);
 
   for (var model in allModels) {
-    if (existingModelsById.containsKey(model.id)) {
-      int remoteGlobalUpdateAtMillis = model.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
-      int localUpdatedAtMillis = existingModelsById[model.id].updatedAt?.millisecondsSinceEpoch ?? 0;
+    int remoteGlobalUpdateAtMillis = model.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
+    int localUpdatedAtMillis = existingModelsById[model.id].updatedAt?.millisecondsSinceEpoch ?? 0;
 
-      if (remoteGlobalUpdateAtMillis > localUpdatedAtMillis) {
-        changedModels.add(model);
-      } else {
-        unchangedModels.add(model);
-      }
-    } else {
-      nonExistingModels.add(model);
-    }
     if (model is Doc || model is Task) {
       model = model.copyWith(
         updatedAt: model.globalUpdatedAt,
@@ -162,6 +149,16 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(input) async {
         t.updatedAt = model.globalUpdatedAt;
         t.remoteUpdatedAt = model.globalUpdatedAt;
       });
+    }
+
+    if (existingModelsById.containsKey(model.id)) {
+      if (remoteGlobalUpdateAtMillis > localUpdatedAtMillis) {
+        changedModels.add(model);
+      } else {
+        unchangedModels.add(model);
+      }
+    } else {
+      nonExistingModels.add(model);
     }
   }
   return [changedModels, unchangedModels, nonExistingModels];

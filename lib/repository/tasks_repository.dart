@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:isolate';
+
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/database_service.dart';
@@ -23,9 +24,9 @@ AND tasks.deleted_at IS NULL
 ORDER BY sorting DESC
 """);
 
-    List<Task> result = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
-
-    return result;
+    final p = ReceivePort();
+    await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromSql)]);
+    return List.from((await p.first)["data"]);
   }
 
   Future<List<Task>> getTodayTasks<Task>({required DateTime date}) async {
@@ -58,7 +59,9 @@ ORDER BY sorting DESC
         ],
       );
 
-      return await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+      final p = ReceivePort();
+      await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromSql)]);
+      return List.from((await p.first)["data"]);
     } catch (e) {
       print(e);
     }

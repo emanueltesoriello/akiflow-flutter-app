@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
@@ -53,7 +54,10 @@ class ApiClient implements IBaseApi {
       }
       if (response.containsKey("data") && response["data"] != null) {
         List<dynamic> items = response["data"];
-        result = await compute(convertToObjList, RawListConvert(items: items, converter: fromMap));
+
+        final p = ReceivePort();
+        await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromMap)]);
+        result.addAll(List.from((await p.first)["data"]));
       }
       page++;
     } while (response["next_page_url"] != null);
@@ -80,7 +84,9 @@ class ApiClient implements IBaseApi {
 
     List<dynamic> items = response["data"];
 
-    List<T> result = await compute(convertToObjList, RawListConvert(items: items, converter: fromMap));
+    final p = ReceivePort();
+    await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromMap)]);
+    List<T> result = List.from((await p.first)["data"]);
 
     return result;
   }

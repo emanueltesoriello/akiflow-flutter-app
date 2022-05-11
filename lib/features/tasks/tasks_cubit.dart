@@ -54,15 +54,30 @@ class TasksCubit extends Cubit<TasksCubitState> {
   refreshTasksFromRepository() async {
     emit(state.copyWith(syncStatus: "Get tasks from repository"));
 
-    List<Task> inboxTasks = await _tasksRepository.getUndone();
-    emit(state.copyWith(inboxTasks: inboxTasks));
+    await fetchLabels();
+    await fetchDocs();
+    await fetchInbox();
+    await fetchTodayTasks();
 
+    emit(state.copyWith(loading: false));
+  }
+
+  Future fetchInbox() async {
+    List<Task> inboxTasks = await _tasksRepository.getUndone();
+    emit(state.copyWith(inboxTasks: inboxTasks, syncStatus: "Get today tasks"));
+  }
+
+  Future fetchTodayTasks() async {
     List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: DateTime.now().toUtc());
     emit(state.copyWith(todayTasks: todayTasks, syncStatus: "Get labels from repository"));
+  }
 
+  Future fetchLabels() async {
     List<Label> labels = await _labelsRepository.get();
     emit(state.copyWith(labels: labels, syncStatus: "Get docs from repository"));
+  }
 
+  Future fetchDocs() async {
     List<Doc> docs = await _docsRepository.get();
     emit(state.copyWith(docs: docs));
   }
