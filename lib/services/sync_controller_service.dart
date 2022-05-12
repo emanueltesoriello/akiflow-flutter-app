@@ -82,7 +82,7 @@ class SyncControllerService {
     Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
-  syncAll({required Function(String) syncStatus}) async {
+  syncTasks({Function(String)? syncStatus}) async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
@@ -96,11 +96,6 @@ class SyncControllerService {
       // await _syncEntity(Entity.calendars);
       // await _syncEntity(Entity.events);
     }
-  }
-
-  syncTasks({Function(String)? syncStatus}) async {
-    await Future.wait(
-        [_syncEntity(Entity.tasks, syncStatus: syncStatus), _syncEntity(Entity.labels), _syncEntity(Entity.docs)]);
   }
 
   Future<void> _syncEntity(Entity entity, {Function(String)? syncStatus}) async {

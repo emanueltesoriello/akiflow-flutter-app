@@ -41,15 +41,21 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       emit(state.copyWith(syncStatus: "Syncing..."));
 
-      await _syncControllerService.syncAll(syncStatus: (status) {
-        _sentryService.addBreadcrumb(category: "sync", message: status);
-        emit(state.copyWith(syncStatus: status));
-      });
+      await syncTasks();
 
       await refreshTasksFromRepository();
 
       emit(state.copyWith(loading: false));
     }
+  }
+
+  Future<void> syncTasks() async {
+    await _syncControllerService.syncTasks(
+      syncStatus: (status) {
+        _sentryService.addBreadcrumb(category: "sync", message: status);
+        emit(state.copyWith(syncStatus: status));
+      },
+    );
   }
 
   refreshTasksFromRepository() async {
@@ -147,14 +153,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  Future<void> syncTasks() async {
-    await _syncControllerService.syncTasks(
-      syncStatus: (status) {
-        emit(state.copyWith(syncStatus: status));
-      },
-    );
-  }
-
   Future<void> duplicate([Task? task]) async {
     DateTime? now = DateTime.now().toUtc();
 
@@ -218,7 +216,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  void assignLabel(Label label, {Task? task}) {
+  Future<void> assignLabel(Label label, {Task? task}) async {
     if (task != null) {
       task = task.copyWith(selected: true);
       int index = state.inboxTasks.indexWhere((t) => t.id == task!.id);
@@ -234,10 +232,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       Task updatedTask = task.copyWith(
         listId: label.id,
+        selected: false,
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
       updated[index] = updatedTask;
+
+      await _tasksRepository.updateById(updated[index].id, data: updated[index]);
     }
 
     clearSelected();
@@ -247,7 +248,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  void selectPriority() {
+  Future<void> selectPriority() async {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> updated = state.inboxTasks.toList();
@@ -258,9 +259,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
       int currentPriority = task.priority ?? 0;
 
       if (currentPriority + 1 > 3) {
-        currentPriority = 0;
+        currentPriority = -1;
       } else {
-        currentPriority++;
+        if (currentPriority < 1) {
+          currentPriority = 1;
+        } else {
+          currentPriority++;
+        }
       }
 
       Task updatedTask = task.copyWith(
@@ -269,6 +274,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
 
       updated[index] = updatedTask;
+
+      await _tasksRepository.updateById(updated[index].id, data: updated[index]);
     }
 
     emit(state.copyWith(inboxTasks: updated));
@@ -362,6 +369,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
         dateTime: dateTime,
         status: statusType.id,
       );
+
+      updated = updated.copyWith(selected: false);
 
       state.inboxTasks[index] = updated;
 

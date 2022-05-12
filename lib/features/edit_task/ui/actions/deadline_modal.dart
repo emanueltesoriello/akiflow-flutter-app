@@ -23,171 +23,167 @@ class _DeadlineModalState extends State<DeadlineModal> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
-              ),
-              child: Container(
-                color: Theme.of(context).backgroundColor,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 12),
-                    const ScrollChip(),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/icons/_common/flags.svg",
-                            width: 28,
-                            height: 28,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            t.editTask.deadline,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
-                          ),
-                        ],
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16.0),
+            topRight: Radius.circular(16.0),
+          ),
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                const SizedBox(height: 12),
+                const ScrollChip(),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/icons/_common/flags.svg",
+                        width: 28,
+                        height: 28,
                       ),
-                    ),
-                    const Separator(),
-                    _predefinedDate(context),
-                    const Separator(),
-                    AddTaskCalendar(
-                      initialDate: () {
-                        try {
-                          return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
-                        } catch (_) {
-                          return null;
-                        }
-                      }(),
-                      onConfirm: (DateTime date, DateTime? datetime) {
-                        context.read<EditTaskCubit>().setDeadline(datetime ?? date, update: true);
-                      },
-                    ),
-                    const Separator(),
-                    const SizedBox(height: 50),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        t.editTask.deadline,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey2(context),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                const Separator(),
+                _predefinedDate(context),
+                const Separator(),
+                AddTaskCalendar(
+                  initialDate: () {
+                    try {
+                      return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
+                    } catch (_) {
+                      return null;
+                    }
+                  }(),
+                  onConfirm: (DateTime date, DateTime? datetime) {
+                    context.read<EditTaskCubit>().setDeadline(datetime ?? date, update: true);
+                  },
+                ),
+                const Separator(),
+                const SizedBox(height: 50),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _predefinedDate(BuildContext context) {
+  DateTime now = DateTime.now();
+
+  return Column(
+    children: [
+      Container(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+        child: Column(children: [
+          const SizedBox(height: 2),
+          _predefinedDateItem(
+            context,
+            text: t.addTask.today,
+            trailingText: DateFormat("EEE").format(now),
+            onPressed: () {
+              context.read<EditTaskCubit>().setDeadline(now);
+
+              Navigator.pop(context);
+            },
+          ),
+          const SizedBox(height: 2),
+          _predefinedDateItem(
+            context,
+            text: t.addTask.tomorrow,
+            trailingText: DateFormat("EEE").format(now.add(const Duration(days: 1))),
+            onPressed: () {
+              context.read<EditTaskCubit>().setDeadline(now.add(const Duration(days: 1)));
+
+              Navigator.pop(context);
+            },
+          ),
+          const SizedBox(height: 2),
+          Builder(builder: (context) {
+            DateTime nextWeekend = now.add(Duration(days: 7 - now.weekday + 1)).add(const Duration(days: 5));
+
+            return _predefinedDateItem(
+              context,
+              text: t.addTask.nextWeekend,
+              trailingText: DateFormat("EEE").format(nextWeekend),
+              onPressed: () {
+                context.read<EditTaskCubit>().setDeadline(nextWeekend);
+
+                Navigator.pop(context);
+              },
+            );
+          }),
+          const SizedBox(height: 2),
+          Builder(builder: (context) {
+            DateTime nextMonday = now.add(Duration(days: 7 - now.weekday + 1));
+
+            return _predefinedDateItem(
+              context,
+              text: t.addTask.nextWeek,
+              trailingText: DateFormat("EEE").format(nextMonday),
+              onPressed: () {
+                context.read<EditTaskCubit>().setDeadline(nextMonday);
+                Navigator.pop(context);
+              },
+            );
+          }),
+        ]),
+      ),
+    ],
+  );
+}
+
+Widget _predefinedDateItem(
+  BuildContext context, {
+  required String text,
+  required String trailingText,
+  required Function() onPressed,
+}) {
+  return InkWell(
+    onTap: onPressed,
+    child: SizedBox(
+      height: 40,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey2(context),
               ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            trailingText,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey3(context),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _predefinedDate(BuildContext context) {
-    DateTime now = DateTime.now();
-
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: Column(children: [
-            const SizedBox(height: 2),
-            _predefinedDateItem(
-              context,
-              text: t.addTask.today,
-              trailingText: DateFormat("EEE").format(now),
-              onPressed: () {
-                context.read<EditTaskCubit>().setDeadline(now);
-
-                Navigator.pop(context);
-              },
-            ),
-            const SizedBox(height: 2),
-            _predefinedDateItem(
-              context,
-              text: t.addTask.tomorrow,
-              trailingText: DateFormat("EEE").format(now.add(const Duration(days: 1))),
-              onPressed: () {
-                context.read<EditTaskCubit>().setDeadline(now.add(const Duration(days: 1)));
-
-                Navigator.pop(context);
-              },
-            ),
-            const SizedBox(height: 2),
-            Builder(builder: (context) {
-              DateTime nextWeekend = now.add(Duration(days: 7 - now.weekday + 1)).add(const Duration(days: 5));
-
-              return _predefinedDateItem(
-                context,
-                text: t.addTask.nextWeekend,
-                trailingText: DateFormat("EEE").format(nextWeekend),
-                onPressed: () {
-                  context.read<EditTaskCubit>().setDeadline(nextWeekend);
-
-                  Navigator.pop(context);
-                },
-              );
-            }),
-            const SizedBox(height: 2),
-            Builder(builder: (context) {
-              DateTime nextMonday = now.add(Duration(days: 7 - now.weekday + 1));
-
-              return _predefinedDateItem(
-                context,
-                text: t.addTask.nextWeek,
-                trailingText: DateFormat("EEE").format(nextMonday),
-                onPressed: () {
-                  context.read<EditTaskCubit>().setDeadline(nextMonday);
-                  Navigator.pop(context);
-                },
-              );
-            }),
-          ]),
-        ),
-      ],
-    );
-  }
-
-  Widget _predefinedDateItem(
-    BuildContext context, {
-    required String text,
-    required String trailingText,
-    required Function() onPressed,
-  }) {
-    return InkWell(
-      onTap: onPressed,
-      child: SizedBox(
-        height: 40,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              trailingText,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-                color: ColorsExt.grey3(context),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }

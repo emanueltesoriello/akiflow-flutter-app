@@ -267,9 +267,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     int currentPriority = state.newTask.priority ?? 0;
 
     if (currentPriority + 1 > 3) {
-      currentPriority = 0;
+      currentPriority = -1;
     } else {
-      currentPriority++;
+      if (currentPriority < 1) {
+        currentPriority = 1;
+      } else {
+        currentPriority++;
+      }
     }
 
     Task updated = state.newTask.copyWith(
@@ -283,8 +287,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   _updateUiRepositoryAndSync(Task task) async {
-    _tasksCubit.refreshTasksFromRepository();
-
     await _tasksRepository.updateById(task.id!, data: task);
 
     _tasksCubit.syncTasks();

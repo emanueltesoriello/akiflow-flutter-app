@@ -40,11 +40,11 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             iconAsset: "assets/images/icons/_common/exclamationmark.svg",
             iconColor: () {
               switch (task.priority) {
-                case 1:
+                case 3:
                   return ColorsExt.green(context);
                 case 2:
                   return ColorsExt.yellow(context);
-                case 3:
+                case 1:
                   return ColorsExt.red(context);
                 default:
                   return ColorsExt.grey3(context);
@@ -85,8 +85,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             iconAsset: "assets/images/icons/_common/link.svg",
             active: () {
               try {
-                return task.links!.toList().isNotEmpty &&
-                    task.links!.toList().every((element) => element.isNotEmpty);
+                return task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty);
               } catch (e) {
                 return false;
               }
@@ -138,10 +137,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                   iconAsset,
                   width: 22,
                   height: 22,
-                  color: iconColor ??
-                      (active
-                          ? ColorsExt.grey2(context)
-                          : ColorsExt.grey3(context)),
+                  color: iconColor ?? (active ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
                 ),
                 Builder(builder: (context) {
                   if (text == null) {
@@ -208,8 +204,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             break;
         }
       },
-      itemBuilder: (BuildContext context) =>
-          <PopupMenuEntry<EditTaskAdditionalAction>>[
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<EditTaskAdditionalAction>>[
         PopupMenuItem<EditTaskAdditionalAction>(
           value: EditTaskAdditionalAction.duplicate,
           child: _additionalActionMenuItem(
