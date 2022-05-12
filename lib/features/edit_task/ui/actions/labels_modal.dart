@@ -31,7 +31,6 @@ class _LabelsModalState extends State<LabelsModal> {
         decoration: const BoxDecoration(
           color: Colors.transparent,
         ),
-        height: MediaQuery.of(context).size.height * 0.5,
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
@@ -39,7 +38,8 @@ class _LabelsModalState extends State<LabelsModal> {
           ),
           child: Container(
             color: Theme.of(context).backgroundColor,
-            child: Column(
+            child: ListView(
+              shrinkWrap: true,
               children: [
                 const SizedBox(height: 12),
                 const ScrollChip(),
@@ -50,82 +50,81 @@ class _LabelsModalState extends State<LabelsModal> {
 
                     labels = LabelExt.filter(labels);
 
-                    return Expanded(
-                      child: ValueListenableBuilder<String>(
-                          valueListenable: _searchNotifier,
-                          builder: (context, value, child) {
-                            List<Label> labelsFiltered = labels.toList();
+                    return ValueListenableBuilder<String>(
+                        valueListenable: _searchNotifier,
+                        builder: (context, value, child) {
+                          List<Label> labelsFiltered = labels.toList();
 
-                            labelsFiltered = labelsFiltered.where((label) {
-                              if (label.title == null || label.title!.isEmpty) {
-                                return false;
+                          labelsFiltered = labelsFiltered.where((label) {
+                            if (label.title == null || label.title!.isEmpty) {
+                              return false;
+                            }
+
+                            return (label.title!).toLowerCase().contains(value.toLowerCase());
+                          }).toList();
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(16),
+                            itemCount: labelsFiltered.length + 3,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: Text(
+                                    t.editTask.assignLabel,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorsExt.grey2(context),
+                                    ),
+                                  ),
+                                );
                               }
 
-                              return (label.title!).toLowerCase().contains(value.toLowerCase());
-                            }).toList();
-
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(16),
-                              itemCount: labelsFiltered.length + 3,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: Text(
-                                      t.editTask.assignLabel,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                        color: ColorsExt.grey2(context),
-                                      ),
-                                    ),
-                                  );
-                                }
-
-                                if (index == 1) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: _Search(
-                                      onChanged: (value) {
-                                        _searchNotifier.value = value;
-                                      },
-                                    ),
-                                  );
-                                }
-
-                                if (index == 2) {
-                                  Label noLabel = Label(
-                                    title: t.editTask.noLabel,
-                                  );
-
-                                  return LabelItem(
-                                    noLabel,
-                                    onTap: () {
-                                      widget.selectLabel(noLabel);
-                                      Navigator.pop(context);
+                              if (index == 1) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _Search(
+                                    onChanged: (value) {
+                                      _searchNotifier.value = value;
                                     },
-                                  );
-                                }
+                                  ),
+                                );
+                              }
 
-                                index -= 3;
-
-                                Label label = labels[index];
+                              if (index == 2) {
+                                Label noLabel = Label(
+                                  title: t.editTask.noLabel,
+                                );
 
                                 return LabelItem(
-                                  label,
+                                  noLabel,
                                   onTap: () {
-                                    widget.selectLabel(label);
+                                    widget.selectLabel(noLabel);
                                     Navigator.pop(context);
                                   },
                                 );
-                              },
-                            );
-                          }),
-                    );
+                              }
+
+                              index -= 3;
+
+                              Label label = labels[index];
+
+                              return LabelItem(
+                                label,
+                                onTap: () {
+                                  widget.selectLabel(label);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                        });
                   },
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 24),
               ],
             ),
           ),
