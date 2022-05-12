@@ -400,8 +400,6 @@ extension TaskExt on Task {
     TaskStatusType? lastDoneTaskStatus,
     required Function(TaskStatusType?) onDone,
   }) {
-    print(isCompletedComputed);
-
     bool done = isCompletedComputed;
 
     DateTime now = DateTime.now().toUtc();

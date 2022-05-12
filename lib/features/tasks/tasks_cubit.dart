@@ -98,24 +98,34 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void select(Task task) {
-    List<Task> tasksUpdated = state.inboxTasks.toList();
-
-    int index = tasksUpdated.indexWhere((t) => t.id == task.id);
-
-    task = task.copyWith(selected: !(task.selected ?? false));
-
-    tasksUpdated[index] = task;
-
-    emit(state.copyWith(inboxTasks: tasksUpdated));
+    emit(
+      state.copyWith(
+        inboxTasks: state.inboxTasks.map((t) {
+          if (t.id == task.id) {
+            return task.copyWith(selected: true);
+          }
+          return t;
+        }).toList(),
+        todayTasks: state.todayTasks.map((t) {
+          if (t.id == task.id) {
+            return task.copyWith(selected: true);
+          }
+          return t;
+        }).toList(),
+      ),
+    );
   }
 
   TaskStatusType? lastDoneTaskStatus;
 
   void markAsDone([Task? task]) async {
-    bool isSelectMode = task == null || state.inboxTasks.any((t) => t.selected ?? false);
+    bool isSelectMode = task == null ||
+        state.inboxTasks.any((t) => t.selected ?? false) ||
+        state.todayTasks.any((t) => t.selected ?? false);
 
     if (isSelectMode) {
       List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+      tasksSelected.addAll(state.todayTasks.where((t) => t.selected ?? false).toList());
 
       for (Task taskSelected in tasksSelected) {
         Task updated = taskSelected.copyWith();
@@ -134,19 +144,19 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       emit(state.copyWith(inboxTasks: state.inboxTasks));
     } else {
-      Task updated = task.copyWith();
-
-      updated = updated.markAsDone(
+      task = task.markAsDone(
         lastDoneTaskStatus: lastDoneTaskStatus,
         onDone: (status) {
           lastDoneTaskStatus = status;
         },
       );
 
-      updateUiOfTask(updated);
+      updateUiOfTask(task);
 
-      await _tasksRepository.updateById(updated.id, data: updated);
+      await _tasksRepository.updateById(task.id, data: task);
     }
+
+    clearSelected();
 
     syncTasks();
   }
@@ -176,6 +186,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
           id: const Uuid().v4(),
           updatedAt: Nullable(now.toIso8601String()),
           createdAt: (now.toIso8601String()),
+          selected: false,
         );
 
         duplicates.add(newTaskDuplicated);
@@ -185,6 +196,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       await _tasksRepository.add(duplicates);
     }
+
+    clearSelected();
 
     emit(state.copyWith(inboxTasks: updated));
 
@@ -308,14 +321,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   void clearSelected() {
-    List<Task> updated = state.inboxTasks.toList();
-
-    for (Task task in updated) {
-      int index = updated.indexWhere((t) => t.id == task.id);
-      updated[index] = task.copyWith(selected: false);
-    }
-
-    emit(state.copyWith(inboxTasks: updated));
+    emit(
+      state.copyWith(
+        inboxTasks: state.inboxTasks.map((e) => e.copyWith(selected: false)).toList(),
+        todayTasks: state.todayTasks.map((e) => e.copyWith(selected: false)).toList(),
+      ),
+    );
   }
 
   Future<void> reorder(
@@ -348,6 +359,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in ordered) {
       await _tasksRepository.updateById(task.id, data: task);
     }
+
+    clearSelected();
 
     syncTasks();
   }
@@ -398,7 +411,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         status: statusType.id,
       );
 
-      updated = updated.copyWith(selected: false);
+      clearSelected();
 
       updateUiOfTask(updated);
 
