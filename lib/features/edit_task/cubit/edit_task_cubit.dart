@@ -287,6 +287,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   _updateUiRepositoryAndSync(Task task) async {
+    _tasksCubit.updateUiOfTask(task);
+
     await _tasksRepository.updateById(task.id!, data: task);
 
     _tasksCubit.syncTasks();

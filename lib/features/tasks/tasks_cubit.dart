@@ -127,9 +127,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
           },
         );
 
-        int index = state.inboxTasks.indexWhere((t) => t.id == updated.id);
-
-        state.inboxTasks[index] = updated;
+        updateUiOfTask(updated);
 
         await _tasksRepository.updateById(taskSelected.id, data: updated);
       }
@@ -145,7 +143,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         },
       );
 
-      _updateUiOfTask(updated);
+      updateUiOfTask(updated);
 
       await _tasksRepository.updateById(updated.id, data: updated);
     }
@@ -205,6 +203,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       updated[index] = task;
 
+      updateUiOfTask(task);
+
       await _tasksRepository.updateById(
         updated[index].id,
         data: updated[index],
@@ -237,6 +237,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
 
       updated[index] = updatedTask;
+
+      updateUiOfTask(updated[index]);
 
       await _tasksRepository.updateById(updated[index].id, data: updated[index]);
     }
@@ -275,6 +277,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       updated[index] = updatedTask;
 
+      updateUiOfTask(updated[index]);
+
       await _tasksRepository.updateById(updated[index].id, data: updated[index]);
     }
 
@@ -287,23 +291,18 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
     for (Task task in tasksSelected) {
-      int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
-
       Task updated = task.copyWith(
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
         dueDate: Nullable(date?.toIso8601String()),
+        selected: false,
       );
 
-      updated = updated.copyWith(selected: false);
-
-      state.inboxTasks[index] = updated;
+      updateUiOfTask(updated);
 
       await _tasksRepository.updateById(task.id, data: updated);
     }
 
     clearSelected();
-
-    emit(state.copyWith(inboxTasks: state.inboxTasks));
 
     syncTasks();
   }
@@ -313,7 +312,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     for (Task task in updated) {
       int index = updated.indexWhere((t) => t.id == task.id);
-
       updated[index] = task.copyWith(selected: false);
     }
 
@@ -354,14 +352,25 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  void _updateUiOfTask(Task task) {
-    int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
-
-    state.inboxTasks[index] = task;
-
-    List<Task> tasksUpdated = state.inboxTasks.toList();
-
-    emit(state.copyWith(inboxTasks: tasksUpdated));
+  void updateUiOfTask(Task task) {
+    emit(
+      state.copyWith(
+        inboxTasks: state.inboxTasks.map((t) {
+          if (t.id == task.id) {
+            return task;
+          } else {
+            return t;
+          }
+        }).toList(),
+        todayTasks: state.todayTasks.map((t) {
+          if (t.id == task.id) {
+            return task;
+          } else {
+            return t;
+          }
+        }).toList(),
+      ),
+    );
   }
 
   Future<void> planFor(
@@ -379,8 +388,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
     for (Task task in tasksSelected) {
-      int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
-
       Task updated = task.copyWith(
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
@@ -393,7 +400,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       updated = updated.copyWith(selected: false);
 
-      state.inboxTasks[index] = updated;
+      updateUiOfTask(updated);
 
       await _tasksRepository.updateById(task.id, data: updated);
     }
