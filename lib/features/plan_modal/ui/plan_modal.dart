@@ -10,14 +10,15 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 
 class PlanModal extends StatelessWidget {
-  final Function(DateTime?, TaskStatusType statusType) onAddTimeClick;
+  final Function({required DateTime? date, required DateTime? datetime, required TaskStatusType statusType})
+      onSelectDate;
   final Function() setForInbox;
   final Function() setForSomeday;
   final TaskStatusType? statusType;
 
   const PlanModal({
     Key? key,
-    required this.onAddTimeClick,
+    required this.onSelectDate,
     required this.setForInbox,
     required this.setForSomeday,
     this.statusType = TaskStatusType.planned,
@@ -28,7 +29,7 @@ class PlanModal extends StatelessWidget {
     return BlocProvider(
       create: (context) => PlanModalCubit(statusType!),
       child: _View(
-        onAddTimeClick: onAddTimeClick,
+        onSelectDate: onSelectDate,
         setForInbox: setForInbox,
         setForSomeday: setForSomeday,
       ),
@@ -37,13 +38,14 @@ class PlanModal extends StatelessWidget {
 }
 
 class _View extends StatelessWidget {
-  final Function(DateTime?, TaskStatusType statusType) onAddTimeClick;
+  final Function({required DateTime date, required DateTime? datetime, required TaskStatusType statusType})
+      onSelectDate;
   final Function() setForInbox;
   final Function() setForSomeday;
 
   const _View({
     Key? key,
-    required this.onAddTimeClick,
+    required this.onSelectDate,
     required this.setForInbox,
     required this.setForSomeday,
   }) : super(key: key);
@@ -72,14 +74,12 @@ class _View extends StatelessWidget {
                       _planType(),
                       _predefinedDate(context),
                       AddTaskCalendar(
-                        selectedDate: context.watch<PlanModalCubit>().state.selectedDate,
-                        onDateSelected: (DateTime? date) {
+                        initialDate: context.watch<PlanModalCubit>().state.selectedDate,
+                        onConfirm: (DateTime date, DateTime? datetime) {
                           context.read<PlanModalCubit>().selectDate(date);
-                        },
-                        onAddTimeClick: (DateTime? date) {
-                          TaskStatusType statusType = context.read<PlanModalCubit>().state.statusType;
 
-                          onAddTimeClick(date, statusType);
+                          TaskStatusType statusType = context.read<PlanModalCubit>().state.statusType;
+                          onSelectDate(date: date, datetime: datetime, statusType: statusType);
                         },
                       ),
                       const SizedBox(height: 16),
@@ -158,10 +158,7 @@ class _View extends StatelessWidget {
                     text: t.addTask.today,
                     trailingText: DateFormat("EEE").format(DateTime.now()),
                     onPressed: () {
-                      onAddTimeClick(
-                        now,
-                        TaskStatusType.planned,
-                      );
+                      onSelectDate(date: now, datetime: null, statusType: TaskStatusType.planned);
 
                       Navigator.pop(context);
                     },
@@ -175,10 +172,7 @@ class _View extends StatelessWidget {
                     text: t.addTask.laterToday,
                     trailingText: DateFormat("EEE HH:mm").format(laterToday),
                     onPressed: () {
-                      onAddTimeClick(
-                        laterToday,
-                        TaskStatusType.snoozed,
-                      );
+                      onSelectDate(date: laterToday, datetime: null, statusType: TaskStatusType.snoozed);
 
                       Navigator.pop(context);
                     },
@@ -194,10 +188,10 @@ class _View extends StatelessWidget {
               text: t.addTask.tomorrow,
               trailingText: DateFormat("EEE").format(now.add(const Duration(days: 1))),
               onPressed: () {
-                onAddTimeClick(
-                  now.add(const Duration(days: 1)),
-                  context.read<PlanModalCubit>().state.statusType,
-                );
+                onSelectDate(
+                    date: now.add(const Duration(days: 1)),
+                    datetime: null,
+                    statusType: context.read<PlanModalCubit>().state.statusType);
 
                 Navigator.pop(context);
               },
@@ -212,10 +206,8 @@ class _View extends StatelessWidget {
                 text: t.addTask.nextWeek,
                 trailingText: DateFormat("EEE").format(nextMonday),
                 onPressed: () {
-                  onAddTimeClick(
-                    nextMonday,
-                    context.read<PlanModalCubit>().state.statusType,
-                  );
+                  onSelectDate(
+                      date: nextMonday, datetime: null, statusType: context.read<PlanModalCubit>().state.statusType);
 
                   Navigator.pop(context);
                 },

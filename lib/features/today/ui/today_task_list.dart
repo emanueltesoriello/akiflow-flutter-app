@@ -111,9 +111,10 @@ class TodayTaskList extends StatelessWidget {
         value: cubit,
         child: PlanModal(
           statusType: statusType,
-          onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
+          onSelectDate: ({required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
             cubit.planFor(
               date,
+              dateTime: datetime,
               statusType: statusType,
               task: task,
             );
@@ -121,6 +122,7 @@ class TodayTaskList extends StatelessWidget {
           setForInbox: () {
             cubit.planFor(
               null,
+              dateTime: null,
               statusType: TaskStatusType.inbox,
               task: task,
             );
@@ -128,6 +130,7 @@ class TodayTaskList extends StatelessWidget {
           setForSomeday: () {
             cubit.planFor(
               null,
+              dateTime: null,
               statusType: TaskStatusType.someday,
               task: task,
             );

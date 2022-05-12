@@ -66,20 +66,15 @@ class _DeadlineModalState extends State<DeadlineModal> {
                     _predefinedDate(context),
                     const Separator(),
                     AddTaskCalendar(
-                      selectedDate: () {
+                      initialDate: () {
                         try {
                           return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
                         } catch (_) {
                           return null;
                         }
                       }(),
-                      onDateSelected: (DateTime? date) {
-                        context.read<EditTaskCubit>().setDeadline(date, update: false);
-
-                        Navigator.pop(context);
-                      },
-                      onAddTimeClick: (DateTime? date) {
-                        context.read<EditTaskCubit>().setDeadline(date, update: true);
+                      onConfirm: (DateTime date, DateTime? datetime) {
+                        context.read<EditTaskCubit>().setDeadline(datetime ?? date, update: true);
                       },
                     ),
                     const Separator(),

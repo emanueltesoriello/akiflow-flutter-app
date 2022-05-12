@@ -104,6 +104,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(newTask: updated));
+
+    _updateUiRepositoryAndSync(updated);
   }
 
   Future<void> selectDate(
@@ -235,9 +237,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _updateUiRepositoryAndSync(updated);
   }
 
-  void setDeadline(DateTime? date, {bool update = true}) {
+  void setDeadline(DateTime date, {bool update = true}) {
     Task updated = state.newTask.copyWith(
-      dueDate: Nullable(date?.toIso8601String()),
+      dueDate: Nullable(date.toIso8601String()),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
@@ -281,7 +283,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   _updateUiRepositoryAndSync(Task task) async {
-    _tasksCubit.updateUiOfTask(task);
+    _tasksCubit.refreshTasksFromRepository();
 
     await _tasksRepository.updateById(task.id!, data: task);
 

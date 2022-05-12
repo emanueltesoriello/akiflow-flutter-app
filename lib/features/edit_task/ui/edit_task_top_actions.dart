@@ -138,14 +138,15 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               builder: (context) => BlocProvider.value(
                 value: cubit,
                 child: PlanModal(
-                  onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
-                    cubit.planFor(date, statusType: statusType);
+                  onSelectDate: (
+                      {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
+                    cubit.planFor(date, dateTime: datetime, statusType: statusType, update: true);
                   },
                   setForInbox: () {
-                    cubit.planFor(null, statusType: TaskStatusType.inbox);
+                    cubit.planFor(null, statusType: TaskStatusType.inbox, update: true);
                   },
                   setForSomeday: () {
-                    cubit.planFor(null, statusType: TaskStatusType.someday);
+                    cubit.planFor(null, statusType: TaskStatusType.someday, update: true);
                   },
                 ),
               ),

@@ -12,14 +12,7 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 
-enum BottomTaskAdditionalActions {
-  moveToInbox,
-  planForToday,
-  setDeadline,
-  duplicate,
-  markAsDone,
-  delete
-}
+enum BottomTaskAdditionalActions { moveToInbox, planForToday, setDeadline, duplicate, markAsDone, delete }
 
 class BottomTaskActions extends StatelessWidget {
   const BottomTaskActions({Key? key}) : super(key: key);
@@ -42,21 +35,15 @@ class BottomTaskActions extends StatelessWidget {
                   showCupertinoModalBottomSheet(
                     context: context,
                     builder: (context) => PlanModal(
-                      onAddTimeClick:
-                          (DateTime? date, TaskStatusType statusType) {
-                        context
-                            .read<TasksCubit>()
-                            .planFor(date, statusType: statusType);
+                      onSelectDate: (
+                          {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
+                        context.read<TasksCubit>().planFor(date, dateTime: datetime, statusType: statusType);
                       },
                       setForInbox: () {
-                        context
-                            .read<TasksCubit>()
-                            .planFor(null, statusType: TaskStatusType.inbox);
+                        context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
                       },
                       setForSomeday: () {
-                        context
-                            .read<TasksCubit>()
-                            .planFor(null, statusType: TaskStatusType.someday);
+                        context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.someday);
                       },
                     ),
                   );
@@ -74,21 +61,15 @@ class BottomTaskActions extends StatelessWidget {
                     context: context,
                     builder: (context) => PlanModal(
                       statusType: TaskStatusType.snoozed,
-                      onAddTimeClick:
-                          (DateTime? date, TaskStatusType statusType) {
-                        context
-                            .read<TasksCubit>()
-                            .planFor(date, statusType: statusType);
+                      onSelectDate: (
+                          {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
+                        context.read<TasksCubit>().planFor(date, dateTime: datetime, statusType: statusType);
                       },
                       setForInbox: () {
-                        context
-                            .read<TasksCubit>()
-                            .planFor(null, statusType: TaskStatusType.inbox);
+                        context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
                       },
                       setForSomeday: () {
-                        context
-                            .read<TasksCubit>()
-                            .planFor(null, statusType: TaskStatusType.someday);
+                        context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.someday);
                       },
                     ),
                   );
@@ -137,13 +118,12 @@ class BottomTaskActions extends StatelessWidget {
                 onSelected: (BottomTaskAdditionalActions result) {
                   switch (result) {
                     case BottomTaskAdditionalActions.moveToInbox:
-                      context
-                          .read<TasksCubit>()
-                          .planFor(null, statusType: TaskStatusType.inbox);
+                      context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
                       break;
                     case BottomTaskAdditionalActions.planForToday:
-                      context.read<TasksCubit>().planFor(DateTime.now(),
-                          statusType: TaskStatusType.inbox);
+                      context
+                          .read<TasksCubit>()
+                          .planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.inbox);
                       break;
                     case BottomTaskAdditionalActions.setDeadline:
                       context.read<TasksCubit>().setDeadline();
@@ -159,8 +139,7 @@ class BottomTaskActions extends StatelessWidget {
                       break;
                   }
                 },
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<BottomTaskAdditionalActions>>[
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<BottomTaskAdditionalActions>>[
                   PopupMenuItem<BottomTaskAdditionalActions>(
                     value: BottomTaskAdditionalActions.moveToInbox,
                     child: _additionalActionMenuItem(
@@ -173,8 +152,7 @@ class BottomTaskActions extends StatelessWidget {
                     value: BottomTaskAdditionalActions.planForToday,
                     child: _additionalActionMenuItem(
                       context,
-                      iconAsset:
-                          "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+                      iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
                       text: t.task.planForToday,
                     ),
                   ),
@@ -190,8 +168,7 @@ class BottomTaskActions extends StatelessWidget {
                     value: BottomTaskAdditionalActions.duplicate,
                     child: _additionalActionMenuItem(
                       context,
-                      iconAsset:
-                          "assets/images/icons/_common/square_on_square.svg",
+                      iconAsset: "assets/images/icons/_common/square_on_square.svg",
                       text: t.task.duplicate,
                     ),
                   ),
@@ -199,8 +176,7 @@ class BottomTaskActions extends StatelessWidget {
                     value: BottomTaskAdditionalActions.markAsDone,
                     child: _additionalActionMenuItem(
                       context,
-                      iconAsset:
-                          "assets/images/icons/_common/Check-done-outline.svg",
+                      iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
                       text: t.task.markAsDone,
                     ),
                   ),

@@ -139,7 +139,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         },
       );
 
-      updateUiOfTask(updated);
+      _updateUiOfTask(updated);
 
       await _tasksRepository.updateById(updated.id, data: updated);
     }
@@ -326,7 +326,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  void updateUiOfTask(Task task) {
+  void _updateUiOfTask(Task task) {
     int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
 
     state.inboxTasks[index] = task;
@@ -338,7 +338,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> planFor(
     DateTime? date, {
-    DateTime? dateTime,
+    required DateTime? dateTime,
     required TaskStatusType statusType,
     Task? task,
   }) async {

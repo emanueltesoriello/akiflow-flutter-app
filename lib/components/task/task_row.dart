@@ -217,7 +217,7 @@ class TaskRow extends StatelessWidget {
         closeOnCancel: true,
         dismissThreshold: 0.5,
         confirmDismiss: () async {
-          // completedClick();
+          completedClick();
           return false;
         },
         onDismissed: () {},

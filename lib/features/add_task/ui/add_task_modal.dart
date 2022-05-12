@@ -241,27 +241,29 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
         if (state.newTask.date != null) {
           DateTime parsed = DateTime.parse(state.newTask.date!);
 
-          if (state.newTask.datetime != null) {
-            if (state.newTask.isToday) {
-              text = DateFormat("HH:mm").format(parsed.toLocal());
-            } else if (state.newTask.isTomorrow) {
-              text = t.addTask.tmw + DateFormat(" - HH:mm").format(parsed.toLocal());
-            } else {
-              text = DateFormat("EEE, d MMM").format(parsed.toLocal());
-            }
+          if (state.newTask.isToday) {
+            text = t.addTask.today;
+          } else if (state.newTask.isTomorrow) {
+            text = t.addTask.tmw;
           } else {
-            if (state.newTask.isToday) {
-              text = t.addTask.today;
-            } else if (state.newTask.isTomorrow) {
-              text = t.addTask.tmw;
-            } else {
-              text = DateFormat("EEE, d MMM").format(parsed.toLocal());
-            }
+            text = DateFormat("EEE, d MMM").format(parsed.toLocal());
           }
         } else if (state.newTask.status == TaskStatusType.someday.id) {
           text = t.task.someday;
         } else {
           text = t.bottomBar.inbox;
+        }
+
+        if (state.newTask.datetime != null) {
+          DateTime parsed = DateTime.parse(state.newTask.datetime!);
+
+          if (state.newTask.isToday) {
+            text = text + " " + DateFormat("HH:mm").format(parsed.toLocal());
+          } else if (state.newTask.isTomorrow) {
+            text = t.addTask.tmw + DateFormat(" - HH:mm").format(parsed.toLocal());
+          } else {
+            text = text + " " + DateFormat("EEE, d MMM").format(parsed.toLocal());
+          }
         }
 
         return AddTaskActionItem(
@@ -277,14 +279,15 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => PlanModal(
-                onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
-                  editTaskCubit.planFor(date, statusType: statusType, update: false);
+                onSelectDate: (
+                    {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
+                  editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType, update: false);
                 },
                 setForInbox: () {
-                  editTaskCubit.planFor(null, statusType: TaskStatusType.inbox, update: false);
+                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox, update: false);
                 },
                 setForSomeday: () {
-                  editTaskCubit.planFor(null, statusType: TaskStatusType.someday, update: false);
+                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.someday, update: false);
                 },
               ),
             );
