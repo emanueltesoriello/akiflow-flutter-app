@@ -98,7 +98,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<TodayCubit>(
           lazy: false,
-          create: (BuildContext context) => TodayCubit(),
+          create: (BuildContext context) => TodayCubit(context.read<TasksCubit>()),
         ),
       ],
       child: MaterialApp(

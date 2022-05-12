@@ -16,7 +16,7 @@ class TodayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (context) => TodayCubit(), child: const _View());
+    return const _View();
   }
 }
 
@@ -25,12 +25,37 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime selectedDate = context.watch<TodayCubit>().state.selectedDate;
     List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
 
-    List<Task> todos = List.from(todayTasks.where((element) => !element.isCompletedComputed));
-    List<Task> completed = List.from(todayTasks.where((element) => element.isCompletedComputed && element.isToday));
+    List<Task> todos;
+    List<Task> pinned;
+    List<Task> completed;
 
-    List<Task> pinned = TaskExt.filterPinnedTasks(todos);
+    if (selectedDate.day == DateTime.now().day &&
+        selectedDate.month == DateTime.now().month &&
+        selectedDate.year == DateTime.now().year) {
+      todos = List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
+      pinned = todayTasks
+          .where((element) =>
+              element.datetime != null &&
+              !element.isOverdue &&
+              !element.isCompletedComputed &&
+              element.isSameDateOf(selectedDate))
+          .toList();
+      completed = List.from(todayTasks.where((element) => element.isCompletedComputed && element.isTodayOrBefore));
+    } else {
+      todos = List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
+      pinned = todayTasks
+          .where((element) =>
+              element.datetime != null &&
+              !element.isOverdue &&
+              !element.isCompletedComputed &&
+              element.isSameDateOf(selectedDate))
+          .toList();
+      completed =
+          List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
+    }
 
     return Stack(
       children: [

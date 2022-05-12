@@ -9,7 +9,6 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_task_list.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
 class SomedayPage extends StatelessWidget {
@@ -28,11 +27,6 @@ class _View extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
 
-    List<Task> todos = List.from(todayTasks.where((element) => !element.isCompletedComputed));
-    List<Task> completed = List.from(todayTasks.where((element) => element.isCompletedComputed && element.isToday));
-
-    List<Task> pinned = TaskExt.filterPinnedTasks(todos);
-
     return Stack(
       children: [
         RefreshIndicator(
@@ -45,42 +39,16 @@ class _View extends StatelessWidget {
               controller: PrimaryScrollController.of(context) ?? ScrollController(),
               slivers: [
                 TodayTaskList(
-                  tasks: todos,
+                  tasks: todayTasks,
                   sorting: TaskListSorting.descending,
                   showTasks: context.watch<TodayCubit>().state.todosListOpen,
                   header: _Header(
                     t.today.toDos,
-                    tasks: todos,
+                    tasks: todayTasks,
                     onClick: () {
                       context.read<TodayCubit>().openTodoList();
                     },
                     listOpened: context.watch<TodayCubit>().state.todosListOpen,
-                  ),
-                ),
-                TodayTaskList(
-                  tasks: pinned,
-                  sorting: TaskListSorting.descending,
-                  showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
-                  header: _Header(
-                    t.today.pinnedInCalendar,
-                    tasks: pinned,
-                    onClick: () {
-                      context.read<TodayCubit>().openPinnedList();
-                    },
-                    listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
-                  ),
-                ),
-                TodayTaskList(
-                  tasks: completed,
-                  sorting: TaskListSorting.descending,
-                  showTasks: context.watch<TodayCubit>().state.completedListOpen,
-                  header: _Header(
-                    t.today.done,
-                    tasks: completed,
-                    onClick: () {
-                      context.read<TodayCubit>().openCompletedList();
-                    },
-                    listOpened: context.watch<TodayCubit>().state.completedListOpen,
                   ),
                 ),
               ],

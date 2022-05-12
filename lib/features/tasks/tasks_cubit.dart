@@ -58,7 +58,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     await fetchLabels();
     await fetchDocs();
     await fetchInbox();
-    await fetchTodayTasks();
+    await fetchTodayTasks(DateTime.now().toUtc());
 
     emit(state.copyWith(loading: false));
   }
@@ -68,8 +68,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(inboxTasks: inboxTasks, syncStatus: "Get today tasks"));
   }
 
-  Future fetchTodayTasks() async {
-    List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: DateTime.now().toUtc());
+  Future fetchTodayTasks(DateTime date) async {
+    List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: date);
     emit(state.copyWith(todayTasks: todayTasks, syncStatus: "Get labels from repository"));
   }
 
@@ -81,6 +81,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future fetchDocs() async {
     List<Doc> docs = await _docsRepository.get();
     emit(state.copyWith(docs: docs));
+  }
+
+  Future<void> getTodayTasksByDate(DateTime selectedDay) async {
+    await fetchTodayTasks(selectedDay.toUtc());
   }
 
   void logout() {

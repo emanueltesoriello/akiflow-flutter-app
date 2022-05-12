@@ -71,6 +71,20 @@ extension TaskStatusTypeExt on TaskStatusType {
 }
 
 extension TaskExt on Task {
+  bool isSameDateOf(DateTime ofDate) {
+    if (datetime != null) {
+      DateTime dateParsed = DateTime.parse(datetime!);
+      return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
+    }
+
+    if (date != null) {
+      DateTime dateParsed = DateTime.parse(date!);
+      return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
+    }
+
+    return false;
+  }
+
   bool get isToday {
     if (datetime != null) {
       DateTime dateParsed = DateTime.parse(datetime!);
@@ -305,16 +319,6 @@ extension TaskExt on Task {
         .toList();
 
     return List.from(todos);
-  }
-
-  static List<Task> filterPinnedTasks(List<Task> tasks) {
-    List<Task> pinnedTasks = tasks
-        .where((element) => element.datetime != null && !element.isOverdue && !element.isCompletedComputed)
-        .toList();
-
-    pinnedTasks.sort((a, b) => a.datetime!.compareTo(b.datetime!));
-
-    return List.from(pinnedTasks);
   }
 
   static List<Task> sort(

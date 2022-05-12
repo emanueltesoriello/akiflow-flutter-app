@@ -29,17 +29,18 @@ ORDER BY sorting DESC
   }
 
   Future<List<Task>> getTodayTasks<Task>({required DateTime date}) async {
-    DateTime startTime = DateTime(date.year, date.month, date.day, date.hour, date.minute, date.second);
-    DateTime endTime = date.add(const Duration(days: 1));
+    DateTime startTime = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    DateTime endTime = startTime.add(const Duration(days: 1));
 
-    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery(
-      """
+    List<Map<String, Object?>> items;
+
+    if (date.day == DateTime.now().day && date.month == DateTime.now().month && date.year == DateTime.now().year) {
+      items = await _databaseService.database!.rawQuery(
+        """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
         AND (date <= ? OR datetime < ?)
-        AND date < ?
-        GROUP BY IFNULL(recurring_id, id)
         ORDER BY
           CASE
             WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 216000}) >= ?
@@ -48,14 +49,38 @@ ORDER BY sorting DESC
               sorting
           END
 """,
-      [
-        date.toUtc().toIso8601String(),
-        endTime.toUtc().toIso8601String(),
-        date.toUtc().toIso8601String(),
-        startTime.toUtc().toIso8601String(),
-        DateTime.now().toUtc().toIso8601String(),
-      ],
-    );
+        [
+          date.toUtc().toIso8601String(),
+          endTime.toUtc().toIso8601String(),
+          DateTime.now().toUtc().toIso8601String(),
+          DateTime.now().toUtc().toIso8601String(),
+        ],
+      );
+    } else {
+      items = await _databaseService.database!.rawQuery(
+        """
+        SELECT * FROM tasks
+        WHERE deleted_at IS NULL
+        AND status = '${TaskStatusType.planned.id}'
+        AND ((date > ? AND date < ?) OR (datetime > ? AND datetime < ?))
+        ORDER BY
+          CASE
+            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 216000}) >= ?
+              THEN datetime
+            ELSE
+              sorting
+          END
+""",
+        [
+          startTime.toUtc().toIso8601String(),
+          endTime.toUtc().toIso8601String(),
+          startTime.toUtc().toIso8601String(),
+          endTime.toUtc().toIso8601String(),
+          DateTime.now().toUtc().toIso8601String(),
+          DateTime.now().toUtc().toIso8601String(),
+        ],
+      );
+    }
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;

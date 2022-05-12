@@ -1,17 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 
 part 'today_state.dart';
 
 class TodayCubit extends Cubit<TodayCubitState> {
-  TodayCubit() : super(TodayCubitState(selectedDate: DateTime.now())) {
-    _init();
-  }
+  final TasksCubit tasksCubit;
 
-  _init() async {}
+  TodayCubit(this.tasksCubit) : super(TodayCubitState(selectedDate: DateTime.now()));
 
   void onDateSelected(DateTime selectedDay) {
     emit(state.copyWith(selectedDate: selectedDay));
+    tasksCubit.getTodayTasksByDate(selectedDay);
   }
 
   toggleCalendarFormat() {
@@ -22,6 +22,7 @@ class TodayCubit extends Cubit<TodayCubitState> {
 
   todayClick() {
     emit(state.copyWith(selectedDate: DateTime.now()));
+    tasksCubit.getTodayTasksByDate(DateTime.now());
   }
 
   void openTodoList() {
