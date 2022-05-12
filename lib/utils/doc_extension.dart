@@ -23,7 +23,6 @@ extension DocExt on Doc {
       case "notion":
         // TODO icon notion svg not supported
         return "assets/images/icons/_common/info.svg";
-        return "assets/images/icons/notion/notion.svg";
       case "slack":
         return "assets/images/icons/slack/slack.svg";
       case "superhuman":
@@ -69,8 +68,7 @@ extension DocExt on Doc {
 
   String? get createdAtFormatted {
     if (content?["createdAt"] != null) {
-      return DateFormat("dd MMM yyyy")
-          .format(DateTime.parse(content!["createdAt"]!).toLocal());
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(content!["createdAt"]!).toLocal());
     }
 
     return '';
@@ -78,8 +76,7 @@ extension DocExt on Doc {
 
   String? get modifiedAtFormatted {
     if (content?["modifiedAt"] != null) {
-      return DateFormat("dd MMM yyyy")
-          .format(DateTime.parse(content!["modifiedAt"]!).toLocal());
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(content!["modifiedAt"]!).toLocal());
     }
 
     return '';
@@ -87,9 +84,8 @@ extension DocExt on Doc {
 
   String? get starredAtFormatted {
     if (content?["starredAt"] != null) {
-      return DateFormat("dd MMM yyyy").format(
-          DateTime.fromMillisecondsSinceEpoch(content!["starredAt"]! * 1000)
-              .toLocal());
+      return DateFormat("dd MMM yyyy")
+          .format(DateTime.fromMillisecondsSinceEpoch(content!["starredAt"]! * 1000).toLocal());
     }
 
     return '';
@@ -97,8 +93,7 @@ extension DocExt on Doc {
 
   String? get dueFormatted {
     if (content?["due"] != null) {
-      return DateFormat("dd MMM yyyy")
-          .format(DateTime.parse(content!["due"]!).toLocal());
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(content!["due"]!).toLocal());
     }
 
     return '';

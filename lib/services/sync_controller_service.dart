@@ -12,7 +12,6 @@ import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/events_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
-import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_service.dart';
 import 'package:models/user.dart';
@@ -21,7 +20,6 @@ enum Entity { accounts, calendars, tasks, labels, events, docs }
 
 class SyncControllerService {
   static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
-  final DialogService _dialogService = locator<DialogService>();
 
   static final AccountApi _accountApi = locator<AccountApi>();
   static final TaskApi _taskApi = locator<TaskApi>();

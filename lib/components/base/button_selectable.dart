@@ -22,8 +22,7 @@ class ButtonSelectable extends StatefulWidget {
   State<ButtonSelectable> createState() => _ButtonSelectableState();
 }
 
-class _ButtonSelectableState extends State<ButtonSelectable>
-    with SingleTickerProviderStateMixin {
+class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerProviderStateMixin {
   Animation<Color?>? _animation;
   late AnimationController _controller;
 
@@ -37,7 +36,7 @@ class _ButtonSelectableState extends State<ButtonSelectable>
       vsync: this,
     );
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
         end: ColorsExt.grey5(context),
@@ -76,9 +75,7 @@ class _ButtonSelectableState extends State<ButtonSelectable>
               height: 42,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
-                color: widget.selected
-                    ? ColorsExt.grey5(context)
-                    : Colors.transparent,
+                color: widget.selected ? ColorsExt.grey5(context) : Colors.transparent,
               ),
               child: AnimatedBuilder(
                 animation: _animation!,
@@ -87,9 +84,7 @@ class _ButtonSelectableState extends State<ButtonSelectable>
                   child: Container(
                     color: _animation!.value,
                     child: Container(
-                      color: widget.selected
-                          ? ColorsExt.grey5(context)
-                          : Colors.transparent,
+                      color: widget.selected ? ColorsExt.grey5(context) : Colors.transparent,
                       child: Row(
                         children: [
                           _buildLeadingIcon(),

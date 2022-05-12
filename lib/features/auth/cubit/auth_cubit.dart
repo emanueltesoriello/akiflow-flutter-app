@@ -17,8 +17,7 @@ import 'package:models/user.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthCubitState> {
-  final PreferencesRepository _preferencesRepository =
-      locator<PreferencesRepository>();
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final DialogService _dialogService = locator<DialogService>();
   final AuthApi _authApi = locator<AuthApi>();
   final DatabaseService _databaseService = locator<DatabaseService>();
@@ -47,7 +46,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   void loginClick() async {
-    FlutterAppAuth appAuth = FlutterAppAuth();
+    FlutterAppAuth appAuth = const FlutterAppAuth();
 
     final AuthorizationResponse? result = await appAuth.authorize(
       AuthorizationRequest(
@@ -62,8 +61,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
     );
 
     if (result != null) {
-      User user = await _authApi.auth(
-          code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
+      User user = await _authApi.auth(code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
 
       await _preferencesRepository.saveUser(user);
 

@@ -50,8 +50,7 @@ class LinksModal extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                           itemCount: links.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 10),
+                          separatorBuilder: (context, index) => const SizedBox(height: 10),
                           itemBuilder: (context, index) {
                             String link = links[index];
 
@@ -61,7 +60,7 @@ class LinksModal extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    launch(link);
+                                    launchUrl(Uri.parse(link));
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -95,9 +94,7 @@ class LinksModal extends StatelessWidget {
                                 ),
                                 const Spacer(),
                                 InkWell(
-                                  onTap: () => context
-                                      .read<EditTaskCubit>()
-                                      .removeLink(link),
+                                  onTap: () => context.read<EditTaskCubit>().removeLink(link),
                                   child: SvgPicture.asset(
                                     'assets/images/icons/_common/xmark.svg',
                                     width: 22,
@@ -117,8 +114,7 @@ class LinksModal extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: ButtonList(
-                      leadingTextIconAsset:
-                          "assets/images/icons/_common/link.svg",
+                      leadingTextIconAsset: "assets/images/icons/_common/link.svg",
                       title: t.editTask.add,
                       onPressed: () {
                         // TODO add link

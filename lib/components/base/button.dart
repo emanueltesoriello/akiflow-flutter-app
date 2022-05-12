@@ -16,8 +16,7 @@ class ButtonComp extends StatefulWidget {
   State<ButtonComp> createState() => _ButtonCompState();
 }
 
-class _ButtonCompState extends State<ButtonComp>
-    with SingleTickerProviderStateMixin {
+class _ButtonCompState extends State<ButtonComp> with SingleTickerProviderStateMixin {
   Animation<Color?>? _animation;
   late AnimationController _controller;
 
@@ -31,7 +30,7 @@ class _ButtonCompState extends State<ButtonComp>
       vsync: this,
     );
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).primaryColorLight,
         end: Theme.of(context).primaryColor,

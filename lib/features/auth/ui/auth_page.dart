@@ -25,8 +25,7 @@ class AuthPage extends StatelessWidget {
       child: BlocListener<AuthCubit, AuthCubitState>(
         listener: (context, state) {
           if (state.user != null) {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainPage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
           }
         },
         child: Scaffold(
@@ -108,7 +107,7 @@ class AuthPage extends StatelessWidget {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                launch(node.attributes["url"]!);
+                                launchUrl(Uri.parse(node.attributes["url"]!));
                               },
                           ));
                         } else {

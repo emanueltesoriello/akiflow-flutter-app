@@ -73,8 +73,7 @@ class SettingsPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.tasks,
                     position: ButtonListPosition.center,
-                    leading:
-                        "assets/images/icons/_common/Check-done-outline.svg",
+                    leading: "assets/images/icons/_common/Check-done-outline.svg",
                     onPressed: () {
                       // TODO SETTINGS - tasks settings event
                     },
@@ -128,7 +127,7 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.top,
                     showShevron: false,
                     onPressed: () {
-                      launch("https://twitter.com/getakiflow");
+                      launchUrl(Uri.parse("https://twitter.com/getakiflow"));
                     },
                   ),
                   const ButtonListDivider(),
@@ -138,7 +137,7 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.bottom,
                     showShevron: false,
                     onPressed: () {
-                      launch("https://akiflow-community.slack.com");
+                      launchUrl(Uri.parse("https://akiflow-community.slack.com"));
                     },
                   ),
                   const SizedBox(height: 16),
@@ -157,9 +156,7 @@ class SettingsPage extends StatelessWidget {
                       context.read<AuthCubit>().logout();
 
                       Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => const AuthPage()),
-                          (Route<dynamic> route) => false);
+                          MaterialPageRoute(builder: (context) => const AuthPage()), (Route<dynamic> route) => false);
                     },
                   ),
                   BlocBuilder<SettingsCubit, SettingsCubitState>(

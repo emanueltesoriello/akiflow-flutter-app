@@ -30,8 +30,7 @@ class ButtonList extends StatefulWidget {
   State<ButtonList> createState() => _ButtonListState();
 }
 
-class _ButtonListState extends State<ButtonList>
-    with SingleTickerProviderStateMixin {
+class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateMixin {
   Animation<Color?>? _animation;
   late AnimationController _controller;
 
@@ -45,7 +44,7 @@ class _ButtonListState extends State<ButtonList>
       vsync: this,
     );
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
         end: ColorsExt.grey5(context),
@@ -111,9 +110,7 @@ class _ButtonListState extends State<ButtonList>
                                   Flexible(
                                     child: Text(
                                       widget.title,
-                                      textAlign: widget.leading == null
-                                          ? TextAlign.center
-                                          : TextAlign.left,
+                                      textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
                                       style: TextStyle(
                                         fontSize: 17,
                                         color: ColorsExt.grey2(context),

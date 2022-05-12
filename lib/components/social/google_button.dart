@@ -18,8 +18,7 @@ class GoogleButton extends StatefulWidget {
   State<GoogleButton> createState() => _GoogleButtonState();
 }
 
-class _GoogleButtonState extends State<GoogleButton>
-    with SingleTickerProviderStateMixin {
+class _GoogleButtonState extends State<GoogleButton> with SingleTickerProviderStateMixin {
   Animation<Color?>? _animation;
   late AnimationController _controller;
 
@@ -33,13 +32,14 @@ class _GoogleButtonState extends State<GoogleButton>
       vsync: this,
     );
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
         end: Theme.of(context).backgroundColor,
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
+
     super.initState();
   }
 

@@ -76,9 +76,7 @@ class LinkedContentModal extends StatelessWidget {
                                   child: Text(
                                     doc.getLinkedContentSummary,
                                     style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
-                                        color: ColorsExt.grey2(context)),
+                                        fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                                   ),
                                 ),
                               ],
@@ -87,26 +85,19 @@ class LinkedContentModal extends StatelessWidget {
                           Builder(
                             builder: (context) {
                               if (doc is AsanaDoc) {
-                                return AsanaLinkedContent(
-                                    doc: doc, itemBuilder: _item, task: task);
+                                return AsanaLinkedContent(doc: doc, itemBuilder: _item, task: task);
                               } else if (doc is GmailDoc) {
-                                return GmailLinkedContent(
-                                    doc: doc, itemBuilder: _item);
+                                return GmailLinkedContent(doc: doc, itemBuilder: _item);
                               } else if (doc is SlackDoc) {
-                                return SlackLinkedContent(
-                                    task: task, doc: doc, itemBuilder: _item);
+                                return SlackLinkedContent(task: task, doc: doc, itemBuilder: _item);
                               } else if (doc is TodoistDoc) {
-                                return TodoistLinkedContent(
-                                    task: task, doc: doc, itemBuilder: _item);
+                                return TodoistLinkedContent(task: task, doc: doc, itemBuilder: _item);
                               } else if (doc is TrelloDoc) {
-                                return TrelloLinkedContent(
-                                    doc: doc, task: task, itemBuilder: _item);
+                                return TrelloLinkedContent(doc: doc, task: task, itemBuilder: _item);
                               } else if (doc is ClickupDoc) {
-                                return ClickupLinkedContent(
-                                    doc: doc, task: task, itemBuilder: _item);
+                                return ClickupLinkedContent(doc: doc, task: task, itemBuilder: _item);
                               } else if (doc is NotionDoc) {
-                                return NotionLinkedContent(
-                                    task: task, doc: doc, itemBuilder: _item);
+                                return NotionLinkedContent(task: task, doc: doc, itemBuilder: _item);
                               }
                               return const SizedBox();
                             },
@@ -119,11 +110,10 @@ class LinkedContentModal extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: ButtonList(
-                      leadingTextIconAsset:
-                          "assets/images/icons/_common/arrow_up_right_square.svg",
+                      leadingTextIconAsset: "assets/images/icons/_common/arrow_up_right_square.svg",
                       title: t.linkedContent.open,
                       onPressed: () {
-                        launch(doc.url ?? '');
+                        launchUrl(Uri.parse(doc.url ?? ''));
                       }),
                 ),
                 const SizedBox(height: 50),
@@ -146,16 +136,13 @@ class LinkedContentModal extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style:
-                    TextStyle(fontSize: 17, color: ColorsExt.grey3(context))),
+            Text(title, style: TextStyle(fontSize: 17, color: ColorsExt.grey3(context))),
             const SizedBox(width: 8),
             Expanded(
               child: Text(value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style:
-                      TextStyle(fontSize: 17, color: ColorsExt.grey2(context))),
+                  style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context))),
             ),
           ],
         ),

@@ -37,7 +37,7 @@ class EditTaskLinks extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        launch(link);
+                        launchUrl(Uri.parse(link));
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -71,8 +71,7 @@ class EditTaskLinks extends StatelessWidget {
                     ),
                     const Spacer(),
                     InkWell(
-                      onTap: () =>
-                          context.read<EditTaskCubit>().removeLink(link),
+                      onTap: () => context.read<EditTaskCubit>().removeLink(link),
                       child: SvgPicture.asset(
                         'assets/images/icons/_common/xmark.svg',
                         width: 22,
