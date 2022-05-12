@@ -31,7 +31,14 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return false;
+        bool isSelectMode = context.read<TasksCubit>().state.inboxTasks.any((t) => t.selected ?? false);
+
+        if (isSelectMode) {
+          context.read<TasksCubit>().clearSelected();
+          return false;
+        } else {
+          return true;
+        }
       },
       child: Stack(
         children: [
