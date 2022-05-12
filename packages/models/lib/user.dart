@@ -82,7 +82,6 @@ class User extends Equatable implements Base {
       channel: channel ?? this.channel,
       referral: referral ?? this.referral,
       referralUrl: referralUrl ?? this.referralUrl,
-      lastUpdatedNote: lastUpdatedNote ?? this.lastUpdatedNote,
       autologin: autologin ?? this.autologin,
       autologincode: autologincode ?? this.autologincode,
       createdAt: createdAt ?? this.createdAt,
