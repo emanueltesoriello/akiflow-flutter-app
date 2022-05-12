@@ -4,6 +4,7 @@ import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/utils/converters_isolate.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:models/task/task.dart';
 
 class TasksRepository extends DatabaseRepository {
   final DatabaseService _databaseService = locator<DatabaseService>();
@@ -55,6 +56,19 @@ ORDER BY sorting DESC
         DateTime.now().toUtc().toIso8601String(),
       ],
     );
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
+  Future<List<Task>> getSomeday() async {
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
+      SELECT *
+      FROM tasks
+      WHERE status = ${TaskStatusType.someday.id}
+        AND done = 0
+        AND deletedAt IS NULL
+""");
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
