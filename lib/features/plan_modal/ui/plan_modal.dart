@@ -65,22 +65,19 @@ class _View extends StatelessWidget {
               ),
               child: Container(
                 color: Theme.of(context).backgroundColor,
-                margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SafeArea(
                   child: Column(
                     children: [
                       _planType(),
                       _predefinedDate(context),
                       AddTaskCalendar(
-                        selectedDate:
-                            context.watch<PlanModalCubit>().state.selectedDate,
+                        selectedDate: context.watch<PlanModalCubit>().state.selectedDate,
                         onDateSelected: (DateTime? date) {
                           context.read<PlanModalCubit>().selectDate(date);
                         },
                         onAddTimeClick: (DateTime? date) {
-                          TaskStatusType statusType =
-                              context.read<PlanModalCubit>().state.statusType;
+                          TaskStatusType statusType = context.read<PlanModalCubit>().state.statusType;
 
                           onAddTimeClick(date, statusType);
                         },
@@ -113,13 +110,10 @@ class _View extends StatelessWidget {
                     AddTaskTopActionItem(
                       text: t.addTask.plan,
                       color: ColorsExt.cyan25(context),
-                      leadingIconAsset:
-                          "assets/images/icons/_common/calendar.svg",
+                      leadingIconAsset: "assets/images/icons/_common/calendar.svg",
                       active: state.statusType == TaskStatusType.planned,
                       onPressed: () {
-                        context
-                            .read<PlanModalCubit>()
-                            .selectPlanType(TaskStatusType.planned);
+                        context.read<PlanModalCubit>().selectPlanType(TaskStatusType.planned);
                       },
                     ),
                     const SizedBox(width: 24),
@@ -129,9 +123,7 @@ class _View extends StatelessWidget {
                       leadingIconAsset: "assets/images/icons/_common/clock.svg",
                       active: state.statusType == TaskStatusType.snoozed,
                       onPressed: () {
-                        context
-                            .read<PlanModalCubit>()
-                            .selectPlanType(TaskStatusType.snoozed);
+                        context.read<PlanModalCubit>().selectPlanType(TaskStatusType.snoozed);
                       },
                     ),
                   ],
@@ -162,8 +154,7 @@ class _View extends StatelessWidget {
                 if (state.statusType == TaskStatusType.planned) {
                   return _predefinedDateItem(
                     context,
-                    iconAsset:
-                        "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
+                    iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
                     text: t.addTask.today,
                     trailingText: DateFormat("EEE").format(DateTime.now()),
                     onPressed: () {
@@ -176,8 +167,7 @@ class _View extends StatelessWidget {
                     },
                   );
                 } else {
-                  DateTime laterToday =
-                      DateTime(now.year, now.month, now.day, now.hour + 3);
+                  DateTime laterToday = DateTime(now.year, now.month, now.day, now.hour + 3);
 
                   return _predefinedDateItem(
                     context,
@@ -202,8 +192,7 @@ class _View extends StatelessWidget {
               iconAsset:
                   "assets/images/icons/_common/${DateFormat("dd").format(now.add(const Duration(days: 1)))}_square.svg",
               text: t.addTask.tomorrow,
-              trailingText:
-                  DateFormat("EEE").format(now.add(const Duration(days: 1))),
+              trailingText: DateFormat("EEE").format(now.add(const Duration(days: 1))),
               onPressed: () {
                 onAddTimeClick(
                   now.add(const Duration(days: 1)),
@@ -215,13 +204,11 @@ class _View extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Builder(builder: (context) {
-              DateTime nextMonday =
-                  now.add(Duration(days: 7 - now.weekday + 1));
+              DateTime nextMonday = now.add(Duration(days: 7 - now.weekday + 1));
 
               return _predefinedDateItem(
                 context,
-                iconAsset:
-                    "assets/images/icons/_common/${DateFormat("dd").format(nextMonday)}_square.svg",
+                iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(nextMonday)}_square.svg",
                 text: t.addTask.nextWeek,
                 trailingText: DateFormat("EEE").format(nextMonday),
                 onPressed: () {
@@ -252,7 +239,7 @@ class _View extends StatelessWidget {
                   return _predefinedDateItem(
                     context,
                     iconAsset: "assets/images/icons/_common/archivebox.svg",
-                    text: t.addTask.someday,
+                    text: t.task.someday,
                     trailingText: t.addTask.noDate,
                     onPressed: () {
                       setForSomeday();

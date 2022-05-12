@@ -55,12 +55,10 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             builder: (context, state) {
               return AddTaskActionItem(
                 leadingIconAsset: "assets/images/icons/_common/repeat.svg",
-                color: state.newTask.recurrence != null &&
-                        state.newTask.recurrence!.isNotEmpty
+                color: state.newTask.recurrence != null && state.newTask.recurrence!.isNotEmpty
                     ? ColorsExt.grey6(context)
                     : ColorsExt.grey3(context),
-                active: state.newTask.recurrence != null &&
-                    state.newTask.recurrence!.isNotEmpty,
+                active: state.newTask.recurrence != null && state.newTask.recurrence!.isNotEmpty,
                 onPressed: () {
                   var cubit = context.read<EditTaskCubit>();
 
@@ -89,13 +87,9 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
         String text;
         Color color;
 
-        TaskStatusType? status =
-            TaskStatusTypeExt.fromId(state.newTask.status) ??
-                TaskStatusType.inbox;
+        TaskStatusType? status = TaskStatusTypeExt.fromId(state.newTask.status) ?? TaskStatusType.inbox;
 
-        if ((status == TaskStatusType.inbox ||
-                status == TaskStatusType.planned) &&
-            status != TaskStatusType.someday) {
+        if ((status == TaskStatusType.inbox || status == TaskStatusType.planned) && status != TaskStatusType.someday) {
           color = ColorsExt.cyan25(context);
           leadingIconAsset = "assets/images/icons/_common/calendar.svg";
         } else {
@@ -108,11 +102,9 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             if (state.newTask.isToday) {
               text = DateFormat("HH:mm").format(state.newTask.date!.toLocal());
             } else if (state.newTask.isTomorrow) {
-              text = t.addTask.tmw +
-                  DateFormat(" - HH:mm").format(state.newTask.date!.toLocal());
+              text = t.addTask.tmw + DateFormat(" - HH:mm").format(state.newTask.date!.toLocal());
             } else {
-              text = DateFormat("EEE, d MMM")
-                  .format(state.newTask.date!.toLocal());
+              text = DateFormat("EEE, d MMM").format(state.newTask.date!.toLocal());
             }
           } else {
             if (state.newTask.isToday) {
@@ -120,12 +112,11 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             } else if (state.newTask.isTomorrow) {
               text = t.addTask.tmw;
             } else {
-              text = DateFormat("EEE, d MMM")
-                  .format(state.newTask.date!.toLocal());
+              text = DateFormat("EEE, d MMM").format(state.newTask.date!.toLocal());
             }
           }
         } else if (state.newTask.status == TaskStatusType.someday.id) {
-          text = t.addTask.someday;
+          text = t.task.someday;
         } else {
           text = t.bottomBar.inbox;
         }

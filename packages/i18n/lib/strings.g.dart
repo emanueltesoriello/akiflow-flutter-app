@@ -1,10 +1,14 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+// ignore_for_file: invalid_null_aware_operator
+// ignore_for_file: unnecessary_null_comparison
+
 /*
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 106
+ * Strings: 105
  *
- * Built on 2022-05-10 at 10:35 UTC
+ * Built on 2022-05-12 at 08:16 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -127,7 +131,6 @@ class AppLocaleUtils {
         return typedLocale;
       }
     }
-
     return _baseLocale;
   }
 
@@ -301,8 +304,7 @@ class _StringsEn {
   // Internal flat map initialized lazily
   late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
-  // ignore: unused_field
-  late final _StringsEn _root = this;
+  late final _StringsEn _root = this; // ignore: unused_field
 
   // Translations
   String get appName => 'Akiflow';
@@ -327,8 +329,7 @@ class _StringsEn {
 class _StringsOnboardingEn {
   _StringsOnboardingEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get welcomeToAkiflow => 'Welcome to Akiflow';
@@ -345,8 +346,7 @@ class _StringsOnboardingEn {
 class _StringsBottomBarEn {
   _StringsBottomBarEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get menu => 'Menu';
@@ -359,8 +359,7 @@ class _StringsBottomBarEn {
 class _StringsNoticeEn {
   _StringsNoticeEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get inboxTitle => 'Here is where the magic happens';
@@ -371,8 +370,7 @@ class _StringsNoticeEn {
 class _StringsSettingsEn {
   _StringsSettingsEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get title => 'Settings';
@@ -395,8 +393,7 @@ class _StringsSettingsEn {
 class _StringsAddTaskEn {
   _StringsAddTaskEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get titleHint => 'Try: review financials today 9am';
@@ -411,7 +408,6 @@ class _StringsAddTaskEn {
   String get nextWeekend => 'Next weekend';
   String get remove => 'Remove';
   String get laterToday => 'Later today';
-  String get someday => 'Someday';
   String get noDate => 'No date';
   String get addTime => 'Add time';
   String get repeat => 'Repeat';
@@ -422,8 +418,7 @@ class _StringsAddTaskEn {
 class _StringsTaskEn {
   _StringsTaskEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get description => 'Description';
@@ -450,8 +445,7 @@ class _StringsTaskEn {
 class _StringsErrorsEn {
   _StringsErrorsEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get noAccountsFound => 'No accounts found';
@@ -461,8 +455,7 @@ class _StringsErrorsEn {
 class _StringsCalendarEn {
   _StringsCalendarEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get comingSoon => 'Calendar is coming in the near future!';
@@ -473,8 +466,7 @@ class _StringsCalendarEn {
 class _StringsLinkedContentEn {
   _StringsLinkedContentEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get subject => 'Subject:';
@@ -502,8 +494,7 @@ class _StringsLinkedContentEn {
 class _StringsEditTaskEn {
   _StringsEditTaskEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get add => 'Add';
@@ -526,8 +517,7 @@ class _StringsEditTaskEn {
 class _StringsTodayEn {
   _StringsTodayEn._(this._root);
 
-  // ignore: unused_field
-  final _StringsEn _root;
+  final _StringsEn _root; // ignore: unused_field
 
   // Translations
   String get toDos => 'To-dos';
@@ -540,7 +530,7 @@ class _StringsTodayEn {
 
 extension on _StringsEn {
   Map<String, dynamic> _buildFlatMap() {
-    return {
+    return <String, dynamic>{
       'appName': 'Akiflow',
       'login': 'Login',
       'typeHere': 'Type here',
@@ -586,7 +576,6 @@ extension on _StringsEn {
       'addTask.nextWeekend': 'Next weekend',
       'addTask.remove': 'Remove',
       'addTask.laterToday': 'Later today',
-      'addTask.someday': 'Someday',
       'addTask.noDate': 'No date',
       'addTask.addTime': 'Add time',
       'addTask.repeat': 'Repeat',

@@ -61,8 +61,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               ),
               child: Container(
                 color: Theme.of(context).backgroundColor,
-                margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SafeArea(
                   child: Column(
                     children: [
@@ -100,9 +99,9 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                               alignment: Alignment.centerRight,
                               child: InkWell(
                                 onTap: () {
-                                  context.read<EditTaskCubit>().create(
-                                      title: _titleController.text,
-                                      description: _descriptionController.text);
+                                  context
+                                      .read<EditTaskCubit>()
+                                      .create(title: _titleController.text, description: _descriptionController.text);
 
                                   Navigator.pop(context);
                                 },
@@ -118,8 +117,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                                         "assets/images/icons/_common/paperplane_send.svg",
                                         width: 24,
                                         height: 24,
-                                        color:
-                                            Theme.of(context).backgroundColor,
+                                        color: Theme.of(context).backgroundColor,
                                       ),
                                     ),
                                   ),
@@ -166,9 +164,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
             return AddTaskActionItem(
               leadingIconAsset: "assets/images/icons/_common/number.svg",
               leadingIconColor: background ?? ColorsExt.grey2(context),
-              color: background != null
-                  ? background.withOpacity(0.1)
-                  : ColorsExt.grey6(context),
+              color: background != null ? background.withOpacity(0.1) : ColorsExt.grey6(context),
               active: true,
               text: state.selectedLabel?.title ?? t.addTask.label,
               onPressed: () {
@@ -232,13 +228,9 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
         String text;
         Color color;
 
-        TaskStatusType? status =
-            TaskStatusTypeExt.fromId(state.newTask.status) ??
-                TaskStatusType.inbox;
+        TaskStatusType? status = TaskStatusTypeExt.fromId(state.newTask.status) ?? TaskStatusType.inbox;
 
-        if ((status == TaskStatusType.inbox ||
-                status == TaskStatusType.planned) &&
-            status != TaskStatusType.someday) {
+        if ((status == TaskStatusType.inbox || status == TaskStatusType.planned) && status != TaskStatusType.someday) {
           color = ColorsExt.cyan25(context);
           leadingIconAsset = "assets/images/icons/_common/calendar.svg";
         } else {
@@ -251,11 +243,9 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
             if (state.newTask.isToday) {
               text = DateFormat("HH:mm").format(state.newTask.date!.toLocal());
             } else if (state.newTask.isTomorrow) {
-              text = t.addTask.tmw +
-                  DateFormat(" - HH:mm").format(state.newTask.date!.toLocal());
+              text = t.addTask.tmw + DateFormat(" - HH:mm").format(state.newTask.date!.toLocal());
             } else {
-              text = DateFormat("EEE, d MMM")
-                  .format(state.newTask.date!.toLocal());
+              text = DateFormat("EEE, d MMM").format(state.newTask.date!.toLocal());
             }
           } else {
             if (state.newTask.isToday) {
@@ -263,12 +253,11 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
             } else if (state.newTask.isTomorrow) {
               text = t.addTask.tmw;
             } else {
-              text = DateFormat("EEE, d MMM")
-                  .format(state.newTask.date!.toLocal());
+              text = DateFormat("EEE, d MMM").format(state.newTask.date!.toLocal());
             }
           }
         } else if (state.newTask.status == TaskStatusType.someday.id) {
-          text = t.addTask.someday;
+          text = t.task.someday;
         } else {
           text = t.bottomBar.inbox;
         }
@@ -287,16 +276,13 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               context: context,
               builder: (context) => PlanModal(
                 onAddTimeClick: (DateTime? date, TaskStatusType statusType) {
-                  editTaskCubit.planFor(date,
-                      statusType: statusType, update: false);
+                  editTaskCubit.planFor(date, statusType: statusType, update: false);
                 },
                 setForInbox: () {
-                  editTaskCubit.planFor(null,
-                      statusType: TaskStatusType.inbox, update: false);
+                  editTaskCubit.planFor(null, statusType: TaskStatusType.inbox, update: false);
                 },
                 setForSomeday: () {
-                  editTaskCubit.planFor(null,
-                      statusType: TaskStatusType.someday, update: false);
+                  editTaskCubit.planFor(null, statusType: TaskStatusType.someday, update: false);
                 },
               ),
             );
