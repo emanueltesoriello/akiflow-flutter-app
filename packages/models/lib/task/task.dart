@@ -94,7 +94,7 @@ class Task extends Equatable implements Base {
     bool? selected,
     int? dailyGoal,
     List<String>? links,
-    List<String>? recurrence,
+    Nullable<List<String>?>? recurrence,
     Nullable<String?>? updatedAt,
     Nullable<String?>? remoteUpdatedAt,
   }) {
@@ -125,7 +125,7 @@ class Task extends Equatable implements Base {
       selected: selected ?? this.selected,
       dailyGoal: dailyGoal ?? this.dailyGoal,
       links: links ?? this.links,
-      recurrence: recurrence ?? this.recurrence,
+      recurrence: recurrence == null ? this.recurrence : recurrence.value,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
       remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
     );
@@ -133,6 +133,7 @@ class Task extends Equatable implements Base {
 
   @override
   Map<String, dynamic> toMap() {
+    print(recurrence == null ? null : List<dynamic>.from(recurrence!.map((x) => x)));
     return <String, dynamic>{
       'id': id,
       'title': title,
@@ -161,8 +162,8 @@ class Task extends Equatable implements Base {
       'sorting_label': sortingLabel,
       'selected': selected,
       'dailyGoal': dailyGoal,
-      'links': links == null ? null : List<dynamic>.from(links!.map((x) => x)),
-      'recurrence': recurrence == null ? null : List<dynamic>.from(recurrence!.map((x) => x)),
+      'links': (links == null || links!.isEmpty) ? null : List<dynamic>.from(links!.map((x) => x)),
+      'recurrence': (recurrence == null || recurrence!.isEmpty) ? null : List<dynamic>.from(recurrence!.map((x) => x)),
     };
   }
 
@@ -225,9 +226,9 @@ class Task extends Equatable implements Base {
       "remote_updated_at": remoteUpdatedAt,
       "sorting": sorting,
       "sorting_label": sortingLabel,
-      "links": links?.toList().join(','),
+      "links": (links == null || links!.isEmpty) ? null : links?.toList().join(';'),
       "daily_goal": dailyGoal,
-      "recurrence": recurrence?.toList().join(';'),
+      "recurrence": (recurrence == null || recurrence!.isEmpty) ? null : recurrence?.toList().join(';'),
     };
   }
 
@@ -253,10 +254,10 @@ class Task extends Equatable implements Base {
       data.remove("links");
     }
 
-    List<String> recurrenceList = [];
+    Nullable<List<String>> recurrenceList = Nullable([]);
     if (data.containsKey("recurrence") && data["recurrence"] != null) {
       String object = data["recurrence"] as String;
-      recurrenceList = object.split(';');
+      recurrenceList = Nullable(object.split(';'));
       data.remove("recurrence");
     }
 

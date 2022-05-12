@@ -289,7 +289,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setRecurrence(RecurrenceRule? rule) {
-    List<String>? recurrence;
+    List<String>? recurrence = [];
 
     if (rule != null) {
       String recurrenceString = rule.toString();
@@ -297,7 +297,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     Task updated = state.newTask.copyWith(
-      recurrence: recurrence,
+      recurrence: Nullable(recurrence),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 

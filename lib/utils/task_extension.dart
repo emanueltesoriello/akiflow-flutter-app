@@ -212,6 +212,10 @@ extension TaskExt on Task {
 
         String recurrenceString = parts.join(';');
 
+        if (recurrenceString.isEmpty) {
+          return RecurrenceModalType.none;
+        }
+
         RecurrenceRule rule = RecurrenceRule.fromString(recurrenceString);
 
         if (rule.frequency == Frequency.daily) {
