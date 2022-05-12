@@ -31,12 +31,13 @@ class ButtonAction extends StatelessWidget {
           children: [
             Container(
               width: label == null || label!.isEmpty ? 40 : 86,
+              height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 color: backColor,
               ),
               child: AspectRatio(
-                aspectRatio: 1,
+                aspectRatio: label == null || label!.isEmpty ? 1 : 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -93,10 +94,7 @@ class ButtonAction extends StatelessWidget {
         Text(
           bottomLabel!,
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 11,
-              color: ColorsExt.grey2(context),
-              fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 11, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
         ),
       ],
     );

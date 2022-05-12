@@ -217,7 +217,7 @@ class TaskRow extends StatelessWidget {
         closeOnCancel: true,
         dismissThreshold: 0.5,
         confirmDismiss: () async {
-          completedClick();
+          // completedClick();
           return false;
         },
         onDismissed: () {},
@@ -289,31 +289,35 @@ class TaskRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         const SizedBox(width: 16),
-        Builder(builder: (context) {
-          return ButtonAction(
-            backColor: ColorsExt.grey5(context),
-            topColor: ColorsExt.grey3(context),
-            icon: 'assets/images/icons/_common/number.svg',
-            click: () {
-              Slidable.of(context)?.close();
-              swipeActionSelectLabelClick();
-            },
-          );
-        }),
+        Flexible(
+          child: Builder(builder: (context) {
+            return ButtonAction(
+              backColor: ColorsExt.grey5(context),
+              topColor: ColorsExt.grey3(context),
+              icon: 'assets/images/icons/_common/number.svg',
+              click: () {
+                Slidable.of(context)?.close();
+                swipeActionSelectLabelClick();
+              },
+            );
+          }),
+        ),
         const SizedBox(width: 16),
-        Builder(builder: (context) {
-          return ButtonAction(
-            backColor: ColorsExt.pink30(context),
-            topColor: ColorsExt.pink(context),
-            icon: 'assets/images/icons/_common/clock.svg',
-            click: () {
-              Slidable.of(context)?.close();
-              swipeActionSnoozeClick();
-            },
-          );
-        }),
+        Flexible(
+          child: Builder(builder: (context) {
+            return ButtonAction(
+              backColor: ColorsExt.pink30(context),
+              topColor: ColorsExt.pink(context),
+              icon: 'assets/images/icons/_common/clock.svg',
+              click: () {
+                Slidable.of(context)?.close();
+                swipeActionSnoozeClick();
+              },
+            );
+          }),
+        ),
         const SizedBox(width: 16),
-        _planButton(withLabel: withLabel),
+        Flexible(child: _planButton(withLabel: withLabel)),
         const SizedBox(width: 16),
       ],
     );
