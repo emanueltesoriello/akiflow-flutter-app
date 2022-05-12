@@ -98,8 +98,8 @@ class SyncService {
 
     List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
     List<dynamic> existingModels = await databaseRepository.getByIds(localIds);
-    result = await compute(partitionItemsToUpsert,
-        {'allModels': remoteItems, 'existingModels': existingModels, 'databaseRepository': databaseRepository});
+    result = await compute(
+        partitionItemsToUpsert, PartitioneItemModel(remoteItems: remoteItems, existingItems: existingModels));
 
     var changedModels = result[0];
     // var unchangedModels = result[1];

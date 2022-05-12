@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
@@ -27,22 +25,24 @@ class BatchInsertModel {
   });
 }
 
-Future<List<T>> convertToObjListIsolate<T>(List<dynamic> args) async {
-  SendPort responsePort = args[0];
-  RawListConvert rawListConvert = args[1];
+class PartitioneItemModel {
+  final List<dynamic> remoteItems;
+  final List<dynamic> existingItems;
 
+  PartitioneItemModel({
+    required this.remoteItems,
+    required this.existingItems,
+  });
+}
+
+Future<List<T>> convertToObjList<T>(RawListConvert rawListConvert) async {
   List<T> result = [];
 
   for (dynamic item in rawListConvert.items) {
-    try {
-      result.add(rawListConvert.converter(item) as T);
-    } catch (e) {
-      print(e);
-    }
+    result.add(rawListConvert.converter(item) as T);
   }
 
-  // return list directly is broken
-  Isolate.exit(responsePort, {"data": List.from(result)});
+  return result;
 }
 
 List<dynamic> fromObjToMapList<T>(List<T> items) {
@@ -126,9 +126,9 @@ Batch prepareBatchInsert(BatchInsertModel batchInsertModel) {
   return batchInsertModel.batch;
 }
 
-Future<List<List<dynamic>>> partitionItemsToUpsert<T>(input) async {
-  List<dynamic> allModels = input['allModels'];
-  List<dynamic> existingModels = input['existingModels'];
+Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partitioneItemModel) async {
+  List<dynamic> allModels = partitioneItemModel.remoteItems;
+  List<dynamic> existingModels = partitioneItemModel.existingItems;
   List<dynamic> changedModels = [];
   List<dynamic> unchangedModels = [];
   List<dynamic> nonExistingModels = [];

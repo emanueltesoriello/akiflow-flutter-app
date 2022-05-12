@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:flutter/foundation.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/database_exception.dart';
@@ -21,11 +19,9 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   Future<List<T>> get<T>() async {
     List<Map<String, Object?>> items = await _databaseService.database!.query(tableName);
 
-    final p = ReceivePort();
-    await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromSql)]);
-    List<T> result = List.from((await p.first)["data"]);
+    List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 
-    return result;
+    return objects;
   }
 
   @override
@@ -35,10 +31,8 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     if (items.isEmpty) {
       return null;
     } else {
-      final p = ReceivePort();
-      await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromSql)]);
-      List<T> result = List.from((await p.first)["data"]);
-      return result.first;
+      List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+      return objects.first;
     }
   }
 
@@ -48,10 +42,8 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     List<Map<String, Object?>> items =
         await _databaseService.database!.rawQuery("SELECT * FROM " + tableName + " WHERE id in (" + ins + ") ", ids);
 
-    final p = ReceivePort();
-    await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromSql)]);
-    List<T> result = List.from((await p.first)["data"]);
-    return result;
+    List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
   }
 
   @override
@@ -96,12 +88,9 @@ class DatabaseRepository implements IBaseDatabaseRepository {
       where: '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
     );
 
-    final p = ReceivePort();
-    await Isolate.spawn(convertToObjListIsolate, [p.sendPort, RawListConvert(items: items, converter: fromSql)]);
+    List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 
-    List<T> list = List.from((await p.first)["data"]);
-
-    return list;
+    return objects;
   }
 
   @override
