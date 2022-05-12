@@ -39,7 +39,7 @@ class LinksModal extends StatelessWidget {
                   builder: (context, state) {
                     List<String> links = state.newTask.links?.toList() ?? [];
 
-                    if (links.isEmpty) {
+                    if (links.isEmpty || links.every((element) => element.isEmpty)) {
                       return const SizedBox();
                     }
 
