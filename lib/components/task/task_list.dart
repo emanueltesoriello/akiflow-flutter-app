@@ -45,8 +45,7 @@ class TaskList extends StatelessWidget {
           child: SlidableAutoCloseBehavior(
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              controller:
-                  PrimaryScrollController.of(context) ?? ScrollController(),
+              controller: PrimaryScrollController.of(context) ?? ScrollController(),
               slivers: [
                 // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
                 //be available in flutter stable branch
@@ -54,14 +53,11 @@ class TaskList extends StatelessWidget {
                   onReorderStarted: (index) {
                     int indexWithoutHeaderWidget = index - 2;
 
-                    context
-                        .read<TasksCubit>()
-                        .select(tasks[indexWithoutHeaderWidget]);
+                    context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
                   },
                   buildDraggableFeedback: (context, constraints, child) {
                     return Material(
-                      child: ConstrainedBox(
-                          constraints: constraints, child: child),
+                      child: ConstrainedBox(constraints: constraints, child: child),
                       elevation: 1,
                       color: ColorsExt.grey6(context),
                       borderRadius: BorderRadius.zero,
@@ -100,8 +96,10 @@ class TaskList extends StatelessWidget {
                         key: ObjectKey(task),
                         task: task,
                         hideInboxLabel: hideInboxLabel,
-                        selectMode:
-                            tasks.any((element) => element.selected ?? false),
+                        selectTask: () {
+                          context.read<TasksCubit>().select(task);
+                        },
+                        selectMode: tasks.any((element) => element.selected ?? false),
                         completedClick: () {
                           context.read<TasksCubit>().markAsDone(task);
                         },

@@ -70,6 +70,9 @@ class TodayTaskList extends StatelessWidget {
             key: ObjectKey(task),
             task: task,
             hideInboxLabel: false,
+            selectTask: () {
+              context.read<TasksCubit>().select(task);
+            },
             selectMode: tasks.any((element) => element.selected ?? false),
             completedClick: () {
               context.read<TasksCubit>().markAsDone(task);

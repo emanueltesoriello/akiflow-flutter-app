@@ -26,6 +26,7 @@ class TaskRow extends StatelessWidget {
   final Function() swipeActionPlanClick;
   final Function() swipeActionSelectLabelClick;
   final Function() swipeActionSnoozeClick;
+  final Function() selectTask;
   final bool hideInboxLabel;
   final bool selectMode;
 
@@ -36,6 +37,7 @@ class TaskRow extends StatelessWidget {
     required this.swipeActionPlanClick,
     required this.swipeActionSelectLabelClick,
     required this.swipeActionSnoozeClick,
+    required this.selectTask,
     this.hideInboxLabel = false,
     this.selectMode = false,
   }) : super(key: key);
@@ -196,11 +198,14 @@ class TaskRow extends StatelessWidget {
         color = ColorsExt.grey3(context);
     }
 
-    return SvgPicture.asset(
-      selected ? "assets/images/icons/_common/largecircle_fill_circle.svg" : "assets/images/icons/_common/circle.svg",
-      width: 20,
-      height: 20,
-      color: color,
+    return InkWell(
+      onTap: selectTask,
+      child: SvgPicture.asset(
+        selected ? "assets/images/icons/_common/largecircle_fill_circle.svg" : "assets/images/icons/_common/circle.svg",
+        width: 20,
+        height: 20,
+        color: color,
+      ),
     );
   }
 
