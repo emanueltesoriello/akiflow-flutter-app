@@ -14,7 +14,6 @@ class User extends Equatable implements Base {
   final String? channel;
   final String? referral;
   final String? referralUrl;
-  final String? lastUpdatedNote;
   final String? autologin;
   final String? autologincode;
   final String? createdAt;
@@ -37,7 +36,6 @@ class User extends Equatable implements Base {
     this.channel,
     this.referral,
     this.referralUrl,
-    this.lastUpdatedNote,
     this.autologin,
     this.autologincode,
     this.createdAt,
@@ -111,7 +109,6 @@ class User extends Equatable implements Base {
       'channel': channel,
       'referral': referral,
       'referral_url': referralUrl,
-      'last_updated_note': lastUpdatedNote,
       'autologin': autologin,
       'autologincode': autologincode,
       'created_at': createdAt,
@@ -137,7 +134,6 @@ class User extends Equatable implements Base {
       channel: map['channel'] != null ? map['channel'] as String : null,
       referral: map['referral'] != null ? map['referral'] as String : null,
       referralUrl: map['referral_url'] != null ? map['referral_url'] as String : null,
-      lastUpdatedNote: map['last_updated_note'] != null ? map['last_updated_note'] as String : null,
       autologin: map['autologin'] != null ? map['autologin'] as String : null,
       autologincode: map['autologincode'] != null ? map['autologincode'] as String : null,
       createdAt: map['created_at'] != null ? map['created_at'] as String : null,
@@ -166,7 +162,6 @@ class User extends Equatable implements Base {
       channel,
       referral,
       referralUrl,
-      lastUpdatedNote,
       autologin,
       autologincode,
       createdAt,
