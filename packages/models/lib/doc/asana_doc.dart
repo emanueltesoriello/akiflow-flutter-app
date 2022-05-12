@@ -39,11 +39,8 @@ class AsanaDoc extends Doc implements DocBase {
     return summaryPieces.join(' - ');
   }
 
-  // TODO getFinalURL
-
   @override
   String get getSummary {
-    return (content?["parentTaskTitle"] ?? content?["projectName"]) ??
-        super.getSummary;
+    return (content?["parentTaskTitle"] ?? content?["projectName"]) ?? super.getSummary;
   }
 }

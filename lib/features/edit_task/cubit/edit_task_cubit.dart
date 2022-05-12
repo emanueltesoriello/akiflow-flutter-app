@@ -7,7 +7,7 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
-import 'package:rrule/src/recurrence_rule.dart';
+import 'package:rrule/rrule.dart';
 import 'package:uuid/uuid.dart';
 
 part 'edit_task_state.dart';
@@ -38,13 +38,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     required String title,
     required String description,
   }) async {
-    DateTime? now = DateTime.now().toUtc();
+    DateTime now = DateTime.now().toUtc();
 
     Task updated = state.newTask.copyWith(
       title: title,
       description: description,
-      updatedAt: now,
-      createdAt: now,
+      updatedAt: Nullable(now.toIso8601String()),
+      createdAt: (now.toIso8601String()),
       listId: state.selectedLabel?.id,
     );
 
@@ -68,7 +68,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     required TaskStatusType statusType,
   }) async {
     Task updated = state.newTask.copyWith(
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     updated = updated.planFor(
@@ -87,7 +87,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<void> setForInbox() async {
     Task updated = state.newTask.copyWith(
       date: Nullable(null),
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       status: TaskStatusType.inbox.id,
     );
 
@@ -99,7 +99,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<void> setSomeday() async {
     Task updated = state.newTask.copyWith(
       date: Nullable(null),
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       status: TaskStatusType.someday.id,
     );
 
@@ -113,7 +113,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(selectedDate: selectedDate));
 
     Task updated = state.newTask.copyWith(
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     updated = updated.planFor(date: selectedDate, status: TaskStatusType.planned.id);
@@ -135,7 +135,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = state.newTask.copyWith(
       duration: Nullable(seconds.toInt()),
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(newTask: updated));
@@ -151,7 +151,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     if (state.setDuration == false) {
       Task updated = state.newTask.copyWith(
         duration: Nullable(null),
-        updatedAt: DateTime.now().toUtc(),
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
       emit(state.copyWith(newTask: updated));
@@ -169,7 +169,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void setLabel(Label label, {bool update = true}) {
     Task updated = state.newTask.copyWith(
       listId: label.id,
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(
@@ -185,7 +185,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   void markAsDone(Task task) {
     Task updated = task.copyWith(
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     updated = task.markAsDone(
@@ -203,7 +203,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void removeLink(String link) {
     Task task = state.newTask.copyWith(
       links: (state.newTask.links ?? []).where((l) => l != link).toList(),
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(newTask: task));
@@ -213,7 +213,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   void snooze(DateTime date) {
     Task updated = state.newTask.copyWith(
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     updated = updated.planFor(date: date, status: TaskStatusType.snoozed.id);
@@ -225,7 +225,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   Future<void> delete() async {
     Task updated = state.newTask.copyWith(
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     updated = updated.delete();
@@ -237,8 +237,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   void setDeadline(DateTime? date, {bool update = true}) {
     Task updated = state.newTask.copyWith(
-      dueDate: date,
-      updatedAt: DateTime.now().toUtc(),
+      dueDate: Nullable(date?.toIso8601String()),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(newTask: updated));
@@ -253,7 +253,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task task = state.newTask.copyWith(
       dailyGoal: currentDailyGoal == 0 ? 1 : 0,
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(newTask: task));
@@ -272,7 +272,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = state.newTask.copyWith(
       priority: currentPriority,
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(newTask: updated));
@@ -298,7 +298,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = state.newTask.copyWith(
       recurrence: recurrence,
-      updatedAt: DateTime.now().toUtc(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(newTask: updated));

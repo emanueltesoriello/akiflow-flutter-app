@@ -54,12 +54,19 @@ class TaskBorderedRow extends StatelessWidget {
                   ),
                 ),
                 Builder(builder: (context) {
+                  String text;
+
+                  if (task.createdAt != null) {
+                    text = DateFormat("dd MMM 'at' HH:mm").format(DateTime.parse(task.createdAt!).toLocal());
+                  } else {
+                    text = '';
+                  }
+
                   return Column(
                     children: [
                       const SizedBox(height: 5),
                       Text(
-                        DateFormat("dd MMM 'at' HH:mm")
-                            .format(task.createdAt!.toLocal()),
+                        text,
                         style: const TextStyle(fontSize: 15),
                       ),
                     ],

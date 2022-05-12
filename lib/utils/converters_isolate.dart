@@ -1,6 +1,5 @@
 import 'package:models/base.dart';
-import 'package:models/doc/doc.dart';
-import 'package:models/task/task.dart';
+import 'package:models/nullable.dart';
 import 'package:sqflite/sqflite.dart';
 
 class RawListConvert {
@@ -69,10 +68,11 @@ DateTime? getMaxUpdatedAt(List<dynamic> items) {
   DateTime? maxRemoteUpdateAt;
 
   for (var item in items) {
-    DateTime? newUpdatedAt = item.updatedAt;
+    String? newUpdatedAt = item.updatedAt;
 
-    if (maxRemoteUpdateAt == null || (newUpdatedAt != null && newUpdatedAt.isAfter(maxRemoteUpdateAt))) {
-      maxRemoteUpdateAt = newUpdatedAt;
+    if (maxRemoteUpdateAt == null ||
+        (newUpdatedAt != null && DateTime.parse(newUpdatedAt).isAfter(maxRemoteUpdateAt))) {
+      maxRemoteUpdateAt = DateTime.parse(newUpdatedAt!);
     }
   }
 
@@ -83,30 +83,30 @@ List<dynamic> prepareItemsForRemote<T>(List<dynamic> items) {
   for (int i = 0; i < items.length; i++) {
     var item = items[i];
 
-    DateTime? updatedAt = item.updatedAt;
-    DateTime? deletedAt = item.deletedAt;
+    String? updatedAt = item.updatedAt;
+    String? deletedAt = item.deletedAt;
 
     DateTime? maxDate;
 
     if (updatedAt != null && deletedAt != null) {
-      maxDate = updatedAt.isAfter(deletedAt) ? updatedAt : deletedAt;
+      DateTime updatedAtDate = DateTime.parse(updatedAt);
+      DateTime deletedAtDate = DateTime.parse(deletedAt);
+
+      maxDate = updatedAtDate.isAfter(deletedAtDate) ? updatedAtDate : deletedAtDate;
     } else if (updatedAt != null) {
-      maxDate = updatedAt;
+      DateTime updatedAtDate = DateTime.parse(updatedAt);
+      maxDate = updatedAtDate;
     } else if (deletedAt != null) {
-      maxDate = deletedAt;
+      DateTime deletedAtDate = DateTime.parse(deletedAt);
+      maxDate = deletedAtDate;
     }
 
-    if (item is Doc || item is Task) {
-      item = item.copyWith(
-        remoteUpdatedAt: maxDate ?? DateTime.now().toUtc(),
-        updatedAt: maxDate ?? DateTime.now().toUtc(),
-      );
-    } else {
-      item = item.rebuild((t) {
-        t.remoteUpdatedAt = maxDate ?? DateTime.now().toUtc();
-        t.updatedAt = maxDate ?? DateTime.now().toUtc();
-      });
-    }
+    String maxDateString = maxDate != null ? maxDate.toIso8601String() : (DateTime.now().toUtc().toIso8601String());
+
+    item = item.copyWith(
+      updatedAt: Nullable(maxDateString),
+      remoteUpdatedAt: Nullable(maxDateString),
+    );
 
     items[i] = item;
   }
@@ -136,20 +136,24 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
   Map<String, dynamic> existingModelsById = Map.fromIterable(existingModels, key: (model) => model.id);
 
   for (var model in allModels) {
-    int remoteGlobalUpdateAtMillis = model.globalUpdatedAt?.millisecondsSinceEpoch ?? 0;
-    int localUpdatedAtMillis = existingModelsById[model.id]?.updatedAt?.millisecondsSinceEpoch ?? 0;
+    int remoteGlobalUpdateAtMillis = 0;
+    int localUpdatedAtMillis = 0;
 
-    if (model is Doc || model is Task) {
-      model = model.copyWith(
-        updatedAt: model.globalUpdatedAt,
-        remoteUpdatedAt: model.globalUpdatedAt,
-      );
-    } else {
-      model = model.rebuild((t) {
-        t.updatedAt = model.globalUpdatedAt;
-        t.remoteUpdatedAt = model.globalUpdatedAt;
-      });
+    if (model.globalUpdatedAt != null) {
+      remoteGlobalUpdateAtMillis = DateTime.parse(model.globalUpdatedAt!).millisecondsSinceEpoch;
     }
+
+    if (existingModelsById[model.id]?.updatedAt != null) {
+      localUpdatedAtMillis = DateTime.parse(existingModelsById[model.id]!.updatedAt!).millisecondsSinceEpoch;
+    }
+
+    String? globalUpdatedAtString =
+        model.globalUpdatedAt != null ? DateTime.parse(model.globalUpdatedAt!).toIso8601String() : null;
+
+    model = model.copyWith(
+      updatedAt: Nullable(globalUpdatedAtString),
+      remoteUpdatedAt: Nullable(globalUpdatedAtString),
+    );
 
     if (existingModelsById.containsKey(model.id)) {
       if (remoteGlobalUpdateAtMillis > localUpdatedAtMillis) {

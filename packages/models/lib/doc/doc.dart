@@ -2,143 +2,173 @@ import 'dart:convert';
 
 import 'package:models/base.dart';
 import 'package:models/doc/doc_base.dart';
+import 'package:models/nullable.dart';
 
 class Doc extends DocBase implements Base {
-  final String? id;
-  final String? connectorId;
-  final String? originId;
-  final String? accountId;
-  final String? taskId;
-  final String? title;
-  final String? description;
-  final String? url;
-  final String? localUrl;
-  final String? type;
-  final String? icon;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final DateTime? deletedAt;
-  final DateTime? globalUpdatedAt;
-  final DateTime? globalCreatedAt;
-  final DateTime? remoteUpdatedAt;
-  final Map<String, dynamic>? content;
-
   Doc({
     this.id,
+    this.userId,
     this.taskId,
-    this.title,
-    this.description,
     this.connectorId,
     this.originId,
     this.accountId,
+    this.originAccountId,
+    this.title,
+    this.description,
+    this.searchText,
+    this.icon,
     this.url,
     this.localUrl,
     this.type,
-    this.icon,
+    this.content,
+    this.priority,
+    this.sorting,
+    this.originUpdatedAt,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
     this.globalUpdatedAt,
     this.globalCreatedAt,
     this.remoteUpdatedAt,
-    this.content,
+    this.updated,
   });
+
+  final String? id;
+  final int? userId;
+  final String? taskId;
+  final String? connectorId;
+  final String? originId;
+  final String? accountId;
+  final String? originAccountId;
+  final String? title;
+  final dynamic description;
+  final String? searchText;
+  final dynamic icon;
+  final String? url;
+  final String? localUrl;
+  final String? type;
+  final dynamic content;
+  final dynamic priority;
+  final int? sorting;
+  final dynamic originUpdatedAt;
+  final String? createdAt;
+  final String? updatedAt;
+  final dynamic deletedAt;
+  final String? globalUpdatedAt;
+  final String? globalCreatedAt;
+  final String? remoteUpdatedAt;
+  final bool? updated;
+
+  factory Doc.fromMap(Map<String, dynamic> json) => Doc(
+        id: json['id'] as String?,
+        userId: json['user_id'] as int?,
+        taskId: json['task_id'] as String?,
+        connectorId: json['connector_id'] as String?,
+        originId: json['origin_id'] as String?,
+        accountId: json['account_id'] as String?,
+        originAccountId: json['origin_account_id'] as String?,
+        title: json['title'] as String?,
+        description: json['description'] as dynamic,
+        searchText: json['search_text'] as String?,
+        icon: json['icon'] as dynamic,
+        url: json['url'] as String?,
+        localUrl: json['local_url'] as String?,
+        type: json['type'] as String?,
+        content: json['content'] as dynamic,
+        priority: json['priority'] as dynamic,
+        sorting: json['sorting'] as int?,
+        originUpdatedAt: json['origin_updated_at'] as dynamic,
+        createdAt: json['created_at'] as String?,
+        updatedAt: json['updated_at'] as String?,
+        deletedAt: json['deleted_at'] as dynamic,
+        globalUpdatedAt: json['global_updated_at'] as String?,
+        globalCreatedAt: json['global_created_at'] as String?,
+        remoteUpdatedAt: json['remote_updated_at'] as String?,
+        updated: json['updated'] as bool?,
+      );
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'user_id': userId,
+        'task_id': taskId,
+        'connector_id': connectorId,
+        'origin_id': originId,
+        'account_id': accountId,
+        'origin_account_id': originAccountId,
+        'title': title,
+        'description': description,
+        'search_text': searchText,
+        'icon': icon,
+        'url': url,
+        'local_url': localUrl,
+        'type': type,
+        'content': content,
+        'priority': priority,
+        'sorting': sorting,
+        'origin_updated_at': originUpdatedAt,
+        'created_at': createdAt,
+        'updated_at': updatedAt,
+        'deleted_at': deletedAt,
+        'global_updated_at': globalUpdatedAt,
+        'global_created_at': globalCreatedAt,
+        'remote_updated_at': remoteUpdatedAt,
+        'updated': updated,
+      };
 
   Doc copyWith({
     String? id,
+    int? userId,
     String? taskId,
-    String? title,
-    String? description,
     String? connectorId,
     String? originId,
     String? accountId,
+    String? originAccountId,
+    String? title,
+    dynamic description,
+    String? searchText,
+    dynamic icon,
     String? url,
     String? localUrl,
     String? type,
-    String? icon,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    DateTime? deletedAt,
-    DateTime? globalUpdatedAt,
-    DateTime? globalCreatedAt,
-    DateTime? remoteUpdatedAt,
-    Map<String, dynamic>? content,
+    dynamic content,
+    dynamic priority,
+    int? sorting,
+    dynamic originUpdatedAt,
+    String? createdAt,
+    Nullable<String?>? updatedAt,
+    Nullable<String?>? remoteUpdatedAt,
+    dynamic deletedAt,
+    String? globalUpdatedAt,
+    String? globalCreatedAt,
+    bool? updated,
   }) {
     return Doc(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       taskId: taskId ?? this.taskId,
-      title: title ?? this.title,
-      description: description ?? this.description,
       connectorId: connectorId ?? this.connectorId,
       originId: originId ?? this.originId,
       accountId: accountId ?? this.accountId,
+      originAccountId: originAccountId ?? this.originAccountId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      searchText: searchText ?? this.searchText,
+      icon: icon ?? this.icon,
       url: url ?? this.url,
       localUrl: localUrl ?? this.localUrl,
       type: type ?? this.type,
-      icon: icon ?? this.icon,
+      content: content ?? this.content,
+      priority: priority ?? this.priority,
+      sorting: sorting ?? this.sorting,
+      originUpdatedAt: originUpdatedAt ?? this.originUpdatedAt,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
       deletedAt: deletedAt ?? this.deletedAt,
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
-      remoteUpdatedAt: remoteUpdatedAt ?? this.remoteUpdatedAt,
-      content: content ?? this.content,
-    );
-  }
-
-  @override
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'task_id': taskId,
-      'title': title,
-      'description': description,
-      'connector_id': connectorId,
-      'origin_id': originId,
-      'account_id': accountId,
-      'url': url,
-      'local_url': localUrl,
-      'type': type,
-      'icon': icon,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
-      'globalUpdated_at': globalUpdatedAt?.toIso8601String(),
-      'globalCreated_at': globalCreatedAt?.toIso8601String(),
-      'remoteUpdated_at': remoteUpdatedAt?.toIso8601String(),
-      'content': content,
-    };
-  }
-
-  factory Doc.fromMap(Map<String, dynamic> map) {
-    return Doc(
-      id: map['id'] != null ? map['id'] as String : null,
-      taskId: map['task_id'] != null ? map['task_id'] as String : null,
-      title: map['title'] != null ? map['title'] as String : null,
-      description:
-          map['description'] != null ? map['description'] as String : null,
-      connectorId:
-          map['connector_id'] != null ? map['connector_id'] as String : null,
-      originId: map['origin_id'] != null ? map['origin_id'] as String : null,
-      accountId: map['account_id'] != null ? map['account_id'] as String : null,
-      url: map['url'] != null ? map['url'] as String : null,
-      localUrl: map['local_url'] != null ? map['local_url'] as String : null,
-      type: map['type'] != null ? map['type'] as String : null,
-      icon: map['icon'] != null ? map['icon'] as String : null,
-      updatedAt:
-          map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
-      deletedAt:
-          map['deleted_at'] != null ? DateTime.parse(map['deleted_at']) : null,
-      globalUpdatedAt: map['global_updated_at'] != null
-          ? DateTime.parse(map['global_updated_at'])
-          : null,
-      globalCreatedAt: map['global_created_at'] != null
-          ? DateTime.parse(map['global_created_at'])
-          : null,
-      remoteUpdatedAt: map['remote_updated_at'] != null
-          ? DateTime.parse(map['remote_updated_at'])
-          : null,
-      content: map['content'],
+      updated: updated ?? this.updated,
     );
   }
 
@@ -156,11 +186,11 @@ class Doc extends DocBase implements Base {
       "url": url,
       "local_url": localUrl,
       "type": type,
-      "updated_at": globalUpdatedAt?.toIso8601String(),
-      "created_at": globalCreatedAt?.toIso8601String(),
-      "deleted_at": deletedAt?.toIso8601String(),
-      "remote_updated_at": globalUpdatedAt?.toIso8601String(),
-      "content": jsonEncode(content),
+      "updated_at": globalUpdatedAt,
+      "created_at": globalCreatedAt,
+      "deleted_at": deletedAt,
+      "remote_updated_at": globalUpdatedAt,
+      "content": content != null ? jsonEncode(content) : null,
     };
   }
 
@@ -168,8 +198,7 @@ class Doc extends DocBase implements Base {
     Map<String, dynamic>? copy = Map<String, dynamic>.from(json);
 
     try {
-      copy['content'] =
-          jsonDecode(json['content'] as String) as Map<String, dynamic>;
+      copy['content'] = jsonDecode(json['content'] as String) as Map<String, dynamic>;
     } catch (_) {}
 
     return Doc.fromMap(copy);
@@ -179,22 +208,30 @@ class Doc extends DocBase implements Base {
   List<Object?> get props {
     return [
       id,
+      userId,
       taskId,
-      title,
-      description,
       connectorId,
       originId,
       accountId,
+      originAccountId,
+      title,
+      description,
+      searchText,
+      icon,
       url,
       localUrl,
       type,
-      icon,
+      content,
+      priority,
+      sorting,
+      originUpdatedAt,
+      createdAt,
       updatedAt,
       deletedAt,
       globalUpdatedAt,
       globalCreatedAt,
       remoteUpdatedAt,
-      content,
+      updated,
     ];
   }
 

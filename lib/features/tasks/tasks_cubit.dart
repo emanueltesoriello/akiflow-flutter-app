@@ -13,6 +13,7 @@ import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -158,8 +159,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     if (task != null) {
       Task newTaskDuplicated = task.copyWith(
         id: const Uuid().v4(),
-        updatedAt: now,
-        createdAt: now,
+        updatedAt: Nullable(now.toIso8601String()),
+        createdAt: (now.toIso8601String()),
       );
 
       updated.addAll([newTaskDuplicated]);
@@ -173,8 +174,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
       for (Task task in tasksSelected) {
         Task newTaskDuplicated = task.copyWith(
           id: const Uuid().v4(),
-          updatedAt: now,
-          createdAt: now,
+          updatedAt: Nullable(now.toIso8601String()),
+          createdAt: (now.toIso8601String()),
         );
 
         duplicates.add(newTaskDuplicated);
@@ -229,7 +230,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       Task updatedTask = task.copyWith(
         listId: label.id,
-        updatedAt: DateTime.now().toUtc(),
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
       updated[index] = updatedTask;
@@ -260,7 +261,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       Task updatedTask = task.copyWith(
         priority: currentPriority,
-        updatedAt: DateTime.now().toUtc(),
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
       updated[index] = updatedTask;
@@ -309,7 +310,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> ordered = updated
         .map((t) => t.copyWith(
               sorting: millis - (1 * updated.indexWhere((e) => e.id == t.id) + 1),
-              updatedAt: now,
+              updatedAt: Nullable(now.toIso8601String()),
               selected: false,
             ))
         .toList();
@@ -349,7 +350,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
 
       Task updated = task.copyWith(
-        updatedAt: DateTime.now().toUtc(),
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
       updated = updated.planFor(

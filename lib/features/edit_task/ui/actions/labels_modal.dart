@@ -61,9 +61,7 @@ class _LabelsModalState extends State<LabelsModal> {
                                 return false;
                               }
 
-                              return (label.title!)
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase());
+                              return (label.title!).toLowerCase().contains(value.toLowerCase());
                             }).toList();
 
                             return ListView.builder(
@@ -98,9 +96,7 @@ class _LabelsModalState extends State<LabelsModal> {
 
                                 if (index == 2) {
                                   Label noLabel = Label(
-                                    (l) => l
-                                      ..id = null
-                                      ..title = t.editTask.noLabel,
+                                    title: t.editTask.noLabel,
                                   );
 
                                   return LabelItem(

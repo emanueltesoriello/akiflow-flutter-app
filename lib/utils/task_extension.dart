@@ -73,25 +73,35 @@ extension TaskStatusTypeExt on TaskStatusType {
 extension TaskExt on Task {
   bool get isToday {
     if (datetime != null) {
-      return datetime!.day == DateTime.now().day &&
-          datetime!.month == DateTime.now().month &&
-          datetime!.year == DateTime.now().year;
+      DateTime dateParsed = DateTime.parse(datetime!);
+      return dateParsed.day == DateTime.now().day &&
+          dateParsed.month == DateTime.now().month &&
+          dateParsed.year == DateTime.now().year;
     }
 
     if (date != null) {
-      return date!.day == DateTime.now().day &&
-          date!.month == DateTime.now().month &&
-          date!.year == DateTime.now().year;
+      DateTime dateParsed = DateTime.parse(date!);
+      return dateParsed.day == DateTime.now().day &&
+          dateParsed.month == DateTime.now().month &&
+          dateParsed.year == DateTime.now().year;
     }
 
     return false;
   }
 
   bool get isTomorrow {
+    if (datetime != null) {
+      DateTime dateParsed = DateTime.parse(datetime!);
+      return dateParsed.day == DateTime.now().day + 1 &&
+          dateParsed.month == DateTime.now().month &&
+          dateParsed.year == DateTime.now().year;
+    }
+
     if (date != null) {
-      return date!.day == DateTime.now().day + 1 &&
-          date!.month == DateTime.now().month &&
-          date!.year == DateTime.now().year;
+      DateTime dateParsed = DateTime.parse(date!);
+      return dateParsed.day == DateTime.now().day + 1 &&
+          dateParsed.month == DateTime.now().month &&
+          dateParsed.year == DateTime.now().year;
     }
 
     return false;
@@ -99,15 +109,17 @@ extension TaskExt on Task {
 
   bool get isTodayOrBefore {
     if (datetime != null) {
-      return datetime!.day <= DateTime.now().day &&
-          datetime!.month <= DateTime.now().month &&
-          datetime!.year <= DateTime.now().year;
+      DateTime dateParsed = DateTime.parse(datetime!);
+      return dateParsed.day <= DateTime.now().day &&
+          dateParsed.month <= DateTime.now().month &&
+          dateParsed.year <= DateTime.now().year;
     }
 
     if (date != null) {
-      return date!.day <= DateTime.now().day &&
-          date!.month <= DateTime.now().month &&
-          date!.year <= DateTime.now().year;
+      DateTime dateParsed = DateTime.parse(date!);
+      return dateParsed.day <= DateTime.now().day &&
+          dateParsed.month <= DateTime.now().month &&
+          dateParsed.year <= DateTime.now().year;
     }
 
     return false;
@@ -115,7 +127,7 @@ extension TaskExt on Task {
 
   DateTime? get endTime {
     try {
-      return datetime!.add(Duration(seconds: duration!));
+      return DateTime.parse(datetime!).add(Duration(seconds: duration!));
     } catch (_) {}
     return null;
   }
@@ -133,7 +145,7 @@ extension TaskExt on Task {
       DateTime endTimePlus1h = endTime!.add(const Duration(hours: 1));
       isOverdueDate = endTimePlus1h.isBefore(now);
     } else if (date != null) {
-      isOverdueDate = date!.isBefore(now);
+      isOverdueDate = DateTime.parse(date!).isBefore(now);
     }
 
     return isPlanned && !isCompletedComputed && isOverdueDate;
@@ -145,12 +157,13 @@ extension TaskExt on Task {
 
   String get shortDate {
     if (date != null) {
+      DateTime dateParsed = DateTime.parse(date!);
       if (isToday) {
         return t.task.today;
-      } else if (date!.isBefore(DateTime.now().add(const Duration(days: 6)))) {
-        return DateFormat.E().format(date!.toLocal());
+      } else if (dateParsed.isBefore(DateTime.now().add(const Duration(days: 6)))) {
+        return DateFormat.E().format(dateParsed.toLocal());
       } else {
-        return DateFormat.MMMd().format(date!.toLocal());
+        return DateFormat.MMMd().format(dateParsed.toLocal());
       }
     }
 
@@ -159,7 +172,8 @@ extension TaskExt on Task {
 
   String get createdAtFormatted {
     if (createdAt != null) {
-      return DateFormat('dd MMM yyyy').format(createdAt!.toLocal());
+      DateTime dateParsed = DateTime.parse(createdAt!);
+      return DateFormat('dd MMM yyyy').format(dateParsed.toLocal());
     }
 
     return '';
@@ -167,7 +181,8 @@ extension TaskExt on Task {
 
   String get dueDateFormatted {
     if (dueDate != null) {
-      return DateFormat('dd MMM yyyy').format(dueDate!.toLocal());
+      DateTime dateParsed = DateTime.parse(dueDate!);
+      return DateFormat('dd MMM yyyy').format(dateParsed.toLocal());
     }
 
     return '';
@@ -203,13 +218,13 @@ extension TaskExt on Task {
   }
 
   String get datetimeFormatted {
-    DateTime? datetimeOrDate = datetime ?? date;
+    String? datetimeOrDate = datetime ?? date;
 
     String prefix;
     String? formatted;
 
     if (datetimeOrDate != null) {
-      formatted = DateFormat("HH:mm").format(datetimeOrDate.toLocal());
+      formatted = DateFormat("HH:mm").format(DateTime.parse(datetimeOrDate).toLocal());
     }
 
     if (isToday) {
@@ -229,7 +244,7 @@ extension TaskExt on Task {
 
   String get doneAtFormatted {
     if (doneAt != null) {
-      return timeago.format(doneAt!.toLocal());
+      return timeago.format(DateTime.parse(doneAt!).toLocal());
     }
 
     return '';
@@ -237,7 +252,7 @@ extension TaskExt on Task {
 
   String get overdueFormatted {
     if (isOverdue) {
-      return DateFormat("EEE, d MMM").format(date!.toLocal());
+      return DateFormat("EEE, d MMM").format(DateTime.parse(date!).toLocal());
     }
 
     return '';
@@ -367,8 +382,8 @@ extension TaskExt on Task {
     required int status,
   }) {
     return copyWith(
-      date: Nullable(date?.toUtc()),
-      datetime: dateTime?.toUtc(),
+      date: Nullable(date?.toUtc().toIso8601String()),
+      datetime: dateTime?.toUtc().toIso8601String(),
       status: status,
     );
   }
@@ -381,7 +396,7 @@ extension TaskExt on Task {
 
     bool done = isCompletedComputed;
 
-    DateTime? now = DateTime.now().toUtc();
+    DateTime now = DateTime.now().toUtc();
 
     if (lastDoneTaskStatus != null && lastDoneTaskStatus.id != TaskStatusType.completed.id) {
       lastDoneTaskStatus = TaskStatusTypeExt.fromId(lastDoneTaskStatus.id);
@@ -392,15 +407,15 @@ extension TaskExt on Task {
     if (!done) {
       updated = copyWith(
         done: true,
-        doneAt: Nullable(now),
-        updatedAt: now,
+        doneAt: Nullable(now.toIso8601String()),
+        updatedAt: Nullable(now.toIso8601String()),
         status: TaskStatusType.completed.id,
       );
     } else {
       updated = copyWith(
         done: false,
         doneAt: Nullable(null),
-        updatedAt: now,
+        updatedAt: Nullable(now.toIso8601String()),
         status: lastDoneTaskStatus?.id,
       );
     }
@@ -413,8 +428,8 @@ extension TaskExt on Task {
   Task delete() {
     return copyWith(
       status: TaskStatusType.deleted.id,
-      deletedAt: DateTime.now().toUtc(),
-      updatedAt: DateTime.now().toUtc(),
+      deletedAt: (DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
   }
 

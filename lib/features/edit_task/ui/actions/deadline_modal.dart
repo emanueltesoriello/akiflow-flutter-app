@@ -66,19 +66,20 @@ class _DeadlineModalState extends State<DeadlineModal> {
                     _predefinedDate(context),
                     const Separator(),
                     AddTaskCalendar(
-                      selectedDate:
-                          context.watch<EditTaskCubit>().state.newTask.dueDate,
+                      selectedDate: () {
+                        try {
+                          return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
+                        } catch (_) {
+                          return null;
+                        }
+                      }(),
                       onDateSelected: (DateTime? date) {
-                        context
-                            .read<EditTaskCubit>()
-                            .setDeadline(date, update: false);
+                        context.read<EditTaskCubit>().setDeadline(date, update: false);
 
                         Navigator.pop(context);
                       },
                       onAddTimeClick: (DateTime? date) {
-                        context
-                            .read<EditTaskCubit>()
-                            .setDeadline(date, update: true);
+                        context.read<EditTaskCubit>().setDeadline(date, update: true);
                       },
                     ),
                     const Separator(),
@@ -116,21 +117,16 @@ class _DeadlineModalState extends State<DeadlineModal> {
             _predefinedDateItem(
               context,
               text: t.addTask.tomorrow,
-              trailingText:
-                  DateFormat("EEE").format(now.add(const Duration(days: 1))),
+              trailingText: DateFormat("EEE").format(now.add(const Duration(days: 1))),
               onPressed: () {
-                context
-                    .read<EditTaskCubit>()
-                    .setDeadline(now.add(const Duration(days: 1)));
+                context.read<EditTaskCubit>().setDeadline(now.add(const Duration(days: 1)));
 
                 Navigator.pop(context);
               },
             ),
             const SizedBox(height: 2),
             Builder(builder: (context) {
-              DateTime nextWeekend = now
-                  .add(Duration(days: 7 - now.weekday + 1))
-                  .add(const Duration(days: 5));
+              DateTime nextWeekend = now.add(Duration(days: 7 - now.weekday + 1)).add(const Duration(days: 5));
 
               return _predefinedDateItem(
                 context,
@@ -145,8 +141,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
             }),
             const SizedBox(height: 2),
             Builder(builder: (context) {
-              DateTime nextMonday =
-                  now.add(Duration(days: 7 - now.weekday + 1));
+              DateTime nextMonday = now.add(Duration(days: 7 - now.weekday + 1));
 
               return _predefinedDateItem(
                 context,

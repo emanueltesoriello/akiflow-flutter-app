@@ -7,22 +7,22 @@ import 'package:models/nullable.dart';
 class Task extends Equatable implements Base {
   final String? id;
   final String? title;
-  final DateTime? date;
+  final String? date;
   final String? description;
   final int? duration;
   final int? status;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final DateTime? deletedAt;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? deletedAt;
   final bool? done;
-  final DateTime? doneAt;
-  final DateTime? datetime;
-  final DateTime? readAt;
-  final DateTime? globalUpdatedAt;
-  final DateTime? globalCreatedAt;
-  final DateTime? activationDatetime;
-  final DateTime? dueDate;
-  final DateTime? remoteUpdatedAt;
+  final String? doneAt;
+  final String? datetime;
+  final String? readAt;
+  final String? globalUpdatedAt;
+  final String? globalCreatedAt;
+  final String? activationDatetime;
+  final String? dueDate;
+  final String? remoteUpdatedAt;
   final String? recurringId;
   final int? priority;
   final String? listId;
@@ -70,22 +70,20 @@ class Task extends Equatable implements Base {
   Task copyWith({
     String? id,
     String? title,
-    Nullable<DateTime?>? date,
+    Nullable<String?>? date,
     String? description,
     Nullable<int?>? duration,
     int? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    DateTime? deletedAt,
+    String? createdAt,
+    String? deletedAt,
     bool? done,
-    Nullable<DateTime?>? doneAt,
-    DateTime? datetime,
-    DateTime? readAt,
-    DateTime? globalUpdatedAt,
-    DateTime? globalCreatedAt,
-    DateTime? activationDatetime,
-    DateTime? dueDate,
-    DateTime? remoteUpdatedAt,
+    Nullable<String?>? doneAt,
+    String? datetime,
+    String? readAt,
+    String? globalUpdatedAt,
+    String? globalCreatedAt,
+    String? activationDatetime,
+    Nullable<String?>? dueDate,
     String? recurringId,
     int? priority,
     String? listId,
@@ -97,6 +95,8 @@ class Task extends Equatable implements Base {
     int? dailyGoal,
     List<String>? links,
     List<String>? recurrence,
+    Nullable<String?>? updatedAt,
+    Nullable<String?>? remoteUpdatedAt,
   }) {
     return Task(
       id: id ?? this.id,
@@ -106,7 +106,6 @@ class Task extends Equatable implements Base {
       duration: duration == null ? this.duration : duration.value,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
       done: done ?? this.done,
       doneAt: doneAt == null ? this.doneAt : doneAt.value,
@@ -115,8 +114,7 @@ class Task extends Equatable implements Base {
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
       activationDatetime: activationDatetime ?? this.activationDatetime,
-      dueDate: dueDate ?? this.dueDate,
-      remoteUpdatedAt: remoteUpdatedAt ?? this.remoteUpdatedAt,
+      dueDate: dueDate == null ? this.dueDate : dueDate.value,
       recurringId: recurringId ?? this.recurringId,
       priority: priority ?? this.priority,
       listId: listId ?? this.listId,
@@ -128,6 +126,8 @@ class Task extends Equatable implements Base {
       dailyGoal: dailyGoal ?? this.dailyGoal,
       links: links ?? this.links,
       recurrence: recurrence ?? this.recurrence,
+      updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
     );
   }
 
@@ -136,22 +136,22 @@ class Task extends Equatable implements Base {
     return <String, dynamic>{
       'id': id,
       'title': title,
-      'date': date != null ? DateFormat('yyyy-MM-dd').format(date!) : null,
+      'date': date != null ? DateFormat('yyyy-MM-dd').format(DateTime.parse(date!)) : null,
       'description': description,
       'duration': duration,
       'status': status,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'deleted_at': deletedAt,
       'done': done,
-      'done_at': doneAt?.toIso8601String(),
-      'datetime': datetime?.toIso8601String(),
-      'read_at': readAt?.toIso8601String(),
-      'global_updated_at': globalUpdatedAt?.toIso8601String(),
-      'global_created_at': globalCreatedAt?.toIso8601String(),
-      'activation_datetime': activationDatetime?.toIso8601String(),
-      'due_date': dueDate != null ? DateFormat('yyyy-MM-dd').format(dueDate!) : null,
-      'remote_updated_at': remoteUpdatedAt?.toIso8601String(),
+      'done_at': doneAt,
+      'datetime': datetime,
+      'read_at': readAt,
+      'global_updated_at': globalUpdatedAt,
+      'global_created_at': globalCreatedAt,
+      'activation_datetime': activationDatetime,
+      'due_date': dueDate != null ? DateFormat('yyyy-MM-dd').format(DateTime.parse(dueDate!)) : null,
+      'remote_updated_at': remoteUpdatedAt,
       'recurring_id': recurringId,
       'priority': priority,
       'listId': listId,
@@ -170,22 +170,22 @@ class Task extends Equatable implements Base {
     return Task(
       id: map['id'] != null ? map['id'] as String : null,
       title: map['title'] != null ? map['title'] as String : null,
-      date: map['date'] != null ? DateTime.tryParse(map['date']) : null,
+      date: map['date'] != null ? map['date'] as String : null,
       description: map['description'] != null ? map['description'] as String : null,
       duration: map['duration'] != null ? map['duration'] as int : null,
       status: map['status'] != null ? map['status'] as int : null,
-      createdAt: map['created_at'] != null ? DateTime.tryParse(map['created_at']) : null,
-      updatedAt: map['updated_at'] != null ? DateTime.tryParse(map['updated_at']) : null,
-      deletedAt: map['deleted_at'] != null ? DateTime.tryParse(map['deleted_at']) : null,
+      createdAt: map['created_at'] != null ? map['created_at'] as String : null,
+      updatedAt: map['updated_at'] != null ? map['updated_at'] as String : null,
+      deletedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
       done: map['done'] != null ? map['done'] as bool : null,
-      doneAt: map['done_at'] != null ? DateTime.tryParse(map['done_t']) : null,
-      datetime: map['datetime'] != null ? DateTime.tryParse(map['datetime']) : null,
-      readAt: map['read_at'] != null ? DateTime.tryParse(map['read_at']) : null,
-      globalCreatedAt: map['global_created_at'] != null ? DateTime.tryParse(map['global_created_at']) : null,
-      globalUpdatedAt: map['global_updated_at'] != null ? DateTime.tryParse(map['global_updated_at']) : null,
-      activationDatetime: map['activation_datetime'] != null ? DateTime.tryParse(map['activation_datetime']) : null,
-      dueDate: map['due_date'] != null ? DateTime.tryParse(map['due_date']) : null,
-      remoteUpdatedAt: map['remote_updated_at'] != null ? DateTime.tryParse(map['remote_updated_at']) : null,
+      doneAt: map['done_at'] != null ? map['done_at'] as String : null,
+      datetime: map['datetime'] != null ? map['datetime'] as String : null,
+      readAt: map['read_at'] != null ? map['read_at'] as String : null,
+      globalCreatedAt: map['global_created_at'] != null ? map['global_created_at'] as String : null,
+      globalUpdatedAt: map['global_updated_at'] != null ? map['global_updated_at'] as String : null,
+      activationDatetime: map['activation_datetime'] != null ? map['activation_datetime'] as String : null,
+      dueDate: map['due_date'] != null ? map['due_date'] as String : null,
+      remoteUpdatedAt: map['remote_updated_at'] != null ? map['remote_updated_at'] as String : null,
       recurringId: map['recurring_id'] != null ? map['recurring_id'] as String : null,
       priority: map['priority'] != null ? map['priority'] as int : null,
       listId: map['listId'] != null ? map['listId'] as String : null,
@@ -206,7 +206,7 @@ class Task extends Equatable implements Base {
       "id": id,
       "title": title,
       "description": description,
-      "date": date?.toIso8601String(),
+      "date": date,
       "recurring_id": recurringId,
       "status": status,
       "duration": duration,
@@ -214,15 +214,15 @@ class Task extends Equatable implements Base {
       "list_id": listId,
       "section_id": sectionId,
       "done": done == true ? 1 : 0,
-      "datetime": datetime?.toIso8601String(),
-      "done_at": doneAt?.toIso8601String(),
-      "read_at": readAt?.toIso8601String(),
-      "due_date": dueDate?.toIso8601String(),
-      "updated_at": updatedAt?.toIso8601String(),
-      "created_at": createdAt?.toIso8601String(),
-      "deleted_at": deletedAt?.toIso8601String(),
+      "datetime": datetime,
+      "done_at": doneAt,
+      "read_at": readAt,
+      "due_date": dueDate,
+      "updated_at": updatedAt,
+      "created_at": createdAt,
+      "deleted_at": deletedAt,
       "origin": origin,
-      "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
+      "remote_updated_at": remoteUpdatedAt,
       "sorting": sorting,
       "sorting_label": sortingLabel,
       "links": links?.toList().join(','),

@@ -1,80 +1,145 @@
 import 'dart:convert';
 
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
-import 'package:models/serializers.dart';
+import 'package:models/nullable.dart';
 
-part 'account.g.dart';
+class Account extends Equatable implements Base {
+  const Account({
+    this.id,
+    this.userId,
+    this.connectorId,
+    this.accountId,
+    this.originAccountId,
+    this.shortName,
+    this.fullName,
+    this.picture,
+    this.identifier,
+    this.syncStatus,
+    this.status,
+    this.details,
+    this.autologinToken,
+    this.globalCreatedAt,
+    this.globalUpdatedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.remoteUpdatedAt,
+    this.deletedAt,
+    this.updated,
+  });
 
-abstract class Account extends Object
-    with Base
-    implements Built<Account, AccountBuilder> {
-  String? get id;
+  final String? id;
+  final int? userId;
+  final String? connectorId;
+  final String? accountId;
+  final String? originAccountId;
+  final String? shortName;
+  final String? fullName;
+  final String? picture;
+  final String? identifier;
+  final dynamic syncStatus;
+  final String? status;
+  final dynamic details;
+  final dynamic autologinToken;
+  final String? globalCreatedAt;
+  final String? globalUpdatedAt;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? remoteUpdatedAt;
+  final dynamic deletedAt;
+  final bool? updated;
 
-  @BuiltValueField(wireName: 'connector_id')
-  String? get connectorId;
-
-  @BuiltValueField(wireName: 'account_id')
-  String? get accountId;
-
-  @BuiltValueField(wireName: 'origin_account_id')
-  String? get originAccountId;
-
-  @BuiltValueField(wireName: 'short_name')
-  String? get shortName;
-
-  @BuiltValueField(wireName: 'full_name')
-  String? get fullName;
-
-  String? get picture;
-  String? get identifier;
-
-  @BuiltValueField(wireName: 'autologin_token')
-  String? get autologinToken;
-
-  @BuiltValueField(wireName: 'status')
-  String? get status;
-
-  @BuiltValueField(wireName: 'sync_status')
-  String? get syncStatus;
-
-  @BuiltValueField(wireName: 'created_at')
-  DateTime? get createdAt;
-
-  @BuiltValueField(wireName: 'updated_at')
-  DateTime? get updatedAt;
-
-  @BuiltValueField(wireName: 'deleted_at')
-  DateTime? get deletedAt;
-
-  @BuiltValueField(wireName: 'global_updated_at')
-  DateTime? get globalUpdatedAt;
-
-  @BuiltValueField(wireName: 'global_created_at')
-  DateTime? get globalCreatedAt;
-
-  @BuiltValueField(wireName: 'remote_updated_at')
-  DateTime? get remoteUpdatedAt;
-
-  Account._();
-
-  factory Account([void Function(AccountBuilder) updates]) = _$Account;
+  factory Account.fromMap(Map<String, dynamic> json) => Account(
+        id: json['id'] as String?,
+        userId: json['user_id'] as int?,
+        connectorId: json['connector_id'] as String?,
+        accountId: json['account_id'] as String?,
+        originAccountId: json['origin_account_id'] as String?,
+        shortName: json['short_name'] as String?,
+        fullName: json['full_name'] as String?,
+        picture: json['picture'] as String?,
+        identifier: json['identifier'] as String?,
+        syncStatus: json['sync_status'] as dynamic,
+        status: json['status'] as String?,
+        details: json['details'] as dynamic,
+        autologinToken: json['autologin_token'] as dynamic,
+        globalCreatedAt: json['global_created_at'] as String?,
+        globalUpdatedAt: json['global_updated_at'] as String?,
+        createdAt: json['created_at'] as String?,
+        updatedAt: json['updated_at'] as String?,
+        remoteUpdatedAt: json['remote_updated_at'] as String?,
+        deletedAt: json['deleted_at'] as dynamic,
+        updated: json['updated'] as bool?,
+      );
 
   @override
-  Account rebuild(void Function(AccountBuilder) updates);
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'user_id': userId,
+        'connector_id': connectorId,
+        'account_id': accountId,
+        'origin_account_id': originAccountId,
+        'short_name': shortName,
+        'full_name': fullName,
+        'picture': picture,
+        'identifier': identifier,
+        'sync_status': syncStatus,
+        'status': status,
+        'details': details,
+        'autologin_token': autologinToken,
+        'global_created_at': globalCreatedAt,
+        'global_updated_at': globalUpdatedAt,
+        'created_at': createdAt,
+        'updated_at': updatedAt,
+        'remote_updated_at': remoteUpdatedAt,
+        'deleted_at': deletedAt,
+        'updated': updated,
+      };
 
-  @override
-  AccountBuilder toBuilder();
-
-  @override
-  Map<String, dynamic> toMap() {
-    return serializers.serializeWith(Account.serializer, this)
-        as Map<String, dynamic>;
-  }
-
-  static Account fromMap(Map<String, dynamic> json) {
-    return serializers.deserializeWith(Account.serializer, json)!;
+  Account copyWith({
+    String? id,
+    int? userId,
+    String? connectorId,
+    String? accountId,
+    String? originAccountId,
+    String? shortName,
+    String? fullName,
+    String? picture,
+    String? identifier,
+    dynamic syncStatus,
+    String? status,
+    dynamic details,
+    dynamic autologinToken,
+    String? globalCreatedAt,
+    String? globalUpdatedAt,
+    String? createdAt,
+    Nullable<String?>? updatedAt,
+    Nullable<String?>? remoteUpdatedAt,
+    dynamic deletedAt,
+    bool? updated,
+  }) {
+    return Account(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      connectorId: connectorId ?? this.connectorId,
+      accountId: accountId ?? this.accountId,
+      originAccountId: originAccountId ?? this.originAccountId,
+      shortName: shortName ?? this.shortName,
+      fullName: fullName ?? this.fullName,
+      picture: picture ?? this.picture,
+      identifier: identifier ?? this.identifier,
+      syncStatus: syncStatus ?? this.syncStatus,
+      status: status ?? this.status,
+      details: details ?? this.details,
+      autologinToken: autologinToken ?? this.autologinToken,
+      globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
+      globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+      deletedAt: deletedAt ?? this.deletedAt,
+      updated: updated ?? this.updated,
+    );
   }
 
   @override
@@ -91,10 +156,10 @@ abstract class Account extends Object
       "autologin_token": autologinToken,
       "status": status,
       "sync_status": syncStatus,
-      "updated_at": updatedAt?.toIso8601String(),
-      "created_at": createdAt?.toIso8601String(),
-      "deleted_at": deletedAt?.toIso8601String(),
-      "remote_updated_at": remoteUpdatedAt?.toIso8601String(),
+      "updated_at": updatedAt,
+      "created_at": createdAt,
+      "deleted_at": deletedAt,
+      "remote_updated_at": remoteUpdatedAt,
     };
   }
 
@@ -104,16 +169,37 @@ abstract class Account extends Object
     for (var key in data.keys) {
       switch (key) {
         case "details":
-          data[key] =
-              data[key] is String ? (jsonDecode(data[key] as String)) : null;
+          data[key] = data[key] is String ? (jsonDecode(data[key] as String)) : null;
           break;
         default:
       }
     }
 
-    return serializers.deserializeWith(Account.serializer, data)!;
+    return Account.fromMap(data);
   }
 
-  @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<Account> get serializer => _$accountSerializer;
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      userId,
+      connectorId,
+      accountId,
+      originAccountId,
+      shortName,
+      fullName,
+      picture,
+      identifier,
+      syncStatus,
+      status,
+      details,
+      autologinToken,
+      globalCreatedAt,
+      globalUpdatedAt,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      updated,
+    ];
+  }
 }

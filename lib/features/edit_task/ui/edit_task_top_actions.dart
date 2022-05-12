@@ -98,13 +98,15 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
         }
 
         if (state.newTask.date != null) {
+          DateTime parsed = DateTime.parse(state.newTask.date!);
+
           if (state.newTask.datetime != null) {
             if (state.newTask.isToday) {
-              text = DateFormat("HH:mm").format(state.newTask.date!.toLocal());
+              text = DateFormat("HH:mm").format(parsed.toLocal());
             } else if (state.newTask.isTomorrow) {
-              text = t.addTask.tmw + DateFormat(" - HH:mm").format(state.newTask.date!.toLocal());
+              text = t.addTask.tmw + DateFormat(" - HH:mm").format(parsed.toLocal());
             } else {
-              text = DateFormat("EEE, d MMM").format(state.newTask.date!.toLocal());
+              text = DateFormat("EEE, d MMM").format(parsed.toLocal());
             }
           } else {
             if (state.newTask.isToday) {
@@ -112,7 +114,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             } else if (state.newTask.isTomorrow) {
               text = t.addTask.tmw;
             } else {
-              text = DateFormat("EEE, d MMM").format(state.newTask.date!.toLocal());
+              text = DateFormat("EEE, d MMM").format(parsed.toLocal());
             }
           }
         } else if (state.newTask.status == TaskStatusType.someday.id) {

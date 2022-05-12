@@ -1,66 +1,113 @@
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
-import 'package:models/serializers.dart';
+import 'package:models/nullable.dart';
 
-part 'label.g.dart';
+class Label extends Equatable implements Base {
+  const Label({
+    this.id,
+    this.userId,
+    this.title,
+    this.icon,
+    this.color,
+    this.sorting,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.globalUpdatedAt,
+    this.parentId,
+    this.globalCreatedAt,
+    this.system,
+    this.type,
+    this.remoteUpdatedAt,
+  });
 
-abstract class Label extends Object
-    with Base
-    implements Built<Label, LabelBuilder> {
-  @BuiltValueField(wireName: 'id')
-  String? get id;
+  final String? id;
+  final int? userId;
+  final String? title;
+  final dynamic icon;
+  final dynamic color;
+  final int? sorting;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? deletedAt;
+  final String? globalUpdatedAt;
+  final dynamic parentId;
+  final String? globalCreatedAt;
+  final dynamic system;
+  final String? type;
+  final String? remoteUpdatedAt;
 
-  @BuiltValueField(wireName: 'title')
-  String? get title;
-
-  @BuiltValueField(wireName: 'icon')
-  String? get icon;
-
-  @BuiltValueField(wireName: 'color')
-  String? get color;
-
-  @BuiltValueField(wireName: 'type')
-  String? get type;
-
-  @BuiltValueField(wireName: 'created_at')
-  DateTime? get createdAt;
-
-  @BuiltValueField(wireName: 'updated_at')
-  DateTime? get updatedAt;
-
-  @BuiltValueField(wireName: 'deleted_at')
-  DateTime? get deletedAt;
-
-  @BuiltValueField(wireName: 'remote_updated_at')
-  DateTime? get remoteUpdatedAt;
-
-  @BuiltValueField(wireName: 'global_updated_at')
-  DateTime? get globalUpdatedAt;
-
-  @BuiltValueField(wireName: 'global_created_at')
-  DateTime? get globalCreatedAt;
-
-  Label._();
-
-  factory Label([void Function(LabelBuilder) updates]) = _$Label;
+  factory Label.fromMap(Map<String, dynamic> json) => Label(
+        id: json['id'] as String?,
+        userId: json['user_id'] as int?,
+        title: json['title'] as String?,
+        icon: json['icon'] as dynamic,
+        color: json['color'] as dynamic,
+        sorting: json['sorting'] as int?,
+        createdAt: json['created_at'] as String?,
+        updatedAt: json['updated_at'] as String?,
+        deletedAt: json['deleted_at'] as String?,
+        globalUpdatedAt: json['global_updated_at'] as String?,
+        parentId: json['parent_id'] as dynamic,
+        globalCreatedAt: json['global_created_at'] as String?,
+        system: json['system'] as dynamic,
+        type: json['type'] as String?,
+        remoteUpdatedAt: json['remote_updated_at'] as String?,
+      );
 
   @override
-  Label rebuild(void Function(LabelBuilder) updates);
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'user_id': userId,
+        'title': title,
+        'icon': icon,
+        'color': color,
+        'sorting': sorting,
+        'created_at': createdAt,
+        'updated_at': updatedAt,
+        'deleted_at': deletedAt,
+        'global_updated_at': globalUpdatedAt,
+        'parent_id': parentId,
+        'global_created_at': globalCreatedAt,
+        'system': system,
+        'type': type,
+        'remote_updated_at': remoteUpdatedAt,
+      };
 
-  @override
-  LabelBuilder toBuilder();
-
-  @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> data = serializers.serializeWith(
-        Label.serializer, this) as Map<String, dynamic>;
-
-    return data;
-  }
-
-  static Label fromMap(Map<String, dynamic> json) {
-    return serializers.deserializeWith(Label.serializer, json)!;
+  Label copyWith({
+    String? id,
+    int? userId,
+    String? title,
+    dynamic icon,
+    dynamic color,
+    int? sorting,
+    String? createdAt,
+    String? deletedAt,
+    String? globalUpdatedAt,
+    dynamic parentId,
+    String? globalCreatedAt,
+    dynamic system,
+    String? type,
+    Nullable<String?>? updatedAt,
+    Nullable<String?>? remoteUpdatedAt,
+  }) {
+    return Label(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
+      sorting: sorting ?? this.sorting,
+      createdAt: createdAt ?? this.createdAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
+      parentId: parentId ?? this.parentId,
+      globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
+      system: system ?? this.system,
+      type: type ?? this.type,
+      updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+    );
   }
 
   @override
@@ -71,10 +118,10 @@ abstract class Label extends Object
       "icon": icon,
       "color": color,
       "type": type,
-      "updated_at": updatedAt?.toIso8601String(),
-      "created_at": createdAt?.toIso8601String(),
-      "deleted_at": deletedAt?.toIso8601String(),
-      "remote_updated_at": remoteUpdatedAt?.toIso8601String()
+      "updated_at": updatedAt,
+      "created_at": createdAt,
+      "deleted_at": deletedAt,
+      "remote_updated_at": remoteUpdatedAt
     };
   }
 
@@ -87,9 +134,27 @@ abstract class Label extends Object
       }
     }
 
-    return serializers.deserializeWith(Label.serializer, data)!;
+    return Label.fromMap(data);
   }
 
-  @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<Label> get serializer => _$labelSerializer;
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      userId,
+      title,
+      icon,
+      color,
+      sorting,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      globalUpdatedAt,
+      parentId,
+      globalCreatedAt,
+      system,
+      type,
+      remoteUpdatedAt,
+    ];
+  }
 }

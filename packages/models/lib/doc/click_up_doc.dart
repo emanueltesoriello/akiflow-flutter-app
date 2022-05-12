@@ -47,7 +47,6 @@ class ClickupDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return (content?["parentTaskTitle"] ?? content?["projectName"]) ??
-        super.getSummary;
+    return (content?["parentTaskTitle"] ?? content?["projectName"]) ?? super.getSummary;
   }
 }

@@ -30,10 +30,8 @@ class GmailDoc extends Doc implements DocBase {
     if (content?["from"] != null && content!["from"].isNotEmpty) {
       final matches = RegExp(r'^(.*?)\s*<(.*?)>').allMatches(content!["from"]);
 
-      String? name =
-          matches.isEmpty ? content!["from"] : matches.first.group(1);
-      String? email =
-          matches.isEmpty ? content!["from"] : matches.first.group(2);
+      String? name = matches.isEmpty ? content!["from"] : matches.first.group(1);
+      String? email = matches.isEmpty ? content!["from"] : matches.first.group(2);
 
       if (name != null && name.isNotEmpty) {
         summaryPieces.add(name);
