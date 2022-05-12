@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:intl/intl.dart';
+import 'package:mobile/components/task/plan_for_action.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/add_task/ui/add_task_duration.dart';
 import 'package:mobile/features/add_task/ui/add_task_labels.dart';
@@ -142,7 +142,28 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
   Widget _actions(BuildContext context) {
     return Wrap(
       children: [
-        _plannedFor(context),
+        PlanForAction(
+          task: context.watch<EditTaskCubit>().state.newTask,
+          onTap: () {
+            var editTaskCubit = context.read<EditTaskCubit>();
+
+            showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => PlanModal(
+                onSelectDate: (
+                    {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
+                  editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType, update: false);
+                },
+                setForInbox: () {
+                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox, update: false);
+                },
+                setForSomeday: () {
+                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.someday, update: false);
+                },
+              ),
+            );
+          },
+        ),
         const SizedBox(width: 8),
         AddTaskActionItem(
           leadingIconAsset: "assets/images/icons/_common/hourglass.svg",
@@ -218,82 +239,6 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
         fontSize: 20,
         fontWeight: FontWeight.w500,
       ),
-    );
-  }
-
-  Widget _plannedFor(BuildContext context) {
-    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-      builder: (context, state) {
-        String leadingIconAsset;
-        String text;
-        Color color;
-
-        TaskStatusType? status = TaskStatusTypeExt.fromId(state.newTask.status) ?? TaskStatusType.inbox;
-
-        if ((status == TaskStatusType.inbox || status == TaskStatusType.planned) && status != TaskStatusType.someday) {
-          color = ColorsExt.cyan25(context);
-          leadingIconAsset = "assets/images/icons/_common/calendar.svg";
-        } else {
-          color = ColorsExt.pink30(context);
-          leadingIconAsset = "assets/images/icons/_common/clock.svg";
-        }
-
-        if (state.newTask.date != null) {
-          DateTime parsed = DateTime.parse(state.newTask.date!);
-
-          if (state.newTask.isToday) {
-            text = t.addTask.today;
-          } else if (state.newTask.isTomorrow) {
-            text = t.addTask.tmw;
-          } else {
-            text = DateFormat("EEE, d MMM").format(parsed.toLocal());
-          }
-        } else if (state.newTask.status == TaskStatusType.someday.id) {
-          text = t.task.someday;
-        } else {
-          text = t.bottomBar.inbox;
-        }
-
-        if (state.newTask.datetime != null) {
-          DateTime parsed = DateTime.parse(state.newTask.datetime!);
-
-          if (state.newTask.isToday) {
-            text = text + " " + DateFormat("HH:mm").format(parsed.toLocal());
-          } else if (state.newTask.isTomorrow) {
-            text = t.addTask.tmw + DateFormat(" - HH:mm").format(parsed.toLocal());
-          } else {
-            text = text + " " + DateFormat("EEE, d MMM").format(parsed.toLocal());
-          }
-        }
-
-        return AddTaskActionItem(
-          text: text,
-          color: color,
-          leadingIconAsset: leadingIconAsset,
-          active: true,
-          onPressed: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-
-            var editTaskCubit = context.read<EditTaskCubit>();
-
-            showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => PlanModal(
-                onSelectDate: (
-                    {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
-                  editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType, update: false);
-                },
-                setForInbox: () {
-                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox, update: false);
-                },
-                setForSomeday: () {
-                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.someday, update: false);
-                },
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }

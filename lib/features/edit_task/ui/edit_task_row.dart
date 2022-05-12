@@ -29,10 +29,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   @override
   void initState() {
-    _titleController.text =
-        context.read<EditTaskCubit>().state.newTask.title ?? '';
-    _descriptionController.text =
-        context.read<EditTaskCubit>().state.newTask.description ?? '';
+    _titleController.text = context.read<EditTaskCubit>().state.newTask.title ?? '';
+    _descriptionController.text = context.read<EditTaskCubit>().state.newTask.description ?? '';
     super.initState();
   }
 
@@ -140,13 +138,10 @@ class _EditTaskRowState extends State<EditTaskRow> {
         bool completed = task.isCompletedComputed;
 
         return SvgPicture.asset(
-          completed
-              ? "assets/images/icons/_common/Check-done.svg"
-              : "assets/images/icons/_common/Check-empty.svg",
+          completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
           width: 20,
           height: 20,
-          color:
-              completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+          color: completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
         );
       }),
     );
@@ -176,41 +171,21 @@ class _EditTaskRowState extends State<EditTaskRow> {
     }
 
     if (task.isOverdue) {
-      return AkiChip(
-        backgroundColor: ColorsExt.cyan25(context),
-        text: task.overdueFormatted,
-        onPressed: statusClick,
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            "assets/images/icons/_common/Clock_alert.svg",
+            width: 20,
+            height: 20,
+            color: ColorsExt.red(context),
+          ),
+          const SizedBox(width: 4),
+        ],
       );
     }
 
-    switch (task.statusType) {
-      case TaskStatusType.someday:
-        return AkiChip(
-          icon: "assets/images/icons/_common/archivebox.svg",
-          backgroundColor: ColorsExt.akiflow10(context),
-          text: task.statusType!.name.capitalizeFirstCharacter(),
-          onPressed: statusClick,
-        );
-      case TaskStatusType.snoozed:
-        return AkiChip(
-          icon: "assets/images/icons/_common/clock.svg",
-          backgroundColor: ColorsExt.pink30(context),
-          text: task.datetimeFormatted,
-          onPressed: statusClick,
-        );
-      case TaskStatusType.planned:
-        return AkiChip(
-          backgroundColor: ColorsExt.cyan25(context),
-          text: task.shortDate,
-          onPressed: statusClick,
-        );
-      default:
-        return AkiChip(
-          backgroundColor: ColorsExt.cyan25(context),
-          text: task.statusType!.name.capitalizeFirstCharacter(),
-          onPressed: statusClick,
-        );
-    }
+    return const SizedBox();
   }
 
   Widget _label(BuildContext context) {
@@ -229,12 +204,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
     return AkiChip(
       icon: "assets/images/icons/_common/number.svg",
       text: label?.title ?? t.editTask.noLabel,
-      backgroundColor: label?.color != null
-          ? ColorsExt.getFromName(label!.color!).withOpacity(0.1)
-          : ColorsExt.grey6(context),
-      iconColor: label?.color != null
-          ? ColorsExt.getFromName(label!.color!)
-          : ColorsExt.grey3(context),
+      backgroundColor:
+          label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey6(context),
+      iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey3(context),
       onPressed: () {
         var cubit = context.read<EditTaskCubit>();
 

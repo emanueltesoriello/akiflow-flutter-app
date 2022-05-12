@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:i18n/strings.g.dart';
-import 'package:intl/intl.dart';
+import 'package:mobile/components/task/plan_for_action.dart';
 import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
@@ -26,7 +25,31 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
       constraints: const BoxConstraints(minHeight: 44),
       child: Row(
         children: [
-          _plannedFor(context),
+          PlanForAction(
+            task: context.watch<EditTaskCubit>().state.newTask,
+            onTap: () {
+              EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+              showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context) => BlocProvider.value(
+                  value: cubit,
+                  child: PlanModal(
+                    onSelectDate: (
+                        {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
+                      cubit.planFor(date, dateTime: datetime, statusType: statusType, update: true);
+                    },
+                    setForInbox: () {
+                      cubit.planFor(null, statusType: TaskStatusType.inbox, update: true);
+                    },
+                    setForSomeday: () {
+                      cubit.planFor(null, statusType: TaskStatusType.someday, update: true);
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
           const SizedBox(width: 8),
           BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
@@ -77,83 +100,6 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _plannedFor(BuildContext context) {
-    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-      builder: (context, state) {
-        String leadingIconAsset;
-        String text;
-        Color color;
-
-        TaskStatusType? status = TaskStatusTypeExt.fromId(state.newTask.status) ?? TaskStatusType.inbox;
-
-        if ((status == TaskStatusType.inbox || status == TaskStatusType.planned) && status != TaskStatusType.someday) {
-          color = ColorsExt.cyan25(context);
-          leadingIconAsset = "assets/images/icons/_common/calendar.svg";
-        } else {
-          color = ColorsExt.pink30(context);
-          leadingIconAsset = "assets/images/icons/_common/clock.svg";
-        }
-
-        if (state.newTask.date != null) {
-          DateTime parsed = DateTime.parse(state.newTask.date!);
-
-          if (state.newTask.datetime != null) {
-            if (state.newTask.isToday) {
-              text = DateFormat("HH:mm").format(parsed.toLocal());
-            } else if (state.newTask.isTomorrow) {
-              text = t.addTask.tmw + DateFormat(" - HH:mm").format(parsed.toLocal());
-            } else {
-              text = DateFormat("EEE, d MMM").format(parsed.toLocal());
-            }
-          } else {
-            if (state.newTask.isToday) {
-              text = t.addTask.today;
-            } else if (state.newTask.isTomorrow) {
-              text = t.addTask.tmw;
-            } else {
-              text = DateFormat("EEE, d MMM").format(parsed.toLocal());
-            }
-          }
-        } else if (state.newTask.status == TaskStatusType.someday.id) {
-          text = t.task.someday;
-        } else {
-          text = t.bottomBar.inbox;
-        }
-
-        return AddTaskActionItem(
-          text: text,
-          color: color,
-          leadingIconAsset: leadingIconAsset,
-          active: true,
-          onPressed: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-
-            EditTaskCubit cubit = context.read<EditTaskCubit>();
-
-            showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => BlocProvider.value(
-                value: cubit,
-                child: PlanModal(
-                  onSelectDate: (
-                      {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
-                    cubit.planFor(date, dateTime: datetime, statusType: statusType, update: true);
-                  },
-                  setForInbox: () {
-                    cubit.planFor(null, statusType: TaskStatusType.inbox, update: true);
-                  },
-                  setForSomeday: () {
-                    cubit.planFor(null, statusType: TaskStatusType.someday, update: true);
-                  },
-                ),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }
