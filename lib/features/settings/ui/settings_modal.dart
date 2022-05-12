@@ -143,12 +143,12 @@ class SettingsModal extends StatelessWidget {
                       ),
                       selected: homeViewType == HomeViewType.today,
                       trailing: Builder(builder: (context) {
-                        List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
-
-                        tasks = TaskExt.filterTodayTodoTasks(tasks);
+                        List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
+                        List<Task> todos = List.from(
+                            todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
                         return Text(
-                          tasks.length.toString(),
+                          todos.length.toString(),
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,

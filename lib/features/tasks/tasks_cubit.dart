@@ -283,8 +283,29 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncTasks();
   }
 
-  void setDeadline({Task? task}) {
-    // TODO TasksHelper.setDeadline(task: task);
+  Future<void> setDeadline(DateTime? date) async {
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+
+    for (Task task in tasksSelected) {
+      int index = state.inboxTasks.indexWhere((t) => t.id == task.id);
+
+      Task updated = task.copyWith(
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        dueDate: Nullable(date?.toIso8601String()),
+      );
+
+      updated = updated.copyWith(selected: false);
+
+      state.inboxTasks[index] = updated;
+
+      await _tasksRepository.updateById(task.id, data: updated);
+    }
+
+    clearSelected();
+
+    emit(state.copyWith(inboxTasks: state.inboxTasks));
+
+    syncTasks();
   }
 
   void clearSelected() {

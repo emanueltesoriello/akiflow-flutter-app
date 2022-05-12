@@ -75,7 +75,18 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                 context: context,
                 builder: (context) => BlocProvider.value(
                   value: cubit,
-                  child: const DeadlineModal(),
+                  child: DeadlineModal(
+                    initialDate: () {
+                      try {
+                        return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
+                      } catch (_) {
+                        return null;
+                      }
+                    }(),
+                    onSelectDate: (DateTime? date) {
+                      cubit.setDeadline(date, update: true);
+                    },
+                  ),
                 ),
               );
             },

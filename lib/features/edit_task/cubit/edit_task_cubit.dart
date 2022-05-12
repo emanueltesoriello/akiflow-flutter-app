@@ -237,9 +237,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _updateUiRepositoryAndSync(updated);
   }
 
-  void setDeadline(DateTime date, {bool update = true}) {
+  void setDeadline(DateTime? date, {bool update = true}) {
     Task updated = state.newTask.copyWith(
-      dueDate: Nullable(date.toIso8601String()),
+      dueDate: Nullable(date?.toIso8601String()),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 

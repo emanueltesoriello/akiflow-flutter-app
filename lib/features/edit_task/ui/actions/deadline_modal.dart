@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/add_task/ui/add_task_calendar.dart';
-import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
 class DeadlineModal extends StatefulWidget {
+  final DateTime? initialDate;
+  final Function(DateTime?) onSelectDate;
+
   const DeadlineModal({
     Key? key,
+    required this.initialDate,
+    required this.onSelectDate,
   }) : super(key: key);
 
   @override
@@ -61,18 +64,12 @@ class _DeadlineModalState extends State<DeadlineModal> {
                   ),
                 ),
                 const Separator(),
-                _predefinedDate(context),
+                _predefinedDate(context, widget.onSelectDate),
                 const Separator(),
                 AddTaskCalendar(
-                  initialDate: () {
-                    try {
-                      return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
-                    } catch (_) {
-                      return null;
-                    }
-                  }(),
+                  initialDate: widget.initialDate,
                   onConfirm: (DateTime date, DateTime? datetime) {
-                    context.read<EditTaskCubit>().setDeadline(datetime ?? date, update: true);
+                    widget.onSelectDate(datetime ?? date);
                   },
                 ),
                 const Separator(),
@@ -86,7 +83,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
   }
 }
 
-Widget _predefinedDate(BuildContext context) {
+Widget _predefinedDate(BuildContext context, Function onSelectDate) {
   DateTime now = DateTime.now();
 
   return Column(
@@ -100,8 +97,7 @@ Widget _predefinedDate(BuildContext context) {
             text: t.addTask.today,
             trailingText: DateFormat("EEE").format(now),
             onPressed: () {
-              context.read<EditTaskCubit>().setDeadline(now);
-
+              onSelectDate(now);
               Navigator.pop(context);
             },
           ),
@@ -111,8 +107,7 @@ Widget _predefinedDate(BuildContext context) {
             text: t.addTask.tomorrow,
             trailingText: DateFormat("EEE").format(now.add(const Duration(days: 1))),
             onPressed: () {
-              context.read<EditTaskCubit>().setDeadline(now.add(const Duration(days: 1)));
-
+              onSelectDate(now.add(const Duration(days: 1)));
               Navigator.pop(context);
             },
           ),
@@ -125,8 +120,7 @@ Widget _predefinedDate(BuildContext context) {
               text: t.addTask.nextWeekend,
               trailingText: DateFormat("EEE").format(nextWeekend),
               onPressed: () {
-                context.read<EditTaskCubit>().setDeadline(nextWeekend);
-
+                onSelectDate(nextWeekend);
                 Navigator.pop(context);
               },
             );
@@ -140,7 +134,7 @@ Widget _predefinedDate(BuildContext context) {
               text: t.addTask.nextWeek,
               trailingText: DateFormat("EEE").format(nextMonday),
               onPressed: () {
-                context.read<EditTaskCubit>().setDeadline(nextMonday);
+                onSelectDate(nextMonday);
                 Navigator.pop(context);
               },
             );

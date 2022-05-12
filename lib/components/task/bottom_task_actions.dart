@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -126,7 +128,27 @@ class BottomTaskActions extends StatelessWidget {
                           .planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.inbox);
                       break;
                     case BottomTaskAdditionalActions.setDeadline:
-                      context.read<TasksCubit>().setDeadline();
+                      var cubit = context.read<TasksCubit>();
+
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) => BlocProvider.value(
+                          value: cubit,
+                          child: DeadlineModal(
+                            initialDate: () {
+                              try {
+                                return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
+                              } catch (_) {
+                                return null;
+                              }
+                            }(),
+                            onSelectDate: (DateTime? date) {
+                              cubit.setDeadline(date);
+                            },
+                          ),
+                        ),
+                      );
+
                       break;
                     case BottomTaskAdditionalActions.duplicate:
                       context.read<TasksCubit>().duplicate();
