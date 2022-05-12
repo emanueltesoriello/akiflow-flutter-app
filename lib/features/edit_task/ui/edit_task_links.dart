@@ -35,41 +35,43 @@ class EditTaskLinks extends StatelessWidget {
 
                 return Row(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        launchUrl(Uri.parse(link));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: ColorsExt.grey6(context),
-                        ),
-                        padding: const EdgeInsets.all(6),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SvgPicture.asset(
-                              iconAsset,
-                              width: 22,
-                              height: 22,
-                            ),
-                            const SizedBox(width: 9),
-                            Flexible(
-                              child: Text(
-                                link,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: ColorsExt.grey3(context),
-                                ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          launchUrl(Uri.parse(link));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: ColorsExt.grey6(context),
+                          ),
+                          padding: const EdgeInsets.all(6),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                iconAsset,
+                                width: 22,
+                                height: 22,
                               ),
-                            )
-                          ],
+                              const SizedBox(width: 9),
+                              Flexible(
+                                child: Text(
+                                  link,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: ColorsExt.grey3(context),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 10),
                     InkWell(
                       onTap: () => context.read<EditTaskCubit>().removeLink(link),
                       child: SvgPicture.asset(

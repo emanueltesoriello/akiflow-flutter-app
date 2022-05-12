@@ -161,8 +161,8 @@ class Task extends Equatable implements Base {
       'sorting_label': sortingLabel,
       'selected': selected,
       'dailyGoal': dailyGoal,
-      'links': links,
-      'recurrence': recurrence,
+      'links': links == null ? null : List<dynamic>.from(links!.map((x) => x)),
+      'recurrence': recurrence == null ? null : List<dynamic>.from(recurrence!.map((x) => x)),
     };
   }
 
@@ -247,18 +247,16 @@ class Task extends Equatable implements Base {
     } catch (_) {}
 
     List<String> linksList = [];
-
     if (data.containsKey("links") && data["links"] != null) {
-      String links = data["links"] as String;
-      linksList = links.split(',');
+      String object = data["links"] as String;
+      linksList = object.split(',');
       data.remove("links");
     }
 
     List<String> recurrenceList = [];
-
     if (data.containsKey("recurrence") && data["recurrence"] != null) {
-      String links = data["recurrence"] as String;
-      linksList = links.split(';');
+      String object = data["recurrence"] as String;
+      recurrenceList = object.split(';');
       data.remove("recurrence");
     }
 
