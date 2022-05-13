@@ -41,7 +41,7 @@ class LinkedContentModal extends StatelessWidget {
         decoration: const BoxDecoration(
           color: Colors.transparent,
         ),
-        height: MediaQuery.of(context).size.height * 0.5,
+        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
@@ -49,64 +49,63 @@ class LinkedContentModal extends StatelessWidget {
           ),
           child: Container(
             color: Theme.of(context).backgroundColor,
-            child: Column(
+            child: Wrap(
               children: [
-                Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    children: [
-                      const SizedBox(height: 12),
-                      const ScrollChip(),
-                      const SizedBox(height: 12),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 58,
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  doc.computedIcon,
-                                  width: 18,
-                                  height: 18,
+                ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    const SizedBox(height: 12),
+                    const ScrollChip(),
+                    const SizedBox(height: 12),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 58,
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                doc.computedIcon,
+                                width: 18,
+                                height: 18,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  doc.getLinkedContentSummary,
+                                  style: TextStyle(
+                                      fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(
-                                    doc.getLinkedContentSummary,
-                                    style: TextStyle(
-                                        fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          Builder(
-                            builder: (context) {
-                              if (doc is AsanaDoc) {
-                                return AsanaLinkedContent(doc: doc, itemBuilder: _item, task: task);
-                              } else if (doc is GmailDoc) {
-                                return GmailLinkedContent(doc: doc, itemBuilder: _item);
-                              } else if (doc is SlackDoc) {
-                                return SlackLinkedContent(task: task, doc: doc, itemBuilder: _item);
-                              } else if (doc is TodoistDoc) {
-                                return TodoistLinkedContent(task: task, doc: doc, itemBuilder: _item);
-                              } else if (doc is TrelloDoc) {
-                                return TrelloLinkedContent(doc: doc, task: task, itemBuilder: _item);
-                              } else if (doc is ClickupDoc) {
-                                return ClickupLinkedContent(doc: doc, task: task, itemBuilder: _item);
-                              } else if (doc is NotionDoc) {
-                                return NotionLinkedContent(task: task, doc: doc, itemBuilder: _item);
-                              }
-                              return const SizedBox();
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                        Builder(
+                          builder: (context) {
+                            if (doc is AsanaDoc) {
+                              return AsanaLinkedContent(doc: doc, itemBuilder: _item, task: task);
+                            } else if (doc is GmailDoc) {
+                              return GmailLinkedContent(doc: doc, itemBuilder: _item);
+                            } else if (doc is SlackDoc) {
+                              return SlackLinkedContent(task: task, doc: doc, itemBuilder: _item);
+                            } else if (doc is TodoistDoc) {
+                              return TodoistLinkedContent(task: task, doc: doc, itemBuilder: _item);
+                            } else if (doc is TrelloDoc) {
+                              return TrelloLinkedContent(doc: doc, task: task, itemBuilder: _item);
+                            } else if (doc is ClickupDoc) {
+                              return ClickupLinkedContent(doc: doc, task: task, itemBuilder: _item);
+                            } else if (doc is NotionDoc) {
+                              return NotionLinkedContent(task: task, doc: doc, itemBuilder: _item);
+                            }
+                            return const SizedBox();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
+                Container(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: ButtonList(
@@ -116,7 +115,7 @@ class LinkedContentModal extends StatelessWidget {
                         launchUrl(Uri.parse(doc.url ?? ''));
                       }),
                 ),
-                const SizedBox(height: 50),
+                Container(height: 24),
               ],
             ),
           ),

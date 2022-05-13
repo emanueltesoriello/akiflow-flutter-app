@@ -31,6 +31,7 @@ class _LabelsModalState extends State<LabelsModal> {
         decoration: const BoxDecoration(
           color: Colors.transparent,
         ),
+        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
@@ -124,7 +125,6 @@ class _LabelsModalState extends State<LabelsModal> {
                         });
                   },
                 ),
-                const SizedBox(height: 24),
               ],
             ),
           ),
