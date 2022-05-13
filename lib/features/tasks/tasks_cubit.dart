@@ -33,7 +33,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncAllAndRefresh();
   }
 
-  syncAllAndRefresh() async {
+  syncAllAndRefresh({DateTime? selectedTodayDate}) async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
@@ -43,7 +43,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       await syncAll();
 
-      await refreshTasksFromRepository();
+      await refreshTasksFromRepository(selectedTodayDate: selectedTodayDate);
 
       emit(state.copyWith(loading: false));
     }
@@ -60,13 +60,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(loading: false));
   }
 
-  refreshTasksFromRepository() async {
+  refreshTasksFromRepository({DateTime? selectedTodayDate}) async {
     emit(state.copyWith(syncStatus: "Get tasks from repository"));
 
     await fetchLabels();
     await fetchDocs();
     await fetchInbox();
-    await fetchTodayTasks(DateTime.now().toUtc());
+    await fetchTodayTasks(selectedTodayDate ?? DateTime.now());
 
     emit(state.copyWith(loading: false));
   }
