@@ -36,101 +36,92 @@ class TaskList extends StatelessWidget {
 
     tasks = TaskExt.sort(tasks, sorting: sorting);
 
-    return Stack(
-      children: [
-        RefreshIndicator(
-          onRefresh: () async {
-            await context.read<TasksCubit>().syncAllAndRefresh();
-          },
-          child: SlidableAutoCloseBehavior(
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: PrimaryScrollController.of(context) ?? ScrollController(),
-              slivers: [
-                // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
-                //be available in flutter stable branch
-                ReorderableSliverList(
-                  onReorderStarted: (index) {
-                    int indexWithoutHeaderWidget = index - 2;
+    return SlidableAutoCloseBehavior(
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: PrimaryScrollController.of(context) ?? ScrollController(),
+        slivers: [
+          // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
+          //be available in flutter stable branch
+          ReorderableSliverList(
+            onReorderStarted: (index) {
+              int indexWithoutHeaderWidget = index - 2;
 
-                    context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
+              context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
+            },
+            buildDraggableFeedback: (context, constraints, child) {
+              return Material(
+                elevation: 1,
+                color: ColorsExt.grey6(context),
+                borderRadius: BorderRadius.zero,
+                child: ConstrainedBox(constraints: constraints, child: child),
+              );
+            },
+            onReorder: (int oldIndex, int newIndex) {
+              context.read<TasksCubit>().reorder(
+                    oldIndex - 2,
+                    newIndex - 2,
+                    newTasksListOrdered: tasks,
+                    sorting: sorting,
+                  );
+            },
+            delegate: ReorderableSliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                if (index == 0) {
+                  return const SyncStatusItem();
+                }
+
+                if (index == 1) {
+                  if (notice == null) {
+                    return const SizedBox(key: ObjectKey(0), height: 0);
+                  }
+
+                  return Container(
+                    key: ObjectKey(notice),
+                    child: notice!,
+                  );
+                }
+
+                index -= 2;
+
+                Task task = tasks[index];
+
+                return TaskRow(
+                  key: ObjectKey(task),
+                  task: task,
+                  hideInboxLabel: hideInboxLabel,
+                  selectTask: () {
+                    context.read<TasksCubit>().select(task);
                   },
-                  buildDraggableFeedback: (context, constraints, child) {
-                    return Material(
-                      child: ConstrainedBox(constraints: constraints, child: child),
-                      elevation: 1,
-                      color: ColorsExt.grey6(context),
-                      borderRadius: BorderRadius.zero,
+                  selectMode: tasks.any((element) => element.selected ?? false),
+                  completedClick: () {
+                    context.read<TasksCubit>().markAsDone(task);
+                  },
+                  swipeActionPlanClick: () {
+                    _showPlan(context, task, TaskStatusType.planned);
+                  },
+                  swipeActionSelectLabelClick: () {
+                    var cubit = context.read<TasksCubit>();
+
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => LabelsModal(
+                        selectLabel: (Label label) {
+                          cubit.assignLabel(label, task: task);
+                        },
+                      ),
                     );
                   },
-                  onReorder: (int oldIndex, int newIndex) {
-                    context.read<TasksCubit>().reorder(
-                          oldIndex - 2,
-                          newIndex - 2,
-                          newTasksListOrdered: tasks,
-                          sorting: sorting,
-                        );
+                  swipeActionSnoozeClick: () {
+                    _showPlan(context, task, TaskStatusType.snoozed);
                   },
-                  delegate: ReorderableSliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      if (index == 0) {
-                        return const SyncStatusItem();
-                      }
-
-                      if (index == 1) {
-                        if (notice == null) {
-                          return const SizedBox(key: ObjectKey(0), height: 0);
-                        }
-
-                        return Container(
-                          key: ObjectKey(notice),
-                          child: notice!,
-                        );
-                      }
-
-                      index -= 2;
-
-                      Task task = tasks[index];
-
-                      return TaskRow(
-                        key: ObjectKey(task),
-                        task: task,
-                        hideInboxLabel: hideInboxLabel,
-                        selectTask: () {
-                          context.read<TasksCubit>().select(task);
-                        },
-                        selectMode: tasks.any((element) => element.selected ?? false),
-                        completedClick: () {
-                          context.read<TasksCubit>().markAsDone(task);
-                        },
-                        swipeActionPlanClick: () {
-                          _showPlan(context, task, TaskStatusType.planned);
-                        },
-                        swipeActionSelectLabelClick: () {
-                          var cubit = context.read<TasksCubit>();
-
-                          showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) => LabelsModal(
-                              selectLabel: (Label label) {
-                                cubit.assignLabel(label, task: task);
-                              },
-                            ),
-                          );
-                        },
-                        swipeActionSnoozeClick: () {
-                          _showPlan(context, task, TaskStatusType.snoozed);
-                        },
-                      );
-                    },
-                    childCount: tasks.length + 2,
-                  ),
-                ),
-              ],
+                );
+              },
+              childCount: tasks.length + 2,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

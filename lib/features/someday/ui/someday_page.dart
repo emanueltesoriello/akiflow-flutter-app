@@ -27,35 +27,26 @@ class _View extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
 
-    return Stack(
-      children: [
-        RefreshIndicator(
-          onRefresh: () async {
-            await context.read<TasksCubit>().syncAllAndRefresh();
-          },
-          child: SlidableAutoCloseBehavior(
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: PrimaryScrollController.of(context) ?? ScrollController(),
-              slivers: [
-                TodayTaskList(
-                  tasks: todayTasks,
-                  sorting: TaskListSorting.descending,
-                  showTasks: context.watch<TodayCubit>().state.todosListOpen,
-                  header: _Header(
-                    t.today.toDos,
-                    tasks: todayTasks,
-                    onClick: () {
-                      context.read<TodayCubit>().openTodoList();
-                    },
-                    listOpened: context.watch<TodayCubit>().state.todosListOpen,
-                  ),
-                ),
-              ],
+    return SlidableAutoCloseBehavior(
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: PrimaryScrollController.of(context) ?? ScrollController(),
+        slivers: [
+          TodayTaskList(
+            tasks: todayTasks,
+            sorting: TaskListSorting.descending,
+            showTasks: context.watch<TodayCubit>().state.todosListOpen,
+            header: _Header(
+              t.today.toDos,
+              tasks: todayTasks,
+              onClick: () {
+                context.read<TodayCubit>().openTodoList();
+              },
+              listOpened: context.watch<TodayCubit>().state.todosListOpen,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

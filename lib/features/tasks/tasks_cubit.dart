@@ -50,12 +50,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> syncTasks() async {
+    emit(state.copyWith(loading: true, syncStatus: ''));
     await _syncControllerService.syncTasks(
       syncStatus: (status) {
         _sentryService.addBreadcrumb(category: "sync", message: status);
         emit(state.copyWith(syncStatus: status));
       },
     );
+    emit(state.copyWith(loading: false));
   }
 
   refreshTasksFromRepository() async {

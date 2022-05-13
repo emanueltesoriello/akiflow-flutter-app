@@ -57,61 +57,52 @@ class _View extends StatelessWidget {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
-    return Stack(
-      children: [
-        RefreshIndicator(
-          onRefresh: () async {
-            await context.read<TasksCubit>().syncAllAndRefresh();
-          },
-          child: SlidableAutoCloseBehavior(
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: PrimaryScrollController.of(context) ?? ScrollController(),
-              slivers: [
-                TodayTaskList(
-                  tasks: todos,
-                  sorting: TaskListSorting.descending,
-                  showTasks: context.watch<TodayCubit>().state.todosListOpen,
-                  header: _Header(
-                    t.today.toDos,
-                    tasks: todos,
-                    onClick: () {
-                      context.read<TodayCubit>().openTodoList();
-                    },
-                    listOpened: context.watch<TodayCubit>().state.todosListOpen,
-                  ),
-                ),
-                TodayTaskList(
-                  tasks: pinned,
-                  sorting: TaskListSorting.descending,
-                  showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
-                  header: _Header(
-                    t.today.pinnedInCalendar,
-                    tasks: pinned,
-                    onClick: () {
-                      context.read<TodayCubit>().openPinnedList();
-                    },
-                    listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
-                  ),
-                ),
-                TodayTaskList(
-                  tasks: completed,
-                  sorting: TaskListSorting.descending,
-                  showTasks: context.watch<TodayCubit>().state.completedListOpen,
-                  header: _Header(
-                    t.today.done,
-                    tasks: completed,
-                    onClick: () {
-                      context.read<TodayCubit>().openCompletedList();
-                    },
-                    listOpened: context.watch<TodayCubit>().state.completedListOpen,
-                  ),
-                ),
-              ],
+    return SlidableAutoCloseBehavior(
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: PrimaryScrollController.of(context) ?? ScrollController(),
+        slivers: [
+          TodayTaskList(
+            tasks: todos,
+            sorting: TaskListSorting.descending,
+            showTasks: context.watch<TodayCubit>().state.todosListOpen,
+            header: _Header(
+              t.today.toDos,
+              tasks: todos,
+              onClick: () {
+                context.read<TodayCubit>().openTodoList();
+              },
+              listOpened: context.watch<TodayCubit>().state.todosListOpen,
             ),
           ),
-        ),
-      ],
+          TodayTaskList(
+            tasks: pinned,
+            sorting: TaskListSorting.descending,
+            showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
+            header: _Header(
+              t.today.pinnedInCalendar,
+              tasks: pinned,
+              onClick: () {
+                context.read<TodayCubit>().openPinnedList();
+              },
+              listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
+            ),
+          ),
+          TodayTaskList(
+            tasks: completed,
+            sorting: TaskListSorting.descending,
+            showTasks: context.watch<TodayCubit>().state.completedListOpen,
+            header: _Header(
+              t.today.done,
+              tasks: completed,
+              onClick: () {
+                context.read<TodayCubit>().openCompletedList();
+              },
+              listOpened: context.watch<TodayCubit>().state.completedListOpen,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

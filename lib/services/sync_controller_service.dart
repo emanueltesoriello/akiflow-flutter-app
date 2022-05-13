@@ -86,15 +86,10 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await Future.wait([
-        _syncEntity(Entity.accounts, syncStatus: syncStatus),
-        _syncEntity(Entity.tasks, syncStatus: syncStatus),
-        _syncEntity(Entity.labels),
-        _syncEntity(Entity.docs)
-      ]);
-
-      // await _syncEntity(Entity.calendars);
-      // await _syncEntity(Entity.events);
+      await _syncEntity(Entity.accounts, syncStatus: syncStatus);
+      await _syncEntity(Entity.tasks, syncStatus: syncStatus);
+      await _syncEntity(Entity.labels);
+      await _syncEntity(Entity.docs);
     }
   }
 

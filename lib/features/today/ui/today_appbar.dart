@@ -65,15 +65,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
               child: Text(t.bottomBar.today,
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.grey3(context))),
             ),
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/images/icons/_common/ellipsis.svg",
-                width: 24,
-                height: 24,
-                color: ColorsExt.grey3(context),
-              ),
-              onPressed: () {},
-            ),
+            const SizedBox(width: 10),
           ],
         ),
         const SizedBox(height: 12),

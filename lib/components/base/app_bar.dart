@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/components/base/space.dart';
 import 'package:mobile/components/base/sync_progress.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
 class AppBarComp extends StatelessWidget {
@@ -115,7 +117,16 @@ class AppBarComp extends StatelessWidget {
   Widget _buildActions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [Container(width: 16), ...actions, const SyncProgress()],
+      children: [
+        Container(width: 16),
+        ...actions,
+        InkWell(
+          onTap: () {
+            context.read<TasksCubit>().syncAllAndRefresh();
+          },
+          child: const SyncProgress(),
+        )
+      ],
     );
   }
 }
