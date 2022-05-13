@@ -12,9 +12,11 @@ import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/inbox_appbar.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_appbar.dart';
 import 'package:mobile/features/today/ui/today_view.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MainPage extends StatelessWidget {
@@ -44,16 +46,23 @@ class MainPage extends StatelessWidget {
         children: [
           Scaffold(
             floatingActionButton: FloatingActionButton(
-              onPressed: () => showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context) => const AddTaskModal(),
+              onPressed: () async {
+                HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
+                TaskStatusType taskStatusType =
+                    homeViewType == HomeViewType.inbox ? TaskStatusType.inbox : TaskStatusType.planned;
+                DateTime date = context.read<TodayCubit>().state.selectedDate;
+
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) => AddTaskModal(taskStatusType: taskStatusType, date: date),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
               child: SvgPicture.asset(
                 "assets/images/icons/_common/plus.svg",
                 color: Theme.of(context).backgroundColor,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
               ),
             ),
             bottomNavigationBar: BottomNavigationBar(

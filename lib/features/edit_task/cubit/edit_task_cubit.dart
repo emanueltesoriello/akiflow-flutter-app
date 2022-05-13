@@ -21,13 +21,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   TaskStatusType? lastDoneTaskStatus;
 
-  EditTaskCubit(this._tasksCubit, {Task? task})
+  EditTaskCubit(this._tasksCubit, {Task? task, TaskStatusType? taskStatusType, DateTime? date})
       : super(
           EditTaskCubitState(
             newTask: task ??
                 const Task().copyWith(
                   id: const Uuid().v4(),
-                  status: TaskStatusType.inbox.id,
+                  status: taskStatusType != null ? taskStatusType.id : task?.status,
+                  date: Nullable(
+                      (taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
                 ),
           ),
         ) {
@@ -52,15 +54,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(newTask: updated));
 
-    List<Task> all = _tasksCubit.state.inboxTasks.toList();
-
-    all.add(updated);
-
-    _tasksCubit.emit(_tasksCubit.state.copyWith(inboxTasks: all));
-
     await _tasksRepository.add([updated]);
 
-    _tasksCubit.syncTasks();
+    _tasksCubit.updateUiOfTask(updated);
+
+    _tasksCubit.syncAll();
   }
 
   Future<void> planFor(
@@ -293,7 +291,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.updateById(task.id!, data: task);
 
-    _tasksCubit.syncTasks();
+    _tasksCubit.syncAll();
   }
 
   void setRecurrence(RecurrenceRule? rule) {

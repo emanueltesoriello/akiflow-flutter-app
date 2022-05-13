@@ -82,7 +82,7 @@ class SyncControllerService {
     Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
-  syncTasks({Function(String)? syncStatus}) async {
+  syncAll({Function(String)? syncStatus}) async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {

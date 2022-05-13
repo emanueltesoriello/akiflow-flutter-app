@@ -41,7 +41,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       emit(state.copyWith(syncStatus: "Syncing..."));
 
-      await syncTasks();
+      await syncAll();
 
       await refreshTasksFromRepository();
 
@@ -49,9 +49,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  Future<void> syncTasks() async {
+  Future<void> syncAll() async {
     emit(state.copyWith(loading: true, syncStatus: ''));
-    await _syncControllerService.syncTasks(
+    await _syncControllerService.syncAll(
       syncStatus: (status) {
         _sentryService.addBreadcrumb(category: "sync", message: status);
         emit(state.copyWith(syncStatus: status));
@@ -160,7 +160,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncTasks();
+    syncAll();
   }
 
   Future<void> duplicate([Task? task]) async {
@@ -203,7 +203,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(inboxTasks: updated));
 
-    syncTasks();
+    syncAll();
   }
 
   Future<void> delete() async {
@@ -228,7 +228,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(inboxTasks: updated));
 
-    syncTasks();
+    syncAll();
   }
 
   Future<void> assignLabel(Label label, {Task? task}) async {
@@ -262,7 +262,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(inboxTasks: updated));
 
-    syncTasks();
+    syncAll();
   }
 
   Future<void> selectPriority() async {
@@ -299,7 +299,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(inboxTasks: updated));
 
-    syncTasks();
+    syncAll();
   }
 
   Future<void> setDeadline(DateTime? date) async {
@@ -319,7 +319,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncTasks();
+    syncAll();
   }
 
   void clearSelected() {
@@ -364,28 +364,33 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncTasks();
+    syncAll();
   }
 
   void updateUiOfTask(Task task) {
-    emit(
-      state.copyWith(
-        inboxTasks: state.inboxTasks.map((t) {
-          if (t.id == task.id) {
-            return task;
-          } else {
-            return t;
-          }
-        }).toList(),
-        todayTasks: state.todayTasks.map((t) {
-          if (t.id == task.id) {
-            return task;
-          } else {
-            return t;
-          }
-        }).toList(),
-      ),
-    );
+    bool inboxHasTask = state.inboxTasks.any((t) => t.id == task.id);
+    bool todayHasTask = state.todayTasks.any((t) => t.id == task.id);
+
+    List<Task> updatedInbox = List.from(state.inboxTasks);
+    if (inboxHasTask) {
+      int index = updatedInbox.indexWhere((t) => t.id == task.id);
+      updatedInbox[index] = task;
+    } else {
+      updatedInbox.add(task);
+    }
+
+    List<Task> updatedToday = List.from(state.todayTasks);
+    if (todayHasTask) {
+      int index = updatedToday.indexWhere((t) => t.id == task.id);
+      updatedToday[index] = task;
+    } else {
+      updatedToday.add(task);
+    }
+
+    emit(state.copyWith(
+      inboxTasks: updatedInbox,
+      todayTasks: updatedToday,
+    ));
   }
 
   Future<void> planFor(
@@ -424,6 +429,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(inboxTasks: state.inboxTasks));
 
-    syncTasks();
+    syncAll();
   }
 }

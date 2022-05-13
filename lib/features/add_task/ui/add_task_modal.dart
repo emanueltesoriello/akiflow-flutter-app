@@ -14,12 +14,19 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddTaskModal extends StatelessWidget {
-  const AddTaskModal({Key? key}) : super(key: key);
+  final TaskStatusType taskStatusType;
+  final DateTime date;
+
+  const AddTaskModal({
+    Key? key,
+    required this.taskStatusType,
+    required this.date,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EditTaskCubit(context.read<TasksCubit>()),
+      create: (context) => EditTaskCubit(context.read<TasksCubit>(), taskStatusType: taskStatusType, date: date),
       child: const AddTaskModalView(),
     );
   }
@@ -33,14 +40,14 @@ class AddTaskModalView extends StatefulWidget {
 }
 
 class _AddTaskModalViewState extends State<AddTaskModalView> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
-  final FocusNode _titleFocus = FocusNode();
+  final FocusNode titleFocus = FocusNode();
 
   @override
   void initState() {
-    _titleFocus.requestFocus();
+    titleFocus.requestFocus();
     super.initState();
   }
 
@@ -101,7 +108,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                                 onTap: () {
                                   context
                                       .read<EditTaskCubit>()
-                                      .create(title: _titleController.text, description: _descriptionController.text);
+                                      .create(title: titleController.text, description: descriptionController.text);
 
                                   Navigator.pop(context);
                                 },
@@ -200,7 +207,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
 
   TextField _description(BuildContext context) {
     return TextField(
-      controller: _descriptionController,
+      controller: descriptionController,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(bottom: 16),
         isDense: true,
@@ -221,8 +228,8 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
 
   TextField _title(BuildContext context) {
     return TextField(
-      controller: _titleController,
-      focusNode: _titleFocus,
+      controller: titleController,
+      focusNode: titleFocus,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.zero,
         isDense: true,
