@@ -111,13 +111,7 @@ class TaskRow extends StatelessWidget {
                 return const SizedBox();
               }
 
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _status(context),
-                  const SizedBox(width: 4),
-                ],
-              );
+              return _status(context);
             }),
             _label(context),
           ],
@@ -375,6 +369,10 @@ class TaskRow extends StatelessWidget {
     }
 
     if (task.isCompletedComputed) {
+      if (task.doneAtFormatted.isEmpty) {
+        return const SizedBox();
+      }
+
       return AkiChip(
         backgroundColor: ColorsExt.green20(context),
         text: task.doneAtFormatted,
@@ -443,12 +441,17 @@ class TaskRow extends StatelessWidget {
       return const SizedBox();
     }
 
-    return AkiChip(
-      icon: "assets/images/icons/_common/number.svg",
-      text: label.title,
-      backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
-      iconColor: label.color != null ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
-      onPressed: () {},
+    return Row(
+      children: [
+        const SizedBox(width: 12),
+        AkiChip(
+          icon: "assets/images/icons/_common/number.svg",
+          text: label.title,
+          backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
+          iconColor: label.color != null ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
+          onPressed: () {},
+        ),
+      ],
     );
   }
 
