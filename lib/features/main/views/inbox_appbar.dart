@@ -20,17 +20,6 @@ class InboxAppBar extends StatelessWidget {
     return AppBarComp(
       title: title,
       leading: _leading(context),
-      actions: [
-        IconButton(
-          icon: SvgPicture.asset(
-            "assets/images/icons/_common/ellipsis.svg",
-            width: 26,
-            height: 26,
-            color: ColorsExt.grey2(context),
-          ),
-          onPressed: () {},
-        ),
-      ],
     );
   }
 

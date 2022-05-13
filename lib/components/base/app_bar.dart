@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/components/base/space.dart';
+import 'package:mobile/components/base/sync_progress.dart';
 import 'package:mobile/style/colors.dart';
 
 class AppBarComp extends StatelessWidget {
@@ -26,31 +27,27 @@ class AppBarComp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Column(
-          children: [
-            Space(MediaQuery.of(context).padding.top + 6),
-            Row(
-              children: [
-                const Space(16),
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _buildLeading(context),
-                      _buildTitle(context),
-                      const Spacer(),
-                      _buildActions(context),
-                    ],
-                  ),
+      children: [
+        Space(MediaQuery.of(context).padding.top),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.5),
+          child: Row(
+            children: [
+              const Space(16),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildLeading(context),
+                    _buildTitle(context),
+                    const Spacer(),
+                    _buildActions(context),
+                  ],
                 ),
-                const Space(16),
-              ],
-            ),
-            const Space(2),
-          ],
+              ),
+              const Space(16),
+            ],
+          ),
         ),
       ],
     );
@@ -118,7 +115,7 @@ class AppBarComp extends StatelessWidget {
   Widget _buildActions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [Container(width: 16), ...actions],
+      children: [Container(width: 16), ...actions, const SyncProgress()],
     );
   }
 }

@@ -7,15 +7,16 @@ class SyncStatusItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, state) {
-        if (state.loading == false) {
-          return const SizedBox();
-        }
+    return SizedBox(
+      height: 20,
+      width: double.infinity,
+      child: BlocBuilder<TasksCubit, TasksCubitState>(
+        builder: (context, state) {
+          if (state.loading == false) {
+            return const SizedBox();
+          }
 
-        return Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
+          return Row(
             children: [
               Expanded(
                 child: Text(
@@ -26,15 +27,10 @@ class SyncStatusItem extends StatelessWidget {
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
-              const SizedBox(
-                height: 16,
-                width: 16,
-                child: CircularProgressIndicator(strokeWidth: 1),
-              ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

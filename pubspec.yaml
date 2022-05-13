@@ -18,7 +18,10 @@ dependencies:
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_slidable: ^1.2.0
+  flutter_slidable: # TODO use official package when updated (temporary fix flutter 3.0 lint errors)
+    git:
+      url: https://github.com/bct-fbo/flutter_slidable.git
+      ref: flutter-3.0-update
   flutter_svg: ^1.0.3
   flutter_widget_from_html: ^0.8.5
   get_it: ^7.2.0
@@ -34,7 +37,7 @@ dependencies:
   package_info_plus: ^1.4.2
   path: ^1.8.0
   path_provider: ^2.0.9
-  reorderables: ^0.4.4
+  reorderables: ^0.5.0
   rrule: ^0.2.8
   sentry_flutter: ^6.4.0
   shared_preferences: ^2.0.13
@@ -45,8 +48,8 @@ dependencies:
   uuid: ^3.0.6
 
 dev_dependencies:
-  flutter_launcher_icons_maker: "^0.10.1"
-  flutter_lints: ^1.0.4
+  flutter_launcher_icons_maker: ^0.10.1
+  flutter_lints: ^2.0.1
   flutter_native_splash: ^2.1.3+1
   flutter_test:
     sdk: flutter
