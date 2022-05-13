@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/api/api.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/exceptions/api_exception.dart';
+import 'package:mobile/exceptions/post_unsynced_exception.dart';
 import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
@@ -72,21 +72,23 @@ class SyncService {
 
     unsynced = await compute(prepareItemsForRemote, unsynced);
 
-    try {
-      setSyncStatusIfNotNull("posting to api ${unsynced.length} items");
+    setSyncStatusIfNotNull("posting to api ${unsynced.length} items");
 
-      List<dynamic> updated = await api.post(unsynced: unsynced);
+    List<dynamic> updated = await api.post(unsynced: unsynced);
 
-      setSyncStatusIfNotNull("posted to api ${updated.length} items");
-
-      if (updated.isNotEmpty) {
-        await _upsertItems(updated);
-      }
-
-      setSyncStatusIfNotNull("local to remote: done");
-    } on ApiException catch (e) {
-      setSyncStatusIfNotNull("error posting to api: ${e.message}");
+    if (unsynced.length != updated.length) {
+      throw PostUnsyncedExcepotion(
+        "Upserted ${unsynced.length} items, but ${updated.length} items were updated",
+      );
     }
+
+    setSyncStatusIfNotNull("posted to api ${updated.length} items");
+
+    if (updated.isNotEmpty) {
+      await _upsertItems(updated);
+    }
+
+    setSyncStatusIfNotNull("local to remote: done");
   }
 
   Future<void> _upsertItems<T>(List<dynamic> remoteItems) async {
@@ -140,24 +142,15 @@ class SyncService {
   }
 
   Future<bool> _addRemoteTaskToLocalDb(itemsToInsert) async {
-    try {
-      List<Object?> result = await databaseRepository.add(itemsToInsert);
+    List<Object?> result = await databaseRepository.add(itemsToInsert);
 
-      _sentryService.addBreadcrumb(
-        category: "sync",
-        message: 'databaseRepository add result: ${result.length} items',
-      );
+    _sentryService.addBreadcrumb(
+      category: "sync",
+      message: 'databaseRepository add result: ${result.length} items',
+    );
 
-      if (result.isEmpty) {
-        throw UpsertDatabaseException('result empty');
-      }
-    } catch (e) {
-      _sentryService.addBreadcrumb(
-        category: "sync",
-        message: '${api.runtimeType}: upsert item, exception: $e',
-      );
-
-      return true;
+    if (result.isEmpty) {
+      throw UpsertDatabaseException('result empty');
     }
 
     return false;
