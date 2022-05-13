@@ -61,6 +61,8 @@
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Dependencies requirements</string>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-</dict>
+		<true/>
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
+	</dict>
 </plist>
