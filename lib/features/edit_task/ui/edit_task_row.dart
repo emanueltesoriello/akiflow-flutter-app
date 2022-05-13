@@ -79,6 +79,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
         fontSize: 17,
         fontWeight: FontWeight.w400,
       ),
+      onChanged: (String value) {
+        context.read<EditTaskCubit>().onDescriptionChanged(value);
+      },
     );
   }
 
@@ -124,6 +127,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
         fontSize: 20,
         fontWeight: FontWeight.w500,
       ),
+      onChanged: (value) {
+        context.read<EditTaskCubit>().onTitleChanged(value);
+      },
     );
   }
 

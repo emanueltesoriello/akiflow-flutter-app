@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/core/locator.dart';
@@ -310,5 +312,45 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(newTask: updated));
 
     _updateUiRepositoryAndSync(updated);
+  }
+
+  Timer? _timer;
+
+  void onTitleChanged(String value) {
+    if (_timer != null) {
+      _timer?.cancel();
+    }
+
+    _timer = Timer(const Duration(seconds: 1), () {
+      _timer = null;
+
+      Task updated = state.newTask.copyWith(
+        title: value,
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      );
+
+      emit(state.copyWith(newTask: updated));
+
+      _updateUiRepositoryAndSync(updated);
+    });
+  }
+
+  void onDescriptionChanged(String value) {
+    if (_timer != null) {
+      _timer?.cancel();
+    }
+
+    _timer = Timer(const Duration(seconds: 1), () {
+      _timer = null;
+
+      Task updated = state.newTask.copyWith(
+        description: value,
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      );
+
+      emit(state.copyWith(newTask: updated));
+
+      _updateUiRepositoryAndSync(updated);
+    });
   }
 }
