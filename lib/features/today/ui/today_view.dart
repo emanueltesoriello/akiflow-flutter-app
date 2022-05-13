@@ -43,7 +43,7 @@ class _View extends StatelessWidget {
               !element.isCompletedComputed &&
               element.isSameDateOf(selectedDate))
           .toList();
-      completed = List.from(todayTasks.where((element) => element.isCompletedComputed && element.isTodayOrBefore));
+      completed = List.from(todayTasks.where((element) => element.isCompletedComputed && element.isToday));
     } else {
       todos = List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
       pinned = todayTasks
