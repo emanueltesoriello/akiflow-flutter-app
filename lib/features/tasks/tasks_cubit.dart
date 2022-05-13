@@ -339,7 +339,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     required List<Task> newTasksListOrdered,
     required TaskListSorting sorting,
   }) async {
-    List<Task> updated = state.inboxTasks.toList();
+    List<Task> updated = newTasksListOrdered.toList();
 
     Task task = updated.removeAt(oldIndex);
 
@@ -352,16 +352,18 @@ class TasksCubit extends Cubit<TasksCubitState> {
       updated = updated.reversed.toList();
     }
 
-    List<Task> ordered = updated
-        .map((t) => t.copyWith(
-              sorting: millis - (1 * updated.indexWhere((e) => e.id == t.id) + 1),
-              updatedAt: Nullable(now.toIso8601String()),
-              selected: false,
-            ))
-        .toList();
+    for (int i = 0; i < updated.length; i++) {
+      Task updatedTask = updated[i];
 
-    for (Task task in ordered) {
-      await _tasksRepository.updateById(task.id, data: task);
+      updatedTask = updatedTask.copyWith(
+        sorting: millis - (i * 1),
+        updatedAt: Nullable(now.toIso8601String()),
+        selected: false,
+      );
+
+      updateUiOfTask(updatedTask);
+
+      await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
     }
 
     clearSelected();
