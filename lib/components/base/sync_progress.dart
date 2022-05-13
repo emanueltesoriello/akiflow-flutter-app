@@ -20,6 +20,13 @@ class _SyncProgressState extends State<SyncProgress> with SingleTickerProviderSt
       duration: const Duration(seconds: 2),
       vsync: this,
     );
+
+    bool loading = context.read<TasksCubit>().state.loading;
+
+    if (loading) {
+      _controller.forward();
+    }
+
     super.initState();
   }
 
