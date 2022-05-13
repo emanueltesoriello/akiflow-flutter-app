@@ -441,9 +441,8 @@ class TaskRow extends StatelessWidget {
       return const SizedBox();
     }
 
-    return Row(
+    return Wrap(
       children: [
-        const SizedBox(width: 12),
         AkiChip(
           icon: "assets/images/icons/_common/number.svg",
           text: label.title,
