@@ -8,6 +8,7 @@ import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/components/base/button_action.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -50,11 +51,18 @@ class TaskRow extends StatelessWidget {
       startActionPane: _startActions(context),
       endActionPane: _endActions(context),
       child: InkWell(
-        onTap: () {
-          showCupertinoModalBottomSheet(
+        onTap: () async {
+          EditTaskCubit editTaskCubit = EditTaskCubit(context.read<TasksCubit>(), task: task);
+
+          await showCupertinoModalBottomSheet(
             context: context,
-            builder: (context) => EditTaskModal(task: task),
+            builder: (context) => BlocProvider(
+              create: (context) => editTaskCubit,
+              child: const EditTaskModal(),
+            ),
           );
+
+          editTaskCubit.modalDismissed();
         },
         child: Container(
           constraints: const BoxConstraints(minHeight: 78),

@@ -1,6 +1,6 @@
 part of 'tasks_cubit.dart';
 
-enum UndoType { markDone, markUndone, delete, restore, plan, snooze, moveToInbox }
+enum UndoType { markDone, markUndone, delete, restore, plan, snooze, moveToInbox, updated }
 
 extension UndoTypeExtension on UndoType {
   String get text {
@@ -19,6 +19,8 @@ extension UndoTypeExtension on UndoType {
         return t.task.undoActions.snoozed;
       case UndoType.moveToInbox:
         return t.task.undoActions.movedToInbox;
+      case UndoType.updated:
+        return t.task.undoActions.updated;
     }
   }
 }

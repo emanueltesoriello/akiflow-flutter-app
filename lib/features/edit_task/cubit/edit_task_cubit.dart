@@ -20,36 +20,34 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   final TasksCubit _tasksCubit;
 
   TaskStatusType? lastDoneTaskStatus;
-  bool isCreateMode;
 
   EditTaskCubit(
     this._tasksCubit, {
     Task? task,
     TaskStatusType? taskStatusType,
     DateTime? date,
-    required this.isCreateMode,
-  }) : super(
-          EditTaskCubitState(
-            newTask: task ??
-                const Task().copyWith(
-                  id: const Uuid().v4(),
-                  status: taskStatusType != null ? taskStatusType.id : task?.status,
-                  date: Nullable(
-                      (taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
-                ),
-          ),
+  }) : super(EditTaskCubitState(
+          originalTask: _buildTask(task, taskStatusType, date),
+          updatedTask: _buildTask(task, taskStatusType, date),
+        ));
+
+  static Task _buildTask(Task? task, TaskStatusType? taskStatusType, DateTime? date) {
+    return task ??
+        const Task().copyWith(
+          id: const Uuid().v4(),
+          status: taskStatusType != null ? taskStatusType.id : task?.status,
+          date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
         );
+  }
 
   void setRead() {
     DateTime now = DateTime.now().toUtc();
 
-    Task updated = state.newTask.copyWith(
+    Task updated = state.updatedTask.copyWith(
       readAt: now.toIso8601String(),
     );
 
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   Future<void> create({
@@ -58,7 +56,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }) async {
     DateTime now = DateTime.now().toUtc();
 
-    Task updated = state.newTask.copyWith(
+    Task updated = state.updatedTask.copyWith(
       title: title,
       description: description,
       updatedAt: Nullable(now.toIso8601String()),
@@ -67,7 +65,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       readAt: now.toIso8601String(),
     );
 
-    emit(state.copyWith(newTask: updated));
+    emit(state.copyWith(updatedTask: updated));
 
     await _tasksRepository.add([updated]);
 
@@ -83,7 +81,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }) async {
     emit(state.copyWith(selectedDate: date));
 
-    Task task = state.newTask;
+    Task task = state.updatedTask;
 
     Task updated = task.copyWith(
       date: Nullable(date?.toIso8601String()),
@@ -92,17 +90,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void setDuration(double value) {
     emit(state.copyWith(selectedDuration: value));
 
-    Task task = state.newTask;
+    Task task = state.updatedTask;
 
     double seconds = value * 3600;
 
@@ -111,27 +105,19 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void toggleDuration() {
     emit(state.copyWith(setDuration: !state.setDuration));
 
     if (state.setDuration == false) {
-      Task updated = state.newTask.copyWith(
+      Task updated = state.updatedTask.copyWith(
         duration: Nullable(null),
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
-      emit(state.copyWith(newTask: updated));
-
-      if (isCreateMode == false) {
-        _updateUiRepositoryAndSync(updated);
-      }
+      emit(state.copyWith(updatedTask: updated));
     }
   }
 
@@ -140,7 +126,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setLabel(Label label) {
-    Task updated = state.newTask.copyWith(
+    Task updated = state.updatedTask.copyWith(
       listId: label.id,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
@@ -148,20 +134,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(
       selectedLabel: label,
       showLabelsList: false,
-      newTask: updated,
+      updatedTask: updated,
     ));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
   }
 
   void markAsDone() {
-    Task task = state.newTask;
-
-    if (isCreateMode == false) {
-      _tasksCubit.addToUndoQueue([task], task.isCompletedComputed ? UndoType.markUndone : UndoType.markDone);
-    }
+    Task task = state.updatedTask;
 
     Task updated = task.markAsDone(
       lastDoneTaskStatus: lastDoneTaskStatus,
@@ -170,32 +148,20 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       },
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void removeLink(String link) {
-    Task updated = state.newTask.copyWith(
-      links: (state.newTask.links ?? []).where((l) => l != link).toList(),
+    Task updated = state.updatedTask.copyWith(
+      links: (state.updatedTask.links ?? []).where((l) => l != link).toList(),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   Future<void> delete() async {
-    Task task = state.newTask;
-
-    if (isCreateMode == false) {
-      _tasksCubit.addToUndoQueue([task], UndoType.delete);
-    }
+    Task task = state.updatedTask;
 
     Task updated = task.copyWith(
       status: TaskStatusType.deleted.id,
@@ -203,47 +169,35 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void setDeadline(DateTime? date) {
-    Task task = state.newTask;
+    Task task = state.updatedTask;
 
     Task updated = task.copyWith(
       dueDate: Nullable(date?.toIso8601String()),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void toggleDailyGoal() {
-    Task task = state.newTask;
+    Task task = state.updatedTask;
 
     int currentDailyGoal = task.dailyGoal ?? 0;
 
-    Task updated = state.newTask.copyWith(
+    Task updated = state.updatedTask.copyWith(
       dailyGoal: currentDailyGoal == 0 ? 1 : 0,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void changePriority() {
-    Task task = state.newTask;
+    Task task = state.updatedTask;
 
     int currentPriority = task.priority ?? 0;
 
@@ -262,11 +216,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void setRecurrence(RecurrenceRule? rule) {
@@ -277,22 +227,18 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       recurrence = recurrenceString.split(';');
     }
 
-    Task updated = state.newTask.copyWith(
+    Task updated = state.updatedTask.copyWith(
       recurrence: Nullable(recurrence),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    if (isCreateMode == false) {
-      _updateUiRepositoryAndSync(updated);
-    }
+    emit(state.copyWith(updatedTask: updated));
   }
 
   Future<void> duplicate() async {
     DateTime? now = DateTime.now().toUtc();
 
-    Task task = state.newTask;
+    Task task = state.updatedTask;
 
     Task newTaskDuplicated = task.copyWith(
       id: const Uuid().v4(),
@@ -308,54 +254,33 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.syncAll();
   }
 
-  Timer? _timer;
-
   void onTitleChanged(String value) {
-    if (_timer != null) {
-      _timer?.cancel();
-    }
-
-    Task updated = state.newTask.copyWith(
+    Task updated = state.updatedTask.copyWith(
       title: value,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    _timer = Timer(const Duration(seconds: 1), () {
-      _timer = null;
-
-      if (isCreateMode == false) {
-        _updateUiRepositoryAndSync(updated);
-      }
-    });
+    emit(state.copyWith(updatedTask: updated));
   }
 
   void onDescriptionChanged(String value) {
-    if (_timer != null) {
-      _timer?.cancel();
-    }
-
-    Task updated = state.newTask.copyWith(
+    Task updated = state.updatedTask.copyWith(
       description: value,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(newTask: updated));
-
-    _timer = Timer(const Duration(seconds: 1), () {
-      _timer = null;
-
-      if (isCreateMode == false) {
-        _updateUiRepositoryAndSync(updated);
-      }
-    });
+    emit(state.copyWith(updatedTask: updated));
   }
 
-  _updateUiRepositoryAndSync(Task task) async {
-    _tasksCubit.updateUiOfTask(task);
+  modalDismissed() async {
+    Task originalTask = state.originalTask;
+    Task updatedTask = state.updatedTask;
 
-    await _tasksRepository.updateById(task.id!, data: task);
+    _tasksCubit.addToUndoQueue([originalTask], UndoType.updated);
+
+    _tasksCubit.updateUiOfTask(updatedTask);
+
+    await _tasksRepository.updateById(updatedTask.id!, data: updatedTask);
 
     _tasksCubit.syncAll();
   }

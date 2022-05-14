@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 114 
+ * Strings: 115 
  *
- * Built on 2022-05-14 at 11:32 UTC
+ * Built on 2022-05-14 at 11:38 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -535,6 +535,7 @@ class _StringsTaskUndoActionsEn {
 	String get planned => 'Task planned';
 	String get snoozed => 'Task snoozed';
 	String get movedToInbox => 'Task moved to inbox';
+	String get updated => 'Task updated';
 }
 
 /// Flat map(s) containing all translations.
@@ -618,6 +619,7 @@ extension on _StringsEn {
 			'task.undoActions.planned': 'Task planned',
 			'task.undoActions.snoozed': 'Task snoozed',
 			'task.undoActions.movedToInbox': 'Task moved to inbox',
+			'task.undoActions.updated': 'Task updated',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

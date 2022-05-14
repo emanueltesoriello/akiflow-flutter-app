@@ -8,38 +8,15 @@ import 'package:mobile/features/edit_task/ui/edit_task_linked_content.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_links.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_row.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_top_actions.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/utils/task_extension.dart';
-import 'package:models/task/task.dart';
 
-class EditTaskModal extends StatelessWidget {
-  final Task? task;
-  final TaskStatusType? taskStatusType;
-
-  const EditTaskModal({
-    Key? key,
-    this.task,
-    this.taskStatusType,
-  }) : super(key: key);
+class EditTaskModal extends StatefulWidget {
+  const EditTaskModal({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          EditTaskCubit(context.read<TasksCubit>(), task: task, taskStatusType: taskStatusType, isCreateMode: false),
-      child: const EditTaskModalView(),
-    );
-  }
+  State<EditTaskModal> createState() => _EditTaskModalState();
 }
 
-class EditTaskModalView extends StatefulWidget {
-  const EditTaskModalView({Key? key}) : super(key: key);
-
-  @override
-  State<EditTaskModalView> createState() => _EditTaskModalViewState();
-}
-
-class _EditTaskModalViewState extends State<EditTaskModalView> {
+class _EditTaskModalState extends State<EditTaskModal> {
   @override
   void initState() {
     context.read<EditTaskCubit>().setRead();

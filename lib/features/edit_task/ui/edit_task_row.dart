@@ -29,8 +29,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   @override
   void initState() {
-    _titleController.text = context.read<EditTaskCubit>().state.newTask.title ?? '';
-    _descriptionController.text = context.read<EditTaskCubit>().state.newTask.description ?? '';
+    _titleController.text = context.read<EditTaskCubit>().state.updatedTask.title ?? '';
+    _descriptionController.text = context.read<EditTaskCubit>().state.updatedTask.description ?? '';
     super.initState();
   }
 
@@ -86,7 +86,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _thirdLine(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
+    Task task = context.watch<EditTaskCubit>().state.updatedTask;
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -134,7 +134,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   InkWell _checkbox(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
+    Task task = context.watch<EditTaskCubit>().state.updatedTask;
 
     return InkWell(
       onTap: () {
@@ -154,7 +154,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _status(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
+    Task task = context.watch<EditTaskCubit>().state.updatedTask;
 
     void statusClick() {
       print(task.status);
@@ -195,7 +195,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _label(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
+    Task task = context.watch<EditTaskCubit>().state.updatedTask;
 
     List<Label> labels = context.watch<TasksCubit>().state.labels;
 

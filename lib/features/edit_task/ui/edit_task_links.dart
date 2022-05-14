@@ -14,7 +14,7 @@ class EditTaskLinks extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
-        List<String> links = state.newTask.links?.toList() ?? [];
+        List<String> links = state.updatedTask.links?.toList() ?? [];
 
         if (links.isEmpty || links.every((element) => element.isEmpty)) {
           return const SizedBox();

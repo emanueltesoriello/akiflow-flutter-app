@@ -28,7 +28,7 @@ class EditTaskBottomActions extends StatefulWidget {
 class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
   @override
   Widget build(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
+    Task task = context.watch<EditTaskCubit>().state.updatedTask;
 
     return Container(
       constraints: const BoxConstraints(minHeight: 64),
@@ -77,7 +77,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                   child: DeadlineModal(
                     initialDate: () {
                       try {
-                        return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
+                        return DateTime.tryParse(context.watch<EditTaskCubit>().state.updatedTask.dueDate!);
                       } catch (_) {
                         return null;
                       }

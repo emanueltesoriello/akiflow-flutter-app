@@ -28,7 +28,7 @@ class EditTaskLinkedContent extends StatelessWidget {
       builder: (context, state) {
         List<Doc> docs = context.watch<TasksCubit>().state.docs;
 
-        Task task = state.newTask;
+        Task task = state.updatedTask;
 
         Doc? doc = docs.firstWhereOrNull(
           (doc) => doc.taskId == task.id,
@@ -93,8 +93,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                     Expanded(
                       child: Text(
                         docWithType.getLinkedContentSummary,
-                        style: TextStyle(
-                            fontSize: 17, color: ColorsExt.grey2(context)),
+                        style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
                       ),
                     ),
                     const SizedBox(width: 10),

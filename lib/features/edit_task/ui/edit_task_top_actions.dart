@@ -26,7 +26,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
       child: Row(
         children: [
           PlanForAction(
-            task: context.watch<EditTaskCubit>().state.newTask,
+            task: context.watch<EditTaskCubit>().state.updatedTask,
             onTap: () {
               EditTaskCubit cubit = context.read<EditTaskCubit>();
 
@@ -53,7 +53,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
           const SizedBox(width: 8),
           BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
-              Task task = state.newTask;
+              Task task = state.updatedTask;
 
               String? text;
 
@@ -78,10 +78,10 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             builder: (context, state) {
               return AddTaskActionItem(
                 leadingIconAsset: "assets/images/icons/_common/repeat.svg",
-                color: state.newTask.recurrence != null && state.newTask.recurrence!.isNotEmpty
+                color: state.updatedTask.recurrence != null && state.updatedTask.recurrence!.isNotEmpty
                     ? ColorsExt.grey6(context)
                     : ColorsExt.grey3(context),
-                active: state.newTask.recurrence != null && state.newTask.recurrence!.isNotEmpty,
+                active: state.updatedTask.recurrence != null && state.updatedTask.recurrence!.isNotEmpty,
                 onPressed: () {
                   var cubit = context.read<EditTaskCubit>();
 
@@ -91,7 +91,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                       onChange: (RecurrenceRule? rule) {
                         cubit.setRecurrence(rule);
                       },
-                      selectedRecurrence: state.newTask.recurrenceComputed,
+                      selectedRecurrence: state.updatedTask.recurrenceComputed,
                     ),
                   );
                 },

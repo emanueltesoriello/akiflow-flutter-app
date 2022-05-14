@@ -85,7 +85,8 @@
       "restored": "Task restored",
       "planned": "Task planned",
       "snoozed": "Task snoozed",
-      "movedToInbox": "Task moved to inbox"
+      "movedToInbox": "Task moved to inbox",
+      "updated": "Task updated"
     }
   },
   "errors": {

@@ -135,7 +135,7 @@ class BottomTaskActions extends StatelessWidget {
                           child: DeadlineModal(
                             initialDate: () {
                               try {
-                                return DateTime.tryParse(context.watch<EditTaskCubit>().state.newTask.dueDate!);
+                                return DateTime.tryParse(context.watch<EditTaskCubit>().state.updatedTask.dueDate!);
                               } catch (_) {
                                 return null;
                               }
