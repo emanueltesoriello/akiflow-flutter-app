@@ -58,18 +58,57 @@ class TaskRow extends StatelessWidget {
         },
         child: Container(
           constraints: const BoxConstraints(minHeight: 78),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
           color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Builder(builder: (context) {
-                if (selectMode) {
-                  return _radio(context);
-                } else {
-                  return _checkbox();
-                }
-              }),
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: Builder(
+                  builder: (context) {
+                    Color? color;
+
+                    try {
+                      if (task.content["expiredSnooze"] == true) {
+                        color = ColorsExt.pink(context);
+                      }
+                    } catch (_) {}
+
+                    if (task.readAt == null) {
+                      color = ColorsExt.cyan(context);
+                    }
+
+                    if (color == null) {
+                      return const SizedBox();
+                    }
+
+                    return Center(
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.all(16 - 10),
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: Builder(builder: (context) {
+                  if (selectMode) {
+                    return _radio(context);
+                  } else {
+                    return _checkbox();
+                  }
+                }),
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(

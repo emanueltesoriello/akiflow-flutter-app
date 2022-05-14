@@ -38,11 +38,19 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
                       (taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
                 ),
           ),
-        ) {
-    _init();
-  }
+        );
 
-  _init() async {}
+  void setRead() {
+    DateTime now = DateTime.now().toUtc();
+
+    Task updated = state.newTask.copyWith(
+      readAt: now.toIso8601String(),
+    );
+
+    if (isCreateMode == false) {
+      _updateUiRepositoryAndSync(updated);
+    }
+  }
 
   Future<void> create({
     required String title,
@@ -56,6 +64,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(now.toIso8601String()),
       createdAt: (now.toIso8601String()),
       listId: state.selectedLabel?.id,
+      readAt: now.toIso8601String(),
     );
 
     emit(state.copyWith(newTask: updated));
@@ -151,7 +160,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.newTask;
 
     if (isCreateMode == false) {
-      _tasksCubit.addToUndoQueue(task, task.isCompletedComputed ? UndoType.markUndone : UndoType.markDone);
+      _tasksCubit.addToUndoQueue([task], task.isCompletedComputed ? UndoType.markUndone : UndoType.markDone);
     }
 
     Task updated = task.markAsDone(
@@ -185,7 +194,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.newTask;
 
     if (isCreateMode == false) {
-      _tasksCubit.addToUndoQueue(task, task.isCompletedComputed ? UndoType.markUndone : UndoType.markDone);
+      _tasksCubit.addToUndoQueue([task], UndoType.delete);
     }
 
     Task updated = task.copyWith(

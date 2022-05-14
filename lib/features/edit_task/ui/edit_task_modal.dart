@@ -41,6 +41,12 @@ class EditTaskModalView extends StatefulWidget {
 
 class _EditTaskModalViewState extends State<EditTaskModalView> {
   @override
+  void initState() {
+    context.read<EditTaskCubit>().setRead();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,

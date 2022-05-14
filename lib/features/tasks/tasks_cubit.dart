@@ -126,9 +126,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     tasksSelected.addAll(state.todayTasks.where((t) => t.selected ?? false).toList());
 
-    for (Task taskSelected in tasksSelected) {
-      addToUndoQueue(taskSelected, taskSelected.isCompletedComputed ? UndoType.markUndone : UndoType.markDone);
+    addToUndoQueue(tasksSelected, UndoType.markDone);
 
+    for (Task taskSelected in tasksSelected) {
       Task updated = taskSelected.copyWith();
 
       updated = updated.markAsDone(
@@ -182,6 +182,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> delete() async {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+
+    addToUndoQueue(tasksSelected, UndoType.delete);
 
     List<Task> updated = state.inboxTasks.toList();
 
@@ -395,30 +397,40 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncAll();
   }
 
-  Future<void> addToUndoQueue(Task task, UndoType type) async {
+  Future<void> addToUndoQueue(List<Task> originalTasks, UndoType type) async {
     List<UndoTask> queue = List.from(state.queue);
 
-    queue.add(UndoTask(task, type));
+    for (var task in originalTasks) {
+      queue.add(UndoTask(task, type));
+    }
 
     emit(state.copyWith(queue: queue));
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 7));
 
-    queue.removeWhere((element) => element.task.id == task.id);
-
-    emit(state.copyWith(queue: List.from(queue)));
+    emit(state.copyWith(queue: []));
   }
 
-  void undo() {
+  Future<void> undo() async {
     List<UndoTask> queue = state.queue.toList();
-    Task undoTask = queue.removeLast().task;
 
     List<Task> inbox = List.from(state.inboxTasks);
     List<Task> today = List.from(state.todayTasks);
 
-    List<Task> newInbox = inbox.map((t) => t.id == undoTask.id ? undoTask : t).toList();
-    List<Task> newToday = today.map((t) => t.id == undoTask.id ? undoTask : t).toList();
+    for (var element in queue) {
+      inbox = inbox.map((t) => t.id == element.task.id ? element.task : t).toList();
+      today = today.map((t) => t.id == element.task.id ? element.task : t).toList();
+    }
 
-    emit(state.copyWith(inboxTasks: newInbox, todayTasks: newToday, queue: queue));
+    emit(state.copyWith(inboxTasks: inbox, todayTasks: today, queue: []));
+
+    for (var element in queue) {
+      Task updated = element.task.copyWith(
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      );
+      await _tasksRepository.updateById(updated.id, data: updated);
+    }
+
+    syncAll();
   }
 }

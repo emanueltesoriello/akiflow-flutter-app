@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:models/base.dart';
@@ -34,6 +36,7 @@ class Task extends Equatable implements Base {
   final int? dailyGoal;
   final List<String>? links;
   final List<String>? recurrence;
+  final dynamic content;
 
   const Task({
     this.id,
@@ -65,6 +68,7 @@ class Task extends Equatable implements Base {
     this.dailyGoal,
     this.links,
     this.recurrence,
+    this.content,
   });
 
   Task copyWith({
@@ -97,6 +101,7 @@ class Task extends Equatable implements Base {
     Nullable<List<String>?>? recurrence,
     Nullable<String?>? updatedAt,
     Nullable<String?>? remoteUpdatedAt,
+    dynamic content,
   }) {
     return Task(
       id: id ?? this.id,
@@ -128,6 +133,7 @@ class Task extends Equatable implements Base {
       recurrence: recurrence == null ? this.recurrence : recurrence.value,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
       remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+      content: content ?? this.content,
     );
   }
 
@@ -164,6 +170,7 @@ class Task extends Equatable implements Base {
       'dailyGoal': dailyGoal,
       'links': (links == null || links!.isEmpty) ? null : List<dynamic>.from(links!.map((x) => x)),
       'recurrence': (recurrence == null || recurrence!.isEmpty) ? null : List<dynamic>.from(recurrence!.map((x) => x)),
+      'content': content,
     };
   }
 
@@ -198,6 +205,7 @@ class Task extends Equatable implements Base {
       dailyGoal: map['dailyGoal'] != null ? map['dailyGoal'] as int : null,
       links: map['links'] != null ? List<String>.from(map['links'] as List<dynamic>) : null,
       recurrence: map['recurrence'] != null ? List<String>.from(map['recurrence'] as List<dynamic>) : null,
+      content: map['content'] != null ? map['content'] as dynamic : null,
     );
   }
 
@@ -229,6 +237,7 @@ class Task extends Equatable implements Base {
       "links": (links == null || links!.isEmpty) ? null : links?.toList().join(';'),
       "daily_goal": dailyGoal,
       "recurrence": (recurrence == null || recurrence!.isEmpty) ? null : recurrence?.toList().join(';'),
+      "content": content != null ? jsonEncode(content) : null,
     };
   }
 
@@ -259,6 +268,10 @@ class Task extends Equatable implements Base {
       String object = data["recurrence"] as String;
       recurrenceList = Nullable(object.split(';'));
       data.remove("recurrence");
+    }
+
+    if (data.containsKey("content") && data["content"] != null) {
+      data["content"] = jsonDecode(data["content"] as String);
     }
 
     Task task = Task.fromMap(data);
@@ -299,6 +312,8 @@ class Task extends Equatable implements Base {
       selected,
       dailyGoal,
       links,
+      recurrence,
+      content,
     ];
   }
 }
