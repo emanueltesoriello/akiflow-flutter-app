@@ -35,7 +35,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     return task ??
         const Task().copyWith(
           id: const Uuid().v4(),
-          status: taskStatusType != null ? taskStatusType.id : task?.status,
+          status: taskStatusType != null ? Nullable(taskStatusType.id) : Nullable(task?.status),
           date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
         );
   }
@@ -78,6 +78,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     DateTime? date, {
     DateTime? dateTime,
     required TaskStatusType statusType,
+    bool forceUpdate = false,
   }) async {
     emit(state.copyWith(selectedDate: date));
 
@@ -86,11 +87,17 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task updated = task.copyWith(
       date: Nullable(date?.toIso8601String()),
       datetime: dateTime?.toIso8601String(),
-      status: statusType.id,
+      status: Nullable(statusType.id),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     emit(state.copyWith(updatedTask: updated));
+
+    if (forceUpdate) {
+      _tasksCubit.updateUiOfTask(updated);
+      await _tasksRepository.updateById(updated.id!, data: updated);
+      _tasksCubit.syncAll();
+    }
   }
 
   void setDuration(double value) {
@@ -125,7 +132,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(showLabelsList: !state.showLabelsList));
   }
 
-  void setLabel(Label label) {
+  Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
       listId: label.id,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
@@ -136,9 +143,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       showLabelsList: false,
       updatedTask: updated,
     ));
+
+    if (forceUpdate) {
+      _tasksCubit.updateUiOfTask(updated);
+      await _tasksRepository.updateById(updated.id!, data: updated);
+      _tasksCubit.syncAll();
+    }
   }
 
-  void markAsDone() {
+  Future<void> markAsDone({bool forceUpdate = false}) async {
     Task task = state.updatedTask;
 
     Task updated = task.markAsDone(
@@ -149,6 +162,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
+
+    if (forceUpdate) {
+      _tasksCubit.updateUiOfTask(updated);
+      await _tasksRepository.updateById(updated.id!, data: updated);
+      _tasksCubit.syncAll();
+    }
   }
 
   void removeLink(String link) {
@@ -164,7 +183,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
-      status: TaskStatusType.deleted.id,
+      status: Nullable(TaskStatusType.deleted.id),
       deletedAt: (DateTime.now().toUtc().toIso8601String()),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );

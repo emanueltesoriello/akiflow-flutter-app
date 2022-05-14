@@ -100,7 +100,7 @@ class TaskList extends StatelessWidget {
                     },
                     selectMode: tasks.any((element) => element.selected ?? false),
                     completedClick: () {
-                      editTaskCubit.markAsDone();
+                      editTaskCubit.markAsDone(forceUpdate: true);
                     },
                     swipeActionPlanClick: () {
                       _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
@@ -110,7 +110,7 @@ class TaskList extends StatelessWidget {
                         context: context,
                         builder: (context) => LabelsModal(
                           selectLabel: (Label label) {
-                            editTaskCubit.setLabel(label);
+                            editTaskCubit.setLabel(label, forceUpdate: true);
                           },
                         ),
                       );
@@ -141,6 +141,7 @@ class TaskList extends StatelessWidget {
               date,
               dateTime: datetime,
               statusType: statusType,
+              forceUpdate: true,
             );
           },
           setForInbox: () {
@@ -148,6 +149,7 @@ class TaskList extends StatelessWidget {
               null,
               dateTime: null,
               statusType: TaskStatusType.inbox,
+              forceUpdate: true,
             );
           },
           setForSomeday: () {
@@ -155,6 +157,7 @@ class TaskList extends StatelessWidget {
               null,
               dateTime: null,
               statusType: TaskStatusType.someday,
+              forceUpdate: true,
             );
           },
         ),

@@ -403,14 +403,14 @@ extension TaskExt on Task {
         done: true,
         doneAt: Nullable(now.toIso8601String()),
         updatedAt: Nullable(now.toIso8601String()),
-        status: TaskStatusType.completed.id,
+        status: Nullable(TaskStatusType.completed.id),
       );
     } else {
       updated = copyWith(
         done: false,
         doneAt: Nullable(null),
         updatedAt: Nullable(now.toIso8601String()),
-        status: lastDoneTaskStatus?.id,
+        status: Nullable(lastDoneTaskStatus != TaskStatusType.completed ? lastDoneTaskStatus?.id : null),
       );
     }
 
