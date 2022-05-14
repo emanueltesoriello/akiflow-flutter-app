@@ -120,7 +120,7 @@ class BottomTaskActions extends StatelessWidget {
                 onSelected: (BottomTaskAdditionalActions result) {
                   switch (result) {
                     case BottomTaskAdditionalActions.moveToInbox:
-                      context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
+                      context.read<TasksCubit>().moveToInbox();
                       break;
                     case BottomTaskAdditionalActions.planForToday:
                       context

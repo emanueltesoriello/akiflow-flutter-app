@@ -370,6 +370,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }
 
+  void moveToInbox() {
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+
+    addToUndoQueue(tasksSelected, UndoType.moveToInbox);
+
+    planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
+  }
+
   Future<void> planFor(
     DateTime? date, {
     required DateTime? dateTime,
@@ -383,6 +391,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         datetime: dateTime?.toIso8601String(),
         status: statusType.id,
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        selected: false,
       );
 
       updateUiOfTask(updated);
