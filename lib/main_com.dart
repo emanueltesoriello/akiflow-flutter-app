@@ -115,63 +115,131 @@ class Application extends StatelessWidget {
           debugShowCheckedModeBanner: Config.development,
           navigatorObservers: [routeObserver],
           theme: lightTheme,
-          home: BlocListener<DialogCubit, DialogState>(
-            listener: (context, state) {
-              if (state is DialogShowMessage) {
-                if (dialogShown) {
-                  return;
-                }
+          home: _Home(userLogged: userLogged)),
+    );
+  }
+}
 
-                dialogShown = true;
+class _Home extends StatelessWidget {
+  const _Home({
+    Key? key,
+    required this.userLogged,
+  }) : super(key: key);
 
-                Timer(
-                  const Duration(milliseconds: 1000),
-                  () {
-                    dialogShown = false;
-                  },
-                );
+  final bool userLogged;
 
-                showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    title: Text(state.action.title, style: TextStyle(color: ColorsExt.grey1(context))),
-                    content: state.action.content != null
-                        ? Text(state.action.content!, style: TextStyle(color: ColorsExt.grey1(context)))
-                        : null,
-                    actions: <Widget>[
-                      state.action.dismiss != null
-                          ? TextButton(
-                              child: Text(state.action.dismissTitle ?? t.dismiss),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                state.action.dismiss!();
-                              },
-                            )
-                          : Container(),
-                      TextButton(
-                        child: Text(state.action.confirmTitle ?? t.ok),
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<DialogCubit, DialogState>(
+      listener: (context, state) {
+        if (state is DialogShowMessage) {
+          if (dialogShown) {
+            return;
+          }
+
+          dialogShown = true;
+
+          Timer(
+            const Duration(milliseconds: 1000),
+            () {
+              dialogShown = false;
+            },
+          );
+
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text(state.action.title, style: TextStyle(color: ColorsExt.grey1(context))),
+              content: state.action.content != null
+                  ? Text(state.action.content!, style: TextStyle(color: ColorsExt.grey1(context)))
+                  : null,
+              actions: <Widget>[
+                state.action.dismiss != null
+                    ? TextButton(
+                        child: Text(state.action.dismissTitle ?? t.dismiss),
                         onPressed: () {
                           Navigator.pop(context);
-                          if (state.action.confirm != null) {
-                            state.action.confirm!();
-                          }
+                          state.action.dismiss!();
                         },
-                      ),
-                    ],
-                  ),
-                );
+                      )
+                    : Container(),
+                TextButton(
+                  child: Text(state.action.confirmTitle ?? t.ok),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    if (state.action.confirm != null) {
+                      state.action.confirm!();
+                    }
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      },
+      child: Stack(
+        children: [
+          Builder(
+            builder: (context) {
+              if (userLogged) {
+                return MainPage();
+              } else {
+                return const AuthPage();
               }
             },
-            child: Builder(
-              builder: (context) {
-                if (userLogged) {
-                  return MainPage();
-                } else {
-                  return const AuthPage();
-                }
-              },
-            ),
-          )),
+          ),
+          BlocBuilder<TasksCubit, TasksCubitState>(
+            builder: (context, state) {
+              if (state.queue.isEmpty) {
+                return const SizedBox();
+              }
+
+              return Material(
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 51,
+                    margin: EdgeInsets.fromLTRB(
+                        14, 0, 14, MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 14),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: ColorsExt.grey6(context),
+                      border: Border.all(
+                        color: ColorsExt.grey5(context),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              state.queue.first.type.text,
+                              style:
+                                  TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              context.read<TasksCubit>().undo();
+                            },
+                            child: Text(t.task.undo.toUpperCase(),
+                                style: TextStyle(
+                                    color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

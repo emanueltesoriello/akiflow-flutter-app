@@ -20,8 +20,7 @@ class AddTaskLabels extends StatelessWidget {
             labels = LabelExt.filter(labels);
 
             return Container(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.3),
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
               child: ListView.builder(
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(8),
@@ -32,9 +31,7 @@ class AddTaskLabels extends StatelessWidget {
                   return LabelItem(
                     label,
                     onTap: () {
-                      context
-                          .read<EditTaskCubit>()
-                          .setLabel(label, update: false);
+                      context.read<EditTaskCubit>().setLabel(label);
                     },
                   );
                 },

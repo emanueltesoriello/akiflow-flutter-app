@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/components/task/sync_status_item.dart';
 import 'package:mobile/components/task/task_row.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -86,35 +87,39 @@ class TaskList extends StatelessWidget {
 
                 Task task = tasks[index];
 
-                return TaskRow(
-                  key: ObjectKey(task),
-                  task: task,
-                  hideInboxLabel: hideInboxLabel,
-                  selectTask: () {
-                    context.read<TasksCubit>().select(task);
-                  },
-                  selectMode: tasks.any((element) => element.selected ?? false),
-                  completedClick: () {
-                    context.read<TasksCubit>().markAsDone(task);
-                  },
-                  swipeActionPlanClick: () {
-                    _showPlan(context, task, TaskStatusType.planned);
-                  },
-                  swipeActionSelectLabelClick: () {
-                    var cubit = context.read<TasksCubit>();
+                EditTaskCubit editTaskCubit =
+                    EditTaskCubit(context.read<TasksCubit>(), task: task, isCreateMode: false);
 
-                    showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context) => LabelsModal(
-                        selectLabel: (Label label) {
-                          cubit.assignLabel(label, task: task);
-                        },
-                      ),
-                    );
-                  },
-                  swipeActionSnoozeClick: () {
-                    _showPlan(context, task, TaskStatusType.snoozed);
-                  },
+                return BlocProvider(
+                  create: (context) => editTaskCubit,
+                  child: TaskRow(
+                    key: ObjectKey(task),
+                    task: task,
+                    hideInboxLabel: hideInboxLabel,
+                    selectTask: () {
+                      context.read<TasksCubit>().select(task);
+                    },
+                    selectMode: tasks.any((element) => element.selected ?? false),
+                    completedClick: () {
+                      editTaskCubit.markAsDone();
+                    },
+                    swipeActionPlanClick: () {
+                      _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
+                    },
+                    swipeActionSelectLabelClick: () {
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) => LabelsModal(
+                          selectLabel: (Label label) {
+                            editTaskCubit.setLabel(label);
+                          },
+                        ),
+                      );
+                    },
+                    swipeActionSnoozeClick: () {
+                      _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
+                    },
+                  ),
                 );
               },
               childCount: tasks.length + 2,
@@ -125,37 +130,32 @@ class TaskList extends StatelessWidget {
     );
   }
 
-  void _showPlan(BuildContext context, Task task, TaskStatusType statusType) {
-    TasksCubit cubit = context.read<TasksCubit>();
-
+  void _showPlan(BuildContext context, Task task, TaskStatusType statusType, EditTaskCubit editTaskCubit) {
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => BlocProvider.value(
-        value: cubit,
+        value: editTaskCubit,
         child: PlanModal(
           statusType: statusType,
           onSelectDate: ({required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
-            cubit.planFor(
+            editTaskCubit.planFor(
               date,
               dateTime: datetime,
               statusType: statusType,
-              task: task,
             );
           },
           setForInbox: () {
-            cubit.planFor(
+            editTaskCubit.planFor(
               null,
               dateTime: null,
               statusType: TaskStatusType.inbox,
-              task: task,
             );
           },
           setForSomeday: () {
-            cubit.planFor(
+            editTaskCubit.planFor(
               null,
               dateTime: null,
               statusType: TaskStatusType.someday,
-              task: task,
             );
           },
         ),

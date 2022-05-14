@@ -138,7 +138,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
     return InkWell(
       onTap: () {
-        context.read<EditTaskCubit>().markAsDone(task);
+        context.read<EditTaskCubit>().markAsDone();
       },
       child: Builder(builder: (context) {
         bool completed = task.isCompletedComputed;

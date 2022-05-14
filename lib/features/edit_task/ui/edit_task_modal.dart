@@ -25,7 +25,8 @@ class EditTaskModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EditTaskCubit(context.read<TasksCubit>(), task: task, taskStatusType: taskStatusType),
+      create: (context) =>
+          EditTaskCubit(context.read<TasksCubit>(), task: task, taskStatusType: taskStatusType, isCreateMode: false),
       child: const EditTaskModalView(),
     );
   }

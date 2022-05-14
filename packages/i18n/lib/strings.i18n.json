@@ -75,7 +75,9 @@
     "noTitle": "(No title)",
     "snoozeTomorrow": "Snooze - Tomorrow",
     "snoozeNextWeek": "Snooze - Next Week",
-    "someday": "Someday"
+    "someday": "Someday",
+    "undo": "Undo",
+    "markedAsDone": "Marked as done"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

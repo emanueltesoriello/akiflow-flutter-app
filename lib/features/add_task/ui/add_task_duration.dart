@@ -35,7 +35,7 @@ class AddTaskDurationItem extends StatelessWidget {
           divisions: 16,
           thumbColor: ColorsExt.background(context),
           onChanged: (double value) {
-            context.read<EditTaskCubit>().setDuration(value, update: false);
+            context.read<EditTaskCubit>().setDuration(value);
           },
         ),
         const SizedBox(height: 10),

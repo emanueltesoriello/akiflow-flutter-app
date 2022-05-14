@@ -384,18 +384,6 @@ extension TaskExt on Task {
     return 'assets/images/icons/_common/circle.svg';
   }
 
-  Task planFor({
-    required DateTime? date,
-    DateTime? dateTime,
-    required int status,
-  }) {
-    return copyWith(
-      date: Nullable(date?.toIso8601String()),
-      datetime: dateTime?.toIso8601String(),
-      status: status,
-    );
-  }
-
   Task markAsDone({
     TaskStatusType? lastDoneTaskStatus,
     required Function(TaskStatusType?) onDone,
@@ -429,14 +417,6 @@ extension TaskExt on Task {
     onDone(lastDoneTaskStatus);
 
     return updated;
-  }
-
-  Task delete() {
-    return copyWith(
-      status: TaskStatusType.deleted.id,
-      deletedAt: (DateTime.now().toUtc().toIso8601String()),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
-    );
   }
 
   static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {

@@ -37,13 +37,13 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                   child: PlanModal(
                     onSelectDate: (
                         {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
-                      cubit.planFor(date, dateTime: datetime, statusType: statusType, update: true);
+                      cubit.planFor(date, dateTime: datetime, statusType: statusType);
                     },
                     setForInbox: () {
-                      cubit.planFor(null, statusType: TaskStatusType.inbox, update: true);
+                      cubit.planFor(null, statusType: TaskStatusType.inbox);
                     },
                     setForSomeday: () {
-                      cubit.planFor(null, statusType: TaskStatusType.someday, update: true);
+                      cubit.planFor(null, statusType: TaskStatusType.someday);
                     },
                   ),
                 ),

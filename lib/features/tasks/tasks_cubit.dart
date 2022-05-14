@@ -122,84 +122,56 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   TaskStatusType? lastDoneTaskStatus;
 
-  void markAsDone([Task? task]) async {
-    bool isSelectMode = task == null ||
-        state.inboxTasks.any((t) => t.selected ?? false) ||
-        state.todayTasks.any((t) => t.selected ?? false);
+  void markAsDone() async {
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+    tasksSelected.addAll(state.todayTasks.where((t) => t.selected ?? false).toList());
 
-    if (isSelectMode) {
-      List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-      tasksSelected.addAll(state.todayTasks.where((t) => t.selected ?? false).toList());
+    for (Task taskSelected in tasksSelected) {
+      addToUndoQueue(taskSelected, taskSelected.isCompletedComputed ? UndoType.markUndone : UndoType.markDone);
 
-      for (Task taskSelected in tasksSelected) {
-        Task updated = taskSelected.copyWith();
+      Task updated = taskSelected.copyWith();
 
-        updated = updated.markAsDone(
-          lastDoneTaskStatus: lastDoneTaskStatus,
-          onDone: (status) {
-            lastDoneTaskStatus = status;
-          },
-        );
-
-        updateUiOfTask(updated);
-
-        await _tasksRepository.updateById(taskSelected.id, data: updated);
-      }
-
-      emit(state.copyWith(inboxTasks: state.inboxTasks));
-    } else {
-      task = task.markAsDone(
+      updated = updated.markAsDone(
         lastDoneTaskStatus: lastDoneTaskStatus,
         onDone: (status) {
           lastDoneTaskStatus = status;
         },
       );
 
-      updateUiOfTask(task);
+      updateUiOfTask(updated);
 
-      await _tasksRepository.updateById(task.id, data: task);
+      await _tasksRepository.updateById(taskSelected.id, data: updated);
     }
 
+    emit(state.copyWith(inboxTasks: state.inboxTasks));
     clearSelected();
 
     syncAll();
   }
 
-  Future<void> duplicate([Task? task]) async {
+  Future<void> duplicate() async {
     DateTime? now = DateTime.now().toUtc();
 
     List<Task> updated = state.inboxTasks.toList();
 
-    if (task != null) {
+    List<Task> duplicates = [];
+
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+
+    for (Task task in tasksSelected) {
       Task newTaskDuplicated = task.copyWith(
         id: const Uuid().v4(),
         updatedAt: Nullable(now.toIso8601String()),
         createdAt: (now.toIso8601String()),
+        selected: false,
       );
 
-      updated.addAll([newTaskDuplicated]);
-
-      await _tasksRepository.add([newTaskDuplicated]);
-    } else {
-      List<Task> duplicates = [];
-
-      List<Task> tasksSelected = updated.where((t) => t.selected ?? false).toList();
-
-      for (Task task in tasksSelected) {
-        Task newTaskDuplicated = task.copyWith(
-          id: const Uuid().v4(),
-          updatedAt: Nullable(now.toIso8601String()),
-          createdAt: (now.toIso8601String()),
-          selected: false,
-        );
-
-        duplicates.add(newTaskDuplicated);
-      }
-
-      updated.addAll(duplicates);
-
-      await _tasksRepository.add(duplicates);
+      duplicates.add(newTaskDuplicated);
     }
+
+    updated.addAll(duplicates);
+
+    await _tasksRepository.add(duplicates);
 
     clearSelected();
 
@@ -216,7 +188,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in tasksSelected) {
       int index = updated.indexWhere((t) => t.id == task.id);
 
-      task = task.delete();
+      task = task.copyWith(
+        selected: false,
+        status: TaskStatusType.deleted.id,
+        deletedAt: (DateTime.now().toUtc().toIso8601String()),
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      );
 
       updated[index] = task;
 
@@ -233,13 +210,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncAll();
   }
 
-  Future<void> assignLabel(Label label, {Task? task}) async {
-    if (task != null) {
-      task = task.copyWith(selected: true);
-      int index = state.inboxTasks.indexWhere((t) => t.id == task!.id);
-      state.inboxTasks[index] = task;
-    }
-
+  Future<void> assignLabel(Label label) async {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> updated = state.inboxTasks.toList();
@@ -401,28 +372,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
     DateTime? date, {
     required DateTime? dateTime,
     required TaskStatusType statusType,
-    Task? task,
   }) async {
-    if (task != null) {
-      task = task.copyWith(selected: true);
-      int index = state.inboxTasks.indexWhere((t) => t.id == task!.id);
-      state.inboxTasks[index] = task;
-    }
-
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
     for (Task task in tasksSelected) {
       Task updated = task.copyWith(
+        date: Nullable(date?.toIso8601String()),
+        datetime: dateTime?.toIso8601String(),
+        status: statusType.id,
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
-
-      updated = updated.planFor(
-        date: date,
-        dateTime: dateTime,
-        status: statusType.id,
-      );
-
-      clearSelected();
 
       updateUiOfTask(updated);
 
@@ -434,5 +393,32 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(inboxTasks: state.inboxTasks));
 
     syncAll();
+  }
+
+  Future<void> addToUndoQueue(Task task, UndoType type) async {
+    List<UndoTask> queue = List.from(state.queue);
+
+    queue.add(UndoTask(task, type));
+
+    emit(state.copyWith(queue: queue));
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    queue.removeWhere((element) => element.task.id == task.id);
+
+    emit(state.copyWith(queue: List.from(queue)));
+  }
+
+  void undo() {
+    List<UndoTask> queue = state.queue.toList();
+    Task undoTask = queue.removeLast().task;
+
+    List<Task> inbox = List.from(state.inboxTasks);
+    List<Task> today = List.from(state.todayTasks);
+
+    List<Task> newInbox = inbox.map((t) => t.id == undoTask.id ? undoTask : t).toList();
+    List<Task> newToday = today.map((t) => t.id == undoTask.id ? undoTask : t).toList();
+
+    emit(state.copyWith(inboxTasks: newInbox, todayTasks: newToday, queue: queue));
   }
 }

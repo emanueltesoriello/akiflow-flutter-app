@@ -1,5 +1,33 @@
 part of 'tasks_cubit.dart';
 
+enum UndoType { markDone, markUndone, delete, restore, plan, snooze }
+
+extension UndoTypeExtension on UndoType {
+  String get text {
+    switch (this) {
+      case UndoType.markDone:
+        return 'Mark done';
+      case UndoType.markUndone:
+        return 'Mark undone';
+      case UndoType.delete:
+        return 'Delete';
+      case UndoType.restore:
+        return 'Restore';
+      case UndoType.plan:
+        return 'Plan';
+      case UndoType.snooze:
+        return 'Snooze';
+    }
+  }
+}
+
+class UndoTask {
+  final Task task;
+  final UndoType type;
+
+  UndoTask(this.task, this.type);
+}
+
 class TasksCubitState extends Equatable {
   final bool loading;
   final List<Task> inboxTasks;
@@ -7,6 +35,7 @@ class TasksCubitState extends Equatable {
   final List<Label> labels;
   final List<Doc> docs;
   final String? syncStatus;
+  final List<UndoTask> queue;
 
   const TasksCubitState({
     this.loading = false,
@@ -15,6 +44,7 @@ class TasksCubitState extends Equatable {
     this.labels = const [],
     this.docs = const [],
     this.syncStatus,
+    this.queue = const [],
   });
 
   TasksCubitState copyWith({
@@ -24,6 +54,7 @@ class TasksCubitState extends Equatable {
     List<Label>? labels,
     List<Doc>? docs,
     String? syncStatus,
+    List<UndoTask>? queue,
   }) {
     return TasksCubitState(
       loading: loading ?? this.loading,
@@ -32,6 +63,7 @@ class TasksCubitState extends Equatable {
       labels: labels ?? this.labels,
       docs: docs ?? this.docs,
       syncStatus: syncStatus ?? this.syncStatus,
+      queue: queue ?? this.queue,
     );
   }
 
@@ -43,5 +75,6 @@ class TasksCubitState extends Equatable {
         labels,
         docs,
         syncStatus,
+        queue,
       ];
 }

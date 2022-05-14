@@ -26,7 +26,8 @@ class AddTaskModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EditTaskCubit(context.read<TasksCubit>(), taskStatusType: taskStatusType, date: date),
+      create: (context) =>
+          EditTaskCubit(context.read<TasksCubit>(), taskStatusType: taskStatusType, date: date, isCreateMode: true),
       child: const AddTaskModalView(),
     );
   }
@@ -159,13 +160,13 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               builder: (context) => PlanModal(
                 onSelectDate: (
                     {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
-                  editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType, update: false);
+                  editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
                 },
                 setForInbox: () {
-                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox, update: false);
+                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
                 },
                 setForSomeday: () {
-                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.someday, update: false);
+                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.someday);
                 },
               ),
             );
@@ -177,7 +178,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
           color: ColorsExt.grey6(context),
           active: context.watch<EditTaskCubit>().state.setDuration,
           onPressed: () {
-            context.read<EditTaskCubit>().toggleDuration(update: false);
+            context.read<EditTaskCubit>().toggleDuration();
           },
         ),
         const SizedBox(width: 8),

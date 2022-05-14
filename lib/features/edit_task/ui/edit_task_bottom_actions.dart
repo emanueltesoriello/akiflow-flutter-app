@@ -5,7 +5,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -84,7 +83,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                       }
                     }(),
                     onSelectDate: (DateTime? date) {
-                      cubit.setDeadline(date, update: true);
+                      cubit.setDeadline(date);
                     },
                   ),
                 ),
@@ -171,8 +170,6 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
   }
 
   Widget _menu(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.newTask;
-
     return PopupMenuButton<EditTaskAdditionalAction>(
       icon: Container(
         height: 32,
@@ -193,21 +190,26 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
       onSelected: (EditTaskAdditionalAction result) {
         switch (result) {
           case EditTaskAdditionalAction.duplicate:
-            context.read<TasksCubit>().duplicate(task);
+            context.read<EditTaskCubit>().duplicate();
             Navigator.pop(context);
             break;
           case EditTaskAdditionalAction.snoozeTomorrow:
-            context.read<EditTaskCubit>().snooze(
+            context.read<EditTaskCubit>().planFor(
                   DateTime.now().add(const Duration(days: 1)),
+                  statusType: TaskStatusType.snoozed,
                 );
             break;
           case EditTaskAdditionalAction.snoozeNextWeek:
-            context.read<EditTaskCubit>().snooze(
+            context.read<EditTaskCubit>().planFor(
                   DateTime.now().add(const Duration(days: 7)),
+                  statusType: TaskStatusType.snoozed,
                 );
             break;
           case EditTaskAdditionalAction.someday:
-            context.read<EditTaskCubit>().setSomeday();
+            context.read<EditTaskCubit>().planFor(
+                  null,
+                  statusType: TaskStatusType.someday,
+                );
             break;
           case EditTaskAdditionalAction.delete:
             context.read<EditTaskCubit>().delete();
