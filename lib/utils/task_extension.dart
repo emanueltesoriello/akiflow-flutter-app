@@ -410,7 +410,9 @@ extension TaskExt on Task {
         done: false,
         doneAt: Nullable(null),
         updatedAt: Nullable(now.toIso8601String()),
-        status: lastDoneTaskStatus != TaskStatusType.completed ? lastDoneTaskStatus?.id : statusBasedOnValue.id,
+        status: (lastDoneTaskStatus != null && lastDoneTaskStatus != TaskStatusType.completed)
+            ? lastDoneTaskStatus.id
+            : statusBasedOnValue.id,
       );
     }
 

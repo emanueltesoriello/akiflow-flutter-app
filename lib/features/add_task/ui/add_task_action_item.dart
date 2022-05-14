@@ -5,7 +5,7 @@ import 'package:mobile/style/colors.dart';
 class AddTaskActionItem extends StatelessWidget {
   final Function() onPressed;
   final String? text;
-  final String leadingIconAsset;
+  final String? leadingIconAsset;
   final Color color;
   final Color? leadingIconColor;
   final bool active;
@@ -33,12 +33,18 @@ class AddTaskActionItem extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(
-              leadingIconAsset,
-              width: 22,
-              height: 22,
-              color: leadingIconColor ?? ColorsExt.grey2(context),
-            ),
+            Builder(builder: (context) {
+              if (leadingIconAsset == null) {
+                return const SizedBox();
+              }
+
+              return SvgPicture.asset(
+                leadingIconAsset!,
+                width: 22,
+                height: 22,
+                color: leadingIconColor ?? ColorsExt.grey2(context),
+              );
+            }),
             Flexible(child: _text(context)),
           ],
         ),
@@ -61,8 +67,7 @@ class AddTaskActionItem extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color:
-                  active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+              color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
             ),
           ),
         ),
