@@ -77,7 +77,16 @@
     "snoozeNextWeek": "Snooze - Next Week",
     "someday": "Someday",
     "undo": "Undo",
-    "markedAsDone": "Marked as done"
+    "markedAsDone": "Marked as done",
+    "undoActions": {
+      "markDone": "Task marked as done",
+      "markUndone": "Task marked as undone",
+      "deleted": "Task deleted",
+      "restored": "Task restored",
+      "planned": "Task planned",
+      "snoozed": "Task snoozed",
+      "movedToInbox": "Task moved to inbox"
+    }
   },
   "errors": {
     "noAccountsFound": "No accounts found"

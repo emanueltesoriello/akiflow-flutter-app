@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 107 
+ * Strings: 114 
  *
- * Built on 2022-05-13 at 14:35 UTC
+ * Built on 2022-05-14 at 11:32 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -434,6 +434,7 @@ class _StringsTaskEn {
 	String get someday => 'Someday';
 	String get undo => 'Undo';
 	String get markedAsDone => 'Marked as done';
+	late final _StringsTaskUndoActionsEn undoActions = _StringsTaskUndoActionsEn._(_root);
 }
 
 // Path: errors
@@ -520,6 +521,22 @@ class _StringsTodayEn {
 	String get done => 'Done';
 }
 
+// Path: task.undoActions
+class _StringsTaskUndoActionsEn {
+	_StringsTaskUndoActionsEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get markDone => 'Task marked as done';
+	String get markUndone => 'Task marked as undone';
+	String get deleted => 'Task deleted';
+	String get restored => 'Task restored';
+	String get planned => 'Task planned';
+	String get snoozed => 'Task snoozed';
+	String get movedToInbox => 'Task moved to inbox';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -594,6 +611,13 @@ extension on _StringsEn {
 			'task.someday': 'Someday',
 			'task.undo': 'Undo',
 			'task.markedAsDone': 'Marked as done',
+			'task.undoActions.markDone': 'Task marked as done',
+			'task.undoActions.markUndone': 'Task marked as undone',
+			'task.undoActions.deleted': 'Task deleted',
+			'task.undoActions.restored': 'Task restored',
+			'task.undoActions.planned': 'Task planned',
+			'task.undoActions.snoozed': 'Task snoozed',
+			'task.undoActions.movedToInbox': 'Task moved to inbox',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

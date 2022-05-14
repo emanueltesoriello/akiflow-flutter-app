@@ -39,7 +39,7 @@ class BottomTaskActions extends StatelessWidget {
                     builder: (context) => PlanModal(
                       onSelectDate: (
                           {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
-                        context.read<TasksCubit>().planFor(date, dateTime: datetime, statusType: statusType);
+                        context.read<TasksCubit>().editPlanOrSnooze(date, dateTime: datetime, statusType: statusType);
                       },
                       setForInbox: () {
                         context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
@@ -65,7 +65,7 @@ class BottomTaskActions extends StatelessWidget {
                       statusType: TaskStatusType.snoozed,
                       onSelectDate: (
                           {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
-                        context.read<TasksCubit>().planFor(date, dateTime: datetime, statusType: statusType);
+                        context.read<TasksCubit>().editPlanOrSnooze(date, dateTime: datetime, statusType: statusType);
                       },
                       setForInbox: () {
                         context.read<TasksCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
@@ -123,9 +123,7 @@ class BottomTaskActions extends StatelessWidget {
                       context.read<TasksCubit>().moveToInbox();
                       break;
                     case BottomTaskAdditionalActions.planForToday:
-                      context
-                          .read<TasksCubit>()
-                          .planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.inbox);
+                      context.read<TasksCubit>().planForToday();
                       break;
                     case BottomTaskAdditionalActions.setDeadline:
                       var cubit = context.read<TasksCubit>();

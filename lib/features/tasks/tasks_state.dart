@@ -6,19 +6,19 @@ extension UndoTypeExtension on UndoType {
   String get text {
     switch (this) {
       case UndoType.markDone:
-        return 'Mark done';
+        return t.task.undoActions.markDone;
       case UndoType.markUndone:
-        return 'Mark undone';
+        return t.task.undoActions.markUndone;
       case UndoType.delete:
-        return 'Delete';
+        return t.task.undoActions.deleted;
       case UndoType.restore:
-        return 'Restore';
+        return t.task.undoActions.restored;
       case UndoType.plan:
-        return 'Plan';
+        return t.task.undoActions.planned;
       case UndoType.snooze:
-        return 'Snooze';
+        return t.task.undoActions.snoozed;
       case UndoType.moveToInbox:
-        return 'Moved to inbox';
+        return t.task.undoActions.movedToInbox;
     }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -372,17 +373,24 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void moveToInbox() {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-
     addToUndoQueue(tasksSelected, UndoType.moveToInbox);
-
     planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
   }
 
-  Future<void> planFor(
-    DateTime? date, {
-    required DateTime? dateTime,
-    required TaskStatusType statusType,
-  }) async {
+  void planForToday() {
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+    addToUndoQueue(tasksSelected, UndoType.moveToInbox);
+    planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.inbox);
+  }
+
+  void editPlanOrSnooze(DateTime? date, {required DateTime? dateTime, required TaskStatusType statusType}) {
+    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+    UndoType undoType = statusType == TaskStatusType.planned ? UndoType.moveToInbox : UndoType.snooze;
+    addToUndoQueue(tasksSelected, undoType);
+    planFor(date, dateTime: dateTime, statusType: statusType);
+  }
+
+  Future<void> planFor(DateTime? date, {required DateTime? dateTime, required TaskStatusType statusType}) async {
     List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
 
     for (Task task in tasksSelected) {
