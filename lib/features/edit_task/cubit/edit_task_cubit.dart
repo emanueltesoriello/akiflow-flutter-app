@@ -35,7 +35,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     return task ??
         const Task().copyWith(
           id: const Uuid().v4(),
-          status: taskStatusType != null ? Nullable(taskStatusType.id) : Nullable(task?.status),
+          status: taskStatusType != null ? taskStatusType.id : task?.status,
           date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
         );
   }
@@ -87,7 +87,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task updated = task.copyWith(
       date: Nullable(date?.toIso8601String()),
       datetime: dateTime?.toIso8601String(),
-      status: Nullable(statusType.id),
+      status: statusType.id,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
@@ -183,7 +183,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
-      status: Nullable(TaskStatusType.deleted.id),
+      status: TaskStatusType.deleted.id,
       deletedAt: (DateTime.now().toUtc().toIso8601String()),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
@@ -294,6 +294,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   modalDismissed() async {
     Task originalTask = state.originalTask;
     Task updatedTask = state.updatedTask;
+
+    // Remvoe readAt field to check if tasks are equal
+    if (originalTask.copyWith(readAt: "") == updatedTask.copyWith(readAt: "")) {
+      return;
+    }
 
     _tasksCubit.addToUndoQueue([originalTask], UndoType.updated);
 

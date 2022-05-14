@@ -191,7 +191,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       task = task.copyWith(
         selected: false,
-        status: Nullable(TaskStatusType.deleted.id),
+        status: TaskStatusType.deleted.id,
         deletedAt: (DateTime.now().toUtc().toIso8601String()),
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
@@ -398,7 +398,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       Task updated = task.copyWith(
         date: Nullable(date?.toIso8601String()),
         datetime: dateTime?.toIso8601String(),
-        status: Nullable(statusType.id),
+        status: statusType.id,
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
         selected: false,
       );

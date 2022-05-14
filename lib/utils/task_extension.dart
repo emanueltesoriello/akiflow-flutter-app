@@ -403,20 +403,28 @@ extension TaskExt on Task {
         done: true,
         doneAt: Nullable(now.toIso8601String()),
         updatedAt: Nullable(now.toIso8601String()),
-        status: Nullable(TaskStatusType.completed.id),
+        status: TaskStatusType.completed.id,
       );
     } else {
       updated = copyWith(
         done: false,
         doneAt: Nullable(null),
         updatedAt: Nullable(now.toIso8601String()),
-        status: Nullable(lastDoneTaskStatus != TaskStatusType.completed ? lastDoneTaskStatus?.id : null),
+        status: lastDoneTaskStatus != TaskStatusType.completed ? lastDoneTaskStatus?.id : statusBasedOnValue.id,
       );
     }
 
     onDone(lastDoneTaskStatus);
 
     return updated;
+  }
+
+  TaskStatusType get statusBasedOnValue {
+    if (date != null || datetime != null) {
+      return TaskStatusType.planned;
+    } else {
+      return TaskStatusType.inbox;
+    }
   }
 
   static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {
