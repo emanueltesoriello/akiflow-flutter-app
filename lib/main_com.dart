@@ -194,47 +194,52 @@ class _Home extends StatelessWidget {
                 return const SizedBox();
               }
 
-              return Material(
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 51,
-                    margin: EdgeInsets.fromLTRB(
-                        14, 0, 14, MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 14),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: ColorsExt.grey6(context),
-                      border: Border.all(
-                        color: ColorsExt.grey5(context),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              state.queue.first.type.text,
-                              style:
-                                  TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
-                            ),
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 51,
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: ColorsExt.grey6(context),
+                          border: Border.all(
+                            color: ColorsExt.grey5(context),
+                            width: 1,
                           ),
-                          InkWell(
-                            onTap: () {
-                              context.read<TasksCubit>().undo();
-                            },
-                            child: Text(t.task.undo.toUpperCase(),
-                                style: TextStyle(
-                                    color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15)),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  state.queue.first.type.text,
+                                  style: TextStyle(
+                                      color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  context.read<TasksCubit>().undo();
+                                },
+                                child: Text(t.task.undo.toUpperCase(),
+                                    style: TextStyle(
+                                        color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15)),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  SizedBox(height: MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 16),
+                ],
               );
             },
           ),

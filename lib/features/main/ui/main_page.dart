@@ -45,25 +45,40 @@ class MainPage extends StatelessWidget {
       child: Stack(
         children: [
           Scaffold(
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-                TaskStatusType taskStatusType =
-                    homeViewType == HomeViewType.inbox ? TaskStatusType.inbox : TaskStatusType.planned;
-                DateTime date = context.read<TodayCubit>().state.selectedDate;
+            floatingActionButton: BlocBuilder<TasksCubit, TasksCubitState>(
+              builder: (context, state) {
+                double bottomPadding;
 
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => AddTaskModal(taskStatusType: taskStatusType, date: date),
+                if (state.queue.isNotEmpty) {
+                  bottomPadding = MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 8;
+                } else {
+                  bottomPadding = 0;
+                }
+
+                return Padding(
+                  padding: EdgeInsets.only(bottom: bottomPadding),
+                  child: FloatingActionButton(
+                    onPressed: () async {
+                      HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
+                      TaskStatusType taskStatusType =
+                          homeViewType == HomeViewType.inbox ? TaskStatusType.inbox : TaskStatusType.planned;
+                      DateTime date = context.read<TodayCubit>().state.selectedDate;
+
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) => AddTaskModal(taskStatusType: taskStatusType, date: date),
+                      );
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/images/icons/_common/plus.svg",
+                      color: Theme.of(context).backgroundColor,
+                    ),
+                  ),
                 );
               },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: SvgPicture.asset(
-                "assets/images/icons/_common/plus.svg",
-                color: Theme.of(context).backgroundColor,
-              ),
             ),
             bottomNavigationBar: BottomNavigationBar(
               elevation: 16,

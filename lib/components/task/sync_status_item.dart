@@ -8,6 +8,7 @@ class SyncStatusItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 20,
       width: double.infinity,
       child: BlocBuilder<TasksCubit, TasksCubitState>(
         builder: (context, state) {
