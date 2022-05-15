@@ -60,7 +60,7 @@ class PlanForAction extends StatelessWidget {
     }
 
     return AddTaskActionItem(
-      text: task.date,
+      text: text,
       color: color,
       leadingIconAsset: leadingIconAsset,
       active: true,
