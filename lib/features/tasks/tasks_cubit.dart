@@ -53,12 +53,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> syncAll() async {
     emit(state.copyWith(loading: true, syncStatus: ''));
 
-    try {
-      await _syncControllerService.syncAll();
-    } catch (e) {
-      emit(state.copyWith(loading: false));
-      rethrow;
-    }
+    await _syncControllerService.syncAll();
+
+    emit(state.copyWith(loading: false));
   }
 
   refreshTasksFromRepository({DateTime? selectedTodayDate}) async {
