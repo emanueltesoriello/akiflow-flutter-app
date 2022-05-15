@@ -21,6 +21,12 @@ class _SyncProgressState extends State<SyncProgress> with SingleTickerProviderSt
       vsync: this,
     );
 
+    _controller.addListener(() {
+      if (_controller.isCompleted) {
+        _controller.repeat();
+      }
+    });
+
     bool loading = context.read<TasksCubit>().state.loading;
 
     if (loading) {

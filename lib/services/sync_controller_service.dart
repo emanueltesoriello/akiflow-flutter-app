@@ -94,14 +94,20 @@ class SyncControllerService {
   }
 
   Future<void> _syncEntity(Entity entity) async {
-    print("Syncing $entity...");
+    try {
+      print("Syncing $entity...");
 
-    SyncService syncService = _syncServices[entity]!;
+      SyncService syncService = _syncServices[entity]!;
 
-    DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
+      DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
 
-    DateTime? lastSyncUpdated = await syncService.start(lastSync);
+      DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
-    await _setLastSyncPreferences[entity]!(lastSyncUpdated);
+      await _setLastSyncPreferences[entity]!(lastSyncUpdated);
+
+      await Future.delayed(const Duration(seconds: 2));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 }
