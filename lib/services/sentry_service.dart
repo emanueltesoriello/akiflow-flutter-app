@@ -16,6 +16,9 @@ class SentryService {
         return;
       }
 
+      print(exception);
+      print(stackTrace);
+
       await Sentry.captureException(exception, stackTrace: stackTrace);
     }
   }
@@ -53,9 +56,7 @@ class SentryService {
   }
 
   static bool ignoreException(throwable) {
-    if (throwable is StateError &&
-        throwable.message
-            .contains("Cannot emit new states after calling close")) {
+    if (throwable is StateError && throwable.message.contains("Cannot emit new states after calling close")) {
       return true;
     }
 

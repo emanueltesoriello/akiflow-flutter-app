@@ -73,12 +73,12 @@ extension TaskStatusTypeExt on TaskStatusType {
 extension TaskExt on Task {
   bool isSameDateOf(DateTime ofDate) {
     if (datetime != null) {
-      DateTime dateParsed = DateTime.parse(datetime!);
+      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
       return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
     }
 
     if (date != null) {
-      DateTime dateParsed = DateTime.parse(date!);
+      DateTime dateParsed = DateTime.parse(date!).toLocal();
       return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
     }
 
@@ -157,9 +157,9 @@ extension TaskExt on Task {
 
     if (endTime != null) {
       DateTime endTimePlus1h = endTime!.add(const Duration(hours: 1));
-      isOverdueDate = endTimePlus1h.isBefore(now);
+      isOverdueDate = endTimePlus1h.toLocal().isBefore(now);
     } else if (date != null) {
-      isOverdueDate = DateTime.parse(date!).isBefore(now);
+      isOverdueDate = DateTime.parse(date!).toLocal().isBefore(now);
     }
 
     return isPlanned && !isCompletedComputed && isOverdueDate;

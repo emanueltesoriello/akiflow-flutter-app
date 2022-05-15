@@ -82,33 +82,26 @@ class SyncControllerService {
     Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
-  syncAll({Function(String)? syncStatus}) async {
+  syncAll() async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncEntity(Entity.accounts, syncStatus: syncStatus);
-      await _syncEntity(Entity.tasks, syncStatus: syncStatus);
+      await _syncEntity(Entity.accounts);
+      await _syncEntity(Entity.tasks);
       await _syncEntity(Entity.labels);
       await _syncEntity(Entity.docs);
     }
   }
 
-  Future<void> _syncEntity(Entity entity, {Function(String)? syncStatus}) async {
-    try {
-      print("Syncing $entity...");
-      SyncService syncService = _syncServices[entity]!;
+  Future<void> _syncEntity(Entity entity) async {
+    print("Syncing $entity...");
 
-      DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
+    SyncService syncService = _syncServices[entity]!;
 
-      DateTime? lastSyncUpdated = await syncService.start(lastSync);
+    DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
 
-      await _setLastSyncPreferences[entity]!(lastSyncUpdated);
-    } catch (e, s) {
-      if (syncStatus != null) {
-        syncStatus("Error syncing $entity: $e");
-      }
+    DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
-      _sentryService.captureException(e, stackTrace: s);
-    }
+    await _setLastSyncPreferences[entity]!(lastSyncUpdated);
   }
 }
