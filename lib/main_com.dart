@@ -214,7 +214,7 @@ class _Home extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.only(left: 16),
                           child: Row(
                             children: [
                               Expanded(
@@ -224,14 +224,15 @@ class _Home extends StatelessWidget {
                                       color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
                                 ),
                               ),
-                              InkWell(
-                                onTap: () {
-                                  context.read<TasksCubit>().undo();
-                                },
-                                child: Text(t.task.undo.toUpperCase(),
-                                    style: TextStyle(
-                                        color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15)),
-                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    context.read<TasksCubit>().undo();
+                                  },
+                                  child: Text(t.task.undo.toUpperCase(),
+                                      style: TextStyle(
+                                          color: ColorsExt.akiflow(context),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15))),
                             ],
                           ),
                         ),
