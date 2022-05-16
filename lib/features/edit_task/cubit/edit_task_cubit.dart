@@ -39,13 +39,17 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setRead() {
-    DateTime now = DateTime.now().toUtc();
+    Task task = state.updatedTask;
 
-    Task updated = state.updatedTask.copyWith(
-      readAt: now.toIso8601String(),
-    );
+    if (task.readAt == null) {
+      DateTime now = DateTime.now().toUtc();
 
-    emit(state.copyWith(updatedTask: updated));
+      Task updated = state.updatedTask.copyWith(
+        readAt: now.toIso8601String(),
+      );
+
+      emit(state.copyWith(updatedTask: updated));
+    }
   }
 
   Future<void> create({
@@ -273,8 +277,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task originalTask = state.originalTask;
     Task updatedTask = state.updatedTask;
 
-    // Remvoe readAt field to check if tasks are equal
-    if (originalTask.copyWith(readAt: "") == updatedTask.copyWith(readAt: "")) {
+    if (originalTask == updatedTask) {
       return;
     }
 
