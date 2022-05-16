@@ -17,11 +17,11 @@ class TasksRepository extends DatabaseRepository {
 
   Future<List<Task>> getUndone<Task>() async {
     List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
-SELECT * FROM tasks
-WHERE tasks.done IS NULL
-OR tasks.done = 0
-AND tasks.deleted_at IS NULL
-ORDER BY sorting DESC
+        SELECT * FROM tasks
+        WHERE tasks.done IS NULL
+        OR tasks.done = 0
+        AND tasks.deleted_at IS NULL
+        ORDER BY sorting DESC
 """);
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));

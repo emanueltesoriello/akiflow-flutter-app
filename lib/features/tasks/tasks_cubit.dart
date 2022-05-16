@@ -388,7 +388,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
     syncAll();
   }
 
+  Timer? _undoTimerDebounce;
+
   Future<void> addToUndoQueue(List<Task> originalTasks, UndoType type) async {
+    if (_undoTimerDebounce != null) {
+      _undoTimerDebounce?.cancel();
+    }
+
     List<UndoTask> queue = List.from(state.queue);
 
     for (var task in originalTasks) {
@@ -397,9 +403,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(queue: queue));
 
-    await Future.delayed(const Duration(seconds: 3));
-
-    emit(state.copyWith(queue: []));
+    _undoTimerDebounce = Timer(const Duration(seconds: 3), () {
+      emit(state.copyWith(queue: []));
+    });
   }
 
   Future<void> undo() async {
