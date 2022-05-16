@@ -306,6 +306,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
         selected: false,
       );
 
+      updated[i] = updatedTask;
+
       updateUiOfTask(updatedTask);
     }
 

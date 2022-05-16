@@ -29,6 +29,10 @@ class TodayTaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Task> tasks = List.from(this.tasks);
+
+    tasks = TaskExt.sort(tasks, sorting: sorting);
+
     // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
     //be available in flutter stable branch
     return ReorderableSliverList(
