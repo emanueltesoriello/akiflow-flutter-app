@@ -9,6 +9,7 @@ import 'package:mobile/components/base/button.dart';
 import 'package:mobile/components/base/space.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
+import 'package:mobile/main_com.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/text_style.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,7 +26,17 @@ class AuthPage extends StatelessWidget {
       child: BlocListener<AuthCubit, AuthCubitState>(
         listener: (context, state) {
           if (state.user != null) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Stack(
+                  children: [
+                    MainPage(),
+                    const UndoBottomView(),
+                  ],
+                ),
+              ),
+            );
           }
         },
         child: Scaffold(

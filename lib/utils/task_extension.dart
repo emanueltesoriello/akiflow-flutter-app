@@ -389,10 +389,10 @@ extension TaskExt on Task {
 
     DateTime now = DateTime.now().toUtc();
 
-    Task updated;
+    Task updated = copyWith();
 
     if (!done) {
-      updated = copyWith(
+      updated = updated.copyWith(
         done: true,
         doneAt: Nullable(now.toIso8601String()),
         updatedAt: Nullable(now.toIso8601String()),
@@ -401,14 +401,14 @@ extension TaskExt on Task {
       if (status == TaskStatusType.inbox.id ||
           status == TaskStatusType.snoozed.id ||
           status == TaskStatusType.someday.id) {
-        updated = copyWith(
+        updated = updated.copyWith(
           date: Nullable(now.toIso8601String()),
           datetime: Nullable(null),
           status: TaskStatusType.planned.id,
         );
       }
     } else {
-      updated = copyWith(
+      updated = updated.copyWith(
         done: false,
         doneAt: Nullable(null),
         updatedAt: Nullable(now.toIso8601String()),
@@ -416,7 +416,7 @@ extension TaskExt on Task {
     }
 
     if (readAt == null) {
-      updated = copyWith(readAt: now.toIso8601String());
+      updated = updated.copyWith(readAt: now.toIso8601String());
     }
 
     return updated;

@@ -139,7 +139,6 @@ class Task extends Equatable implements Base {
 
   @override
   Map<String, dynamic> toMap() {
-    print(recurrence == null ? null : List<dynamic>.from(recurrence!.map((x) => x)));
     return <String, dynamic>{
       'id': id,
       'title': title,

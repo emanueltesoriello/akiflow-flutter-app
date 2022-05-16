@@ -162,7 +162,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
 
     if (forceUpdate) {
-      _tasksCubit.addToUndoQueue([task], updated.isCompletedComputed ? UndoType.markUndone : UndoType.markDone);
+      _tasksCubit.addToUndoQueue([task], updated.isCompletedComputed ? UndoType.markDone : UndoType.markUndone);
       _tasksCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.syncAll();
