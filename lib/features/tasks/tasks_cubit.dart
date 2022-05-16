@@ -123,12 +123,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     addToUndoQueue(tasksSelected, UndoType.markDone);
 
     for (Task taskSelected in tasksSelected) {
-      Task updated = taskSelected.markAsDone(
-        lastDoneTaskStatus: lastDoneTaskStatus,
-        onDone: (status) {
-          lastDoneTaskStatus = status;
-        },
-      );
+      Task updated = taskSelected.markAsDone();
 
       updateUiOfTask(updated);
 
@@ -390,7 +385,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in tasksSelected) {
       Task updated = task.copyWith(
         date: Nullable(date?.toIso8601String()),
-        datetime: dateTime?.toIso8601String(),
+        datetime: Nullable(dateTime?.toIso8601String()),
         status: statusType.id,
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
         selected: false,
@@ -417,7 +412,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(queue: queue));
 
-    await Future.delayed(const Duration(seconds: 7));
+    await Future.delayed(const Duration(seconds: 3));
 
     emit(state.copyWith(queue: []));
   }

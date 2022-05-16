@@ -19,8 +19,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   final TasksCubit _tasksCubit;
 
-  TaskStatusType? lastDoneTaskStatus;
-
   EditTaskCubit(
     this._tasksCubit, {
     Task? task,
@@ -86,7 +84,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = task.copyWith(
       date: Nullable(date?.toIso8601String()),
-      datetime: dateTime?.toIso8601String(),
+      datetime: Nullable(dateTime?.toIso8601String()),
       status: statusType.id,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
@@ -155,12 +153,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<void> markAsDone({bool forceUpdate = false}) async {
     Task task = state.updatedTask;
 
-    Task updated = task.markAsDone(
-      lastDoneTaskStatus: lastDoneTaskStatus,
-      onDone: (status) {
-        lastDoneTaskStatus = status;
-      },
-    );
+    Task updated = task.markAsDone();
 
     emit(state.copyWith(updatedTask: updated));
 

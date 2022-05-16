@@ -166,7 +166,7 @@ extension TaskExt on Task {
   }
 
   bool get isCompletedComputed {
-    return (statusType == TaskStatusType.completed || (done ?? false) || doneAt != null);
+    return ((done ?? false) == true) && doneAt != null;
   }
 
   String get shortDate {
@@ -384,17 +384,10 @@ extension TaskExt on Task {
     return 'assets/images/icons/_common/circle.svg';
   }
 
-  Task markAsDone({
-    TaskStatusType? lastDoneTaskStatus,
-    required Function(TaskStatusType?) onDone,
-  }) {
+  Task markAsDone() {
     bool done = isCompletedComputed;
 
     DateTime now = DateTime.now().toUtc();
-
-    if (lastDoneTaskStatus != null && lastDoneTaskStatus.id != TaskStatusType.completed.id) {
-      lastDoneTaskStatus = TaskStatusTypeExt.fromId(lastDoneTaskStatus.id);
-    }
 
     Task updated;
 
@@ -403,20 +396,28 @@ extension TaskExt on Task {
         done: true,
         doneAt: Nullable(now.toIso8601String()),
         updatedAt: Nullable(now.toIso8601String()),
-        status: TaskStatusType.completed.id,
       );
+
+      if (status == TaskStatusType.inbox.id ||
+          status == TaskStatusType.snoozed.id ||
+          status == TaskStatusType.someday.id) {
+        updated = copyWith(
+          date: Nullable(now.toIso8601String()),
+          datetime: Nullable(null),
+          status: TaskStatusType.planned.id,
+        );
+      }
     } else {
       updated = copyWith(
         done: false,
         doneAt: Nullable(null),
         updatedAt: Nullable(now.toIso8601String()),
-        status: (lastDoneTaskStatus != null && lastDoneTaskStatus != TaskStatusType.completed)
-            ? lastDoneTaskStatus.id
-            : statusBasedOnValue.id,
       );
     }
 
-    onDone(lastDoneTaskStatus);
+    if (readAt == null) {
+      updated = copyWith(readAt: now.toIso8601String());
+    }
 
     return updated;
   }
