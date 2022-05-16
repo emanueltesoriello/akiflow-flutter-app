@@ -158,7 +158,7 @@ extension TaskExt on Task {
     if (endTime != null) {
       DateTime endTimePlus1h = endTime!.add(const Duration(hours: 1));
       isOverdueDate = endTimePlus1h.toLocal().isBefore(now);
-    } else if (date != null) {
+    } else if (date != null && !isToday) {
       isOverdueDate = DateTime.parse(date!).toLocal().isBefore(now);
     }
 
@@ -167,21 +167,6 @@ extension TaskExt on Task {
 
   bool get isCompletedComputed {
     return ((done ?? false) == true) && doneAt != null;
-  }
-
-  String get shortDate {
-    if (date != null) {
-      DateTime dateParsed = DateTime.parse(date!).toLocal();
-      if (isToday) {
-        return t.task.today;
-      } else if (dateParsed.isBefore(DateTime.now().add(const Duration(days: 6)))) {
-        return DateFormat.E().format(dateParsed.toLocal());
-      } else {
-        return DateFormat.MMMd().format(dateParsed.toLocal());
-      }
-    }
-
-    return '';
   }
 
   String get createdAtFormatted {
@@ -235,26 +220,41 @@ extension TaskExt on Task {
     return RecurrenceModalType.none;
   }
 
-  String get datetimeFormatted {
-    String? datetimeOrDate = datetime ?? date;
+  String get timeFormatted {
+    if (datetime != null) {
+      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
+      if (isToday) {
+        return DateFormat.Hm().format(dateParsed);
+      } else if (isTomorrow) {
+        return DateFormat.Hm().format(dateParsed);
+      } else if (dateParsed.isBefore(DateTime.now().add(const Duration(days: 6)))) {
+        return DateFormat.Hm().format(dateParsed);
+      }
+    }
 
+    return '';
+  }
+
+  String get datetimeFormatted {
     String prefix;
     String? formatted;
 
-    if (datetimeOrDate != null) {
-      formatted = DateFormat("HH:mm").format(DateTime.parse(datetimeOrDate).toLocal());
+    if (datetime != null) {
+      prefix = "";
+      formatted = DateFormat.yMMMd().format(DateTime.parse(datetime!).toLocal());
+    } else if (date != null) {
+      prefix = "";
+      formatted = t.task.today;
     }
 
-    if (isToday) {
-      prefix = t.task.today;
-    } else if (isTomorrow) {
+    if (isTomorrow) {
       prefix = t.addTask.tmw;
     } else {
       prefix = "";
     }
 
     if (formatted != null) {
-      return "$prefix $formatted";
+      return "$prefix${prefix.isNotEmpty ? ' ' : ''}$formatted";
     } else {
       return prefix;
     }
@@ -281,7 +281,7 @@ extension TaskExt on Task {
   }
 
   bool get isPinnedInCalendar {
-    return date != null && datetime != null;
+    return datetime != null && !isOverdue;
   }
 
   TaskStatusType? get statusType {

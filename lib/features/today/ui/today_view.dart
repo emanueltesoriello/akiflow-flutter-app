@@ -35,23 +35,20 @@ class _View extends StatelessWidget {
     if (selectedDate.day == DateTime.now().day &&
         selectedDate.month == DateTime.now().month &&
         selectedDate.year == DateTime.now().year) {
-      todos = List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
+      todos = List.from(todayTasks
+          .where((element) => !element.isCompletedComputed && element.isTodayOrBefore && !element.isPinnedInCalendar));
       pinned = todayTasks
-          .where((element) =>
-              element.datetime != null &&
-              !element.isOverdue &&
-              !element.isCompletedComputed &&
-              element.isSameDateOf(selectedDate))
+          .where((element) => !element.isCompletedComputed && !element.isOverdue && element.isPinnedInCalendar)
           .toList();
       completed = List.from(todayTasks.where((element) => element.isCompletedComputed && element.isToday));
     } else {
-      todos =
-          List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isSameDateOf(selectedDate)));
+      todos = List.from(todayTasks.where((element) =>
+          !element.isCompletedComputed && element.isSameDateOf(selectedDate) && !element.isPinnedInCalendar));
       pinned = todayTasks
           .where((element) =>
-              element.datetime != null &&
-              !element.isOverdue &&
               !element.isCompletedComputed &&
+              !element.isOverdue &&
+              element.isPinnedInCalendar &&
               element.isSameDateOf(selectedDate))
           .toList();
       completed =

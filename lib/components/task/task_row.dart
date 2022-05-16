@@ -4,20 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/components/base/button_action.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
+import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
-import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/doc.dart';
-import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
 class TaskRow extends StatelessWidget {
@@ -124,7 +122,11 @@ class TaskRow extends StatelessWidget {
                   children: [
                     _firstLine(context),
                     _secondLine(context),
-                    _thirdLine(context),
+                    TaskInfo(
+                      task,
+                      hideInboxLabel: hideInboxLabel,
+                      selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                    ),
                   ],
                 ),
               ),
@@ -135,57 +137,55 @@ class TaskRow extends StatelessWidget {
     );
   }
 
-  Widget _thirdLine(BuildContext context) {
-    return Column(
-      children: [
-        Builder(builder: (context) {
-          if (task.statusType == null && !task.isOverdue && task.listId == null && !hideInboxLabel) {
-            return const SizedBox();
-          }
-
-          return const SizedBox(height: 10.5);
-        }),
-        Wrap(
-          spacing: 4,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            _overdue(context),
-            Builder(builder: (context) {
-              if (task.statusType == null) {
-                return const SizedBox();
-              }
-              if (task.statusType == TaskStatusType.inbox && hideInboxLabel) {
-                return const SizedBox();
-              }
-
-              return _status(context);
-            }),
-            _label(context),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Text _firstLine(BuildContext context) {
+  Widget _firstLine(BuildContext context) {
     String? text = task.title;
 
     if (text == null || text.isEmpty) {
       text = t.task.noTitle;
     }
 
-    return Text(
-      text,
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontSize: 17,
-        fontWeight: FontWeight.w500,
-        color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-            ? ColorsExt.grey3(context)
-            : ColorsExt.grey1(context),
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            text,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
+                  ? ColorsExt.grey3(context)
+                  : ColorsExt.grey1(context),
+            ),
+          ),
+        ),
+        _overdue(context),
+      ],
     );
+  }
+
+  Widget _overdue(BuildContext context) {
+    if (task.isOverdue) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              "assets/images/icons/_common/Clock_alert.svg",
+              width: 20,
+              height: 20,
+              color: ColorsExt.red(context),
+            ),
+            const SizedBox(width: 4),
+          ],
+        ),
+      );
+    }
+
+    return const SizedBox();
   }
 
   InkWell _checkbox() {
@@ -377,128 +377,6 @@ class TaskRow extends StatelessWidget {
         },
       );
     });
-  }
-
-  Widget _overdue(BuildContext context) {
-    if (task.isOverdue) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            "assets/images/icons/_common/Clock_alert.svg",
-            width: 20,
-            height: 20,
-            color: ColorsExt.red(context),
-          ),
-          const SizedBox(width: 4),
-        ],
-      );
-    }
-
-    return const SizedBox();
-  }
-
-  Widget _status(BuildContext context) {
-    void statusClick() {
-      print(task.status);
-    }
-
-    if (task.deletedAt != null ||
-        task.statusType == TaskStatusType.deleted ||
-        task.statusType == TaskStatusType.permanentlyDeleted) {
-      return AkiChip(
-        icon: "assets/images/icons/_common/trash.svg",
-        backgroundColor: ColorsExt.grey6(context),
-        text: task.statusType!.name.capitalizeFirstCharacter(),
-        onPressed: statusClick,
-        foregroundColor: ColorsExt.grey3(context),
-      );
-    }
-
-    if (task.isCompletedComputed) {
-      if (task.doneAtFormatted.isEmpty) {
-        return const SizedBox();
-      }
-
-      return AkiChip(
-        backgroundColor: ColorsExt.green20(context),
-        text: task.doneAtFormatted,
-        onPressed: statusClick,
-      );
-    }
-
-    if (task.isPinnedInCalendar) {
-      return AkiChip(
-        backgroundColor: ColorsExt.cyan25(context),
-        text: task.datetimeFormatted,
-        onPressed: statusClick,
-      );
-    }
-
-    if (task.isOverdue) {
-      return AkiChip(
-        backgroundColor: ColorsExt.cyan25(context),
-        text: task.overdueFormatted,
-        onPressed: statusClick,
-      );
-    }
-
-    switch (task.statusType) {
-      case TaskStatusType.someday:
-        return AkiChip(
-          icon: "assets/images/icons/_common/archivebox.svg",
-          backgroundColor: ColorsExt.akiflow10(context),
-          text: task.statusType!.name.capitalizeFirstCharacter(),
-          onPressed: statusClick,
-        );
-      case TaskStatusType.snoozed:
-        return AkiChip(
-          icon: "assets/images/icons/_common/clock.svg",
-          backgroundColor: ColorsExt.akiflow10(context),
-          text: task.datetimeFormatted,
-          onPressed: statusClick,
-        );
-      case TaskStatusType.planned:
-        return AkiChip(
-          backgroundColor: ColorsExt.cyan25(context),
-          text: task.shortDate,
-          onPressed: statusClick,
-        );
-      default:
-        return AkiChip(
-          backgroundColor: ColorsExt.cyan25(context),
-          text: task.statusType!.name.capitalizeFirstCharacter(),
-          onPressed: statusClick,
-        );
-    }
-  }
-
-  Widget _label(BuildContext context) {
-    if (task.listId == null || task.listId!.isEmpty) {
-      return const SizedBox();
-    }
-
-    List<Label> labels = context.watch<TasksCubit>().state.labels;
-
-    Label? label = labels.firstWhereOrNull(
-      (label) => task.listId!.contains(label.id!),
-    );
-
-    if (label == null) {
-      return const SizedBox();
-    }
-
-    return Wrap(
-      children: [
-        AkiChip(
-          icon: "assets/images/icons/_common/number.svg",
-          text: label.title,
-          backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
-          iconColor: label.color != null ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
-          onPressed: () {},
-        ),
-      ],
-    );
   }
 
   Widget _secondLine(BuildContext context) {
