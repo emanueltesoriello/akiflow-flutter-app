@@ -39,6 +39,10 @@ class MainPage extends StatelessWidget {
           context.read<TasksCubit>().clearSelected();
           return false;
         } else {
+          if (ModalRoute.of(context)?.settings.name != "/") {
+            return false;
+          }
+
           return true;
         }
       },
