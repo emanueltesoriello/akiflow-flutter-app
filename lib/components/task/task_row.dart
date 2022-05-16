@@ -63,7 +63,6 @@ class TaskRow extends StatelessWidget {
           editTaskCubit.modalDismissed();
         },
         child: Container(
-          constraints: const BoxConstraints(minHeight: 78),
           padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
           color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
           child: Row(
