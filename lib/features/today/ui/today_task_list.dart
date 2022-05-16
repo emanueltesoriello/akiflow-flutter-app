@@ -29,8 +29,6 @@ class TodayTaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TasksCubit tasksCubit = context.read<TasksCubit>();
-
     // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
     //be available in flutter stable branch
     return ReorderableSliverList(

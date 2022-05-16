@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/user.dart';
@@ -7,8 +7,7 @@ import 'package:models/user.dart';
 part 'main_state.dart';
 
 class MainCubit extends Cubit<MainCubitState> {
-  static final PreferencesRepository _preferencesRepository =
-      locator<PreferencesRepository>();
+  static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   MainCubit() : super(const MainCubitState()) {
     init();

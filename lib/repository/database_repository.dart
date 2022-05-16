@@ -27,7 +27,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   @override
   Future<T?> getById<T>(id) async {
     List<Map<String, Object?>> items =
-        await _databaseService.database!.rawQuery("SELECT * FROM " + tableName + " WHERE id=? ", [id]);
+        await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id=? ", [id]);
     if (items.isEmpty) {
       return null;
     } else {
@@ -40,7 +40,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   Future<List<T>> getByIds<T>(List<dynamic> ids) async {
     String ins = ids.map((el) => '?').join(',');
     List<Map<String, Object?>> items =
-        await _databaseService.database!.rawQuery("SELECT * FROM " + tableName + " WHERE id in (" + ins + ") ", ids);
+        await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
 
     List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;

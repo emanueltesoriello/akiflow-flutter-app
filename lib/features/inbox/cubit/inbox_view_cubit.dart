@@ -1,13 +1,12 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 
 part 'inbox_view_state.dart';
 
 class InboxCubit extends Cubit<InboxCubitState> {
-  final PreferencesRepository _preferencesRepository =
-      locator<PreferencesRepository>();
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   InboxCubit() : super(const InboxCubitState()) {
     _init();

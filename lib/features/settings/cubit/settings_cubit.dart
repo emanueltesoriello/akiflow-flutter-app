@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';

@@ -5,7 +5,7 @@ import 'package:models/event/event.dart';
 class EventApi extends ApiClient {
   EventApi()
       : super(
-          Uri.parse(Config.endpoint + "/v3/events"),
+          Uri.parse("${Config.endpoint}/v3/events"),
           fromMap: Event.fromMap,
         );
 }

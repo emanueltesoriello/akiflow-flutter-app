@@ -14,7 +14,7 @@ class HttpClient extends BaseClient {
     User? user = _preferences.user;
 
     if (user != null) {
-      request.headers['Authorization'] = "Bearer " + (user.accessToken ?? '');
+      request.headers['Authorization'] = "Bearer ${user.accessToken ?? ''}";
     }
 
     request.headers['Content-Type'] = "application/json";

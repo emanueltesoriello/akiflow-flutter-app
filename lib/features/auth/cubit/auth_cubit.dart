@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';

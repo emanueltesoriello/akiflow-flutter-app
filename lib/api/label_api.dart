@@ -5,7 +5,7 @@ import 'package:models/label/label.dart';
 class LabelApi extends ApiClient {
   LabelApi()
       : super(
-          Uri.parse(Config.endpoint + "/v3/labels"),
+          Uri.parse("${Config.endpoint}/v3/labels"),
           fromMap: Label.fromMap,
         );
 }

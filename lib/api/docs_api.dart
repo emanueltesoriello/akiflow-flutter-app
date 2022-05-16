@@ -5,7 +5,7 @@ import 'package:models/doc/doc.dart';
 class DocsApi extends ApiClient {
   DocsApi()
       : super(
-          Uri.parse(Config.endpoint + "/v2/docs"),
+          Uri.parse("${Config.endpoint}/v2/docs"),
           fromMap: Doc.fromMap,
         );
 }

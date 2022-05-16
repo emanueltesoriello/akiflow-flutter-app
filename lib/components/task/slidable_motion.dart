@@ -16,12 +16,11 @@ class SlidableMotion extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SlidableMotionState createState() => _SlidableMotionState();
+  SlidableMotionState createState() => SlidableMotionState();
 }
 
-class _SlidableMotionState extends State<SlidableMotion> {
-  final ValueNotifier<double> animationRationNotifier =
-      ValueNotifier<double>(0);
+class SlidableMotionState extends State<SlidableMotion> {
+  final ValueNotifier<double> animationRationNotifier = ValueNotifier<double>(0);
 
   @override
   Widget build(BuildContext context) {

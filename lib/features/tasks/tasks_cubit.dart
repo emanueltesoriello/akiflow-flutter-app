@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
@@ -9,7 +9,6 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
-import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/doc/doc.dart';
@@ -26,7 +25,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
-  final SentryService _sentryService = locator<SentryService>();
 
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
 

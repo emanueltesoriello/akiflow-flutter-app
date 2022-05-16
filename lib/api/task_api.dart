@@ -5,7 +5,7 @@ import 'package:models/task/task.dart';
 class TaskApi extends ApiClient {
   TaskApi()
       : super(
-          Uri.parse(Config.endpoint + "/v2/tasks"),
+          Uri.parse("${Config.endpoint}/v2/tasks"),
           fromMap: Task.fromMap,
         );
 }
