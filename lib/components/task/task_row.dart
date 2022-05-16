@@ -198,13 +198,13 @@ class TaskRow extends StatelessWidget {
 
         switch (task.priority) {
           case 1:
-            color = ColorsExt.green(context);
+            color = ColorsExt.red(context);
             break;
           case 2:
             color = ColorsExt.yellow(context);
             break;
           case 3:
-            color = ColorsExt.red(context);
+            color = ColorsExt.green(context);
             break;
           default:
             color = completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context);
@@ -227,13 +227,13 @@ class TaskRow extends StatelessWidget {
 
     switch (task.priority) {
       case 1:
-        color = ColorsExt.green(context);
+        color = ColorsExt.red(context);
         break;
       case 2:
         color = ColorsExt.yellow(context);
         break;
       case 3:
-        color = ColorsExt.red(context);
+        color = ColorsExt.green(context);
         break;
       default:
         color = ColorsExt.grey3(context);

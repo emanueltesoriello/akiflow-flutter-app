@@ -104,8 +104,6 @@ class SyncControllerService {
       DateTime? lastSyncUpdated = await syncService.start(lastSync);
 
       await _setLastSyncPreferences[entity]!(lastSyncUpdated);
-
-      await Future.delayed(const Duration(seconds: 2));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }

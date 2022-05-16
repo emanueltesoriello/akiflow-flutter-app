@@ -235,22 +235,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in tasksSelected) {
       int index = updated.indexWhere((t) => t.id == task.id);
 
-      int currentPriority = task.priority ?? 0;
-
-      if (currentPriority + 1 > 3) {
-        currentPriority = -1;
-      } else {
-        if (currentPriority < 1) {
-          currentPriority = 1;
-        } else {
-          currentPriority++;
-        }
-      }
-
-      Task updatedTask = task.copyWith(
-        priority: currentPriority,
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
-      );
+      Task updatedTask = task.changePriority();
 
       updated[index] = updatedTask;
 

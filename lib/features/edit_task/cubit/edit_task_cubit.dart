@@ -211,24 +211,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void changePriority() {
-    Task task = state.updatedTask;
-
-    int currentPriority = task.priority ?? 0;
-
-    if (currentPriority + 1 > 3) {
-      currentPriority = -1;
-    } else {
-      if (currentPriority < 1) {
-        currentPriority = 1;
-      } else {
-        currentPriority++;
-      }
-    }
-
-    Task updated = task.copyWith(
-      priority: currentPriority,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
-    );
+    Task updated = state.updatedTask.changePriority();
 
     emit(state.copyWith(updatedTask: updated));
   }

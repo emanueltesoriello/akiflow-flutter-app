@@ -39,12 +39,12 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             iconAsset: "assets/images/icons/_common/exclamationmark.svg",
             iconColor: () {
               switch (task.priority) {
-                case 3:
-                  return ColorsExt.green(context);
-                case 2:
-                  return ColorsExt.yellow(context);
                 case 1:
                   return ColorsExt.red(context);
+                case 2:
+                  return ColorsExt.yellow(context);
+                case 3:
+                  return ColorsExt.green(context);
                 default:
                   return ColorsExt.grey3(context);
               }

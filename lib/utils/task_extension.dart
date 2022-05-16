@@ -422,6 +422,25 @@ extension TaskExt on Task {
     return updated;
   }
 
+  Task changePriority() {
+    int currentPriority = priority ?? -1;
+
+    if (currentPriority == -1) {
+      currentPriority = 3;
+    } else if (currentPriority - 1 < 1) {
+      currentPriority = -1;
+    } else {
+      currentPriority--;
+    }
+
+    Task updated = copyWith(
+      priority: currentPriority,
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+    );
+
+    return updated;
+  }
+
   TaskStatusType get statusBasedOnValue {
     if (date != null || datetime != null) {
       return TaskStatusType.planned;
