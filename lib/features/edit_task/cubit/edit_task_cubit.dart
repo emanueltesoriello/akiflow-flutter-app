@@ -33,7 +33,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     return task ??
         const Task().copyWith(
           id: const Uuid().v4(),
-          status: taskStatusType != null ? taskStatusType.id : task?.status,
+          status: Nullable(taskStatusType != null ? taskStatusType.id : task?.status),
           date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
         );
   }
@@ -89,7 +89,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task updated = task.copyWith(
       date: Nullable(date?.toIso8601String()),
       datetime: Nullable(dateTime?.toIso8601String()),
-      status: statusType.id,
+      status: Nullable(statusType.id),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
@@ -157,7 +157,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<void> markAsDone({bool forceUpdate = false}) async {
     Task task = state.updatedTask;
 
-    Task updated = task.markAsDone();
+    Task updated = task.markAsDone(state.originalTask);
 
     emit(state.copyWith(updatedTask: updated));
 
@@ -182,7 +182,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
-      status: TaskStatusType.deleted.id,
+      status: Nullable(TaskStatusType.deleted.id),
       deletedAt: (DateTime.now().toUtc().toIso8601String()),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );

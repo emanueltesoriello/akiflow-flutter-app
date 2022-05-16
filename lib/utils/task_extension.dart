@@ -384,7 +384,7 @@ extension TaskExt on Task {
     return 'assets/images/icons/_common/circle.svg';
   }
 
-  Task markAsDone() {
+  Task markAsDone(Task originalTask) {
     bool done = isCompletedComputed;
 
     DateTime now = DateTime.now().toUtc();
@@ -395,7 +395,6 @@ extension TaskExt on Task {
       updated = updated.copyWith(
         done: true,
         doneAt: Nullable(now.toIso8601String()),
-        updatedAt: Nullable(now.toIso8601String()),
       );
 
       if (status == TaskStatusType.inbox.id ||
@@ -404,20 +403,24 @@ extension TaskExt on Task {
         updated = updated.copyWith(
           date: Nullable(now.toIso8601String()),
           datetime: Nullable(null),
-          status: TaskStatusType.planned.id,
+          status: Nullable(TaskStatusType.planned.id),
         );
       }
     } else {
       updated = updated.copyWith(
         done: false,
         doneAt: Nullable(null),
-        updatedAt: Nullable(now.toIso8601String()),
+        date: Nullable(originalTask.date),
+        datetime: Nullable(originalTask.datetime),
+        status: Nullable(originalTask.status),
       );
     }
 
     if (readAt == null) {
       updated = updated.copyWith(readAt: now.toIso8601String());
     }
+
+    updated = updated.copyWith(updatedAt: Nullable(now.toIso8601String()));
 
     return updated;
   }
