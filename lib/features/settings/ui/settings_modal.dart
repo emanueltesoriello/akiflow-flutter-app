@@ -296,11 +296,29 @@ class SettingsModal extends StatelessWidget {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  FolderItem(
-                                    folder,
-                                    onTap: () {
-                                      context.read<SettingsCubit>().toggleFolder(folder);
-                                    },
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: FolderItem(
+                                          folder,
+                                          onTap: () {
+                                            context.read<SettingsCubit>().toggleFolder(folder);
+                                          },
+                                        ),
+                                      ),
+                                      Builder(builder: (context) {
+                                        bool open = settingsState.folderOpen[folder] ?? false;
+
+                                        return SvgPicture.asset(
+                                          open
+                                              ? "assets/images/icons/_common/chevron_up.svg"
+                                              : "assets/images/icons/_common/chevron_down.svg",
+                                          width: 16,
+                                          height: 16,
+                                          color: ColorsExt.grey3(context),
+                                        );
+                                      }),
+                                    ],
                                   ),
                                   Builder(builder: (context) {
                                     bool open = settingsState.folderOpen[folder] ?? false;
