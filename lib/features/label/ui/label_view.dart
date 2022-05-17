@@ -4,7 +4,6 @@ import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/label/cubit/label_cubit.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
@@ -13,17 +12,11 @@ class LabelView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> all = [
-      ...context.watch<TasksCubit>().state.inboxTasks,
-      ...context.watch<TasksCubit>().state.todayTasks,
-    ];
-
     return BlocBuilder<LabelCubit, LabelCubitState>(
       builder: (context, state) {
-        List<Task> labelTasks =
-            all.where((element) => element.listId == state.selectedLabel!.id! && !element.isCompletedComputed).toList();
+        List<Task> labelTasks = state.tasks ?? [];
 
-        print(state.selectedLabel?.title);
+        List<Task> filtered = labelTasks.where((element) => !element.isCompletedComputed).toList();
 
         return Column(
           children: [
@@ -31,7 +24,7 @@ class LabelView extends StatelessWidget {
             Expanded(
               child: ContainerInnerShadow(
                 child: TaskList(
-                  tasks: labelTasks,
+                  tasks: filtered,
                   sorting: TaskListSorting.ascending,
                   hideLabel: true,
                 ),

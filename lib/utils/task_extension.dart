@@ -166,7 +166,7 @@ extension TaskExt on Task {
   }
 
   bool get isCompletedComputed {
-    return ((done ?? false) == true) && doneAt != null;
+    return ((done ?? false) == true);
   }
 
   String get createdAtFormatted {

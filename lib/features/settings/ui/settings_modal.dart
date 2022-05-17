@@ -301,7 +301,7 @@ class SettingsModal extends StatelessWidget {
                   FolderItem(
                     folder,
                     onTap: () {
-                      // TODO open label screen
+                      // TODO open close folder
                     },
                   ),
                   ListView.builder(
@@ -315,7 +315,8 @@ class SettingsModal extends StatelessWidget {
                       return LabelItem(
                         label,
                         onTap: () {
-                          // TODO open label screen
+                          context.read<MainCubit>().selectLabel(label);
+                          Navigator.pop(context);
                         },
                       );
                     },
