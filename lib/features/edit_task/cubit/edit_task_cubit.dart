@@ -273,19 +273,44 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  modalDismissed() async {
-    Task originalTask = state.originalTask;
-    Task updatedTask = state.updatedTask;
+  modalDismissed({String? recurringId}) async {
+    if (recurringId != null) {
+      List<Task> tasks = await _tasksRepository.getByRecurringId(recurringId);
 
-    if (originalTask == updatedTask) {
-      return;
+      List<Task> updatedRecurringTasks = [];
+
+      for (Task task in tasks) {
+        Task updatedRecurringTask = state.updatedTask.copyWith(
+          id: task.id,
+          date: Nullable(task.date),
+          datetime: Nullable(task.datetime),
+          status: Nullable(task.status),
+          createdAt: (task.createdAt),
+          deletedAt: (task.deletedAt),
+          globalCreatedAt: (task.globalCreatedAt),
+          globalUpdatedAt: (task.globalUpdatedAt),
+          readAt: (task.readAt),
+          updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        );
+
+        _tasksCubit.updateUiOfTask(updatedRecurringTask);
+
+        updatedRecurringTasks.add(updatedRecurringTask);
+      }
+
+      for (Task task in updatedRecurringTasks) {
+        await _tasksRepository.updateById(task.id!, data: task);
+      }
+    } else {
+      Task original = state.originalTask;
+      Task updated = state.updatedTask;
+
+      _tasksCubit.addToUndoQueue([original], UndoType.updated);
+
+      _tasksCubit.updateUiOfTask(updated);
+
+      await _tasksRepository.updateById(updated.id!, data: updated);
     }
-
-    _tasksCubit.addToUndoQueue([originalTask], UndoType.updated);
-
-    _tasksCubit.updateUiOfTask(updatedTask);
-
-    await _tasksRepository.updateById(updatedTask.id!, data: updatedTask);
 
     _tasksCubit.syncAll();
   }

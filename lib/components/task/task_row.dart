@@ -62,13 +62,22 @@ class TaskRow extends StatelessWidget {
           );
 
           Task updated = editTaskCubit.state.updatedTask;
+          Task original = editTaskCubit.state.originalTask;
+
+          if (updated == original) {
+            return;
+          }
 
           if (updated.recurringId != null) {
             showDialog(
                 context: context,
                 builder: (context) => RecurringEditDialog(
-                      onlyThisTap: () {},
-                      allTap: () {},
+                      onlyThisTap: () {
+                        editTaskCubit.modalDismissed();
+                      },
+                      allTap: () {
+                        editTaskCubit.modalDismissed(recurringId: updated.recurringId);
+                      },
                     ));
           } else {
             editTaskCubit.modalDismissed();

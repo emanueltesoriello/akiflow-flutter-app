@@ -98,4 +98,16 @@ class TasksRepository extends DatabaseRepository {
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
   }
+
+  Future<List<Task>> getByRecurringId(String recurringId) async {
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
+      SELECT *
+      FROM tasks
+      WHERE recurring_id = ?
+        AND deleted_at IS NULL
+""", [recurringId]);
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
 }
