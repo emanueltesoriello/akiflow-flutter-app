@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 115 
+ * Strings: 120 
  *
- * Built on 2022-05-14 at 11:38 UTC
+ * Built on 2022-05-17 at 08:30 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -507,6 +507,7 @@ class _StringsEditTaskEn {
 	String get everyWeekday => 'Every weekday';
 	String get custom => 'Custom';
 	String get comingSoon => 'Coming soon';
+	late final _StringsEditTaskRepeatingEditDialogEn repeatingEditDialog = _StringsEditTaskRepeatingEditDialogEn._(_root);
 }
 
 // Path: today
@@ -536,6 +537,20 @@ class _StringsTaskUndoActionsEn {
 	String get snoozed => 'Task snoozed';
 	String get movedToInbox => 'Task moved to inbox';
 	String get updated => 'Task updated';
+}
+
+// Path: editTask.repeatingEditDialog
+class _StringsEditTaskRepeatingEditDialogEn {
+	_StringsEditTaskRepeatingEditDialogEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'You are changing a repeating task';
+	String get description => 'Do you want to change only this occurrence or change this and all future occurrences?';
+	String get onlyThis => 'Only this task';
+	String get thisAndAllFuture => 'This and all future tasks';
+	String get cancel => 'Cancel';
 }
 
 /// Flat map(s) containing all translations.
@@ -656,6 +671,11 @@ extension on _StringsEn {
 			'editTask.everyWeekday': 'Every weekday',
 			'editTask.custom': 'Custom',
 			'editTask.comingSoon': 'Coming soon',
+			'editTask.repeatingEditDialog.title': 'You are changing a repeating task',
+			'editTask.repeatingEditDialog.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
+			'editTask.repeatingEditDialog.onlyThis': 'Only this task',
+			'editTask.repeatingEditDialog.thisAndAllFuture': 'This and all future tasks',
+			'editTask.repeatingEditDialog.cancel': 'Cancel',
 			'today.toDos': 'To-dos',
 			'today.pinnedInCalendar': 'Pinned in calendar',
 			'today.done': 'Done',

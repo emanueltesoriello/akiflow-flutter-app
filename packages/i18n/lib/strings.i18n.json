@@ -131,7 +131,14 @@
     "everyYearOn": "Every year on ${date}",
     "everyWeekday": "Every weekday",
     "custom": "Custom",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "repeatingEditDialog": {
+      "title": "You are changing a repeating task",
+      "description": "Do you want to change only this occurrence or change this and all future occurrences?",
+      "onlyThis": "Only this task",
+      "thisAndAllFuture": "This and all future tasks",
+      "cancel": "Cancel"
+    }
   },
   "today": {
     "toDos": "To-dos",

@@ -10,6 +10,7 @@ import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
+import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
@@ -60,7 +61,18 @@ class TaskRow extends StatelessWidget {
             ),
           );
 
-          editTaskCubit.modalDismissed();
+          Task updated = editTaskCubit.state.updatedTask;
+
+          if (updated.recurringId != null) {
+            showDialog(
+                context: context,
+                builder: (context) => RecurringEditDialog(
+                      onlyThisTap: () {},
+                      allTap: () {},
+                    ));
+          } else {
+            editTaskCubit.modalDismissed();
+          }
         },
         child: Container(
           padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
