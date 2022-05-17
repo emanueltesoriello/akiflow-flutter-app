@@ -16,7 +16,14 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/doc/asana_doc.dart';
+import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/doc/gmail_doc.dart';
+import 'package:models/doc/notion_doc.dart';
+import 'package:models/doc/slack_doc.dart';
+import 'package:models/doc/todoist_doc.dart';
+import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
 class TaskRow extends StatelessWidget {
@@ -424,9 +431,42 @@ class TaskRow extends StatelessWidget {
                   height: 18,
                 ),
                 const SizedBox(width: 7),
-                Text(
-                  t.task.linkedContent,
-                  style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                Builder(
+                  builder: (context) {
+                    Doc docWithType;
+
+                    switch (doc.connectorId) {
+                      case "asana":
+                        docWithType = AsanaDoc(doc);
+                        break;
+                      case "clickup":
+                        docWithType = ClickupDoc(doc);
+                        break;
+                      case "gmail":
+                        docWithType = GmailDoc(doc);
+                        break;
+                      case "notion":
+                        docWithType = NotionDoc(doc);
+                        break;
+                      case "slack":
+                        docWithType = SlackDoc(doc);
+                        break;
+                      case "todoist":
+                        docWithType = TodoistDoc(doc);
+                        break;
+                      case "trello":
+                        docWithType = TrelloDoc(doc);
+                        break;
+                      default:
+                        docWithType = doc;
+                        break;
+                    }
+
+                    return Text(
+                      docWithType.getSummary,
+                      style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                    );
+                  },
                 ),
               ],
             );
