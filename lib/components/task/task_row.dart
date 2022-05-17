@@ -36,6 +36,7 @@ class TaskRow extends StatelessWidget {
   final Function() selectTask;
   final bool hideInboxLabel;
   final bool selectMode;
+  final bool hideLabel;
 
   const TaskRow({
     Key? key,
@@ -47,6 +48,7 @@ class TaskRow extends StatelessWidget {
     required this.selectTask,
     this.hideInboxLabel = false,
     this.selectMode = false,
+    this.hideLabel = false,
   }) : super(key: key);
 
   @override
@@ -152,6 +154,7 @@ class TaskRow extends StatelessWidget {
                     TaskInfo(
                       task,
                       hideInboxLabel: hideInboxLabel,
+                      hideLabel: hideLabel,
                       selectDate: context.watch<EditTaskCubit>().state.selectedDate,
                     ),
                   ],

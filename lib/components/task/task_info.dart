@@ -14,8 +14,15 @@ class TaskInfo extends StatelessWidget {
   final Task task;
   final bool hideInboxLabel;
   final DateTime? selectDate;
+  final bool hideLabel;
 
-  const TaskInfo(this.task, {Key? key, required this.hideInboxLabel, required this.selectDate}) : super(key: key);
+  const TaskInfo(
+    this.task, {
+    Key? key,
+    required this.hideInboxLabel,
+    required this.selectDate,
+    required this.hideLabel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +89,10 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget _label(BuildContext context) {
+    if (hideLabel) {
+      return const SizedBox();
+    }
+
     if (task.listId == null || task.listId!.isEmpty) {
       return const SizedBox();
     }

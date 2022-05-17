@@ -198,9 +198,11 @@ class MainPage extends StatelessWidget {
                             return _views[3];
                           case HomeViewType.label:
                             Label label = state.selectedLabel!;
+
                             return BlocProvider(
+                              key: ObjectKey(label),
                               create: (context) => LabelCubit(label),
-                              child: const LabelView(),
+                              child: LabelView(key: ObjectKey(label)),
                             );
                           default:
                             return const SizedBox();
