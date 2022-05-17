@@ -111,8 +111,6 @@ class SettingsModal extends StatelessWidget {
                       trailing: Builder(builder: (context) {
                         List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
-                        tasks = TaskExt.filterInboxTasks(tasks);
-
                         return Text(
                           tasks.length.toString(),
                           style: TextStyle(

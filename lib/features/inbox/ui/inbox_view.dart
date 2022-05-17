@@ -5,7 +5,6 @@ import 'package:mobile/components/base/notice.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
 class InboxView extends StatelessWidget {
@@ -23,8 +22,6 @@ class _View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
-
-    tasks = TaskExt.filterInboxTasks(tasks);
 
     return BlocBuilder<InboxCubit, InboxCubitState>(
       builder: (context, state) {

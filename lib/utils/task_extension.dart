@@ -309,12 +309,6 @@ extension TaskExt on Task {
     }
   }
 
-  static List<Task> filterInboxTasks(List<Task> tasks) {
-    tasks.removeWhere((element) => element.statusType != TaskStatusType.inbox);
-    tasks.removeWhere((task) => task.isDeleted);
-    return List.from(tasks);
-  }
-
   static List<Task> filterTodayTodoTasks(List<Task> tasks) {
     List<Task> todos = tasks
         .where((element) =>

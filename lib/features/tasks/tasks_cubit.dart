@@ -68,7 +68,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future fetchInbox() async {
-    List<Task> inboxTasks = await _tasksRepository.getUndone();
+    List<Task> inboxTasks = await _tasksRepository.getInbox();
     emit(state.copyWith(inboxTasks: inboxTasks, syncStatus: "Get today tasks"));
   }
 
