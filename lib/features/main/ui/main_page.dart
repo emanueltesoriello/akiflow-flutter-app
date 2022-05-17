@@ -8,6 +8,8 @@ import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
+import 'package:mobile/features/label/cubit/label_cubit.dart';
+import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/inbox_appbar.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
@@ -18,6 +20,7 @@ import 'package:mobile/features/today/ui/today_view.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/label/label.dart';
 
 class MainPage extends StatelessWidget {
   final List<Widget> _views = [
@@ -134,7 +137,13 @@ class MainPage extends StatelessWidget {
                 }
               }(),
               unselectedItemColor: ColorsExt.grey1(context),
-              selectedItemColor: Theme.of(context).primaryColor,
+              selectedItemColor: () {
+                if (context.watch<MainCubit>().state.homeViewType == HomeViewType.label) {
+                  return ColorsExt.grey1(context);
+                } else {
+                  return Theme.of(context).primaryColor;
+                }
+              }(),
               onTap: (index) {
                 if (index == 0) {
                   showCupertinoModalBottomSheet(
@@ -143,7 +152,17 @@ class MainPage extends StatelessWidget {
                     builder: (context) => const SettingsModal(),
                   );
                 } else {
-                  context.read<MainCubit>().changeHomeView(index);
+                  switch (index) {
+                    case 1:
+                      context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+                      break;
+                    case 2:
+                      context.read<MainCubit>().changeHomeView(HomeViewType.today);
+                      break;
+                    case 3:
+                      context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
+                      break;
+                  }
                 }
               },
             ),
@@ -177,6 +196,12 @@ class MainPage extends StatelessWidget {
                             return _views[2];
                           case HomeViewType.calendar:
                             return _views[3];
+                          case HomeViewType.label:
+                            Label label = state.selectedLabel!;
+                            return BlocProvider(
+                              create: (context) => LabelCubit(label),
+                              child: const LabelView(),
+                            );
                           default:
                             return const SizedBox();
                         }

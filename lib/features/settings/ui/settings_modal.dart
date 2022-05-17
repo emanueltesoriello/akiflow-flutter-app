@@ -124,7 +124,7 @@ class SettingsModal extends StatelessWidget {
                         );
                       }),
                       onPressed: () {
-                        context.read<MainCubit>().changeHomeView(1);
+                        context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
                         Navigator.pop(context);
                       },
                     );
@@ -158,7 +158,7 @@ class SettingsModal extends StatelessWidget {
                         );
                       }),
                       onPressed: () {
-                        context.read<MainCubit>().changeHomeView(2);
+                        context.read<MainCubit>().changeHomeView(HomeViewType.today);
                         Navigator.pop(context);
                       },
                     );
@@ -185,8 +185,7 @@ class SettingsModal extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        context.read<MainCubit>().changeHomeView(2);
-                        Navigator.pop(context);
+                        // TODO someday list
                       },
                     );
                   },
@@ -212,8 +211,7 @@ class SettingsModal extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        context.read<MainCubit>().changeHomeView(2);
-                        Navigator.pop(context);
+                        // TODO all tasks list
                       },
                     );
                   },
@@ -288,7 +286,8 @@ class SettingsModal extends StatelessWidget {
                   return LabelItem(
                     label,
                     onTap: () {
-                      // TODO open label screen
+                      context.read<MainCubit>().selectLabel(label);
+                      Navigator.pop(context);
                     },
                   );
                 },

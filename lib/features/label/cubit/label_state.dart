@@ -2,23 +2,23 @@ part of 'label_cubit.dart';
 
 class LabelCubitState extends Equatable {
   final bool loading;
-  final User? user;
+  final Label? selectedLabel;
 
   const LabelCubitState({
     this.loading = false,
-    this.user,
+    this.selectedLabel,
   });
 
   LabelCubitState copyWith({
     bool? loading,
-    Nullable<User?>? user,
+    Label? selectedLabel,
   }) {
     return LabelCubitState(
       loading: loading ?? this.loading,
-      user: user != null ? user.value : this.user,
+      selectedLabel: selectedLabel ?? this.selectedLabel,
     );
   }
 
   @override
-  List<Object?> get props => [loading, user];
+  List<Object?> get props => [loading, selectedLabel];
 }

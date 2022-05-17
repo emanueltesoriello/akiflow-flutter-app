@@ -15,6 +15,7 @@ class AppBarComp extends StatelessWidget {
   final bool showLogo;
   final Widget? leading;
   final Widget? customTitle;
+  final bool showSyncButton;
 
   const AppBarComp({
     Key? key,
@@ -25,6 +26,7 @@ class AppBarComp extends StatelessWidget {
     this.showLogo = false,
     this.leading,
     this.customTitle,
+    this.showSyncButton = true,
   }) : super(key: key);
 
   @override
@@ -121,13 +123,19 @@ class AppBarComp extends StatelessWidget {
       children: [
         Container(width: 16),
         ...actions,
-        InkWell(
-          onTap: () {
-            DateTime? selectedTodayDate = context.read<TodayCubit>().state.selectedDate;
-            context.read<TasksCubit>().syncAllAndRefresh(selectedTodayDate: selectedTodayDate);
-          },
-          child: const SyncProgress(),
-        )
+        Builder(builder: (context) {
+          if (!showSyncButton) {
+            return const SizedBox();
+          }
+
+          return InkWell(
+            onTap: () {
+              DateTime? selectedTodayDate = context.read<TodayCubit>().state.selectedDate;
+              context.read<TasksCubit>().syncAllAndRefresh(selectedTodayDate: selectedTodayDate);
+            },
+            child: const SyncProgress(),
+          );
+        })
       ],
     );
   }

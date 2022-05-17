@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:models/label/label.dart';
 import 'package:models/user.dart';
 
 part 'main_state.dart';
@@ -19,17 +20,11 @@ class MainCubit extends Cubit<MainCubitState> {
     if (user != null) {}
   }
 
-  void changeHomeView(int index) {
-    switch (index) {
-      case 1:
-        emit(state.copyWith(homeViewType: HomeViewType.inbox));
-        break;
-      case 2:
-        emit(state.copyWith(homeViewType: HomeViewType.today));
-        break;
-      case 3:
-        emit(state.copyWith(homeViewType: HomeViewType.calendar));
-        break;
-    }
+  void changeHomeView(HomeViewType homeViewType) {
+    emit(state.copyWith(homeViewType: homeViewType));
+  }
+
+  void selectLabel(Label label) {
+    emit(state.copyWith(selectedLabel: label, homeViewType: HomeViewType.label));
   }
 }
