@@ -94,7 +94,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<SettingsCubit>(
           lazy: false,
-          create: (BuildContext context) => SettingsCubit(),
+          create: (BuildContext context) => SettingsCubit(context.read<TasksCubit>()),
         ),
         BlocProvider<TodayCubit>(
           lazy: false,

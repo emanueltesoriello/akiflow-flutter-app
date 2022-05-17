@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
+import 'package:models/label/label.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 part 'settings_state.dart';
@@ -11,7 +13,9 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final DialogService _dialogService = locator<DialogService>();
 
-  SettingsCubit() : super(const SettingsCubitState()) {
+  final TasksCubit _tasksCubit;
+
+  SettingsCubit(this._tasksCubit) : super(const SettingsCubitState()) {
     _init();
   }
 
@@ -22,10 +26,29 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     String buildNumber = packageInfo.buildNumber;
 
     emit(state.copyWith(appVersion: '$version ($buildNumber)'));
+
+    List<Label> allItems = _tasksCubit.state.labels;
+    List<Label> folders = allItems.where((element) => element.type == "folder").toList();
+
+    Map<Label, bool> folderOpen = {};
+
+    for (var folder in folders) {
+      folderOpen[folder] = false;
+    }
+
+    emit(state.copyWith(folderOpen: folderOpen));
   }
 
   void bugReport() {
     _sentryService.captureException(Exception('Bug report'));
     _dialogService.showMessage("Bug report sent");
+  }
+
+  void toggleFolder(Label folder) {
+    Map<Label, bool> openFolder = Map.from(state.folderOpen);
+
+    openFolder[folder] = !(openFolder[folder] ?? false);
+
+    emit(state.copyWith(folderOpen: openFolder));
   }
 }

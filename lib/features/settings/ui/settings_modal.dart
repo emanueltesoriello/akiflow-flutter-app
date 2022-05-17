@@ -9,6 +9,7 @@ import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/components/task/label_item.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/folder_item.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -227,106 +228,120 @@ class SettingsModal extends StatelessWidget {
                         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
                       ),
                     ),
-                    SvgPicture.asset(
-                      "assets/images/icons/_common/plus.svg",
-                      width: 22,
-                      height: 22,
-                      color: ColorsExt.grey3(context),
+                    InkWell(
+                      onTap: () {
+                        // TODO create label
+                      },
+                      child: SvgPicture.asset(
+                        "assets/images/icons/_common/plus.svg",
+                        width: 22,
+                        height: 22,
+                        color: ColorsExt.grey3(context),
+                      ),
                     )
                   ],
                 ),
                 const SizedBox(height: 7.5),
-                _labels(),
+                BlocBuilder<SettingsCubit, SettingsCubitState>(
+                  builder: (context, settingsState) {
+                    return BlocBuilder<TasksCubit, TasksCubitState>(
+                      builder: (context, tasksState) {
+                        List<Label> allItems = tasksState.labels;
+
+                        List<Label> folders = allItems.where((element) => element.type == "folder").toList();
+                        List<Label> labelsWithoutFolder = allItems
+                            .where((element) =>
+                                element.type != "folder" && element.type != "section" && element.parentId == null)
+                            .toList();
+
+                        Map<Label?, List<Label>> folderLabels = {};
+
+                        // Add to top all the labels which don't have parentId
+                        folderLabels[null] = labelsWithoutFolder;
+
+                        for (var folder in folders) {
+                          List<Label> labels = allItems.where((Label label) => label.parentId == folder.id).toList();
+                          folderLabels[folder] = labels;
+                        }
+
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: folderLabels.length,
+                          separatorBuilder: (context, index) => const SizedBox(height: 4),
+                          itemBuilder: (context, index) {
+                            Label? folder = folderLabels.keys.elementAt(index);
+                            List<Label> labels = folderLabels.values.elementAt(index);
+
+                            if (folder == null) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: labels.length,
+                                itemBuilder: (context, index) {
+                                  Label label = labels[index];
+
+                                  return LabelItem(
+                                    label,
+                                    onTap: () {
+                                      context.read<MainCubit>().selectLabel(label);
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                },
+                              );
+                            } else {
+                              List<Label>? labels = folderLabels[folder] ?? [];
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FolderItem(
+                                    folder,
+                                    onTap: () {
+                                      context.read<SettingsCubit>().toggleFolder(folder);
+                                    },
+                                  ),
+                                  Builder(builder: (context) {
+                                    bool open = settingsState.folderOpen[folder] ?? false;
+
+                                    if (!open) {
+                                      return const SizedBox();
+                                    }
+
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                                      itemCount: labels.length,
+                                      itemBuilder: (context, index) {
+                                        Label label = labels[index];
+
+                                        return LabelItem(
+                                          label,
+                                          onTap: () {
+                                            context.read<MainCubit>().selectLabel(label);
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                    );
+                                  })
+                                ],
+                              );
+                            }
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
                 const SizedBox(height: 24),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  BlocBuilder<TasksCubit, TasksCubitState> _labels() {
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, state) {
-        List<Label> allItems = state.labels;
-
-        List<Label> folders = allItems.where((element) => element.type == "folder").toList();
-        List<Label> labelsWithoutFolder = allItems
-            .where((element) => element.type != "folder" && element.type != "section" && element.parentId == null)
-            .toList();
-
-        Map<Label?, List<Label>> folderLabels = {};
-
-        // Add to top all the labels which don't have parentId
-        folderLabels[null] = labelsWithoutFolder;
-
-        for (var folder in folders) {
-          List<Label> labels = allItems.where((Label label) => label.parentId == folder.id).toList();
-          folderLabels[folder] = labels;
-        }
-
-        return ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: folderLabels.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 4),
-          itemBuilder: (context, index) {
-            Label? folder = folderLabels.keys.elementAt(index);
-            List<Label> labels = folderLabels.values.elementAt(index);
-
-            if (folder == null) {
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: labels.length,
-                itemBuilder: (context, index) {
-                  Label label = labels[index];
-
-                  return LabelItem(
-                    label,
-                    onTap: () {
-                      context.read<MainCubit>().selectLabel(label);
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              );
-            } else {
-              List<Label>? labels = folderLabels[folder] ?? [];
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FolderItem(
-                    folder,
-                    onTap: () {
-                      // TODO open close folder
-                    },
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: labels.length,
-                    itemBuilder: (context, index) {
-                      Label label = labels[index];
-
-                      return LabelItem(
-                        label,
-                        onTap: () {
-                          context.read<MainCubit>().selectLabel(label);
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                  )
-                ],
-              );
-            }
-          },
-        );
-      },
     );
   }
 }
