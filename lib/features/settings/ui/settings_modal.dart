@@ -5,12 +5,16 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_selectable.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
+import 'package:mobile/components/base/separator.dart';
+import 'package:mobile/components/task/label_item.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/settings/folder_item.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
 class SettingsModal extends StatelessWidget {
@@ -21,9 +25,7 @@ class SettingsModal extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-        ),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
@@ -33,6 +35,7 @@ class SettingsModal extends StatelessWidget {
             color: Theme.of(context).backgroundColor,
             padding: const EdgeInsets.only(top: 16),
             child: ListView(
+              shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 const ScrollChip(),
@@ -86,7 +89,7 @@ class SettingsModal extends StatelessWidget {
                     InkWell(
                       child: SvgPicture.asset(
                         "assets/images/icons/_common/gear_alt.svg",
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey2(context),
                       ),
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
@@ -161,11 +164,169 @@ class SettingsModal extends StatelessWidget {
                     );
                   },
                 ),
+                const SizedBox(height: 2),
+                BlocBuilder<MainCubit, MainCubitState>(
+                  builder: (context, state) {
+                    HomeViewType homeViewType = state.homeViewType;
+
+                    return ButtonSelectable(
+                      title: t.task.someday,
+                      leading: SvgPicture.asset(
+                        "assets/images/icons/_common/tray.svg",
+                        height: 19,
+                        color: ColorsExt.grey3(context),
+                      ),
+                      selected: homeViewType == HomeViewType.someday,
+                      trailing: Text(
+                        t.comingSoon,
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: ColorsExt.grey3(context),
+                        ),
+                      ),
+                      onPressed: () {
+                        context.read<MainCubit>().changeHomeView(2);
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 2),
+                BlocBuilder<MainCubit, MainCubitState>(
+                  builder: (context, state) {
+                    HomeViewType homeViewType = state.homeViewType;
+
+                    return ButtonSelectable(
+                      title: t.allTasks,
+                      leading: SvgPicture.asset(
+                        "assets/images/icons/_common/rectangle_grid_1x2.svg",
+                        height: 19,
+                        color: ColorsExt.grey3(context),
+                      ),
+                      selected: homeViewType == HomeViewType.someday,
+                      trailing: Text(
+                        t.comingSoon,
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: ColorsExt.grey3(context),
+                        ),
+                      ),
+                      onPressed: () {
+                        context.read<MainCubit>().changeHomeView(2);
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                const Separator(),
+                const SizedBox(height: 19.5),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        t.settings.labels.toUpperCase(),
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      "assets/images/icons/_common/plus.svg",
+                      width: 22,
+                      height: 22,
+                      color: ColorsExt.grey3(context),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 7.5),
+                _labels(),
+                const SizedBox(height: 24),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  BlocBuilder<TasksCubit, TasksCubitState> _labels() {
+    return BlocBuilder<TasksCubit, TasksCubitState>(
+      builder: (context, state) {
+        List<Label> allItems = state.labels;
+
+        List<Label> folders = allItems.where((element) => element.type == "folder").toList();
+        List<Label> labelsWithoutFolder = allItems
+            .where((element) => element.type != "folder" && element.type != "section" && element.parentId == null)
+            .toList();
+
+        Map<Label?, List<Label>> folderLabels = {};
+
+        // Add to top all the labels which don't have parentId
+        folderLabels[null] = labelsWithoutFolder;
+
+        for (var folder in folders) {
+          List<Label> labels = allItems.where((Label label) => label.parentId == folder.id).toList();
+          folderLabels[folder] = labels;
+        }
+
+        return ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: folderLabels.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 4),
+          itemBuilder: (context, index) {
+            Label? folder = folderLabels.keys.elementAt(index);
+            List<Label> labels = folderLabels.values.elementAt(index);
+
+            if (folder == null) {
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: labels.length,
+                itemBuilder: (context, index) {
+                  Label label = labels[index];
+
+                  return LabelItem(
+                    label,
+                    onTap: () {
+                      // TODO open label screen
+                    },
+                  );
+                },
+              );
+            } else {
+              List<Label>? labels = folderLabels[folder] ?? [];
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FolderItem(
+                    folder,
+                    onTap: () {
+                      // TODO open label screen
+                    },
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: labels.length,
+                    itemBuilder: (context, index) {
+                      Label label = labels[index];
+
+                      return LabelItem(
+                        label,
+                        onTap: () {
+                          // TODO open label screen
+                        },
+                      );
+                    },
+                  )
+                ],
+              );
+            }
+          },
+        );
+      },
     );
   }
 }

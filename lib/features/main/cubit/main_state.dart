@@ -1,6 +1,6 @@
 part of 'main_cubit.dart';
 
-enum HomeViewType { inbox, today, calendar }
+enum HomeViewType { inbox, today, calendar, someday, allTasks }
 
 class MainCubitState extends Equatable {
   final bool loading;

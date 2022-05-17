@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 120 
+ * Strings: 123 
  *
- * Built on 2022-05-17 at 08:30 UTC
+ * Built on 2022-05-17 at 13:10 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -317,6 +317,8 @@ class _StringsEn {
 	late final _StringsLinkedContentEn linkedContent = _StringsLinkedContentEn._(_root);
 	late final _StringsEditTaskEn editTask = _StringsEditTaskEn._(_root);
 	late final _StringsTodayEn today = _StringsTodayEn._(_root);
+	String get comingSoon => 'Coming soon';
+	String get allTasks => 'All tasks';
 }
 
 // Path: onboarding
@@ -380,6 +382,7 @@ class _StringsSettingsEn {
 	String get followUsOnTwitter => 'Follow Us on Twitter';
 	String get joinOurCommunity => 'Join our community';
 	String get bugReport => 'Bug report';
+	String get labels => 'Labels';
 }
 
 // Path: addTask
@@ -591,6 +594,7 @@ extension on _StringsEn {
 			'settings.followUsOnTwitter': 'Follow Us on Twitter',
 			'settings.joinOurCommunity': 'Join our community',
 			'settings.bugReport': 'Bug report',
+			'settings.labels': 'Labels',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',
@@ -679,6 +683,8 @@ extension on _StringsEn {
 			'today.toDos': 'To-dos',
 			'today.pinnedInCalendar': 'Pinned in calendar',
 			'today.done': 'Done',
+			'comingSoon': 'Coming soon',
+			'allTasks': 'All tasks',
 		};
 	}
 }

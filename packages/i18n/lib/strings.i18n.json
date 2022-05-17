@@ -37,7 +37,8 @@
     "about": "About",
     "followUsOnTwitter": "Follow Us on Twitter",
     "joinOurCommunity": "Join our community",
-    "bugReport": "Bug report"
+    "bugReport": "Bug report",
+    "labels": "Labels"
   },
   "addTask": {
     "titleHint": "Try: review financials today 9am",
@@ -144,5 +145,7 @@
     "toDos": "To-dos",
     "pinnedInCalendar": "Pinned in calendar",
     "done": "Done"
-  }
+  },
+  "comingSoon": "Coming soon",
+  "allTasks": "All tasks"
 }

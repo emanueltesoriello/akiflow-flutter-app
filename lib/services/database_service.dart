@@ -296,7 +296,7 @@ CREATE TABLE IF NOT EXISTS lists(
   `deleted_at` TEXT,
   `sorting` INTEGER,
   `remote_updated_at` TEXT,
-  "parentId" UUID,
+  `parent_id` UUID,
   `is_folder` INTEGER,
   `system` VARCHAR(255),
   `type` VARCHAR(255)

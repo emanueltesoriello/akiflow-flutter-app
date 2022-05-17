@@ -139,6 +139,7 @@ class MainPage extends StatelessWidget {
                 if (index == 0) {
                   showCupertinoModalBottomSheet(
                     context: context,
+                    expand: true,
                     builder: (context) => const SettingsModal(),
                   );
                 } else {

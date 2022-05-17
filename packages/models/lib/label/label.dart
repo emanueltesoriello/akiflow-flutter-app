@@ -118,10 +118,11 @@ class Label extends Equatable implements Base {
       "icon": icon,
       "color": color,
       "type": type,
+      "parent_id": parentId,
       "updated_at": updatedAt,
       "created_at": createdAt,
       "deleted_at": deletedAt,
-      "remote_updated_at": remoteUpdatedAt
+      "remote_updated_at": remoteUpdatedAt,
     };
   }
 
