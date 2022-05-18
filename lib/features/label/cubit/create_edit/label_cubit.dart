@@ -25,6 +25,22 @@ class LabelCubit extends Cubit<LabelCubitState> {
   _init() async {
     List<Task> tasks = await _tasksRepository.getLabelTasks(state.selectedLabel!);
     emit(state.copyWith(tasks: tasks));
+
+    List<Label> allLabels = await _labelsRepository.get();
+    List<Label> sections = allLabels.where((label) => label.type == "section").toList();
+    List<Label> labelSections = [];
+
+    Label noSection = const Label(title: "No Section", type: "section");
+    labelSections.add(noSection);
+    labelSections.addAll(sections.where((label) => label.parentId == state.selectedLabel!.id).toList());
+
+    emit(state.copyWith(sections: labelSections));
+
+    Map<String?, bool> openedSections = {};
+    for (Label label in labelSections) {
+      openedSections[label.id] = true;
+    }
+    emit(state.copyWith(openedSections: openedSections));
   }
 
   void setColor(String rawColorName) {
@@ -79,5 +95,11 @@ class LabelCubit extends Cubit<LabelCubitState> {
     await _labelsRepository.updateById(labelUpdated.id, data: labelUpdated);
 
     labelsCubit.syncAllAndRefresh();
+  }
+
+  void toggleOpenSection(String? sectionId) {
+    Map<String?, bool> openedSections = Map.from(state.openedSections);
+    openedSections[sectionId] = !(openedSections[sectionId] ?? true);
+    emit(state.copyWith(openedSections: openedSections));
   }
 }

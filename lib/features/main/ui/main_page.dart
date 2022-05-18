@@ -203,7 +203,7 @@ class MainPage extends StatelessWidget {
                             LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
                             return BlocProvider(
-                              key: ObjectKey(label),
+                              key: UniqueKey(),
                               create: (context) => LabelCubit(label, labelsCubit: labelsCubit),
                               child: LabelView(key: ObjectKey(label)),
                             );
