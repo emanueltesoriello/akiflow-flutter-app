@@ -175,7 +175,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () {
-                            Navigator.pop(context);
+                            Navigator.pop(context, true);
                           },
                           child: Container(
                             width: double.infinity,

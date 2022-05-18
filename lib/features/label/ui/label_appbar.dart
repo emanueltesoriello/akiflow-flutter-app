@@ -71,7 +71,7 @@ class LabelAppBar extends StatelessWidget {
                 // Use a reference to the current label to update ui after updated the label
                 LabelCubit labelUpdateCubit = LabelCubit(label, labelsCubit: labelsCubit);
 
-                await showCupertinoModalBottomSheet(
+                bool? update = await showCupertinoModalBottomSheet(
                   context: context,
                   builder: (context) => BlocProvider(
                     key: ObjectKey(label),
@@ -80,7 +80,10 @@ class LabelAppBar extends StatelessWidget {
                   ),
                 );
 
-                currentLabelCubit.saveLabel(labelUpdateCubit.state.selectedLabel!);
+                if (update != null && update == true) {
+                  currentLabelCubit.saveLabel(labelUpdateCubit.state.selectedLabel!);
+                }
+
                 break;
               case LabelActions.order:
                 // TODO: Handle this case.
