@@ -302,7 +302,7 @@ class SettingsModal extends StatelessWidget {
                   builder: (context, settingsState) {
                     return BlocBuilder<LabelsCubit, LabelsCubitState>(
                       builder: (context, tasksState) {
-                        List<Label> allItems = tasksState.labels;
+                        List<Label> allItems = tasksState.labels.where((element) => element.deletedAt == null).toList();
 
                         List<Label> folders = allItems.where((element) => element.type == "folder").toList();
                         List<Label> labelsWithoutFolder = allItems

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
@@ -13,6 +14,7 @@ part 'label_state.dart';
 
 class LabelCubit extends Cubit<LabelCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
+  final LabelsRepository _labelsRepository = locator<LabelsRepository>();
 
   final LabelsCubit labelsCubit;
 
@@ -68,5 +70,14 @@ class LabelCubit extends Cubit<LabelCubitState> {
 
   void toggleShowDone() {
     emit(state.copyWith(showDone: !state.showDone));
+  }
+
+  Future<void> delete() async {
+    Label labelUpdated = state.selectedLabel!.copyWith(deletedAt: DateTime.now().toUtc().toIso8601String());
+    emit(state.copyWith(selectedLabel: labelUpdated));
+
+    await _labelsRepository.updateById(labelUpdated.id, data: labelUpdated);
+
+    labelsCubit.syncAllAndRefresh();
   }
 }

@@ -7,6 +7,7 @@ import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
@@ -97,7 +98,8 @@ class LabelAppBar extends StatelessWidget {
                 context.read<LabelCubit>().toggleShowDone();
                 break;
               case LabelActions.delete:
-                // TODO: Handle this case.
+                context.read<LabelCubit>().delete();
+                context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
                 break;
             }
           },
