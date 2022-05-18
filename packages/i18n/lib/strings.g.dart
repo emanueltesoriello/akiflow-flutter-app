@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 130 
+ * Strings: 131 
  *
- * Built on 2022-05-18 at 09:53 UTC
+ * Built on 2022-05-18 at 10:50 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -540,6 +540,7 @@ class _StringsLabelEn {
 	String get noFolder => 'No Folder';
 	String get color => 'Color';
 	String get folder => 'Folder';
+	String get createFolder => 'Create Folder';
 }
 
 // Path: task.undoActions
@@ -709,6 +710,7 @@ extension on _StringsEn {
 			'label.noFolder': 'No Folder',
 			'label.color': 'Color',
 			'label.folder': 'Folder',
+			'label.createFolder': 'Create Folder',
 		};
 	}
 }

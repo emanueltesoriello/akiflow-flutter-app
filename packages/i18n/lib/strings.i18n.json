@@ -155,6 +155,7 @@
     "save": "Save",
     "noFolder": "No Folder",
     "color": "Color",
-    "folder": "Folder"
+    "folder": "Folder",
+    "createFolder": "Create Folder"
   }
 }
