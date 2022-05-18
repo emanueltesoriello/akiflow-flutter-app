@@ -59,6 +59,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                         const SizedBox(height: 16),
                         BorderedInputView(
                           focus: titleFocus,
+                          initialValue: context.read<LabelCubit>().state.selectedLabel?.title,
                           onChanged: (value) {
                             context.read<LabelCubit>().titleChanged(value);
                           },
@@ -174,7 +175,6 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () {
-                            context.read<LabelCubit>().createLabel();
                             Navigator.pop(context);
                           },
                           child: Container(
@@ -198,10 +198,22 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                                         color: ColorsExt.grey1(context)),
                                   ),
                                   const SizedBox(width: 11),
-                                  Text(
-                                    t.label.createLabel,
-                                    style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
-                                    textAlign: TextAlign.center,
+                                  BlocBuilder<LabelCubit, LabelCubitState>(
+                                    builder: (context, state) {
+                                      String text;
+
+                                      if (state.selectedLabel?.id == null) {
+                                        text = t.label.createLabel;
+                                      } else {
+                                        text = t.label.save;
+                                      }
+
+                                      return Text(
+                                        text,
+                                        style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
+                                        textAlign: TextAlign.center,
+                                      );
+                                    },
                                   ),
                                 ],
                               ),

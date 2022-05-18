@@ -34,7 +34,8 @@ class AppBarComp extends StatelessWidget {
     return Column(
       children: [
         Space(MediaQuery.of(context).padding.top),
-        Padding(
+        Container(
+          constraints: const BoxConstraints(maxHeight: 56),
           padding: const EdgeInsets.symmetric(vertical: 12.5),
           child: Row(
             children: [

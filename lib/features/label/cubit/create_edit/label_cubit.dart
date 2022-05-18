@@ -33,9 +33,14 @@ class LabelCubit extends Cubit<LabelCubitState> {
     emit(state.copyWith(selectedLabel: label));
   }
 
-  void createLabel() {
-    Label newLabel = state.selectedLabel!.copyWith(id: const Uuid().v4());
-    labelsCubit.addLabel(newLabel);
+  void saveLabel(Label label) {
+    if (state.selectedLabel?.id == null) {
+      Label newLabel = label.copyWith(id: const Uuid().v4());
+      labelsCubit.addLabel(newLabel);
+    } else {
+      labelsCubit.updateLabel(label);
+      emit(state.copyWith(selectedLabel: label));
+    }
   }
 
   void titleChanged(String value) {

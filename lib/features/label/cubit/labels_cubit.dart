@@ -38,4 +38,16 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _init();
   }
+
+  Future<void> updateLabel(Label label) async {
+    List<Label> labels = List.from(state.labels);
+    labels.add(label);
+    emit(state.copyWith(labels: labels));
+
+    await _labelsRepository.updateById(label.id, data: label);
+
+    await _syncControllerService.syncAll();
+
+    await _init();
+  }
 }

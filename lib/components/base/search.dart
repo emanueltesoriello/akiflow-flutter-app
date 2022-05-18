@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/style/colors.dart';
 
-class BorderedInputView extends StatelessWidget {
+class BorderedInputView extends StatefulWidget {
   final Function(String) onChanged;
   final String hint;
   final FocusNode? focus;
+  final String? initialValue;
 
   const BorderedInputView({
     Key? key,
     required this.onChanged,
     required this.hint,
     this.focus,
+    this.initialValue,
   }) : super(key: key);
+
+  @override
+  State<BorderedInputView> createState() => _BorderedInputViewState();
+}
+
+class _BorderedInputViewState extends State<BorderedInputView> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.initialValue != null) {
+      _controller.text = widget.initialValue!;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +43,12 @@ class BorderedInputView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
         child: TextField(
-          focusNode: focus,
+          controller: _controller,
+          focusNode: widget.focus,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.zero,
             isDense: true,
-            hintText: hint,
+            hintText: widget.hint,
             border: InputBorder.none,
             hintStyle: TextStyle(
               color: ColorsExt.grey3(context),
@@ -42,7 +60,7 @@ class BorderedInputView extends StatelessWidget {
             fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
-          onChanged: onChanged,
+          onChanged: widget.onChanged,
         ),
       ),
     );

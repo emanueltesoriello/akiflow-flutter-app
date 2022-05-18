@@ -156,6 +156,11 @@
     "noFolder": "No Folder",
     "color": "Color",
     "folder": "Folder",
-    "createFolder": "Create Folder"
+    "createFolder": "Create Folder",
+    "editLabel": "Edit Label",
+    "order": "Order",
+    "newSection": "New Section",
+    "showDone": "Show Done",
+    "deleteLabel": "Delete Label"
   }
 }

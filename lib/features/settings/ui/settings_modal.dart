@@ -228,71 +228,74 @@ class SettingsModal extends StatelessWidget {
                 const SizedBox(height: 12),
                 const Separator(),
                 const SizedBox(height: 19.5),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        t.settings.labels.toUpperCase(),
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
-                      ),
-                    ),
-                    PopupMenuButton<AddListType>(
-                      icon: SvgPicture.asset(
-                        "assets/images/icons/_common/plus.svg",
-                        width: 22,
-                        height: 22,
-                        color: ColorsExt.grey3(context),
-                      ),
-                      onSelected: (AddListType result) {
-                        switch (result) {
-                          case AddListType.addLabel:
-                            Label newLabel = const Label(color: "palette-red");
-
-                            LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                            showCupertinoModalBottomSheet(
-                              context: context,
-                              builder: (context) => BlocProvider(
-                                key: ObjectKey(newLabel),
-                                create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
-                                child: const CreateEditLabelModal(),
-                              ),
-                            );
-                            break;
-                          case AddListType.addFolder:
-                            Label newLabel = const Label();
-
-                            LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                            showCupertinoModalBottomSheet(
-                              context: context,
-                              builder: (context) => BlocProvider(
-                                key: ObjectKey(newLabel),
-                                create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
-                                child: const CreateFolderModal(),
-                              ),
-                            );
-                            break;
-                        }
-                      },
-                      itemBuilder: (BuildContext context) => <PopupMenuEntry<AddListType>>[
-                        PopupMenuItem<AddListType>(
-                          value: AddListType.addLabel,
-                          child: PopupMenuCustomItem(
-                            iconAsset: "assets/images/icons/_common/number.svg",
-                            text: t.label.addLabel,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          t.settings.labels.toUpperCase(),
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
                         ),
-                        PopupMenuItem<AddListType>(
-                          value: AddListType.addFolder,
-                          child: PopupMenuCustomItem(
-                            iconAsset: "assets/images/icons/_common/folder.svg",
-                            text: t.label.addFolder,
-                          ),
+                      ),
+                      PopupMenuButton<AddListType>(
+                        icon: SvgPicture.asset(
+                          "assets/images/icons/_common/plus.svg",
+                          width: 22,
+                          height: 22,
+                          color: ColorsExt.grey3(context),
                         ),
-                      ],
-                    )
-                  ],
+                        onSelected: (AddListType result) {
+                          switch (result) {
+                            case AddListType.addLabel:
+                              Label newLabel = const Label(color: "palette-red");
+
+                              LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                              showCupertinoModalBottomSheet(
+                                context: context,
+                                builder: (context) => BlocProvider(
+                                  key: ObjectKey(newLabel),
+                                  create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
+                                  child: const CreateEditLabelModal(),
+                                ),
+                              );
+                              break;
+                            case AddListType.addFolder:
+                              Label newLabel = const Label();
+
+                              LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                              showCupertinoModalBottomSheet(
+                                context: context,
+                                builder: (context) => BlocProvider(
+                                  key: ObjectKey(newLabel),
+                                  create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
+                                  child: const CreateFolderModal(),
+                                ),
+                              );
+                              break;
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<AddListType>>[
+                          PopupMenuItem<AddListType>(
+                            value: AddListType.addLabel,
+                            child: PopupMenuCustomItem(
+                              iconAsset: "assets/images/icons/_common/number.svg",
+                              text: t.label.addLabel,
+                            ),
+                          ),
+                          PopupMenuItem<AddListType>(
+                            value: AddListType.addFolder,
+                            child: PopupMenuCustomItem(
+                              iconAsset: "assets/images/icons/_common/folder.svg",
+                              text: t.label.addFolder,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 7.5),
                 BlocBuilder<SettingsCubit, SettingsCubitState>(
