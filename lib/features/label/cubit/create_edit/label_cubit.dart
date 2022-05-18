@@ -65,4 +65,8 @@ class LabelCubit extends Cubit<LabelCubitState> {
       emit(state.copyWith(sorting: TaskListSorting.ascending));
     }
   }
+
+  void toggleShowDone() {
+    emit(state.copyWith(showDone: !state.showDone));
+  }
 }

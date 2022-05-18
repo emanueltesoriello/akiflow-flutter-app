@@ -15,10 +15,12 @@ enum LabelActions { edit, order, newSection, showDone, delete }
 
 class LabelAppBar extends StatelessWidget {
   final Label label;
+  final bool showDone;
 
   const LabelAppBar({
     Key? key,
     required this.label,
+    required this.showDone,
   }) : super(key: key);
 
   @override
@@ -92,7 +94,7 @@ class LabelAppBar extends StatelessWidget {
                 // TODO: Handle this case.
                 break;
               case LabelActions.showDone:
-                // TODO: Handle this case.
+                context.read<LabelCubit>().toggleShowDone();
                 break;
               case LabelActions.delete:
                 // TODO: Handle this case.
@@ -144,7 +146,7 @@ class LabelAppBar extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: PopupMenuCustomItem(
                   iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
-                  text: t.label.showDone,
+                  text: showDone ? t.label.hideDone : t.label.showDone,
                 ),
               ),
             ),

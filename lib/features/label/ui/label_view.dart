@@ -16,11 +16,15 @@ class LabelView extends StatelessWidget {
       builder: (context, state) {
         List<Task> labelTasks = state.tasks ?? [];
 
-        List<Task> filtered = labelTasks.where((element) => !element.isCompletedComputed).toList();
+        List<Task> filtered = labelTasks.toList();
+
+        if (!state.showDone) {
+          filtered = labelTasks.where((element) => !element.isCompletedComputed).toList();
+        }
 
         return Column(
           children: [
-            LabelAppBar(label: state.selectedLabel!),
+            LabelAppBar(label: state.selectedLabel!, showDone: state.showDone),
             Expanded(
               child: ContainerInnerShadow(
                 child: TaskList(

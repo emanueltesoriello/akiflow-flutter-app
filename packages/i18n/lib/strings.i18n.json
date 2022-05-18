@@ -161,6 +161,7 @@
     "order": "Order",
     "newSection": "New Section",
     "showDone": "Show Done",
-    "deleteLabel": "Delete Label"
+    "deleteLabel": "Delete Label",
+    "hideDone": "Hide Done"
   }
 }
