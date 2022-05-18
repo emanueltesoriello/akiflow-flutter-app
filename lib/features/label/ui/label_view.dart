@@ -25,7 +25,7 @@ class LabelView extends StatelessWidget {
               child: ContainerInnerShadow(
                 child: TaskList(
                   tasks: filtered,
-                  sorting: TaskListSorting.ascending,
+                  sorting: state.sorting,
                   hideLabel: true,
                 ),
               ),

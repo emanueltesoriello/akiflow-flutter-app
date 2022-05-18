@@ -86,7 +86,7 @@ class LabelAppBar extends StatelessWidget {
 
                 break;
               case LabelActions.order:
-                // TODO: Handle this case.
+                context.read<LabelCubit>().toggleSorting();
                 break;
               case LabelActions.newSection:
                 // TODO: Handle this case.

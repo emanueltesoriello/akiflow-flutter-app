@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
@@ -53,5 +54,15 @@ class LabelCubit extends Cubit<LabelCubitState> {
   void createFolder() {
     Label newLabel = state.selectedLabel!.copyWith(id: const Uuid().v4(), type: "folder");
     labelsCubit.addLabel(newLabel);
+  }
+
+  void toggleSorting() {
+    TaskListSorting sorting = state.sorting;
+
+    if (sorting == TaskListSorting.ascending) {
+      emit(state.copyWith(sorting: TaskListSorting.descending));
+    } else {
+      emit(state.copyWith(sorting: TaskListSorting.ascending));
+    }
   }
 }
