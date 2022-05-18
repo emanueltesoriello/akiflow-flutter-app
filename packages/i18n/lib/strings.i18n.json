@@ -163,6 +163,7 @@
     "showDone": "Show Done",
     "deleteLabel": "Delete Label",
     "hideDone": "Hide Done",
-    "createSection": "Create Section"
+    "createSection": "Create Section",
+    "sectionTitle": "Section Title"
   }
 }

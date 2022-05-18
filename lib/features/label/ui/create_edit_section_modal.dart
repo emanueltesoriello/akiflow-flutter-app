@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/components/base/search.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/label/label.dart';
@@ -32,9 +31,8 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
       child: Wrap(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
+            decoration: const BoxDecoration(color: Colors.transparent),
+            constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.1),
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16.0),
@@ -51,64 +49,61 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                         const SizedBox(height: 16),
                         const ScrollChip(),
                         const SizedBox(height: 16),
-                        BorderedInputView(
-                          focus: titleFocus,
-                          initialValue: context.read<LabelCubit>().state.selectedLabel?.title,
-                          onChanged: (value) {
-                            context.read<LabelCubit>().titleChanged(value);
-                          },
-                          hint: "",
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                focusNode: titleFocus,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  isDense: true,
+                                  hintText: t.label.sectionTitle,
+                                  border: InputBorder.none,
+                                  hintStyle: TextStyle(
+                                    color: ColorsExt.grey3(context),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                style: TextStyle(
+                                  color: ColorsExt.grey2(context),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                onChanged: (value) {
+                                  context.read<LabelCubit>().titleChanged(value);
+                                },
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () {
+                                  Label newSection = context.read<LabelCubit>().state.selectedLabel!;
+                                  Navigator.pop(context, newSection);
+                                },
+                                borderRadius: BorderRadius.circular(8),
+                                child: Material(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: SizedBox(
+                                    height: 36,
+                                    width: 36,
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        "assets/images/icons/_common/arrow_up.svg",
+                                        width: 24,
+                                        height: 24,
+                                        color: Theme.of(context).backgroundColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 24),
-                        InkWell(
-                          onTap: () {
-                            Label newSection = context.read<LabelCubit>().state.selectedLabel!;
-                            Navigator.pop(context, newSection);
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: ColorsExt.grey4(context),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: SvgPicture.asset("assets/images/icons/_common/checkmark.svg",
-                                        color: ColorsExt.grey1(context)),
-                                  ),
-                                  const SizedBox(width: 11),
-                                  BlocBuilder<LabelCubit, LabelCubitState>(
-                                    builder: (context, state) {
-                                      String text;
-
-                                      if (state.selectedLabel?.id == null) {
-                                        text = t.label.createSection;
-                                      } else {
-                                        text = t.label.save;
-                                      }
-
-                                      return Text(
-                                        text,
-                                        style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
-                                        textAlign: TextAlign.center,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
                       ],
                     ),
                   ),
