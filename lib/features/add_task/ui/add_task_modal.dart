@@ -12,21 +12,33 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/label/label.dart';
+import 'package:models/task/task.dart';
 
 class AddTaskModal extends StatelessWidget {
   final TaskStatusType taskStatusType;
   final DateTime date;
+  final Label? label;
+  final Label? section;
 
   const AddTaskModal({
     Key? key,
     required this.taskStatusType,
     required this.date,
+    this.label,
+    this.section,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EditTaskCubit(context.read<TasksCubit>(), taskStatusType: taskStatusType, date: date),
+      create: (context) => EditTaskCubit(
+        context.read<TasksCubit>(),
+        taskStatusType: taskStatusType,
+        date: date,
+        label: label,
+        section: section,
+      ),
       child: const AddTaskModalView(),
     );
   }
@@ -110,7 +122,9 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                                       .read<EditTaskCubit>()
                                       .create(title: titleController.text, description: descriptionController.text);
 
-                                  Navigator.pop(context);
+                                  Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
+
+                                  Navigator.pop(context, taskUpdated);
                                 },
                                 borderRadius: BorderRadius.circular(8),
                                 child: Material(

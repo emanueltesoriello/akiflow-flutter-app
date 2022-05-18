@@ -24,17 +24,28 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task? task,
     TaskStatusType? taskStatusType,
     DateTime? date,
+    Label? label,
+    Label? section,
   }) : super(EditTaskCubitState(
-          originalTask: _buildTask(task, taskStatusType, date),
-          updatedTask: _buildTask(task, taskStatusType, date),
+          originalTask: _buildTask(task, taskStatusType, date, label, section),
+          updatedTask: _buildTask(task, taskStatusType, date, label, section),
+          selectedLabel: label,
         ));
 
-  static Task _buildTask(Task? task, TaskStatusType? taskStatusType, DateTime? date) {
+  static Task _buildTask(
+    Task? task,
+    TaskStatusType? taskStatusType,
+    DateTime? date,
+    Label? label,
+    Label? section,
+  ) {
     return task ??
         const Task().copyWith(
           id: const Uuid().v4(),
           status: Nullable(taskStatusType != null ? taskStatusType.id : task?.status),
           date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
+          listId: label?.id,
+          sectionId: section?.id,
         );
   }
 
@@ -313,5 +324,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     _tasksCubit.syncAll();
+
+    // _labels.refresh();
   }
 }

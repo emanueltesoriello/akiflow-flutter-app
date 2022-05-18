@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 139 
+ * Strings: 142 
  *
- * Built on 2022-05-18 at 14:35 UTC
+ * Built on 2022-05-18 at 14:48 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -549,6 +549,9 @@ class _StringsLabelEn {
 	String get hideDone => 'Hide Done';
 	String get createSection => 'Create Section';
 	String get sectionTitle => 'Section Title';
+	String get addTask => 'Add Task';
+	String get rename => 'Rename';
+	String get delete => 'Delete';
 }
 
 // Path: task.undoActions
@@ -727,6 +730,9 @@ extension on _StringsEn {
 			'label.hideDone': 'Hide Done',
 			'label.createSection': 'Create Section',
 			'label.sectionTitle': 'Section Title',
+			'label.addTask': 'Add Task',
+			'label.rename': 'Rename',
+			'label.delete': 'Delete',
 		};
 	}
 }

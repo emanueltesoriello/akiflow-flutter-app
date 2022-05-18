@@ -237,7 +237,7 @@ class TaskRow extends StatelessWidget {
             color = ColorsExt.green(context);
             break;
           default:
-            color = completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context);
+            color = completed ? ColorsExt.grey3(context) : ColorsExt.grey3(context);
         }
 
         return SvgPicture.asset(

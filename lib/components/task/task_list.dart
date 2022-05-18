@@ -35,7 +35,8 @@ class TaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> tasks = List.from(this.tasks);
+    List<Task> tasks =
+        List.from(this.tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed));
 
     tasks = TaskExt.sort(tasks, sorting: sorting);
 

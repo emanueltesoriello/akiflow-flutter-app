@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/style/colors.dart';
 
+enum SectionActionType { addTask, rename, delete }
+
 class SectionHeaderItem extends StatelessWidget {
   const SectionHeaderItem(
     this.title, {
@@ -9,12 +11,18 @@ class SectionHeaderItem extends StatelessWidget {
     required this.taskCount,
     required this.listOpened,
     required this.onClick,
+    required this.onCreateTask,
+    required this.onRename,
+    required this.onDelete,
   }) : super(key: key);
 
   final String title;
   final int taskCount;
   final bool listOpened;
   final Function() onClick;
+  final Function() onCreateTask;
+  final Function() onRename;
+  final Function() onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +31,7 @@ class SectionHeaderItem extends StatelessWidget {
       child: Container(
         height: 42,
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.only(left: 16),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -58,7 +66,69 @@ class SectionHeaderItem extends StatelessWidget {
               color: ColorsExt.grey3(context),
               width: 20,
               height: 20,
-            )
+            ),
+            const SizedBox(width: 8),
+            // TODO handle actions + update inbox when added from section
+            // PopupMenuButton<SectionActionType>(
+            //   padding: EdgeInsets.zero,
+            //   icon: SvgPicture.asset(
+            //     "assets/images/icons/_common/ellipsis.svg",
+            //     color: ColorsExt.grey3(context),
+            //     width: 20,
+            //     height: 20,
+            //   ),
+            //   onSelected: (SectionActionType result) {
+            //     switch (result) {
+            //       case SectionActionType.addTask:
+            //         onCreateTask();
+            //         break;
+            //       case SectionActionType.rename:
+            //         onRename();
+            //         break;
+            //       case SectionActionType.delete:
+            //         onDelete();
+            //         break;
+            //     }
+            //   },
+            //   itemBuilder: (BuildContext context) => <PopupMenuEntry<SectionActionType>>[
+            //     PopupMenuItem<SectionActionType>(
+            //       value: SectionActionType.addTask,
+            //       padding: EdgeInsets.zero,
+            //       height: 40,
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10),
+            //         child: PopupMenuCustomItem(
+            //           iconAsset: "assets/images/icons/_common/plus_square.svg",
+            //           text: t.label.addTask,
+            //         ),
+            //       ),
+            //     ),
+            //     PopupMenuItem<SectionActionType>(
+            //       value: SectionActionType.rename,
+            //       padding: EdgeInsets.zero,
+            //       height: 40,
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10),
+            //         child: PopupMenuCustomItem(
+            //           iconAsset: "assets/images/icons/_common/pencil.svg",
+            //           text: t.label.rename,
+            //         ),
+            //       ),
+            //     ),
+            //     PopupMenuItem<SectionActionType>(
+            //       value: SectionActionType.delete,
+            //       padding: EdgeInsets.zero,
+            //       height: 40,
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10),
+            //         child: PopupMenuCustomItem(
+            //           iconAsset: "assets/images/icons/_common/trash.svg",
+            //           text: t.label.delete,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),

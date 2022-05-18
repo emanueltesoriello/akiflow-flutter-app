@@ -164,6 +164,9 @@
     "deleteLabel": "Delete Label",
     "hideDone": "Hide Done",
     "createSection": "Create Section",
-    "sectionTitle": "Section Title"
+    "sectionTitle": "Section Title",
+    "addTask": "Add Task",
+    "rename": "Rename",
+    "delete": "Delete"
   }
 }
