@@ -38,18 +38,24 @@ class LabelView extends StatelessWidget {
                     slivers: state.sections.map((section) {
                       List<Task> tasks = filtered.where((task) => task.sectionId == section.id).toList();
 
-                      return TodayTaskList(
-                        tasks: tasks,
-                        sorting: TaskListSorting.descending,
-                        showTasks: state.openedSections[section.id] ?? false,
-                        header: SectionHeaderItem(
+                      Widget? header;
+
+                      if (state.sections.length > 1) {
+                        header = SectionHeaderItem(
                           section.title ?? t.task.noTitle,
                           taskCount: tasks.length,
                           onClick: () {
                             context.read<LabelCubit>().toggleOpenSection(section.id);
                           },
                           listOpened: state.openedSections[section.id] ?? false,
-                        ),
+                        );
+                      }
+
+                      return TodayTaskList(
+                        tasks: tasks,
+                        sorting: TaskListSorting.descending,
+                        showTasks: state.openedSections[section.id] ?? false,
+                        header: header,
                       );
                     }).toList(),
                   ),
