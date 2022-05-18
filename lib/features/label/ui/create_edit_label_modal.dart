@@ -16,7 +16,10 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 
 class CreateEditLabelModal extends StatefulWidget {
-  const CreateEditLabelModal({Key? key}) : super(key: key);
+  // Set to `false` to update the label after close the modal (edit label purpose)
+  final bool updateFromModal;
+
+  const CreateEditLabelModal({Key? key, this.updateFromModal = false}) : super(key: key);
 
   @override
   State<CreateEditLabelModal> createState() => _CreateEditLabelModalState();
@@ -175,7 +178,13 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () {
-                            Navigator.pop(context, true);
+                            if (widget.updateFromModal) {
+                              Label label = context.read<LabelCubit>().state.selectedLabel!;
+                              context.read<LabelCubit>().saveLabel(label);
+                              Navigator.pop(context);
+                            } else {
+                              Navigator.pop(context, true);
+                            }
                           },
                           child: Container(
                             width: double.infinity,

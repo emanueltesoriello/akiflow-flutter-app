@@ -257,7 +257,7 @@ class SettingsModal extends StatelessWidget {
                                 builder: (context) => BlocProvider(
                                   key: ObjectKey(newLabel),
                                   create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
-                                  child: const CreateEditLabelModal(),
+                                  child: const CreateEditLabelModal(updateFromModal: true),
                                 ),
                               );
                               break;

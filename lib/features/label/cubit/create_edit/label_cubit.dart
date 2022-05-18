@@ -4,6 +4,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:uuid/uuid.dart';
 
@@ -38,6 +39,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
       Label newLabel = label.copyWith(id: const Uuid().v4());
       labelsCubit.addLabel(newLabel);
     } else {
+      label = label.copyWith(updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
       labelsCubit.updateLabel(label);
       emit(state.copyWith(selectedLabel: label));
     }
