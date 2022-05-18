@@ -2,117 +2,79 @@ import 'package:flutter/material.dart';
 
 extension ColorsExt on Colors {
   static Color grey1(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey1
-        : ColorsDark.grey1;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey1 : ColorsDark.grey1;
   }
 
   static Color grey2(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey2
-        : ColorsDark.grey2;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey2 : ColorsDark.grey2;
   }
 
   static Color grey2_5(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey2_5
-        : ColorsDark.grey2_5;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey2_5 : ColorsDark.grey2_5;
   }
 
   static Color grey3(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey3
-        : ColorsDark.grey3;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey3 : ColorsDark.grey3;
   }
 
   static Color grey4(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey4
-        : ColorsDark.grey4;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey4 : ColorsDark.grey4;
   }
 
   static Color grey5(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey5
-        : ColorsDark.grey5;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey5 : ColorsDark.grey5;
   }
 
   static Color grey6(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey6
-        : ColorsDark.grey6;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey6 : ColorsDark.grey6;
   }
 
   static Color grey7(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.grey7
-        : ColorsDark.grey7;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey7 : ColorsDark.grey7;
   }
 
   static green(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.green
-        : ColorsDark.green;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.green : ColorsDark.green;
   }
 
   static green20(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.green20
-        : ColorsDark.green20;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.green20 : ColorsDark.green20;
   }
 
   static cyan(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.cyan
-        : ColorsDark.cyan;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.cyan : ColorsDark.cyan;
   }
 
   static cyan25(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.cyan25
-        : ColorsDark.cyan25;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.cyan25 : ColorsDark.cyan25;
   }
 
   static akiflow(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.akiflow
-        : ColorsDark.akiflow;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.akiflow : ColorsDark.akiflow;
   }
 
   static akiflow10(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.akiflow10
-        : ColorsDark.akiflow10;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.akiflow10 : ColorsDark.akiflow10;
   }
 
   static pink(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.pink
-        : ColorsDark.pink;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.pink : ColorsDark.pink;
   }
 
   static pink30(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.pink30
-        : ColorsDark.pink30;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.pink30 : ColorsDark.pink30;
   }
 
   static yellow(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.yellow
-        : ColorsDark.yellow;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.yellow : ColorsDark.yellow;
   }
 
   static red(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.red
-        : ColorsDark.red;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.red : ColorsDark.red;
   }
 
   static background(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? ColorsLight.white
-        : ColorsDark.grey1;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.white : ColorsDark.grey1;
   }
 
   static Color fromHex(String hexString) {
@@ -141,8 +103,31 @@ extension ColorsExt on Colors {
     'palette-brown': '#D99385',
   };
 
+  static Map<String, String> paletteColorsDisplayName = {
+    'palette-comet': 'Comet',
+    'palette-grey': 'Grey',
+    'palette-orange': 'Orange',
+    'palette-yellow': 'Yellow',
+    'palette-red': 'Red',
+    'palette-pink': 'Pink',
+    'palette-purple': 'Purple',
+    'palette-finn': 'Finn',
+    'palette-violet': 'Violet',
+    'palette-mauve': 'Mauve',
+    'palette-blue': 'Blue',
+    'palette-cyan': 'Cyan',
+    'palette-green': 'Green',
+    'palette-wildwillow': 'Wildwillow',
+    'palette-chico': 'Chico',
+    'palette-brown': 'Brown',
+  };
+
   static Color getFromName(String name) {
     return fromHex(paletteColors[name] ?? "#ffffff");
+  }
+
+  static String displayTextFromName(String name) {
+    return paletteColorsDisplayName[name] ?? "";
   }
 }
 

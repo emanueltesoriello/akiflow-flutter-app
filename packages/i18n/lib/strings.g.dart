@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 125 
+ * Strings: 129 
  *
- * Built on 2022-05-18 at 08:17 UTC
+ * Built on 2022-05-18 at 09:37 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -535,6 +535,10 @@ class _StringsLabelEn {
 	// Translations
 	String get addLabel => 'Add Label';
 	String get addFolder => 'Add Folder';
+	String get createLabel => 'Create Label';
+	String get save => 'Save';
+	String get noFolder => 'No Folder';
+	String get color => 'Color';
 }
 
 // Path: task.undoActions
@@ -699,6 +703,10 @@ extension on _StringsEn {
 			'allTasks': 'All tasks',
 			'label.addLabel': 'Add Label',
 			'label.addFolder': 'Add Folder',
+			'label.createLabel': 'Create Label',
+			'label.save': 'Save',
+			'label.noFolder': 'No Folder',
+			'label.color': 'Color',
 		};
 	}
 }

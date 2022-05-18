@@ -9,6 +9,8 @@ import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/components/task/label_item.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/label/cubit/label_cubit.dart';
+import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/folder_item.dart';
@@ -16,6 +18,7 @@ import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
@@ -241,7 +244,16 @@ class SettingsModal extends StatelessWidget {
                       onSelected: (AddListType result) {
                         switch (result) {
                           case AddListType.addLabel:
-                            // TODO: Handle this case.
+                            Label newLabel = const Label(color: "palette-red");
+
+                            showCupertinoModalBottomSheet(
+                              context: context,
+                              builder: (context) => BlocProvider(
+                                key: ObjectKey(newLabel),
+                                create: (context) => LabelCubit(newLabel),
+                                child: const CreateEditLabelModal(),
+                              ),
+                            );
                             break;
                           case AddListType.addFolder:
                             // TODO: Handle this case.

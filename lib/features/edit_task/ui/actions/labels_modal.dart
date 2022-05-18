@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
+import 'package:mobile/components/base/search.dart';
 import 'package:mobile/components/task/label_item.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -87,7 +88,8 @@ class _LabelsModalState extends State<LabelsModal> {
                               if (index == 1) {
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 16),
-                                  child: _Search(
+                                  child: SearchView(
+                                    hint: t.editTask.createOrSearchALabel,
                                     onChanged: (value) {
                                       _searchNotifier.value = value;
                                     },
@@ -128,49 +130,6 @@ class _LabelsModalState extends State<LabelsModal> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Search extends StatelessWidget {
-  final Function(String) onChanged;
-
-  const _Search({
-    Key? key,
-    required this.onChanged,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: ColorsExt.grey4(context),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-        child: TextField(
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.zero,
-            isDense: true,
-            hintText: t.editTask.createOrSearchALabel,
-            border: InputBorder.none,
-            hintStyle: TextStyle(
-              color: ColorsExt.grey3(context),
-              fontSize: 17,
-            ),
-          ),
-          style: TextStyle(
-            color: ColorsExt.grey2(context),
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-          ),
-          onChanged: onChanged,
         ),
       ),
     );

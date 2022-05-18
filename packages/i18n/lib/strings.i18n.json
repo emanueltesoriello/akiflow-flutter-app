@@ -150,6 +150,10 @@
   "allTasks": "All tasks",
   "label": {
     "addLabel": "Add Label",
-    "addFolder": "Add Folder"
+    "addFolder": "Add Folder",
+    "createLabel": "Create Label",
+    "save": "Save",
+    "noFolder": "No Folder",
+    "color": "Color"
   }
 }

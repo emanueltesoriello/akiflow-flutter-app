@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
-enum ButtonListPosition { single, top, center, bottom, onlyHorizontalPadding }
-
-class ButtonList extends StatefulWidget {
+class ButtonListLabel extends StatefulWidget {
   final String title;
   final Function() onPressed;
-  final String? leading;
-  final Color? leadingColor;
+  final Widget? leading;
   final ButtonListPosition position;
   final bool showShevron;
   final String? leadingTextIconAsset;
 
-  const ButtonList({
+  const ButtonListLabel({
     Key? key,
     required this.title,
     required this.onPressed,
     this.leading,
-    this.leadingColor,
     this.position = ButtonListPosition.single,
     this.showShevron = true,
     this.leadingTextIconAsset,
   }) : super(key: key);
 
   @override
-  State<ButtonList> createState() => _ButtonListState();
+  State<ButtonListLabel> createState() => _View();
 }
 
-class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateMixin {
+class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
   Animation<Color?>? _animation;
   late AnimationController _controller;
 
@@ -101,13 +98,12 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                         ),
                         child: Row(
                           children: [
-                            _buildLeadingIcon(),
+                            _buildLeading(),
                             Expanded(
                               child: Row(
                                 mainAxisAlignment:
                                     widget.leading == null ? MainAxisAlignment.center : MainAxisAlignment.start,
                                 children: [
-                                  _buildLeadingTextIcon(),
                                   Flexible(
                                     child: Text(
                                       widget.title,
@@ -149,37 +145,14 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildLeadingIcon() {
+  Widget _buildLeading() {
     if (widget.leading == null) {
       return const SizedBox();
     }
 
     return Row(
       children: [
-        SvgPicture.asset(
-          widget.leading!,
-          width: 24,
-          height: 24,
-          color: widget.leadingColor ?? ColorsExt.grey2(context),
-        ),
-        const SizedBox(width: 8),
-      ],
-    );
-  }
-
-  Widget _buildLeadingTextIcon() {
-    if (widget.leadingTextIconAsset == null) {
-      return const SizedBox();
-    }
-
-    return Row(
-      children: [
-        SvgPicture.asset(
-          widget.leadingTextIconAsset!,
-          width: 24,
-          height: 24,
-          color: widget.leadingColor ?? ColorsExt.grey2(context),
-        ),
+        widget.leading!,
         const SizedBox(width: 8),
       ],
     );

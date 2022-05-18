@@ -18,4 +18,9 @@ class LabelCubit extends Cubit<LabelCubitState> {
     List<Task> tasks = await _tasksRepository.getLabelTasks(state.selectedLabel!);
     emit(state.copyWith(tasks: tasks));
   }
+
+  void setColor(String rawColorName) {
+    Label label = state.selectedLabel!.copyWith(color: rawColorName);
+    emit(state.copyWith(selectedLabel: label));
+  }
 }
