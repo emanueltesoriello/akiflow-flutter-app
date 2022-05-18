@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 123 
+ * Strings: 125 
  *
- * Built on 2022-05-17 at 13:10 UTC
+ * Built on 2022-05-18 at 08:17 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -319,6 +319,7 @@ class _StringsEn {
 	late final _StringsTodayEn today = _StringsTodayEn._(_root);
 	String get comingSoon => 'Coming soon';
 	String get allTasks => 'All tasks';
+	late final _StringsLabelEn label = _StringsLabelEn._(_root);
 }
 
 // Path: onboarding
@@ -525,6 +526,17 @@ class _StringsTodayEn {
 	String get done => 'Done';
 }
 
+// Path: label
+class _StringsLabelEn {
+	_StringsLabelEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get addLabel => 'Add Label';
+	String get addFolder => 'Add Folder';
+}
+
 // Path: task.undoActions
 class _StringsTaskUndoActionsEn {
 	_StringsTaskUndoActionsEn._(this._root);
@@ -685,6 +697,8 @@ extension on _StringsEn {
 			'today.done': 'Done',
 			'comingSoon': 'Coming soon',
 			'allTasks': 'All tasks',
+			'label.addLabel': 'Add Label',
+			'label.addFolder': 'Add Folder',
 		};
 	}
 }

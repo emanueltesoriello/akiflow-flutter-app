@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
@@ -162,48 +163,42 @@ class BottomTaskActions extends StatelessWidget {
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<BottomTaskAdditionalActions>>[
                   PopupMenuItem<BottomTaskAdditionalActions>(
                     value: BottomTaskAdditionalActions.moveToInbox,
-                    child: _additionalActionMenuItem(
-                      context,
+                    child: PopupMenuCustomItem(
                       iconAsset: "assets/images/icons/_common/tray.svg",
                       text: t.task.moveToInbox,
                     ),
                   ),
                   PopupMenuItem<BottomTaskAdditionalActions>(
                     value: BottomTaskAdditionalActions.planForToday,
-                    child: _additionalActionMenuItem(
-                      context,
+                    child: PopupMenuCustomItem(
                       iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
                       text: t.task.planForToday,
                     ),
                   ),
                   PopupMenuItem<BottomTaskAdditionalActions>(
                     value: BottomTaskAdditionalActions.setDeadline,
-                    child: _additionalActionMenuItem(
-                      context,
+                    child: PopupMenuCustomItem(
                       iconAsset: "assets/images/icons/_common/flags.svg",
                       text: t.task.setDeadline,
                     ),
                   ),
                   PopupMenuItem<BottomTaskAdditionalActions>(
                     value: BottomTaskAdditionalActions.duplicate,
-                    child: _additionalActionMenuItem(
-                      context,
+                    child: PopupMenuCustomItem(
                       iconAsset: "assets/images/icons/_common/square_on_square.svg",
                       text: t.task.duplicate,
                     ),
                   ),
                   PopupMenuItem<BottomTaskAdditionalActions>(
                     value: BottomTaskAdditionalActions.markAsDone,
-                    child: _additionalActionMenuItem(
-                      context,
+                    child: PopupMenuCustomItem(
                       iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
                       text: t.task.markAsDone,
                     ),
                   ),
                   PopupMenuItem<BottomTaskAdditionalActions>(
                     value: BottomTaskAdditionalActions.delete,
-                    child: _additionalActionMenuItem(
-                      context,
+                    child: PopupMenuCustomItem(
                       iconAsset: "assets/images/icons/_common/trash.svg",
                       text: t.task.delete,
                     ),
@@ -214,25 +209,6 @@ class BottomTaskActions extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _additionalActionMenuItem(
-    BuildContext context, {
-    required String iconAsset,
-    required String text,
-  }) {
-    return Row(
-      children: [
-        SvgPicture.asset(
-          iconAsset,
-          width: 22,
-          height: 22,
-          color: ColorsExt.grey2(context),
-        ),
-        const SizedBox(width: 8),
-        Expanded(child: Text(text)),
-      ],
     );
   }
 }

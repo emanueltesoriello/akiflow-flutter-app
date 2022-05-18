@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
@@ -220,63 +221,39 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
       itemBuilder: (BuildContext context) => <PopupMenuEntry<EditTaskAdditionalAction>>[
         PopupMenuItem<EditTaskAdditionalAction>(
           value: EditTaskAdditionalAction.duplicate,
-          child: _additionalActionMenuItem(
-            context,
+          child: PopupMenuCustomItem(
             iconAsset: "assets/images/icons/_common/square_on_square.svg",
             text: t.task.duplicate,
           ),
         ),
         PopupMenuItem<EditTaskAdditionalAction>(
           value: EditTaskAdditionalAction.snoozeTomorrow,
-          child: _additionalActionMenuItem(
-            context,
+          child: PopupMenuCustomItem(
             iconAsset: "assets/images/icons/_common/clock.svg",
             text: t.task.snoozeTomorrow,
           ),
         ),
         PopupMenuItem<EditTaskAdditionalAction>(
           value: EditTaskAdditionalAction.snoozeNextWeek,
-          child: _additionalActionMenuItem(
-            context,
+          child: PopupMenuCustomItem(
             iconAsset: "assets/images/icons/_common/clock.svg",
             text: t.task.snoozeNextWeek,
           ),
         ),
         PopupMenuItem<EditTaskAdditionalAction>(
           value: EditTaskAdditionalAction.someday,
-          child: _additionalActionMenuItem(
-            context,
+          child: PopupMenuCustomItem(
             iconAsset: "assets/images/icons/_common/tray.svg",
             text: t.task.someday,
           ),
         ),
         PopupMenuItem<EditTaskAdditionalAction>(
           value: EditTaskAdditionalAction.delete,
-          child: _additionalActionMenuItem(
-            context,
+          child: PopupMenuCustomItem(
             iconAsset: "assets/images/icons/_common/trash.svg",
             text: t.task.delete,
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _additionalActionMenuItem(
-    BuildContext context, {
-    required String iconAsset,
-    required String text,
-  }) {
-    return Row(
-      children: [
-        SvgPicture.asset(
-          iconAsset,
-          width: 22,
-          height: 22,
-          color: ColorsExt.grey2(context),
-        ),
-        const SizedBox(width: 8),
-        Expanded(child: Text(text)),
       ],
     );
   }

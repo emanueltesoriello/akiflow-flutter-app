@@ -147,5 +147,9 @@
     "done": "Done"
   },
   "comingSoon": "Coming soon",
-  "allTasks": "All tasks"
+  "allTasks": "All tasks",
+  "label": {
+    "addLabel": "Add Label",
+    "addFolder": "Add Folder"
+  }
 }

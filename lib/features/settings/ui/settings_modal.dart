@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_selectable.dart';
+import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/components/task/label_item.dart';
@@ -17,6 +18,8 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+
+enum AddListType { addLabel, addFolder }
 
 class SettingsModal extends StatelessWidget {
   const SettingsModal({Key? key}) : super(key: key);
@@ -228,16 +231,39 @@ class SettingsModal extends StatelessWidget {
                         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        // TODO create label
-                      },
-                      child: SvgPicture.asset(
+                    PopupMenuButton<AddListType>(
+                      icon: SvgPicture.asset(
                         "assets/images/icons/_common/plus.svg",
                         width: 22,
                         height: 22,
                         color: ColorsExt.grey3(context),
                       ),
+                      onSelected: (AddListType result) {
+                        switch (result) {
+                          case AddListType.addLabel:
+                            // TODO: Handle this case.
+                            break;
+                          case AddListType.addFolder:
+                            // TODO: Handle this case.
+                            break;
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<AddListType>>[
+                        PopupMenuItem<AddListType>(
+                          value: AddListType.addLabel,
+                          child: PopupMenuCustomItem(
+                            iconAsset: "assets/images/icons/_common/number.svg",
+                            text: t.label.addLabel,
+                          ),
+                        ),
+                        PopupMenuItem<AddListType>(
+                          value: AddListType.addFolder,
+                          child: PopupMenuCustomItem(
+                            iconAsset: "assets/images/icons/_common/folder.svg",
+                            text: t.label.addFolder,
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),
