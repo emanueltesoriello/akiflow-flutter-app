@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -97,7 +97,7 @@ class TaskInfo extends StatelessWidget {
       return const SizedBox();
     }
 
-    List<Label> labels = context.watch<TasksCubit>().state.labels;
+    List<Label> labels = context.watch<LabelsCubit>().state.labels;
 
     Label? label = labels.firstWhereOrNull(
       (label) => task.listId!.contains(label.id!),

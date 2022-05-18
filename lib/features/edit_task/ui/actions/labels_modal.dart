@@ -4,7 +4,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/search.dart';
 import 'package:mobile/components/task/label_item.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/label_ext.dart';
 import 'package:models/label/label.dart';
@@ -46,7 +46,7 @@ class _LabelsModalState extends State<LabelsModal> {
                 const SizedBox(height: 12),
                 const ScrollChip(),
                 const SizedBox(height: 12),
-                BlocBuilder<TasksCubit, TasksCubitState>(
+                BlocBuilder<LabelsCubit, LabelsCubitState>(
                   builder: (context, state) {
                     List<Label> labels = state.labels.toList();
 
@@ -88,7 +88,7 @@ class _LabelsModalState extends State<LabelsModal> {
                               if (index == 1) {
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 16),
-                                  child: SearchView(
+                                  child: BorderedInputView(
                                     hint: t.editTask.createOrSearchALabel,
                                     onChanged: (value) {
                                       _searchNotifier.value = value;

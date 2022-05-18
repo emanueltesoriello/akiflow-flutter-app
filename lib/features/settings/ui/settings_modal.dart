@@ -9,7 +9,8 @@ import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/components/task/label_item.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/label/cubit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
@@ -246,11 +247,13 @@ class SettingsModal extends StatelessWidget {
                           case AddListType.addLabel:
                             Label newLabel = const Label(color: "palette-red");
 
+                            LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
                             showCupertinoModalBottomSheet(
                               context: context,
                               builder: (context) => BlocProvider(
                                 key: ObjectKey(newLabel),
-                                create: (context) => LabelCubit(newLabel),
+                                create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
                                 child: const CreateEditLabelModal(),
                               ),
                             );
@@ -282,7 +285,7 @@ class SettingsModal extends StatelessWidget {
                 const SizedBox(height: 7.5),
                 BlocBuilder<SettingsCubit, SettingsCubitState>(
                   builder: (context, settingsState) {
-                    return BlocBuilder<TasksCubit, TasksCubitState>(
+                    return BlocBuilder<LabelsCubit, LabelsCubitState>(
                       builder: (context, tasksState) {
                         List<Label> allItems = tasksState.labels;
 

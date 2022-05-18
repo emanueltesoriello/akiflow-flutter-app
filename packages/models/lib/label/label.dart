@@ -119,6 +119,7 @@ class Label extends Equatable implements Base {
       "color": color,
       "type": type,
       "parent_id": parentId,
+      "user_id": userId,
       "updated_at": updatedAt,
       "created_at": createdAt,
       "deleted_at": deletedAt,

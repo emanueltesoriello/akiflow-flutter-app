@@ -1,16 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:uuid/uuid.dart';
 
 part 'label_state.dart';
 
 class LabelCubit extends Cubit<LabelCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
 
-  LabelCubit(Label label) : super(LabelCubitState(selectedLabel: label)) {
+  final LabelsCubit labelsCubit;
+
+  LabelCubit(Label label, {required this.labelsCubit}) : super(LabelCubitState(selectedLabel: label)) {
     _init();
   }
 
@@ -21,6 +25,22 @@ class LabelCubit extends Cubit<LabelCubitState> {
 
   void setColor(String rawColorName) {
     Label label = state.selectedLabel!.copyWith(color: rawColorName);
+    emit(state.copyWith(selectedLabel: label));
+  }
+
+  void setFolder(Label folder) {
+    Label label = state.selectedLabel!.copyWith(parentId: folder.id);
+    emit(state.copyWith(selectedLabel: label));
+  }
+
+  void createLabel() {
+    Label newLabel = state.selectedLabel!.copyWith(id: const Uuid().v4());
+
+    labelsCubit.addLabel(newLabel);
+  }
+
+  void titleChanged(String value) {
+    Label label = state.selectedLabel!.copyWith(title: value);
     emit(state.copyWith(selectedLabel: label));
   }
 }

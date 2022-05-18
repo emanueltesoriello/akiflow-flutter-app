@@ -11,6 +11,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
@@ -82,6 +83,10 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => TasksCubit(),
         ),
+        BlocProvider<LabelsCubit>(
+          lazy: false,
+          create: (BuildContext context) => LabelsCubit(),
+        ),
         BlocProvider<MainCubit>(
           lazy: false,
           create: (BuildContext context) => MainCubit(),
@@ -94,7 +99,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<SettingsCubit>(
           lazy: false,
-          create: (BuildContext context) => SettingsCubit(context.read<TasksCubit>()),
+          create: (BuildContext context) => SettingsCubit(context.read<LabelsCubit>()),
         ),
         BlocProvider<TodayCubit>(
           lazy: false,

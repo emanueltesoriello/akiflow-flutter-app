@@ -6,7 +6,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/aki_chip.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -197,7 +197,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
   Widget _label(BuildContext context) {
     Task task = context.watch<EditTaskCubit>().state.updatedTask;
 
-    List<Label> labels = context.watch<TasksCubit>().state.labels;
+    List<Label> labels = context.watch<LabelsCubit>().state.labels;
 
     Label? label;
 

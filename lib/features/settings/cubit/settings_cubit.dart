@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/label/label.dart';
@@ -13,9 +13,9 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final DialogService _dialogService = locator<DialogService>();
 
-  final TasksCubit _tasksCubit;
+  final LabelsCubit _labelCubit;
 
-  SettingsCubit(this._tasksCubit) : super(const SettingsCubitState()) {
+  SettingsCubit(this._labelCubit) : super(const SettingsCubitState()) {
     _init();
   }
 
@@ -27,7 +27,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     emit(state.copyWith(appVersion: '$version ($buildNumber)'));
 
-    List<Label> allItems = _tasksCubit.state.labels;
+    List<Label> allItems = _labelCubit.state.labels;
     List<Label> folders = allItems.where((element) => element.type == "folder").toList();
 
     Map<Label, bool> folderOpen = {};

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/style/colors.dart';
 
-class SearchView extends StatelessWidget {
+class BorderedInputView extends StatelessWidget {
   final Function(String) onChanged;
   final String hint;
   final FocusNode? focus;
 
-  const SearchView({
+  const BorderedInputView({
     Key? key,
     required this.onChanged,
     required this.hint,

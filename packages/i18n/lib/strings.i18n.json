@@ -154,6 +154,7 @@
     "createLabel": "Create Label",
     "save": "Save",
     "noFolder": "No Folder",
-    "color": "Color"
+    "color": "Color",
+    "folder": "Folder"
   }
 }

@@ -7,7 +7,6 @@ import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/docs_repository.dart';
-import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -23,7 +22,6 @@ part 'tasks_state.dart';
 class TasksCubit extends Cubit<TasksCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
-  final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
 
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
@@ -59,7 +57,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
   refreshTasksFromRepository({DateTime? selectedTodayDate}) async {
     emit(state.copyWith(loading: true, syncStatus: "Get tasks from repository"));
 
-    await fetchLabels();
     await fetchDocs();
     await fetchInbox();
     await fetchTodayTasks(selectedTodayDate ?? DateTime.now());
@@ -75,11 +72,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future fetchTodayTasks(DateTime date) async {
     List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: date);
     emit(state.copyWith(todayTasks: todayTasks, syncStatus: "Get labels from repository"));
-  }
-
-  Future fetchLabels() async {
-    List<Label> labels = await _labelsRepository.get();
-    emit(state.copyWith(labels: labels, syncStatus: "Get docs from repository"));
   }
 
   Future fetchDocs() async {

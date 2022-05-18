@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/task/label_item.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/utils/label_ext.dart';
 import 'package:models/label/label.dart';
 
@@ -13,7 +13,7 @@ class AddTaskLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        BlocBuilder<TasksCubit, TasksCubitState>(
+        BlocBuilder<LabelsCubit, LabelsCubitState>(
           builder: (context, state) {
             List<Label> labels = state.labels.toList();
 

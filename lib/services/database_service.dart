@@ -291,6 +291,7 @@ CREATE TABLE IF NOT EXISTS lists(
   `title` VARCHAR(255),
   `icon` VARCHAR(255),
   `color` VARCHAR(255),
+  `user_id` INTEGER,
   `created_at` TEXT,
   `updated_at` TEXT,
   `deleted_at` TEXT,

@@ -8,7 +8,8 @@ import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
-import 'package:mobile/features/label/cubit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/inbox_appbar.dart';
@@ -199,9 +200,11 @@ class MainPage extends StatelessWidget {
                           case HomeViewType.label:
                             Label label = state.selectedLabel!;
 
+                            LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
                             return BlocProvider(
                               key: ObjectKey(label),
-                              create: (context) => LabelCubit(label),
+                              create: (context) => LabelCubit(label, labelsCubit: labelsCubit),
                               child: LabelView(key: ObjectKey(label)),
                             );
                           default:

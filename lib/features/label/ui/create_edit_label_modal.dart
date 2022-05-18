@@ -6,9 +6,11 @@ import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/search.dart';
-import 'package:mobile/features/label/cubit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/button_list_label.dart';
 import 'package:mobile/features/label/ui/colors_modal.dart';
+import 'package:mobile/features/label/ui/folder_modal.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
@@ -21,8 +23,6 @@ class CreateEditLabelModal extends StatefulWidget {
 }
 
 class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
-  final TextEditingController titleController = TextEditingController();
-
   final FocusNode titleFocus = FocusNode();
 
   @override
@@ -57,9 +57,11 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                         const SizedBox(height: 16),
                         const ScrollChip(),
                         const SizedBox(height: 16),
-                        SearchView(
+                        BorderedInputView(
                           focus: titleFocus,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            context.read<LabelCubit>().titleChanged(value);
+                          },
                           hint: "",
                         ),
                         const SizedBox(height: 24),
@@ -116,29 +118,63 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                           },
                         ),
                         const ButtonListDivider(),
-                        ButtonListLabel(
-                          title: t.settings.myAccount,
-                          position: ButtonListPosition.bottom,
-                          leading: SizedBox(
-                            height: 26,
-                            width: 26,
-                            child: Center(
-                              child: SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: SvgPicture.asset(
-                                    "assets/images/icons/_common/folder.svg",
-                                    color: ColorsExt.grey2(context),
-                                  )),
-                            ),
-                          ),
-                          onPressed: () {
-                            // TODO SETTINGS - my account settings event
+                        BlocBuilder<LabelCubit, LabelCubitState>(
+                          builder: (context, state) {
+                            List<Label> folders = context
+                                .read<LabelsCubit>()
+                                .state
+                                .labels
+                                .where((label) => label.type == "folder")
+                                .toList();
+
+                            Label label = state.selectedLabel!;
+
+                            String? parentId = label.parentId;
+
+                            int index = folders.indexWhere((element) => element.id == parentId);
+                            Label? folder;
+
+                            if (index != -1) {
+                              folder = folders[index];
+                            }
+
+                            return ButtonListLabel(
+                              title: folder?.title ?? t.label.noFolder,
+                              position: ButtonListPosition.bottom,
+                              leading: SizedBox(
+                                height: 26,
+                                width: 26,
+                                child: Center(
+                                  child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: SvgPicture.asset(
+                                        "assets/images/icons/_common/folder.svg",
+                                        color: ColorsExt.grey2(context),
+                                      )),
+                                ),
+                              ),
+                              onPressed: () async {
+                                LabelCubit labelCubit = context.read<LabelCubit>();
+
+                                Label? folder = await showCupertinoModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => FolderModal(
+                                    folders: folders,
+                                  ),
+                                );
+
+                                if (folder != null) {
+                                  labelCubit.setFolder(folder);
+                                }
+                              },
+                            );
                           },
                         ),
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () {
+                            context.read<LabelCubit>().createLabel();
                             Navigator.pop(context);
                           },
                           child: Container(
