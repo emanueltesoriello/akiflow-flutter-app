@@ -27,7 +27,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
     emit(state.copyWith(tasks: tasks));
 
     List<Label> allLabels = await _labelsRepository.get();
-    List<Label> sections = allLabels.where((label) => label.type == "section").toList();
+    List<Label> sections = allLabels.where((label) => label.type == "section" && label.deletedAt == null).toList();
     List<Label> labelSections = [];
 
     Label noSection = const Label(title: "No Section", type: "section");
@@ -100,6 +100,19 @@ class LabelCubit extends Cubit<LabelCubitState> {
   void toggleOpenSection(String? sectionId) {
     Map<String?, bool> openedSections = Map.from(state.openedSections);
     openedSections[sectionId] = !(openedSections[sectionId] ?? true);
+    emit(state.copyWith(openedSections: openedSections));
+  }
+
+  void addSectionToLocalUi(Label newSectionUpdated) {
+    List<Label> sections = List.from(state.sections);
+    sections.add(newSectionUpdated);
+
+    emit(state.copyWith(sections: sections));
+
+    Map<String?, bool> openedSections = {};
+    for (Label label in sections) {
+      openedSections[label.id] = true;
+    }
     emit(state.copyWith(openedSections: openedSections));
   }
 }

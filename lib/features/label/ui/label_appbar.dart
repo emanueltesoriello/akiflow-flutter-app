@@ -7,10 +7,12 @@ import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
+import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
+import 'package:uuid/uuid.dart';
 
 enum LabelActions { edit, order, newSection, showDone, delete }
 
@@ -92,7 +94,26 @@ class LabelAppBar extends StatelessWidget {
                 context.read<LabelCubit>().toggleSorting();
                 break;
               case LabelActions.newSection:
-                // TODO: Handle this case.
+                LabelCubit labelCubit = context.read<LabelCubit>();
+
+                Label currentLabel = labelCubit.state.selectedLabel!;
+                Label newSection = Label(id: const Uuid().v4(), parentId: currentLabel.id!, type: "section");
+
+                LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                Label? newSectionUpdated = await showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) => BlocProvider(
+                    key: UniqueKey(),
+                    create: (context) => LabelCubit(newSection, labelsCubit: labelsCubit),
+                    child: const CreateEditSectionModal(),
+                  ),
+                );
+
+                if (newSectionUpdated != null) {
+                  labelsCubit.addSectionToDatabase(newSectionUpdated);
+                  labelCubit.addSectionToLocalUi(newSectionUpdated);
+                }
                 break;
               case LabelActions.showDone:
                 context.read<LabelCubit>().toggleShowDone();

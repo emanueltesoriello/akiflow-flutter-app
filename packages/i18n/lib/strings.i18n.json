@@ -162,6 +162,7 @@
     "newSection": "New Section",
     "showDone": "Show Done",
     "deleteLabel": "Delete Label",
-    "hideDone": "Hide Done"
+    "hideDone": "Hide Done",
+    "createSection": "Create Section"
   }
 }

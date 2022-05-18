@@ -17,9 +17,9 @@ import 'package:models/label/label.dart';
 
 class CreateEditLabelModal extends StatefulWidget {
   // Set to `false` to update the label after close the modal (edit label purpose)
-  final bool updateFromModal;
+  final bool create;
 
-  const CreateEditLabelModal({Key? key, this.updateFromModal = false}) : super(key: key);
+  const CreateEditLabelModal({Key? key, this.create = false}) : super(key: key);
 
   @override
   State<CreateEditLabelModal> createState() => _CreateEditLabelModalState();
@@ -178,7 +178,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () {
-                            if (widget.updateFromModal) {
+                            if (widget.create) {
                               Label label = context.read<LabelCubit>().state.selectedLabel!;
                               context.read<LabelCubit>().saveLabel(label);
                               Navigator.pop(context);

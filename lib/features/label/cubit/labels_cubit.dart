@@ -48,6 +48,22 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     await syncAllAndRefresh();
   }
 
+  Future<void> addSectionToDatabase(Label newSection) async {
+    User user = _preferencesRepository.user!;
+
+    newSection = newSection.copyWith(userId: user.id);
+
+    List<Label> labels = List.from(state.labels);
+    labels.add(newSection);
+    emit(state.copyWith(labels: labels));
+
+    await _labelsRepository.add([newSection]);
+
+    await _syncControllerService.syncAll();
+
+    await _init();
+  }
+
   Future<void> syncAllAndRefresh() async {
     await _syncControllerService.syncAll();
 
