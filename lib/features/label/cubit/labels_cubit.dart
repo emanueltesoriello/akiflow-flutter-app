@@ -92,20 +92,6 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     tasksCubit.emit(tasksCubit.state.copyWith(labelTasks: tasks));
   }
 
-  void updateUiOfTask(Task updated) {
-    bool hasTask = tasksCubit.state.labelTasks.any((t) => t.id == updated.id);
-
-    List<Task> updatedTasks = List.from(tasksCubit.state.labelTasks);
-    if (hasTask) {
-      int index = updatedTasks.indexWhere((t) => t.id == updated.id);
-      updatedTasks[index] = updated;
-    } else {
-      updatedTasks.add(updated);
-    }
-
-    tasksCubit.emit(tasksCubit.state.copyWith(labelTasks: updatedTasks));
-  }
-
   Future<void> fetchLabels() async {
     List<Label> labels = await _labelsRepository.get();
     emit(state.copyWith(labels: labels));
@@ -117,7 +103,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     for (Task task in labelTasks) {
       if (task.sectionId == section.id) {
         task = task.copyWith(sectionId: Nullable(null), listId: section.parentId);
-        updateUiOfTask(task);
+        tasksCubit.updateUiOfTask(task);
       }
     }
   }

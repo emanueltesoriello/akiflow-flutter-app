@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -19,11 +18,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
 
   final TasksCubit _tasksCubit;
-  final LabelsCubit _labelsCubit;
 
   EditTaskCubit(
-    this._tasksCubit,
-    this._labelsCubit, {
+    this._tasksCubit, {
     Task? task,
     TaskStatusType? taskStatusType,
     DateTime? date,
@@ -82,7 +79,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
-    _labelsCubit.updateUiOfTask(updated);
 
     await _tasksRepository.add([updated]);
 
@@ -113,7 +109,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.status == TaskStatusType.planned.id ? UndoType.plan : UndoType.snooze);
       _tasksCubit.updateUiOfTask(updated);
-      _labelsCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.syncAll();
     }
@@ -166,7 +161,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     if (forceUpdate) {
       _tasksCubit.updateUiOfTask(updated);
-      _labelsCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.syncAll();
     }
@@ -182,7 +176,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.isCompletedComputed ? UndoType.markDone : UndoType.markUndone);
       _tasksCubit.updateUiOfTask(updated);
-      _labelsCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.syncAll();
     }
@@ -268,7 +261,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     _tasksCubit.updateUiOfTask(newTaskDuplicated);
-    _labelsCubit.updateUiOfTask(newTaskDuplicated);
 
     await _tasksRepository.add([newTaskDuplicated]);
 
@@ -314,7 +306,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         );
 
         _tasksCubit.updateUiOfTask(updatedRecurringTask);
-        _labelsCubit.updateUiOfTask(updatedRecurringTask);
 
         updatedRecurringTasks.add(updatedRecurringTask);
       }
@@ -329,7 +320,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.addToUndoQueue([original], UndoType.updated);
 
       _tasksCubit.updateUiOfTask(updated);
-      _labelsCubit.updateUiOfTask(updated);
 
       await _tasksRepository.updateById(updated.id!, data: updated);
     }

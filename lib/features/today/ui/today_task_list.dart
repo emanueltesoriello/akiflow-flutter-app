@@ -4,7 +4,6 @@ import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -78,9 +77,8 @@ class TodayTaskList extends StatelessWidget {
 
           Task task = tasks[index];
           TasksCubit tasksCubit = context.read<TasksCubit>();
-          LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
-          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, labelsCubit, task: task);
+          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, task: task);
 
           return BlocProvider(
             create: (context) => editTaskCubit,
