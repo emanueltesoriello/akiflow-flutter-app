@@ -72,9 +72,11 @@ class MainPage extends StatelessWidget {
                           homeViewType == HomeViewType.inbox ? TaskStatusType.inbox : TaskStatusType.planned;
                       DateTime date = context.read<TodayCubit>().state.selectedDate;
 
+                      Label? label = context.read<MainCubit>().state.selectedLabel;
+
                       showCupertinoModalBottomSheet(
                         context: context,
-                        builder: (context) => AddTaskModal(taskStatusType: taskStatusType, date: date),
+                        builder: (context) => AddTaskModal(taskStatusType: taskStatusType, date: date, label: label),
                       );
                     },
                     shape: RoundedRectangleBorder(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 
 part 'main_state.dart';
@@ -21,10 +22,10 @@ class MainCubit extends Cubit<MainCubitState> {
   }
 
   void changeHomeView(HomeViewType homeViewType) {
-    emit(state.copyWith(homeViewType: homeViewType));
+    emit(state.copyWith(homeViewType: homeViewType, selectedLabel: Nullable(null)));
   }
 
   void selectLabel(Label label) {
-    emit(state.copyWith(selectedLabel: label, homeViewType: HomeViewType.label));
+    emit(state.copyWith(selectedLabel: Nullable(label), homeViewType: HomeViewType.label));
   }
 }

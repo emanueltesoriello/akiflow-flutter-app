@@ -4,16 +4,12 @@ import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/repository/labels_repository.dart';
-import 'package:mobile/repository/tasks_repository.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
-import 'package:models/task/task.dart';
-import 'package:uuid/uuid.dart';
 
 part 'label_state.dart';
 
 class LabelCubit extends Cubit<LabelCubitState> {
-  final TasksRepository _tasksRepository = locator<TasksRepository>();
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
 
   final LabelsCubit labelsCubit;
@@ -23,8 +19,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
   }
 
   _init() async {
-    List<Task> tasks = await _tasksRepository.getLabelTasks(state.selectedLabel!);
-    emit(state.copyWith(tasks: tasks));
+    labelsCubit.getLabelTasks(state.selectedLabel);
 
     List<Label> allLabels = await _labelsRepository.get();
     List<Label> sections = allLabels.where((label) => label.type == "section" && label.deletedAt == null).toList();
@@ -43,12 +38,6 @@ class LabelCubit extends Cubit<LabelCubitState> {
     emit(state.copyWith(openedSections: openedSections));
   }
 
-  void newTaskCreated(Task task) {
-    List<Task> tasks = List.from(state.tasks ?? []);
-    tasks.add(task);
-    emit(state.copyWith(tasks: tasks));
-  }
-
   void setColor(String rawColorName) {
     Label label = state.selectedLabel!.copyWith(color: rawColorName);
     emit(state.copyWith(selectedLabel: label));
@@ -60,24 +49,14 @@ class LabelCubit extends Cubit<LabelCubitState> {
   }
 
   void saveLabel(Label label) {
-    if (state.selectedLabel?.id == null) {
-      Label newLabel = label.copyWith(id: const Uuid().v4());
-      labelsCubit.addLabel(newLabel);
-    } else {
-      label = label.copyWith(updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
-      labelsCubit.updateLabel(label);
-      emit(state.copyWith(selectedLabel: label));
-    }
+    label = label.copyWith(updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+    labelsCubit.updateLabel(label);
+    emit(state.copyWith(selectedLabel: label));
   }
 
   void titleChanged(String value) {
     Label label = state.selectedLabel!.copyWith(title: value);
     emit(state.copyWith(selectedLabel: label));
-  }
-
-  void createFolder() {
-    Label newLabel = state.selectedLabel!.copyWith(id: const Uuid().v4(), type: "folder");
-    labelsCubit.addLabel(newLabel);
   }
 
   void toggleSorting() {
@@ -97,10 +76,6 @@ class LabelCubit extends Cubit<LabelCubitState> {
   Future<void> delete() async {
     Label labelUpdated = state.selectedLabel!.copyWith(deletedAt: DateTime.now().toUtc().toIso8601String());
     emit(state.copyWith(selectedLabel: labelUpdated));
-
-    await _labelsRepository.updateById(labelUpdated.id, data: labelUpdated);
-
-    labelsCubit.syncAllAndRefresh();
   }
 
   void toggleOpenSection(String? sectionId) {

@@ -7,7 +7,7 @@ import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/label/label.dart';
 
-// Return new section as a `Label` using `Navigator.pop(context, newSection)`
+// Return new section as a `Label` using `Navigator.pop(context, newSection)` to refresh sections ui
 class CreateEditSectionModal extends StatefulWidget {
   const CreateEditSectionModal({Key? key}) : super(key: key);
 

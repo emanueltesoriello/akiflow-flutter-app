@@ -7,6 +7,7 @@ import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/add_task/ui/add_task_duration.dart';
 import 'package:mobile/features/add_task/ui/add_task_labels.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -31,9 +32,13 @@ class AddTaskModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+    LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
     return BlocProvider(
       create: (context) => EditTaskCubit(
-        context.read<TasksCubit>(),
+        tasksCubit,
+        labelsCubit,
         taskStatusType: taskStatusType,
         date: date,
         label: label,

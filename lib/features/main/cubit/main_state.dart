@@ -16,12 +16,12 @@ class MainCubitState extends Equatable {
   MainCubitState copyWith({
     bool? loading,
     HomeViewType? homeViewType,
-    Label? selectedLabel,
+    Nullable<Label?>? selectedLabel,
   }) {
     return MainCubitState(
       loading: loading ?? this.loading,
       homeViewType: homeViewType ?? this.homeViewType,
-      selectedLabel: selectedLabel ?? this.selectedLabel,
+      selectedLabel: selectedLabel == null ? this.selectedLabel : selectedLabel.value,
     );
   }
 

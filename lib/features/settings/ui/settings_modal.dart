@@ -23,6 +23,7 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:uuid/uuid.dart';
 
 enum AddListType { addLabel, addFolder }
 
@@ -248,7 +249,7 @@ class SettingsModal extends StatelessWidget {
                         onSelected: (AddListType result) {
                           switch (result) {
                             case AddListType.addLabel:
-                              Label newLabel = const Label(color: "palette-red");
+                              Label newLabel = Label(id: const Uuid().v4(), color: "palette-red");
 
                               LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
@@ -257,12 +258,12 @@ class SettingsModal extends StatelessWidget {
                                 builder: (context) => BlocProvider(
                                   key: ObjectKey(newLabel),
                                   create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
-                                  child: const CreateEditLabelModal(),
+                                  child: const CreateEditLabelModal(isCreating: true),
                                 ),
                               );
                               break;
                             case AddListType.addFolder:
-                              Label newLabel = const Label();
+                              Label newLabel = Label(id: const Uuid().v4(), type: "folder");
 
                               LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
@@ -301,8 +302,15 @@ class SettingsModal extends StatelessWidget {
                 BlocBuilder<SettingsCubit, SettingsCubitState>(
                   builder: (context, settingsState) {
                     return BlocBuilder<LabelsCubit, LabelsCubitState>(
-                      builder: (context, tasksState) {
-                        List<Label> allItems = tasksState.labels.where((element) => element.deletedAt == null).toList();
+                      builder: (context, labelsState) {
+                        if (labelsState.loading) {
+                          return const Center(
+                            child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                          );
+                        }
+
+                        List<Label> allItems =
+                            labelsState.labels.where((element) => element.deletedAt == null).toList();
 
                         List<Label> folders = allItems.where((element) => element.type == "folder").toList();
                         List<Label> labelsWithoutFolder = allItems

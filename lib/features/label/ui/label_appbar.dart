@@ -72,6 +72,7 @@ class LabelAppBar extends StatelessWidget {
               case LabelActions.edit:
                 LabelsCubit labelsCubit = context.read<LabelsCubit>();
                 LabelCubit currentLabelCubit = context.read<LabelCubit>();
+                MainCubit mainCubit = context.read<MainCubit>();
 
                 // Use a reference to the current label to update ui after updated the label
                 LabelCubit labelUpdateCubit = LabelCubit(label, labelsCubit: labelsCubit);
@@ -81,12 +82,13 @@ class LabelAppBar extends StatelessWidget {
                   builder: (context) => BlocProvider(
                     key: ObjectKey(label),
                     create: (context) => labelUpdateCubit,
-                    child: const CreateEditLabelModal(),
+                    child: const CreateEditLabelModal(isCreating: false),
                   ),
                 );
 
                 if (update != null && update == true) {
                   currentLabelCubit.saveLabel(labelUpdateCubit.state.selectedLabel!);
+                  mainCubit.selectLabel(labelUpdateCubit.state.selectedLabel!);
                 }
 
                 break;
@@ -101,25 +103,30 @@ class LabelAppBar extends StatelessWidget {
 
                 LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
-                Label? newSectionUpdated = await showCupertinoModalBottomSheet(
+                Label? section = await showCupertinoModalBottomSheet(
                   context: context,
                   builder: (context) => BlocProvider(
-                    key: UniqueKey(),
+                    key: ObjectKey(newSection),
                     create: (context) => LabelCubit(newSection, labelsCubit: labelsCubit),
                     child: const CreateEditSectionModal(),
                   ),
                 );
 
-                if (newSectionUpdated != null) {
-                  labelsCubit.addSectionToDatabase(newSectionUpdated);
-                  labelCubit.addSectionToLocalUi(newSectionUpdated);
+                if (section != null) {
+                  labelCubit.addSectionToLocalUi(section);
+                  labelsCubit.addLabel(section);
                 }
+
                 break;
               case LabelActions.showDone:
                 context.read<LabelCubit>().toggleShowDone();
                 break;
               case LabelActions.delete:
                 context.read<LabelCubit>().delete();
+
+                Label deletedLabel = context.read<LabelCubit>().state.selectedLabel!;
+                context.read<LabelsCubit>().updateLabel(deletedLabel);
+
                 context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
                 break;
             }

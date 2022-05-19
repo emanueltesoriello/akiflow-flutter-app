@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -18,9 +19,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
 
   final TasksCubit _tasksCubit;
+  final LabelsCubit _labelsCubit;
 
   EditTaskCubit(
-    this._tasksCubit, {
+    this._tasksCubit,
+    this._labelsCubit, {
     Task? task,
     TaskStatusType? taskStatusType,
     DateTime? date,
@@ -41,7 +44,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   ) {
     return task ??
         const Task().copyWith(
-          id: const Uuid().v4(),
           status: Nullable(taskStatusType != null ? taskStatusType.id : task?.status),
           date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
           listId: label?.id,
@@ -70,6 +72,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     DateTime now = DateTime.now().toUtc();
 
     Task updated = state.updatedTask.copyWith(
+      id: const Uuid().v4(),
       title: title,
       description: description,
       updatedAt: Nullable(now.toIso8601String()),
@@ -79,12 +82,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
+    _labelsCubit.updateUiOfTask(updated);
 
     await _tasksRepository.add([updated]);
 
     _tasksCubit.updateUiOfTask(updated);
 
     _tasksCubit.syncAll();
+    _labelsCubit.syncAllAndRefresh();
   }
 
   Future<void> planFor(

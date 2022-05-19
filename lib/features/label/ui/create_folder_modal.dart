@@ -5,7 +5,9 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/search.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:models/label/label.dart';
 
 class CreateFolderModal extends StatefulWidget {
   const CreateFolderModal({Key? key}) : super(key: key);
@@ -59,7 +61,8 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () {
-                            context.read<LabelCubit>().createFolder();
+                            Label newFolder = context.read<LabelCubit>().state.selectedLabel!;
+                            context.read<LabelsCubit>().addLabel(newFolder);
                             Navigator.pop(context);
                           },
                           child: Container(

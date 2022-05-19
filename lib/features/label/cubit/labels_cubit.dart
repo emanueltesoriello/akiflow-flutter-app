@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/labels_repository.dart';
+import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/label/label.dart';
+import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 
 part 'labels_state.dart';
@@ -13,6 +15,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
+  final TasksRepository _tasksRepository = locator<TasksRepository>();
 
   LabelsCubit() : super(const LabelsCubitState()) {
     _init();
@@ -64,10 +67,33 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     await _init();
   }
 
-  Future<void> syncAllAndRefresh() async {
+  Future<void> syncAllAndRefresh({bool loading = false}) async {
+    emit(state.copyWith(loading: loading ? true : state.loading));
+
     await _syncControllerService.syncAll();
 
     List<Label> labels = await _labelsRepository.get();
     emit(state.copyWith(labels: labels));
+
+    emit(state.copyWith(loading: false));
+  }
+
+  Future<void> getLabelTasks(Label? selectedLabel) async {
+    List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel!);
+    emit(state.copyWith(labelTasks: tasks));
+  }
+
+  void updateUiOfTask(Task updated) {
+    bool hasTask = state.labelTasks.any((t) => t.id == updated.id);
+
+    List<Task> updatedTasks = List.from(state.labelTasks);
+    if (hasTask) {
+      int index = updatedTasks.indexWhere((t) => t.id == updated.id);
+      updatedTasks[index] = updated;
+    } else {
+      updatedTasks.add(updated);
+    }
+
+    emit(state.copyWith(labelTasks: updatedTasks));
   }
 }

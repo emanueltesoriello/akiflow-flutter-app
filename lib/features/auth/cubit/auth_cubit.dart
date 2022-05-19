@@ -7,6 +7,7 @@ import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
@@ -24,8 +25,9 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final SentryService _sentryService = locator<SentryService>();
 
   final TasksCubit _tasksCubit;
+  final LabelsCubit _labelsCubit;
 
-  AuthCubit(this._tasksCubit) : super(const AuthCubitState()) {
+  AuthCubit(this._tasksCubit, this._labelsCubit) : super(const AuthCubitState()) {
     _init();
   }
 
@@ -70,6 +72,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
       emit(state.copyWith(user: Nullable(user)));
 
       _tasksCubit.syncAllAndRefresh();
+      _labelsCubit.syncAllAndRefresh(loading: true);
     } else {
       _dialogService.showGenericError();
     }
