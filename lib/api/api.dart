@@ -17,7 +17,7 @@ class ApiClient implements IBaseApi {
   ApiClient(this.url, {required this.fromMap});
 
   @override
-  Future<List<T>> get<T>({
+  Future<List<T>> getItems<T>({
     int perPage = 2500,
     bool withDeleted = true,
     DateTime? updatedAfter,

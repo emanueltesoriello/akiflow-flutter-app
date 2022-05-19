@@ -1,5 +1,5 @@
 abstract class IBaseApi {
-  Future<List<T>> get<T>({
+  Future<List<T>> getItems<T>({
     int perPage = 2500,
     bool withDeleted = true,
     DateTime? updatedAfter,

@@ -36,7 +36,7 @@ class SyncService {
   Future<DateTime?> _remoteToLocal(DateTime? lastSyncAt) async {
     setSyncStatusIfNotNull("last sync at: $lastSyncAt, starting remote to local");
 
-    var remoteItems = await api.get(
+    var remoteItems = await api.getItems(
       perPage: 2500,
       withDeleted: lastSyncAt != null ? true : false,
       updatedAfter: lastSyncAt,

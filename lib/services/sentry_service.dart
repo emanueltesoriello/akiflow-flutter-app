@@ -41,7 +41,7 @@ class SentryService {
     );
 
     if (Config.development) {
-      print(breadcrumb.message);
+      print("${breadcrumb.category} - ${breadcrumb.message}");
     } else {
       Sentry.addBreadcrumb(breadcrumb);
     }

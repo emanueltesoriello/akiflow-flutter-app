@@ -6,6 +6,7 @@ import 'package:mobile/api/docs_api.dart';
 import 'package:mobile/api/event_api.dart';
 import 'package:mobile/api/label_api.dart';
 import 'package:mobile/api/task_api.dart';
+import 'package:mobile/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/accounts_repository.dart';
@@ -33,8 +34,7 @@ void setupLocator({
   required SharedPreferences preferences,
   required DatabaseService databaseService,
 }) {
-  PreferencesRepository preferencesRepository =
-      PreferencesRepositoryImpl(preferences);
+  PreferencesRepository preferencesRepository = PreferencesRepositoryImpl(preferences);
 
   /// Core
   locator.registerSingleton<HttpClient>(HttpClient(preferencesRepository));
@@ -49,21 +49,16 @@ void setupLocator({
   locator.registerSingleton<LabelApi>(LabelApi());
   locator.registerSingleton<EventApi>(EventApi());
   locator.registerSingleton<DocsApi>(DocsApi());
+  locator.registerSingleton<UserApi>(UserApi());
 
   /// Repositories
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);
-  locator.registerSingleton<TasksRepository>(
-      TasksRepository(fromSql: Task.fromSql));
-  locator.registerSingleton<AccountsRepository>(
-      AccountsRepository(fromSql: Account.fromSql));
-  locator.registerSingleton<CalendarsRepository>(
-      CalendarsRepository(fromSql: Calendar.fromSql));
-  locator.registerSingleton<LabelsRepository>(
-      LabelsRepository(fromSql: Label.fromSql));
-  locator.registerSingleton<EventsRepository>(
-      EventsRepository(fromSql: Event.fromSql));
-  locator
-      .registerSingleton<DocsRepository>(DocsRepository(fromSql: Doc.fromSql));
+  locator.registerSingleton<TasksRepository>(TasksRepository(fromSql: Task.fromSql));
+  locator.registerSingleton<AccountsRepository>(AccountsRepository(fromSql: Account.fromSql));
+  locator.registerSingleton<CalendarsRepository>(CalendarsRepository(fromSql: Calendar.fromSql));
+  locator.registerSingleton<LabelsRepository>(LabelsRepository(fromSql: Label.fromSql));
+  locator.registerSingleton<EventsRepository>(EventsRepository(fromSql: Event.fromSql));
+  locator.registerSingleton<DocsRepository>(DocsRepository(fromSql: Doc.fromSql));
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
