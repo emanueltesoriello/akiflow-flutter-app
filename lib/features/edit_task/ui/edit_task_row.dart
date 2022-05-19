@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/aki_chip.dart';
+import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
@@ -163,7 +163,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     if (task.deletedAt != null ||
         task.statusType == TaskStatusType.deleted ||
         task.statusType == TaskStatusType.permanentlyDeleted) {
-      return AkiChip(
+      return TagBox(
         icon: "assets/images/icons/_common/trash.svg",
         backgroundColor: ColorsExt.grey6(context),
         text: task.statusType!.name.capitalizeFirstCharacter(),
@@ -207,7 +207,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       );
     }
 
-    return AkiChip(
+    return TagBox(
       icon: "assets/images/icons/_common/number.svg",
       text: label?.title ?? t.editTask.noLabel,
       backgroundColor:

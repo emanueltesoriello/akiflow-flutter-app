@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:mobile/components/task/sync_status_item.dart';
 import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
@@ -49,7 +48,7 @@ class TaskList extends StatelessWidget {
           //be available in flutter stable branch
           ReorderableSliverList(
             onReorderStarted: (index) {
-              int indexWithoutHeaderWidget = index - 2;
+              int indexWithoutHeaderWidget = index - 1;
 
               context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
             },
@@ -63,8 +62,8 @@ class TaskList extends StatelessWidget {
             },
             onReorder: (int oldIndex, int newIndex) {
               context.read<TasksCubit>().reorder(
-                    oldIndex - 2,
-                    newIndex - 2,
+                    oldIndex - 1,
+                    newIndex - 1,
                     newTasksListOrdered: tasks,
                     sorting: sorting,
                   );
@@ -72,10 +71,6 @@ class TaskList extends StatelessWidget {
             delegate: ReorderableSliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 if (index == 0) {
-                  return const SyncStatusItem();
-                }
-
-                if (index == 1) {
                   if (notice == null) {
                     return const SizedBox(key: ObjectKey(0), height: 0);
                   }
@@ -86,7 +81,7 @@ class TaskList extends StatelessWidget {
                   );
                 }
 
-                index -= 2;
+                index -= 1;
 
                 Task task = tasks[index];
                 TasksCubit tasksCubit = context.read<TasksCubit>();
@@ -126,7 +121,7 @@ class TaskList extends StatelessWidget {
                   ),
                 );
               },
-              childCount: tasks.length + 2,
+              childCount: tasks.length + 1,
             ),
           ),
         ],

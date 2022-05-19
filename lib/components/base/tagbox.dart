@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/style/colors.dart';
 
-class AkiChip extends StatelessWidget {
+class TagBox extends StatelessWidget {
   final String? icon;
   final double? iconSize;
   final String? text;
@@ -11,7 +11,7 @@ class AkiChip extends StatelessWidget {
   final Color? iconColor;
   final Function() onPressed;
 
-  const AkiChip({
+  const TagBox({
     Key? key,
     this.icon,
     this.iconSize,

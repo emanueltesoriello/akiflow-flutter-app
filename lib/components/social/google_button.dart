@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/space.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
@@ -94,7 +93,7 @@ class _GoogleButtonState extends State<GoogleButton> with SingleTickerProviderSt
                         color: ColorsExt.grey2_5(context),
                       ),
                     )),
-                    const Space(8),
+                    const SizedBox(width: 8),
                     SvgPicture.asset(
                       'assets/images/icons/google/search.svg',
                       height: 20,

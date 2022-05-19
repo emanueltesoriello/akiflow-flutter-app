@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile/components/base/space.dart';
 import 'package:mobile/components/base/sync_progress.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -34,13 +33,13 @@ class AppBarComp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Space(MediaQuery.of(context).padding.top),
+        SizedBox(height: MediaQuery.of(context).padding.top),
         Container(
           constraints: const BoxConstraints(maxHeight: 56),
           padding: const EdgeInsets.symmetric(vertical: 12.5),
           child: Row(
             children: [
-              const Space(16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

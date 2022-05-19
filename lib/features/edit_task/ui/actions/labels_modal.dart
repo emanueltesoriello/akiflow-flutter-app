@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/bordered_input_view.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/components/base/search.dart';
-import 'package:mobile/components/task/label_item.dart';
+import 'package:mobile/components/label/label_item.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/label_ext.dart';

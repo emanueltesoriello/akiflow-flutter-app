@@ -5,9 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/button.dart';
-import 'package:mobile/components/base/space.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/auth/ui/login_button.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/main_com.dart';
 import 'package:mobile/style/colors.dart';
@@ -55,7 +54,7 @@ class AuthPage extends StatelessWidget {
                       width: 56,
                     ),
                   ),
-                  const Space(16),
+                  const SizedBox(height: 16),
                   Text(
                     t.onboarding.welcomeToAkiflow,
                     textAlign: TextAlign.center,
@@ -65,7 +64,7 @@ class AuthPage extends StatelessWidget {
                       color: ColorsExt.grey1(context),
                     ),
                   ),
-                  const Space(8),
+                  const SizedBox(height: 8),
                   Text(
                     t.onboarding.welcomeToAkiflowSubtitle,
                     textAlign: TextAlign.center,
@@ -86,7 +85,7 @@ class AuthPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ButtonComp(
+                  LoginButton(
                     child: Text(
                       t.onboarding.login,
                       style: TextStyleExt.button(context),
@@ -95,8 +94,7 @@ class AuthPage extends StatelessWidget {
                       context.read<AuthCubit>().loginClick();
                     },
                   ),
-                  const Space(8),
-                  const Space(24),
+                  const SizedBox(height: 32),
                   HtmlWidget(
                     t.onboarding.continuingAcceptTermsPrivacy,
                     enableCaching: false,

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/aki_chip.dart';
+import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/string_ext.dart';
@@ -55,21 +55,21 @@ class TaskInfo extends StatelessWidget {
     }
 
     if (task.statusType == TaskStatusType.inbox) {
-      return AkiChip(
+      return TagBox(
         icon: "assets/images/icons/_common/tray.svg",
         backgroundColor: ColorsExt.cyan25(context),
         text: t.bottomBar.inbox,
         onPressed: statusClick,
       );
     } else if (task.statusType == TaskStatusType.someday) {
-      return AkiChip(
+      return TagBox(
         icon: "assets/images/icons/_common/archivebox.svg",
         backgroundColor: ColorsExt.akiflow10(context),
         text: task.statusType!.name.capitalizeFirstCharacter(),
         onPressed: statusClick,
       );
     } else if (task.statusType == TaskStatusType.snoozed) {
-      return AkiChip(
+      return TagBox(
         icon: "assets/images/icons/_common/clock.svg",
         backgroundColor: ColorsExt.akiflow10(context),
         text: task.datetimeFormatted,
@@ -77,7 +77,7 @@ class TaskInfo extends StatelessWidget {
       );
     } else {
       if (task.datetime != null && !task.isOverdue) {
-        return AkiChip(
+        return TagBox(
           backgroundColor: ColorsExt.cyan25(context),
           text: task.timeFormatted,
           onPressed: statusClick,
@@ -109,7 +109,7 @@ class TaskInfo extends StatelessWidget {
 
     return Wrap(
       children: [
-        AkiChip(
+        TagBox(
           icon: "assets/images/icons/_common/number.svg",
           text: label.title,
           backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
