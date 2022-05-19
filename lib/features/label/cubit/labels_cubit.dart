@@ -40,11 +40,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.add([newLabel]);
 
-    fetchLabelTasks(newLabel);
-
     await _syncControllerService.syncAll();
-
-    await _init();
   }
 
   Future<void> updateLabel(Label label) async {
