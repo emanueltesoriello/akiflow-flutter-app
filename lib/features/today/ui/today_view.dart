@@ -64,6 +64,7 @@ class _View extends StatelessWidget {
             tasks: todos,
             sorting: TaskListSorting.descending,
             showTasks: context.watch<TodayCubit>().state.todosListOpen,
+            showLabel: true,
             header: _Header(
               t.today.toDos,
               tasks: todos,
@@ -77,6 +78,7 @@ class _View extends StatelessWidget {
             tasks: pinned,
             sorting: TaskListSorting.descending,
             showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
+            showLabel: true,
             header: _Header(
               t.today.pinnedInCalendar,
               tasks: pinned,
@@ -90,6 +92,7 @@ class _View extends StatelessWidget {
             tasks: completed,
             sorting: TaskListSorting.descending,
             showTasks: context.watch<TodayCubit>().state.completedListOpen,
+            showLabel: true,
             header: _Header(
               t.today.done,
               tasks: completed,

@@ -47,7 +47,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           status: Nullable(taskStatusType != null ? taskStatusType.id : task?.status),
           date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
           listId: label?.id,
-          sectionId: section?.id,
+          sectionId: Nullable(section?.id),
         );
   }
 
@@ -113,6 +113,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.status == TaskStatusType.planned.id ? UndoType.plan : UndoType.snooze);
       _tasksCubit.updateUiOfTask(updated);
+      _labelsCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.syncAll();
     }
@@ -153,6 +154,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
       listId: label.id,
+      sectionId: Nullable(null),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
@@ -164,6 +166,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     if (forceUpdate) {
       _tasksCubit.updateUiOfTask(updated);
+      _labelsCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.syncAll();
     }
@@ -179,6 +182,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.isCompletedComputed ? UndoType.markDone : UndoType.markUndone);
       _tasksCubit.updateUiOfTask(updated);
+      _labelsCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.syncAll();
     }
@@ -264,6 +268,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     _tasksCubit.updateUiOfTask(newTaskDuplicated);
+    _labelsCubit.updateUiOfTask(newTaskDuplicated);
 
     await _tasksRepository.add([newTaskDuplicated]);
 
@@ -309,6 +314,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         );
 
         _tasksCubit.updateUiOfTask(updatedRecurringTask);
+        _labelsCubit.updateUiOfTask(updatedRecurringTask);
 
         updatedRecurringTasks.add(updatedRecurringTask);
       }
@@ -323,6 +329,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.addToUndoQueue([original], UndoType.updated);
 
       _tasksCubit.updateUiOfTask(updated);
+      _labelsCubit.updateUiOfTask(updated);
 
       await _tasksRepository.updateById(updated.id!, data: updated);
     }

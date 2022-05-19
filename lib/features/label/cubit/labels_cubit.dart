@@ -6,6 +6,7 @@ import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 
@@ -99,5 +100,16 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   Future<void> fetchLabels() async {
     List<Label> labels = await _labelsRepository.get();
     emit(state.copyWith(labels: labels));
+  }
+
+  void updateUiAfterDeleteSection(Label section) {
+    List<Task> labelTasks = state.labelTasks.toList();
+
+    for (Task task in labelTasks) {
+      if (task.sectionId == section.id) {
+        task = task.copyWith(sectionId: Nullable(null));
+        updateUiOfTask(task);
+      }
+    }
   }
 }

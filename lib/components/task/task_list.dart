@@ -23,7 +23,7 @@ class TaskList extends StatelessWidget {
   final Widget? notice;
   final bool hideInboxLabel;
   final TaskListSorting sorting;
-  final bool hideLabel;
+  final bool showLabel;
 
   const TaskList({
     Key? key,
@@ -31,7 +31,7 @@ class TaskList extends StatelessWidget {
     required this.sorting,
     this.notice,
     this.hideInboxLabel = false,
-    this.hideLabel = false,
+    required this.showLabel,
   }) : super(key: key);
 
   @override
@@ -101,7 +101,7 @@ class TaskList extends StatelessWidget {
                     key: ObjectKey(task),
                     task: task,
                     hideInboxLabel: hideInboxLabel,
-                    hideLabel: hideLabel,
+                    showLabel: showLabel,
                     selectTask: () {
                       context.read<TasksCubit>().select(task);
                     },

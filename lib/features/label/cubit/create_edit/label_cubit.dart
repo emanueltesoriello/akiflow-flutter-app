@@ -96,4 +96,22 @@ class LabelCubit extends Cubit<LabelCubitState> {
     }
     emit(state.copyWith(openedSections: openedSections));
   }
+
+  Future<void> deleteSection(Label section) async {
+    List<Label> sections = List.from(state.sections);
+    sections.remove(section);
+
+    emit(state.copyWith(sections: sections));
+
+    Map<String?, bool> openedSections = {};
+    for (Label label in sections) {
+      openedSections[label.id] = true;
+    }
+    emit(state.copyWith(openedSections: openedSections));
+
+    labelsCubit.updateUiAfterDeleteSection(section);
+
+    section = section.copyWith(deletedAt: DateTime.now().toUtc().toIso8601String());
+    await labelsCubit.updateLabel(section);
+  }
 }

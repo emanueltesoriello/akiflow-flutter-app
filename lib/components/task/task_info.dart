@@ -14,14 +14,14 @@ class TaskInfo extends StatelessWidget {
   final Task task;
   final bool hideInboxLabel;
   final DateTime? selectDate;
-  final bool hideLabel;
+  final bool showLabel;
 
   const TaskInfo(
     this.task, {
     Key? key,
     required this.hideInboxLabel,
     required this.selectDate,
-    required this.hideLabel,
+    required this.showLabel,
   }) : super(key: key);
 
   @override
@@ -89,7 +89,7 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget _label(BuildContext context) {
-    if (hideLabel) {
+    if (!showLabel) {
       return const SizedBox();
     }
 

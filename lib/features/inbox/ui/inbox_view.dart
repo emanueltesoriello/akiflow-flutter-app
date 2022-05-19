@@ -29,6 +29,7 @@ class _View extends StatelessWidget {
           tasks: tasks,
           hideInboxLabel: true,
           sorting: TaskListSorting.ascending,
+          showLabel: true,
           notice: () {
             if (!state.showInboxNotice) {
               return null;

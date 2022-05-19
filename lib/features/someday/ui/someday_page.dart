@@ -36,6 +36,7 @@ class _View extends StatelessWidget {
             tasks: todayTasks,
             sorting: TaskListSorting.descending,
             showTasks: context.watch<TodayCubit>().state.todosListOpen,
+            showLabel: true,
             header: _Header(
               t.today.toDos,
               tasks: todayTasks,
