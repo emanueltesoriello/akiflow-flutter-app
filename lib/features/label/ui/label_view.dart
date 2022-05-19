@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/components/task/task_list.dart';
@@ -13,6 +14,7 @@ import 'package:mobile/features/label/ui/section_header.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_task_list.dart';
+import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
@@ -102,12 +104,47 @@ class LabelView extends StatelessWidget {
                         },
                       );
 
+                      int snoozedCount = tasks.where((element) => element.isSnoozed).toList().length;
+                      int somedayCount = tasks.where((element) => element.isSomeday).toList().length;
+
+                      Widget? footer;
+
+                      if (snoozedCount != 0 || somedayCount != 0) {
+                        footer = Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            Builder(builder: (context) {
+                              if (snoozedCount == 0) {
+                                return const SizedBox();
+                              }
+                              return CompactInfo(
+                                iconAsset: "assets/images/icons/_common/clock.svg",
+                                title: t.task.snoozed,
+                                value: snoozedCount.toString(),
+                              );
+                            }),
+                            Builder(builder: (context) {
+                              if (somedayCount == 0) {
+                                return const SizedBox();
+                              }
+                              return CompactInfo(
+                                iconAsset: "assets/images/icons/_common/archivebox.svg",
+                                title: t.task.someday,
+                                value: somedayCount.toString(),
+                              );
+                            }),
+                          ],
+                        );
+                      }
+
                       return TodayTaskList(
                         tasks: tasks,
                         sorting: TaskListSorting.descending,
                         showTasks: labelState.openedSections[section.id] ?? false,
                         showLabel: false,
                         header: labelState.sections.length > 1 ? header : null,
+                        footer: footer,
                       );
                     }).toList(),
                   ),
@@ -117,6 +154,43 @@ class LabelView extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class CompactInfo extends StatelessWidget {
+  final String iconAsset;
+  final String title;
+  final String value;
+
+  const CompactInfo({
+    Key? key,
+    required this.iconAsset,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(4, 5, 4, 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(color: ColorsExt.grey5(context), width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset, color: ColorsExt.grey2(context))),
+          const SizedBox(width: 4),
+          Text(
+            "$value $title",
+            style: TextStyle(fontSize: 13, color: ColorsExt.grey2(context)),
+          ),
+        ],
+      ),
     );
   }
 }

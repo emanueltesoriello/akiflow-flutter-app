@@ -16,6 +16,7 @@ import 'package:reorderables/reorderables.dart';
 class TodayTaskList extends StatelessWidget {
   final List<Task> tasks;
   final Widget? header;
+  final Widget? footer;
   final TaskListSorting sorting;
   final bool showTasks;
   final bool showLabel;
@@ -25,6 +26,7 @@ class TodayTaskList extends StatelessWidget {
     required this.tasks,
     required this.sorting,
     required this.header,
+    required this.footer,
     required this.showTasks,
     required this.showLabel,
   }) : super(key: key);
@@ -61,6 +63,14 @@ class TodayTaskList extends StatelessWidget {
       },
       delegate: ReorderableSliverChildBuilderDelegate(
         (BuildContext context, int index) {
+          if (index == tasks.length + 1) {
+            if (footer != null) {
+              return Container(margin: const EdgeInsets.fromLTRB(16, 0, 16, 8), child: footer!);
+            }
+
+            return const SizedBox();
+          }
+
           if (index == 0) {
             if (header != null) {
               return header!;
@@ -113,7 +123,7 @@ class TodayTaskList extends StatelessWidget {
             ),
           );
         },
-        childCount: tasks.length + 1,
+        childCount: tasks.length + 2,
       ),
     );
   }

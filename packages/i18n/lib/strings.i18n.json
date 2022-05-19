@@ -65,6 +65,7 @@
     "plan": "Plan",
     "done": "Done",
     "snooze": "Snooze",
+    "snoozed": "Snoozed",
     "assign": "Assign",
     "priority": "Priority",
     "moveToInbox": "Move to inbox",

@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 142 
+ * Strings: 143 
  *
- * Built on 2022-05-18 at 14:48 UTC
+ * Built on 2022-05-19 at 15:42 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -424,6 +424,7 @@ class _StringsTaskEn {
 	String get plan => 'Plan';
 	String get done => 'Done';
 	String get snooze => 'Snooze';
+	String get snoozed => 'Snoozed';
 	String get assign => 'Assign';
 	String get priority => 'Priority';
 	String get moveToInbox => 'Move to inbox';
@@ -646,6 +647,7 @@ extension on _StringsEn {
 			'task.plan': 'Plan',
 			'task.done': 'Done',
 			'task.snooze': 'Snooze',
+			'task.snoozed': 'Snoozed',
 			'task.assign': 'Assign',
 			'task.priority': 'Priority',
 			'task.moveToInbox': 'Move to inbox',

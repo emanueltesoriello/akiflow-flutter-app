@@ -309,6 +309,14 @@ extension TaskExt on Task {
     }
   }
 
+  bool get isSnoozed {
+    return status == TaskStatusType.snoozed.id;
+  }
+
+  bool get isSomeday {
+    return status == TaskStatusType.someday.id;
+  }
+
   static List<Task> filterTodayTodoTasks(List<Task> tasks) {
     List<Task> todos = tasks
         .where((element) =>

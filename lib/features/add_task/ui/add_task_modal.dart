@@ -164,6 +164,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
 
   Widget _actions(BuildContext context) {
     return Wrap(
+      runSpacing: 8,
       children: [
         PlanForAction(
           task: context.watch<EditTaskCubit>().state.updatedTask,

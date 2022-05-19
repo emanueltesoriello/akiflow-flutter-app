@@ -316,16 +316,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
 
       updated[i] = updatedTask;
-
-      updateUiOfTask(updatedTask);
     }
-
-    clearSelected();
 
     for (int i = 0; i < updated.length; i++) {
       Task updatedTask = updated[i];
+      updateUiOfTask(updatedTask);
       await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
     }
+
+    clearSelected();
 
     syncAll();
   }
