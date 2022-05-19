@@ -228,7 +228,7 @@ class SettingsModal extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 const Separator(),
-                const SizedBox(height: 19.5),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: Row(
