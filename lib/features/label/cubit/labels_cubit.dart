@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
@@ -18,7 +19,9 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
 
-  LabelsCubit() : super(const LabelsCubitState()) {
+  final TasksCubit tasksCubit;
+
+  LabelsCubit(this.tasksCubit) : super(const LabelsCubitState()) {
     _init();
   }
 
@@ -86,13 +89,13 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
   Future<void> fetchLabelTasks(Label? selectedLabel) async {
     List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel!);
-    emit(state.copyWith(labelTasks: tasks));
+    tasksCubit.emit(tasksCubit.state.copyWith(labelTasks: tasks));
   }
 
   void updateUiOfTask(Task updated) {
-    bool hasTask = state.labelTasks.any((t) => t.id == updated.id);
+    bool hasTask = tasksCubit.state.labelTasks.any((t) => t.id == updated.id);
 
-    List<Task> updatedTasks = List.from(state.labelTasks);
+    List<Task> updatedTasks = List.from(tasksCubit.state.labelTasks);
     if (hasTask) {
       int index = updatedTasks.indexWhere((t) => t.id == updated.id);
       updatedTasks[index] = updated;
@@ -100,7 +103,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
       updatedTasks.add(updated);
     }
 
-    emit(state.copyWith(labelTasks: updatedTasks));
+    tasksCubit.emit(tasksCubit.state.copyWith(labelTasks: updatedTasks));
   }
 
   Future<void> fetchLabels() async {
@@ -109,7 +112,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   }
 
   void updateUiAfterDeleteSection(Label section) {
-    List<Task> labelTasks = state.labelTasks.toList();
+    List<Task> labelTasks = tasksCubit.state.labelTasks.toList();
 
     for (Task task in labelTasks) {
       if (task.sectionId == section.id) {

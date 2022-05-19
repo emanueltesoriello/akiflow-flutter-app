@@ -10,6 +10,7 @@ import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/section_header.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_task_list.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -23,7 +24,7 @@ class LabelView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> labelTasks = context.watch<LabelsCubit>().state.labelTasks;
+    List<Task> labelTasks = context.watch<TasksCubit>().state.labelTasks;
 
     return BlocBuilder<LabelCubit, LabelCubitState>(
       builder: (context, labelState) {
