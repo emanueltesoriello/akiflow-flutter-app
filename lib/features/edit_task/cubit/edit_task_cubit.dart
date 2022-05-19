@@ -89,7 +89,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.updateUiOfTask(updated);
 
     _tasksCubit.syncAll();
-    _labelsCubit.syncAllAndRefresh();
   }
 
   Future<void> planFor(

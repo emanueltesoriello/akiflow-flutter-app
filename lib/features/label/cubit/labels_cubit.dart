@@ -72,8 +72,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _syncControllerService.syncAll();
 
-    List<Label> labels = await _labelsRepository.get();
-    emit(state.copyWith(labels: labels));
+    await fetchLabels();
 
     emit(state.copyWith(loading: false));
   }
@@ -95,5 +94,10 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     }
 
     emit(state.copyWith(labelTasks: updatedTasks));
+  }
+
+  Future<void> fetchLabels() async {
+    List<Label> labels = await _labelsRepository.get();
+    emit(state.copyWith(labels: labels));
   }
 }
