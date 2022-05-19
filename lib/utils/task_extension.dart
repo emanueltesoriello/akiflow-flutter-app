@@ -338,7 +338,17 @@ extension TaskExt on Task {
     return tasks;
   }
 
-  static String iconAssetFromUrl(String? url) {
+  static String? iconNetworkFromUrl(String? url) {
+    try {
+      url = !url!.startsWith('http://') && !url.startsWith('https://') ? 'http://$url' : url;
+      Uri origin = Uri.parse(url);
+      return "https://www.google.com/s2/favicons?sz=24&domain=$origin";
+    } catch (_) {}
+
+    return null;
+  }
+
+  static String? iconAssetFromUrl(String? url) {
     if (url != null) {
       if (url.contains('asana.com') || url.startsWith('asanadesktop://')) {
         return 'assets/images/icons/asana/asana.svg';
@@ -375,7 +385,7 @@ extension TaskExt on Task {
       }
     }
 
-    return 'assets/images/icons/_common/circle.svg';
+    return null;
   }
 
   Task markAsDone(Task originalTask) {

@@ -31,7 +31,8 @@ class EditTaskLinks extends StatelessWidget {
               itemBuilder: (context, index) {
                 String link = links[index];
 
-                String iconAsset = TaskExt.iconAssetFromUrl(link);
+                String? iconAsset = TaskExt.iconAssetFromUrl(link);
+                String? networkIcon = TaskExt.iconNetworkFromUrl(link);
 
                 return Row(
                   children: [
@@ -49,11 +50,29 @@ class EditTaskLinks extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SvgPicture.asset(
-                                iconAsset,
-                                width: 22,
-                                height: 22,
-                              ),
+                              Builder(builder: (context) {
+                                if (iconAsset != null) {
+                                  return SvgPicture.asset(
+                                    iconAsset,
+                                    width: 22,
+                                    height: 22,
+                                  );
+                                } else if (networkIcon != null) {
+                                  return SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: Center(
+                                      child: Image.network(
+                                        networkIcon,
+                                        width: 16,
+                                        height: 16,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return const SizedBox();
+                                }
+                              }),
                               const SizedBox(width: 9),
                               Flexible(
                                 child: Text(
