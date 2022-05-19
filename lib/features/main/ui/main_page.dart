@@ -59,7 +59,10 @@ class MainPage extends StatelessWidget {
           ),
           BlocBuilder<TasksCubit, TasksCubitState>(
             builder: (context, state) {
-              if (state.inboxTasks.any((element) => element.selected ?? false)) {
+              bool anyInboxSelected = state.inboxTasks.any((t) => t.selected ?? false);
+              bool anyTodaySelected = state.todayTasks.any((t) => t.selected ?? false);
+
+              if (anyInboxSelected || anyTodaySelected) {
                 return const SafeArea(
                   child: Align(
                     alignment: Alignment.bottomCenter,

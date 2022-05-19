@@ -92,13 +92,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
       state.copyWith(
         inboxTasks: state.inboxTasks.map((t) {
           if (t.id == task.id) {
-            return task.copyWith(selected: true);
+            return task.copyWith(selected: !(task.selected ?? false));
           }
           return t;
         }).toList(),
         todayTasks: state.todayTasks.map((t) {
           if (t.id == task.id) {
-            return task.copyWith(selected: true);
+            return task.copyWith(selected: !(task.selected ?? false));
           }
           return t;
         }).toList(),
@@ -160,14 +160,22 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> delete() async {
-    List<Task> tasksSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+    List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
 
-    addToUndoQueue(tasksSelected, UndoType.delete);
+    addToUndoQueue([...inboxSelected, ...todayTasksSelected], UndoType.delete);
 
-    List<Task> updated = state.inboxTasks.toList();
+    List<Task> updatedInbox = await _deleteTasksList(inboxSelected, state.inboxTasks.toList());
+    List<Task> updatedToday = await _deleteTasksList(todayTasksSelected, state.todayTasks.toList());
 
-    for (Task task in tasksSelected) {
-      int index = updated.indexWhere((t) => t.id == task.id);
+    emit(state.copyWith(inboxTasks: updatedInbox, todayTasks: updatedToday));
+
+    syncAll();
+  }
+
+  Future<List<Task>> _deleteTasksList(List<Task> selected, List<Task> origin) async {
+    for (Task task in selected) {
+      int index = origin.indexWhere((t) => t.id == task.id);
 
       task = task.copyWith(
         selected: false,
@@ -176,19 +184,17 @@ class TasksCubit extends Cubit<TasksCubitState> {
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
-      updated[index] = task;
+      origin[index] = task;
 
       updateUiOfTask(task);
 
       await _tasksRepository.updateById(
-        updated[index].id,
-        data: updated[index],
+        origin[index].id,
+        data: origin[index],
       );
     }
 
-    emit(state.copyWith(inboxTasks: updated));
-
-    syncAll();
+    return origin;
   }
 
   Future<void> assignLabel(Label label) async {
