@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/api/auth_api.dart';
+import 'package:mobile/api/user_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -23,6 +24,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final AuthApi _authApi = locator<AuthApi>();
   final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
+  final UserApi _userApi = locator<UserApi>();
 
   final TasksCubit _tasksCubit;
   final LabelsCubit _labelsCubit;
@@ -43,7 +45,19 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       _sentryService.authenticate(user.id.toString(), user.email);
 
+      _sentryService.addBreadcrumb(category: 'user', message: 'Fetching updates');
+
+      User userUpdated = await _userApi.get();
+
+      String accessToken = user.accessToken!;
+
+      userUpdated = userUpdated.copyWith(accessToken: accessToken);
+
+      _preferencesRepository.saveUser(user);
+
       emit(AuthCubitState(user: user));
+
+      _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
     }
   }
 
