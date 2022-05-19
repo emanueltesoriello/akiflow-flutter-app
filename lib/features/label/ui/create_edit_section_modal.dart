@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/label/label.dart';
 
 // Return new section as a `Label` using `Navigator.pop(context, newSection)` to refresh sections ui
 class CreateEditSectionModal extends StatefulWidget {
-  const CreateEditSectionModal({Key? key}) : super(key: key);
+  final Label section;
+
+  const CreateEditSectionModal({Key? key, required this.section}) : super(key: key);
 
   @override
   State<CreateEditSectionModal> createState() => _CreateEditSectionModalState();
@@ -17,11 +17,13 @@ class CreateEditSectionModal extends StatefulWidget {
 
 class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
   final FocusNode titleFocus = FocusNode();
+  late final ValueNotifier<Label> section;
 
   @override
   void initState() {
-    titleFocus.requestFocus();
     super.initState();
+    section = ValueNotifier(widget.section);
+    titleFocus.requestFocus();
   }
 
   @override
@@ -71,7 +73,7 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                                   fontWeight: FontWeight.w500,
                                 ),
                                 onChanged: (value) {
-                                  context.read<LabelCubit>().titleChanged(value);
+                                  section.value = section.value.copyWith(title: value);
                                 },
                               ),
                             ),
@@ -79,8 +81,7 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                               alignment: Alignment.centerRight,
                               child: InkWell(
                                 onTap: () {
-                                  Label newSection = context.read<LabelCubit>().state.selectedLabel!;
-                                  Navigator.pop(context, newSection);
+                                  Navigator.pop(context, section.value);
                                 },
                                 borderRadius: BorderRadius.circular(8),
                                 child: Material(

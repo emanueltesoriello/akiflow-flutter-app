@@ -37,6 +37,8 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.add([newLabel]);
 
+    fetchLabelTasks(newLabel);
+
     await _syncControllerService.syncAll();
 
     await _init();
@@ -44,7 +46,11 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
   Future<void> updateLabel(Label label) async {
     List<Label> labels = List.from(state.labels);
-    labels.add(label);
+
+    int index = labels.indexWhere((l) => l.id == label.id);
+
+    labels[index] = label;
+
     emit(state.copyWith(labels: labels));
 
     await _labelsRepository.updateById(label.id, data: label);
@@ -78,7 +84,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     emit(state.copyWith(loading: false));
   }
 
-  Future<void> getLabelTasks(Label? selectedLabel) async {
+  Future<void> fetchLabelTasks(Label? selectedLabel) async {
     List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel!);
     emit(state.copyWith(labelTasks: tasks));
   }
@@ -107,7 +113,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     for (Task task in labelTasks) {
       if (task.sectionId == section.id) {
-        task = task.copyWith(sectionId: Nullable(null));
+        task = task.copyWith(sectionId: Nullable(null), listId: section.parentId);
         updateUiOfTask(task);
       }
     }

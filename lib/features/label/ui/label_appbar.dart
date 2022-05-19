@@ -108,7 +108,7 @@ class LabelAppBar extends StatelessWidget {
                   builder: (context) => BlocProvider(
                     key: ObjectKey(newSection),
                     create: (context) => LabelCubit(newSection, labelsCubit: labelsCubit),
-                    child: const CreateEditSectionModal(),
+                    child: CreateEditSectionModal(section: newSection),
                   ),
                 );
 

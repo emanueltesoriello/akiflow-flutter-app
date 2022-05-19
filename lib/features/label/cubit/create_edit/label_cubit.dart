@@ -19,7 +19,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
   }
 
   _init() async {
-    labelsCubit.getLabelTasks(state.selectedLabel);
+    labelsCubit.fetchLabelTasks(state.selectedLabel);
 
     List<Label> allLabels = await _labelsRepository.get();
     List<Label> sections = allLabels.where((label) => label.type == "section" && label.deletedAt == null).toList();
@@ -100,18 +100,26 @@ class LabelCubit extends Cubit<LabelCubitState> {
   Future<void> deleteSection(Label section) async {
     List<Label> sections = List.from(state.sections);
     sections.remove(section);
-
     emit(state.copyWith(sections: sections));
-
-    Map<String?, bool> openedSections = {};
-    for (Label label in sections) {
-      openedSections[label.id] = true;
-    }
-    emit(state.copyWith(openedSections: openedSections));
 
     labelsCubit.updateUiAfterDeleteSection(section);
 
-    section = section.copyWith(deletedAt: DateTime.now().toUtc().toIso8601String());
+    section = section.copyWith(
+      deletedAt: DateTime.now().toUtc().toIso8601String(),
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+    );
+
     await labelsCubit.updateLabel(section);
+  }
+
+  Future<void> updateSection(Label sectionUpdated) async {
+    sectionUpdated = sectionUpdated.copyWith(updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+    List<Label> sections = List.from(state.sections);
+    int index = sections.indexWhere((section) => section.id == sectionUpdated.id);
+    sections[index] = sectionUpdated;
+    emit(state.copyWith(sections: sections));
+
+    await labelsCubit.updateLabel(sectionUpdated);
   }
 }

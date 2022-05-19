@@ -103,7 +103,7 @@ class TaskInfo extends StatelessWidget {
       (label) => task.listId!.contains(label.id!),
     );
 
-    if (label == null) {
+    if (label == null || label.deletedAt != null) {
       return const SizedBox();
     }
 

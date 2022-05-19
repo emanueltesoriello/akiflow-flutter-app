@@ -16,6 +16,7 @@ class SectionHeaderItem extends StatelessWidget {
     required this.onCreateTask,
     required this.onRename,
     required this.onDelete,
+    required this.showActionsMenu,
   }) : super(key: key);
 
   final String title;
@@ -25,6 +26,7 @@ class SectionHeaderItem extends StatelessWidget {
   final Function() onCreateTask;
   final Function() onRename;
   final Function() onDelete;
+  final bool showActionsMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -70,66 +72,72 @@ class SectionHeaderItem extends StatelessWidget {
               height: 20,
             ),
             const SizedBox(width: 8),
-            PopupMenuButton<SectionActionType>(
-              padding: EdgeInsets.zero,
-              icon: SvgPicture.asset(
-                "assets/images/icons/_common/ellipsis.svg",
-                color: ColorsExt.grey3(context),
-                width: 20,
-                height: 20,
-              ),
-              onSelected: (SectionActionType result) {
-                switch (result) {
-                  case SectionActionType.addTask:
-                    onCreateTask();
-                    break;
-                  case SectionActionType.rename:
-                    onRename();
-                    break;
-                  case SectionActionType.delete:
-                    onDelete();
-                    break;
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<SectionActionType>>[
-                PopupMenuItem<SectionActionType>(
-                  value: SectionActionType.addTask,
-                  padding: EdgeInsets.zero,
-                  height: 40,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: PopupMenuCustomItem(
-                      iconAsset: "assets/images/icons/_common/plus_square.svg",
-                      text: t.label.addTask,
+            Builder(builder: (context) {
+              if (!showActionsMenu) {
+                return const SizedBox();
+              }
+
+              return PopupMenuButton<SectionActionType>(
+                padding: EdgeInsets.zero,
+                icon: SvgPicture.asset(
+                  "assets/images/icons/_common/ellipsis.svg",
+                  color: ColorsExt.grey3(context),
+                  width: 20,
+                  height: 20,
+                ),
+                onSelected: (SectionActionType result) {
+                  switch (result) {
+                    case SectionActionType.addTask:
+                      onCreateTask();
+                      break;
+                    case SectionActionType.rename:
+                      onRename();
+                      break;
+                    case SectionActionType.delete:
+                      onDelete();
+                      break;
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<SectionActionType>>[
+                  PopupMenuItem<SectionActionType>(
+                    value: SectionActionType.addTask,
+                    padding: EdgeInsets.zero,
+                    height: 40,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: PopupMenuCustomItem(
+                        iconAsset: "assets/images/icons/_common/plus_square.svg",
+                        text: t.label.addTask,
+                      ),
                     ),
                   ),
-                ),
-                PopupMenuItem<SectionActionType>(
-                  value: SectionActionType.rename,
-                  padding: EdgeInsets.zero,
-                  height: 40,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: PopupMenuCustomItem(
-                      iconAsset: "assets/images/icons/_common/pencil.svg",
-                      text: t.label.rename,
+                  PopupMenuItem<SectionActionType>(
+                    value: SectionActionType.rename,
+                    padding: EdgeInsets.zero,
+                    height: 40,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: PopupMenuCustomItem(
+                        iconAsset: "assets/images/icons/_common/pencil.svg",
+                        text: t.label.rename,
+                      ),
                     ),
                   ),
-                ),
-                PopupMenuItem<SectionActionType>(
-                  value: SectionActionType.delete,
-                  padding: EdgeInsets.zero,
-                  height: 40,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: PopupMenuCustomItem(
-                      iconAsset: "assets/images/icons/_common/trash.svg",
-                      text: t.label.delete,
+                  PopupMenuItem<SectionActionType>(
+                    value: SectionActionType.delete,
+                    padding: EdgeInsets.zero,
+                    height: 40,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: PopupMenuCustomItem(
+                        iconAsset: "assets/images/icons/_common/trash.svg",
+                        text: t.label.delete,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
+                ],
+              );
+            })
           ],
         ),
       ),
