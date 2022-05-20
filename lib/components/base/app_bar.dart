@@ -123,6 +123,7 @@ class AppBarComp extends StatelessWidget {
       children: [
         Container(width: 16),
         ...actions,
+        const SizedBox(width: 10),
         Builder(builder: (context) {
           if (!showSyncButton) {
             return const SizedBox();
@@ -136,7 +137,7 @@ class AppBarComp extends StatelessWidget {
             },
             child: const SyncProgress(),
           );
-        })
+        }),
       ],
     );
   }

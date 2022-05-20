@@ -89,7 +89,9 @@
       "snoozed": "Task snoozed",
       "movedToInbox": "Task moved to inbox",
       "updated": "Task updated"
-    }
+    },
+    "sort": "Sort",
+    "filter": "Filter"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

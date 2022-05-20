@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/components/base/app_bar.dart';
+import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -20,6 +21,9 @@ class InboxAppBar extends StatelessWidget {
     return AppBarComp(
       title: title,
       leading: _leading(context),
+      actions: const [
+        TaskListMenu(),
+      ],
     );
   }
 

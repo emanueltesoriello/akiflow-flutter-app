@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 145 
+ * Strings: 147 
  *
- * Built on 2022-05-20 at 09:47 UTC
+ * Built on 2022-05-20 at 13:18 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -440,6 +440,8 @@ class _StringsTaskEn {
 	String get undo => 'Undo';
 	String get markedAsDone => 'Marked as done';
 	late final _StringsTaskUndoActionsEn undoActions = _StringsTaskUndoActionsEn._(_root);
+	String get sort => 'Sort';
+	String get filter => 'Filter';
 }
 
 // Path: errors
@@ -672,6 +674,8 @@ extension on _StringsEn {
 			'task.undoActions.snoozed': 'Task snoozed',
 			'task.undoActions.movedToInbox': 'Task moved to inbox',
 			'task.undoActions.updated': 'Task updated',
+			'task.sort': 'Sort',
+			'task.filter': 'Filter',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

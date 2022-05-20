@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/calendar/calendar_selected_day.dart';
 import 'package:mobile/components/calendar/calendar_today.dart';
+import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -65,7 +66,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
               child: Text(t.bottomBar.today,
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.grey3(context))),
             ),
-            const SizedBox(width: 10),
+            const TaskListMenu(),
           ],
         ),
         const SizedBox(height: 12),
