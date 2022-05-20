@@ -37,6 +37,8 @@ class SyncControllerService {
 
   final SentryService _sentryService = locator<SentryService>();
 
+  static bool _isSyncing = false;
+
   final Map<Entity, SyncService> _syncServices = {
     Entity.accounts: SyncService(
       api: _accountApi,
@@ -83,6 +85,12 @@ class SyncControllerService {
   };
 
   syncAll() async {
+    if (_isSyncing) {
+      return;
+    }
+
+    _isSyncing = true;
+
     User? user = _preferencesRepository.user;
 
     if (user != null) {
@@ -91,6 +99,8 @@ class SyncControllerService {
       await _syncEntity(Entity.labels);
       await _syncEntity(Entity.docs);
     }
+
+    _isSyncing = false;
   }
 
   Future<void> _syncEntity(Entity entity) async {

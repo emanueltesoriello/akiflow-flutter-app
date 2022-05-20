@@ -14,15 +14,14 @@ import 'package:mobile/features/dialog/dialog_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
+import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/services/database_service.dart';
-import 'package:mobile/services/push_notification_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
-import 'package:pusher_beams/pusher_beams.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -74,14 +73,16 @@ class Application extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    PushNotificationService pushNotificationService = locator<PushNotificationService>();
 
-    pushNotificationService.init();
     return MultiBlocProvider(
       providers: [
         BlocProvider<DialogCubit>(
           lazy: false,
           create: (BuildContext context) => DialogCubit(),
+        ),
+        BlocProvider<PushCubit>(
+          lazy: false,
+          create: (BuildContext context) => PushCubit(),
         ),
         BlocProvider<TasksCubit>(
           lazy: false,
@@ -97,7 +98,11 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<AuthCubit>(
           lazy: false,
-          create: (BuildContext context) => AuthCubit(context.read<TasksCubit>(), context.read<LabelsCubit>()),
+          create: (BuildContext context) => AuthCubit(
+            context.read<TasksCubit>(),
+            context.read<LabelsCubit>(),
+            context.read<PushCubit>(),
+          ),
         ),
         BlocProvider<SettingsCubit>(
           lazy: false,
