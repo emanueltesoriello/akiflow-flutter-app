@@ -37,11 +37,11 @@ class DatabaseService {
       return;
     }
 
-    await sql.deleteDatabase(database!.path);
-
     try {
       File(database!.path).deleteSync();
     } catch (_) {}
+
+    await sql.deleteDatabase(database!.path);
 
     await open();
   }
