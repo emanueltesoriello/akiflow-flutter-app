@@ -6,13 +6,7 @@ import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:rrule/rrule.dart';
 
-enum RecurrenceModalType {
-  none,
-  daily,
-  everyCurrentDay,
-  everyYearOnThisDay,
-  everyWeekday,
-}
+enum RecurrenceModalType { none, daily, everyCurrentDay, everyYearOnThisDay, everyWeekday, custom }
 
 class RecurrenceModal extends StatelessWidget {
   final Function(RecurrenceRule?) onChange;
@@ -82,9 +76,7 @@ class RecurrenceModal extends StatelessWidget {
                   click: () {
                     var rule = RecurrenceRule(
                       frequency: Frequency.daily,
-                      until: DateTime.now()
-                          .toUtc()
-                          .add(const Duration(days: 365 * 2)),
+                      until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
                     );
 
                     onChange(rule);
@@ -93,8 +85,7 @@ class RecurrenceModal extends StatelessWidget {
                 ),
                 _item(
                   context,
-                  active:
-                      selectedRecurrence == RecurrenceModalType.everyCurrentDay,
+                  active: selectedRecurrence == RecurrenceModalType.everyCurrentDay,
                   text: t.editTask.everyCurrentDay(
                     day: DateFormat("EEEE").format(DateTime.now()),
                   ),
@@ -104,9 +95,7 @@ class RecurrenceModal extends StatelessWidget {
                       byWeekDays: {
                         ByWeekDayEntry(DateTime.now().weekday),
                       },
-                      until: DateTime.now()
-                          .toUtc()
-                          .add(const Duration(days: 365 * 2)),
+                      until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
                     );
 
                     onChange(rule);
@@ -115,17 +104,14 @@ class RecurrenceModal extends StatelessWidget {
                 ),
                 _item(
                   context,
-                  active: selectedRecurrence ==
-                      RecurrenceModalType.everyYearOnThisDay,
+                  active: selectedRecurrence == RecurrenceModalType.everyYearOnThisDay,
                   text: t.editTask.everyYearOn(
                     date: DateFormat("MMM dd").format(DateTime.now()),
                   ),
                   click: () {
                     var rule = RecurrenceRule(
                       frequency: Frequency.yearly,
-                      until: DateTime.now()
-                          .toUtc()
-                          .add(const Duration(days: 365 * 2)),
+                      until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
                     );
 
                     onChange(rule);
@@ -134,8 +120,7 @@ class RecurrenceModal extends StatelessWidget {
                 ),
                 _item(
                   context,
-                  active:
-                      selectedRecurrence == RecurrenceModalType.everyWeekday,
+                  active: selectedRecurrence == RecurrenceModalType.everyWeekday,
                   text: t.editTask.everyWeekday,
                   click: () {
                     var rule = RecurrenceRule(
@@ -147,15 +132,37 @@ class RecurrenceModal extends StatelessWidget {
                         ByWeekDayEntry(DateTime.thursday),
                         ByWeekDayEntry(DateTime.friday),
                       },
-                      until: DateTime.now()
-                          .toUtc()
-                          .add(const Duration(days: 365 * 2)),
+                      until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
                     );
 
                     onChange(rule);
                     Navigator.pop(context);
                   },
                 ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          t.editTask.custom,
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: ColorsExt.grey3(context),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        t.comingSoon,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: ColorsExt.grey3(context),
+                        ),
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
           ),
