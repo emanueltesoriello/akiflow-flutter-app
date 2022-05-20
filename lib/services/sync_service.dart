@@ -34,7 +34,7 @@ class SyncService {
   }
 
   Future<DateTime?> _remoteToLocal(DateTime? lastSyncAt) async {
-    setSyncStatusIfNotNull("last sync at: $lastSyncAt, starting remote to local");
+    setSyncStatusIfNotNull("${api.runtimeType} last sync at: $lastSyncAt, starting remote to local");
 
     var remoteItems = await api.getItems(
       perPage: 2500,
@@ -43,7 +43,7 @@ class SyncService {
       allPages: true,
     );
 
-    setSyncStatusIfNotNull("remote to local retrieved: ${remoteItems.length} items");
+    setSyncStatusIfNotNull("${api.runtimeType} remote to local retrieved: ${remoteItems.length} items");
 
     if (remoteItems.isEmpty) {
       return null;
@@ -60,11 +60,11 @@ class SyncService {
   }
 
   Future<void> _localToRemote() async {
-    setSyncStatusIfNotNull("starting local to remote, getting unsynced items");
+    setSyncStatusIfNotNull("${api.runtimeType} starting local to remote, getting unsynced items");
 
     List<dynamic> unsynced = await databaseRepository.unsynced();
 
-    setSyncStatusIfNotNull("local to remote, sync ${unsynced.length} items");
+    setSyncStatusIfNotNull("${api.runtimeType} local to remote, sync ${unsynced.length} items");
 
     if (unsynced.isEmpty) {
       return;
@@ -72,27 +72,27 @@ class SyncService {
 
     unsynced = await compute(prepareItemsForRemote, unsynced);
 
-    setSyncStatusIfNotNull("posting to api ${unsynced.length} items");
+    setSyncStatusIfNotNull("${api.runtimeType} posting to api ${unsynced.length} items");
 
     List<dynamic> updated = await api.post(unsynced: unsynced);
 
     if (unsynced.length != updated.length) {
       throw PostUnsyncedExcepotion(
-        "Upserted ${unsynced.length} items, but ${updated.length} items were updated",
+        "${api.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
       );
     }
 
-    setSyncStatusIfNotNull("posted to api ${updated.length} items");
+    setSyncStatusIfNotNull("${api.runtimeType} posted to api ${updated.length} items");
 
     if (updated.isNotEmpty) {
       await _upsertItems(updated);
     }
 
-    setSyncStatusIfNotNull("local to remote: done");
+    setSyncStatusIfNotNull("${api.runtimeType} local to remote: done");
   }
 
   Future<void> _upsertItems<T>(List<dynamic> remoteItems) async {
-    setSyncStatusIfNotNull("upsert remote items: ${remoteItems.length} to db");
+    setSyncStatusIfNotNull("${api.runtimeType} upsert remote items: ${remoteItems.length} to db");
 
     bool anyInsertErrors = false;
 
@@ -110,13 +110,14 @@ class SyncService {
     if (changedModels.isEmpty && nonExistingModels.isEmpty) {
       _sentryService.addBreadcrumb(
         category: "sync",
-        message: "no items to upsert",
+        message: "${api.runtimeType} no items to upsert",
       );
       return;
     }
     _sentryService.addBreadcrumb(
       category: "sync",
-      message: 'nonExistingModels length: ${nonExistingModels.length}, itemToUpdate length: ${changedModels.length}',
+      message:
+          '${api.runtimeType} nonExistingModels length: ${nonExistingModels.length}, itemToUpdate length: ${changedModels.length}',
     );
 
     if (nonExistingModels.isNotEmpty) {
@@ -131,14 +132,14 @@ class SyncService {
 
     _sentryService.addBreadcrumb(
       category: "sync",
-      message: 'anyInsertErrors: $anyInsertErrors',
+      message: '${api.runtimeType} anyInsertErrors: $anyInsertErrors',
     );
 
     if (anyInsertErrors) {
       _sentryService.captureException(UpsertDatabaseException("upsert items error"));
     }
 
-    setSyncStatusIfNotNull("upsert remote items: done");
+    setSyncStatusIfNotNull("${api.runtimeType} upsert remote items: done");
   }
 
   Future<bool> _addRemoteTaskToLocalDb(itemsToInsert) async {
@@ -146,11 +147,11 @@ class SyncService {
 
     _sentryService.addBreadcrumb(
       category: "sync",
-      message: 'databaseRepository add result: ${result.length} items',
+      message: '${api.runtimeType} databaseRepository add result: ${result.length} items',
     );
 
     if (result.isEmpty) {
-      throw UpsertDatabaseException('result empty');
+      throw UpsertDatabaseException('${api.runtimeType} result empty');
     }
 
     return false;
