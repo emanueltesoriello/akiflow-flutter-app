@@ -12,6 +12,7 @@ import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
+import 'package:mobile/services/push_notification_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
@@ -25,6 +26,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
   final UserApi _userApi = locator<UserApi>();
+
 
   final TasksCubit _tasksCubit;
   final LabelsCubit _labelsCubit;
@@ -48,6 +50,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
       _sentryService.addBreadcrumb(category: 'user', message: 'Fetching updates');
 
       User userUpdated = await _userApi.get();
+
+
 
       String accessToken = user.accessToken!;
 

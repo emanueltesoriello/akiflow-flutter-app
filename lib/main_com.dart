@@ -18,9 +18,11 @@ import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/services/database_service.dart';
+import 'package:mobile/services/push_notification_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
+import 'package:pusher_beams/pusher_beams.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -72,7 +74,9 @@ class Application extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    PushNotificationService pushNotificationService = locator<PushNotificationService>();
 
+    pushNotificationService.init();
     return MultiBlocProvider(
       providers: [
         BlocProvider<DialogCubit>(

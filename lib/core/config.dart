@@ -43,4 +43,8 @@ abstract class Config {
   static String get oauthRedirectUrl {
     return _config['oauth_redirect_url'] as String;
   }
+
+  static String get pusherInstanceId {
+    return _config['pusher_instance_id'] as String;
+  }
 }
