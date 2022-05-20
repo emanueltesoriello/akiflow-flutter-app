@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 147 
+ * Strings: 148 
  *
- * Built on 2022-05-20 at 13:18 UTC
+ * Built on 2022-05-20 at 13:40 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -384,6 +384,7 @@ class _StringsSettingsEn {
 	String get joinOurCommunity => 'Join our community';
 	String get bugReport => 'Bug report';
 	String get labels => 'Labels';
+	String get searchComingSoon => 'Search is coming soon in the near future!';
 }
 
 // Path: addTask
@@ -629,6 +630,7 @@ extension on _StringsEn {
 			'settings.joinOurCommunity': 'Join our community',
 			'settings.bugReport': 'Bug report',
 			'settings.labels': 'Labels',
+			'settings.searchComingSoon': 'Search is coming soon in the near future!',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',

@@ -6,6 +6,8 @@ class BorderedInputView extends StatefulWidget {
   final String hint;
   final FocusNode? focus;
   final String? initialValue;
+  final bool enabled;
+  final Widget? leading;
 
   const BorderedInputView({
     Key? key,
@@ -13,6 +15,8 @@ class BorderedInputView extends StatefulWidget {
     required this.hint,
     this.focus,
     this.initialValue,
+    this.enabled = true,
+    this.leading,
   }) : super(key: key);
 
   @override
@@ -42,25 +46,37 @@ class _BorderedInputViewState extends State<BorderedInputView> {
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-        child: TextField(
-          controller: _controller,
-          focusNode: widget.focus,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.zero,
-            isDense: true,
-            hintText: widget.hint,
-            border: InputBorder.none,
-            hintStyle: TextStyle(
-              color: ColorsExt.grey3(context),
-              fontSize: 17,
+        child: Row(
+          children: [
+            if (widget.leading != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: widget.leading!,
+              ),
+            Expanded(
+              child: TextField(
+                controller: _controller,
+                focusNode: widget.focus,
+                enabled: widget.enabled,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
+                  isDense: true,
+                  hintText: widget.hint,
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    color: ColorsExt.grey3(context),
+                    fontSize: 17,
+                  ),
+                ),
+                style: TextStyle(
+                  color: ColorsExt.grey2(context),
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                ),
+                onChanged: widget.onChanged,
+              ),
             ),
-          ),
-          style: TextStyle(
-            color: ColorsExt.grey2(context),
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-          ),
-          onChanged: widget.onChanged,
+          ],
         ),
       ),
     );

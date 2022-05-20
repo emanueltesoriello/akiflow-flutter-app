@@ -16,6 +16,7 @@ import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/button_selectable.dart';
 import 'package:mobile/features/settings/ui/folder_item.dart';
+import 'package:mobile/features/settings/ui/search_modal.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -92,7 +93,10 @@ class SettingsModal extends StatelessWidget {
                         color: ColorsExt.grey3(context),
                       ),
                       onTap: () {
-                        // TODO SETTINGS - search
+                        showCupertinoModalBottomSheet(
+                          context: context,
+                          builder: (context) => const SearchModal(),
+                        );
                       },
                     ),
                     const SizedBox(width: 12),
