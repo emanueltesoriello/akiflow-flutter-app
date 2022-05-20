@@ -7,6 +7,8 @@ class LabelCubitState extends Equatable {
   final bool showDone;
   final List<Label> sections;
   final Map<String?, bool> openedSections;
+  final bool showSnoozed;
+  final bool showSomeday;
 
   const LabelCubitState({
     this.loading = false,
@@ -15,6 +17,8 @@ class LabelCubitState extends Equatable {
     this.showDone = false,
     this.sections = const [],
     this.openedSections = const {},
+    this.showSnoozed = false,
+    this.showSomeday = false,
   });
 
   LabelCubitState copyWith({
@@ -24,6 +28,8 @@ class LabelCubitState extends Equatable {
     bool? showDone,
     List<Label>? sections,
     Map<String?, bool>? openedSections,
+    bool? showSnoozed,
+    bool? showSomeday,
   }) {
     return LabelCubitState(
       loading: loading ?? this.loading,
@@ -32,9 +38,20 @@ class LabelCubitState extends Equatable {
       showDone: showDone ?? this.showDone,
       sections: sections ?? this.sections,
       openedSections: openedSections ?? this.openedSections,
+      showSnoozed: showSnoozed ?? this.showSnoozed,
+      showSomeday: showSomeday ?? this.showSomeday,
     );
   }
 
   @override
-  List<Object?> get props => [loading, selectedLabel, sorting, showDone, sections, openedSections];
+  List<Object?> get props => [
+        loading,
+        selectedLabel,
+        sorting,
+        showDone,
+        sections,
+        openedSections,
+        showSnoozed,
+        showSomeday,
+      ];
 }

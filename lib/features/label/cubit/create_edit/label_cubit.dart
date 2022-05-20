@@ -122,4 +122,12 @@ class LabelCubit extends Cubit<LabelCubitState> {
 
     await labelsCubit.updateLabel(sectionUpdated);
   }
+
+  void toggleShowSnoozed() {
+    emit(state.copyWith(showSnoozed: !state.showSnoozed));
+  }
+
+  void toggleShowSomeday() {
+    emit(state.copyWith(showSomeday: !state.showSomeday));
+  }
 }

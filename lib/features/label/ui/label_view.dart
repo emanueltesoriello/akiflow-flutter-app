@@ -58,7 +58,21 @@ class LabelView extends StatelessWidget {
                     controller: PrimaryScrollController.of(context) ?? ScrollController(),
                     slivers: labelState.sections.map((section) {
                       List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
-                      int count = tasks.where((element) => element.sectionId == section.id).toList().length;
+
+                      List<Task> tasksWithoutSnoozedAndSomeday = List.from(tasks);
+
+                      if (!labelState.showSnoozed) {
+                        tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSnoozed);
+                      }
+
+                      if (!labelState.showSomeday) {
+                        tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSomeday);
+                      }
+
+                      int count = tasksWithoutSnoozedAndSomeday
+                          .where((element) => element.sectionId == section.id)
+                          .toList()
+                          .length;
 
                       Widget? header = SectionHeaderItem(
                         section.title ?? t.task.noTitle,
@@ -118,20 +132,46 @@ class LabelView extends StatelessWidget {
                               if (snoozedCount == 0) {
                                 return const SizedBox();
                               }
+
+                              String text;
+                              String? iconAsset;
+
+                              if (!labelState.showSnoozed) {
+                                text = "$snoozedCount ${t.task.snoozed}";
+                                iconAsset = "assets/images/icons/_common/clock.svg";
+                              } else {
+                                text = t.label.hideSnoozed;
+                              }
+
                               return CompactInfo(
-                                iconAsset: "assets/images/icons/_common/clock.svg",
-                                title: t.task.snoozed,
-                                value: snoozedCount.toString(),
+                                iconAsset: iconAsset,
+                                text: text,
+                                onPressed: () {
+                                  context.read<LabelCubit>().toggleShowSnoozed();
+                                },
                               );
                             }),
                             Builder(builder: (context) {
                               if (somedayCount == 0) {
                                 return const SizedBox();
                               }
+
+                              String text;
+                              String? iconAsset;
+
+                              if (!labelState.showSomeday) {
+                                text = "$somedayCount ${t.task.someday}";
+                                iconAsset = "assets/images/icons/_common/archivebox.svg";
+                              } else {
+                                text = t.label.hideSomeday;
+                              }
+
                               return CompactInfo(
-                                iconAsset: "assets/images/icons/_common/archivebox.svg",
-                                title: t.task.someday,
-                                value: somedayCount.toString(),
+                                iconAsset: iconAsset,
+                                text: text,
+                                onPressed: () {
+                                  context.read<LabelCubit>().toggleShowSomeday();
+                                },
                               );
                             }),
                           ],
@@ -139,7 +179,7 @@ class LabelView extends StatelessWidget {
                       }
 
                       return TodayTaskList(
-                        tasks: tasks,
+                        tasks: tasksWithoutSnoozedAndSomeday,
                         sorting: TaskListSorting.descending,
                         showTasks: labelState.openedSections[section.id] ?? false,
                         showLabel: false,
@@ -159,37 +199,50 @@ class LabelView extends StatelessWidget {
 }
 
 class CompactInfo extends StatelessWidget {
-  final String iconAsset;
-  final String title;
-  final String value;
+  final String? iconAsset;
+  final String text;
+  final Function()? onPressed;
 
   const CompactInfo({
     Key? key,
-    required this.iconAsset,
-    required this.title,
-    required this.value,
+    this.iconAsset,
+    required this.text,
+    this.onPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(4, 5, 4, 5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(3),
-        border: Border.all(color: ColorsExt.grey5(context), width: 1),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset, color: ColorsExt.grey2(context))),
-          const SizedBox(width: 4),
-          Text(
-            "$value $title",
-            style: TextStyle(fontSize: 13, color: ColorsExt.grey2(context)),
-          ),
-        ],
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(4, 5, 4, 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3),
+          border: Border.all(color: ColorsExt.grey5(context), width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Builder(builder: (context) {
+              if (iconAsset == null) {
+                return const SizedBox();
+              }
+
+              return Row(
+                children: [
+                  SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey2(context))),
+                  const SizedBox(width: 4),
+                ],
+              );
+            }),
+            Text(
+              text,
+              style: TextStyle(fontSize: 13, color: ColorsExt.grey2(context)),
+            ),
+          ],
+        ),
       ),
     );
   }

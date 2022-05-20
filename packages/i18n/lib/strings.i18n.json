@@ -168,6 +168,8 @@
     "sectionTitle": "Section Title",
     "addTask": "Add Task",
     "rename": "Rename",
-    "delete": "Delete"
+    "delete": "Delete",
+    "hideSnoozed": "Hide Snoozed",
+    "hideSomeday": "Hide Someday"
   }
 }
