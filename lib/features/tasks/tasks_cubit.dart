@@ -6,6 +6,8 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
@@ -26,11 +28,23 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
 
+  late final TodayCubit _todayCubit;
+
+  LabelCubit? _labelCubit;
+
   TasksCubit() : super(const TasksCubitState()) {
     syncAllAndRefresh();
   }
 
-  syncAllAndRefresh({DateTime? selectedTodayDate}) async {
+  attachTodayCubit(TodayCubit todayCubit) {
+    _todayCubit = todayCubit;
+  }
+
+  attachLabelCubit(LabelCubit labelCubit) {
+    _labelCubit = labelCubit;
+  }
+
+  syncAllAndRefresh() async {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
@@ -40,7 +54,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       await syncAll();
 
-      await refreshTasksFromRepository(selectedTodayDate: selectedTodayDate);
+      await refreshTasksFromRepository();
 
       emit(state.copyWith(loading: false));
     }
@@ -54,12 +68,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(loading: false));
   }
 
-  refreshTasksFromRepository({DateTime? selectedTodayDate}) async {
+  refreshTasksFromRepository() async {
     emit(state.copyWith(loading: true, syncStatus: "Get tasks from repository"));
 
     await fetchDocs();
     await fetchInbox();
-    await fetchTodayTasks(selectedTodayDate ?? DateTime.now());
+    await fetchTodayTasks(_todayCubit.state.selectedDate);
+
+    if (_labelCubit?.state.selectedLabel != null) {
+      await fetchLabelTasks(_labelCubit!.state.selectedLabel!);
+    }
 
     emit(state.copyWith(loading: false));
   }
@@ -77,6 +95,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future fetchDocs() async {
     List<Doc> docs = await _docsRepository.get();
     emit(state.copyWith(docs: docs));
+  }
+
+  Future<void> fetchLabelTasks(Label selectedLabel) async {
+    List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
+    emit(state.copyWith(labelTasks: tasks));
   }
 
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
@@ -126,10 +149,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task taskSelected in all) {
       Task updated = taskSelected.markAsDone(taskSelected);
 
-      updateUiOfTask(updated);
-
       await _tasksRepository.updateById(taskSelected.id, data: updated);
     }
+
+    refreshTasksFromRepository();
 
     clearSelected();
 
@@ -176,6 +199,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     await _tasksRepository.add(duplicates);
 
+    refreshTasksFromRepository();
+
     clearSelected();
 
     emit(state.copyWith(inboxTasks: newInboxTasks, todayTasks: newTodayTasks, labelTasks: newLabelTasks));
@@ -200,10 +225,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
-      updateUiOfTask(updated);
-
       await _tasksRepository.updateById(updated.id, data: updated);
     }
+
+    refreshTasksFromRepository();
 
     clearSelected();
 
@@ -224,10 +249,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
-      updateUiOfTask(updatedTask);
-
       await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
     }
+
+    refreshTasksFromRepository();
 
     clearSelected();
 
@@ -244,10 +269,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in allSelected) {
       Task updatedTask = task.changePriority();
 
-      updateUiOfTask(updatedTask);
-
       await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
     }
+
+    refreshTasksFromRepository();
 
     clearSelected();
 
@@ -268,10 +293,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
         selected: false,
       );
 
-      updateUiOfTask(updated);
-
       await _tasksRepository.updateById(updated.id, data: updated);
     }
+
+    refreshTasksFromRepository();
 
     clearSelected();
 
@@ -320,49 +345,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     for (int i = 0; i < updated.length; i++) {
       Task updatedTask = updated[i];
-      updateUiOfTask(updatedTask);
       await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
     }
+
+    refreshTasksFromRepository();
 
     clearSelected();
 
     syncAll();
-  }
-
-  void updateUiOfTask(Task task) {
-    bool inboxHasTask = state.inboxTasks.any((t) => t.id == task.id);
-    bool todayHasTask = state.todayTasks.any((t) => t.id == task.id);
-    bool labelTasksHasTask = state.labelTasks.any((t) => t.id == task.id);
-
-    List<Task> updatedInbox = List.from(state.inboxTasks);
-    if (inboxHasTask) {
-      int index = updatedInbox.indexWhere((t) => t.id == task.id);
-      updatedInbox[index] = task;
-    } else {
-      updatedInbox.add(task);
-    }
-
-    List<Task> updatedToday = List.from(state.todayTasks);
-    if (todayHasTask) {
-      int index = updatedToday.indexWhere((t) => t.id == task.id);
-      updatedToday[index] = task;
-    } else {
-      updatedToday.add(task);
-    }
-
-    List<Task> labelTasks = List.from(state.labelTasks);
-    if (labelTasksHasTask) {
-      int index = labelTasks.indexWhere((t) => t.id == task.id);
-      labelTasks[index] = task;
-    } else {
-      labelTasks.add(task);
-    }
-
-    emit(state.copyWith(
-      inboxTasks: updatedInbox,
-      todayTasks: updatedToday,
-      labelTasks: labelTasks,
-    ));
   }
 
   void moveToInbox() {
@@ -409,10 +399,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
         selected: false,
       );
 
-      updateUiOfTask(updated);
-
       await _tasksRepository.updateById(task.id, data: updated);
     }
+
+    refreshTasksFromRepository();
 
     clearSelected();
 

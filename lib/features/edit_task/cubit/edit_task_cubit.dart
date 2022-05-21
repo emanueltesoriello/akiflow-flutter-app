@@ -82,7 +82,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.add([updated]);
 
-    _tasksCubit.updateUiOfTask(updated);
+    _tasksCubit.refreshTasksFromRepository();
 
     _tasksCubit.syncAll();
   }
@@ -108,8 +108,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.status == TaskStatusType.planned.id ? UndoType.plan : UndoType.snooze);
-      _tasksCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
+      _tasksCubit.refreshTasksFromRepository();
       _tasksCubit.syncAll();
     }
   }
@@ -160,8 +160,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     ));
 
     if (forceUpdate) {
-      _tasksCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
+      _tasksCubit.refreshTasksFromRepository();
       _tasksCubit.syncAll();
     }
   }
@@ -175,8 +175,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.isCompletedComputed ? UndoType.markDone : UndoType.markUndone);
-      _tasksCubit.updateUiOfTask(updated);
       await _tasksRepository.updateById(updated.id!, data: updated);
+      _tasksCubit.refreshTasksFromRepository();
       _tasksCubit.syncAll();
     }
   }
@@ -260,9 +260,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       selected: false,
     );
 
-    _tasksCubit.updateUiOfTask(newTaskDuplicated);
-
     await _tasksRepository.add([newTaskDuplicated]);
+
+    _tasksCubit.refreshTasksFromRepository();
 
     _tasksCubit.syncAll();
   }
@@ -305,8 +305,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
         );
 
-        _tasksCubit.updateUiOfTask(updatedRecurringTask);
-
         updatedRecurringTasks.add(updatedRecurringTask);
       }
 
@@ -319,10 +317,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       _tasksCubit.addToUndoQueue([original], UndoType.updated);
 
-      _tasksCubit.updateUiOfTask(updated);
-
       await _tasksRepository.updateById(updated.id!, data: updated);
     }
+
+    _tasksCubit.refreshTasksFromRepository();
 
     _tasksCubit.syncAll();
   }

@@ -5,9 +5,13 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 part 'today_state.dart';
 
 class TodayCubit extends Cubit<TodayCubitState> {
-  final TasksCubit tasksCubit;
+  late final TasksCubit tasksCubit;
 
-  TodayCubit(this.tasksCubit) : super(TodayCubitState(selectedDate: DateTime.now()));
+  TodayCubit() : super(TodayCubitState(selectedDate: DateTime.now()));
+
+  void attachTasksCubit(TasksCubit tasksCubit) {
+    this.tasksCubit = tasksCubit;
+  }
 
   void onDateSelected(DateTime selectedDay) {
     emit(state.copyWith(selectedDate: selectedDay));

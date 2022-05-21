@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
@@ -11,6 +12,7 @@ part 'label_state.dart';
 
 class LabelCubit extends Cubit<LabelCubitState> {
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
+  final TasksCubit _tasksCubit = locator<TasksCubit>();
 
   final LabelsCubit labelsCubit;
 
@@ -19,7 +21,9 @@ class LabelCubit extends Cubit<LabelCubitState> {
   }
 
   _init() async {
-    labelsCubit.fetchLabelTasks(state.selectedLabel);
+    _tasksCubit.attachLabelCubit(this);
+
+    _tasksCubit.fetchLabelTasks(state.selectedLabel!);
 
     List<Label> allLabels = await _labelsRepository.get();
     List<Label> sections = allLabels.where((label) => label.type == "section" && label.deletedAt == null).toList();
@@ -102,14 +106,14 @@ class LabelCubit extends Cubit<LabelCubitState> {
     sections.remove(section);
     emit(state.copyWith(sections: sections));
 
-    labelsCubit.updateUiAfterDeleteSection(section);
-
     section = section.copyWith(
       deletedAt: DateTime.now().toUtc().toIso8601String(),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
     await labelsCubit.updateLabel(section);
+
+    _tasksCubit.refreshTasksFromRepository();
   }
 
   Future<void> updateSection(Label sectionUpdated) async {

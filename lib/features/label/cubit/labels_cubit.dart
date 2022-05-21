@@ -4,11 +4,8 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/labels_repository.dart';
-import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/label/label.dart';
-import 'package:models/nullable.dart';
-import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 
 part 'labels_state.dart';
@@ -17,7 +14,6 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
-  final TasksRepository _tasksRepository = locator<TasksRepository>();
 
   final TasksCubit tasksCubit;
 
@@ -83,24 +79,8 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     emit(state.copyWith(loading: false));
   }
 
-  Future<void> fetchLabelTasks(Label? selectedLabel) async {
-    List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel!);
-    tasksCubit.emit(tasksCubit.state.copyWith(labelTasks: tasks));
-  }
-
   Future<void> fetchLabels() async {
     List<Label> labels = await _labelsRepository.get();
     emit(state.copyWith(labels: labels));
-  }
-
-  void updateUiAfterDeleteSection(Label section) {
-    List<Task> labelTasks = tasksCubit.state.labelTasks.toList();
-
-    for (Task task in labelTasks) {
-      if (task.sectionId == section.id) {
-        task = task.copyWith(sectionId: Nullable(null), listId: section.parentId);
-        tasksCubit.updateUiOfTask(task);
-      }
-    }
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile/components/base/sync_progress.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
 class AppBarComp extends StatelessWidget {
@@ -131,8 +130,7 @@ class AppBarComp extends StatelessWidget {
 
           return InkWell(
             onTap: () {
-              DateTime? selectedTodayDate = context.read<TodayCubit>().state.selectedDate;
-              context.read<TasksCubit>().syncAllAndRefresh(selectedTodayDate: selectedTodayDate);
+              context.read<TasksCubit>().syncAllAndRefresh();
               context.read<LabelsCubit>().syncAllAndRefresh();
             },
             child: const SyncProgress(),

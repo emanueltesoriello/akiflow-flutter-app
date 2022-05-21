@@ -9,6 +9,8 @@ import 'package:mobile/api/task_api.dart';
 import 'package:mobile/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/calendars_repository.dart';
 import 'package:mobile/repository/docs_repository.dart';
@@ -17,7 +19,6 @@ import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
-import 'package:mobile/services/push_notification_service.dart';
 import 'package:mobile/services/push_notification_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
@@ -66,4 +67,14 @@ void setupLocator({
   locator.registerSingleton<SentryService>(SentryService());
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
   locator.registerSingleton<PushNotificationService>(PushNotificationService());
+
+  /// Blocs
+  TodayCubit todayCubit = TodayCubit();
+  TasksCubit tasksCubit = TasksCubit();
+
+  tasksCubit.attachTodayCubit(todayCubit);
+  todayCubit.attachTasksCubit(tasksCubit);
+
+  locator.registerSingleton<TasksCubit>(tasksCubit);
+  locator.registerSingleton<TodayCubit>(todayCubit);
 }

@@ -86,7 +86,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<TasksCubit>(
           lazy: false,
-          create: (BuildContext context) => TasksCubit(),
+          create: (BuildContext context) => locator<TasksCubit>(),
         ),
         BlocProvider<LabelsCubit>(
           lazy: false,
@@ -110,7 +110,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<TodayCubit>(
           lazy: false,
-          create: (BuildContext context) => TodayCubit(context.read<TasksCubit>()),
+          create: (BuildContext context) => locator<TodayCubit>(),
         ),
       ],
       child: MaterialApp(
