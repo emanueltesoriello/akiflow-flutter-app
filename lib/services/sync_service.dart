@@ -51,7 +51,7 @@ class SyncService {
 
     DateTime? maxRemoteUpdateAt = await compute(getMaxUpdatedAt, remoteItems);
 
-    setSyncStatusIfNotNull("${api.runtimeType}: update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
+    setSyncStatusIfNotNull("${api.runtimeType} update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
 
     // Upsert only after retrieved max remote update at.
     await _upsertItems(remoteItems);
@@ -99,13 +99,47 @@ class SyncService {
     var result = [];
 
     List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
-    List<dynamic> existingModels = await databaseRepository.getByIds(localIds);
+    setSyncStatusIfNotNull("${api.runtimeType} localIds length: ${localIds.length}");
+
+    List<T> existingModels = [];
+
+    int sqlMaxVariableNumber = 999;
+
+    if (localIds.length > sqlMaxVariableNumber) {
+      List<List<dynamic>> chunks = [];
+
+      for (var i = 0; i < localIds.length; i += sqlMaxVariableNumber) {
+        List<dynamic> sublistWithMaxVariables = localIds.sublist(
+            i, i + sqlMaxVariableNumber > localIds.length ? localIds.length : i + sqlMaxVariableNumber);
+        chunks.add(sublistWithMaxVariables);
+      }
+
+      for (var chunk in chunks) {
+        List<T> existingModelsChunk = await databaseRepository.getByIds(chunk);
+        existingModels.addAll(existingModelsChunk);
+      }
+    } else {
+      existingModels = await databaseRepository.getByIds(localIds);
+    }
+
+    setSyncStatusIfNotNull("${api.runtimeType} existingModels length: ${existingModels.length}");
+
     result = await compute(
         partitionItemsToUpsert, PartitioneItemModel(remoteItems: remoteItems, existingItems: existingModels));
 
     var changedModels = result[0];
     // var unchangedModels = result[1];
     var nonExistingModels = result[2];
+
+    _sentryService.addBreadcrumb(
+      category: "sync",
+      message: "${api.runtimeType} changedModels length: ${changedModels.length}",
+    );
+
+    _sentryService.addBreadcrumb(
+      category: "sync",
+      message: "${api.runtimeType} nonExistingModels length: ${nonExistingModels.length}",
+    );
 
     if (changedModels.isEmpty && nonExistingModels.isEmpty) {
       _sentryService.addBreadcrumb(
@@ -114,11 +148,6 @@ class SyncService {
       );
       return;
     }
-    _sentryService.addBreadcrumb(
-      category: "sync",
-      message:
-          '${api.runtimeType} nonExistingModels length: ${nonExistingModels.length}, itemToUpdate length: ${changedModels.length}',
-    );
 
     if (nonExistingModels.isNotEmpty) {
       anyInsertErrors = await _addRemoteTaskToLocalDb(nonExistingModels);

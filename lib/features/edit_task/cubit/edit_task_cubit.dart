@@ -325,7 +325,5 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     _tasksCubit.syncAll();
-
-    // _labels.refresh();
   }
 }
