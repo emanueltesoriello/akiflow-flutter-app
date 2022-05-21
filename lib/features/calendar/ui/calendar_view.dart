@@ -47,7 +47,7 @@ class _View extends StatelessWidget {
           const SizedBox(height: 24),
           InkWell(
             onTap: () {
-              context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+              context.read<MainCubit>().changeHomeView(HomeViewType.today);
             },
             child: Container(
               width: 114,
