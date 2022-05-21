@@ -3,12 +3,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:models/label/label.dart';
 
-class RecurringEditDialog extends StatelessWidget {
-  final Function() onlyThisTap;
-  final Function() allTap;
+class DeleteLabelDialog extends StatelessWidget {
+  final Label label;
+  final Function() justDeleteTheLabelClick;
+  final Function() markAllTasksAsDoneClick;
 
-  const RecurringEditDialog({Key? key, required this.onlyThisTap, required this.allTap}) : super(key: key);
+  const DeleteLabelDialog(
+    this.label, {
+    Key? key,
+    required this.justDeleteTheLabelClick,
+    required this.markAllTasksAsDoneClick,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,18 +45,18 @@ class RecurringEditDialog extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          SvgPicture.asset("assets/images/icons/_common/pencil_circle.svg",
+                          SvgPicture.asset("assets/images/icons/_common/exclamationmark_triangle_fill.svg",
                               width: 48, height: 48, color: ColorsExt.grey2(context)),
                           const SizedBox(height: 16),
                           Text(
-                            t.editTask.repeatingEditDialog.title,
+                            t.label.deleteDialog.title(labelTitle: label.title ?? t.noTitle),
                             style:
                                 TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            t.editTask.repeatingEditDialog.description,
+                            t.label.deleteDialog.description,
                             style:
                                 TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                             textAlign: TextAlign.center,
@@ -57,29 +64,7 @@ class RecurringEditDialog extends StatelessWidget {
                           const SizedBox(height: 24),
                           InkWell(
                             onTap: () {
-                              onlyThisTap();
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: ColorsExt.grey2(context),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  t.editTask.repeatingEditDialog.onlyThis,
-                                  style: TextStyle(fontSize: 15, color: ColorsExt.background(context)),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          InkWell(
-                            onTap: () {
-                              allTap();
+                              justDeleteTheLabelClick();
                               Navigator.pop(context);
                             },
                             child: Container(
@@ -92,7 +77,30 @@ class RecurringEditDialog extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  t.editTask.repeatingEditDialog.thisAndAllFuture,
+                                  t.label.deleteDialog.justDeleteTheLabel,
+                                  style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          InkWell(
+                            onTap: () {
+                              markAllTasksAsDoneClick();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: ColorsExt.background(context),
+                                border: Border.all(color: ColorsExt.grey2(context)),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  t.label.deleteDialog.markAllTasksAsDone,
                                   style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
                                   textAlign: TextAlign.center,
                                 ),
@@ -112,7 +120,7 @@ class RecurringEditDialog extends StatelessWidget {
                         height: 48,
                         child: Center(
                           child: Text(
-                            t.noTitle,
+                            t.cancel,
                             style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
                             textAlign: TextAlign.center,
                           ),

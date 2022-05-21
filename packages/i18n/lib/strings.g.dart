@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 148 
+ * Strings: 152 
  *
- * Built on 2022-05-20 at 13:40 UTC
+ * Built on 2022-05-21 at 12:51 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -320,6 +320,8 @@ class _StringsEn {
 	String get comingSoon => 'Coming soon';
 	String get allTasks => 'All tasks';
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
+	String get cancel => 'Cancel';
+	String get noTitle => '(No title)';
 }
 
 // Path: onboarding
@@ -434,7 +436,6 @@ class _StringsTaskEn {
 	String get duplicate => 'Duplicate';
 	String get markAsDone => 'Mark as done';
 	String get delete => 'Delete';
-	String get noTitle => '(No title)';
 	String get snoozeTomorrow => 'Snooze - Tomorrow';
 	String get snoozeNextWeek => 'Snooze - Next Week';
 	String get someday => 'Someday';
@@ -558,6 +559,7 @@ class _StringsLabelEn {
 	String get delete => 'Delete';
 	String get hideSnoozed => 'Hide Snoozed';
 	String get hideSomeday => 'Hide Someday';
+	late final _StringsLabelDeleteDialogEn deleteDialog = _StringsLabelDeleteDialogEn._(_root);
 }
 
 // Path: task.undoActions
@@ -588,7 +590,19 @@ class _StringsEditTaskRepeatingEditDialogEn {
 	String get description => 'Do you want to change only this occurrence or change this and all future occurrences?';
 	String get onlyThis => 'Only this task';
 	String get thisAndAllFuture => 'This and all future tasks';
-	String get cancel => 'Cancel';
+}
+
+// Path: label.deleteDialog
+class _StringsLabelDeleteDialogEn {
+	_StringsLabelDeleteDialogEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String title({required Object labelTitle}) => 'You are deleting ${labelTitle}';
+	String get description => 'What do you want to do with the tasks assigned to this label?';
+	String get justDeleteTheLabel => 'Just delete the label';
+	String get markAllTasksAsDone => 'Mark all tasks as Done';
 }
 
 /// Flat map(s) containing all translations.
@@ -662,7 +676,6 @@ extension on _StringsEn {
 			'task.duplicate': 'Duplicate',
 			'task.markAsDone': 'Mark as done',
 			'task.delete': 'Delete',
-			'task.noTitle': '(No title)',
 			'task.snoozeTomorrow': 'Snooze - Tomorrow',
 			'task.snoozeNextWeek': 'Snooze - Next Week',
 			'task.someday': 'Someday',
@@ -718,7 +731,6 @@ extension on _StringsEn {
 			'editTask.repeatingEditDialog.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
 			'editTask.repeatingEditDialog.onlyThis': 'Only this task',
 			'editTask.repeatingEditDialog.thisAndAllFuture': 'This and all future tasks',
-			'editTask.repeatingEditDialog.cancel': 'Cancel',
 			'today.toDos': 'To-dos',
 			'today.pinnedInCalendar': 'Pinned in calendar',
 			'today.done': 'Done',
@@ -745,6 +757,12 @@ extension on _StringsEn {
 			'label.delete': 'Delete',
 			'label.hideSnoozed': 'Hide Snoozed',
 			'label.hideSomeday': 'Hide Someday',
+			'label.deleteDialog.title': ({required Object labelTitle}) => 'You are deleting ${labelTitle}',
+			'label.deleteDialog.description': 'What do you want to do with the tasks assigned to this label?',
+			'label.deleteDialog.justDeleteTheLabel': 'Just delete the label',
+			'label.deleteDialog.markAllTasksAsDone': 'Mark all tasks as Done',
+			'cancel': 'Cancel',
+			'noTitle': '(No title)',
 		};
 	}
 }

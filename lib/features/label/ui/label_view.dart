@@ -75,7 +75,7 @@ class LabelView extends StatelessWidget {
                           .length;
 
                       Widget? header = SectionHeaderItem(
-                        section.title ?? t.task.noTitle,
+                        section.title ?? t.noTitle,
                         taskCount: count,
                         showActionsMenu: section.id != null,
                         onClick: () {

@@ -8,6 +8,7 @@ import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
 import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
+import 'package:mobile/features/label/ui/delete_label_dialog.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -40,7 +41,7 @@ class LabelAppBar extends StatelessWidget {
     }
 
     return AppBarComp(
-      title: label.title ?? t.task.noTitle,
+      title: label.title ?? t.noTitle,
       showSyncButton: false,
       leading: Container(
         decoration: BoxDecoration(
@@ -122,12 +123,34 @@ class LabelAppBar extends StatelessWidget {
                 context.read<LabelCubit>().toggleShowDone();
                 break;
               case LabelActions.delete:
-                context.read<LabelCubit>().delete();
+                LabelCubit labelCubit = context.read<LabelCubit>();
+                LabelsCubit labelsCubit = context.read<LabelsCubit>();
+                MainCubit mainCubit = context.read<MainCubit>();
 
-                Label deletedLabel = context.read<LabelCubit>().state.selectedLabel!;
-                context.read<LabelsCubit>().updateLabel(deletedLabel);
+                Label labelToDelete = labelCubit.state.selectedLabel!;
 
-                context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+                showDialog(
+                    context: context,
+                    builder: (context) => DeleteLabelDialog(
+                          labelToDelete,
+                          justDeleteTheLabelClick: () {
+                            labelCubit.delete();
+
+                            Label deletedLabel = labelCubit.state.selectedLabel!;
+                            labelsCubit.updateLabel(deletedLabel);
+
+                            mainCubit.changeHomeView(HomeViewType.inbox);
+                          },
+                          markAllTasksAsDoneClick: () {
+                            labelCubit.delete(markTasksAsDone: true);
+
+                            Label deletedLabel = labelCubit.state.selectedLabel!;
+                            labelsCubit.updateLabel(deletedLabel);
+
+                            mainCubit.changeHomeView(HomeViewType.inbox);
+                          },
+                        ));
+
                 break;
             }
           },

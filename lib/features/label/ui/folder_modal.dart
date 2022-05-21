@@ -65,7 +65,7 @@ class FolderModal extends StatelessWidget {
                           children: [
                             Expanded(
                                 child: Text(
-                              folder.title ?? t.task.noTitle,
+                              folder.title ?? t.noTitle,
                               style: TextStyle(color: ColorsExt.grey2(context), fontSize: 17),
                             )),
                           ],

@@ -176,7 +176,7 @@ class TaskRow extends StatelessWidget {
     String? text = task.title;
 
     if (text == null || text.isEmpty) {
-      text = t.task.noTitle;
+      text = t.noTitle;
     }
 
     return Row(

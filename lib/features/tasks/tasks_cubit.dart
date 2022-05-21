@@ -453,4 +453,21 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     syncAll();
   }
+
+  Future<void> markLabelTasksAsDone() async {
+    List<Task> labelTasksSelected = state.labelTasks.toList();
+
+    for (Task task in labelTasksSelected) {
+      Task updated = task.markAsDone(task);
+      await _tasksRepository.updateById(updated.id, data: updated);
+    }
+
+    refreshTasksFromRepository();
+
+    clearSelected();
+
+    syncAll();
+
+    emit(state.copyWith(labelTasks: []));
+  }
 }

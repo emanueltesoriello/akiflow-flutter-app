@@ -75,7 +75,6 @@
     "duplicate": "Duplicate",
     "markAsDone": "Mark as done",
     "delete": "Delete",
-    "noTitle": "(No title)",
     "snoozeTomorrow": "Snooze - Tomorrow",
     "snoozeNextWeek": "Snooze - Next Week",
     "someday": "Someday",
@@ -141,8 +140,7 @@
       "title": "You are changing a repeating task",
       "description": "Do you want to change only this occurrence or change this and all future occurrences?",
       "onlyThis": "Only this task",
-      "thisAndAllFuture": "This and all future tasks",
-      "cancel": "Cancel"
+      "thisAndAllFuture": "This and all future tasks"
     }
   },
   "today": {
@@ -173,6 +171,14 @@
     "rename": "Rename",
     "delete": "Delete",
     "hideSnoozed": "Hide Snoozed",
-    "hideSomeday": "Hide Someday"
-  }
+    "hideSomeday": "Hide Someday",
+    "deleteDialog": {
+      "title": "You are deleting ${labelTitle}",
+      "description": "What do you want to do with the tasks assigned to this label?",
+      "justDeleteTheLabel": "Just delete the label",
+      "markAllTasksAsDone": "Mark all tasks as Done"
+    }
+  },
+  "cancel": "Cancel",
+  "noTitle": "(No title)"
 }

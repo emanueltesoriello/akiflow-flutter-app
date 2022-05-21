@@ -19,7 +19,7 @@ class GmailLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.subject,
-          value: doc.title ?? t.task.noTitle,
+          value: doc.title ?? t.noTitle,
         ),
         itemBuilder(
           context,

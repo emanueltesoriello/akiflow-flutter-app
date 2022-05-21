@@ -77,9 +77,13 @@ class LabelCubit extends Cubit<LabelCubitState> {
     emit(state.copyWith(showDone: !state.showDone));
   }
 
-  Future<void> delete() async {
+  Future<void> delete({bool markTasksAsDone = false}) async {
     Label labelUpdated = state.selectedLabel!.copyWith(deletedAt: DateTime.now().toUtc().toIso8601String());
     emit(state.copyWith(selectedLabel: labelUpdated));
+
+    if (markTasksAsDone) {
+      await _tasksCubit.markLabelTasksAsDone();
+    }
   }
 
   void toggleOpenSection(String? sectionId) {
