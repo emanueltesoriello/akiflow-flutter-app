@@ -19,7 +19,7 @@ class TodayCubitState extends Equatable {
     this.calendarFormat = CalendarFormatState.week,
     this.todosListOpen = true,
     this.pinnedListOpen = true,
-    this.completedListOpen = true,
+    this.completedListOpen = false,
   });
 
   TodayCubitState copyWith({
