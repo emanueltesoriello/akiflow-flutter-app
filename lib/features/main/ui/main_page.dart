@@ -137,34 +137,55 @@ class MainPage extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: SvgPicture.asset("assets/images/icons/_common/line_horizontal_3.svg"),
+          icon: SizedBox(
+              width: 30,
+              height: 30,
+              child: SvgPicture.asset("assets/images/icons/_common/line_horizontal_3.svg",
+                  color: ColorsExt.grey2(context))),
           label: t.bottomBar.menu,
         ),
         BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/images/icons/_common/tray.svg"),
-            activeIcon: SvgPicture.asset(
-              "assets/images/icons/_common/tray.svg",
-              color: Theme.of(context).primaryColor,
+            icon: SizedBox(
+                width: 30,
+                height: 30,
+                child: SvgPicture.asset("assets/images/icons/_common/tray.svg", color: ColorsExt.grey2(context))),
+            activeIcon: SizedBox(
+              width: 30,
+              height: 30,
+              child: SvgPicture.asset("assets/images/icons/_common/tray.svg", color: Theme.of(context).primaryColor),
             ),
             label: t.bottomBar.inbox),
         BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-            height: 19,
-            color: ColorsExt.grey1(context),
+          icon: SizedBox(
+            width: 30,
+            height: 30,
+            child: SvgPicture.asset(
+              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+              color: ColorsExt.grey2(context),
+            ),
           ),
-          activeIcon: SvgPicture.asset(
-            "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-            height: 19,
-            color: Theme.of(context).primaryColor,
+          activeIcon: SizedBox(
+            width: 30,
+            height: 30,
+            child: SvgPicture.asset(
+              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           label: t.bottomBar.today,
         ),
         BottomNavigationBarItem(
-          icon: SvgPicture.asset("assets/images/icons/_common/calendar.svg"),
-          activeIcon: SvgPicture.asset(
-            "assets/images/icons/_common/calendar.svg",
-            color: Theme.of(context).primaryColor,
+          icon: SizedBox(
+              width: 30,
+              height: 30,
+              child: SvgPicture.asset("assets/images/icons/_common/calendar.svg", color: ColorsExt.grey2(context))),
+          activeIcon: SizedBox(
+            width: 30,
+            height: 30,
+            child: SvgPicture.asset(
+              "assets/images/icons/_common/calendar.svg",
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           label: t.bottomBar.calendar,
         ),
