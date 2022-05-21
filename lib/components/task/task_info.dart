@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -150,16 +151,14 @@ class TaskInfo extends StatelessWidget {
       return const SizedBox();
     }
 
-    return Wrap(
-      children: [
-        TagBox(
-          icon: "assets/images/icons/_common/number.svg",
-          text: label.title,
-          backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
-          iconColor: label.color != null ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
-          onPressed: () {},
-        ),
-      ],
+    return TagBox(
+      icon: "assets/images/icons/_common/number.svg",
+      text: label.title,
+      backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
+      iconColor: label.color != null ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
+      onPressed: () {
+        context.read<MainCubit>().selectLabel(label);
+      },
     );
   }
 }
