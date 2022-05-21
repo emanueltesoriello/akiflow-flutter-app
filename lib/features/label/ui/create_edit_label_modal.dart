@@ -128,7 +128,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                                 .read<LabelsCubit>()
                                 .state
                                 .labels
-                                .where((label) => label.type == "folder")
+                                .where((label) => label.type == "folder" && label.deletedAt == null)
                                 .toList();
 
                             Label label = state.selectedLabel!;
