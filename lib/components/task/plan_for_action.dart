@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
+import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -59,11 +59,11 @@ class PlanForAction extends StatelessWidget {
       text = task.doneAtFormatted;
     }
 
-    return AddTaskActionItem(
+    return TagBox(
       text: text,
-      color: color,
-      leadingIconAsset: leadingIconAsset,
-      active: true,
+      backgroundColor: color,
+      icon: leadingIconAsset,
+      isBig: true,
       onPressed: () {
         FocusManager.instance.primaryFocus?.unfocus();
         onTap();

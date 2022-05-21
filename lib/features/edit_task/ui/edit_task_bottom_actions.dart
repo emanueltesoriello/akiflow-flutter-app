@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
+import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
@@ -36,8 +37,10 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          _button(
-            iconAsset: "assets/images/icons/_common/exclamationmark.svg",
+          TagBox(
+            icon: "assets/images/icons/_common/exclamationmark.svg",
+            isBig: true,
+            isSquare: true,
             iconColor: () {
               switch (task.priority) {
                 case 1:
@@ -50,23 +53,27 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                   return ColorsExt.grey3(context);
               }
             }(),
-            active: task.priority != null && task.priority != 0,
+            backgroundColor:
+                task.priority != null && task.priority != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
             onPressed: () {
               context.read<EditTaskCubit>().changePriority();
             },
           ),
           const SizedBox(width: 11),
-          _button(
-            iconAsset: "assets/images/icons/_common/target.svg",
-            active: task.dailyGoal != null && task.dailyGoal == 1,
+          TagBox(
+            icon: "assets/images/icons/_common/target.svg",
+            isBig: true,
+            backgroundColor:
+                task.dailyGoal != null && task.dailyGoal == 1 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
             onPressed: () {
               context.read<EditTaskCubit>().toggleDailyGoal();
             },
           ),
           const SizedBox(width: 11),
-          _button(
-            iconAsset: "assets/images/icons/_common/flags.svg",
-            active: task.dueDate != null,
+          TagBox(
+            icon: "assets/images/icons/_common/flags.svg",
+            isBig: true,
+            backgroundColor: task.dueDate != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
             text: task.dueDateFormatted,
             onPressed: () {
               var cubit = context.read<EditTaskCubit>();
@@ -92,14 +99,17 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             },
           ),
           const SizedBox(width: 11),
-          _button(
-            iconAsset: "assets/images/icons/_common/link.svg",
-            active: () {
+          TagBox(
+            icon: "assets/images/icons/_common/link.svg",
+            isBig: true,
+            backgroundColor: () {
               try {
-                return task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty);
-              } catch (e) {
-                return false;
-              }
+                if (task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty)) {
+                  return ColorsExt.grey6(context);
+                }
+              } catch (_) {}
+
+              return ColorsExt.grey7(context);
             }(),
             onPressed: () {
               var cubit = context.read<EditTaskCubit>();
@@ -116,56 +126,6 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           const Spacer(),
           _menu(context),
         ],
-      ),
-    );
-  }
-
-  Widget _button({
-    required String iconAsset,
-    required bool active,
-    required Function() onPressed,
-    String? text,
-    Color? iconColor,
-  }) {
-    return InkWell(
-      onTap: () => onPressed(),
-      child: Container(
-        constraints: const BoxConstraints(
-          minHeight: 32,
-          minWidth: 28,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3),
-          color: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  iconAsset,
-                  width: 22,
-                  height: 22,
-                  color: iconColor ?? (active ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-                ),
-                Builder(builder: (context) {
-                  if (text == null) {
-                    return const SizedBox();
-                  } else {
-                    return Row(
-                      children: [
-                        const SizedBox(width: 4),
-                        Text(text),
-                      ],
-                    );
-                  }
-                }),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

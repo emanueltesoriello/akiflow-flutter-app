@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/components/task/plan_for_action.dart';
-import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
@@ -64,24 +64,27 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 text = "${hours.floor()}h${minutes.floor()}m";
               }
 
-              return AddTaskActionItem(
-                leadingIconAsset: "assets/images/icons/_common/hourglass.svg",
-                color: ColorsExt.grey6(context),
-                active: task.duration != null,
+              return TagBox(
+                icon: "assets/images/icons/_common/hourglass.svg",
+                backgroundColor: task.duration != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
                 text: text,
-                onPressed: () {},
+                isBig: true,
+                isSquare: task.duration != null ? false : true,
+                onPressed: () {
+                  // TODO edit duration
+                },
               );
             },
           ),
           const SizedBox(width: 8),
           BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
-              return AddTaskActionItem(
-                leadingIconAsset: "assets/images/icons/_common/repeat.svg",
-                color: state.updatedTask.recurrence != null && state.updatedTask.recurrence!.isNotEmpty
-                    ? ColorsExt.grey6(context)
-                    : ColorsExt.grey3(context),
-                active: state.updatedTask.recurrence != null && state.updatedTask.recurrence!.isNotEmpty,
+              bool enabled = state.updatedTask.recurrence != null && state.updatedTask.recurrence!.isNotEmpty;
+
+              return TagBox(
+                icon: "assets/images/icons/_common/repeat.svg",
+                backgroundColor: enabled ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                isBig: true,
                 onPressed: () {
                   var cubit = context.read<EditTaskCubit>();
 

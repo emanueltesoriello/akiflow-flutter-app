@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/components/task/plan_for_action.dart';
-import 'package:mobile/features/add_task/ui/add_task_action_item.dart';
 import 'package:mobile/features/add_task/ui/add_task_duration.dart';
 import 'package:mobile/features/add_task/ui/add_task_labels.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
@@ -189,10 +189,12 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
           },
         ),
         const SizedBox(width: 8),
-        AddTaskActionItem(
-          leadingIconAsset: "assets/images/icons/_common/hourglass.svg",
-          color: ColorsExt.grey6(context),
-          active: context.watch<EditTaskCubit>().state.setDuration,
+        TagBox(
+          icon: "assets/images/icons/_common/hourglass.svg",
+          backgroundColor:
+              context.watch<EditTaskCubit>().state.setDuration ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+          isSquare: true,
+          isBig: true,
           onPressed: () {
             context.read<EditTaskCubit>().toggleDuration();
           },
@@ -206,12 +208,12 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               background = ColorsExt.getFromName(state.selectedLabel!.color!);
             }
 
-            return AddTaskActionItem(
-              leadingIconAsset: "assets/images/icons/_common/number.svg",
-              leadingIconColor: background ?? ColorsExt.grey2(context),
-              color: background != null ? background.withOpacity(0.1) : ColorsExt.grey6(context),
-              active: true,
+            return TagBox(
+              icon: "assets/images/icons/_common/number.svg",
+              iconColor: background ?? ColorsExt.grey2(context),
+              backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey6(context),
               text: state.selectedLabel?.title ?? t.addTask.label,
+              isBig: true,
               onPressed: () {
                 context.read<EditTaskCubit>().toggleLabels();
               },
