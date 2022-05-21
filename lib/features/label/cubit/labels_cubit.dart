@@ -22,6 +22,10 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   }
 
   _init() async {
+    _syncControllerService.syncCompletedStream.listen((_) async {
+      await fetchLabels();
+    });
+
     await syncAllAndRefresh();
   }
 
@@ -73,8 +77,6 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     emit(state.copyWith(loading: loading ? true : state.loading));
 
     await _syncControllerService.syncAll();
-
-    await fetchLabels();
 
     emit(state.copyWith(loading: false));
   }

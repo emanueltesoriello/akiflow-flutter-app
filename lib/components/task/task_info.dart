@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -15,6 +16,7 @@ class TaskInfo extends StatelessWidget {
   final bool hideInboxLabel;
   final DateTime? selectDate;
   final bool showLabel;
+  final bool showPlanInfo;
 
   const TaskInfo(
     this.task, {
@@ -22,6 +24,7 @@ class TaskInfo extends StatelessWidget {
     required this.hideInboxLabel,
     required this.selectDate,
     required this.showLabel,
+    required this.showPlanInfo,
   }) : super(key: key);
 
   @override
@@ -75,6 +78,8 @@ class TaskInfo extends StatelessWidget {
         text: task.datetimeFormatted,
         onPressed: statusClick,
       );
+    } else if (task.statusType == TaskStatusType.planned && showPlanInfo) {
+      return plannedInfo(context);
     } else {
       if (task.datetime != null && !task.isOverdue) {
         return TagBox(
@@ -86,6 +91,44 @@ class TaskInfo extends StatelessWidget {
     }
 
     return const SizedBox();
+  }
+
+  Widget plannedInfo(BuildContext context) {
+    String text;
+    Color color;
+
+    TaskStatusType? status = TaskStatusTypeExt.fromId(task.status) ?? TaskStatusType.inbox;
+
+    if ((status == TaskStatusType.inbox || status == TaskStatusType.planned) && status != TaskStatusType.someday) {
+      color = ColorsExt.cyan25(context);
+    } else if (status == TaskStatusType.completed) {
+      color = ColorsExt.green20(context);
+    } else {
+      color = ColorsExt.pink30(context);
+    }
+
+    if (task.date != null) {
+      DateTime parsed = DateTime.parse(task.date!).toLocal();
+
+      if (task.isToday) {
+        text = t.addTask.today;
+      } else if (task.isTomorrow) {
+        text = t.addTask.tmw;
+      } else {
+        text = DateFormat("EEE, d MMM").format(parsed);
+      }
+    } else if (task.status == TaskStatusType.someday.id) {
+      text = t.task.someday;
+    } else {
+      text = t.bottomBar.inbox;
+    }
+
+    if (task.datetime != null) {
+      DateTime parsed = DateTime.parse(task.datetime!).toLocal();
+      text = "$text ${DateFormat("HH:mm").format(parsed)}";
+    }
+
+    return TagBox(text: text, backgroundColor: color, onPressed: () {});
   }
 
   Widget _label(BuildContext context) {

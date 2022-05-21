@@ -33,6 +33,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
   LabelCubit? _labelCubit;
 
   TasksCubit() : super(const TasksCubitState()) {
+    _syncControllerService.syncCompletedStream.listen((_) async {
+      await refreshTasksFromRepository();
+    });
+
     syncAllAndRefresh();
   }
 
@@ -53,8 +57,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       emit(state.copyWith(syncStatus: "Syncing..."));
 
       await syncAll();
-
-      await refreshTasksFromRepository();
 
       emit(state.copyWith(loading: false));
     }

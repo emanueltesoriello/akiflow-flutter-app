@@ -38,6 +38,7 @@ class _View extends StatelessWidget {
             showTasks: context.watch<TodayCubit>().state.todosListOpen,
             showLabel: true,
             footer: null,
+            showPlanInfo: false,
             header: _Header(
               t.today.toDos,
               tasks: todayTasks,

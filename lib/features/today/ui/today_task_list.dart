@@ -20,6 +20,7 @@ class TodayTaskList extends StatelessWidget {
   final TaskListSorting sorting;
   final bool showTasks;
   final bool showLabel;
+  final bool showPlanInfo;
 
   const TodayTaskList({
     Key? key,
@@ -29,6 +30,7 @@ class TodayTaskList extends StatelessWidget {
     required this.footer,
     required this.showTasks,
     required this.showLabel,
+    required this.showPlanInfo,
   }) : super(key: key);
 
   @override
@@ -97,6 +99,7 @@ class TodayTaskList extends StatelessWidget {
               task: task,
               hideInboxLabel: false,
               showLabel: showLabel,
+              showPlanInfo: showPlanInfo,
               selectTask: () {
                 context.read<TasksCubit>().select(task);
               },

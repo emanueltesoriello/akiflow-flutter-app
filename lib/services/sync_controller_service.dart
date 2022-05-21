@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:mobile/api/account_api.dart';
 import 'package:mobile/api/calendar_api.dart';
 import 'package:mobile/api/docs_api.dart';
@@ -84,6 +86,9 @@ class SyncControllerService {
     Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
+  final StreamController _syncCompletedController = StreamController.broadcast();
+  Stream get syncCompletedStream => _syncCompletedController.stream;
+
   syncAll() async {
     if (_isSyncing) {
       return;
@@ -101,6 +106,8 @@ class SyncControllerService {
     }
 
     _isSyncing = false;
+
+    _syncCompletedController.add(0);
   }
 
   Future<void> _syncEntity(Entity entity) async {

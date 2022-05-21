@@ -37,6 +37,7 @@ class TaskRow extends StatelessWidget {
   final bool hideInboxLabel;
   final bool selectMode;
   final bool showLabel;
+  final bool showPlanInfo;
 
   const TaskRow({
     Key? key,
@@ -49,6 +50,7 @@ class TaskRow extends StatelessWidget {
     this.hideInboxLabel = false,
     this.selectMode = false,
     required this.showLabel,
+    required this.showPlanInfo,
   }) : super(key: key);
 
   @override
@@ -158,6 +160,7 @@ class TaskRow extends StatelessWidget {
                       hideInboxLabel: hideInboxLabel,
                       showLabel: showLabel,
                       selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                      showPlanInfo: showPlanInfo,
                     ),
                   ],
                 ),

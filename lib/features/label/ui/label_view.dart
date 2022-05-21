@@ -185,6 +185,7 @@ class LabelView extends StatelessWidget {
                         showLabel: false,
                         header: labelState.sections.length > 1 ? header : null,
                         footer: footer,
+                        showPlanInfo: true,
                       );
                     }).toList(),
                   ),
