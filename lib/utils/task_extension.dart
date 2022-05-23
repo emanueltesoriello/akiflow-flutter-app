@@ -317,6 +317,48 @@ extension TaskExt on Task {
     return status == TaskStatusType.someday.id;
   }
 
+  String get eventLockInCalendar {
+    return content?["eventLockInCalendar"] != null ? content["eventLockInCalendar"] : "private";
+  }
+
+  static bool hasRecurringDataChanges({required Task original, required Task updated}) {
+    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
+    bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
+    bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
+
+    return updated.recurringId != null && (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar);
+  }
+
+  static bool hasEditedData({required Task original, required Task updated}) {
+    return original.title != updated.title ||
+        original.priority != updated.priority ||
+        original.dailyGoal != (updated.dailyGoal != null ? updated.dailyGoal!.toInt() : null) ||
+        (original.eventLockInCalendar != updated.eventLockInCalendar) ||
+        original.duration != updated.duration ||
+        original.description != updated.description ||
+        original.listId != updated.listId ||
+        original.sectionId != updated.sectionId ||
+        original.dueDate != updated.dueDate ||
+        ((original.links ?? []).length != (updated.links ?? []).length ||
+            (original.links ?? []).any((element) => !(updated.links ?? []).contains(element)));
+  }
+
+  static bool hasEditedTimings({required Task original, required Task updated}) {
+    bool hasEditedDate = original.status == TaskStatusType.planned.id && original.date != updated.date;
+    bool hasEditedDateTime = original.status == TaskStatusType.planned.id && original.datetime != updated.datetime;
+    bool hasEditedRepeat = hasEditedRepetition(original: original, updated: updated);
+
+    return hasEditedDate || hasEditedDateTime || hasEditedRepeat;
+  }
+
+  static bool hasEditedRepetition({required Task original, required Task updated}) {
+    return original.recurrence != updated.recurrence;
+  }
+
+  static bool hasEditedCalendar({required Task original, required Task updated}) {
+    return original.content?["calendarUniqueId"] != updated.content?["calendarUniqueId"];
+  }
+
   static List<Task> filterTodayTodoTasks(List<Task> tasks) {
     List<Task> todos = tasks
         .where((element) =>

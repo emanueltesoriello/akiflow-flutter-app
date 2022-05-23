@@ -83,7 +83,7 @@ class TaskRow extends StatelessWidget {
             return;
           }
 
-          if (updated.recurringId != null) {
+          if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
             showDialog(
                 context: context,
                 builder: (context) => RecurringEditDialog(
