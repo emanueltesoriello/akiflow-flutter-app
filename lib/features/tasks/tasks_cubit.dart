@@ -434,22 +434,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> undo() async {
     List<UndoTask> queue = state.queue.toList();
 
-    List<Task> inbox = List.from(state.inboxTasks);
-    List<Task> today = List.from(state.todayTasks);
-
-    for (var element in queue) {
-      inbox = inbox.map((t) => t.id == element.task.id ? element.task : t).toList();
-      today = today.map((t) => t.id == element.task.id ? element.task : t).toList();
-    }
-
-    emit(state.copyWith(inboxTasks: inbox, todayTasks: today, queue: []));
-
     for (var element in queue) {
       Task updated = element.task.copyWith(
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
       await _tasksRepository.updateById(updated.id, data: updated);
     }
+
+    emit(state.copyWith(queue: []));
+
+    refreshTasksFromRepository();
 
     syncAll();
   }
