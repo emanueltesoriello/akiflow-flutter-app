@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -195,7 +196,7 @@ class _Home extends StatelessWidget {
           Builder(
             builder: (context) {
               if (userLogged) {
-                return MainPage();
+                return const MainPage();
               } else {
                 return const AuthPage();
               }
@@ -264,7 +265,13 @@ class UndoBottomView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 16),
+            Builder(builder: (context) {
+              if (Platform.isIOS) {
+                return SizedBox(height: MediaQuery.of(context).padding.top + kBottomNavigationBarHeight + 10);
+              } else {
+                return SizedBox(height: MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 16);
+              }
+            }),
           ],
         );
       },

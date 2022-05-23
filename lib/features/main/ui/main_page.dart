@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -266,7 +268,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         double bottomPadding;
 
         if (state.queue.isNotEmpty) {
-          bottomPadding = MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 8;
+          if (Platform.isIOS) {
+            bottomPadding = MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 8;
+          } else {
+            bottomPadding = MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight;
+          }
         } else {
           bottomPadding = 0;
         }
