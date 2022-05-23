@@ -11,6 +11,7 @@ import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
@@ -63,8 +64,9 @@ class TaskRow extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           TasksCubit tasksCubit = context.read<TasksCubit>();
+          SyncCubit syncCubit = context.read<SyncCubit>();
 
-          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, task: task);
+          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit, task: task);
 
           await showCupertinoModalBottomSheet(
             context: context,

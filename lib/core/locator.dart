@@ -9,6 +9,7 @@ import 'package:mobile/api/task_api.dart';
 import 'package:mobile/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
@@ -70,11 +71,13 @@ void setupLocator({
 
   /// Blocs
   TodayCubit todayCubit = TodayCubit();
-  TasksCubit tasksCubit = TasksCubit();
+  SyncCubit syncCubit = SyncCubit();
+  TasksCubit tasksCubit = TasksCubit(syncCubit);
 
   tasksCubit.attachTodayCubit(todayCubit);
   todayCubit.attachTasksCubit(tasksCubit);
 
   locator.registerSingleton<TasksCubit>(tasksCubit);
   locator.registerSingleton<TodayCubit>(todayCubit);
+  locator.registerSingleton<SyncCubit>(syncCubit);
 }

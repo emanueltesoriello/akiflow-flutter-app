@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/label/label.dart';
@@ -12,21 +14,20 @@ part 'labels_state.dart';
 
 class LabelsCubit extends Cubit<LabelsCubitState> {
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
-  final SyncControllerService _syncControllerService = locator<SyncControllerService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
-  final TasksCubit tasksCubit;
+  final SyncCubit _syncCubit;
 
-  LabelsCubit(this.tasksCubit) : super(const LabelsCubitState()) {
+  LabelsCubit(this._syncCubit) : super(const LabelsCubitState()) {
     _init();
   }
 
   _init() async {
-    _syncControllerService.syncCompletedStream.listen((_) async {
+    log("listen labels sync");
+
+    _syncCubit.syncCompletedStream.listen((_) async {
       await fetchLabels();
     });
-
-    await syncAllAndRefresh();
   }
 
   Future<void> addLabel(Label newLabel) async {
@@ -40,7 +41,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.add([newLabel]);
 
-    await _syncControllerService.syncAll();
+    _syncCubit.sync([Entity.labels]);
   }
 
   Future<void> updateLabel(Label label) async {
@@ -54,7 +55,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.updateById(label.id, data: label);
 
-    await syncAllAndRefresh();
+    _syncCubit.sync([Entity.labels]);
   }
 
   Future<void> addSectionToDatabase(Label newSection) async {
@@ -68,17 +69,9 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.add([newSection]);
 
-    await _syncControllerService.syncAll();
+    await _syncCubit.sync([Entity.labels]);
 
     await _init();
-  }
-
-  Future<void> syncAllAndRefresh({bool loading = false}) async {
-    emit(state.copyWith(loading: loading ? true : state.loading));
-
-    await _syncControllerService.syncAll();
-
-    emit(state.copyWith(loading: false));
   }
 
   Future<void> fetchLabels() async {

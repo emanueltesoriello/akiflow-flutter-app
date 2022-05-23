@@ -89,8 +89,9 @@ class SyncControllerService {
   final StreamController _syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => _syncCompletedController.stream;
 
-  syncAll() async {
+  sync([List<Entity>? entities]) async {
     if (_isSyncing) {
+      print("sync already in progress");
       return;
     }
 
@@ -99,10 +100,16 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncEntity(Entity.accounts);
-      await _syncEntity(Entity.tasks);
-      await _syncEntity(Entity.labels);
-      await _syncEntity(Entity.docs);
+      if (entities == null) {
+        await _syncEntity(Entity.accounts);
+        await _syncEntity(Entity.tasks);
+        await _syncEntity(Entity.labels);
+        await _syncEntity(Entity.docs);
+      } else {
+        for (Entity entity in entities) {
+          await _syncEntity(entity);
+        }
+      }
     }
 
     _isSyncing = false;

@@ -7,6 +7,7 @@ import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
@@ -26,18 +27,17 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
 
-  final SyncControllerService _syncControllerService = locator<SyncControllerService>();
-
   late final TodayCubit _todayCubit;
+  late final SyncCubit _syncCubit;
 
   LabelCubit? _labelCubit;
 
-  TasksCubit() : super(const TasksCubitState()) {
-    _syncControllerService.syncCompletedStream.listen((_) async {
+  TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
+    print("listen tasks sync");
+
+    _syncCubit.syncCompletedStream.listen((_) async {
       await refreshTasksFromRepository();
     });
-
-    syncAllAndRefresh();
   }
 
   attachTodayCubit(TodayCubit todayCubit) {
@@ -56,18 +56,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       emit(state.copyWith(syncStatus: "Syncing..."));
 
-      await syncAll();
+      await _syncCubit.sync([Entity.tasks]);
 
       emit(state.copyWith(loading: false));
     }
-  }
-
-  Future<void> syncAll() async {
-    emit(state.copyWith(loading: true, syncStatus: ''));
-
-    await _syncControllerService.syncAll();
-
-    emit(state.copyWith(loading: false));
   }
 
   refreshTasksFromRepository() async {
@@ -106,10 +98,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
     await fetchTodayTasks(selectedDay.toUtc());
-  }
-
-  void logout() {
-    emit(state.copyWith(inboxTasks: []));
   }
 
   void select(Task task) {
@@ -158,7 +146,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   Future<void> duplicate() async {
@@ -207,7 +195,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(inboxTasks: newInboxTasks, todayTasks: newTodayTasks, labelTasks: newLabelTasks));
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   Future<void> delete() async {
@@ -234,7 +222,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   Future<void> assignLabel(Label label) async {
@@ -258,7 +246,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   Future<void> selectPriority() async {
@@ -278,7 +266,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   Future<void> setDeadline(DateTime? date) async {
@@ -302,7 +290,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   void clearSelected() {
@@ -310,6 +298,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       state.copyWith(
         inboxTasks: state.inboxTasks.map((e) => e.copyWith(selected: false)).toList(),
         todayTasks: state.todayTasks.map((e) => e.copyWith(selected: false)).toList(),
+        labelTasks: state.labelTasks.map((e) => e.copyWith(selected: false)).toList(),
       ),
     );
   }
@@ -354,7 +343,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   void moveToInbox() {
@@ -408,7 +397,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   Timer? _undoTimerDebounce;
@@ -445,7 +434,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     refreshTasksFromRepository();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
   }
 
   Future<void> markLabelTasksAsDone() async {
@@ -460,7 +449,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    syncAll();
+    _syncCubit.sync([Entity.tasks]);
 
     emit(state.copyWith(labelTasks: []));
   }

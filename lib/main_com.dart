@@ -16,6 +16,7 @@ import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/services/database_service.dart';
@@ -84,25 +85,25 @@ class Application extends StatelessWidget {
           lazy: false,
           create: (BuildContext context) => PushCubit(),
         ),
+        BlocProvider<SyncCubit>(
+          lazy: false,
+          create: (BuildContext context) => locator<SyncCubit>(),
+        ),
         BlocProvider<TasksCubit>(
           lazy: false,
           create: (BuildContext context) => locator<TasksCubit>(),
         ),
         BlocProvider<LabelsCubit>(
           lazy: false,
-          create: (BuildContext context) => LabelsCubit(context.read<TasksCubit>()),
+          create: (BuildContext context) => LabelsCubit(locator<SyncCubit>()),
         ),
         BlocProvider<MainCubit>(
           lazy: false,
-          create: (BuildContext context) => MainCubit(),
+          create: (BuildContext context) => MainCubit(locator<SyncCubit>()),
         ),
         BlocProvider<AuthCubit>(
           lazy: false,
-          create: (BuildContext context) => AuthCubit(
-            context.read<TasksCubit>(),
-            context.read<LabelsCubit>(),
-            context.read<PushCubit>(),
-          ),
+          create: (BuildContext context) => AuthCubit(locator<SyncCubit>(), context.read<PushCubit>()),
         ),
         BlocProvider<SettingsCubit>(
           lazy: false,

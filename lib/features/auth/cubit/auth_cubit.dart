@@ -8,9 +8,8 @@ import 'package:mobile/api/user_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/push/cubit/push_cubit.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
@@ -27,11 +26,10 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final UserApi _userApi = locator<UserApi>();
 
-  final TasksCubit _tasksCubit;
-  final LabelsCubit _labelsCubit;
+  final SyncCubit _syncCubit;
   final PushCubit _pushCubit;
 
-  AuthCubit(this._tasksCubit, this._labelsCubit, this._pushCubit) : super(const AuthCubitState()) {
+  AuthCubit(this._syncCubit, this._pushCubit) : super(const AuthCubitState()) {
     _init();
   }
 
@@ -91,8 +89,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _pushCubit.login(user);
 
-      _tasksCubit.syncAllAndRefresh();
-      _labelsCubit.syncAllAndRefresh(loading: true);
+      _syncCubit.sync();
     } else {
       _dialogService.showGenericError();
     }
@@ -106,8 +103,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
     _databaseService.delete();
 
     emit(state.copyWith(user: Nullable(null)));
-
-    _tasksCubit.logout();
 
     await _pushCubit.logout();
   }
