@@ -325,8 +325,10 @@ extension TaskExt on Task {
     bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
     bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
+    bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
 
-    return updated.recurringId != null && (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar);
+    return updated.recurringId != null &&
+        (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete);
   }
 
   static bool hasEditedData({required Task original, required Task updated}) {
@@ -353,6 +355,10 @@ extension TaskExt on Task {
 
   static bool hasEditedRepetition({required Task original, required Task updated}) {
     return original.recurrence != updated.recurrence;
+  }
+
+  static bool hasEditedDelete({required Task original, required Task updated}) {
+    return original.deletedAt != updated.deletedAt;
   }
 
   static bool hasEditedCalendar({required Task original, required Task updated}) {

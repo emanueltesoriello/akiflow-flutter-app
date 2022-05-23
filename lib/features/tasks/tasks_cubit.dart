@@ -27,6 +27,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
 
+  final StreamController<List<Task>> _editRecurringTasksDialog = StreamController<List<Task>>();
+  Stream get editRecurringTasksDialog => _editRecurringTasksDialog.stream;
+
   late final TodayCubit _todayCubit;
   late final SyncCubit _syncCubit;
 
@@ -203,26 +206,34 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
 
-    addToUndoQueue(all, UndoType.delete);
+    addToUndoQueue(allSelected, UndoType.delete);
 
-    for (Task task in all) {
-      Task updated = task.copyWith(
+    bool hasRecurringDataChanges = false;
+
+    for (Task task in allSelected) {
+      Task updatedTask = task.copyWith(
         selected: false,
         status: Nullable(TaskStatusType.deleted.id),
         deletedAt: (DateTime.now().toUtc().toIso8601String()),
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
-      await _tasksRepository.updateById(updated.id, data: updated);
+      allSelected = allSelected.map((t) {
+        return t.id == task.id ? updatedTask : t;
+      }).toList();
+
+      if (hasRecurringDataChanges == false && TaskExt.hasRecurringDataChanges(original: task, updated: updatedTask)) {
+        hasRecurringDataChanges = true;
+      }
     }
 
-    refreshTasksFromRepository();
-
-    clearSelected();
-
-    _syncCubit.sync([Entity.tasks]);
+    if (hasRecurringDataChanges) {
+      _editRecurringTasksDialog.add(allSelected);
+    } else {
+      await update(allSelected);
+    }
   }
 
   Future<void> assignLabel(Label label) async {
@@ -232,6 +243,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
 
+    bool hasRecurringDataChanges = false;
+
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
         listId: label.id,
@@ -239,14 +252,20 @@ class TasksCubit extends Cubit<TasksCubitState> {
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
       );
 
-      await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
+      allSelected = allSelected.map((t) {
+        return t.id == task.id ? updatedTask : t;
+      }).toList();
+
+      if (hasRecurringDataChanges == false && TaskExt.hasRecurringDataChanges(original: task, updated: updatedTask)) {
+        hasRecurringDataChanges = true;
+      }
     }
 
-    refreshTasksFromRepository();
-
-    clearSelected();
-
-    _syncCubit.sync([Entity.tasks]);
+    if (hasRecurringDataChanges) {
+      _editRecurringTasksDialog.add(allSelected);
+    } else {
+      await update(allSelected);
+    }
   }
 
   Future<void> selectPriority() async {
@@ -256,10 +275,54 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
 
+    bool hasRecurringDataChanges = false;
+
     for (Task task in allSelected) {
       Task updatedTask = task.changePriority();
 
-      await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
+      allSelected = allSelected.map((t) {
+        return t.id == task.id ? updatedTask : t;
+      }).toList();
+
+      if (hasRecurringDataChanges == false && TaskExt.hasRecurringDataChanges(original: task, updated: updatedTask)) {
+        hasRecurringDataChanges = true;
+      }
+    }
+
+    if (hasRecurringDataChanges) {
+      _editRecurringTasksDialog.add(allSelected);
+    } else {
+      await update(allSelected);
+    }
+  }
+
+  Future<void> update(List<Task> tasksUpdated, {bool andFutureTasks = false}) async {
+    if (andFutureTasks) {
+      List<Task> taskWithRecurrence = tasksUpdated.where((element) => element.recurringId != null).toList();
+      List<String> recurringIds = taskWithRecurrence.map((t) => t.recurringId!).toList();
+      List<Task> tasks = await _tasksRepository.getByRecurringIds(recurringIds);
+
+      List<Task> updatedRecurringTasks = [];
+
+      for (Task task in tasks) {
+        Task updatedRecurringTask = task.copyWith(
+          listId: tasksUpdated.first.listId,
+          updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+          priority: tasksUpdated.first.priority,
+          duration: Nullable(tasksUpdated.first.duration),
+          deletedAt: tasksUpdated.first.deletedAt,
+        );
+
+        updatedRecurringTasks.add(updatedRecurringTask);
+      }
+
+      for (Task task in updatedRecurringTasks) {
+        await _tasksRepository.updateById(task.id!, data: task);
+      }
+    } else {
+      for (Task task in tasksUpdated) {
+        await _tasksRepository.updateById(task.id, data: task);
+      }
     }
 
     refreshTasksFromRepository();

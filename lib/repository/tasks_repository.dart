@@ -125,4 +125,13 @@ class TasksRepository extends DatabaseRepository {
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
   }
+
+  Future<List<T>> getByRecurringIds<T>(List<dynamic> ids) async {
+    String ins = ids.map((el) => '?').join(',');
+    List<Map<String, Object?>> items =
+        await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE recurring_id in ($ins) ", ids);
+
+    List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
 }

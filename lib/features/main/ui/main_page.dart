@@ -9,6 +9,7 @@ import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
+import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
@@ -45,6 +46,20 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+    tasksCubit.editRecurringTasksDialog.listen((allSelected) {
+      showDialog(
+          context: context,
+          builder: (context) => RecurringEditDialog(
+                onlyThisTap: () {
+                  tasksCubit.update(allSelected);
+                },
+                allTap: () {
+                  tasksCubit.update(allSelected, andFutureTasks: true);
+                },
+              ));
+    });
   }
 
   @override
