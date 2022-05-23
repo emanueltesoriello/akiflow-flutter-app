@@ -22,19 +22,19 @@ class SyncService {
 
   // Returns the last sync time updated.
   Future<DateTime?> start(DateTime? lastSyncAt) async {
-    setSyncStatusIfNotNull("${api.runtimeType} start syncing");
+    addBreadcrumb("${api.runtimeType} start syncing");
 
     DateTime? updatedLastSync = await _remoteToLocal(lastSyncAt);
 
     await _localToRemote();
 
-    setSyncStatusIfNotNull("${api.runtimeType} completed sync at: $updatedLastSync");
+    addBreadcrumb("${api.runtimeType} completed sync at: $updatedLastSync");
 
     return updatedLastSync;
   }
 
   Future<DateTime?> _remoteToLocal(DateTime? lastSyncAt) async {
-    setSyncStatusIfNotNull("${api.runtimeType} last sync at: $lastSyncAt, starting remote to local");
+    addBreadcrumb("${api.runtimeType} last sync at: $lastSyncAt, starting remote to local");
 
     var remoteItems = await api.getItems(
       perPage: 2500,
@@ -43,7 +43,7 @@ class SyncService {
       allPages: true,
     );
 
-    setSyncStatusIfNotNull("${api.runtimeType} remote to local retrieved: ${remoteItems.length} items");
+    addBreadcrumb("${api.runtimeType} remote to local retrieved: ${remoteItems.length} items");
 
     if (remoteItems.isEmpty) {
       return null;
@@ -51,7 +51,7 @@ class SyncService {
 
     DateTime? maxRemoteUpdateAt = await compute(getMaxUpdatedAt, remoteItems);
 
-    setSyncStatusIfNotNull("${api.runtimeType} update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
+    addBreadcrumb("${api.runtimeType} update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
 
     // Upsert only after retrieved max remote update at.
     await _upsertItems(remoteItems);
@@ -60,11 +60,11 @@ class SyncService {
   }
 
   Future<void> _localToRemote() async {
-    setSyncStatusIfNotNull("${api.runtimeType} starting local to remote, getting unsynced items");
+    addBreadcrumb("${api.runtimeType} starting local to remote, getting unsynced items");
 
     List<dynamic> unsynced = await databaseRepository.unsynced();
 
-    setSyncStatusIfNotNull("${api.runtimeType} local to remote, sync ${unsynced.length} items");
+    addBreadcrumb("${api.runtimeType} local to remote, sync ${unsynced.length} items");
 
     if (unsynced.isEmpty) {
       return;
@@ -72,7 +72,7 @@ class SyncService {
 
     unsynced = await compute(prepareItemsForRemote, unsynced);
 
-    setSyncStatusIfNotNull("${api.runtimeType} posting to api ${unsynced.length} items");
+    addBreadcrumb("${api.runtimeType} posting to api ${unsynced.length} items");
 
     List<dynamic> updated = await api.post(unsynced: unsynced);
 
@@ -82,24 +82,24 @@ class SyncService {
       );
     }
 
-    setSyncStatusIfNotNull("${api.runtimeType} posted to api ${updated.length} items");
+    addBreadcrumb("${api.runtimeType} posted to api ${updated.length} items");
 
     if (updated.isNotEmpty) {
       await _upsertItems(updated);
     }
 
-    setSyncStatusIfNotNull("${api.runtimeType} local to remote: done");
+    addBreadcrumb("${api.runtimeType} local to remote: done");
   }
 
   Future<void> _upsertItems<T>(List<dynamic> remoteItems) async {
-    setSyncStatusIfNotNull("${api.runtimeType} upsert remote items: ${remoteItems.length} to db");
+    addBreadcrumb("${api.runtimeType} upsert remote items: ${remoteItems.length} to db");
 
     bool anyInsertErrors = false;
 
     var result = [];
 
     List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
-    setSyncStatusIfNotNull("${api.runtimeType} localIds length: ${localIds.length}");
+    addBreadcrumb("${api.runtimeType} localIds length: ${localIds.length}");
 
     List<T> existingModels = [];
 
@@ -122,7 +122,7 @@ class SyncService {
       existingModels = await databaseRepository.getByIds(localIds);
     }
 
-    setSyncStatusIfNotNull("${api.runtimeType} existingModels length: ${existingModels.length}");
+    addBreadcrumb("${api.runtimeType} existingModels length: ${existingModels.length}");
 
     result = await compute(
         partitionItemsToUpsert, PartitioneItemModel(remoteItems: remoteItems, existingItems: existingModels));
@@ -131,21 +131,11 @@ class SyncService {
     // var unchangedModels = result[1];
     var nonExistingModels = result[2];
 
-    _sentryService.addBreadcrumb(
-      category: "sync",
-      message: "${api.runtimeType} changedModels length: ${changedModels.length}",
-    );
-
-    _sentryService.addBreadcrumb(
-      category: "sync",
-      message: "${api.runtimeType} nonExistingModels length: ${nonExistingModels.length}",
-    );
+    addBreadcrumb("${api.runtimeType} changedModels length: ${changedModels.length}");
+    addBreadcrumb("${api.runtimeType} nonExistingModels length: ${nonExistingModels.length}");
 
     if (changedModels.isEmpty && nonExistingModels.isEmpty) {
-      _sentryService.addBreadcrumb(
-        category: "sync",
-        message: "${api.runtimeType} no items to upsert",
-      );
+      addBreadcrumb("${api.runtimeType} no items to upsert");
       return;
     }
 
@@ -159,25 +149,19 @@ class SyncService {
       }
     }
 
-    _sentryService.addBreadcrumb(
-      category: "sync",
-      message: '${api.runtimeType} anyInsertErrors: $anyInsertErrors',
-    );
+    addBreadcrumb('${api.runtimeType} anyInsertErrors: $anyInsertErrors');
 
     if (anyInsertErrors) {
       _sentryService.captureException(UpsertDatabaseException("upsert items error"));
     }
 
-    setSyncStatusIfNotNull("${api.runtimeType} upsert remote items: done");
+    addBreadcrumb("${api.runtimeType} upsert remote items: done");
   }
 
   Future<bool> _addRemoteTaskToLocalDb(itemsToInsert) async {
     List<Object?> result = await databaseRepository.add(itemsToInsert);
 
-    _sentryService.addBreadcrumb(
-      category: "sync",
-      message: '${api.runtimeType} databaseRepository add result: ${result.length} items',
-    );
+    addBreadcrumb('${api.runtimeType} databaseRepository add result: ${result.length} items');
 
     if (result.isEmpty) {
       throw UpsertDatabaseException('${api.runtimeType} result empty');
@@ -186,7 +170,7 @@ class SyncService {
     return false;
   }
 
-  void setSyncStatusIfNotNull(String message) {
-    print(message);
+  void addBreadcrumb(String message) {
+    _sentryService.addBreadcrumb(category: "sync", message: message);
   }
 }
