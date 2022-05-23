@@ -14,6 +14,7 @@ import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/views/inbox_appbar.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_appbar.dart';
@@ -23,7 +24,14 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   final List<Widget> _views = [
     const SizedBox(),
     const InboxView(),
@@ -31,7 +39,25 @@ class MainPage extends StatelessWidget {
     const CalendarView(),
   ];
 
-  MainPage({Key? key}) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      context.read<SyncCubit>().sync();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
