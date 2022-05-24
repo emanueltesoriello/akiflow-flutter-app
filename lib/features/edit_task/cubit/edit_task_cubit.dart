@@ -314,8 +314,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<void> _removeTasksWithRecurrence(Task original, Task updated) async {
     List<Task> tasks = await _tasksRepository.getByRecurringId(original.recurringId!);
 
+    DateTime updatedTaskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
+
     for (Task task in tasks) {
-      if (task.id == updated.id || (task.date != null && DateTime.parse(task.date!).isBefore(DateTime.now().toUtc()))) {
+      DateTime taskDate = task.date != null ? DateTime.parse(task.date!) : DateTime.now().toUtc();
+
+      if (task.id == updated.id || taskDate.isBefore(updatedTaskDate)) {
         continue;
       }
 
