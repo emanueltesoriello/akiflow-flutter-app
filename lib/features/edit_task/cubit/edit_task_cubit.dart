@@ -80,7 +80,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       id: const Uuid().v4(),
       title: title,
       description: description,
-      updatedAt: Nullable(now.toIso8601String()),
       createdAt: (now.toIso8601String()),
       listId: state.selectedLabel?.id,
       readAt: now.toIso8601String(),

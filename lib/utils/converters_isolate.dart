@@ -101,10 +101,8 @@ List<dynamic> prepareItemsForRemote<T>(List<dynamic> localItems) {
       maxDate = deletedAtDate;
     }
 
-    String maxDateString = maxDate != null ? maxDate.toIso8601String() : (DateTime.now().toUtc().toIso8601String());
-
     localItem = localItem.copyWith(
-      globalUpdatedAt: maxDateString,
+      globalUpdatedAt: maxDate?.toIso8601String(),
       globalCreatedAt: localItem.createdAt,
     );
 
