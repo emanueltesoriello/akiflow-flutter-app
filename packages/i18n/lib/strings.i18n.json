@@ -37,7 +37,6 @@
     "bugReport": "Bug report",
     "labels": "Labels",
     "searchComingSoon": "Search is coming soon in the near future!",
-    "learnAkiflow": "Learn Akiflow",
     "changeLog": "Change log",
     "sendUsAnEmail": "Send us an Email",
     "myAccount": {
@@ -53,6 +52,10 @@
       "legal": "Legal",
       "licensesInfo": "Licenses Info",
       "security": "Security"
+    },
+    "learnAkiflow": {
+      "title": "Learn Akiflow",
+      "useGuide": "Use guide"
     }
   },
   "addTask": {

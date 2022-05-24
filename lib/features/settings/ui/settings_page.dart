@@ -83,12 +83,13 @@ class SettingsPage extends StatelessWidget {
                     },
                   ),
                   ButtonList(
-                    title: t.settings.learnAkiflow,
+                    title: t.settings.learnAkiflow.title,
                     leading: "assets/images/icons/_common/guidebook.svg",
                     position: ButtonListPosition.center,
                     showShevron: false,
                     onPressed: () {
-                      // TODO SETTINGS - refer friend event
+                      launchUrl(Uri.parse(
+                          "https://www.notion.so/akiflow/How-to-use-Akiflow-7476c0787ec64e8aa3567bdeb3ab4540"));
                     },
                   ),
                   ButtonList(
@@ -97,7 +98,7 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.bottom,
                     showShevron: false,
                     onPressed: () {
-                      // TODO SETTINGS - help center event
+                      launchUrl(Uri.parse("https://product.akiflow.com/changelog"));
                     },
                   ),
                   const SizedBox(height: 16),

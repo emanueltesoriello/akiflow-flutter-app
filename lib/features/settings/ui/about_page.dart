@@ -34,11 +34,6 @@ class AboutPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 4),
-                    Text(
-                      t.settings.myAccount.connectedAs.toUpperCase(),
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                    ),
-                    const SizedBox(height: 4),
                     Container(
                       height: 62,
                       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),

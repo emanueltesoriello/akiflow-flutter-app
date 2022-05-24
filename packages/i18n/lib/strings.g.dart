@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 162 
+ * Strings: 163 
  *
- * Built on 2022-05-24 at 14:06 UTC
+ * Built on 2022-05-24 at 14:30 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -384,11 +384,11 @@ class _StringsSettingsEn {
 	String get bugReport => 'Bug report';
 	String get labels => 'Labels';
 	String get searchComingSoon => 'Search is coming soon in the near future!';
-	String get learnAkiflow => 'Learn Akiflow';
 	String get changeLog => 'Change log';
 	String get sendUsAnEmail => 'Send us an Email';
 	late final _StringsSettingsMyAccountEn myAccount = _StringsSettingsMyAccountEn._(_root);
 	late final _StringsSettingsAboutEn about = _StringsSettingsAboutEn._(_root);
+	late final _StringsSettingsLearnAkiflowEn learnAkiflow = _StringsSettingsLearnAkiflowEn._(_root);
 }
 
 // Path: addTask
@@ -592,6 +592,17 @@ class _StringsSettingsAboutEn {
 	String get security => 'Security';
 }
 
+// Path: settings.learnAkiflow
+class _StringsSettingsLearnAkiflowEn {
+	_StringsSettingsLearnAkiflowEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Learn Akiflow';
+	String get useGuide => 'Use guide';
+}
+
 // Path: task.undoActions
 class _StringsTaskUndoActionsEn {
 	_StringsTaskUndoActionsEn._(this._root);
@@ -672,7 +683,6 @@ extension on _StringsEn {
 			'settings.bugReport': 'Bug report',
 			'settings.labels': 'Labels',
 			'settings.searchComingSoon': 'Search is coming soon in the near future!',
-			'settings.learnAkiflow': 'Learn Akiflow',
 			'settings.changeLog': 'Change log',
 			'settings.sendUsAnEmail': 'Send us an Email',
 			'settings.myAccount.title': 'My account',
@@ -685,6 +695,8 @@ extension on _StringsEn {
 			'settings.about.legal': 'Legal',
 			'settings.about.licensesInfo': 'Licenses Info',
 			'settings.about.security': 'Security',
+			'settings.learnAkiflow.title': 'Learn Akiflow',
+			'settings.learnAkiflow.useGuide': 'Use guide',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',
