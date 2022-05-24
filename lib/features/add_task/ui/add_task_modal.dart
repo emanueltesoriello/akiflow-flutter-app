@@ -118,38 +118,6 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
                             _description(context),
                             const SizedBox(height: 16),
                             _actions(context),
-                            const SizedBox(height: 16),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                onTap: () {
-                                  context
-                                      .read<EditTaskCubit>()
-                                      .create(title: titleController.text, description: descriptionController.text);
-
-                                  Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
-
-                                  Navigator.pop(context, taskUpdated);
-                                },
-                                borderRadius: BorderRadius.circular(8),
-                                child: Material(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: SizedBox(
-                                    height: 36,
-                                    width: 36,
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        "assets/images/icons/_common/paperplane_send.svg",
-                                        width: 24,
-                                        height: 24,
-                                        color: Theme.of(context).backgroundColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
                             const SizedBox(height: 8),
                           ],
                         ),
@@ -166,8 +134,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
   }
 
   Widget _actions(BuildContext context) {
-    return Wrap(
-      runSpacing: 8,
+    return Row(
       children: [
         PlanForAction(
           task: context.watch<EditTaskCubit>().state.updatedTask,
@@ -222,6 +189,33 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
               },
             );
           },
+        ),
+        const Spacer(),
+        InkWell(
+          onTap: () {
+            context.read<EditTaskCubit>().create(title: titleController.text, description: descriptionController.text);
+
+            Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
+
+            Navigator.pop(context, taskUpdated);
+          },
+          borderRadius: BorderRadius.circular(8),
+          child: Material(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(8),
+            child: SizedBox(
+              height: 36,
+              width: 36,
+              child: Center(
+                child: SvgPicture.asset(
+                  "assets/images/icons/_common/paperplane_send.svg",
+                  width: 24,
+                  height: 24,
+                  color: Theme.of(context).backgroundColor,
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
