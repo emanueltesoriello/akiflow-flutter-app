@@ -58,7 +58,9 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               String? text;
 
               if (task.duration != null && task.duration != 0) {
-                double hours = state.selectedDuration!;
+                int seconds = task.duration!;
+
+                double hours = seconds / 3600;
                 double minutes = (hours - hours.floor()) * 60;
 
                 text = "${hours.floor()}h${minutes.floor()}m";
@@ -66,7 +68,8 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
 
               return TagBox(
                 icon: "assets/images/icons/_common/hourglass.svg",
-                backgroundColor: task.duration != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                backgroundColor:
+                    task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
                 text: text,
                 isBig: true,
                 isSquare: task.duration != null ? false : true,
