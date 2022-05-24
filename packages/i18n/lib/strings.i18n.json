@@ -25,9 +25,7 @@
   },
   "settings": {
     "title": "Settings",
-    "logout": "Log out",
     "upgradeToPro": "Upgrade to pro",
-    "myAccount": "My account",
     "general": "General",
     "tasks": "Tasks",
     "notifications": "Notifications",
@@ -39,7 +37,17 @@
     "joinOurCommunity": "Join our community",
     "bugReport": "Bug report",
     "labels": "Labels",
-    "searchComingSoon": "Search is coming soon in the near future!"
+    "searchComingSoon": "Search is coming soon in the near future!",
+    "learnAkiflow": "Learn Akiflow",
+    "changeLog": "Change log",
+    "sendUsAnEmail": "Send us an Email",
+    "myAccount": {
+      "title": "My account",
+      "connectedAs": "Connected as",
+      "manageAccount": "Manage account",
+      "manageSubscriptionAndBillingPreferences": "Manage subscription & billing preferences",
+      "logout": "Log out"
+    }
   },
   "addTask": {
     "titleHint": "Try: review financials today 9am",

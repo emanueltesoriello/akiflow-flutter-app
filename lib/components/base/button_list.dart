@@ -14,6 +14,9 @@ class ButtonList extends StatefulWidget {
   final ButtonListPosition position;
   final bool showShevron;
   final String? leadingTextIconAsset;
+  final bool enabled;
+  final bool useSvgColor;
+  final Widget? trailingWidget;
 
   const ButtonList({
     Key? key,
@@ -24,6 +27,9 @@ class ButtonList extends StatefulWidget {
     this.position = ButtonListPosition.single,
     this.showShevron = true,
     this.leadingTextIconAsset,
+    this.enabled = true,
+    this.useSvgColor = false,
+    this.trailingWidget,
   }) : super(key: key);
 
   @override
@@ -114,7 +120,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                                       textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
                                       style: TextStyle(
                                         fontSize: 17,
-                                        color: ColorsExt.grey2(context),
+                                        color: (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
                                       ),
                                     ),
                                   ),
@@ -128,6 +134,10 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
 
                               if (widget.showShevron == false) {
                                 return const SizedBox();
+                              }
+
+                              if (widget.trailingWidget != null) {
+                                return widget.trailingWidget!;
                               }
 
                               return SvgPicture.asset(
@@ -160,7 +170,9 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
           widget.leading!,
           width: 24,
           height: 24,
-          color: widget.leadingColor ?? ColorsExt.grey2(context),
+          color: widget.useSvgColor
+              ? null
+              : (widget.leadingColor ?? (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
         ),
         const SizedBox(width: 8),
       ],

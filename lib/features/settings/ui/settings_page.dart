@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
-import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
-import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
+import 'package:mobile/features/settings/ui/my_account_page.dart';
+import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -21,6 +20,7 @@ class SettingsPage extends StatelessWidget {
           AppBarComp(
             title: t.settings.title,
             showBack: true,
+            showSyncButton: false,
           ),
           Expanded(
             child: ContainerInnerShadow(
@@ -29,46 +29,39 @@ class SettingsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   ButtonList(
-                    title: t.settings.upgradeToPro,
-                    position: ButtonListPosition.top,
-                    leading: "assets/images/icons/_common/crown.svg",
-                    leadingColor: Theme.of(context).primaryColor,
-                    showShevron: false,
-                    onPressed: () {
-                      // TODO SETTINGS - upgrade to pro event
-                    },
-                  ),
-                  ButtonList(
-                    title: t.settings.myAccount,
-                    position: ButtonListPosition.center,
+                    title: t.settings.myAccount.title,
+                    position: ButtonListPosition.single,
                     leading: "assets/images/icons/_common/person_circle.svg",
                     onPressed: () {
-                      // TODO SETTINGS - my account settings event
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAccountPage()));
                     },
                   ),
+                  const SizedBox(height: 16),
+                  Text(
+                    t.comingSoon.toUpperCase(),
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                  ),
+                  const SizedBox(height: 4),
                   ButtonList(
                     title: t.settings.general,
-                    position: ButtonListPosition.onlyHorizontalPadding,
+                    position: ButtonListPosition.top,
                     leading: "assets/images/icons/_common/gear_alt.svg",
-                    onPressed: () {
-                      // TODO SETTINGS - general settings event
-                    },
-                  ),
-                  ButtonList(
-                    title: t.settings.tasks,
-                    position: ButtonListPosition.center,
-                    leading: "assets/images/icons/_common/Check-done-outline.svg",
-                    onPressed: () {
-                      // TODO SETTINGS - tasks settings event
-                    },
+                    enabled: false,
+                    onPressed: () {},
                   ),
                   ButtonList(
                     title: t.settings.notifications,
-                    position: ButtonListPosition.bottom,
+                    position: ButtonListPosition.center,
                     leading: "assets/images/icons/_common/bell.svg",
-                    onPressed: () {
-                      // TODO SETTINGS - notifications settings event
-                    },
+                    enabled: false,
+                    onPressed: () {},
+                  ),
+                  ButtonList(
+                    title: t.settings.tasks,
+                    position: ButtonListPosition.bottom,
+                    leading: "assets/images/icons/_common/Check-done-outline.svg",
+                    enabled: false,
+                    onPressed: () {},
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
@@ -81,47 +74,60 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
-                    title: t.settings.referYourFriends,
-                    leading: "assets/images/icons/_common/gift.svg",
+                    title: t.settings.about,
+                    leading: "assets/images/icons/_common/info_circle.svg",
                     position: ButtonListPosition.top,
+                    onPressed: () {
+                      // TODO SETTINGS - about event
+                    },
+                  ),
+                  ButtonList(
+                    title: t.settings.learnAkiflow,
+                    leading: "assets/images/icons/_common/guidebook.svg",
+                    position: ButtonListPosition.center,
+                    showShevron: false,
                     onPressed: () {
                       // TODO SETTINGS - refer friend event
                     },
                   ),
                   ButtonList(
-                    title: t.settings.helpCenter,
-                    leading: "assets/images/icons/_common/guidebook.svg",
-                    position: ButtonListPosition.center,
+                    title: t.settings.changeLog,
+                    leading: "assets/images/icons/_common/curlybraces.svg",
+                    position: ButtonListPosition.bottom,
+                    showShevron: false,
                     onPressed: () {
                       // TODO SETTINGS - help center event
-                    },
-                  ),
-                  ButtonList(
-                    title: t.settings.about,
-                    leading: "assets/images/icons/_common/info_circle.svg",
-                    position: ButtonListPosition.bottom,
-                    onPressed: () {
-                      // TODO SETTINGS - about event
                     },
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
                     title: t.settings.followUsOnTwitter,
-                    leading: "assets/images/icons/twitter/twitter.svg",
+                    leading: "assets/images/icons/twitter/logo_twitter.svg",
                     position: ButtonListPosition.top,
                     showShevron: false,
+                    useSvgColor: true,
                     onPressed: () {
                       launchUrl(Uri.parse("https://twitter.com/getakiflow"));
                     },
                   ),
-                  const ButtonListDivider(),
                   ButtonList(
                     title: t.settings.joinOurCommunity,
                     leading: "assets/images/icons/slack/slack.svg",
-                    position: ButtonListPosition.bottom,
+                    position: ButtonListPosition.center,
                     showShevron: false,
+                    useSvgColor: true,
                     onPressed: () {
                       launchUrl(Uri.parse("https://akiflow-community.slack.com"));
+                    },
+                  ),
+                  ButtonList(
+                    title: t.settings.sendUsAnEmail,
+                    leading: "assets/images/icons/_common/envelope.svg",
+                    position: ButtonListPosition.bottom,
+                    showShevron: false,
+                    useSvgColor: true,
+                    onPressed: () {
+                      launchUrl(Uri.parse("mailto:support@akiflow.com"));
                     },
                   ),
                   const SizedBox(height: 16),
@@ -130,17 +136,6 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.single,
                     onPressed: () {
                       context.read<SettingsCubit>().bugReport();
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  ButtonList(
-                    title: t.settings.logout,
-                    position: ButtonListPosition.single,
-                    onPressed: () {
-                      context.read<AuthCubit>().logout();
-
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => const AuthPage()), (Route<dynamic> route) => false);
                     },
                   ),
                   BlocBuilder<SettingsCubit, SettingsCubitState>(
