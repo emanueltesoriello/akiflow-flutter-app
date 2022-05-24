@@ -223,11 +223,12 @@ extension TaskExt on Task {
   String get timeFormatted {
     if (datetime != null) {
       DateTime dateParsed = DateTime.parse(datetime!).toLocal();
+
       if (isToday) {
         return DateFormat.Hm().format(dateParsed);
       } else if (isTomorrow) {
         return DateFormat.Hm().format(dateParsed);
-      } else if (dateParsed.isBefore(DateTime.now().add(const Duration(days: 6)))) {
+      } else {
         return DateFormat.Hm().format(dateParsed);
       }
     }

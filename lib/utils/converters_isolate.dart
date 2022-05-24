@@ -79,12 +79,12 @@ DateTime? getMaxUpdatedAt(List<dynamic> items) {
   return maxRemoteUpdateAt;
 }
 
-List<dynamic> prepareItemsForRemote<T>(List<dynamic> items) {
-  for (int i = 0; i < items.length; i++) {
-    var item = items[i];
+List<dynamic> prepareItemsForRemote<T>(List<dynamic> localItems) {
+  for (int i = 0; i < localItems.length; i++) {
+    var localItem = localItems[i];
 
-    String? updatedAt = item.updatedAt;
-    String? deletedAt = item.deletedAt;
+    String? updatedAt = localItem.updatedAt;
+    String? deletedAt = localItem.deletedAt;
 
     DateTime? maxDate;
 
@@ -103,15 +103,15 @@ List<dynamic> prepareItemsForRemote<T>(List<dynamic> items) {
 
     String maxDateString = maxDate != null ? maxDate.toIso8601String() : (DateTime.now().toUtc().toIso8601String());
 
-    item = item.copyWith(
-      updatedAt: Nullable(maxDateString),
-      remoteUpdatedAt: Nullable(maxDateString),
+    localItem = localItem.copyWith(
+      globalUpdatedAt: maxDateString,
+      globalCreatedAt: localItem.createdAt,
     );
 
-    items[i] = item;
+    localItems[i] = localItem;
   }
 
-  return items;
+  return localItems;
 }
 
 Batch prepareBatchInsert(BatchInsertModel batchInsertModel) {
@@ -127,42 +127,43 @@ Batch prepareBatchInsert(BatchInsertModel batchInsertModel) {
 }
 
 Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partitioneItemModel) async {
-  List<dynamic> allModels = partitioneItemModel.remoteItems;
-  List<dynamic> existingModels = partitioneItemModel.existingItems;
+  List<dynamic> allRemoteModels = partitioneItemModel.remoteItems;
+  List<dynamic> existingLocalModels = partitioneItemModel.existingItems;
   List<dynamic> changedModels = [];
   List<dynamic> unchangedModels = [];
   List<dynamic> nonExistingModels = [];
 
-  Map<String, dynamic> existingModelsById = Map.fromIterable(existingModels, key: (model) => model.id);
+  Map<String, dynamic> existingModelsById = Map.fromIterable(existingLocalModels, key: (model) => model.id);
 
-  for (var model in allModels) {
+  for (var remoteModel in allRemoteModels) {
     int remoteGlobalUpdateAtMillis = 0;
     int localUpdatedAtMillis = 0;
 
-    if (model.globalUpdatedAt != null) {
-      remoteGlobalUpdateAtMillis = DateTime.parse(model.globalUpdatedAt!).millisecondsSinceEpoch;
+    if (remoteModel.globalUpdatedAt != null) {
+      remoteGlobalUpdateAtMillis = DateTime.parse(remoteModel.globalUpdatedAt!).millisecondsSinceEpoch;
     }
 
-    if (existingModelsById[model.id]?.updatedAt != null) {
-      localUpdatedAtMillis = DateTime.parse(existingModelsById[model.id]!.updatedAt!).millisecondsSinceEpoch;
+    if (existingModelsById[remoteModel.id]?.updatedAt != null) {
+      localUpdatedAtMillis = DateTime.parse(existingModelsById[remoteModel.id]!.updatedAt!).millisecondsSinceEpoch;
     }
 
-    String? globalUpdatedAtString =
-        model.globalUpdatedAt != null ? DateTime.parse(model.globalUpdatedAt!).toIso8601String() : null;
+    Nullable<String?>? remoteUpdatedAt = Nullable(remoteModel.globalUpdatedAt);
 
-    model = model.copyWith(
-      updatedAt: Nullable(globalUpdatedAtString),
-      remoteUpdatedAt: Nullable(globalUpdatedAtString),
+    remoteModel = remoteModel.copyWith(
+      updatedAt: remoteUpdatedAt,
+      createdAt: remoteModel.globalCreatedAt,
+      deletedAt: remoteModel.deletedAt,
+      remoteUpdatedAt: remoteUpdatedAt,
     );
 
-    if (existingModelsById.containsKey(model.id)) {
-      if (remoteGlobalUpdateAtMillis > localUpdatedAtMillis) {
-        changedModels.add(model);
+    if (existingModelsById.containsKey(remoteModel.id)) {
+      if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
+        changedModels.add(remoteModel);
       } else {
-        unchangedModels.add(model);
+        unchangedModels.add(remoteModel);
       }
     } else {
-      nonExistingModels.add(model);
+      nonExistingModels.add(remoteModel);
     }
   }
   return [changedModels, unchangedModels, nonExistingModels];

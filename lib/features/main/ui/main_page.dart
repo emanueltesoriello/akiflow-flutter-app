@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -42,13 +43,22 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     const CalendarView(),
   ];
 
+  StreamSubscription? streamSubscription;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
     TasksCubit tasksCubit = context.read<TasksCubit>();
-    tasksCubit.editRecurringTasksDialog.listen((allSelected) {
+
+    tasksCubit.closeStream();
+
+    if (streamSubscription != null) {
+      streamSubscription!.cancel();
+    }
+
+    streamSubscription = tasksCubit.editRecurringTasksDialog.listen((allSelected) {
       showDialog(
           context: context,
           builder: (context) => RecurringEditDialog(

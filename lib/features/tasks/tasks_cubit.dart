@@ -27,8 +27,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
 
-  final StreamController<List<Task>> _editRecurringTasksDialog = StreamController<List<Task>>();
+  StreamController<List<Task>> _editRecurringTasksDialog = StreamController<List<Task>>();
   Stream get editRecurringTasksDialog => _editRecurringTasksDialog.stream;
+
+  void closeStream() {
+    _editRecurringTasksDialog.close();
+    _editRecurringTasksDialog = StreamController<List<Task>>();
+  }
 
   late final TodayCubit _todayCubit;
   late final SyncCubit _syncCubit;
