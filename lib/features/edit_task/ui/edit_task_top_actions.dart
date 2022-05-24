@@ -57,8 +57,8 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
 
               String? text;
 
-              if (task.duration != null) {
-                double hours = state.selectedDuration ?? 4;
+              if (task.duration != null && task.duration != 0) {
+                double hours = state.selectedDuration!;
                 double minutes = (hours - hours.floor()) * 60;
 
                 text = "${hours.floor()}h${minutes.floor()}m";
