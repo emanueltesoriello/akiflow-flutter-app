@@ -5,6 +5,7 @@ import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
+import 'package:mobile/features/settings/ui/about_page.dart';
 import 'package:mobile/features/settings/ui/my_account_page.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -74,11 +75,11 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
-                    title: t.settings.about,
+                    title: t.settings.about.title,
                     leading: "assets/images/icons/_common/info_circle.svg",
                     position: ButtonListPosition.top,
                     onPressed: () {
-                      // TODO SETTINGS - about event
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AboutPage()));
                     },
                   ),
                   ButtonList(
@@ -136,17 +137,6 @@ class SettingsPage extends StatelessWidget {
                     position: ButtonListPosition.single,
                     onPressed: () {
                       context.read<SettingsCubit>().bugReport();
-                    },
-                  ),
-                  BlocBuilder<SettingsCubit, SettingsCubitState>(
-                    builder: (context, state) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          state.appVersion ?? "",
-                          textAlign: TextAlign.end,
-                        ),
-                      );
                     },
                   ),
                   const SizedBox(height: 16),

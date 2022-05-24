@@ -32,7 +32,6 @@
     "integrations": "Integrations",
     "referYourFriends": "Refer your friends",
     "helpCenter": "Help center",
-    "about": "About",
     "followUsOnTwitter": "Follow Us on Twitter",
     "joinOurCommunity": "Join our community",
     "bugReport": "Bug report",
@@ -47,6 +46,13 @@
       "manageAccount": "Manage account",
       "manageSubscriptionAndBillingPreferences": "Manage subscription & billing preferences",
       "logout": "Log out"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version",
+      "legal": "Legal",
+      "licensesInfo": "Licenses Info",
+      "security": "Security"
     }
   },
   "addTask": {

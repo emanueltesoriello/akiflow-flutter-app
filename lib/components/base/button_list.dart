@@ -17,6 +17,7 @@ class ButtonList extends StatefulWidget {
   final bool enabled;
   final bool useSvgColor;
   final Widget? trailingWidget;
+  final MainAxisAlignment? textMainAxisAlignment;
 
   const ButtonList({
     Key? key,
@@ -30,6 +31,7 @@ class ButtonList extends StatefulWidget {
     this.enabled = true,
     this.useSvgColor = false,
     this.trailingWidget,
+    this.textMainAxisAlignment,
   }) : super(key: key);
 
   @override
@@ -110,8 +112,8 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                             _buildLeadingIcon(),
                             Expanded(
                               child: Row(
-                                mainAxisAlignment:
-                                    widget.leading == null ? MainAxisAlignment.center : MainAxisAlignment.start,
+                                mainAxisAlignment: widget.textMainAxisAlignment ??
+                                    (widget.leading == null ? MainAxisAlignment.center : MainAxisAlignment.start),
                                 children: [
                                   _buildLeadingTextIcon(),
                                   Flexible(
@@ -128,16 +130,16 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                               ),
                             ),
                             Builder(builder: (context) {
+                              if (widget.trailingWidget != null) {
+                                return widget.trailingWidget!;
+                              }
+
                               if (widget.leading == null) {
                                 return const SizedBox();
                               }
 
                               if (widget.showShevron == false) {
                                 return const SizedBox();
-                              }
-
-                              if (widget.trailingWidget != null) {
-                                return widget.trailingWidget!;
                               }
 
                               return SvgPicture.asset(
@@ -161,7 +163,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
 
   Widget _buildLeadingIcon() {
     if (widget.leading == null) {
-      return const SizedBox();
+      return const SizedBox(width: 4);
     }
 
     return Row(

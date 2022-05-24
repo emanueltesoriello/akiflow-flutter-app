@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 158 
+ * Strings: 162 
  *
- * Built on 2022-05-24 at 13:49 UTC
+ * Built on 2022-05-24 at 14:06 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -379,7 +379,6 @@ class _StringsSettingsEn {
 	String get integrations => 'Integrations';
 	String get referYourFriends => 'Refer your friends';
 	String get helpCenter => 'Help center';
-	String get about => 'About';
 	String get followUsOnTwitter => 'Follow Us on Twitter';
 	String get joinOurCommunity => 'Join our community';
 	String get bugReport => 'Bug report';
@@ -389,6 +388,7 @@ class _StringsSettingsEn {
 	String get changeLog => 'Change log';
 	String get sendUsAnEmail => 'Send us an Email';
 	late final _StringsSettingsMyAccountEn myAccount = _StringsSettingsMyAccountEn._(_root);
+	late final _StringsSettingsAboutEn about = _StringsSettingsAboutEn._(_root);
 }
 
 // Path: addTask
@@ -578,6 +578,20 @@ class _StringsSettingsMyAccountEn {
 	String get logout => 'Log out';
 }
 
+// Path: settings.about
+class _StringsSettingsAboutEn {
+	_StringsSettingsAboutEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'About';
+	String get version => 'Version';
+	String get legal => 'Legal';
+	String get licensesInfo => 'Licenses Info';
+	String get security => 'Security';
+}
+
 // Path: task.undoActions
 class _StringsTaskUndoActionsEn {
 	_StringsTaskUndoActionsEn._(this._root);
@@ -653,7 +667,6 @@ extension on _StringsEn {
 			'settings.integrations': 'Integrations',
 			'settings.referYourFriends': 'Refer your friends',
 			'settings.helpCenter': 'Help center',
-			'settings.about': 'About',
 			'settings.followUsOnTwitter': 'Follow Us on Twitter',
 			'settings.joinOurCommunity': 'Join our community',
 			'settings.bugReport': 'Bug report',
@@ -667,6 +680,11 @@ extension on _StringsEn {
 			'settings.myAccount.manageAccount': 'Manage account',
 			'settings.myAccount.manageSubscriptionAndBillingPreferences': 'Manage subscription & billing preferences',
 			'settings.myAccount.logout': 'Log out',
+			'settings.about.title': 'About',
+			'settings.about.version': 'Version',
+			'settings.about.legal': 'Legal',
+			'settings.about.licensesInfo': 'Licenses Info',
+			'settings.about.security': 'Security',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',
