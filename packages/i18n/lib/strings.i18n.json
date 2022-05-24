@@ -29,7 +29,6 @@
     "general": "General",
     "tasks": "Tasks",
     "notifications": "Notifications",
-    "integrations": "Integrations",
     "referYourFriends": "Refer your friends",
     "helpCenter": "Help center",
     "followUsOnTwitter": "Follow Us on Twitter",
@@ -56,7 +55,39 @@
     "learnAkiflow": {
       "title": "Learn Akiflow",
       "useGuide": "Use guide"
-    }
+    },
+    "integrations": {
+      "title": "Integrations",
+      "connected": "Connected",
+      "gmail": {
+        "title": "Gmail",
+        "description": "Communication",
+        "step1": "Star an email or activate the $labelName on Gmail",
+        "step2": "Check your new task in your Akiflow Inbox",
+        "importOptions": "Import options",
+        "toImportTasks": "To import tasks",
+        "useAkiflowLabel": "Use Akiflow label",
+        "star": "Star",
+        "behavior": "Behavior",
+        "onMarkAsDone": {
+          "title": "On mark as done",
+          "unstarTheEmail": "Unstar The email",
+          "goToGmail": "Go to Gmail",
+          "doNothing": "Do nothing",
+          "askMeEveryTime": "Ask me every time"
+        },
+        "clientSettings": "Client settings",
+        "useSuperhuman": "Use superhuman",
+        "openYourEmailsInSuperhumanInsteadOfGmail": "Open your emails in superhuman instead of Gmail"
+      },
+      "slack": {
+        "title": "Slack"
+      },
+      "calendar": {
+        "title": "Google Calendar"
+      }
+    },
+    "connected": "Connected"
   },
   "addTask": {
     "titleHint": "Try: review financials today 9am",
@@ -197,5 +228,7 @@
     }
   },
   "cancel": "Cancel",
-  "noTitle": "(No title)"
+  "noTitle": "(No title)",
+  "connect": "Connect",
+  "more": "More"
 }

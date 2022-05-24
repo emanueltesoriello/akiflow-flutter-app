@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 163 
+ * Strings: 186 
  *
- * Built on 2022-05-24 at 14:30 UTC
+ * Built on 2022-05-24 at 15:20 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -322,6 +322,8 @@ class _StringsEn {
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
 	String get cancel => 'Cancel';
 	String get noTitle => '(No title)';
+	String get connect => 'Connect';
+	String get more => 'More';
 }
 
 // Path: onboarding
@@ -376,7 +378,6 @@ class _StringsSettingsEn {
 	String get general => 'General';
 	String get tasks => 'Tasks';
 	String get notifications => 'Notifications';
-	String get integrations => 'Integrations';
 	String get referYourFriends => 'Refer your friends';
 	String get helpCenter => 'Help center';
 	String get followUsOnTwitter => 'Follow Us on Twitter';
@@ -389,6 +390,8 @@ class _StringsSettingsEn {
 	late final _StringsSettingsMyAccountEn myAccount = _StringsSettingsMyAccountEn._(_root);
 	late final _StringsSettingsAboutEn about = _StringsSettingsAboutEn._(_root);
 	late final _StringsSettingsLearnAkiflowEn learnAkiflow = _StringsSettingsLearnAkiflowEn._(_root);
+	late final _StringsSettingsIntegrationsEn integrations = _StringsSettingsIntegrationsEn._(_root);
+	String get connected => 'Connected';
 }
 
 // Path: addTask
@@ -603,6 +606,20 @@ class _StringsSettingsLearnAkiflowEn {
 	String get useGuide => 'Use guide';
 }
 
+// Path: settings.integrations
+class _StringsSettingsIntegrationsEn {
+	_StringsSettingsIntegrationsEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Integrations';
+	String get connected => 'Connected';
+	late final _StringsSettingsIntegrationsGmailEn gmail = _StringsSettingsIntegrationsGmailEn._(_root);
+	late final _StringsSettingsIntegrationsSlackEn slack = _StringsSettingsIntegrationsSlackEn._(_root);
+	late final _StringsSettingsIntegrationsCalendarEn calendar = _StringsSettingsIntegrationsCalendarEn._(_root);
+}
+
 // Path: task.undoActions
 class _StringsTaskUndoActionsEn {
 	_StringsTaskUndoActionsEn._(this._root);
@@ -646,6 +663,62 @@ class _StringsLabelDeleteDialogEn {
 	String get markAllTasksAsDone => 'Mark all tasks as Done';
 }
 
+// Path: settings.integrations.gmail
+class _StringsSettingsIntegrationsGmailEn {
+	_StringsSettingsIntegrationsGmailEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Gmail';
+	String get description => 'Communication';
+	String step1({required Object labelName}) => 'Star an email or activate the $labelName on Gmail';
+	String get step2 => 'Check your new task in your Akiflow Inbox';
+	String get importOptions => 'Import options';
+	String get toImportTasks => 'To import tasks';
+	String get useAkiflowLabel => 'Use Akiflow label';
+	String get star => 'Star';
+	String get behavior => 'Behavior';
+	late final _StringsSettingsIntegrationsGmailOnMarkAsDoneEn onMarkAsDone = _StringsSettingsIntegrationsGmailOnMarkAsDoneEn._(_root);
+	String get clientSettings => 'Client settings';
+	String get useSuperhuman => 'Use superhuman';
+	String get openYourEmailsInSuperhumanInsteadOfGmail => 'Open your emails in superhuman instead of Gmail';
+}
+
+// Path: settings.integrations.slack
+class _StringsSettingsIntegrationsSlackEn {
+	_StringsSettingsIntegrationsSlackEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Slack';
+}
+
+// Path: settings.integrations.calendar
+class _StringsSettingsIntegrationsCalendarEn {
+	_StringsSettingsIntegrationsCalendarEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Google Calendar';
+}
+
+// Path: settings.integrations.gmail.onMarkAsDone
+class _StringsSettingsIntegrationsGmailOnMarkAsDoneEn {
+	_StringsSettingsIntegrationsGmailOnMarkAsDoneEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'On mark as done';
+	String get unstarTheEmail => 'Unstar The email';
+	String get goToGmail => 'Go to Gmail';
+	String get doNothing => 'Do nothing';
+	String get askMeEveryTime => 'Ask me every time';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -675,7 +748,6 @@ extension on _StringsEn {
 			'settings.general': 'General',
 			'settings.tasks': 'Tasks',
 			'settings.notifications': 'Notifications',
-			'settings.integrations': 'Integrations',
 			'settings.referYourFriends': 'Refer your friends',
 			'settings.helpCenter': 'Help center',
 			'settings.followUsOnTwitter': 'Follow Us on Twitter',
@@ -697,6 +769,28 @@ extension on _StringsEn {
 			'settings.about.security': 'Security',
 			'settings.learnAkiflow.title': 'Learn Akiflow',
 			'settings.learnAkiflow.useGuide': 'Use guide',
+			'settings.integrations.title': 'Integrations',
+			'settings.integrations.connected': 'Connected',
+			'settings.integrations.gmail.title': 'Gmail',
+			'settings.integrations.gmail.description': 'Communication',
+			'settings.integrations.gmail.step1': ({required Object labelName}) => 'Star an email or activate the $labelName on Gmail',
+			'settings.integrations.gmail.step2': 'Check your new task in your Akiflow Inbox',
+			'settings.integrations.gmail.importOptions': 'Import options',
+			'settings.integrations.gmail.toImportTasks': 'To import tasks',
+			'settings.integrations.gmail.useAkiflowLabel': 'Use Akiflow label',
+			'settings.integrations.gmail.star': 'Star',
+			'settings.integrations.gmail.behavior': 'Behavior',
+			'settings.integrations.gmail.onMarkAsDone.title': 'On mark as done',
+			'settings.integrations.gmail.onMarkAsDone.unstarTheEmail': 'Unstar The email',
+			'settings.integrations.gmail.onMarkAsDone.goToGmail': 'Go to Gmail',
+			'settings.integrations.gmail.onMarkAsDone.doNothing': 'Do nothing',
+			'settings.integrations.gmail.onMarkAsDone.askMeEveryTime': 'Ask me every time',
+			'settings.integrations.gmail.clientSettings': 'Client settings',
+			'settings.integrations.gmail.useSuperhuman': 'Use superhuman',
+			'settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail': 'Open your emails in superhuman instead of Gmail',
+			'settings.integrations.slack.title': 'Slack',
+			'settings.integrations.calendar.title': 'Google Calendar',
+			'settings.connected': 'Connected',
 			'addTask.titleHint': 'Try: review financials today 9am',
 			'addTask.descriptionHint': 'Description',
 			'addTask.plan': 'Plan',
@@ -815,6 +909,8 @@ extension on _StringsEn {
 			'label.deleteDialog.markAllTasksAsDone': 'Mark all tasks as Done',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',
+			'connect': 'Connect',
+			'more': 'More',
 		};
 	}
 }

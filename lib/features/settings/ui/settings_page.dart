@@ -6,6 +6,7 @@ import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/about_page.dart';
+import 'package:mobile/features/settings/ui/integrations/integrations_page.dart';
 import 'package:mobile/features/settings/ui/my_account_page.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -66,11 +67,11 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ButtonList(
-                    title: t.settings.integrations,
+                    title: t.settings.integrations.title,
                     leading: "assets/images/icons/_common/puzzle.svg",
                     position: ButtonListPosition.single,
                     onPressed: () {
-                      // TODO SETTINGS - integrations
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const IntegrationsPage()));
                     },
                   ),
                   const SizedBox(height: 16),
