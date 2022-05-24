@@ -29,9 +29,9 @@ class AuthPage extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => Stack(
-                  children: [
+                  children: const [
                     MainPage(),
-                    const UndoBottomView(),
+                    UndoBottomView(),
                   ],
                 ),
               ),

@@ -86,8 +86,8 @@ class SyncControllerService {
     Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
-  final StreamController _syncCompletedController = StreamController.broadcast();
-  Stream get syncCompletedStream => _syncCompletedController.stream;
+  final StreamController syncCompletedController = StreamController.broadcast();
+  Stream get syncCompletedStream => syncCompletedController.stream;
 
   sync([List<Entity>? entities]) async {
     if (_isSyncing) {
@@ -114,7 +114,7 @@ class SyncControllerService {
 
     _isSyncing = false;
 
-    _syncCompletedController.add(0);
+    syncCompletedController.add(0);
   }
 
   Future<void> _syncEntity(Entity entity) async {

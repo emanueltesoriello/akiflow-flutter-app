@@ -112,7 +112,7 @@ class RecurringEditDialog extends StatelessWidget {
                         height: 48,
                         child: Center(
                           child: Text(
-                            t.noTitle,
+                            t.cancel,
                             style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
                             textAlign: TextAlign.center,
                           ),

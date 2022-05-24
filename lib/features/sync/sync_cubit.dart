@@ -28,4 +28,10 @@ class SyncCubit extends Cubit<SyncCubitState> {
       emit(state.copyWith(loading: false));
     }
   }
+
+  @override
+  Future<void> close() async {
+    await _syncControllerService.syncCompletedController.close();
+    return super.close();
+  }
 }

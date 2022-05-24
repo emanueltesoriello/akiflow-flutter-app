@@ -91,7 +91,7 @@ class TaskRow extends StatelessWidget {
                         editTaskCubit.modalDismissed();
                       },
                       allTap: () {
-                        editTaskCubit.modalDismissed(recurringId: updated.recurringId);
+                        editTaskCubit.modalDismissed(updateAllFuture: true);
                       },
                     ));
           } else {

@@ -348,9 +348,8 @@ extension TaskExt on Task {
   static bool hasEditedTimings({required Task original, required Task updated}) {
     bool hasEditedDate = original.status == TaskStatusType.planned.id && original.date != updated.date;
     bool hasEditedDateTime = original.status == TaskStatusType.planned.id && original.datetime != updated.datetime;
-    bool hasEditedRepeat = hasEditedRepetition(original: original, updated: updated);
 
-    return hasEditedDate || hasEditedDateTime || hasEditedRepeat;
+    return hasEditedDate || hasEditedDateTime;
   }
 
   static bool hasEditedRepetition({required Task original, required Task updated}) {

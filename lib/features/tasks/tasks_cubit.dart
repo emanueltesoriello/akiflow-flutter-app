@@ -302,6 +302,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
       List<String> recurringIds = taskWithRecurrence.map((t) => t.recurringId!).toList();
       List<Task> tasks = await _tasksRepository.getByRecurringIds(recurringIds);
 
+      // filter tasks with date > today
+      tasks = tasks.where((t) => t.date != null && DateTime.parse(t.date!).isAfter(DateTime.now())).toList();
+
       List<Task> updatedRecurringTasks = [];
 
       for (Task task in tasks) {

@@ -12,6 +12,7 @@ import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
 
 part 'edit_task_state.dart';
@@ -21,6 +22,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   final TasksCubit _tasksCubit;
   final SyncCubit _syncCubit;
+
+  List<Task> recurrenceTasksToUpdate = [];
+  List<Task> recurrenceTasksToCreate = [];
 
   EditTaskCubit(
     this._tasksCubit,
@@ -236,13 +240,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  void setRecurrence(RecurrenceRule? rule) {
-    List<String>? recurrence = [];
+  Future<void> setRecurrence(RecurrenceRule? rule) async {
+    List<String>? recurrence;
 
     if (rule != null) {
-      String recurrenceString = rule.toString();
-      recurrence = recurrenceString.split(';');
+      recurrence = [rule.toString()];
     }
+
+    Task original = state.originalTask;
 
     Task updated = state.updatedTask.copyWith(
       recurrence: Nullable(recurrence),
@@ -250,6 +255,77 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
+
+    recurrenceTasksToUpdate.clear();
+    recurrenceTasksToCreate.clear();
+
+    if ((original.recurrence != null && original.recurrence!.isNotEmpty) &&
+        (updated.recurrence == null || updated.recurrence!.isEmpty)) {
+      await _removeTasksWithRecurrence(original, updated);
+    } else if ((original.recurrence == null || original.recurrence!.isEmpty) &&
+        (updated.recurrence != null && updated.recurrence!.isNotEmpty)) {
+      updated = await _addTaskWithRecurrence(updated);
+    } else {
+      await _removeTasksWithRecurrence(original, updated);
+      updated = await _addTaskWithRecurrence(updated);
+    }
+
+    emit(state.copyWith(updatedTask: updated));
+  }
+
+  Future<Task> _addTaskWithRecurrence(Task updated) async {
+    RecurrenceRule rule = RecurrenceRule.fromString((updated.recurrence ?? []).join(";"));
+
+    List<DateTime> dates = rule.getAllInstances(start: DateTime.now().toUtc());
+
+    List<Task> tasks = [];
+
+    String recurringId = const Uuid().v4();
+    DateTime updatedAt = DateTime.now().toUtc();
+
+    updated = updated.copyWith(
+      recurrence: Nullable([rule.toString()]),
+      recurringId: recurringId,
+      updatedAt: Nullable(updatedAt.toIso8601String()),
+    );
+
+    await _tasksRepository.updateById(updated.id, data: updated);
+
+    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
+
+    for (DateTime date in dates) {
+      if (date.isBefore(taskDate) || (isSameDay(date, taskDate))) {
+        continue;
+      }
+
+      Task newTask = updated.copyWith(
+        id: const Uuid().v4(),
+        date: Nullable(date.toIso8601String()),
+        createdAt: updatedAt.toIso8601String(),
+      );
+
+      tasks.add(newTask);
+    }
+
+    recurrenceTasksToCreate.addAll(tasks);
+
+    return updated;
+  }
+
+  Future<void> _removeTasksWithRecurrence(Task original, Task updated) async {
+    List<Task> tasks = await _tasksRepository.getByRecurringId(original.recurringId!);
+
+    for (Task task in tasks) {
+      if (task.id == updated.id || (task.date != null && DateTime.parse(task.date!).isBefore(DateTime.now().toUtc()))) {
+        continue;
+      }
+
+      recurrenceTasksToUpdate.add(task.copyWith(
+        recurrence: Nullable(null),
+        deletedAt: DateTime.now().toUtc().toIso8601String(),
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      ));
+    }
   }
 
   Future<void> duplicate() async {
@@ -289,9 +365,29 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  modalDismissed({String? recurringId}) async {
-    if (recurringId != null) {
-      List<Task> tasks = await _tasksRepository.getByRecurringId(recurringId);
+  modalDismissed({bool updateAllFuture = false}) async {
+    if (recurrenceTasksToUpdate.isNotEmpty) {
+      for (Task task in recurrenceTasksToUpdate) {
+        await _tasksRepository.updateById(task.id, data: task);
+      }
+    }
+
+    if (recurrenceTasksToCreate.isNotEmpty) {
+      await _tasksRepository.add(recurrenceTasksToCreate);
+    }
+
+    if (updateAllFuture && state.updatedTask.recurringId != null) {
+      List<Task> tasks = await _tasksRepository.getByRecurringId(state.updatedTask.recurringId!);
+
+      DateTime? taskDate = state.updatedTask.date != null ? DateTime.parse(state.updatedTask.date!) : null;
+
+      // Tasks selected and future
+      tasks = tasks
+          .where((element) =>
+              element.date != null &&
+              taskDate != null &&
+              (isSameDay(taskDate, DateTime.parse(element.date!)) || DateTime.parse(element.date!).isAfter(taskDate)))
+          .toList();
 
       List<Task> updatedRecurringTasks = [];
 
