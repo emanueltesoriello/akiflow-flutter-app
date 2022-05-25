@@ -86,7 +86,23 @@ class IntegrationsPage extends StatelessWidget {
                           return Column(
                             children: [
                               IntegrationListItem(
-                                leadingWidget: SvgPicture.asset(iconAsset),
+                                leadingWidget: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    SvgPicture.asset(iconAsset),
+                                    Builder(builder: (context) {
+                                      if (account.picture == null || account.picture!.isEmpty) {
+                                        return const SizedBox();
+                                      }
+                                      return Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CircleAvatar(
+                                              radius: 8,
+                                              backgroundColor: ColorsExt.grey3(context),
+                                              backgroundImage: NetworkImage(account.picture!)));
+                                    })
+                                  ],
+                                ),
                                 title: title,
                                 infoText: account.identifier ?? '',
                                 insets: insets,
