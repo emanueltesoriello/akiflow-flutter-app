@@ -13,8 +13,7 @@ class IntegrationListItem extends StatefulWidget {
   final bool useSvgColor;
   final Widget? trailingWidget;
   final MainAxisAlignment? textMainAxisAlignment;
-  final bool isConnected;
-  final String? infoText;
+  final String? identifier;
 
   const IntegrationListItem({
     Key? key,
@@ -25,8 +24,7 @@ class IntegrationListItem extends StatefulWidget {
     this.trailingWidget,
     this.textMainAxisAlignment,
     required this.leadingWidget,
-    this.isConnected = false,
-    this.infoText,
+    this.identifier,
     this.insets = const EdgeInsets.symmetric(horizontal: 16),
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
   }) : super(key: key);
@@ -131,7 +129,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                       ],
                                     ),
                                     Builder(builder: (context) {
-                                      if (!widget.isConnected) {
+                                      if (widget.identifier == null || widget.identifier!.isEmpty) {
                                         return const SizedBox();
                                       }
 
@@ -147,7 +145,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                               const SizedBox(width: 4),
                                               Flexible(
                                                   child: Text(
-                                                widget.infoText ?? '',
+                                                widget.identifier!,
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: ColorsExt.grey3(context),

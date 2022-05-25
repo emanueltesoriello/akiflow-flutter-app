@@ -43,7 +43,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     emit(state.copyWith(folderOpen: folderOpen));
 
     List<Account> accounts = await _accountsRepository.get();
-    emit(state.copyWith(accounts: accounts));
+    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
   }
 
   void bugReport() {

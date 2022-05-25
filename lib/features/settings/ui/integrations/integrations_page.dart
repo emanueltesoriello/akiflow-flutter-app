@@ -104,7 +104,7 @@ class IntegrationsPage extends StatelessWidget {
                                   ],
                                 ),
                                 title: title,
-                                infoText: account.identifier ?? '',
+                                identifier: account.identifier ?? 'aaa',
                                 insets: insets,
                                 borderRadius: borderRadius,
                                 enabled: account.connectorId == 'gmail',
