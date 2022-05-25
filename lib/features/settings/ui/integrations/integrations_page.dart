@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
+import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
+import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/integrations/integration_list_item.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/style/theme.dart';
+import 'package:mobile/utils/doc_extension.dart';
+import 'package:models/account/account.dart';
 
 class IntegrationsPage extends StatelessWidget {
   const IntegrationsPage({Key? key}) : super(key: key);
@@ -25,53 +31,91 @@ class IntegrationsPage extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  // Text(
-                  //   t.settings.integrations.connected.toUpperCase(),
-                  //   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                  // ),
-                  // const SizedBox(height: 4),
-                  // IntegrationListItem(
-                  //   leadingWidget: SvgPicture.asset(
-                  //     "assets/images/icons/google/calendar.svg",
-                  //   ),
-                  //   title: t.settings.integrations.gmail.title,
-                  //   onPressed: () {},
-                  // ),
-                  // const SizedBox(height: 16),
+                  BlocBuilder<SettingsCubit, SettingsCubitState>(
+                    builder: (context, state) {
+                      List<Account> accounts = state.accounts.toList();
+
+                      accounts.removeWhere((element) => element.connectorId == "akiflow");
+
+                      if (accounts.isEmpty) {
+                        return const SizedBox();
+                      }
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: accounts.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  t.settings.integrations.connected.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                                ),
+                                const SizedBox(height: 4),
+                              ],
+                            );
+                          }
+
+                          index -= 1;
+
+                          Account account = accounts[index];
+
+                          String? title = DocExt.titleFromConnectorId(account.connectorId);
+                          String? iconAsset = DocExt.iconFromConnectorId(account.connectorId);
+
+                          EdgeInsets insets;
+                          BorderRadius borderRadius;
+
+                          if (index == 0) {
+                            insets = const EdgeInsets.only(top: 1, left: 1, right: 1, bottom: 1);
+                            borderRadius = const BorderRadius.only(
+                                topLeft: Radius.circular(radius), topRight: Radius.circular(radius));
+                          } else if (index == accounts.length - 1) {
+                            insets = const EdgeInsets.only(left: 1, right: 1, bottom: 1);
+                            borderRadius = const BorderRadius.only(
+                                bottomLeft: Radius.circular(radius), bottomRight: Radius.circular(radius));
+                          } else {
+                            insets = const EdgeInsets.only(left: 1, right: 1, bottom: 1);
+                            borderRadius = BorderRadius.zero;
+                          }
+
+                          return Column(
+                            children: [
+                              IntegrationListItem(
+                                leadingWidget: SvgPicture.asset(iconAsset),
+                                title: title,
+                                infoText: account.identifier ?? '',
+                                insets: insets,
+                                borderRadius: borderRadius,
+                                enabled: account.connectorId == 'gmail',
+                                trailingWidget: account.connectorId != 'gmail' ? const SizedBox() : null,
+                                onPressed: () {},
+                              ),
+                              if (index == 0 && accounts.length == 2) const ButtonListDivider(),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
                   Text(
                     t.more.toUpperCase(),
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                   ),
                   const SizedBox(height: 4),
                   IntegrationListItem(
-                    position: IntegrationListItemPosition.top,
-                    leadingWidget: SvgPicture.asset(
-                      "assets/images/icons/google/calendar.svg",
-                    ),
-                    title: t.settings.integrations.calendar.title,
-                    onPressed: () {},
-                    enabled: false,
-                    trailingWidget: const SizedBox(),
-                  ),
-                  IntegrationListItem(
-                    position: IntegrationListItemPosition.center,
                     leadingWidget: SvgPicture.asset(
                       "assets/images/icons/google/gmail.svg",
                     ),
                     title: t.settings.integrations.gmail.title,
-                    enabled: false,
-                    trailingWidget: const SizedBox(),
+                    insets: const EdgeInsets.all(1),
+                    borderRadius: BorderRadius.circular(radius),
                     onPressed: () {},
-                  ),
-                  IntegrationListItem(
-                    position: IntegrationListItemPosition.bottom,
-                    leadingWidget: SvgPicture.asset(
-                      "assets/images/icons/slack/slack.svg",
-                    ),
-                    title: t.settings.integrations.slack.title,
-                    enabled: false,
-                    onPressed: () {},
-                    trailingWidget: const SizedBox(),
                   ),
                   const SizedBox(height: 16),
                 ],

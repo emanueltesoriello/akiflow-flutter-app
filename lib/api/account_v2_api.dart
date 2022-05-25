@@ -58,9 +58,6 @@ class AccountV2Api extends ApiClient {
         List<dynamic> items = response["data"];
         List<AccountV2> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromMap));
 
-        // Filter only Gmail account
-        objects = objects.where((item) => item.connectorId == "gmail").toList();
-
         result.addAll(objects);
       }
       page++;

@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/theme.dart';
-
-enum IntegrationListItemPosition { single, top, center, bottom, onlyHorizontalPadding }
 
 class IntegrationListItem extends StatefulWidget {
   final String title;
   final Function() onPressed;
   final Widget leadingWidget;
-  final IntegrationListItemPosition position;
+  final EdgeInsets insets;
+  final BorderRadius borderRadius;
   final bool enabled;
   final bool useSvgColor;
   final Widget? trailingWidget;
@@ -22,7 +20,6 @@ class IntegrationListItem extends StatefulWidget {
     Key? key,
     required this.title,
     required this.onPressed,
-    this.position = IntegrationListItemPosition.single,
     this.enabled = true,
     this.useSvgColor = false,
     this.trailingWidget,
@@ -30,6 +27,8 @@ class IntegrationListItem extends StatefulWidget {
     required this.leadingWidget,
     this.isConnected = false,
     this.infoText,
+    this.insets = const EdgeInsets.symmetric(horizontal: 16),
+    this.borderRadius = const BorderRadius.all(Radius.circular(8)),
   }) : super(key: key);
 
   @override
@@ -95,16 +94,16 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                       Container(
                         decoration: BoxDecoration(
                           color: ColorsExt.grey5(context),
-                          borderRadius: borderRadius(context),
+                          borderRadius: widget.borderRadius,
                         ),
                       ),
                       AnimatedBuilder(
                         animation: _animation!,
                         builder: (_, child) => Container(
-                          margin: margin(context),
+                          margin: widget.insets,
                           padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                           decoration: BoxDecoration(
-                            borderRadius: borderRadius(context),
+                            borderRadius: widget.borderRadius,
                             color: _animation!.value,
                           ),
                           child: Row(
@@ -196,43 +195,5 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
         const SizedBox(width: 16),
       ],
     );
-  }
-
-  EdgeInsets margin(BuildContext context) {
-    switch (widget.position) {
-      case IntegrationListItemPosition.single:
-        return const EdgeInsets.all(1);
-      case IntegrationListItemPosition.top:
-        return const EdgeInsets.only(left: 1, top: 1, right: 1);
-      case IntegrationListItemPosition.center:
-        return const EdgeInsets.all(1);
-      case IntegrationListItemPosition.bottom:
-        return const EdgeInsets.only(left: 1, bottom: 1, right: 1);
-      case IntegrationListItemPosition.onlyHorizontalPadding:
-        return const EdgeInsets.only(left: 1, right: 1);
-    }
-  }
-
-  BorderRadius borderRadius(BuildContext context) {
-    switch (widget.position) {
-      case IntegrationListItemPosition.single:
-        return const BorderRadius.all(
-          Radius.circular(radius),
-        );
-      case IntegrationListItemPosition.top:
-        return const BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          topRight: Radius.circular(radius),
-        );
-      case IntegrationListItemPosition.center:
-        return BorderRadius.zero;
-      case IntegrationListItemPosition.bottom:
-        return const BorderRadius.only(
-          bottomLeft: Radius.circular(radius),
-          bottomRight: Radius.circular(radius),
-        );
-      case IntegrationListItemPosition.onlyHorizontalPadding:
-        return const BorderRadius.all(Radius.zero);
-    }
   }
 }

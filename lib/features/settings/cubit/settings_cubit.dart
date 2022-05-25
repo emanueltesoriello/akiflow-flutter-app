@@ -2,14 +2,18 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
+import 'package:models/account/account.dart';
 import 'package:models/label/label.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 part 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsCubitState> {
+  final AccountsRepository _accountsRepository = locator<AccountsRepository>();
+
   final SentryService _sentryService = locator<SentryService>();
   final DialogService _dialogService = locator<DialogService>();
 
@@ -37,6 +41,9 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     }
 
     emit(state.copyWith(folderOpen: folderOpen));
+
+    List<Account> accounts = await _accountsRepository.get();
+    emit(state.copyWith(accounts: accounts));
   }
 
   void bugReport() {
