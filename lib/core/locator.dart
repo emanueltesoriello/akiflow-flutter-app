@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobile/api/account_api.dart';
+import 'package:mobile/api/account_v2_api.dart';
 import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/api/calendar_api.dart';
 import 'package:mobile/api/docs_api.dart';
@@ -48,6 +49,7 @@ void setupLocator({
   /// Apis
   locator.registerSingleton<AuthApi>(AuthApi());
   locator.registerSingleton<AccountApi>(AccountApi());
+  locator.registerSingleton<AccountV2Api>(AccountV2Api());
   locator.registerSingleton<TaskApi>(TaskApi());
   locator.registerSingleton<CalendarApi>(CalendarApi());
   locator.registerSingleton<LabelApi>(LabelApi());

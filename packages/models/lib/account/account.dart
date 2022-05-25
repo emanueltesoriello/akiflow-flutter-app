@@ -136,7 +136,9 @@ class Account extends Equatable implements Base {
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null
+          ? this.remoteUpdatedAt
+          : remoteUpdatedAt.value,
       deletedAt: deletedAt ?? this.deletedAt,
       updated: updated ?? this.updated,
     );
@@ -166,10 +168,16 @@ class Account extends Equatable implements Base {
   static Account fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
+    // Account v2 model parse
+    if (data['id'] is int) {
+      data['id'] = data['id'].toString();
+    }
+
     for (var key in data.keys) {
       switch (key) {
         case "details":
-          data[key] = data[key] is String ? (jsonDecode(data[key] as String)) : null;
+          data[key] =
+              data[key] is String ? (jsonDecode(data[key] as String)) : null;
           break;
         default:
       }

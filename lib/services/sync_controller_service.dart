@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:mobile/api/account_api.dart';
+import 'package:mobile/api/account_v2_api.dart';
 import 'package:mobile/api/calendar_api.dart';
 import 'package:mobile/api/docs_api.dart';
 import 'package:mobile/api/event_api.dart';
@@ -18,11 +19,12 @@ import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_service.dart';
 import 'package:models/user.dart';
 
-enum Entity { accounts, calendars, tasks, labels, events, docs }
+enum Entity { accountsV2, accounts, calendars, tasks, labels, events, docs }
 
 class SyncControllerService {
   static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
+  static final AccountV2Api _accountV2Api = locator<AccountV2Api>();
   static final AccountApi _accountApi = locator<AccountApi>();
   static final TaskApi _taskApi = locator<TaskApi>();
   static final CalendarApi _calendarApi = locator<CalendarApi>();
@@ -42,6 +44,10 @@ class SyncControllerService {
   static bool _isSyncing = false;
 
   final Map<Entity, SyncService> _syncServices = {
+    Entity.accountsV2: SyncService(
+      api: _accountV2Api,
+      databaseRepository: _accountsRepository,
+    ),
     Entity.accounts: SyncService(
       api: _accountApi,
       databaseRepository: _accountsRepository,
@@ -69,6 +75,7 @@ class SyncControllerService {
   };
 
   final Map<Entity, Function()> _getLastSyncFromPreferences = {
+    Entity.accountsV2: () => _preferencesRepository.lastAccountsV2SyncAt,
     Entity.accounts: () => _preferencesRepository.lastAccountsSyncAt,
     Entity.calendars: () => _preferencesRepository.lastCalendarsSyncAt,
     Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
@@ -78,6 +85,7 @@ class SyncControllerService {
   };
 
   final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
+    Entity.accountsV2: _preferencesRepository.setLastAccountsV2SyncAt,
     Entity.accounts: _preferencesRepository.setLastAccountsSyncAt,
     Entity.calendars: _preferencesRepository.setLastCalendarsSyncAt,
     Entity.tasks: _preferencesRepository.setLastTasksSyncAt,
@@ -101,6 +109,7 @@ class SyncControllerService {
 
     if (user != null) {
       if (entities == null) {
+        await _syncEntity(Entity.accountsV2);
         await _syncEntity(Entity.accounts);
         await _syncEntity(Entity.tasks);
         await _syncEntity(Entity.labels);

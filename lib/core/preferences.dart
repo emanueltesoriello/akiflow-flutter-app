@@ -14,28 +14,25 @@ abstract class PreferencesRepository {
 
   Future<void> setInboxNoticeHidden(bool value);
 
-  DateTime? get lastAccountsSyncAt;
+  DateTime? get lastAccountsV2SyncAt;
+  Future<void> setLastAccountsV2SyncAt(DateTime? value);
 
+  DateTime? get lastAccountsSyncAt;
   Future<void> setLastAccountsSyncAt(DateTime? value);
 
   DateTime? get lastCalendarsSyncAt;
-
   Future<void> setLastCalendarsSyncAt(DateTime? value);
 
   DateTime? get lastTasksSyncAt;
-
   Future<void> setLastTasksSyncAt(DateTime? value);
 
   DateTime? get lastLabelsSyncAt;
-
   Future<void> setLastLabelsSyncAt(DateTime? value);
 
   DateTime? get lastEventsSyncAt;
-
   Future<void> setLastEventsSyncAt(DateTime? value);
 
   DateTime? get lastDocsSyncAt;
-
   Future<void> setLastDocsSyncAt(DateTime? value);
 }
 
@@ -73,6 +70,19 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setInboxNoticeHidden(bool value) async {
     await _prefs.setBool("inboxNoticeHidden", value);
+  }
+
+  @override
+  DateTime? get lastAccountsV2SyncAt {
+    String? value = _prefs.getString("lastAccountsV2SyncAt");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastAccountsV2SyncAt(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastAccountsV2SyncAt", value.toIso8601String());
+    }
   }
 
   @override
