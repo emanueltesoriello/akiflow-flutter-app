@@ -8,7 +8,7 @@ import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/about_page.dart';
 import 'package:mobile/features/settings/ui/integrations/integrations_page.dart';
 import 'package:mobile/features/settings/ui/my_account_page.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -39,11 +39,7 @@ class SettingsPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    t.comingSoon.toUpperCase(),
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                  ),
-                  const SizedBox(height: 4),
+                  SettingHeaderText(text: t.comingSoon),
                   ButtonList(
                     title: t.settings.general,
                     position: ButtonListPosition.top,

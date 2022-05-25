@@ -62,13 +62,18 @@
       "gmail": {
         "title": "Gmail",
         "description": "Communication",
-        "step1": "Star an email or activate the $labelName on Gmail",
+        "step1": {
+          "t1": "Star an email or activate the ",
+          "t2": "Akiflow label",
+          "t3": " on Gmail."
+        },
         "step2": "Check your new task in your Akiflow Inbox",
         "importOptions": "Import options",
         "toImportTasks": "To import tasks",
         "useAkiflowLabel": "Use Akiflow label",
         "star": "Star",
         "behavior": "Behavior",
+        "communication": "Communication",
         "onMarkAsDone": {
           "title": "On mark as done",
           "unstarTheEmail": "Unstar The email",

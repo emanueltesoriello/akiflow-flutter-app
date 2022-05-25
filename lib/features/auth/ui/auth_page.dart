@@ -5,8 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/auth/ui/login_button.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/main_com.dart';
 import 'package:mobile/style/colors.dart';
@@ -85,7 +85,7 @@ class AuthPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  LoginButton(
+                  ActionButton(
                     child: Text(
                       t.onboarding.login,
                       style: TextStyleExt.button(context),

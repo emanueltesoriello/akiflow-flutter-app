@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
-import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/settings/ui/integrations/integration_list_item.dart';
+import 'package:mobile/features/settings/ui/integrations/gmail_instruction_integration_page.dart';
+import 'package:mobile/features/settings/ui/view/integration_list_item.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:mobile/utils/doc_extension.dart';
@@ -83,36 +83,36 @@ class IntegrationsPage extends StatelessWidget {
                             borderRadius = BorderRadius.zero;
                           }
 
-                          return Column(
-                            children: [
-                              IntegrationListItem(
-                                leadingWidget: Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    SvgPicture.asset(iconAsset),
-                                    Builder(builder: (context) {
-                                      if (account.picture == null || account.picture!.isEmpty) {
-                                        return const SizedBox();
-                                      }
-                                      return Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: CircleAvatar(
-                                              radius: 8,
-                                              backgroundColor: ColorsExt.grey3(context),
-                                              backgroundImage: NetworkImage(account.picture!)));
-                                    })
-                                  ],
-                                ),
-                                title: title,
-                                identifier: account.identifier ?? 'aaa',
-                                insets: insets,
-                                borderRadius: borderRadius,
-                                enabled: account.connectorId == 'gmail',
-                                trailingWidget: account.connectorId != 'gmail' ? const SizedBox() : null,
-                                onPressed: () {},
-                              ),
-                              if (index == 0 && accounts.length == 2) const ButtonListDivider(),
-                            ],
+                          return IntegrationListItem(
+                            leadingWidget: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                SvgPicture.asset(iconAsset),
+                                Builder(builder: (context) {
+                                  if (account.picture == null || account.picture!.isEmpty) {
+                                    return const SizedBox();
+                                  }
+                                  return Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: CircleAvatar(
+                                          radius: 8,
+                                          backgroundColor: ColorsExt.grey3(context),
+                                          backgroundImage: NetworkImage(account.picture!)));
+                                })
+                              ],
+                            ),
+                            title: title,
+                            identifier: account.identifier ?? 'aaa',
+                            insets: insets,
+                            borderRadius: borderRadius,
+                            enabled: account.connectorId == 'gmail',
+                            trailingWidget: account.connectorId != 'gmail' ? const SizedBox() : null,
+                            onPressed: () {
+                              if (account.connectorId == 'gmail') {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) => const GmailInstructionIntegrationsPage()));
+                              }
+                            },
                           );
                         },
                       );
@@ -131,7 +131,10 @@ class IntegrationsPage extends StatelessWidget {
                     title: t.settings.integrations.gmail.title,
                     insets: const EdgeInsets.all(1),
                     borderRadius: BorderRadius.circular(radius),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => const GmailInstructionIntegrationsPage()));
+                    },
                   ),
                   const SizedBox(height: 16),
                 ],

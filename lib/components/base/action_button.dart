@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mobile/style/theme.dart';
 
-class LoginButton extends StatefulWidget {
+class ActionButton extends StatefulWidget {
   final Widget child;
   final Function()? onPressed;
 
-  const LoginButton({
+  const ActionButton({
     Key? key,
     required this.child,
     this.onPressed,
   }) : super(key: key);
 
   @override
-  State<LoginButton> createState() => _LoginButtonState();
+  State<ActionButton> createState() => _ActionButtonState();
 }
 
-class _LoginButtonState extends State<LoginButton> with SingleTickerProviderStateMixin {
+class _ActionButtonState extends State<ActionButton> with SingleTickerProviderStateMixin {
   Animation<Color?>? _animation;
   late AnimationController _controller;
 
