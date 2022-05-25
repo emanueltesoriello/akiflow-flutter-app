@@ -84,7 +84,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<PushCubit>(
           lazy: false,
-          create: (BuildContext context) => PushCubit(),
+          create: (BuildContext context) => locator<PushCubit>(),
         ),
         BlocProvider<SyncCubit>(
           lazy: false,
@@ -104,11 +104,15 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<AuthCubit>(
           lazy: false,
-          create: (BuildContext context) => AuthCubit(locator<SyncCubit>(), context.read<PushCubit>()),
+          create: (BuildContext context) => locator<AuthCubit>(),
         ),
         BlocProvider<SettingsCubit>(
           lazy: false,
-          create: (BuildContext context) => SettingsCubit(context.read<LabelsCubit>()),
+          create: (BuildContext context) => SettingsCubit(
+            context.read<LabelsCubit>(),
+            locator<AuthCubit>(),
+            locator<SyncCubit>(),
+          ),
         ),
         BlocProvider<TodayCubit>(
           lazy: false,

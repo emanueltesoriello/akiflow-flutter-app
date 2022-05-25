@@ -5,7 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/settings/ui/integrations/gmail_instruction_integration_page.dart';
+import 'package:mobile/features/settings/ui/integrations/gmail/gmail_instruction_integration_page.dart';
 import 'package:mobile/features/settings/ui/view/integration_list_item.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';

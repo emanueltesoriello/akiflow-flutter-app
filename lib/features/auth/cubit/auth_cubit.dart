@@ -47,11 +47,9 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       _sentryService.addBreadcrumb(category: 'user', message: 'Fetching updates');
 
-      User userUpdated = await _userApi.get();
+      Map<String, dynamic>? settings = await _userApi.getSettings();
 
-      String accessToken = user.accessToken!;
-
-      userUpdated = userUpdated.copyWith(accessToken: accessToken);
+      user = user.copyWith(settings: settings);
 
       _preferencesRepository.saveUser(user);
 
@@ -105,5 +103,21 @@ class AuthCubit extends Cubit<AuthCubitState> {
     emit(state.copyWith(user: Nullable(null)));
 
     await _pushCubit.logout();
+  }
+
+  Future<void> updateUserSettings(Map<String, dynamic> settings) async {
+    User user = User.fromMap(state.user!.toMap());
+
+    user = user.copyWith(settings: settings);
+
+    emit(state.copyWith(user: Nullable(const User())));
+    emit(state.copyWith(user: Nullable(user)));
+
+    Map<String, dynamic>? updated = await _userApi.postSettings(settings);
+
+    if (updated != null) {
+      user = user.copyWith(settings: updated);
+      _preferencesRepository.saveUser(user);
+    }
   }
 }

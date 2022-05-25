@@ -10,6 +10,8 @@ import 'package:mobile/api/task_api.dart';
 import 'package:mobile/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
@@ -75,6 +77,8 @@ void setupLocator({
   TodayCubit todayCubit = TodayCubit();
   SyncCubit syncCubit = SyncCubit();
   TasksCubit tasksCubit = TasksCubit(syncCubit);
+  PushCubit pushCubit = PushCubit();
+  AuthCubit authCubit = AuthCubit(syncCubit, pushCubit);
 
   tasksCubit.attachTodayCubit(todayCubit);
   todayCubit.attachTasksCubit(tasksCubit);
@@ -82,4 +86,6 @@ void setupLocator({
   locator.registerSingleton<TasksCubit>(tasksCubit);
   locator.registerSingleton<TodayCubit>(todayCubit);
   locator.registerSingleton<SyncCubit>(syncCubit);
+  locator.registerSingleton<PushCubit>(pushCubit);
+  locator.registerSingleton<AuthCubit>(authCubit);
 }

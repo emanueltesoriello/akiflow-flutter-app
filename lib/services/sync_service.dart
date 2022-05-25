@@ -74,7 +74,7 @@ class SyncService {
 
     addBreadcrumb("${api.runtimeType} posting to api ${unsynced.length} items");
 
-    List<dynamic> updated = await api.post(unsynced: unsynced);
+    List<dynamic> updated = await api.postUnsynced(unsynced: unsynced);
 
     if (unsynced.length != updated.length) {
       throw PostUnsyncedExcepotion(

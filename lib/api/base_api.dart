@@ -6,7 +6,7 @@ abstract class IBaseApi {
     bool allPages = false,
   });
 
-  Future<List<T>> post<T>({
+  Future<List<T>> postUnsynced<T>({
     required List<T> unsynced,
   });
 }

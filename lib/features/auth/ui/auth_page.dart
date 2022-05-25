@@ -23,6 +23,13 @@ class AuthPage extends StatelessWidget {
         return false;
       },
       child: BlocListener<AuthCubit, AuthCubitState>(
+        listenWhen: (previous, current) {
+          if (previous.user == null && current.user != null) {
+            return true;
+          } else {
+            return false;
+          }
+        },
         listener: (context, state) {
           if (state.user != null) {
             Navigator.push(

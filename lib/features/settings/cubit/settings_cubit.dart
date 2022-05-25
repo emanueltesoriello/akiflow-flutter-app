@@ -1,7 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/features/settings/ui/integrations/gmail/gmail_mark_done_modal.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
@@ -18,8 +21,15 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   final DialogService _dialogService = locator<DialogService>();
 
   final LabelsCubit _labelCubit;
+  final AuthCubit _authCubit;
+  late final SyncCubit _syncCubit;
 
-  SettingsCubit(this._labelCubit) : super(const SettingsCubitState()) {
+  SettingsCubit(this._labelCubit, this._authCubit, this._syncCubit) : super(const SettingsCubitState()) {
+    _syncCubit.syncCompletedStream.listen((_) async {
+      List<Account> accounts = await _accountsRepository.get();
+      emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+    });
+
     _init();
   }
 
@@ -57,5 +67,16 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     openFolder[folder] = !(openFolder[folder] ?? false);
 
     emit(state.copyWith(folderOpen: openFolder));
+  }
+
+  void gmailBehaviorOnMarkAsDone(GmailMarkAsDoneType selectedType) {
+    Map<String, dynamic> settings = Map.from(_authCubit.state.user!.settings ?? {});
+    Map<String, dynamic> popups = settings['popups'] ?? {};
+
+    popups['gmail.unstar'] = selectedType.key;
+
+    settings['popups'] = popups;
+
+    _authCubit.updateUserSettings(Map<String, dynamic>.from(settings));
   }
 }

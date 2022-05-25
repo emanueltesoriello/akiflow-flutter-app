@@ -17,7 +17,7 @@ class UserApi extends ApiClient {
           fromMap: User.fromMap,
         );
 
-  Future<User> get() async {
+  Future<Map<String, dynamic>?> getSettings() async {
     Response responseRaw = await _httpClient.get(url);
 
     var response = jsonDecode(responseRaw.body);
@@ -25,7 +25,27 @@ class UserApi extends ApiClient {
     if (response.containsKey("errors")) {
       throw ApiException(response);
     } else {
-      return fromMap(response["data"]);
+      return User.fromMap(response["data"]).settings;
     }
+  }
+
+  Future<Map<String, dynamic>?> postSettings(Map<String, dynamic> newSettings) async {
+    String json = jsonEncode({
+      "settings": newSettings,
+      "isFirstLoad": false,
+    });
+
+    Response responseRaw = await _httpClient.post(url, body: json);
+
+    Map<String, dynamic> response = jsonDecode(responseRaw.body);
+
+    if (response.containsKey("errors")) {
+      print(response);
+      throw ApiException(response);
+    }
+
+    User userUpdated = User.fromMap(response["data"]);
+
+    return userUpdated.settings;
   }
 }

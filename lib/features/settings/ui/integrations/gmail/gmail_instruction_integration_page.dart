@@ -1,21 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/settings/ui/view/integration_list_item.dart';
-import 'package:mobile/features/settings/ui/view/integration_setting.dart';
-import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
+import 'package:mobile/features/settings/ui/integrations/gmail/gmail_details_integration_page.dart';
+import 'package:mobile/features/settings/ui/view/integration_header.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
-import 'package:mobile/utils/doc_extension.dart';
-import 'package:models/account/account.dart';
 
-class GmailDetailsIntegrationsPage extends StatelessWidget {
-  const GmailDetailsIntegrationsPage({Key? key}) : super(key: key);
+class GmailInstructionIntegrationsPage extends StatelessWidget {
+  const GmailInstructionIntegrationsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,73 +25,40 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           Expanded(
             child: ContainerInnerShadow(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              child: ListView(
-                padding: const EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  BlocBuilder<SettingsCubit, SettingsCubitState>(
-                    builder: (context, state) {
-                      Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
-
-                      return IntegrationListItem(
-                        leadingWidget: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            SvgPicture.asset(DocExt.iconFromConnectorId("gmail")),
-                            Builder(builder: (context) {
-                              if (gmailAccount.picture == null || gmailAccount.picture!.isEmpty) {
-                                return const SizedBox();
-                              }
-                              return Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: CircleAvatar(
-                                      radius: 8,
-                                      backgroundColor: ColorsExt.grey3(context),
-                                      backgroundImage: NetworkImage(gmailAccount.picture!)));
-                            })
-                          ],
-                        ),
-                        title: DocExt.titleFromConnectorId("gmail"),
-                        identifier: gmailAccount.identifier ?? 'aaa',
-                        insets: const EdgeInsets.all(1),
-                        borderRadius: BorderRadius.circular(radius),
-                        trailingWidget: const SizedBox(),
-                        onPressed: () {},
-                      );
-                    },
+                  ListView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      IntegrationDetailsHeader(
+                        isActive: false,
+                        identifier: t.settings.integrations.gmail.communication,
+                        connectorId: 'gmail',
+                      ),
+                      const SizedBox(height: 32),
+                      _step1(context),
+                      const SizedBox(height: 16),
+                      _mailPlaceholder(context),
+                      const SizedBox(height: 32),
+                      _step2(context),
+                      const SizedBox(height: 16),
+                    ],
                   ),
-                  const SizedBox(height: 32),
-                  SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
-                  IntegrationSetting(
-                    title: t.settings.integrations.gmail.toImportTasks,
-                    subtitle: t.settings.integrations.gmail.useAkiflowLabel,
-                    onPressed: () {
-                      // TODO handle this action
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  SettingHeaderText(text: t.settings.integrations.gmail.behavior),
-                  IntegrationSetting(
-                    title: t.settings.integrations.gmail.onMarkAsDone.title,
-                    subtitle: t.settings.integrations.gmail.onMarkAsDone.unstarTheEmail,
-                    onPressed: () {
-                      // TODO handle this action
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
-                  IntegrationSetting(
-                    title: t.settings.integrations.gmail.useSuperhuman,
-                    subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
-                    trailingWidget: CupertinoSwitch(
-                      activeColor: ColorsExt.akiflow(context),
-                      value: true,
-                      onChanged: (value) {},
+                  const Spacer(),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                    child: ActionButton(
+                      child: Text(
+                        t.connect,
+                        style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
+                      },
                     ),
-                    onPressed: () {
-                      // TODO handle this action
-                    },
-                  ),
-                  const SizedBox(height: 32),
+                  )
                 ],
               ),
             ),

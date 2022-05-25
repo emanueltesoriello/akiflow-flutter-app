@@ -63,7 +63,7 @@ class ApiClient implements IBaseApi {
   }
 
   @override
-  Future<List<T>> post<T>({
+  Future<List<T>> postUnsynced<T>({
     required List<T> unsynced,
   }) async {
     List<dynamic> jsonList = await compute(fromObjToMapList, unsynced);
