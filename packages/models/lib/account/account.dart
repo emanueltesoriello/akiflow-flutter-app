@@ -39,7 +39,7 @@ class Account extends Equatable implements Base {
   final String? identifier;
   final dynamic syncStatus;
   final String? status;
-  final dynamic details;
+  final Map<String, dynamic>? details;
   final dynamic autologinToken;
   final String? globalCreatedAt;
   final String? globalUpdatedAt;
@@ -61,7 +61,7 @@ class Account extends Equatable implements Base {
         identifier: json['identifier'] as String?,
         syncStatus: json['sync_status'] as dynamic,
         status: json['status'] as String?,
-        details: json['details'] as dynamic,
+        details: json['details'] as Map<String, dynamic>?,
         autologinToken: json['autologin_token'] as dynamic,
         globalCreatedAt: json['global_created_at'] as String?,
         globalUpdatedAt: json['global_updated_at'] as String?,
@@ -108,7 +108,7 @@ class Account extends Equatable implements Base {
     String? identifier,
     dynamic syncStatus,
     String? status,
-    dynamic details,
+    Map<String, dynamic>? details,
     dynamic autologinToken,
     String? globalCreatedAt,
     String? globalUpdatedAt,
@@ -162,25 +162,18 @@ class Account extends Equatable implements Base {
       "created_at": createdAt,
       "deleted_at": deletedAt,
       "remote_updated_at": remoteUpdatedAt,
+      "details": jsonEncode(details),
     };
   }
 
   static Account fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
+    data['details'] = jsonDecode(data['details'] as String? ?? '{}');
+
     // Account v2 model parse
     if (data['id'] is int) {
       data['id'] = data['id'].toString();
-    }
-
-    for (var key in data.keys) {
-      switch (key) {
-        case "details":
-          data[key] =
-              data[key] is String ? (jsonDecode(data[key] as String)) : null;
-          break;
-        default:
-      }
     }
 
     return Account.fromMap(data);

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/features/settings/ui/integrations/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/features/settings/ui/integrations/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
@@ -10,6 +11,7 @@ import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nullable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 part 'settings_state.dart';
@@ -78,5 +80,24 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     settings['popups'] = popups;
 
     _authCubit.updateUserSettings(Map<String, dynamic>.from(settings));
+  }
+
+  Future<void> gmailBehaviorImportTask(GmailImportTaskType selectedType) async {
+    Account account = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+
+    Map<String, dynamic>? settings = Map.from(account.details ?? {});
+    settings['syncMode'] = selectedType.key;
+
+    account = account.copyWith(
+      details: settings,
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+    );
+
+    await _accountsRepository.updateById(account.id, data: account);
+
+    List<Account> accounts = await _accountsRepository.get();
+    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+
+    _syncCubit.sync();
   }
 }

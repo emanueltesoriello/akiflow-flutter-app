@@ -7,6 +7,7 @@ import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
+import 'package:mobile/features/settings/ui/integrations/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/features/settings/ui/integrations/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/settings/ui/view/integration_list_item.dart';
 import 'package:mobile/features/settings/ui/view/integration_setting.dart';
@@ -70,11 +71,44 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
-                  IntegrationSetting(
-                    title: t.settings.integrations.gmail.toImportTasks,
-                    subtitle: t.settings.integrations.gmail.useAkiflowLabel,
-                    onPressed: () {
-                      // TODO handle this action
+                  BlocBuilder<SettingsCubit, SettingsCubitState>(
+                    builder: (context, state) {
+                      Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+                      String subtitle = GmailImportTaskType.titleFromKey(gmailAccount.details?['syncMode']);
+
+                      return IntegrationSetting(
+                        title: t.settings.integrations.gmail.toImportTask.title,
+                        subtitle: subtitle,
+                        onPressed: () async {
+                          var bloc = context.read<SettingsCubit>();
+
+                          GmailImportTaskType initialType;
+
+                          switch (gmailAccount.details?['syncMode']) {
+                            case 1:
+                              initialType = GmailImportTaskType.useAkiflowLabel;
+                              break;
+                            case 0:
+                              initialType = GmailImportTaskType.useStarToImport;
+                              break;
+                            case -1:
+                              initialType = GmailImportTaskType.doNothing;
+                              break;
+                            default:
+                              initialType = GmailImportTaskType.askMeEveryTime;
+                              break;
+                          }
+
+                          GmailImportTaskType? selectedType = await showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context) => GmaiImportTaskModal(initialType: initialType),
+                          );
+
+                          if (selectedType != null) {
+                            bloc.gmailBehaviorImportTask(selectedType);
+                          }
+                        },
+                      );
                     },
                   ),
                   const SizedBox(height: 20),

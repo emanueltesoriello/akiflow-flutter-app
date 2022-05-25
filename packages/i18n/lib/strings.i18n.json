@@ -69,7 +69,6 @@
         },
         "step2": "Check your new task in your Akiflow Inbox",
         "importOptions": "Import options",
-        "toImportTasks": "To import tasks",
         "useAkiflowLabel": "Use Akiflow label",
         "star": "Star",
         "behavior": "Behavior",
@@ -78,6 +77,13 @@
           "title": "On mark as done",
           "unstarTheEmail": "Unstar The email",
           "goToGmail": "Go to Gmail",
+          "doNothing": "Do nothing",
+          "askMeEveryTime": "Ask me every time"
+        },
+        "toImportTask": {
+          "title": "To import tasks",
+          "useAkiflowLabel": "Use Akiflow label",
+          "useStarToImport": "Use star to import",
           "doNothing": "Do nothing",
           "askMeEveryTime": "Ask me every time"
         },

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
@@ -75,6 +76,7 @@ class ApiClient implements IBaseApi {
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
     if (response.containsKey("errors")) {
+      log(json);
       print(response);
       throw ApiException(response);
     }

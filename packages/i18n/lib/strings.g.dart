@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 189 
+ * Strings: 193 
  *
- * Built on 2022-05-25 at 10:14 UTC
+ * Built on 2022-05-25 at 15:38 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -675,12 +675,12 @@ class _StringsSettingsIntegrationsGmailEn {
 	late final _StringsSettingsIntegrationsGmailStep1En step1 = _StringsSettingsIntegrationsGmailStep1En._(_root);
 	String get step2 => 'Check your new task in your Akiflow Inbox';
 	String get importOptions => 'Import options';
-	String get toImportTasks => 'To import tasks';
 	String get useAkiflowLabel => 'Use Akiflow label';
 	String get star => 'Star';
 	String get behavior => 'Behavior';
 	String get communication => 'Communication';
 	late final _StringsSettingsIntegrationsGmailOnMarkAsDoneEn onMarkAsDone = _StringsSettingsIntegrationsGmailOnMarkAsDoneEn._(_root);
+	late final _StringsSettingsIntegrationsGmailToImportTaskEn toImportTask = _StringsSettingsIntegrationsGmailToImportTaskEn._(_root);
 	String get clientSettings => 'Client settings';
 	String get useSuperhuman => 'Use superhuman';
 	String get openYourEmailsInSuperhumanInsteadOfGmail => 'Open your emails in superhuman instead of Gmail';
@@ -728,6 +728,20 @@ class _StringsSettingsIntegrationsGmailOnMarkAsDoneEn {
 	String get title => 'On mark as done';
 	String get unstarTheEmail => 'Unstar The email';
 	String get goToGmail => 'Go to Gmail';
+	String get doNothing => 'Do nothing';
+	String get askMeEveryTime => 'Ask me every time';
+}
+
+// Path: settings.integrations.gmail.toImportTask
+class _StringsSettingsIntegrationsGmailToImportTaskEn {
+	_StringsSettingsIntegrationsGmailToImportTaskEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'To import tasks';
+	String get useAkiflowLabel => 'Use Akiflow label';
+	String get useStarToImport => 'Use star to import';
 	String get doNothing => 'Do nothing';
 	String get askMeEveryTime => 'Ask me every time';
 }
@@ -791,7 +805,6 @@ extension on _StringsEn {
 			'settings.integrations.gmail.step1.t3': ' on Gmail.',
 			'settings.integrations.gmail.step2': 'Check your new task in your Akiflow Inbox',
 			'settings.integrations.gmail.importOptions': 'Import options',
-			'settings.integrations.gmail.toImportTasks': 'To import tasks',
 			'settings.integrations.gmail.useAkiflowLabel': 'Use Akiflow label',
 			'settings.integrations.gmail.star': 'Star',
 			'settings.integrations.gmail.behavior': 'Behavior',
@@ -801,6 +814,11 @@ extension on _StringsEn {
 			'settings.integrations.gmail.onMarkAsDone.goToGmail': 'Go to Gmail',
 			'settings.integrations.gmail.onMarkAsDone.doNothing': 'Do nothing',
 			'settings.integrations.gmail.onMarkAsDone.askMeEveryTime': 'Ask me every time',
+			'settings.integrations.gmail.toImportTask.title': 'To import tasks',
+			'settings.integrations.gmail.toImportTask.useAkiflowLabel': 'Use Akiflow label',
+			'settings.integrations.gmail.toImportTask.useStarToImport': 'Use star to import',
+			'settings.integrations.gmail.toImportTask.doNothing': 'Do nothing',
+			'settings.integrations.gmail.toImportTask.askMeEveryTime': 'Ask me every time',
 			'settings.integrations.gmail.clientSettings': 'Client settings',
 			'settings.integrations.gmail.useSuperhuman': 'Use superhuman',
 			'settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail': 'Open your emails in superhuman instead of Gmail',
