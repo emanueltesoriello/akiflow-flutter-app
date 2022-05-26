@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:models/base.dart';
+import 'package:models/doc/doc.dart';
 import 'package:models/nullable.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -165,4 +167,102 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
     }
   }
   return [changedModels, unchangedModels, nonExistingModels];
+}
+
+class PrepareDocForRemoteModel {
+  final List<Doc> remoteItems;
+  final List<Doc> existingItems;
+
+  PrepareDocForRemoteModel({
+    required this.remoteItems,
+    required this.existingItems,
+  });
+}
+
+class DocsFromGmailDataModel {
+  final List<dynamic> gmailData;
+  final int syncMode;
+  final String connectorId;
+  final String accountId;
+  final String originAccountId;
+  final String email;
+
+  DocsFromGmailDataModel({
+    required this.gmailData,
+    required this.syncMode,
+    required this.connectorId,
+    required this.accountId,
+    required this.originAccountId,
+    required this.email,
+  });
+}
+
+List<Doc> docsFromGmailData(DocsFromGmailDataModel data) {
+  List<Doc> result = [];
+
+  for (var messageContent in data.gmailData) {
+    result.add(Doc(
+      title: messageContent.subject,
+      originId: messageContent.messageId,
+      searchText: messageContent.subject?.toLowerCase() + ' ' + messageContent.from?.toLowerCase(),
+      description: null,
+      icon: null,
+      type: 'email',
+      content: {
+        "from": messageContent.from,
+        "internalDate": messageContent.internalDate,
+        "initialSyncMode": data.syncMode
+      },
+      url: "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
+      localUrl: null,
+      // customType: null,
+      // important: messageContent.internalDate,
+      priority: 2,
+      sorting: messageContent.internalDate,
+      connectorId: data.connectorId,
+      accountId: data.accountId,
+      originAccountId: data.originAccountId,
+    ));
+  }
+
+  return result;
+}
+
+List<Doc> prepareDocsForRemote<T>(PrepareDocForRemoteModel prepareDocForRemoteModel) {
+  List<Doc> remoteDocs = prepareDocForRemoteModel.remoteItems.toList();
+
+  for (int i = 0; i < remoteDocs.length; i++) {
+    Doc remoteDoc = remoteDocs[i];
+
+    String? updatedAt = remoteDoc.updatedAt;
+    String? deletedAt = remoteDoc.deletedAt;
+
+    DateTime? maxDate;
+
+    if (updatedAt != null && deletedAt != null) {
+      DateTime updatedAtDate = DateTime.parse(updatedAt);
+      DateTime deletedAtDate = DateTime.parse(deletedAt);
+
+      maxDate = updatedAtDate.isAfter(deletedAtDate) ? updatedAtDate : deletedAtDate;
+    } else if (updatedAt != null) {
+      DateTime updatedAtDate = DateTime.parse(updatedAt);
+      maxDate = updatedAtDate;
+    } else if (deletedAt != null) {
+      DateTime deletedAtDate = DateTime.parse(deletedAt);
+      maxDate = deletedAtDate;
+    }
+
+    Doc? localDoc = prepareDocForRemoteModel.existingItems.firstWhereOrNull((element) => element.id == remoteDoc.id);
+
+    remoteDoc = remoteDoc.copyWith(
+      id: remoteDoc.id ?? localDoc?.id,
+      taskId: remoteDoc.taskId ?? localDoc?.taskId,
+      globalUpdatedAt: maxDate?.toIso8601String(),
+      globalCreatedAt: remoteDoc.createdAt,
+    );
+
+    remoteDocs[i] = remoteDoc;
+  }
+
+  return remoteDocs;
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
+import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/view/integration_header.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
@@ -53,9 +55,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                         style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
                       ),
                       onPressed: () {
-                        // TODO handle this
-                        // Navigator.of(context)
-                        //     .push(MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
+                        context.read<SettingsCubit>().connectGmail();
                       },
                     ),
                   )

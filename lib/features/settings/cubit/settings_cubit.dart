@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
@@ -114,5 +116,30 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
     _syncCubit.sync();
+  }
+
+  Future<void> connectGmail() async {
+    FlutterAppAuth appAuth = const FlutterAppAuth();
+
+    final AuthorizationResponse? result = await appAuth.authorize(
+      AuthorizationRequest(
+        Config.googleCredentials.clientId,
+        Config.googleCredentials.redirectUri,
+        preferEphemeralSession: true,
+        serviceConfiguration: const AuthorizationServiceConfiguration(
+          authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
+          tokenEndpoint: "https://oauth2.googleapis.com/token",
+        ),
+        scopes: [
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/gmail.modify',
+        ],
+      ),
+    );
+
+    print(result);
+
+    // TODO gmail sync
   }
 }

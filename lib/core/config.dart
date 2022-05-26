@@ -47,4 +47,18 @@ abstract class Config {
   static String get pusherInstanceId {
     return _config['pusher_instance_id'] as String;
   }
+
+  static GoogleCredentials get googleCredentials {
+    return GoogleCredentials(
+      _config['google_credentials']['client_id'] as String,
+      _config['google_credentials']['redirect_uri'] as String,
+    );
+  }
+}
+
+class GoogleCredentials {
+  final String clientId;
+  final String redirectUri;
+
+  GoogleCredentials(this.clientId, this.redirectUri);
 }
