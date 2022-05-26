@@ -14,7 +14,7 @@ class AccountV2 extends Equatable implements Base {
   final String? fullName;
   final String? picture;
   final String? identifier;
-  final dynamic details;
+  final Map<String, dynamic>? details;
   final String? createdAt;
   final String? updatedAt;
   final String? deletedAt;
@@ -53,7 +53,7 @@ class AccountV2 extends Equatable implements Base {
     String? fullName,
     String? picture,
     String? identifier,
-    dynamic? details,
+    Map<String, dynamic>? details,
     String? createdAt,
     Nullable<String?>? updatedAt,
     String? deletedAt,
@@ -97,7 +97,7 @@ class AccountV2 extends Equatable implements Base {
       'full_name': fullName,
       'picture': picture,
       'identifier': identifier,
-      'details': details.toMap(),
+      'details': details,
       'created_at': createdAt,
       'updated_at': updatedAt,
       'deleted_at': deletedAt,
@@ -119,7 +119,7 @@ class AccountV2 extends Equatable implements Base {
       fullName: map['full_name'] as String?,
       picture: map['picture'] as String?,
       identifier: map['identifier'] as String,
-      details: map['details'] as dynamic,
+      details: map['details'] as Map<String, dynamic>?,
       createdAt: map['created_at'] as String?,
       updatedAt: map['updated_at'] as String?,
       deletedAt: map['deleted_at'] as String?,
@@ -132,6 +132,7 @@ class AccountV2 extends Equatable implements Base {
 
   @override
   Map<String, Object?> toSql() {
+    print(details);
     return {
       "id": id?.toString(),
       "account_id": accountId,
@@ -141,8 +142,9 @@ class AccountV2 extends Equatable implements Base {
       "full_name": fullName,
       "picture": picture,
       "identifier": identifier,
-      "updated_at": updatedAt,
+      "details": jsonEncode(details),
       "created_at": createdAt,
+      "updated_at": updatedAt,
       "deleted_at": deletedAt,
       "remote_updated_at": remoteUpdatedAt,
     };
@@ -151,15 +153,7 @@ class AccountV2 extends Equatable implements Base {
   static AccountV2 fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
-    for (var key in data.keys) {
-      switch (key) {
-        case "details":
-          data[key] =
-              data[key] is String ? (jsonDecode(data[key] as String)) : null;
-          break;
-        default:
-      }
-    }
+    data['details'] = jsonDecode(data['details'] as String? ?? '{}');
 
     return AccountV2.fromMap(data);
   }

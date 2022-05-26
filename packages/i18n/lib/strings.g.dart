@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 193 
  *
- * Built on 2022-05-25 at 15:38 UTC
+ * Built on 2022-05-26 at 08:53 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -339,7 +339,7 @@ class _StringsOnboardingEn {
 	String get welcomeToAkiflowSubtitle => 'The journey to improve your productivity starts here.';
 	String get or => 'or';
 	String get signInWithGoogle => 'Sign in with Google';
-	String get continuingAcceptTermsPrivacy => '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>';
+	String get continuingAcceptTermsPrivacy => '<center>Continuing you accept the <a url="https://akiflow.com/legal/terms-of-service">Terms and Conditions</a><br/> and the <a url="https://akiflow.com/legal/privacy-policy">Privacy Policy</a> of Akiflow</center>';
 }
 
 // Path: bottomBar
@@ -763,7 +763,7 @@ extension on _StringsEn {
 			'onboarding.welcomeToAkiflowSubtitle': 'The journey to improve your productivity starts here.',
 			'onboarding.or': 'or',
 			'onboarding.signInWithGoogle': 'Sign in with Google',
-			'onboarding.continuingAcceptTermsPrivacy': '<center>Continuing you accept the <a url="https://google.com">Terms and Conditions</a><br/> and the <a url="https://google.com">Privacy Policy</a> of Akiflow</center>',
+			'onboarding.continuingAcceptTermsPrivacy': '<center>Continuing you accept the <a url="https://akiflow.com/legal/terms-of-service">Terms and Conditions</a><br/> and the <a url="https://akiflow.com/legal/privacy-policy">Privacy Policy</a> of Akiflow</center>',
 			'bottomBar.menu': 'Menu',
 			'bottomBar.inbox': 'Inbox',
 			'bottomBar.today': 'Today',

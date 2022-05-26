@@ -71,18 +71,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     emit(state.copyWith(folderOpen: openFolder));
   }
 
-  void gmailBehaviorOnMarkAsDone(GmailMarkAsDoneType selectedType) {
-    Map<String, dynamic> settings = Map.from(_authCubit.state.user!.settings ?? {});
-    Map<String, dynamic> popups = settings['popups'] ?? {};
-
-    popups['gmail.unstar'] = selectedType.key;
-
-    settings['popups'] = popups;
-
-    _authCubit.updateUserSettings(Map<String, dynamic>.from(settings));
-  }
-
-  Future<void> gmailBehaviorImportTask(GmailImportTaskType selectedType) async {
+  Future<void> gmailImportOptions(GmailImportTaskType selectedType) async {
     Account account = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
     Map<String, dynamic>? settings = Map.from(account.details ?? {});
@@ -99,5 +88,16 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
     _syncCubit.sync();
+  }
+
+  void gmailBehaviorOnMarkAsDone(GmailMarkAsDoneType selectedType) {
+    Map<String, dynamic> settings = Map.from(_authCubit.state.user!.settings ?? {});
+    Map<String, dynamic> popups = settings['popups'] ?? {};
+
+    popups['gmail.unstar'] = selectedType.key;
+
+    settings['popups'] = popups;
+
+    _authCubit.updateUserSettings(Map<String, dynamic>.from(settings));
   }
 }

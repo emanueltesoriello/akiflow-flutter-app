@@ -11,7 +11,7 @@
     "welcomeToAkiflowSubtitle": "The journey to improve your productivity starts here.",
     "or": "or",
     "signInWithGoogle": "Sign in with Google",
-    "continuingAcceptTermsPrivacy": "<center>Continuing you accept the <a url=\"https://google.com\">Terms and Conditions</a><br/> and the <a url=\"https://google.com\">Privacy Policy</a> of Akiflow</center>"
+    "continuingAcceptTermsPrivacy": "<center>Continuing you accept the <a url=\"https://akiflow.com/legal/terms-of-service\">Terms and Conditions</a><br/> and the <a url=\"https://akiflow.com/legal/privacy-policy\">Privacy Policy</a> of Akiflow</center>"
   },
   "bottomBar": {
     "menu": "Menu",

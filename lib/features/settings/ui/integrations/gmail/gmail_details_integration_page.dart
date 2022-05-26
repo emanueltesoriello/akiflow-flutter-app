@@ -38,123 +38,13 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  BlocBuilder<SettingsCubit, SettingsCubitState>(
-                    builder: (context, state) {
-                      Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
-
-                      return IntegrationListItem(
-                        leadingWidget: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            SvgPicture.asset(DocExt.iconFromConnectorId("gmail")),
-                            Builder(builder: (context) {
-                              if (gmailAccount.picture == null || gmailAccount.picture!.isEmpty) {
-                                return const SizedBox();
-                              }
-                              return Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: CircleAvatar(
-                                      radius: 8,
-                                      backgroundColor: ColorsExt.grey3(context),
-                                      backgroundImage: NetworkImage(gmailAccount.picture!)));
-                            })
-                          ],
-                        ),
-                        title: DocExt.titleFromConnectorId("gmail"),
-                        identifier: gmailAccount.identifier ?? 'aaa',
-                        insets: const EdgeInsets.all(1),
-                        borderRadius: BorderRadius.circular(radius),
-                        trailingWidget: const SizedBox(),
-                        onPressed: () {},
-                      );
-                    },
-                  ),
+                  _header(),
                   const SizedBox(height: 32),
                   SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
-                  BlocBuilder<SettingsCubit, SettingsCubitState>(
-                    builder: (context, state) {
-                      Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
-                      String subtitle = GmailImportTaskType.titleFromKey(gmailAccount.details?['syncMode']);
-
-                      return IntegrationSetting(
-                        title: t.settings.integrations.gmail.toImportTask.title,
-                        subtitle: subtitle,
-                        onPressed: () async {
-                          var bloc = context.read<SettingsCubit>();
-
-                          GmailImportTaskType initialType;
-
-                          switch (gmailAccount.details?['syncMode']) {
-                            case 1:
-                              initialType = GmailImportTaskType.useAkiflowLabel;
-                              break;
-                            case 0:
-                              initialType = GmailImportTaskType.useStarToImport;
-                              break;
-                            case -1:
-                              initialType = GmailImportTaskType.doNothing;
-                              break;
-                            default:
-                              initialType = GmailImportTaskType.askMeEveryTime;
-                              break;
-                          }
-
-                          GmailImportTaskType? selectedType = await showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) => GmaiImportTaskModal(initialType: initialType),
-                          );
-
-                          if (selectedType != null) {
-                            bloc.gmailBehaviorImportTask(selectedType);
-                          }
-                        },
-                      );
-                    },
-                  ),
+                  _importOptions(),
                   const SizedBox(height: 20),
                   SettingHeaderText(text: t.settings.integrations.gmail.behavior),
-                  BlocBuilder<AuthCubit, AuthCubitState>(
-                    builder: (context, authState) {
-                      String? markAsDone = authState.user?.settings?['popups']['gmail.unstar'];
-                      String subtitle = GmailMarkAsDoneType.titleFromKey(markAsDone);
-
-                      return IntegrationSetting(
-                        title: t.settings.integrations.gmail.onMarkAsDone.title,
-                        subtitle: subtitle,
-                        onPressed: () async {
-                          var bloc = context.read<SettingsCubit>();
-
-                          User user = authState.user!;
-
-                          GmailMarkAsDoneType initialType;
-
-                          switch (user.settings?['popups']['gmail.unstar']) {
-                            case 'unstar':
-                              initialType = GmailMarkAsDoneType.unstarTheEmail;
-                              break;
-                            case 'open':
-                              initialType = GmailMarkAsDoneType.goToGmail;
-                              break;
-                            case 'cancel':
-                              initialType = GmailMarkAsDoneType.doNothing;
-                              break;
-                            default:
-                              initialType = GmailMarkAsDoneType.askMeEveryTime;
-                              break;
-                          }
-
-                          GmailMarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) => GmailMarkDoneModal(initialType: initialType),
-                          );
-
-                          if (selectedType != null) {
-                            bloc.gmailBehaviorOnMarkAsDone(selectedType);
-                          }
-                        },
-                      );
-                    },
-                  ),
+                  _behaviour(),
                   const SizedBox(height: 20),
                   SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
                   IntegrationSetting(
@@ -176,6 +66,129 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  BlocBuilder<AuthCubit, AuthCubitState> _behaviour() {
+    return BlocBuilder<AuthCubit, AuthCubitState>(
+      builder: (context, authState) {
+        String? markAsDone = authState.user?.settings?['popups']['gmail.unstar'];
+        String subtitle = GmailMarkAsDoneType.titleFromKey(markAsDone);
+
+        return IntegrationSetting(
+          title: t.settings.integrations.gmail.onMarkAsDone.title,
+          subtitle: subtitle,
+          onPressed: () async {
+            var bloc = context.read<SettingsCubit>();
+
+            User user = authState.user!;
+
+            GmailMarkAsDoneType initialType;
+
+            switch (user.settings?['popups']['gmail.unstar']) {
+              case 'unstar':
+                initialType = GmailMarkAsDoneType.unstarTheEmail;
+                break;
+              case 'open':
+                initialType = GmailMarkAsDoneType.goToGmail;
+                break;
+              case 'cancel':
+                initialType = GmailMarkAsDoneType.doNothing;
+                break;
+              default:
+                initialType = GmailMarkAsDoneType.askMeEveryTime;
+                break;
+            }
+
+            GmailMarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => GmailMarkDoneModal(initialType: initialType),
+            );
+
+            if (selectedType != null) {
+              bloc.gmailBehaviorOnMarkAsDone(selectedType);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  BlocBuilder<SettingsCubit, SettingsCubitState> _importOptions() {
+    return BlocBuilder<SettingsCubit, SettingsCubitState>(
+      builder: (context, state) {
+        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+
+        String subtitle = GmailImportTaskType.titleFromKey(gmailAccount.details?['syncMode']);
+
+        return IntegrationSetting(
+          title: t.settings.integrations.gmail.toImportTask.title,
+          subtitle: subtitle,
+          onPressed: () async {
+            var bloc = context.read<SettingsCubit>();
+
+            GmailImportTaskType initialType;
+
+            switch (gmailAccount.details?['syncMode']) {
+              case 1:
+                initialType = GmailImportTaskType.useAkiflowLabel;
+                break;
+              case 0:
+                initialType = GmailImportTaskType.useStarToImport;
+                break;
+              case -1:
+                initialType = GmailImportTaskType.doNothing;
+                break;
+              default:
+                initialType = GmailImportTaskType.askMeEveryTime;
+                break;
+            }
+
+            GmailImportTaskType? selectedType = await showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => GmaiImportTaskModal(initialType: initialType),
+            );
+
+            if (selectedType != null) {
+              bloc.gmailImportOptions(selectedType);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  BlocBuilder<SettingsCubit, SettingsCubitState> _header() {
+    return BlocBuilder<SettingsCubit, SettingsCubitState>(
+      builder: (context, state) {
+        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+
+        return IntegrationListItem(
+          leadingWidget: Stack(
+            fit: StackFit.expand,
+            children: [
+              SvgPicture.asset(DocExt.iconFromConnectorId("gmail")),
+              Builder(builder: (context) {
+                if (gmailAccount.picture == null || gmailAccount.picture!.isEmpty) {
+                  return const SizedBox();
+                }
+                return Align(
+                    alignment: Alignment.bottomRight,
+                    child: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: ColorsExt.grey3(context),
+                        backgroundImage: NetworkImage(gmailAccount.picture!)));
+              })
+            ],
+          ),
+          title: DocExt.titleFromConnectorId("gmail"),
+          identifier: gmailAccount.identifier ?? 'aaa',
+          insets: const EdgeInsets.all(1),
+          borderRadius: BorderRadius.circular(radius),
+          trailingWidget: const SizedBox(),
+          onPressed: () {},
+        );
+      },
     );
   }
 

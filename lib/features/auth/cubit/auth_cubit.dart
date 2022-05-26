@@ -49,7 +49,9 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       Map<String, dynamic>? settings = await _userApi.getSettings();
 
-      user = user.copyWith(settings: settings);
+      if (settings != null) {
+        user = user.copyWith(settings: settings);
+      }
 
       _preferencesRepository.saveUser(user);
 
@@ -80,6 +82,13 @@ class AuthCubit extends Cubit<AuthCubitState> {
       User user = await _authApi.auth(code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
 
       await _preferencesRepository.saveUser(user);
+
+      Map<String, dynamic>? settings = await _userApi.getSettings();
+
+      if (settings != null) {
+        user = user.copyWith(settings: settings);
+        await _preferencesRepository.saveUser(user);
+      }
 
       _sentryService.authenticate(user.id.toString(), user.email);
 

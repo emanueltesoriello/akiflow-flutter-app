@@ -4,7 +4,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/container_inner_shadow.dart';
-import 'package:mobile/features/settings/ui/integrations/gmail/gmail_details_integration_page.dart';
 import 'package:mobile/features/settings/ui/view/integration_header.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
@@ -54,8 +53,9 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                         style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
                       ),
                       onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
+                        // TODO handle this
+                        // Navigator.of(context)
+                        //     .push(MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
                       },
                     ),
                   )

@@ -43,6 +43,15 @@ class SyncService {
       allPages: true,
     );
 
+    try {
+      // TODO remove when migrate to gmail v3
+      if (api.runtimeType.toString() == "AccountApi") {
+        remoteItems = remoteItems
+            .where((element) => element.connectorId == "akiflow" || element.connectorId == "google")
+            .toList();
+      }
+    } catch (_) {}
+
     addBreadcrumb("${api.runtimeType} remote to local retrieved: ${remoteItems.length} items");
 
     if (remoteItems.isEmpty) {
