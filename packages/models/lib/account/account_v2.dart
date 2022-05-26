@@ -132,7 +132,6 @@ class AccountV2 extends Equatable implements Base {
 
   @override
   Map<String, Object?> toSql() {
-    print(details);
     return {
       "id": id?.toString(),
       "account_id": accountId,
