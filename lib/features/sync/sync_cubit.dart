@@ -29,6 +29,20 @@ class SyncCubit extends Cubit<SyncCubitState> {
     }
   }
 
+  syncIntegration([List<IntegrationEntity>? entities]) async {
+    print("start sync integration $entities from ");
+
+    User? user = _preferencesRepository.user;
+
+    if (user != null) {
+      emit(state.copyWith(loading: true));
+
+      await _syncControllerService.syncIntegration(entities);
+
+      emit(state.copyWith(loading: false));
+    }
+  }
+
   @override
   Future<void> close() async {
     await _syncControllerService.syncCompletedController.close();

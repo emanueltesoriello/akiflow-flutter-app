@@ -16,6 +16,7 @@ import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
+import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/label/label.dart';
@@ -82,7 +83,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     emit(state.copyWith(folderOpen: openFolder));
   }
 
-  Future<void> gmailImportOptions(Account account, GmailImportTaskType selectedType) async {
+  Future<void> gmailImportOptions(Account account, GmailSyncMode selectedType) async {
     Map<String, dynamic>? settings = Map.from(account.details ?? {});
     settings['syncMode'] = selectedType.key;
 
@@ -149,11 +150,13 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       ),
     );
 
-    Map<String, dynamic> accountData = await _gmailApi.accountData(result!.accessToken!);
+    _gmailApi.setAccessToken(result?.accessToken);
+
+    Map<String, dynamic> accountData = await _gmailApi.accountData();
 
     AccountToken accountToken = AccountToken(
       id: "gmail-${accountData['id']}",
-      accessToken: result.accessToken,
+      accessToken: result!.accessToken,
       refreshToken: result.refreshToken,
       accessTokenExpirationDateTime: result.accessTokenExpirationDateTime,
       tokenType: result.tokenType,
@@ -176,6 +179,10 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       createdAt: DateTime.now().toUtc().toIso8601String(),
     );
 
+    // TODO set account when start the app and after login too
+
+    _gmailApi.setAccount(account);
+
     try {
       Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);
 
@@ -186,6 +193,10 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     emit(state.copyWith(isAuthenticatingOAuth: false));
 
-    // TODO gmail sync
+    _syncCubit.syncIntegration([IntegrationEntity.gmail]);
+  }
+
+  void syncGmail() {
+    _syncCubit.syncIntegration([IntegrationEntity.gmail]);
   }
 }

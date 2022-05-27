@@ -31,6 +31,14 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
             title: t.settings.integrations.gmail.title,
             showBack: true,
             showSyncButton: false,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.sync),
+                onPressed: () {
+                  context.read<SettingsCubit>().syncGmail();
+                },
+              ),
+            ],
           ),
           Expanded(
             child: ContainerInnerShadow(
@@ -129,7 +137,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
       builder: (context, state) {
         Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
-        String subtitle = GmailImportTaskType.titleFromKey(gmailAccount.details?['syncMode']);
+        String subtitle = GmailSyncMode.titleFromKey(gmailAccount.details?['syncMode']);
 
         return IntegrationSetting(
           title: t.settings.integrations.gmail.toImportTask.title,
@@ -137,24 +145,24 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           onPressed: () async {
             var bloc = context.read<SettingsCubit>();
 
-            GmailImportTaskType initialType;
+            GmailSyncMode initialType;
 
             switch (gmailAccount.details?['syncMode']) {
               case 1:
-                initialType = GmailImportTaskType.useAkiflowLabel;
+                initialType = GmailSyncMode.useAkiflowLabel;
                 break;
               case 0:
-                initialType = GmailImportTaskType.useStarToImport;
+                initialType = GmailSyncMode.useStarToImport;
                 break;
               case -1:
-                initialType = GmailImportTaskType.doNothing;
+                initialType = GmailSyncMode.doNothing;
                 break;
               default:
-                initialType = GmailImportTaskType.askMeEveryTime;
+                initialType = GmailSyncMode.askMeEveryTime;
                 break;
             }
 
-            GmailImportTaskType? selectedType = await showCupertinoModalBottomSheet(
+            GmailSyncMode? selectedType = await showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => GmaiImportTaskModal(initialType: initialType),
             );

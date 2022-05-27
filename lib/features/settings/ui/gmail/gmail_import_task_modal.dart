@@ -3,14 +3,14 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/style/colors.dart';
 
-enum GmailImportTaskType {
+enum GmailSyncMode {
   useAkiflowLabel(1),
   useStarToImport(0),
   doNothing(-1),
   askMeEveryTime(null);
 
   final int? key;
-  const GmailImportTaskType(this.key);
+  const GmailSyncMode(this.key);
 
   static String titleFromKey(int? key) {
     switch (key) {
@@ -27,7 +27,7 @@ enum GmailImportTaskType {
 }
 
 class GmaiImportTaskModal extends StatefulWidget {
-  final GmailImportTaskType initialType;
+  final GmailSyncMode initialType;
 
   const GmaiImportTaskModal({Key? key, required this.initialType}) : super(key: key);
 
@@ -36,11 +36,11 @@ class GmaiImportTaskModal extends StatefulWidget {
 }
 
 class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
-  late final ValueNotifier<GmailImportTaskType> _selectedType;
+  late final ValueNotifier<GmailSyncMode> _selectedType;
 
   @override
   void initState() {
-    _selectedType = ValueNotifier<GmailImportTaskType>(widget.initialType);
+    _selectedType = ValueNotifier<GmailSyncMode>(widget.initialType);
     super.initState();
   }
 
@@ -61,7 +61,7 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
             color: Theme.of(context).backgroundColor,
             child: ValueListenableBuilder(
               valueListenable: _selectedType,
-              builder: (context, GmailImportTaskType type, child) => ListView(
+              builder: (context, GmailSyncMode type, child) => ListView(
                 shrinkWrap: true,
                 children: [
                   const SizedBox(height: 12),
@@ -87,36 +87,36 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
                   _predefinedDateItem(
                     context,
                     text: t.settings.integrations.gmail.toImportTask.useAkiflowLabel,
-                    selected: type == GmailImportTaskType.useAkiflowLabel,
+                    selected: type == GmailSyncMode.useAkiflowLabel,
                     onPressed: () {
-                      Navigator.pop(context, GmailImportTaskType.useAkiflowLabel);
+                      Navigator.pop(context, GmailSyncMode.useAkiflowLabel);
                     },
                   ),
                   const SizedBox(height: 2),
                   _predefinedDateItem(
                     context,
                     text: t.settings.integrations.gmail.toImportTask.useStarToImport,
-                    selected: type == GmailImportTaskType.useStarToImport,
+                    selected: type == GmailSyncMode.useStarToImport,
                     onPressed: () {
-                      Navigator.pop(context, GmailImportTaskType.useStarToImport);
+                      Navigator.pop(context, GmailSyncMode.useStarToImport);
                     },
                   ),
                   const SizedBox(height: 2),
                   _predefinedDateItem(
                     context,
                     text: t.settings.integrations.gmail.toImportTask.doNothing,
-                    selected: type == GmailImportTaskType.doNothing,
+                    selected: type == GmailSyncMode.doNothing,
                     onPressed: () {
-                      Navigator.pop(context, GmailImportTaskType.doNothing);
+                      Navigator.pop(context, GmailSyncMode.doNothing);
                     },
                   ),
                   const SizedBox(height: 2),
                   _predefinedDateItem(
                     context,
                     text: t.settings.integrations.gmail.toImportTask.askMeEveryTime,
-                    selected: type == GmailImportTaskType.askMeEveryTime,
+                    selected: type == GmailSyncMode.askMeEveryTime,
                     onPressed: () {
-                      Navigator.pop(context, GmailImportTaskType.askMeEveryTime);
+                      Navigator.pop(context, GmailSyncMode.askMeEveryTime);
                     },
                   ),
                   const SizedBox(height: 50),
