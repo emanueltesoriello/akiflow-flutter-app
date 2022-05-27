@@ -50,15 +50,15 @@ abstract class Config {
 
   static GoogleCredentials get googleCredentials {
     return GoogleCredentials(
-      _config['google_credentials']['client_id'] as String,
-      _config['google_credentials']['redirect_uri'] as String,
+      _config['google_credentials']['client_id_android'] as String,
+      _config['google_credentials']['client_id_ios'] as String,
     );
   }
 }
 
 class GoogleCredentials {
-  final String clientId;
-  final String redirectUri;
+  final String clientIdAndroid;
+  final String clientIdiOS;
 
-  GoogleCredentials(this.clientId, this.redirectUri);
+  GoogleCredentials(this.clientIdAndroid, this.clientIdiOS);
 }

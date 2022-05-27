@@ -3,6 +3,7 @@ import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/nullable.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:uuid/uuid.dart';
 
 class RawListConvert {
   final List<dynamic> items;
@@ -202,23 +203,24 @@ List<Doc> docsFromGmailData(DocsFromGmailDataModel data) {
 
   for (var messageContent in data.gmailData) {
     result.add(Doc(
-      title: messageContent.subject,
-      originId: messageContent.messageId,
-      searchText: messageContent.subject?.toLowerCase() + ' ' + messageContent.from?.toLowerCase(),
+      id: const Uuid().v4(),
+      title: messageContent?['subject'],
+      originId: messageContent?['messageId'],
+      searchText: "${messageContent?['subject']?.toLowerCase()} ${messageContent?['from']?.toLowerCase()}",
       description: null,
       icon: null,
       type: 'email',
       content: {
-        "from": messageContent.from,
-        "internalDate": messageContent.internalDate,
+        "from": messageContent?['from'],
+        "internalDate": messageContent?['internalDate'],
         "initialSyncMode": data.syncMode
       },
-      url: "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
+      url: "https://mail.google.com/mail/u/${data.email}/#all/${messageContent?['threadId']}",
       localUrl: null,
       // customType: null,
       // important: messageContent.internalDate,
       priority: 2,
-      sorting: messageContent.internalDate,
+      sorting: messageContent?['internalDate'],
       connectorId: data.connectorId,
       accountId: data.accountId,
       originAccountId: data.originAccountId,

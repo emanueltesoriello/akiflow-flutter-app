@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/api/integrations/gmail_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
+import 'package:mobile/exceptions/database_exception.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
@@ -12,14 +17,18 @@ import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/account/account.dart';
+import 'package:models/account/account_token.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:uuid/uuid.dart';
 
 part 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsCubitState> {
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
+  final GmailApi _gmailApi = locator<GmailApi>();
 
   final SentryService _sentryService = locator<SentryService>();
   final DialogService _dialogService = locator<DialogService>();
@@ -119,12 +128,14 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   }
 
   Future<void> connectGmail() async {
+    emit(state.copyWith(isAuthenticatingOAuth: true));
+
     FlutterAppAuth appAuth = const FlutterAppAuth();
 
-    final AuthorizationResponse? result = await appAuth.authorize(
-      AuthorizationRequest(
-        Config.googleCredentials.clientId,
-        Config.googleCredentials.redirectUri,
+    final AuthorizationTokenResponse? result = await appAuth.authorizeAndExchangeCode(
+      AuthorizationTokenRequest(
+        Platform.isIOS ? Config.googleCredentials.clientIdiOS : Config.googleCredentials.clientIdAndroid,
+        Config.oauthRedirectUrl,
         preferEphemeralSession: true,
         serviceConfiguration: const AuthorizationServiceConfiguration(
           authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
@@ -138,7 +149,42 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       ),
     );
 
-    print(result);
+    Map<String, dynamic> accountData = await _gmailApi.accountData(result!.accessToken!);
+
+    AccountToken accountToken = AccountToken(
+      id: "gmail-${accountData['id']}",
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+      accessTokenExpirationDateTime: result.accessTokenExpirationDateTime,
+      tokenType: result.tokenType,
+      scopes: result.scopes,
+      idToken: result.idToken,
+    );
+
+    await _preferencesRepository.setAccountToken(accountToken.id!, accountToken);
+
+    Account account = Account(
+      id: const Uuid().v4(),
+      accountId: accountToken.id!,
+      connectorId: "gmail",
+      originAccountId: accountData['id'],
+      shortName: accountData['given_name'],
+      fullName: accountData['family_name'],
+      picture: accountData['picture'],
+      identifier: accountData['email'],
+      status: "INITIATED",
+      createdAt: DateTime.now().toUtc().toIso8601String(),
+    );
+
+    try {
+      Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);
+
+      await _accountsRepository.updateById(existingAccount!.id, data: account);
+    } on DatabaseItemNotFoundException {
+      await _accountsRepository.add([account]);
+    }
+
+    emit(state.copyWith(isAuthenticatingOAuth: false));
 
     // TODO gmail sync
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +38,9 @@ abstract class PreferencesRepository {
 
   DateTime? get lastGmailSyncAt;
   Future<void> setLastGmailSyncAt(DateTime? value);
+
+  AccountToken? getAccountToken(String accountId);
+  Future<void> setAccountToken(String accountId, AccountToken token);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -177,5 +181,21 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     if (value != null) {
       await _prefs.setString("lastGmailSyncAt", value.toIso8601String());
     }
+  }
+
+  @override
+  AccountToken? getAccountToken(String accountId) {
+    String? tokenString = _prefs.getString("accountToken_$accountId");
+
+    if (tokenString == null) {
+      return null;
+    }
+
+    return AccountToken.fromMap(jsonDecode(tokenString));
+  }
+
+  @override
+  Future<void> setAccountToken(String accountId, AccountToken token) async {
+    await _prefs.setString(accountId, jsonEncode(token.toMap()));
   }
 }

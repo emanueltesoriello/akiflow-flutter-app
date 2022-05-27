@@ -16,7 +16,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
   Stream get syncCompletedStream => _syncControllerService.syncCompletedStream;
 
   sync([List<Entity>? entities]) async {
-    print("start sync $entities");
+    print("start sync $entities from ");
 
     User? user = _preferencesRepository.user;
 

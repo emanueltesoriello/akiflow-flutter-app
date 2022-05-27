@@ -8,6 +8,7 @@ import 'package:mobile/exceptions/upsert_database_exception.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/utils/converters_isolate.dart';
+import 'package:models/account/account.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -43,6 +44,17 @@ class SyncService {
       allPages: true,
     );
 
+    // Remove account that are not already manually added by the user
+    try {
+      // TODO remove when migrate to gmail v3
+      if (api.runtimeType.toString() == "AccountV2Api") {
+        List<Account> accounts = await databaseRepository.get();
+        remoteItems =
+            remoteItems.where((element) => accounts.any((account) => account.id == element.accountId)).toList();
+      }
+    } catch (_) {}
+
+    // Ignore other integrations
     try {
       // TODO remove when migrate to gmail v3
       if (api.runtimeType.toString() == "AccountApi") {

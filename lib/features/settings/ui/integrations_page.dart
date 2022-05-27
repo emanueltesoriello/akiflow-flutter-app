@@ -103,7 +103,7 @@ class IntegrationsPage extends StatelessWidget {
                               ],
                             ),
                             title: title,
-                            identifier: account.identifier ?? 'aaa',
+                            identifier: account.identifier ?? '',
                             insets: insets,
                             borderRadius: borderRadius,
                             enabled: account.connectorId == 'gmail',

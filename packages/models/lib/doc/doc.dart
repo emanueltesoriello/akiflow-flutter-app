@@ -7,7 +7,6 @@ import 'package:models/nullable.dart';
 class Doc extends DocBase implements Base {
   Doc({
     this.id,
-    this.userId,
     this.taskId,
     this.connectorId,
     this.originId,
@@ -34,7 +33,6 @@ class Doc extends DocBase implements Base {
   });
 
   final String? id;
-  final int? userId;
   final String? taskId;
   final String? connectorId;
   final String? originId;
@@ -61,7 +59,6 @@ class Doc extends DocBase implements Base {
 
   factory Doc.fromMap(Map<String, dynamic> json) => Doc(
         id: json['id'] as String?,
-        userId: json['user_id'] as int?,
         taskId: json['task_id'] as String?,
         connectorId: json['connector_id'] as String?,
         originId: json['origin_id'] as String?,
@@ -90,7 +87,6 @@ class Doc extends DocBase implements Base {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'user_id': userId,
         'task_id': taskId,
         'connector_id': connectorId,
         'origin_id': originId,
@@ -118,7 +114,6 @@ class Doc extends DocBase implements Base {
 
   Doc copyWith({
     String? id,
-    int? userId,
     String? taskId,
     String? connectorId,
     String? originId,
@@ -145,7 +140,6 @@ class Doc extends DocBase implements Base {
   }) {
     return Doc(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
       taskId: taskId ?? this.taskId,
       connectorId: connectorId ?? this.connectorId,
       originId: originId ?? this.originId,
@@ -164,7 +158,9 @@ class Doc extends DocBase implements Base {
       originUpdatedAt: originUpdatedAt ?? this.originUpdatedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null
+          ? this.remoteUpdatedAt
+          : remoteUpdatedAt.value,
       deletedAt: deletedAt ?? this.deletedAt,
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
@@ -198,7 +194,8 @@ class Doc extends DocBase implements Base {
     Map<String, dynamic>? copy = Map<String, dynamic>.from(json);
 
     try {
-      copy['content'] = jsonDecode(json['content'] as String) as Map<String, dynamic>;
+      copy['content'] =
+          jsonDecode(json['content'] as String) as Map<String, dynamic>;
     } catch (_) {}
 
     return Doc.fromMap(copy);
@@ -208,7 +205,6 @@ class Doc extends DocBase implements Base {
   List<Object?> get props {
     return [
       id,
-      userId,
       taskId,
       connectorId,
       originId,

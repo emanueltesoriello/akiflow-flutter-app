@@ -29,7 +29,7 @@ class SyncIntegrationService {
       accountId: params?['accountId'],
       connectorId: params?['connectorId'],
       originAccountId: params?['originAccountId'],
-      syncMode: params?['syncMode'],
+      syncMode: params?['syncMode'] ?? 0,
       email: params?['email'],
     );
 

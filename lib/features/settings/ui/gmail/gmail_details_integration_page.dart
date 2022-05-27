@@ -192,7 +192,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
             ],
           ),
           title: DocExt.titleFromConnectorId("gmail"),
-          identifier: gmailAccount.identifier ?? 'aaa',
+          identifier: gmailAccount.identifier ?? '',
           insets: const EdgeInsets.all(1),
           borderRadius: BorderRadius.circular(radius),
           trailingWidget: const SizedBox(),

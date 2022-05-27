@@ -141,7 +141,7 @@ class SyncControllerService {
 
     syncCompletedController.add(0);
 
-    // TODO test -> syncIntegration();
+    syncIntegration();
   }
 
   syncIntegration([List<IntegrationEntity>? entities]) async {
@@ -196,7 +196,7 @@ class SyncControllerService {
       print("Syncing integration $integrationEntity...");
 
       SyncIntegrationService syncService = _syncIntegrationServices[integrationEntity]!;
-      Account? account = _syncIntegrationServicesAccount?[integrationEntity]!;
+      Account? account = _syncIntegrationServicesAccount?[integrationEntity];
 
       if (account == null) {
         print("no $integrationEntity account found");
