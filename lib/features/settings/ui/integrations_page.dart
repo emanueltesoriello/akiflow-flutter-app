@@ -132,8 +132,8 @@ class IntegrationsPage extends StatelessWidget {
                     title: t.settings.integrations.gmail.title,
                     insets: const EdgeInsets.all(1),
                     borderRadius: BorderRadius.circular(radius),
-                    onPressed: () {
-                      Navigator.of(context)
+                    onPressed: () async {
+                      await Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) => const GmailInstructionIntegrationsPage()));
                     },
                   ),

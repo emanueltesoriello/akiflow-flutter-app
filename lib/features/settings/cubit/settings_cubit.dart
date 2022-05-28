@@ -190,6 +190,12 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     emit(state.copyWith(isAuthenticatingOAuth: false));
 
+    List<Account> accounts = await _accountsRepository.get();
+    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+
+    emit(state.copyWith(connected: true));
+    emit(state.copyWith(connected: false));
+
     _syncCubit.syncIntegration([IntegrationEntity.gmail]);
   }
 

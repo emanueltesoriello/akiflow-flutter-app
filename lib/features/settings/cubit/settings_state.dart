@@ -6,6 +6,7 @@ class SettingsCubitState extends Equatable {
   final Map<Label, bool> folderOpen;
   final List<Account> accounts;
   final bool isAuthenticatingOAuth;
+  final bool connected;
 
   const SettingsCubitState({
     this.loading = false,
@@ -13,6 +14,7 @@ class SettingsCubitState extends Equatable {
     this.folderOpen = const {},
     this.accounts = const [],
     this.isAuthenticatingOAuth = false,
+    this.connected = false,
   });
 
   SettingsCubitState copyWith({
@@ -21,6 +23,7 @@ class SettingsCubitState extends Equatable {
     Map<Label, bool>? folderOpen,
     List<Account>? accounts,
     bool? isAuthenticatingOAuth,
+    bool? connected,
   }) {
     return SettingsCubitState(
       loading: loading ?? this.loading,
@@ -28,9 +31,10 @@ class SettingsCubitState extends Equatable {
       folderOpen: folderOpen ?? this.folderOpen,
       accounts: accounts ?? this.accounts,
       isAuthenticatingOAuth: isAuthenticatingOAuth ?? this.isAuthenticatingOAuth,
+      connected: connected ?? this.connected,
     );
   }
 
   @override
-  List<Object?> get props => [loading, appVersion, folderOpen, accounts, isAuthenticatingOAuth];
+  List<Object?> get props => [loading, appVersion, folderOpen, accounts, isAuthenticatingOAuth, connected];
 }

@@ -15,55 +15,65 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          AppBarComp(
-            title: t.settings.integrations.gmail.title,
-            showBack: true,
-            showSyncButton: false,
-          ),
-          Expanded(
-            child: ContainerInnerShadow(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              child: Column(
-                children: [
-                  ListView(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      IntegrationDetailsHeader(
-                        isActive: false,
-                        identifier: t.settings.integrations.gmail.communication,
-                        connectorId: 'gmail',
-                      ),
-                      const SizedBox(height: 32),
-                      _step1(context),
-                      const SizedBox(height: 16),
-                      _mailPlaceholder(context),
-                      const SizedBox(height: 32),
-                      _step2(context),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
-                  const Spacer(),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-                    child: ActionButton(
-                      child: Text(
-                        t.connect,
-                        style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
-                      ),
-                      onPressed: () {
-                        context.read<SettingsCubit>().connectGmail();
-                      },
+    return BlocListener<SettingsCubit, SettingsCubitState>(
+      listenWhen: (previous, current) {
+        return previous.connected == false && current.connected == true;
+      },
+      listener: (context, state) {
+        if (state.connected) {
+          Navigator.of(context).pop(true);
+        }
+      },
+      child: Scaffold(
+        body: Column(
+          children: [
+            AppBarComp(
+              title: t.settings.integrations.gmail.title,
+              showBack: true,
+              showSyncButton: false,
+            ),
+            Expanded(
+              child: ContainerInnerShadow(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                child: Column(
+                  children: [
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        IntegrationDetailsHeader(
+                          isActive: false,
+                          identifier: t.settings.integrations.gmail.communication,
+                          connectorId: 'gmail',
+                        ),
+                        const SizedBox(height: 32),
+                        _step1(context),
+                        const SizedBox(height: 16),
+                        _mailPlaceholder(context),
+                        const SizedBox(height: 32),
+                        _step2(context),
+                        const SizedBox(height: 16),
+                      ],
                     ),
-                  )
-                ],
+                    const Spacer(),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                      child: ActionButton(
+                        child: Text(
+                          t.connect,
+                          style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
+                        ),
+                        onPressed: () {
+                          context.read<SettingsCubit>().connectGmail();
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

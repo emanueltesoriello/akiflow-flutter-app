@@ -154,12 +154,12 @@ class SyncControllerService {
       List<Account> accounts = await _accountsRepository.get();
 
       for (Account account in accounts) {
-        print("get account token for id ${account.id}");
+        print("get account token for ${account.connectorId} ${account.id}");
 
         AccountToken? accountToken = _preferencesRepository.getAccountToken(account.id!);
 
         if (accountToken == null) {
-          print("no account token for id ${account.id}");
+          print("no account token for ${account.connectorId} ${account.id}");
           continue;
         }
 
