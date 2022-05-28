@@ -11,9 +11,9 @@ class SyncCubit extends Cubit<SyncCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
 
-  SyncCubit() : super(const SyncCubitState());
-
   Stream get syncCompletedStream => _syncControllerService.syncCompletedStream;
+
+  SyncCubit() : super(const SyncCubitState());
 
   sync([List<Entity>? entities]) async {
     print("start sync $entities from ");
@@ -37,7 +37,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
     if (user != null) {
       emit(state.copyWith(loading: true));
 
-      await _syncControllerService.syncIntegration(entities);
+      await _syncControllerService.syncIntegration();
 
       emit(state.copyWith(loading: false));
     }

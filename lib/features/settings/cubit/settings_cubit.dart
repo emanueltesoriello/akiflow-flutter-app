@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/api/integrations/gmail_api.dart';
+import 'package:mobile/api/integrations/google_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -29,10 +29,10 @@ part 'settings_state.dart';
 class SettingsCubit extends Cubit<SettingsCubitState> {
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
-  final GmailApi _gmailApi = locator<GmailApi>();
 
   final SentryService _sentryService = locator<SentryService>();
   final DialogService _dialogService = locator<DialogService>();
+  final GoogleApi _googleApi = locator<GoogleApi>();
 
   final LabelsCubit _labelCubit;
   final AuthCubit _authCubit;
@@ -150,21 +150,16 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       ),
     );
 
-    _gmailApi.setAccessToken(result?.accessToken);
-
-    Map<String, dynamic> accountData = await _gmailApi.accountData();
+    Map<String, dynamic> accountData = await _googleApi.accountData(result!.accessToken!);
 
     AccountToken accountToken = AccountToken(
       id: "gmail-${accountData['id']}",
-      accessToken: result!.accessToken,
+      accessToken: result.accessToken,
       refreshToken: result.refreshToken,
       accessTokenExpirationDateTime: result.accessTokenExpirationDateTime,
       tokenType: result.tokenType,
-      scopes: result.scopes,
       idToken: result.idToken,
     );
-
-    await _preferencesRepository.setAccountToken(accountToken.id!, accountToken);
 
     Account account = Account(
       id: const Uuid().v4(),
@@ -179,9 +174,11 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       createdAt: DateTime.now().toUtc().toIso8601String(),
     );
 
-    // TODO set account when start the app and after login too
+    accountToken = accountToken.copyWith(account: account);
 
-    _gmailApi.setAccount(account);
+    print("set account token in preferences for account ${account.id}");
+
+    await _preferencesRepository.setAccountToken(account.id!, accountToken);
 
     try {
       Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);

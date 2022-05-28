@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:mobile/api/docs_api.dart';
+import 'package:mobile/api/integrations/gmail_api.dart';
 import 'package:mobile/api/integrations/integration_base_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/post_unsynced_exception.dart';
@@ -22,10 +23,10 @@ class SyncIntegrationService {
   Future<DateTime?> start(DateTime? lastSyncAt, {required Map<String, dynamic>? params}) async {
     addBreadcrumb("${integrationApi.runtimeType} start syncing");
 
-    List<dynamic> data = await integrationApi.getItems();
+    List<GmailMessage> messages = (await integrationApi.getItems()) as List<GmailMessage>;
 
     DocsFromGmailDataModel docsFromGmailDataModel = DocsFromGmailDataModel(
-      gmailData: data,
+      messages: messages,
       accountId: params?['accountId'],
       connectorId: params?['connectorId'],
       originAccountId: params?['originAccountId'],

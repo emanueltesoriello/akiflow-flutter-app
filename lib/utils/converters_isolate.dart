@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:mobile/api/integrations/gmail_api.dart';
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/nullable.dart';
@@ -181,7 +182,7 @@ class PrepareDocForRemoteModel {
 }
 
 class DocsFromGmailDataModel {
-  final List<dynamic> gmailData;
+  final List<GmailMessage> messages;
   final int syncMode;
   final String connectorId;
   final String accountId;
@@ -189,7 +190,7 @@ class DocsFromGmailDataModel {
   final String email;
 
   DocsFromGmailDataModel({
-    required this.gmailData,
+    required this.messages,
     required this.syncMode,
     required this.connectorId,
     required this.accountId,
@@ -201,24 +202,24 @@ class DocsFromGmailDataModel {
 List<Doc> docsFromGmailData(DocsFromGmailDataModel data) {
   List<Doc> result = [];
 
-  for (var messageContent in data.gmailData) {
+  for (GmailMessage messageContent in data.messages) {
     result.add(Doc(
       id: const Uuid().v4(),
-      title: messageContent?['subject'],
-      originId: messageContent?['messageId'],
-      searchText: "${messageContent?['subject']?.toLowerCase()} ${messageContent?['from']?.toLowerCase()}",
+      title: messageContent.subject,
+      originId: messageContent.messageId,
+      searchText: "${messageContent.subject?.toLowerCase()} ${messageContent.from?.toLowerCase()}",
       description: null,
       icon: null,
       type: 'email',
       content: {
-        "from": messageContent?['from'],
-        "internalDate": messageContent?['internalDate'],
+        "from": messageContent.from,
+        "internalDate": messageContent.internalDate,
         "initialSyncMode": data.syncMode
       },
-      url: "https://mail.google.com/mail/u/${data.email}/#all/${messageContent?['threadId']}",
+      url: "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
       localUrl: null,
       priority: 2,
-      sorting: messageContent?['internalDate'] != null ? int.parse(messageContent?['internalDate']) : null,
+      sorting: messageContent.internalDate != null ? int.parse(messageContent.internalDate ?? '0') : null,
       connectorId: data.connectorId,
       accountId: data.accountId,
       originAccountId: data.originAccountId,

@@ -5,7 +5,7 @@ import 'package:mobile/api/auth_api.dart';
 import 'package:mobile/api/calendar_api.dart';
 import 'package:mobile/api/docs_api.dart';
 import 'package:mobile/api/event_api.dart';
-import 'package:mobile/api/integrations/gmail_api.dart';
+import 'package:mobile/api/integrations/google_api.dart';
 import 'package:mobile/api/label_api.dart';
 import 'package:mobile/api/task_api.dart';
 import 'package:mobile/api/user_api.dart';
@@ -61,7 +61,7 @@ void setupLocator({
   locator.registerSingleton<UserApi>(UserApi());
 
   /// Integrations
-  locator.registerSingleton<GmailApi>(GmailApi());
+  locator.registerSingleton<GoogleApi>(GoogleApi());
 
   /// Repositories
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);

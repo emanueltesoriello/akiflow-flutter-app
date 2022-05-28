@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/api/integrations/integration_base_api.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
-import 'package:models/account/account.dart';
+import 'package:models/account/account_token.dart';
 import 'package:uuid/uuid.dart';
 
 class GmailMessageMetadata {
@@ -21,35 +21,49 @@ class GmailMessagesAndThreads {
   GmailMessagesAndThreads(this.messagesId, this.threadsId);
 }
 
+class GmailMessage {
+  final String? id;
+  final String? threadId;
+  final String? internalDate;
+  final String? subject;
+  final String? from;
+  final String? messageId;
+
+  GmailMessage({
+    this.id,
+    this.threadId,
+    this.internalDate,
+    this.subject,
+    this.from,
+    this.messageId,
+  });
+
+  factory GmailMessage.fromMap(Map<String, dynamic> json) {
+    return GmailMessage(
+      id: json['id'] as String?,
+      threadId: json['threadId'] as String?,
+      internalDate: json['internalDate'] as String?,
+      subject: json['subject'] as String?,
+      from: json['from'] as String?,
+      messageId: json['messageId'] as String?,
+    );
+  }
+}
+
 class GmailApi implements IIntegrationBaseApi {
   static const String authEndpoint = 'https://www.googleapis.com/oauth2/v1';
   static const String endpoint = 'https://www.googleapis.com/gmail/v1';
   static const String endpointBatch = 'https://www.googleapis.com/batch/gmail/v1';
 
-  String? accessToken;
-  Account? account;
+  final AccountToken accountToken;
 
-  void setAccessToken(String? accessToken) {
-    this.accessToken = accessToken;
-  }
-
-  void setAccount(Account? account) {
-    this.account = account;
-  }
-
-  Future<Map<String, dynamic>> accountData() async {
-    Response response = await http.get(Uri.parse("$authEndpoint/userinfo?alt=json"), headers: {
-      'Authorization': 'Bearer $accessToken',
-    });
-
-    return jsonDecode(response.body) as Map<String, dynamic>;
-  }
+  GmailApi(this.accountToken);
 
   GmailSyncMode get gmailSyncMode =>
-      account?.details?['syncMode'] == 1 ? GmailSyncMode.useAkiflowLabel : GmailSyncMode.useStarToImport;
+      accountToken.account!.details?['syncMode'] == 1 ? GmailSyncMode.useAkiflowLabel : GmailSyncMode.useStarToImport;
 
   @override
-  Future<List<dynamic>> getItems() async {
+  Future<List<GmailMessage>> getItems() async {
     // TODO refresh token if expired
 
     // TODO create Akiflow label if not exists
@@ -60,18 +74,16 @@ class GmailApi implements IIntegrationBaseApi {
     // }
 
     List<GmailMessageMetadata> messagesMetadata = await messagesId();
-    print("1 messagesMetadata: ${messagesMetadata.length}");
 
     GmailMessagesAndThreads gmailMessagesAndThreads = getMessageAndThreadIdsFromMetadata(messagesMetadata);
-    print("2 gmailMessagesAndThreads: ${gmailMessagesAndThreads.messagesId.length}");
 
-    List<dynamic> singleMessageContents = await getSingleMessageContents(gmailMessagesAndThreads.messagesId);
-    print("3 singleMessageContents: ${singleMessageContents.length}");
+    List<GmailMessage> singleMessageContents = await getSingleMessageContents(gmailMessagesAndThreads.messagesId);
 
-    List<dynamic> threadMessageContents = await getThreadMessageContents(gmailMessagesAndThreads.threadsId);
-    print("4 threadMessageContents: ${threadMessageContents.length}");
+    List<GmailMessage> threadMessageContents = await getThreadMessageContents(gmailMessagesAndThreads.threadsId);
 
-    return [...singleMessageContents, ...threadMessageContents];
+    List<GmailMessage> allMessageContents = [...singleMessageContents, ...threadMessageContents];
+
+    return allMessageContents;
   }
 
   Future<List<GmailMessageMetadata>> messagesId() async {
@@ -79,7 +91,7 @@ class GmailApi implements IIntegrationBaseApi {
     String? nextPageToken;
 
     do {
-      Uri urlWithQueryParameters = Uri.parse('$endpoint/users/${account!.identifier}/messages');
+      Uri urlWithQueryParameters = Uri.parse('$endpoint/users/${accountToken.account!.identifier}/messages');
 
       Map<String, dynamic> queryParameters = {
         "pageToken": nextPageToken,
@@ -89,7 +101,7 @@ class GmailApi implements IIntegrationBaseApi {
       urlWithQueryParameters = urlWithQueryParameters.replace(queryParameters: queryParameters);
 
       final response = await http.get(urlWithQueryParameters, headers: {
-        'Authorization': 'Bearer $accessToken',
+        'Authorization': 'Bearer ${accountToken.accessToken}',
       });
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -137,8 +149,8 @@ class GmailApi implements IIntegrationBaseApi {
     return GmailMessagesAndThreads(messageIds, threadIds);
   }
 
-  Future<List<Map<String, dynamic>>> getSingleMessageContents(List<String> messageIds) async {
-    List<Map<String, dynamic>> messagePages = [];
+  Future<List<GmailMessage>> getSingleMessageContents(List<String> messageIds) async {
+    List<GmailMessage> messagePages = [];
     while (messageIds.isNotEmpty) {
       List<String> messageIdsChunk;
 
@@ -156,15 +168,18 @@ class GmailApi implements IIntegrationBaseApi {
 
       final batchResult = await http.post(
         Uri.parse(endpointBatch),
-        headers: {'Authorization': 'Bearer $accessToken', 'Content-Type': 'multipart/mixed; boundary=$boundary'},
+        headers: {
+          'Authorization': 'Bearer ${accountToken.accessToken}',
+          'Content-Type': 'multipart/mixed; boundary=$boundary'
+        },
         body: batchRequestString,
       );
 
       List<Map<String, dynamic>> messagesBatch = parseBatchResults(batchResult);
 
-      List<Map<String, dynamic>> messagePage = [];
+      List<GmailMessage> messagePage = [];
       for (Map<String, dynamic> message in messagesBatch) {
-        Map<String, dynamic>? messageContent = getMessageContentFromMessageResult(message);
+        GmailMessage? messageContent = getMessageContentFromMessageResult(message);
         if (messageContent != null) {
           messagePage.add(messageContent);
         }
@@ -175,8 +190,8 @@ class GmailApi implements IIntegrationBaseApi {
     return messagePages;
   }
 
-  Future<List<Map<String, dynamic>>> getThreadMessageContents(List<String> threadIds) async {
-    List<Map<String, dynamic>> messagePages = [];
+  Future<List<GmailMessage>> getThreadMessageContents(List<String> threadIds) async {
+    List<GmailMessage> messagePages = [];
     while (threadIds.isNotEmpty) {
       List<String> threadIdsChunk;
 
@@ -194,13 +209,16 @@ class GmailApi implements IIntegrationBaseApi {
 
       final batchResult = await http.post(
         Uri.parse(endpointBatch),
-        headers: {'Authorization': 'Bearer $accessToken', 'Content-Type': 'multipart/mixed; boundary=$boundary'},
+        headers: {
+          'Authorization': 'Bearer ${accountToken.accessToken}',
+          'Content-Type': 'multipart/mixed; boundary=$boundary'
+        },
         body: batchRequestString,
       );
 
       List<Map<String, dynamic>> threadsBatch = parseBatchResults(batchResult);
 
-      List<Map<String, dynamic>> threadPage = [];
+      List<GmailMessage> threadPage = [];
       for (dynamic thread in threadsBatch) {
         List<Map<String, dynamic>> threadMessages = (thread['messages'] ?? []).filter(
             (Map<String, dynamic> messageResult) =>
@@ -208,7 +226,7 @@ class GmailApi implements IIntegrationBaseApi {
                 !(messageResult['labelIds'] ?? []).any((element) => element.contains('SPAM')));
         if (threadMessages.isNotEmpty) {
           Map<String, dynamic> firstThreadMessage = threadMessages[0];
-          Map<String, dynamic>? messageContent = getMessageContentFromMessageResult(firstThreadMessage);
+          GmailMessage? messageContent = getMessageContentFromMessageResult(firstThreadMessage);
           if (messageContent != null) {
             messagePages.add(messageContent);
           }
@@ -219,7 +237,7 @@ class GmailApi implements IIntegrationBaseApi {
     return messagePages;
   }
 
-  Map<String, dynamic>? getMessageContentFromMessageResult(Map<String, dynamic> messageResult) {
+  GmailMessage? getMessageContentFromMessageResult(Map<String, dynamic> messageResult) {
     if (messageResult['error'] != null) {
       print(messageResult['error']);
       return null;
@@ -229,14 +247,14 @@ class GmailApi implements IIntegrationBaseApi {
     String? subject = payload?['headers'].firstWhere((header) => header?['name'] == 'Subject')?['value'];
     String? from = payload?['headers'].firstWhere((header) => header?['name'] == 'From')?['value'];
 
-    return Map<String, dynamic>.from({
-      "id": messageResult['id'],
-      "threadId": messageResult['threadId'],
-      "internalDate": messageResult['internalDate'],
-      "subject": subject,
-      "from": from,
-      "messageId": messageResult['id'],
-    });
+    return GmailMessage(
+      id: messageResult['id'],
+      threadId: messageResult['threadId'],
+      internalDate: messageResult['internalDate'],
+      subject: subject,
+      from: from,
+      messageId: messageResult['id'],
+    );
   }
 
   String buildGetMessageBatchRequestString(String boundary, List<String> messageIds) {
@@ -249,7 +267,7 @@ Content-Type: application/json
 Content-ID: gmail-$messageId
 Accept: application/json
 
-GET /gmail/v1/users/${account?.identifier}/messages/$messageId?format=metadata&metadataHeaders=subject&metadataHeaders=From
+GET /gmail/v1/users/${accountToken.account?.identifier}/messages/$messageId?format=metadata&metadataHeaders=subject&metadataHeaders=From
 
 {}
 """);

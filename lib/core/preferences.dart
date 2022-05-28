@@ -36,8 +36,8 @@ abstract class PreferencesRepository {
   DateTime? get lastDocsSyncAt;
   Future<void> setLastDocsSyncAt(DateTime? value);
 
-  DateTime? get lastGmailSyncAt;
-  Future<void> setLastGmailSyncAt(DateTime? value);
+  DateTime? lastSyncForAccountId(String accountId);
+  Future<void> setLastSyncForAccountId(String accountId, DateTime? value);
 
   AccountToken? getAccountToken(String accountId);
   Future<void> setAccountToken(String accountId, AccountToken token);
@@ -171,21 +171,8 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
-  DateTime? get lastGmailSyncAt {
-    String? value = _prefs.getString("lastGmailSyncAt");
-    return value == null ? null : DateTime.parse(value);
-  }
-
-  @override
-  Future<void> setLastGmailSyncAt(DateTime? value) async {
-    if (value != null) {
-      await _prefs.setString("lastGmailSyncAt", value.toIso8601String());
-    }
-  }
-
-  @override
   AccountToken? getAccountToken(String accountId) {
-    String? tokenString = _prefs.getString("accountToken_$accountId");
+    String? tokenString = _prefs.getString("integration_$accountId");
 
     if (tokenString == null) {
       return null;
@@ -196,6 +183,19 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   Future<void> setAccountToken(String accountId, AccountToken token) async {
-    await _prefs.setString(accountId, jsonEncode(token.toMap()));
+    await _prefs.setString("integration_$accountId", jsonEncode(token.toMap()));
+  }
+
+  @override
+  DateTime? lastSyncForAccountId(String accountId) {
+    String? value = _prefs.getString("lastSyncForAccountId_$accountId");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastSyncForAccountId(String accountId, DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastSyncForAccountId_$accountId", value.toIso8601String());
+    }
   }
 }
