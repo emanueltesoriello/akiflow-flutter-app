@@ -63,29 +63,19 @@ class SyncIntegrationService {
   }
 
   Future<List<Doc>> getExistingDocs(List<Doc> remoteItems) async {
-    List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
-
-    addBreadcrumb("${integrationApi.runtimeType} localIds length: ${localIds.length}");
+    addBreadcrumb("${integrationApi.runtimeType} remoteItems length: ${remoteItems.length}");
 
     List<Doc> existingModels = [];
 
-    int sqlMaxVariableNumber = 999;
+    for (Doc remoteItem in remoteItems) {
+      Doc? localItem = await _docsRepository.getDocByConnectorIdAndOriginId(
+        connectorId: remoteItem.connectorId ?? '',
+        originId: remoteItem.originId ?? '',
+      );
 
-    if (localIds.length > sqlMaxVariableNumber) {
-      List<List<dynamic>> chunks = [];
-
-      for (var i = 0; i < localIds.length; i += sqlMaxVariableNumber) {
-        List<dynamic> sublistWithMaxVariables = localIds.sublist(
-            i, i + sqlMaxVariableNumber > localIds.length ? localIds.length : i + sqlMaxVariableNumber);
-        chunks.add(sublistWithMaxVariables);
+      if (localItem != null) {
+        existingModels.add(localItem);
       }
-
-      for (var chunk in chunks) {
-        List<Doc> existingModelsChunk = await _docsRepository.getByIds(chunk);
-        existingModels.addAll(existingModelsChunk);
-      }
-    } else {
-      existingModels = await _docsRepository.getByIds(localIds);
     }
 
     return existingModels;

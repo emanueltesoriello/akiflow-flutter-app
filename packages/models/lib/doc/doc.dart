@@ -30,6 +30,7 @@ class Doc extends DocBase implements Base {
     this.globalCreatedAt,
     this.remoteUpdatedAt,
     this.updated,
+    this.taskData,
   });
 
   final String? id;
@@ -56,6 +57,7 @@ class Doc extends DocBase implements Base {
   final String? globalCreatedAt;
   final String? remoteUpdatedAt;
   final bool? updated;
+  final Map<String, dynamic>? taskData;
 
   factory Doc.fromMap(Map<String, dynamic> json) => Doc(
         id: json['id'] as String?,
@@ -82,6 +84,7 @@ class Doc extends DocBase implements Base {
         globalCreatedAt: json['global_created_at'] as String?,
         remoteUpdatedAt: json['remote_updated_at'] as String?,
         updated: json['updated'] as bool?,
+        taskData: json['taskData'] as Map<String, dynamic>?,
       );
 
   @override
@@ -110,6 +113,7 @@ class Doc extends DocBase implements Base {
         'global_created_at': globalCreatedAt,
         'remote_updated_at': remoteUpdatedAt,
         'updated': updated,
+        'taskData': taskData,
       };
 
   Doc copyWith({
@@ -137,6 +141,7 @@ class Doc extends DocBase implements Base {
     String? globalUpdatedAt,
     String? globalCreatedAt,
     bool? updated,
+    Map<String, dynamic>? taskData,
   }) {
     return Doc(
       id: id ?? this.id,
@@ -165,6 +170,7 @@ class Doc extends DocBase implements Base {
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
       updated: updated ?? this.updated,
+      taskData: taskData ?? this.taskData,
     );
   }
 
@@ -228,6 +234,7 @@ class Doc extends DocBase implements Base {
       globalCreatedAt,
       remoteUpdatedAt,
       updated,
+      taskData,
     ];
   }
 

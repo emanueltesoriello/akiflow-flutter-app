@@ -253,14 +253,17 @@ List<Doc> prepareDocsForRemote<T>(PrepareDocForRemoteModel prepareDocForRemoteMo
       maxDate = deletedAtDate;
     }
 
-    Doc? localDoc = prepareDocForRemoteModel.existingItems.firstWhereOrNull((element) => element.id == remoteDoc.id);
+    Doc? localDoc = prepareDocForRemoteModel.existingItems.firstWhereOrNull(
+        (element) => element.connectorId == remoteDoc.connectorId && element.originId == remoteDoc.originId);
 
     remoteDoc = remoteDoc.copyWith(
-      id: remoteDoc.id ?? localDoc?.id,
-      taskId: remoteDoc.taskId ?? localDoc?.taskId,
-      globalUpdatedAt: maxDate?.toIso8601String(),
-      globalCreatedAt: remoteDoc.createdAt,
-    );
+        id: remoteDoc.id ?? localDoc?.id,
+        taskId: remoteDoc.taskId ?? localDoc?.taskId,
+        globalUpdatedAt: maxDate?.toIso8601String(),
+        globalCreatedAt: remoteDoc.createdAt,
+        taskData: {
+          "title": remoteDoc.title ?? '',
+        });
 
     remoteDocs[i] = remoteDoc;
   }

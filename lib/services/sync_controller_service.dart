@@ -215,6 +215,8 @@ class SyncControllerService {
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
 
       await _preferencesRepository.setLastSyncForAccountId(accountToken.account!.id!, lastSyncUpdated);
+
+      await _syncEntity(Entity.docs);
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }

@@ -441,42 +441,44 @@ class TaskRow extends StatelessWidget {
                   height: 18,
                 ),
                 const SizedBox(width: 7),
-                Builder(
-                  builder: (context) {
-                    Doc docWithType;
+                Expanded(
+                  child: Builder(
+                    builder: (context) {
+                      Doc docWithType;
 
-                    switch (doc.connectorId) {
-                      case "asana":
-                        docWithType = AsanaDoc(doc);
-                        break;
-                      case "clickup":
-                        docWithType = ClickupDoc(doc);
-                        break;
-                      case "gmail":
-                        docWithType = GmailDoc(doc);
-                        break;
-                      case "notion":
-                        docWithType = NotionDoc(doc);
-                        break;
-                      case "slack":
-                        docWithType = SlackDoc(doc);
-                        break;
-                      case "todoist":
-                        docWithType = TodoistDoc(doc);
-                        break;
-                      case "trello":
-                        docWithType = TrelloDoc(doc);
-                        break;
-                      default:
-                        docWithType = doc;
-                        break;
-                    }
+                      switch (doc.connectorId) {
+                        case "asana":
+                          docWithType = AsanaDoc(doc);
+                          break;
+                        case "clickup":
+                          docWithType = ClickupDoc(doc);
+                          break;
+                        case "gmail":
+                          docWithType = GmailDoc(doc);
+                          break;
+                        case "notion":
+                          docWithType = NotionDoc(doc);
+                          break;
+                        case "slack":
+                          docWithType = SlackDoc(doc);
+                          break;
+                        case "todoist":
+                          docWithType = TodoistDoc(doc);
+                          break;
+                        case "trello":
+                          docWithType = TrelloDoc(doc);
+                          break;
+                        default:
+                          docWithType = doc;
+                          break;
+                      }
 
-                    return Text(
-                      docWithType.getSummary,
-                      style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
-                    );
-                  },
+                      return Text(
+                        docWithType.getSummary,
+                        style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                      );
+                    },
+                  ),
                 ),
               ],
             );

@@ -74,13 +74,9 @@ class GmailApi implements IIntegrationBaseApi {
     // }
 
     List<GmailMessageMetadata> messagesMetadata = await messagesId();
-
     GmailMessagesAndThreads gmailMessagesAndThreads = getMessageAndThreadIdsFromMetadata(messagesMetadata);
-
     List<GmailMessage> singleMessageContents = await getSingleMessageContents(gmailMessagesAndThreads.messagesId);
-
     List<GmailMessage> threadMessageContents = await getThreadMessageContents(gmailMessagesAndThreads.threadsId);
-
     List<GmailMessage> allMessageContents = [...singleMessageContents, ...threadMessageContents];
 
     return allMessageContents;

@@ -70,7 +70,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
       AuthorizationRequest(
         Config.oauthClientId,
         Config.oauthRedirectUrl,
-        // preferEphemeralSession: true,
+        preferEphemeralSession: true,
         serviceConfiguration: AuthorizationServiceConfiguration(
           authorizationEndpoint: '${Config.oauthEndpoint}/oauth/authorize',
           tokenEndpoint: '${Config.oauthEndpoint}/oauth/authorize',
@@ -83,12 +83,14 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _preferencesRepository.saveUser(user);
 
-      Map<String, dynamic>? settings = await _userApi.getSettings();
+      try {
+        Map<String, dynamic>? settings = await _userApi.getSettings();
 
-      if (settings != null) {
-        user = user.copyWith(settings: settings);
-        await _preferencesRepository.saveUser(user);
-      }
+        if (settings != null) {
+          user = user.copyWith(settings: settings);
+          await _preferencesRepository.saveUser(user);
+        }
+      } catch (_) {}
 
       _sentryService.authenticate(user.id.toString(), user.email);
 
