@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:mobile/api/integrations/gmail_api.dart';
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';

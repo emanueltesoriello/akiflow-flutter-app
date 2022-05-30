@@ -6,50 +6,8 @@ import 'package:mobile/api/integrations/integration_base_api.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/integrations/gmail.dart';
 import 'package:uuid/uuid.dart';
-
-class GmailMessageMetadata {
-  final String id;
-  final String threadId;
-
-  GmailMessageMetadata(this.id, this.threadId);
-}
-
-class GmailMessagesAndThreads {
-  final List<String> messagesId;
-  final List<String> threadsId;
-
-  GmailMessagesAndThreads(this.messagesId, this.threadsId);
-}
-
-class GmailMessage {
-  final String? id;
-  final String? threadId;
-  final String? internalDate;
-  final String? subject;
-  final String? from;
-  final String? messageId;
-
-  GmailMessage({
-    this.id,
-    this.threadId,
-    this.internalDate,
-    this.subject,
-    this.from,
-    this.messageId,
-  });
-
-  factory GmailMessage.fromMap(Map<String, dynamic> json) {
-    return GmailMessage(
-      id: json['id'] as String?,
-      threadId: json['threadId'] as String?,
-      internalDate: json['internalDate'] as String?,
-      subject: json['subject'] as String?,
-      from: json['from'] as String?,
-      messageId: json['messageId'] as String?,
-    );
-  }
-}
 
 class GmailApi implements IIntegrationBaseApi {
   static const String authEndpoint = 'https://www.googleapis.com/oauth2/v1';
