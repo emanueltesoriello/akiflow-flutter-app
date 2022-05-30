@@ -22,6 +22,7 @@ import 'package:mobile/services/sync_integration_service.dart';
 import 'package:mobile/services/sync_service.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 
 enum Entity { accountsV2, accounts, calendars, tasks, labels, events, docs }
@@ -163,7 +164,16 @@ class SyncControllerService {
           continue;
         }
 
-        GmailApi gmailApi = GmailApi(account, accountToken: accountToken);
+        GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {
+          Map<String, dynamic> details = account.details ?? {};
+          details['akiflowLabelId'] = labelId;
+
+          account = account.copyWith(details: details, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+          _accountsRepository.updateById(account.id, data: account);
+
+          print("updated gmail akiflow label");
+        });
 
         DateTime? lastSync = _preferencesRepository.lastSyncForAccountId(account.id!);
 

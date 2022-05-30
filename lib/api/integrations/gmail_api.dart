@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:http/http.dart';
 import 'package:mobile/api/integrations/gmail_client.dart';
 import 'package:mobile/api/integrations/integration_base_api.dart';
@@ -17,8 +18,9 @@ class GmailApi implements IIntegrationBaseApi {
   late final GmailClient _client;
 
   final Account account;
+  final Function(String labelId) saveAkiflowLabelId;
 
-  GmailApi(this.account, {required AccountToken accountToken}) {
+  GmailApi(this.account, {required AccountToken accountToken, required this.saveAkiflowLabelId}) {
     _client = GmailClient(accountToken, account: account);
   }
 
@@ -30,10 +32,9 @@ class GmailApi implements IIntegrationBaseApi {
     // TODO create Akiflow label if not exists
     // TODO on mark as done: unstar / go to gmail / do nothing
 
-    // this.syncMode = ((yield AccountsRepository.instance.getAccountByAccountId(this.accountData.accountId))?.details || {}).syncMode
-    // if (this.syncMode === GmailConnector.syncModes.akiflowLabel) {
-    //   yield this.createAkiflowLabelIfNotExists(signal)
-    // }
+    if (gmailSyncMode == GmailSyncMode.useAkiflowLabel) {
+      await createAkiflowLabelIfNotExists();
+    }
 
     List<GmailMessageMetadata> messagesMetadata = await messagesId();
     GmailMessagesAndThreads gmailMessagesAndThreads = getMessageAndThreadIdsFromMetadata(messagesMetadata);
@@ -60,7 +61,7 @@ class GmailApi implements IIntegrationBaseApi {
 
       print('urlWithQueryParameters: $urlWithQueryParameters');
 
-      final response = await _client.get(urlWithQueryParameters);
+      final response = await _client.get(urlWithQueryParameters, headers: {'Content-Type': 'application/json'});
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -90,9 +91,9 @@ class GmailApi implements IIntegrationBaseApi {
     if (shouldUseThreadId) {
       for (GmailMessageMetadata messageMetadata in messagesMetadata) {
         GmailMessageMetadata? originalThreadMessageMetadata =
-            messagesMetadata.firstWhere((msgMetadata) => msgMetadata.id == messageMetadata.threadId);
+            messagesMetadata.firstWhereOrNull((msgMetadata) => msgMetadata.id == messageMetadata.threadId);
 
-        if (!messageIds.contains(originalThreadMessageMetadata.threadId)) {
+        if (originalThreadMessageMetadata != null && !messageIds.contains(originalThreadMessageMetadata.threadId)) {
           // we found original message for this thread, we use its threadId as message id
           messageIds.add(originalThreadMessageMetadata.threadId);
         } else if (!threadIds.contains(messageMetadata.threadId)) {
@@ -160,9 +161,9 @@ class GmailApi implements IIntegrationBaseApi {
 
       String boundary = 'batch_${const Uuid().v4()}';
 
-      String batchRequestString = buildGetMessageBatchRequestString(boundary, threadIdsChunk);
+      String batchRequestString = buildGetThreadBatchRequestString(boundary, threadIdsChunk);
 
-      final batchResult = await _client.post(
+      Response batchResult = await _client.post(
         Uri.parse(endpointBatch),
         headers: {'Content-Type': 'multipart/mixed; boundary=$boundary'},
         body: batchRequestString,
@@ -172,10 +173,13 @@ class GmailApi implements IIntegrationBaseApi {
 
       List<GmailMessage> threadPage = [];
       for (dynamic thread in threadsBatch) {
-        List<Map<String, dynamic>> threadMessages = (thread['messages'] ?? []).filter(
-            (Map<String, dynamic> messageResult) =>
-                !(messageResult['labelIds'] ?? []).contains('TRASH') &&
-                !(messageResult['labelIds'] ?? []).any((element) => element.contains('SPAM')));
+        List<dynamic>? messages = thread['messages'] as List<dynamic>?;
+
+        List<dynamic> threadMessages = (messages ?? [])
+            .where((messageResult) =>
+                !messageResult?['labelIds']?.contains('TRASH') && !messageResult?['labelIds']?.contains('SPAM'))
+            .toList();
+
         if (threadMessages.isNotEmpty) {
           Map<String, dynamic> firstThreadMessage = threadMessages[0];
           GmailMessage? messageContent = getMessageContentFromMessageResult(firstThreadMessage);
@@ -228,6 +232,25 @@ GET /gmail/v1/users/${account.identifier}/messages/$messageId?format=metadata&me
     return "${batchRequests.join('\n')}\n\n--$boundary--";
   }
 
+  String buildGetThreadBatchRequestString(String boundary, List<String> threadIds) {
+    List<String> batchRequests = [];
+
+    for (String threadId in threadIds) {
+      batchRequests.add("""
+--$boundary
+Content-Type: application/json
+Content-ID: gmail-$threadId
+Accept: application/json
+
+GET /gmail/v1/users/${account.identifier}/threads/$threadId?format=metadata&metadataHeaders=subject&metadataHeaders=From
+
+{}
+""");
+    }
+
+    return "${batchRequests.join('\n')}\n\n--$boundary--";
+  }
+
   List<Map<String, dynamic>> parseBatchResults(Response axiosResult) {
     List<Map<String, dynamic>> items = [];
 
@@ -262,5 +285,32 @@ GET /gmail/v1/users/${account.identifier}/messages/$messageId?format=metadata&me
     String boundary = components.firstWhere((component) => component.trim().startsWith('boundary='));
     boundary = boundary.replaceAll('boundary=', '').trim();
     return boundary;
+  }
+
+  Future<void> createAkiflowLabelIfNotExists() async {
+    Uri uri = Uri.parse('$endpoint/users/${account.identifier}/labels');
+
+    Response result = await _client.get(uri, headers: {'Content-Type': 'application/json'});
+
+    List<dynamic> currentLabels = jsonDecode(result.body)['labels'];
+
+    var akiflowLabel = currentLabels.firstWhereOrNull((label) => label['name']?.toLowerCase() == 'akiflow');
+
+    if (akiflowLabel?['id'] != null) {
+      await saveAkiflowLabelId(akiflowLabel!['id']);
+    } else {
+      Uri uri = Uri.parse('$endpoint/users/${account.identifier}/labels');
+
+      Map<String, dynamic> label = {
+        "name": 'Akiflow',
+        "labelListVisibility": 'labelHide',
+        "messageListVisibility": 'show',
+        "color": {"backgroundColor": '#8e63ce', "textColor": '#ffffff'}
+      };
+
+      Response result = await _client.post(uri, body: jsonEncode(label), headers: {'Content-Type': 'application/json'});
+
+      await saveAkiflowLabelId(jsonDecode(result.body)?['id']);
+    }
   }
 }

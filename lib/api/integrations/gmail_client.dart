@@ -35,25 +35,27 @@ class GmailClient extends BaseClient {
   }
 
   BaseRequest _buildNewRequest(BaseRequest originalRequest) {
-    BaseRequest request;
+    originalRequest.headers['Authorization'] = "Bearer ${_accountToken.accessToken ?? ''}";
 
     if (originalRequest is MultipartRequest) {
-      request = MultipartRequest(originalRequest.method, originalRequest.url)
+      return MultipartRequest(originalRequest.method, originalRequest.url)
         ..fields.addAll(originalRequest.fields)
-        ..files.addAll(originalRequest.files);
+        ..files.addAll(originalRequest.files)
+        ..headers.addAll(originalRequest.headers)
+        ..persistentConnection = (originalRequest).persistentConnection
+        ..followRedirects = (originalRequest).followRedirects
+        ..maxRedirects = (originalRequest).maxRedirects
+        ..contentLength = (originalRequest).contentLength;
     } else {
-      request = Request(originalRequest.method, originalRequest.url)
+      return Request(originalRequest.method, originalRequest.url)
         ..encoding = (originalRequest as Request).encoding
+        ..body = (originalRequest).body
+        ..headers.addAll(originalRequest.headers)
+        ..persistentConnection = (originalRequest).persistentConnection
+        ..followRedirects = (originalRequest).followRedirects
+        ..maxRedirects = (originalRequest).maxRedirects
         ..bodyBytes = originalRequest.bodyBytes;
     }
-
-    request.headers['Authorization'] = "Bearer ${_accountToken.accessToken ?? ''}";
-
-    originalRequest.headers.forEach((key, value) {
-      request.headers[key] = value;
-    });
-
-    return request;
   }
 
   Future<void> refreshToken() async {
@@ -67,12 +69,14 @@ class GmailClient extends BaseClient {
 
     AccountToken accountWithNewAccessToken = _preferencesRepository.getAccountToken(account.id!)!;
 
+    DateTime now = DateTime.now();
+    DateTime expiration = now.add(Duration(seconds: result['expires_in'] as int? ?? 0));
+
     accountWithNewAccessToken = accountWithNewAccessToken.copyWith(
-      accessToken: result?['accessToken'],
-      refreshToken: result?['refreshToken'],
-      accessTokenExpirationDateTime: result?['accessTokenExpirationDateTime'],
-      tokenType: result?['tokenType'],
-      idToken: result?['idToken'],
+      accessToken: result?['access_token'],
+      idToken: result?['id_token'],
+      accessTokenExpirationDateTime: expiration,
+      tokenType: result?['token_type'],
     );
 
     await _preferencesRepository.setAccountToken(_accountToken.id!, accountWithNewAccessToken);
