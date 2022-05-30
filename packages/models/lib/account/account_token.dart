@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:models/account/account.dart';
 
 class AccountToken extends Equatable {
   final String? id;
@@ -9,7 +8,6 @@ class AccountToken extends Equatable {
   final DateTime? accessTokenExpirationDateTime;
   final String? idToken;
   final String? tokenType;
-  final Account? account;
 
   const AccountToken({
     this.id,
@@ -18,7 +16,6 @@ class AccountToken extends Equatable {
     this.accessTokenExpirationDateTime,
     this.idToken,
     this.tokenType,
-    this.account,
   });
 
   AccountToken copyWith({
@@ -28,7 +25,6 @@ class AccountToken extends Equatable {
     DateTime? accessTokenExpirationDateTime,
     String? idToken,
     String? tokenType,
-    Account? account,
   }) {
     return AccountToken(
       id: id ?? this.id,
@@ -38,7 +34,6 @@ class AccountToken extends Equatable {
           accessTokenExpirationDateTime ?? this.accessTokenExpirationDateTime,
       idToken: idToken ?? this.idToken,
       tokenType: tokenType ?? this.tokenType,
-      account: account ?? this.account,
     );
   }
 
@@ -51,7 +46,6 @@ class AccountToken extends Equatable {
           accessTokenExpirationDateTime?.millisecondsSinceEpoch,
       'idToken': idToken,
       'tokenType': tokenType,
-      'account': account?.toMap(),
     };
   }
 
@@ -69,9 +63,6 @@ class AccountToken extends Equatable {
               : null,
       idToken: map['idToken'] != null ? map['idToken'] as String : null,
       tokenType: map['tokenType'] != null ? map['tokenType'] as String : null,
-      account: map['account'] != null
-          ? Account.fromMap(map['account'] as Map<String, dynamic>)
-          : null,
     );
   }
 
@@ -84,7 +75,6 @@ class AccountToken extends Equatable {
       accessTokenExpirationDateTime,
       idToken,
       tokenType,
-      account,
     ];
   }
 }

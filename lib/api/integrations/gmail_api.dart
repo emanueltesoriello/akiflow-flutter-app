@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
+import 'package:mobile/api/integrations/gmail_client.dart';
 import 'package:mobile/api/integrations/integration_base_api.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
+import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:uuid/uuid.dart';
 
@@ -55,18 +56,21 @@ class GmailApi implements IIntegrationBaseApi {
   static const String endpoint = 'https://www.googleapis.com/gmail/v1';
   static const String endpointBatch = 'https://www.googleapis.com/batch/gmail/v1';
 
-  final AccountToken accountToken;
+  late final GmailClient _client;
 
-  GmailApi(this.accountToken);
+  final Account account;
+
+  GmailApi(this.account, {required AccountToken accountToken}) {
+    _client = GmailClient(accountToken, account: account);
+  }
 
   GmailSyncMode get gmailSyncMode =>
-      accountToken.account!.details?['syncMode'] == 1 ? GmailSyncMode.useAkiflowLabel : GmailSyncMode.useStarToImport;
+      account.details?['syncMode'] == 1 ? GmailSyncMode.useAkiflowLabel : GmailSyncMode.useStarToImport;
 
   @override
   Future<List<GmailMessage>> getItems() async {
-    // TODO refresh token if expired
-
     // TODO create Akiflow label if not exists
+    // TODO on mark as done: unstar / go to gmail / do nothing
 
     // this.syncMode = ((yield AccountsRepository.instance.getAccountByAccountId(this.accountData.accountId))?.details || {}).syncMode
     // if (this.syncMode === GmailConnector.syncModes.akiflowLabel) {
@@ -87,7 +91,7 @@ class GmailApi implements IIntegrationBaseApi {
     String? nextPageToken;
 
     do {
-      Uri urlWithQueryParameters = Uri.parse('$endpoint/users/${accountToken.account!.identifier}/messages');
+      Uri urlWithQueryParameters = Uri.parse('$endpoint/users/${account.identifier}/messages');
 
       Map<String, dynamic> queryParameters = {
         "pageToken": nextPageToken,
@@ -96,9 +100,9 @@ class GmailApi implements IIntegrationBaseApi {
 
       urlWithQueryParameters = urlWithQueryParameters.replace(queryParameters: queryParameters);
 
-      final response = await http.get(urlWithQueryParameters, headers: {
-        'Authorization': 'Bearer ${accountToken.accessToken}',
-      });
+      print('urlWithQueryParameters: $urlWithQueryParameters');
+
+      final response = await _client.get(urlWithQueryParameters);
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -162,12 +166,9 @@ class GmailApi implements IIntegrationBaseApi {
 
       String batchRequestString = buildGetMessageBatchRequestString(boundary, messageIdsChunk);
 
-      final batchResult = await http.post(
+      final batchResult = await _client.post(
         Uri.parse(endpointBatch),
-        headers: {
-          'Authorization': 'Bearer ${accountToken.accessToken}',
-          'Content-Type': 'multipart/mixed; boundary=$boundary'
-        },
+        headers: {'Content-Type': 'multipart/mixed; boundary=$boundary'},
         body: batchRequestString,
       );
 
@@ -203,12 +204,9 @@ class GmailApi implements IIntegrationBaseApi {
 
       String batchRequestString = buildGetMessageBatchRequestString(boundary, threadIdsChunk);
 
-      final batchResult = await http.post(
+      final batchResult = await _client.post(
         Uri.parse(endpointBatch),
-        headers: {
-          'Authorization': 'Bearer ${accountToken.accessToken}',
-          'Content-Type': 'multipart/mixed; boundary=$boundary'
-        },
+        headers: {'Content-Type': 'multipart/mixed; boundary=$boundary'},
         body: batchRequestString,
       );
 
@@ -263,7 +261,7 @@ Content-Type: application/json
 Content-ID: gmail-$messageId
 Accept: application/json
 
-GET /gmail/v1/users/${accountToken.account?.identifier}/messages/$messageId?format=metadata&metadataHeaders=subject&metadataHeaders=From
+GET /gmail/v1/users/${account.identifier}/messages/$messageId?format=metadata&metadataHeaders=subject&metadataHeaders=From
 
 {}
 """);

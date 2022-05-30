@@ -174,8 +174,6 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       createdAt: DateTime.now().toUtc().toIso8601String(),
     );
 
-    accountToken = accountToken.copyWith(account: account);
-
     print("set account token in preferences for account ${account.id}");
 
     await _preferencesRepository.setAccountToken(account.id!, accountToken);

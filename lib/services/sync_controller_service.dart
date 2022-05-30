@@ -163,13 +163,13 @@ class SyncControllerService {
           continue;
         }
 
-        GmailApi gmailApi = GmailApi(accountToken);
+        GmailApi gmailApi = GmailApi(account, accountToken: accountToken);
 
         DateTime? lastSync = _preferencesRepository.lastSyncForAccountId(account.id!);
 
         print("sync integration for account ${account.id}");
 
-        await _syncEntityIntegration(gmailApi, lastSync, accountToken);
+        await _syncEntityIntegration(gmailApi, lastSync, account);
 
         print("sync integration for account ${account.id} done");
       }
@@ -196,7 +196,7 @@ class SyncControllerService {
     }
   }
 
-  Future<void> _syncEntityIntegration(IIntegrationBaseApi api, DateTime? lastSync, AccountToken accountToken) async {
+  Future<void> _syncEntityIntegration(IIntegrationBaseApi api, DateTime? lastSync, Account account) async {
     try {
       print("Syncing integration $api...");
 
@@ -204,17 +204,17 @@ class SyncControllerService {
 
       if (api.runtimeType.toString() == "GmailApi") {
         params = {
-          "accountId": accountToken.account!.accountId,
-          "connectorId": accountToken.account!.connectorId,
-          "originAccountId": accountToken.account!.originAccountId,
-          "syncMode": accountToken.account!.details?["syncMode"],
-          "email": accountToken.account!.identifier,
+          "accountId": account.accountId,
+          "connectorId": account.connectorId,
+          "originAccountId": account.originAccountId,
+          "syncMode": account.details?["syncMode"],
+          "email": account.identifier,
         };
       }
 
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
 
-      await _preferencesRepository.setLastSyncForAccountId(accountToken.account!.id!, lastSyncUpdated);
+      await _preferencesRepository.setLastSyncForAccountId(account.id!, lastSyncUpdated);
 
       await _syncEntity(Entity.docs);
     } catch (e, s) {
