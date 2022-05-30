@@ -31,10 +31,14 @@ class AppBarComp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: MediaQuery.of(context).padding.top),
+        Container(
+          color: ColorsExt.background(context),
+          height: MediaQuery.of(context).padding.top,
+        ),
         Container(
           constraints: const BoxConstraints(maxHeight: 56),
           padding: const EdgeInsets.symmetric(vertical: 12.5),
+          color: ColorsExt.background(context),
           child: Row(
             children: [
               const SizedBox(width: 16),

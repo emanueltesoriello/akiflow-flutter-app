@@ -52,13 +52,11 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       borderRadius: BorderRadius.circular(0),
     ),
   ),
-  checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
+  checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       primary: ColorsLight.akiflow,
-      textStyle: const TextStyle(
-          fontWeight: FontWeight.bold, color: ColorsLight.akiflow),
+      textStyle: const TextStyle(fontWeight: FontWeight.bold, color: ColorsLight.akiflow),
     ),
   ),
   pageTransitionsTheme: const PageTransitionsTheme(

@@ -69,112 +69,115 @@ class _TodayAppBarState extends State<TodayAppBar> {
             const TaskListMenu(),
           ],
         ),
-        const SizedBox(height: 12),
+        Container(color: ColorsExt.background(context), height: 12),
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
             DateTime now = DateTime.now();
 
-            return TableCalendar(
-              calendarFormat:
-                  state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month,
-              onCalendarCreated: (pageController) {
-                _pageController = pageController;
-              },
-              focusedDay: state.selectedDate,
-              firstDay: now.subtract(const Duration(days: 365)),
-              lastDay: now.add(const Duration(days: 365)),
-              selectedDayPredicate: (day) {
-                return isSameDay(state.selectedDate, day);
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                context.read<TodayCubit>().onDateSelected(selectedDay);
-              },
-              headerVisible: false,
-              daysOfWeekStyle: DaysOfWeekStyle(
-                dowTextFormatter: (date, locale) {
-                  return DateFormat("E").format(date).substring(0, 1);
+            return Container(
+              color: ColorsExt.background(context),
+              child: TableCalendar(
+                calendarFormat:
+                    state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month,
+                onCalendarCreated: (pageController) {
+                  _pageController = pageController;
                 },
-                weekdayStyle: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: ColorsExt.grey3(context),
+                focusedDay: state.selectedDate,
+                firstDay: now.subtract(const Duration(days: 365)),
+                lastDay: now.add(const Duration(days: 365)),
+                selectedDayPredicate: (day) {
+                  return isSameDay(state.selectedDate, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  context.read<TodayCubit>().onDateSelected(selectedDay);
+                },
+                headerVisible: false,
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  dowTextFormatter: (date, locale) {
+                    return DateFormat("E").format(date).substring(0, 1);
+                  },
+                  weekdayStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: ColorsExt.grey3(context),
+                  ),
+                  weekendStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: ColorsExt.grey3(context),
+                  ),
                 ),
-                weekendStyle: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: ColorsExt.grey3(context),
-                ),
-              ),
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) {
-                  return Center(
-                    child: Text(
-                      DateFormat("d").format(day),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey2(context),
+                calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) {
+                    return Center(
+                      child: Text(
+                        DateFormat("d").format(day),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey2(context),
+                        ),
                       ),
-                    ),
-                  );
-                },
-                selectedBuilder: (context, day, focusedDay) {
-                  return CalendarSelectedDay(day);
-                },
-                todayBuilder: (context, day, focusedDay) {
-                  return CalendarToday(day);
-                },
-                headerTitleBuilder: (context, day) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            _pageController?.jumpToPage((_pageController!.page! - 1).toInt());
-                          },
-                          child: RotatedBox(
-                            quarterTurns: 2,
+                    );
+                  },
+                  selectedBuilder: (context, day, focusedDay) {
+                    return CalendarSelectedDay(day);
+                  },
+                  todayBuilder: (context, day, focusedDay) {
+                    return CalendarToday(day);
+                  },
+                  headerTitleBuilder: (context, day) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _pageController?.jumpToPage((_pageController!.page! - 1).toInt());
+                            },
+                            child: RotatedBox(
+                              quarterTurns: 2,
+                              child: SvgPicture.asset(
+                                "assets/images/icons/_common/chevron_right.svg",
+                                width: 20,
+                                height: 20,
+                                color: ColorsExt.grey2(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Flexible(
+                            child: Container(
+                              constraints: const BoxConstraints(minWidth: 100),
+                              child: Text(
+                                DateFormat("MMMM").format(day),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsExt.grey2(context),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          InkWell(
+                            onTap: () {
+                              _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
+                            },
                             child: SvgPicture.asset(
                               "assets/images/icons/_common/chevron_right.svg",
                               width: 20,
                               height: 20,
                               color: ColorsExt.grey2(context),
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Flexible(
-                          child: Container(
-                            constraints: const BoxConstraints(minWidth: 100),
-                            child: Text(
-                              DateFormat("MMMM").format(day),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                                color: ColorsExt.grey2(context),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        InkWell(
-                          onTap: () {
-                            _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
-                          },
-                          child: SvgPicture.asset(
-                            "assets/images/icons/_common/chevron_right.svg",
-                            width: 20,
-                            height: 20,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             );
           },
