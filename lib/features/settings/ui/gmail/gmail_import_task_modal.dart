@@ -12,6 +12,19 @@ enum GmailSyncMode {
   final int? key;
   const GmailSyncMode(this.key);
 
+  factory GmailSyncMode.fromKey(int? key) {
+    switch (key) {
+      case 1:
+        return useAkiflowLabel;
+      case 0:
+        return useStarToImport;
+      case -1:
+        return doNothing;
+      default:
+        return askMeEveryTime;
+    }
+  }
+
   static String titleFromKey(int? key) {
     switch (key) {
       case 1:

@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 193 
+ * Strings: 194 
  *
- * Built on 2022-05-26 at 08:53 UTC
+ * Built on 2022-05-30 at 12:00 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -726,7 +726,8 @@ class _StringsSettingsIntegrationsGmailOnMarkAsDoneEn {
 
 	// Translations
 	String get title => 'On mark as done';
-	String get unstarTheEmail => 'Unstar The email';
+	String get unstarTheEmail => 'Unstar the email';
+	String get unlabelTheEmail => 'Unlabel the email';
 	String get goToGmail => 'Go to Gmail';
 	String get doNothing => 'Do nothing';
 	String get askMeEveryTime => 'Ask me every time';
@@ -810,7 +811,8 @@ extension on _StringsEn {
 			'settings.integrations.gmail.behavior': 'Behavior',
 			'settings.integrations.gmail.communication': 'Communication',
 			'settings.integrations.gmail.onMarkAsDone.title': 'On mark as done',
-			'settings.integrations.gmail.onMarkAsDone.unstarTheEmail': 'Unstar The email',
+			'settings.integrations.gmail.onMarkAsDone.unstarTheEmail': 'Unstar the email',
+			'settings.integrations.gmail.onMarkAsDone.unlabelTheEmail': 'Unlabel the email',
 			'settings.integrations.gmail.onMarkAsDone.goToGmail': 'Go to Gmail',
 			'settings.integrations.gmail.onMarkAsDone.doNothing': 'Do nothing',
 			'settings.integrations.gmail.onMarkAsDone.askMeEveryTime': 'Ask me every time',

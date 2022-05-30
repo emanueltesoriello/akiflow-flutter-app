@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
+import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/style/colors.dart';
 
 enum GmailMarkAsDoneType {
@@ -12,10 +13,14 @@ enum GmailMarkAsDoneType {
   final String? key;
   const GmailMarkAsDoneType(this.key);
 
-  static String titleFromKey(String? key) {
+  static String titleFromKey(String? key, GmailSyncMode syncMode) {
     switch (key) {
       case 'unstar':
-        return t.settings.integrations.gmail.onMarkAsDone.unstarTheEmail;
+        if (syncMode == GmailSyncMode.useAkiflowLabel) {
+          return t.settings.integrations.gmail.onMarkAsDone.unlabelTheEmail;
+        } else {
+          return t.settings.integrations.gmail.onMarkAsDone.unstarTheEmail;
+        }
       case 'open':
         return t.settings.integrations.gmail.onMarkAsDone.goToGmail;
       case 'cancel':

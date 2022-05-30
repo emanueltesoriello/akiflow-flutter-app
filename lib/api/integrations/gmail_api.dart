@@ -29,9 +29,6 @@ class GmailApi implements IIntegrationBaseApi {
 
   @override
   Future<List<GmailMessage>> getItems() async {
-    // TODO create Akiflow label if not exists
-    // TODO on mark as done: unstar / go to gmail / do nothing
-
     if (gmailSyncMode == GmailSyncMode.useAkiflowLabel) {
       await createAkiflowLabelIfNotExists();
     }

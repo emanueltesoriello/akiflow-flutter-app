@@ -87,45 +87,52 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
     );
   }
 
-  BlocBuilder<AuthCubit, AuthCubitState> _behaviour() {
-    return BlocBuilder<AuthCubit, AuthCubitState>(
-      builder: (context, authState) {
-        String? markAsDone = authState.user?.settings?['popups']['gmail.unstar'];
-        String subtitle = GmailMarkAsDoneType.titleFromKey(markAsDone);
+  Widget _behaviour() {
+    return BlocBuilder<SettingsCubit, SettingsCubitState>(
+      builder: (context, state) {
+        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
-        return IntegrationSetting(
-          title: t.settings.integrations.gmail.onMarkAsDone.title,
-          subtitle: subtitle,
-          onPressed: () async {
-            var bloc = context.read<SettingsCubit>();
+        return BlocBuilder<AuthCubit, AuthCubitState>(
+          builder: (context, authState) {
+            String? markAsDone = authState.user?.settings?['popups']['gmail.unstar'];
+            GmailSyncMode syncMode = GmailSyncMode.fromKey(gmailAccount.details?['syncMode']);
+            String subtitle = GmailMarkAsDoneType.titleFromKey(markAsDone, syncMode);
 
-            User user = authState.user!;
+            return IntegrationSetting(
+              title: t.settings.integrations.gmail.onMarkAsDone.title,
+              subtitle: subtitle,
+              onPressed: () async {
+                var bloc = context.read<SettingsCubit>();
 
-            GmailMarkAsDoneType initialType;
+                User user = authState.user!;
 
-            switch (user.settings?['popups']['gmail.unstar']) {
-              case 'unstar':
-                initialType = GmailMarkAsDoneType.unstarTheEmail;
-                break;
-              case 'open':
-                initialType = GmailMarkAsDoneType.goToGmail;
-                break;
-              case 'cancel':
-                initialType = GmailMarkAsDoneType.doNothing;
-                break;
-              default:
-                initialType = GmailMarkAsDoneType.askMeEveryTime;
-                break;
-            }
+                GmailMarkAsDoneType initialType;
 
-            GmailMarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => GmailMarkDoneModal(initialType: initialType),
+                switch (user.settings?['popups']['gmail.unstar']) {
+                  case 'unstar':
+                    initialType = GmailMarkAsDoneType.unstarTheEmail;
+                    break;
+                  case 'open':
+                    initialType = GmailMarkAsDoneType.goToGmail;
+                    break;
+                  case 'cancel':
+                    initialType = GmailMarkAsDoneType.doNothing;
+                    break;
+                  default:
+                    initialType = GmailMarkAsDoneType.askMeEveryTime;
+                    break;
+                }
+
+                GmailMarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) => GmailMarkDoneModal(initialType: initialType),
+                );
+
+                if (selectedType != null) {
+                  bloc.gmailBehaviorOnMarkAsDone(selectedType);
+                }
+              },
             );
-
-            if (selectedType != null) {
-              bloc.gmailBehaviorOnMarkAsDone(selectedType);
-            }
           },
         );
       },

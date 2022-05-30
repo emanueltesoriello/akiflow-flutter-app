@@ -75,7 +75,8 @@
         "communication": "Communication",
         "onMarkAsDone": {
           "title": "On mark as done",
-          "unstarTheEmail": "Unstar The email",
+          "unstarTheEmail": "Unstar the email",
+          "unlabelTheEmail": "Unlabel the email",
           "goToGmail": "Go to Gmail",
           "doNothing": "Do nothing",
           "askMeEveryTime": "Ask me every time"
