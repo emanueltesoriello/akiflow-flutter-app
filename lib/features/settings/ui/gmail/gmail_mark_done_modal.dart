@@ -13,6 +13,19 @@ enum GmailMarkAsDoneType {
   final String? key;
   const GmailMarkAsDoneType(this.key);
 
+  factory GmailMarkAsDoneType.fromKey(String? key) {
+    switch (key) {
+      case 'unstar':
+        return unstarTheEmail;
+      case 'open':
+        return goToGmail;
+      case 'cancel':
+        return doNothing;
+      default:
+        return askMeEveryTime;
+    }
+  }
+
   static String titleFromKey(String? key, GmailSyncMode syncMode) {
     switch (key) {
       case 'unstar':

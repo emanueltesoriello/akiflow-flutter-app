@@ -1,11 +1,17 @@
+import 'package:collection/collection.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
+import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:models/doc/doc.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -515,5 +521,20 @@ extension TaskExt on Task {
   static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {
     List<Task> completed = List.from(tasks.where((element) => element.isCompletedComputed));
     return completed.where((element) => element.isTodayOrBefore).toList();
+  }
+
+  static void openGmailUrlIfAny(Task task, AuthCubit authCubit, TasksCubit tasksCubit) {
+    List<Doc> docs = tasksCubit.state.docs;
+
+    Doc? doc = docs.firstWhereOrNull((doc) => doc.taskId == task.id);
+
+    if (doc?.connectorId == "gmail") {
+      String? markAsDoneKey = authCubit.state.user?.settings?['popups']['gmail.unstar'];
+      GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
+
+      if (gmailMarkAsDoneType == GmailMarkAsDoneType.goToGmail) {
+        launchUrl(Uri.parse(doc!.url!), mode: LaunchMode.externalApplication);
+      }
+    }
   }
 }

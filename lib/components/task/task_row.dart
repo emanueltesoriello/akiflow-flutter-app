@@ -8,6 +8,7 @@ import 'package:mobile/components/base/button_action.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/task_info.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
@@ -65,6 +66,7 @@ class TaskRow extends StatelessWidget {
         onTap: () async {
           TasksCubit tasksCubit = context.read<TasksCubit>();
           SyncCubit syncCubit = context.read<SyncCubit>();
+          AuthCubit authCubit = context.read<AuthCubit>();
 
           EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit, task: task);
 
@@ -96,6 +98,10 @@ class TaskRow extends StatelessWidget {
                     ));
           } else {
             editTaskCubit.modalDismissed();
+          }
+
+          if (updated.isCompletedComputed != original.isCompletedComputed) {
+            TaskExt.openGmailUrlIfAny(updated, authCubit, tasksCubit);
           }
         },
         child: Container(
@@ -146,7 +152,7 @@ class TaskRow extends StatelessWidget {
                   if (selectMode) {
                     return _radio(context);
                   } else {
-                    return _checkbox();
+                    return _checkbox(context);
                   }
                 }),
               ),
@@ -225,9 +231,18 @@ class TaskRow extends StatelessWidget {
     return const SizedBox();
   }
 
-  InkWell _checkbox() {
+  InkWell _checkbox(BuildContext context) {
     return InkWell(
-      onTap: completedClick,
+      onTap: () {
+        if (!task.isCompletedComputed) {
+          TasksCubit tasksCubit = context.read<TasksCubit>();
+          AuthCubit authCubit = context.read<AuthCubit>();
+
+          TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
+        }
+
+        completedClick();
+      },
       child: Builder(builder: (context) {
         bool completed = task.isCompletedComputed;
 
