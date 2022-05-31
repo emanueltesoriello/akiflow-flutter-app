@@ -213,7 +213,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
     );
   }
 
-  Widget _leading(BuildContext context) {
+  Widget? _leading(BuildContext context) {
     bool selectMode = context.watch<TasksCubit>().state.inboxTasks.any((element) => element.selected ?? false);
 
     if (selectMode) {
@@ -231,7 +231,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
       );
     } else {
       if (widget.leadingAsset == null) {
-        return const SizedBox();
+        return null;
       }
 
       return SvgPicture.asset(

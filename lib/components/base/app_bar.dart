@@ -87,6 +87,7 @@ class AppBarComp extends StatelessWidget {
           if (leading == null) return Container();
 
           return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [

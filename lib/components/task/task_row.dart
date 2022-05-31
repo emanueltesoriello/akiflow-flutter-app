@@ -105,7 +105,7 @@ class TaskRow extends StatelessWidget {
           }
         },
         child: Container(
-          padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
+          padding: const EdgeInsets.fromLTRB(0, 16, 16, 12),
           color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
