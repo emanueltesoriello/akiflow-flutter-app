@@ -190,6 +190,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   Widget _bottomBar(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
+        List<Task> inboxTasks = List.from(state.inboxTasks);
         List<Task> todayTasks = List.from(state.todayTasks);
         List<Task> todos =
             List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
@@ -207,15 +208,26 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
               label: t.bottomBar.menu,
             ),
             BottomNavigationBarItem(
-                icon: SizedBox(
-                    width: 29,
-                    height: 29,
-                    child: SvgPicture.asset("assets/images/icons/_common/tray.svg", color: ColorsExt.grey2(context))),
-                activeIcon: SizedBox(
-                  width: 29,
-                  height: 29,
-                  child:
-                      SvgPicture.asset("assets/images/icons/_common/tray.svg", color: Theme.of(context).primaryColor),
+                icon: Stack(
+                  children: [
+                    SizedBox(
+                        width: 29,
+                        height: 29,
+                        child:
+                            SvgPicture.asset("assets/images/icons/_common/tray.svg", color: ColorsExt.grey2(context))),
+                    _BottomIconBadge(inboxTasks.length.toString()),
+                  ],
+                ),
+                activeIcon: Stack(
+                  children: [
+                    SizedBox(
+                      width: 29,
+                      height: 29,
+                      child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    _BottomIconBadge(inboxTasks.length.toString()),
+                  ],
                 ),
                 label: t.bottomBar.inbox),
             BottomNavigationBarItem(
@@ -229,7 +241,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                       color: ColorsExt.grey2(context),
                     ),
                   ),
-                  _TodayBadge(todos.length.toString()),
+                  _BottomIconBadge(todos.length.toString()),
                 ],
               ),
               activeIcon: Stack(
@@ -242,7 +254,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  _TodayBadge(todos.length.toString()),
+                  _BottomIconBadge(todos.length.toString()),
                 ],
               ),
               label: t.bottomBar.today,
@@ -354,10 +366,10 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 }
 
-class _TodayBadge extends StatelessWidget {
+class _BottomIconBadge extends StatelessWidget {
   final String info;
 
-  const _TodayBadge(
+  const _BottomIconBadge(
     this.info, {
     Key? key,
   }) : super(key: key);
@@ -379,7 +391,7 @@ class _TodayBadge extends StatelessWidget {
             info,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 9,
               fontWeight: FontWeight.w600,
               color: ColorsExt.background(context),
             ),
