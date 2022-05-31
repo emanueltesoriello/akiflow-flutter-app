@@ -23,10 +23,11 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   backgroundColor: ColorsLight.white,
   scaffoldBackgroundColor: ColorsLight.grey7,
   appBarTheme: const AppBarTheme(
-    color: ColorsLight.akiflow10,
-    iconTheme: IconThemeData(color: ColorsLight.akiflow),
-    actionsIconTheme: IconThemeData(color: ColorsLight.akiflow),
-    foregroundColor: ColorsLight.akiflow,
+    color: ColorsLight.white,
+    iconTheme: IconThemeData(color: ColorsLight.grey2, size: 30),
+    actionsIconTheme: IconThemeData(color: ColorsLight.grey2),
+    foregroundColor: ColorsLight.grey2,
+    titleTextStyle: TextStyle(color: ColorsLight.grey2, fontSize: 24, fontWeight: FontWeight.w500),
   ),
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: ColorsLight.akiflow,

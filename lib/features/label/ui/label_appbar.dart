@@ -17,7 +17,7 @@ import 'package:uuid/uuid.dart';
 
 enum LabelActions { edit, order, newSection, showDone, delete }
 
-class LabelAppBar extends StatelessWidget {
+class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Label label;
   final bool showDone;
 
@@ -26,6 +26,9 @@ class LabelAppBar extends StatelessWidget {
     required this.label,
     required this.showDone,
   }) : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(56);
 
   @override
   Widget build(BuildContext context) {

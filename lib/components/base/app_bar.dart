@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
 
-class AppBarComp extends StatelessWidget {
+class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;
   final String? title;
   final List<Widget> actions;
@@ -25,86 +29,66 @@ class AppBarComp extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  Size get preferredSize => const Size.fromHeight(56);
+
+  @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(useMaterial3: false),
-      child: Material(
-        elevation: 4,
-        shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
-        child: Column(
-          children: [
-            Container(
-              color: ColorsExt.background(context),
-              height: MediaQuery.of(context).padding.top + 4,
-            ),
-            Container(
-              constraints: const BoxConstraints(maxHeight: 56),
-              padding: const EdgeInsets.symmetric(vertical: 12.5),
-              color: ColorsExt.background(context),
-              child: Row(
-                children: [
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _buildLeading(context),
-                        Expanded(child: _buildTitle(context)),
-                        _buildActions(context),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-              ),
-            ),
-            if (child != null) child!
-          ],
+      child: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
         ),
+        elevation: 4,
+        automaticallyImplyLeading: false,
+        shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
+        title: _buildTitle(context),
+        titleSpacing: leading != null ? 0 : 16,
+        leading: _buildLeading(context),
+        actions: _buildActions(context),
       ),
     );
   }
 
-  Widget _buildLeading(BuildContext context) {
-    return Row(
-      children: [
-        Builder(builder: (context) {
-          if (showBack) {
-            return Row(
-              children: [
-                InkWell(
-                  onTap: (() => Navigator.pop(context)),
-                  child: SvgPicture.asset(
-                    "assets/images/icons/_common/arrow_left.svg",
-                    height: 26,
-                    width: 26,
-                    color: ColorsExt.grey2(context),
-                  ),
-                ),
-                Container(width: 10),
-              ],
-            );
-          } else {
-            return const SizedBox();
-          }
-        }),
-        Builder(builder: (context) {
-          if (leading == null) return Container();
+  Widget? _buildLeading(BuildContext context) {
+    if (TaskExt.isSelectMode(context.watch<TasksCubit>().state)) {
+      return InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () {
+          context.read<TasksCubit>().clearSelected();
+        },
+        child: Center(
+          child: SvgPicture.asset(
+            "assets/images/icons/_common/arrow_left.svg",
+            width: 26,
+            height: 26,
+            color: ColorsExt.grey2(context),
+          ),
+        ),
+      );
+    }
 
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  leading!,
-                  Container(width: 10),
-                ],
-              ),
-            ],
-          );
-        }),
-      ],
-    );
+    if (leading != null) {
+      return Center(child: leading!);
+    }
+
+    if (showBack) {
+      return Center(
+        child: InkWell(
+          onTap: (() => Navigator.pop(context)),
+          child: SvgPicture.asset(
+            "assets/images/icons/_common/arrow_left.svg",
+            height: 26,
+            width: 26,
+            color: ColorsExt.grey2(context),
+          ),
+        ),
+      );
+    }
+
+    return null;
   }
 
   Widget _buildTitle(BuildContext context) {
@@ -125,13 +109,10 @@ class AppBarComp extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(width: 16),
-        ...actions,
-      ],
-    );
+  List<Widget> _buildActions(BuildContext context) {
+    return [
+      Container(width: 16),
+      ...actions,
+    ];
   }
 }

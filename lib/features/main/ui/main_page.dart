@@ -6,16 +6,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
+import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/main/views/inbox_appbar.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
@@ -92,9 +94,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        bool isSelectMode = context.read<TasksCubit>().state.inboxTasks.any((t) => t.selected ?? false);
+        bool anyInboxSelected = context.read<TasksCubit>().state.inboxTasks.any((t) => t.selected ?? false);
+        bool anyTodaySelected = context.read<TasksCubit>().state.todayTasks.any((t) => t.selected ?? false);
+        bool anyLabelsSelected = context.read<TasksCubit>().state.labelTasks.any((t) => t.selected ?? false);
 
-        if (isSelectMode) {
+        if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
           context.read<TasksCubit>().clearSelected();
           return false;
         } else {
@@ -105,82 +109,96 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           return true;
         }
       },
-      child: Stack(
-        children: [
-          Scaffold(
-            floatingActionButton: _floatingButton(),
-            bottomNavigationBar: _bottomBar(context),
-            body: _content(),
-          ),
-          BlocBuilder<TasksCubit, TasksCubitState>(
-            builder: (context, state) {
-              bool anyInboxSelected = state.inboxTasks.any((t) => t.selected ?? false);
-              bool anyTodaySelected = state.todayTasks.any((t) => t.selected ?? false);
-
-              if (anyInboxSelected || anyTodaySelected) {
-                return const SafeArea(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: BottomTaskActions(),
-                  ),
-                );
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
-        ],
+      child: StreamBuilder<Label?>(
+        stream: context.read<MainCubit>().labelCubitStream,
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return _body(context);
+          } else {
+            return BlocProvider(
+              key: UniqueKey(),
+              create: (context) => LabelCubit(snapshot.data!, labelsCubit: context.read<LabelsCubit>()),
+              child: _body(context),
+            );
+          }
+        },
       ),
     );
   }
 
-  Widget _content() {
-    return Column(
+  Widget _body(BuildContext context) {
+    return Stack(
       children: [
-        BlocBuilder<MainCubit, MainCubitState>(
+        Scaffold(
+          appBar: _appBar(context),
+          floatingActionButton: _floatingButton(),
+          bottomNavigationBar: _bottomBar(context),
+          body: _content(),
+        ),
+        BlocBuilder<TasksCubit, TasksCubitState>(
           builder: (context, state) {
-            switch (state.homeViewType) {
-              case HomeViewType.inbox:
-                return InboxAppBar(
-                  title: t.bottomBar.inbox,
-                  leadingAsset: "assets/images/icons/_common/tray.svg",
-                );
-              case HomeViewType.today:
-                return const TodayAppBar();
-              case HomeViewType.calendar:
-                return const SizedBox();
-              default:
-                return const SizedBox();
+            bool anyInboxSelected = state.inboxTasks.any((t) => t.selected ?? false);
+            bool anyTodaySelected = state.todayTasks.any((t) => t.selected ?? false);
+            bool anyLabelsSelected = state.labelTasks.any((t) => t.selected ?? false);
+
+            if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
+              return const SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: BottomTaskActions(),
+                ),
+              );
+            } else {
+              return const SizedBox();
             }
           },
         ),
-        Expanded(
-          child: BlocBuilder<MainCubit, MainCubitState>(
-            builder: (context, state) {
-              switch (state.homeViewType) {
-                case HomeViewType.inbox:
-                  return _views[1];
-                case HomeViewType.today:
-                  return _views[2];
-                case HomeViewType.calendar:
-                  return _views[3];
-                case HomeViewType.label:
-                  Label label = state.selectedLabel!;
-
-                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                  return BlocProvider(
-                    key: UniqueKey(),
-                    create: (context) => LabelCubit(label, labelsCubit: labelsCubit),
-                    child: LabelView(key: ObjectKey(label)),
-                  );
-                default:
-                  return const SizedBox();
-              }
-            },
-          ),
-        ),
       ],
+    );
+  }
+
+  PreferredSizeWidget _appBar(BuildContext context) {
+    MainCubitState state = context.watch<MainCubit>().state;
+
+    switch (state.homeViewType) {
+      case HomeViewType.inbox:
+        return AppBarComp(
+          title: t.bottomBar.inbox,
+          leading: SvgPicture.asset(
+            "assets/images/icons/_common/tray.svg",
+            width: 30,
+            height: 30,
+          ),
+          actions: const [TaskListMenu()],
+        );
+      case HomeViewType.today:
+        return const TodayAppBar();
+      case HomeViewType.calendar:
+        return AppBarComp(title: t.bottomBar.calendar);
+      case HomeViewType.label:
+        return LabelAppBar(label: state.selectedLabel!, showDone: false);
+      default:
+        return const PreferredSize(preferredSize: Size.zero, child: SizedBox());
+    }
+  }
+
+  Widget _content() {
+    return BlocBuilder<MainCubit, MainCubitState>(
+      builder: (context, state) {
+        switch (state.homeViewType) {
+          case HomeViewType.inbox:
+            return _views[1];
+          case HomeViewType.today:
+            return _views[2];
+          case HomeViewType.calendar:
+            return _views[3];
+          case HomeViewType.label:
+            Label label = state.selectedLabel!;
+            return LabelView(key: ObjectKey(label));
+          default:
+            return const SizedBox();
+        }
+      },
     );
   }
 
