@@ -44,13 +44,13 @@ dependencies:
 dev_dependencies:
   flutter_launcher_icons_maker: ^0.10.1
   flutter_lints: ^2.0.1
-  flutter_native_splash: ^2.1.3+1
+  flutter_native_splash: ^2.2.2
   flutter_test:
     sdk: flutter
 
 flutter_native_splash:
-  color: "#FFFFFF"
-  image: "assets/images/logo.png"
+  color: "#FAFBFD"
+  image: "assets/images/akiflow_icon.png"
   android: true
   ios: true
 
