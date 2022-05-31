@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_task_list.dart';
@@ -55,63 +56,68 @@ class _View extends StatelessWidget {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
-    return SlidableAutoCloseBehavior(
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: PrimaryScrollController.of(context) ?? ScrollController(),
-        slivers: [
-          TodayTaskList(
-            tasks: todos,
-            sorting: TaskListSorting.descending,
-            showTasks: context.watch<TodayCubit>().state.todosListOpen,
-            showLabel: true,
-            footer: null,
-            showPlanInfo: false,
-            header: _Header(
-              t.today.toDos,
+    return RefreshIndicator(
+      onRefresh: () async {
+        return context.read<SyncCubit>().sync();
+      },
+      child: SlidableAutoCloseBehavior(
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: PrimaryScrollController.of(context) ?? ScrollController(),
+          slivers: [
+            TodayTaskList(
               tasks: todos,
-              onClick: () {
-                context.read<TodayCubit>().openTodoList();
-              },
-              listOpened: context.watch<TodayCubit>().state.todosListOpen,
-              usePrimaryColor: true,
+              sorting: TaskListSorting.descending,
+              showTasks: context.watch<TodayCubit>().state.todosListOpen,
+              showLabel: true,
+              footer: null,
+              showPlanInfo: false,
+              header: _Header(
+                t.today.toDos,
+                tasks: todos,
+                onClick: () {
+                  context.read<TodayCubit>().openTodoList();
+                },
+                listOpened: context.watch<TodayCubit>().state.todosListOpen,
+                usePrimaryColor: true,
+              ),
             ),
-          ),
-          TodayTaskList(
-            tasks: pinned,
-            sorting: TaskListSorting.descending,
-            showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
-            showLabel: true,
-            footer: null,
-            showPlanInfo: false,
-            header: _Header(
-              t.today.pinnedInCalendar,
+            TodayTaskList(
               tasks: pinned,
-              onClick: () {
-                context.read<TodayCubit>().openPinnedList();
-              },
-              listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
-              usePrimaryColor: false,
+              sorting: TaskListSorting.descending,
+              showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
+              showLabel: true,
+              footer: null,
+              showPlanInfo: false,
+              header: _Header(
+                t.today.pinnedInCalendar,
+                tasks: pinned,
+                onClick: () {
+                  context.read<TodayCubit>().openPinnedList();
+                },
+                listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
+                usePrimaryColor: false,
+              ),
             ),
-          ),
-          TodayTaskList(
-            tasks: completed,
-            sorting: TaskListSorting.descending,
-            showTasks: context.watch<TodayCubit>().state.completedListOpen,
-            showLabel: true,
-            footer: null,
-            showPlanInfo: false,
-            header: _Header(
-              t.today.done,
+            TodayTaskList(
               tasks: completed,
-              onClick: () {
-                context.read<TodayCubit>().openCompletedList();
-              },
-              listOpened: context.watch<TodayCubit>().state.completedListOpen,
-              usePrimaryColor: false,
+              sorting: TaskListSorting.descending,
+              showTasks: context.watch<TodayCubit>().state.completedListOpen,
+              showLabel: true,
+              footer: null,
+              showPlanInfo: false,
+              header: _Header(
+                t.today.done,
+                tasks: completed,
+                onClick: () {
+                  context.read<TodayCubit>().openCompletedList();
+                },
+                listOpened: context.watch<TodayCubit>().state.completedListOpen,
+                usePrimaryColor: false,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

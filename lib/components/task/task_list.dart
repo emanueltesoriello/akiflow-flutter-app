@@ -42,94 +42,99 @@ class TaskList extends StatelessWidget {
 
     tasks = TaskExt.sort(tasks, sorting: sorting);
 
-    return SlidableAutoCloseBehavior(
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: PrimaryScrollController.of(context) ?? ScrollController(),
-        slivers: [
-          // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
-          //be available in flutter stable branch
-          ReorderableSliverList(
-            onReorderStarted: (index) {
-              int indexWithoutHeaderWidget = index - 1;
+    return RefreshIndicator(
+      onRefresh: () async {
+        return context.read<SyncCubit>().sync();
+      },
+      child: SlidableAutoCloseBehavior(
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: PrimaryScrollController.of(context) ?? ScrollController(),
+          slivers: [
+            // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
+            //be available in flutter stable branch
+            ReorderableSliverList(
+              onReorderStarted: (index) {
+                int indexWithoutHeaderWidget = index - 1;
 
-              context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
-            },
-            buildDraggableFeedback: (context, constraints, child) {
-              return Material(
-                elevation: 1,
-                color: ColorsExt.grey6(context),
-                borderRadius: BorderRadius.zero,
-                child: ConstrainedBox(constraints: constraints, child: child),
-              );
-            },
-            onReorder: (int oldIndex, int newIndex) {
-              context.read<TasksCubit>().reorder(
-                    oldIndex - 1,
-                    newIndex - 1,
-                    newTasksListOrdered: tasks,
-                    sorting: sorting,
-                  );
-            },
-            delegate: ReorderableSliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                if (index == 0) {
-                  if (notice == null) {
-                    return const SizedBox(key: ObjectKey(0), height: 0);
-                  }
-
-                  return Container(
-                    key: ObjectKey(notice),
-                    child: notice!,
-                  );
-                }
-
-                index -= 1;
-
-                Task task = tasks[index];
-                TasksCubit tasksCubit = context.read<TasksCubit>();
-                SyncCubit syncCubit = context.read<SyncCubit>();
-
-                EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit, task: task);
-
-                return BlocProvider(
-                  create: (context) => editTaskCubit,
-                  child: TaskRow(
-                    key: ObjectKey(task),
-                    task: task,
-                    hideInboxLabel: hideInboxLabel,
-                    showLabel: showLabel,
-                    showPlanInfo: showPlanInfo,
-                    selectTask: () {
-                      context.read<TasksCubit>().select(task);
-                    },
-                    selectMode: tasks.any((element) => element.selected ?? false),
-                    completedClick: () {
-                      editTaskCubit.markAsDone(forceUpdate: true);
-                    },
-                    swipeActionPlanClick: () {
-                      _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
-                    },
-                    swipeActionSelectLabelClick: () {
-                      showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) => LabelsModal(
-                          selectLabel: (Label label) {
-                            editTaskCubit.setLabel(label, forceUpdate: true);
-                          },
-                        ),
-                      );
-                    },
-                    swipeActionSnoozeClick: () {
-                      _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
-                    },
-                  ),
+                context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
+              },
+              buildDraggableFeedback: (context, constraints, child) {
+                return Material(
+                  elevation: 1,
+                  color: ColorsExt.grey6(context),
+                  borderRadius: BorderRadius.zero,
+                  child: ConstrainedBox(constraints: constraints, child: child),
                 );
               },
-              childCount: tasks.length + 1,
+              onReorder: (int oldIndex, int newIndex) {
+                context.read<TasksCubit>().reorder(
+                      oldIndex - 1,
+                      newIndex - 1,
+                      newTasksListOrdered: tasks,
+                      sorting: sorting,
+                    );
+              },
+              delegate: ReorderableSliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  if (index == 0) {
+                    if (notice == null) {
+                      return const SizedBox(key: ObjectKey(0), height: 0);
+                    }
+
+                    return Container(
+                      key: ObjectKey(notice),
+                      child: notice!,
+                    );
+                  }
+
+                  index -= 1;
+
+                  Task task = tasks[index];
+                  TasksCubit tasksCubit = context.read<TasksCubit>();
+                  SyncCubit syncCubit = context.read<SyncCubit>();
+
+                  EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit, task: task);
+
+                  return BlocProvider(
+                    create: (context) => editTaskCubit,
+                    child: TaskRow(
+                      key: ObjectKey(task),
+                      task: task,
+                      hideInboxLabel: hideInboxLabel,
+                      showLabel: showLabel,
+                      showPlanInfo: showPlanInfo,
+                      selectTask: () {
+                        context.read<TasksCubit>().select(task);
+                      },
+                      selectMode: tasks.any((element) => element.selected ?? false),
+                      completedClick: () {
+                        editTaskCubit.markAsDone(forceUpdate: true);
+                      },
+                      swipeActionPlanClick: () {
+                        _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
+                      },
+                      swipeActionSelectLabelClick: () {
+                        showCupertinoModalBottomSheet(
+                          context: context,
+                          builder: (context) => LabelsModal(
+                            selectLabel: (Label label) {
+                              editTaskCubit.setLabel(label, forceUpdate: true);
+                            },
+                          ),
+                        );
+                      },
+                      swipeActionSnoozeClick: () {
+                        _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
+                      },
+                    ),
+                  );
+                },
+                childCount: tasks.length + 1,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

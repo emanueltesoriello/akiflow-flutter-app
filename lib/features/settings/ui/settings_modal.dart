@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
+import 'package:mobile/components/base/sync_progress.dart';
 import 'package:mobile/components/label/label_item.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
@@ -18,6 +19,7 @@ import 'package:mobile/features/settings/ui/search_modal.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/features/settings/ui/view/button_selectable.dart';
 import 'package:mobile/features/settings/ui/view/folder_item.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -85,6 +87,13 @@ class SettingsModal extends StatelessWidget {
                           );
                         },
                       ),
+                    ),
+                    const SizedBox(width: 12),
+                    InkWell(
+                      onTap: () {
+                        context.read<SyncCubit>().sync();
+                      },
+                      child: const SyncProgress(),
                     ),
                     const SizedBox(width: 12),
                     InkWell(

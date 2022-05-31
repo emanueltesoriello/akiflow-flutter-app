@@ -22,7 +22,6 @@ class SettingsPage extends StatelessWidget {
           AppBarComp(
             title: t.settings.title,
             showBack: true,
-            showSyncButton: false,
           ),
           Expanded(
             child: ContainerInnerShadow(

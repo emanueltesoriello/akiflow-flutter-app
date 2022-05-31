@@ -42,7 +42,6 @@ class LabelAppBar extends StatelessWidget {
 
     return AppBarComp(
       title: label.title ?? t.noTitle,
-      showSyncButton: false,
       leading: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),

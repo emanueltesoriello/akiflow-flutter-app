@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile/components/base/sync_progress.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
 class AppBarComp extends StatelessWidget {
@@ -13,7 +10,6 @@ class AppBarComp extends StatelessWidget {
   final bool showLogo;
   final Widget? leading;
   final Widget? customTitle;
-  final bool showSyncButton;
 
   const AppBarComp({
     Key? key,
@@ -24,7 +20,6 @@ class AppBarComp extends StatelessWidget {
     this.showLogo = false,
     this.leading,
     this.customTitle,
-    this.showSyncButton = true,
   }) : super(key: key);
 
   @override
@@ -126,19 +121,6 @@ class AppBarComp extends StatelessWidget {
       children: [
         Container(width: 16),
         ...actions,
-        const SizedBox(width: 10),
-        Builder(builder: (context) {
-          if (!showSyncButton) {
-            return const SizedBox();
-          }
-
-          return InkWell(
-            onTap: () {
-              context.read<SyncCubit>().sync();
-            },
-            child: const SyncProgress(),
-          );
-        }),
       ],
     );
   }

@@ -30,7 +30,6 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           AppBarComp(
             title: t.settings.integrations.gmail.title,
             showBack: true,
-            showSyncButton: false,
             actions: [
               IconButton(
                 icon: const Icon(Icons.sync),

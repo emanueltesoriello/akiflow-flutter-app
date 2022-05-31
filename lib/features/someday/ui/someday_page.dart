@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/someday/cubit/someday_cubit.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_task_list.dart';
@@ -27,28 +28,33 @@ class _View extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
 
-    return SlidableAutoCloseBehavior(
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: PrimaryScrollController.of(context) ?? ScrollController(),
-        slivers: [
-          TodayTaskList(
-            tasks: todayTasks,
-            sorting: TaskListSorting.descending,
-            showTasks: context.watch<TodayCubit>().state.todosListOpen,
-            showLabel: true,
-            footer: null,
-            showPlanInfo: false,
-            header: _Header(
-              t.today.toDos,
+    return RefreshIndicator(
+      onRefresh: () async {
+        return context.read<SyncCubit>().sync();
+      },
+      child: SlidableAutoCloseBehavior(
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: PrimaryScrollController.of(context) ?? ScrollController(),
+          slivers: [
+            TodayTaskList(
               tasks: todayTasks,
-              onClick: () {
-                context.read<TodayCubit>().openTodoList();
-              },
-              listOpened: context.watch<TodayCubit>().state.todosListOpen,
+              sorting: TaskListSorting.descending,
+              showTasks: context.watch<TodayCubit>().state.todosListOpen,
+              showLabel: true,
+              footer: null,
+              showPlanInfo: false,
+              header: _Header(
+                t.today.toDos,
+                tasks: todayTasks,
+                onClick: () {
+                  context.read<TodayCubit>().openTodoList();
+                },
+                listOpened: context.watch<TodayCubit>().state.todosListOpen,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

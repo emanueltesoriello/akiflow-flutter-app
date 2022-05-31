@@ -23,7 +23,6 @@ class AboutPage extends StatelessWidget {
           AppBarComp(
             title: t.settings.about.title,
             showBack: true,
-            showSyncButton: false,
           ),
           Expanded(
             child: ContainerInnerShadow(

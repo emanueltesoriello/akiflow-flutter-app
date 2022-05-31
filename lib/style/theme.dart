@@ -88,6 +88,10 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     activeTickMarkColor: Colors.transparent,
     inactiveTickMarkColor: Colors.transparent,
   ),
+  useMaterial3: true,
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: ColorsLight.akiflow,
+  ),
 );
 
 /// Dark Theme

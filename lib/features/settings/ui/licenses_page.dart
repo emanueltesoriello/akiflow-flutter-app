@@ -16,7 +16,6 @@ class LicensesPage extends StatelessWidget {
           AppBarComp(
             title: t.settings.about.licensesInfo,
             showBack: true,
-            showSyncButton: false,
           ),
           Expanded(
             child: ContainerInnerShadow(

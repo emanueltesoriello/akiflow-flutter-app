@@ -357,7 +357,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             ),
             child: SvgPicture.asset(
               "assets/images/icons/_common/plus.svg",
-              color: Theme.of(context).backgroundColor,
+              color: ColorsExt.background(context),
             ),
           ),
         );

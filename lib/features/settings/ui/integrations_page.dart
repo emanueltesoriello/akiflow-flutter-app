@@ -24,7 +24,6 @@ class IntegrationsPage extends StatelessWidget {
           AppBarComp(
             title: t.settings.integrations.title,
             showBack: true,
-            showSyncButton: false,
           ),
           Expanded(
             child: ContainerInnerShadow(
