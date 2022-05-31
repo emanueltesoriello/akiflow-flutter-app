@@ -130,6 +130,10 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (tasks.isEmpty) {
+      return const SizedBox();
+    }
+
     return InkWell(
       onTap: onClick,
       child: Container(
