@@ -210,6 +210,7 @@
     }
   },
   "today": {
+    "title": "Today",
     "toDos": "To-dos",
     "pinnedInCalendar": "Pinned in calendar",
     "done": "Done"

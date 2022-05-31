@@ -36,12 +36,29 @@ class _TodayAppBarState extends State<TodayAppBar> {
             onTap: () => context.read<TodayCubit>().toggleCalendarFormat(),
             child: Row(
               children: [
-                Text(
-                  DateFormat('EEE, dd').format(DateTime.now()),
-                  textAlign: TextAlign.start,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: ColorsExt.grey2(context)),
+                BlocBuilder<TodayCubit, TodayCubitState>(
+                  builder: (context, state) {
+                    bool isToday = isSameDay(state.selectedDate, DateTime.now());
+
+                    String text;
+                    Color color;
+
+                    if (isToday) {
+                      text = t.today.title;
+                      color = ColorsExt.akiflow(context);
+                    } else {
+                      text = DateFormat('EEE, dd').format(DateTime.now());
+                      color = ColorsExt.grey2(context);
+                    }
+
+                    return Text(
+                      text,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: color),
+                    );
+                  },
                 ),
                 const SizedBox(width: 10),
                 BlocBuilder<TodayCubit, TodayCubitState>(
@@ -61,10 +78,20 @@ class _TodayAppBarState extends State<TodayAppBar> {
           ),
           leading: _leading(context),
           actions: [
-            InkWell(
-              onTap: () => context.read<TodayCubit>().todayClick(),
-              child: Text(t.bottomBar.today,
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.grey3(context))),
+            BlocBuilder<TodayCubit, TodayCubitState>(
+              builder: (context, state) {
+                bool isToday = isSameDay(state.selectedDate, DateTime.now());
+
+                if (isToday) {
+                  return const SizedBox();
+                }
+
+                return InkWell(
+                  onTap: () => context.read<TodayCubit>().todayClick(),
+                  child: Text(t.bottomBar.today,
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.akiflow(context))),
+                );
+              },
             ),
             const TaskListMenu(),
           ],

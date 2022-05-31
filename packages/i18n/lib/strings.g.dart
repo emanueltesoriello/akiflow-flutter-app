@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 198 
+ * Strings: 199 
  *
- * Built on 2022-05-31 at 11:14 UTC
+ * Built on 2022-05-31 at 15:34 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -531,6 +531,7 @@ class _StringsTodayEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
+	String get title => 'Today';
 	String get toDos => 'To-dos';
 	String get pinnedInCalendar => 'Pinned in calendar';
 	String get done => 'Done';
@@ -931,6 +932,7 @@ extension on _StringsEn {
 			'editTask.repeatingEditDialog.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
 			'editTask.repeatingEditDialog.onlyThis': 'Only this task',
 			'editTask.repeatingEditDialog.thisAndAllFuture': 'This and all future tasks',
+			'today.title': 'Today',
 			'today.toDos': 'To-dos',
 			'today.pinnedInCalendar': 'Pinned in calendar',
 			'today.done': 'Done',
