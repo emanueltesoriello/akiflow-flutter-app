@@ -546,7 +546,7 @@ extension TaskExt on Task {
     try {
       var document = parse(htmlData);
 
-      text = (document.body?.children ?? []).map((e) => e.text).join(joinCharacter ?? ' ');
+      text = (document.body?.nodes ?? []).map((node) => node.text).join(joinCharacter ?? ' ').trim();
 
       if (text.isEmpty) {
         text = htmlData;
