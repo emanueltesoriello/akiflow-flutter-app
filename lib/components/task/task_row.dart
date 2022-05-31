@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/components/task/checkbox_animated.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/task_info.dart';
@@ -104,16 +105,14 @@ class TaskRow extends StatelessWidget {
             TaskExt.openGmailUrlIfAny(updated, authCubit, tasksCubit);
           }
         },
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
-          color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: Builder(
+        child: IntrinsicHeight(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 6, 16, 16),
+            color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Builder(
                   builder: (context) {
                     Color? color;
 
@@ -128,14 +127,15 @@ class TaskRow extends StatelessWidget {
                     }
 
                     if (color == null) {
-                      return const SizedBox();
+                      return const SizedBox(width: 6 + 8);
                     }
 
-                    return Center(
+                    return Align(
+                      alignment: Alignment.topCenter,
                       child: Container(
                         width: 6,
                         height: 6,
-                        margin: const EdgeInsets.all(16 - 10),
+                        margin: const EdgeInsets.only(top: 16, left: 8),
                         decoration: BoxDecoration(
                           color: color,
                           shape: BoxShape.circle,
@@ -144,36 +144,48 @@ class TaskRow extends StatelessWidget {
                     );
                   },
                 ),
-              ),
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: Builder(builder: (context) {
+                Builder(builder: (context) {
                   if (selectMode) {
                     return _radio(context);
                   } else {
-                    return _checkbox(context);
+                    return CheckboxAnimated(
+                      task,
+                      key: ObjectKey(task),
+                      onTap: () {
+                        print(task.id);
+                        if (!task.isCompletedComputed) {
+                          TasksCubit tasksCubit = context.read<TasksCubit>();
+                          AuthCubit authCubit = context.read<AuthCubit>();
+
+                          TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
+                        }
+
+                        completedClick();
+                      },
+                    );
                   }
                 }),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _firstLine(context),
-                    _secondLine(context),
-                    TaskInfo(
-                      task,
-                      hideInboxLabel: hideInboxLabel,
-                      showLabel: showLabel,
-                      selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                      showPlanInfo: showPlanInfo,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _firstLine(context),
+                        _secondLine(context),
+                        TaskInfo(
+                          task,
+                          hideInboxLabel: hideInboxLabel,
+                          showLabel: showLabel,
+                          selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                          showPlanInfo: showPlanInfo,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -231,47 +243,6 @@ class TaskRow extends StatelessWidget {
     return const SizedBox();
   }
 
-  InkWell _checkbox(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (!task.isCompletedComputed) {
-          TasksCubit tasksCubit = context.read<TasksCubit>();
-          AuthCubit authCubit = context.read<AuthCubit>();
-
-          TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
-        }
-
-        completedClick();
-      },
-      child: Builder(builder: (context) {
-        bool completed = task.isCompletedComputed;
-
-        Color color;
-
-        switch (task.priority) {
-          case 1:
-            color = ColorsExt.red(context);
-            break;
-          case 2:
-            color = ColorsExt.yellow(context);
-            break;
-          case 3:
-            color = ColorsExt.green(context);
-            break;
-          default:
-            color = completed ? ColorsExt.grey3(context) : ColorsExt.grey3(context);
-        }
-
-        return SvgPicture.asset(
-          completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
-          width: 20,
-          height: 20,
-          color: color,
-        );
-      }),
-    );
-  }
-
   Widget _radio(BuildContext context) {
     bool selected = task.selected ?? false;
 
@@ -293,11 +264,20 @@ class TaskRow extends StatelessWidget {
 
     return InkWell(
       onTap: selectTask,
-      child: SvgPicture.asset(
-        selected ? "assets/images/icons/_common/largecircle_fill_circle.svg" : "assets/images/icons/_common/circle.svg",
-        width: 20,
-        height: 20,
-        color: color,
+      child: Container(
+        height: double.infinity,
+        padding: const EdgeInsets.all(10),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: SvgPicture.asset(
+            selected
+                ? "assets/images/icons/_common/largecircle_fill_circle.svg"
+                : "assets/images/icons/_common/circle.svg",
+            width: 20,
+            height: 20,
+            color: color,
+          ),
+        ),
       ),
     );
   }
