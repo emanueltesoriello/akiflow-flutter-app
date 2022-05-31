@@ -22,8 +22,11 @@ class FolderItem extends StatelessWidget {
         child: Center(
           child: Row(
             children: [
-              SvgPicture.asset("assets/images/icons/_common/folder.svg",
-                  width: 22, height: 22, color: ColorsExt.grey2(context)),
+              SizedBox(
+                width: 22,
+                height: 22,
+                child: SvgPicture.asset("assets/images/icons/_common/folder.svg", color: ColorsExt.grey2(context)),
+              ),
               const SizedBox(width: 8),
               Text(
                 label.title!,

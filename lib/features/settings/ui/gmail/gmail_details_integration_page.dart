@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
-import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
@@ -40,45 +39,42 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
             ],
           ),
           Expanded(
-            child: ContainerInnerShadow(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _header(),
-                  const SizedBox(height: 32),
-                  SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
-                  _importOptions(),
-                  const SizedBox(height: 20),
-                  SettingHeaderText(text: t.settings.integrations.gmail.behavior),
-                  _behaviour(),
-                  const SizedBox(height: 20),
-                  SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
-                  BlocBuilder<SettingsCubit, SettingsCubitState>(
-                    builder: (context, state) {
-                      Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _header(),
+                const SizedBox(height: 32),
+                SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
+                _importOptions(),
+                const SizedBox(height: 20),
+                SettingHeaderText(text: t.settings.integrations.gmail.behavior),
+                _behaviour(),
+                const SizedBox(height: 20),
+                SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
+                BlocBuilder<SettingsCubit, SettingsCubitState>(
+                  builder: (context, state) {
+                    Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
-                      bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
+                    bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
 
-                      return IntegrationSetting(
-                        title: t.settings.integrations.gmail.useSuperhuman,
-                        subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
-                        trailingWidget: CupertinoSwitch(
-                          activeColor: ColorsExt.akiflow(context),
-                          value: isSuperhumanEnabled ?? false,
-                          onChanged: (value) {
-                            context
-                                .read<SettingsCubit>()
-                                .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
-                          },
-                        ),
-                        onPressed: () {},
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 32),
-                ],
-              ),
+                    return IntegrationSetting(
+                      title: t.settings.integrations.gmail.useSuperhuman,
+                      subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
+                      trailingWidget: CupertinoSwitch(
+                        activeColor: ColorsExt.akiflow(context),
+                        value: isSuperhumanEnabled ?? false,
+                        onChanged: (value) {
+                          context
+                              .read<SettingsCubit>()
+                              .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
+                        },
+                      ),
+                      onPressed: () {},
+                    );
+                  },
+                ),
+                const SizedBox(height: 32),
+              ],
             ),
           ),
         ],

@@ -10,6 +10,7 @@ class AppBarComp extends StatelessWidget {
   final bool showLogo;
   final Widget? leading;
   final Widget? customTitle;
+  final Widget? child;
 
   const AppBarComp({
     Key? key,
@@ -20,38 +21,47 @@ class AppBarComp extends StatelessWidget {
     this.showLogo = false,
     this.leading,
     this.customTitle,
+    this.child,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          color: ColorsExt.background(context),
-          height: MediaQuery.of(context).padding.top + 4,
-        ),
-        Container(
-          constraints: const BoxConstraints(maxHeight: 56),
-          padding: const EdgeInsets.symmetric(vertical: 12.5),
-          color: ColorsExt.background(context),
-          child: Row(
-            children: [
-              const SizedBox(width: 16),
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildLeading(context),
-                    Expanded(child: _buildTitle(context)),
-                    _buildActions(context),
-                  ],
-                ),
+    return Theme(
+      data: Theme.of(context).copyWith(useMaterial3: false),
+      child: Material(
+        elevation: 4,
+        shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
+        child: Column(
+          children: [
+            Container(
+              color: ColorsExt.background(context),
+              height: MediaQuery.of(context).padding.top + 4,
+            ),
+            Container(
+              constraints: const BoxConstraints(maxHeight: 56),
+              padding: const EdgeInsets.symmetric(vertical: 12.5),
+              color: ColorsExt.background(context),
+              child: Row(
+                children: [
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _buildLeading(context),
+                        Expanded(child: _buildTitle(context)),
+                        _buildActions(context),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
               ),
-              const SizedBox(width: 8),
-            ],
-          ),
+            ),
+            if (child != null) child!
+          ],
         ),
-      ],
+      ),
     );
   }
 

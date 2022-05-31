@@ -39,6 +39,7 @@ class SettingsModal extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         decoration: const BoxDecoration(color: Colors.transparent),
+        constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.9),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
@@ -127,11 +128,13 @@ class SettingsModal extends StatelessWidget {
 
                     return ButtonSelectable(
                       title: t.bottomBar.inbox,
-                      leading: SvgPicture.asset(
-                        "assets/images/icons/_common/tray.svg",
-                        width: 24,
-                        height: 24,
-                        color: ColorsExt.grey2(context),
+                      leading: SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: SvgPicture.asset(
+                          "assets/images/icons/_common/tray.svg",
+                          color: ColorsExt.grey2(context),
+                        ),
                       ),
                       selected: homeViewType == HomeViewType.inbox,
                       trailing: Builder(builder: (context) {
@@ -160,10 +163,13 @@ class SettingsModal extends StatelessWidget {
 
                     return ButtonSelectable(
                       title: t.bottomBar.today,
-                      leading: SvgPicture.asset(
-                        "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                        height: 19,
-                        color: ColorsExt.grey1(context),
+                      leading: SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: SvgPicture.asset(
+                          "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+                          color: ColorsExt.grey1(context),
+                        ),
                       ),
                       selected: homeViewType == HomeViewType.today,
                       trailing: Builder(builder: (context) {
@@ -194,10 +200,13 @@ class SettingsModal extends StatelessWidget {
 
                     return ButtonSelectable(
                       title: t.task.someday,
-                      leading: SvgPicture.asset(
-                        "assets/images/icons/_common/tray.svg",
-                        height: 19,
-                        color: ColorsExt.grey3(context),
+                      leading: SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: SvgPicture.asset(
+                          "assets/images/icons/_common/archivebox.svg",
+                          color: ColorsExt.grey3(context),
+                        ),
                       ),
                       selected: homeViewType == HomeViewType.someday,
                       trailing: Text(
@@ -220,10 +229,14 @@ class SettingsModal extends StatelessWidget {
 
                     return ButtonSelectable(
                       title: t.allTasks,
-                      leading: SvgPicture.asset(
-                        "assets/images/icons/_common/rectangle_grid_1x2.svg",
-                        height: 19,
-                        color: ColorsExt.grey3(context),
+                      leading: SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: SvgPicture.asset(
+                          "assets/images/icons/_common/rectangle_grid_1x2.svg",
+                          height: 19,
+                          color: ColorsExt.grey3(context),
+                        ),
                       ),
                       selected: homeViewType == HomeViewType.someday,
                       trailing: Text(

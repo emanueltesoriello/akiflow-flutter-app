@@ -29,73 +29,71 @@ class _TodayAppBarState extends State<TodayAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AppBarComp(
-          customTitle: InkWell(
-            onTap: () => context.read<TodayCubit>().toggleCalendarFormat(),
-            child: Row(
-              children: [
-                BlocBuilder<TodayCubit, TodayCubitState>(
-                  builder: (context, state) {
-                    bool isToday = isSameDay(state.selectedDate, DateTime.now());
-
-                    String text;
-                    Color color;
-
-                    if (isToday) {
-                      text = t.today.title;
-                      color = ColorsExt.akiflow(context);
-                    } else {
-                      text = DateFormat('EEE, dd').format(DateTime.now());
-                      color = ColorsExt.grey2(context);
-                    }
-
-                    return Text(
-                      text,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: color),
-                    );
-                  },
-                ),
-                const SizedBox(width: 10),
-                BlocBuilder<TodayCubit, TodayCubitState>(
-                  builder: (context, state) {
-                    return SvgPicture.asset(
-                      state.calendarFormat == CalendarFormatState.month
-                          ? "assets/images/icons/_common/chevron_up.svg"
-                          : "assets/images/icons/_common/chevron_down.svg",
-                      width: 16,
-                      height: 16,
-                      color: ColorsExt.grey3(context),
-                    );
-                  },
-                )
-              ],
-            ),
-          ),
-          leading: _leading(context),
-          actions: [
+    return AppBarComp(
+      customTitle: InkWell(
+        onTap: () => context.read<TodayCubit>().toggleCalendarFormat(),
+        child: Row(
+          children: [
             BlocBuilder<TodayCubit, TodayCubitState>(
               builder: (context, state) {
                 bool isToday = isSameDay(state.selectedDate, DateTime.now());
 
+                String text;
+                Color color;
+
                 if (isToday) {
-                  return const SizedBox();
+                  text = t.today.title;
+                  color = ColorsExt.akiflow(context);
+                } else {
+                  text = DateFormat('EEE, dd').format(DateTime.now());
+                  color = ColorsExt.grey2(context);
                 }
 
-                return InkWell(
-                  onTap: () => context.read<TodayCubit>().todayClick(),
-                  child: Text(t.bottomBar.today,
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.akiflow(context))),
+                return Text(
+                  text,
+                  textAlign: TextAlign.start,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: color),
                 );
               },
             ),
-            const TaskListMenu(),
+            const SizedBox(width: 10),
+            BlocBuilder<TodayCubit, TodayCubitState>(
+              builder: (context, state) {
+                return SvgPicture.asset(
+                  state.calendarFormat == CalendarFormatState.month
+                      ? "assets/images/icons/_common/chevron_up.svg"
+                      : "assets/images/icons/_common/chevron_down.svg",
+                  width: 16,
+                  height: 16,
+                  color: ColorsExt.grey3(context),
+                );
+              },
+            )
           ],
         ),
+      ),
+      leading: _leading(context),
+      actions: [
+        BlocBuilder<TodayCubit, TodayCubitState>(
+          builder: (context, state) {
+            bool isToday = isSameDay(state.selectedDate, DateTime.now());
+
+            if (isToday) {
+              return const SizedBox();
+            }
+
+            return InkWell(
+              onTap: () => context.read<TodayCubit>().todayClick(),
+              child: Text(t.bottomBar.today,
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.akiflow(context))),
+            );
+          },
+        ),
+        const TaskListMenu(),
+      ],
+      child: Column(children: [
         Container(color: ColorsExt.background(context), height: 12),
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
@@ -209,7 +207,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
             );
           },
         ),
-      ],
+      ]),
     );
   }
 

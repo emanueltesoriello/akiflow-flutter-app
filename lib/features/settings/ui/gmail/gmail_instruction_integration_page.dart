@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/components/base/app_bar.dart';
-import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/view/integration_header.dart';
 import 'package:mobile/style/colors.dart';
@@ -32,43 +31,40 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
               showBack: true,
             ),
             Expanded(
-              child: ContainerInnerShadow(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                child: Column(
-                  children: [
-                    ListView(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(16),
-                      children: [
-                        IntegrationDetailsHeader(
-                          isActive: false,
-                          identifier: t.settings.integrations.gmail.communication,
-                          connectorId: 'gmail',
-                        ),
-                        const SizedBox(height: 32),
-                        _step1(context),
-                        const SizedBox(height: 16),
-                        _mailPlaceholder(context),
-                        const SizedBox(height: 32),
-                        _step2(context),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                    const Spacer(),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-                      child: ActionButton(
-                        child: Text(
-                          t.connect,
-                          style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
-                        ),
-                        onPressed: () {
-                          context.read<SettingsCubit>().connectGmail();
-                        },
+              child: Column(
+                children: [
+                  ListView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      IntegrationDetailsHeader(
+                        isActive: false,
+                        identifier: t.settings.integrations.gmail.communication,
+                        connectorId: 'gmail',
                       ),
-                    )
-                  ],
-                ),
+                      const SizedBox(height: 32),
+                      _step1(context),
+                      const SizedBox(height: 16),
+                      _mailPlaceholder(context),
+                      const SizedBox(height: 32),
+                      _step2(context),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                  const Spacer(),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                    child: ActionButton(
+                      child: Text(
+                        t.connect,
+                        style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
+                      ),
+                      onPressed: () {
+                        context.read<SettingsCubit>().connectGmail();
+                      },
+                    ),
+                  )
+                ],
               ),
             ),
           ],

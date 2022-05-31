@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/components/base/container_inner_shadow.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
@@ -135,7 +134,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     );
   }
 
-  Column _content() {
+  Widget _content() {
     return Column(
       children: [
         BlocBuilder<MainCubit, MainCubitState>(
@@ -156,36 +155,36 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           },
         ),
         Expanded(
-          child: ContainerInnerShadow(
-            child: BlocBuilder<MainCubit, MainCubitState>(
-              builder: (context, state) {
-                switch (state.homeViewType) {
-                  case HomeViewType.inbox:
-                    return _views[1];
-                  case HomeViewType.today:
-                    return _views[2];
-                  case HomeViewType.calendar:
-                    return _views[3];
-                  case HomeViewType.label:
-                    Label label = state.selectedLabel!;
+          child: BlocBuilder<MainCubit, MainCubitState>(
+            builder: (context, state) {
+              switch (state.homeViewType) {
+                case HomeViewType.inbox:
+                  return _views[1];
+                case HomeViewType.today:
+                  return _views[2];
+                case HomeViewType.calendar:
+                  return _views[3];
+                case HomeViewType.label:
+                  Label label = state.selectedLabel!;
 
-                    LabelsCubit labelsCubit = context.read<LabelsCubit>();
+                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
-                    return BlocProvider(
-                      key: UniqueKey(),
-                      create: (context) => LabelCubit(label, labelsCubit: labelsCubit),
-                      child: LabelView(key: ObjectKey(label)),
-                    );
-                  default:
-                    return const SizedBox();
-                }
-              },
-            ),
+                  return BlocProvider(
+                    key: UniqueKey(),
+                    create: (context) => LabelCubit(label, labelsCubit: labelsCubit),
+                    child: LabelView(key: ObjectKey(label)),
+                  );
+                default:
+                  return const SizedBox();
+              }
+            },
           ),
         ),
       ],
     );
   }
+
+  static const double bottomBarIconSize = 30;
 
   Widget _bottomBar(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
@@ -195,127 +194,141 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         List<Task> todos =
             List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
-        return BottomNavigationBar(
-          elevation: 16,
-          type: BottomNavigationBarType.fixed,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                  width: 29,
-                  height: 29,
-                  child: SvgPicture.asset("assets/images/icons/_common/line_horizontal_3.svg",
-                      color: ColorsExt.grey2(context))),
-              label: t.bottomBar.menu,
-            ),
-            BottomNavigationBarItem(
-                icon: Stack(
-                  children: [
-                    SizedBox(
-                        width: 29,
-                        height: 29,
-                        child:
-                            SvgPicture.asset("assets/images/icons/_common/tray.svg", color: ColorsExt.grey2(context))),
-                    _BottomIconBadge(inboxTasks.length.toString()),
+        return Theme(
+          data: Theme.of(context).copyWith(useMaterial3: false),
+          child: Material(
+            elevation: 4,
+            shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(height: 0.5, color: const Color(0xffE4EDF3)),
+                BottomNavigationBar(
+                  elevation: 16,
+                  type: BottomNavigationBarType.fixed,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: SizedBox(
+                          width: bottomBarIconSize,
+                          height: bottomBarIconSize,
+                          child: SvgPicture.asset("assets/images/icons/_common/line_horizontal_3.svg",
+                              color: ColorsExt.grey2(context))),
+                      label: t.bottomBar.menu,
+                    ),
+                    BottomNavigationBarItem(
+                        icon: Stack(
+                          children: [
+                            SizedBox(
+                                width: bottomBarIconSize,
+                                height: bottomBarIconSize,
+                                child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
+                                    color: ColorsExt.grey2(context))),
+                            _BottomIconBadge(inboxTasks.length.toString()),
+                          ],
+                        ),
+                        activeIcon: Stack(
+                          children: [
+                            SizedBox(
+                              width: bottomBarIconSize,
+                              height: bottomBarIconSize,
+                              child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            _BottomIconBadge(inboxTasks.length.toString()),
+                          ],
+                        ),
+                        label: t.bottomBar.inbox),
+                    BottomNavigationBarItem(
+                      icon: Stack(
+                        children: [
+                          SizedBox(
+                            width: bottomBarIconSize,
+                            height: bottomBarIconSize,
+                            child: SvgPicture.asset(
+                              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+                              color: ColorsExt.grey2(context),
+                            ),
+                          ),
+                          _BottomIconBadge(todos.length.toString()),
+                        ],
+                      ),
+                      activeIcon: Stack(
+                        children: [
+                          SizedBox(
+                            width: bottomBarIconSize,
+                            height: bottomBarIconSize,
+                            child: SvgPicture.asset(
+                              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          _BottomIconBadge(todos.length.toString()),
+                        ],
+                      ),
+                      label: t.bottomBar.today,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SizedBox(
+                          width: bottomBarIconSize,
+                          height: bottomBarIconSize,
+                          child: SvgPicture.asset("assets/images/icons/_common/calendar.svg",
+                              color: ColorsExt.grey2(context))),
+                      activeIcon: SizedBox(
+                        width: bottomBarIconSize,
+                        height: bottomBarIconSize,
+                        child: SvgPicture.asset(
+                          "assets/images/icons/_common/calendar.svg",
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      label: t.bottomBar.calendar,
+                    ),
                   ],
+                  currentIndex: () {
+                    switch (context.watch<MainCubit>().state.homeViewType) {
+                      case HomeViewType.inbox:
+                        return 1;
+                      case HomeViewType.today:
+                        return 2;
+                      case HomeViewType.calendar:
+                        return 3;
+                      default:
+                        return 0;
+                    }
+                  }(),
+                  unselectedItemColor: ColorsExt.grey1(context),
+                  selectedItemColor: () {
+                    if (context.watch<MainCubit>().state.homeViewType == HomeViewType.label) {
+                      return ColorsExt.grey1(context);
+                    } else {
+                      return Theme.of(context).primaryColor;
+                    }
+                  }(),
+                  onTap: (index) {
+                    if (index == 0) {
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) => const SettingsModal(),
+                        closeProgressThreshold: 0,
+                      );
+                    } else {
+                      switch (index) {
+                        case 1:
+                          context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+                          break;
+                        case 2:
+                          context.read<MainCubit>().changeHomeView(HomeViewType.today);
+                          break;
+                        case 3:
+                          context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
+                          break;
+                      }
+                    }
+                  },
                 ),
-                activeIcon: Stack(
-                  children: [
-                    SizedBox(
-                      width: 29,
-                      height: 29,
-                      child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
-                          color: Theme.of(context).primaryColor),
-                    ),
-                    _BottomIconBadge(inboxTasks.length.toString()),
-                  ],
-                ),
-                label: t.bottomBar.inbox),
-            BottomNavigationBarItem(
-              icon: Stack(
-                children: [
-                  SizedBox(
-                    width: 29,
-                    height: 29,
-                    child: SvgPicture.asset(
-                      "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
-                  _BottomIconBadge(todos.length.toString()),
-                ],
-              ),
-              activeIcon: Stack(
-                children: [
-                  SizedBox(
-                    width: 29,
-                    height: 29,
-                    child: SvgPicture.asset(
-                      "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  _BottomIconBadge(todos.length.toString()),
-                ],
-              ),
-              label: t.bottomBar.today,
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                  width: 29,
-                  height: 29,
-                  child: SvgPicture.asset("assets/images/icons/_common/calendar.svg", color: ColorsExt.grey2(context))),
-              activeIcon: SizedBox(
-                width: 29,
-                height: 29,
-                child: SvgPicture.asset(
-                  "assets/images/icons/_common/calendar.svg",
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              label: t.bottomBar.calendar,
-            ),
-          ],
-          currentIndex: () {
-            switch (context.watch<MainCubit>().state.homeViewType) {
-              case HomeViewType.inbox:
-                return 1;
-              case HomeViewType.today:
-                return 2;
-              case HomeViewType.calendar:
-                return 3;
-              default:
-                return 0;
-            }
-          }(),
-          unselectedItemColor: ColorsExt.grey1(context),
-          selectedItemColor: () {
-            if (context.watch<MainCubit>().state.homeViewType == HomeViewType.label) {
-              return ColorsExt.grey1(context);
-            } else {
-              return Theme.of(context).primaryColor;
-            }
-          }(),
-          onTap: (index) {
-            if (index == 0) {
-              showCupertinoModalBottomSheet(
-                context: context,
-                expand: true,
-                builder: (context) => const SettingsModal(),
-              );
-            } else {
-              switch (index) {
-                case 1:
-                  context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
-                  break;
-                case 2:
-                  context.read<MainCubit>().changeHomeView(HomeViewType.today);
-                  break;
-                case 3:
-                  context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
-                  break;
-              }
-            }
-          },
+          ),
         );
       },
     );

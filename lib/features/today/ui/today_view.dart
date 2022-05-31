@@ -152,7 +152,6 @@ class _Header extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: ColorsExt.background(context),
           border: Border(
             bottom: BorderSide(
               color: ColorsExt.grey5(context),

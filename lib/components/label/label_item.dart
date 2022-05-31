@@ -35,17 +35,17 @@ class LabelItem extends StatelessWidget {
           child: Row(
             children: [
               Container(
+                height: 26,
+                width: 26,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   color: iconBackground,
                 ),
-                height: 26,
-                width: 26,
                 child: Center(
                   child: SvgPicture.asset(
                     "assets/images/icons/_common/number.svg",
-                    width: 15,
-                    height: 15,
+                    width: 16,
+                    height: 16,
                     color: iconForeground,
                   ),
                 ),
