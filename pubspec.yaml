@@ -57,8 +57,10 @@ flutter_native_splash:
 flutter_icons:
   android: true
   ios: true
-  image_path_android: "assets/images/logo/logo_1024x1024.png"
-  image_path_ios: "assets/images/logo/logo_1024x1024-white.png"
+  image_path_android: "assets/images/akiflow_icon.png"
+  image_path_ios: "assets/images/akiflow_icon.png"
+  adaptive_icon_background: "#fafbfd"
+  adaptive_icon_foreground: "assets/images/app_icon/top.png"
 
 flutter:
   uses-material-design: true
@@ -67,6 +69,7 @@ flutter:
     - assets/config/
     - assets/fonts/
     - assets/images/
+    - assets/images/app_icon/
     - assets/images/akiflow/
     - assets/images/defaults/
     - assets/images/favicons/
