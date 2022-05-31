@@ -30,7 +30,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
   @override
   void initState() {
     _titleController.text = context.read<EditTaskCubit>().state.updatedTask.title ?? '';
-    _descriptionController.text = context.read<EditTaskCubit>().state.updatedTask.description ?? '';
+
+    String descriptionHtml = context.read<EditTaskCubit>().state.updatedTask.descriptionComputed(joinCharacter: '\n');
+    _descriptionController.text = descriptionHtml;
     super.initState();
   }
 
@@ -60,7 +62,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     );
   }
 
-  TextField _description(BuildContext context) {
+  Widget _description(BuildContext context) {
     return TextField(
       controller: _descriptionController,
       maxLines: null,

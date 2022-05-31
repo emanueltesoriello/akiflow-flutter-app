@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list.dart';
@@ -536,5 +537,24 @@ extension TaskExt on Task {
         launchUrl(Uri.parse(doc!.url!), mode: LaunchMode.externalApplication);
       }
     }
+  }
+
+  String descriptionComputed({String? joinCharacter}) {
+    String htmlData = description ?? '';
+    String text;
+
+    try {
+      var document = parse(htmlData);
+
+      text = (document.body?.children ?? []).map((e) => e.text).join(joinCharacter ?? ' ');
+
+      if (text.isEmpty) {
+        text = htmlData;
+      }
+    } catch (e) {
+      text = htmlData;
+    }
+
+    return text;
   }
 }

@@ -360,8 +360,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void onDescriptionChanged(String value) {
+    String html = value.replaceAll("\n", "<br>");
     Task updated = state.updatedTask.copyWith(
-      description: value,
+      description: html,
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 

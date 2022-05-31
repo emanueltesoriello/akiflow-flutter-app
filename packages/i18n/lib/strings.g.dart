@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 194 
+ * Strings: 198 
  *
- * Built on 2022-05-30 at 12:00 UTC
+ * Built on 2022-05-31 at 11:14 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -339,7 +339,7 @@ class _StringsOnboardingEn {
 	String get welcomeToAkiflowSubtitle => 'The journey to improve your productivity starts here.';
 	String get or => 'or';
 	String get signInWithGoogle => 'Sign in with Google';
-	String get continuingAcceptTermsPrivacy => '<center>Continuing you accept the <a url="https://akiflow.com/legal/terms-of-service">Terms and Conditions</a><br/> and the <a url="https://akiflow.com/legal/privacy-policy">Privacy Policy</a> of Akiflow</center>';
+	late final _StringsOnboardingTermsAndPrivacyEn termsAndPrivacy = _StringsOnboardingTermsAndPrivacyEn._(_root);
 }
 
 // Path: bottomBar
@@ -567,6 +567,20 @@ class _StringsLabelEn {
 	late final _StringsLabelDeleteDialogEn deleteDialog = _StringsLabelDeleteDialogEn._(_root);
 }
 
+// Path: onboarding.termsAndPrivacy
+class _StringsOnboardingTermsAndPrivacyEn {
+	_StringsOnboardingTermsAndPrivacyEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get continuingYouAcceptThe => 'Continuing you accept the ';
+	String get termsAndConditions => 'Terms and Conditions';
+	String get andThe => ' and the ';
+	String get privacyPolicy => 'Privacy Policy';
+	String get ofAkiflow => ' of Akiflow';
+}
+
 // Path: settings.myAccount
 class _StringsSettingsMyAccountEn {
 	_StringsSettingsMyAccountEn._(this._root);
@@ -764,7 +778,11 @@ extension on _StringsEn {
 			'onboarding.welcomeToAkiflowSubtitle': 'The journey to improve your productivity starts here.',
 			'onboarding.or': 'or',
 			'onboarding.signInWithGoogle': 'Sign in with Google',
-			'onboarding.continuingAcceptTermsPrivacy': '<center>Continuing you accept the <a url="https://akiflow.com/legal/terms-of-service">Terms and Conditions</a><br/> and the <a url="https://akiflow.com/legal/privacy-policy">Privacy Policy</a> of Akiflow</center>',
+			'onboarding.termsAndPrivacy.continuingYouAcceptThe': 'Continuing you accept the ',
+			'onboarding.termsAndPrivacy.termsAndConditions': 'Terms and Conditions',
+			'onboarding.termsAndPrivacy.andThe': ' and the ',
+			'onboarding.termsAndPrivacy.privacyPolicy': 'Privacy Policy',
+			'onboarding.termsAndPrivacy.ofAkiflow': ' of Akiflow',
 			'bottomBar.menu': 'Menu',
 			'bottomBar.inbox': 'Inbox',
 			'bottomBar.today': 'Today',

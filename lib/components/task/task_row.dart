@@ -508,19 +508,14 @@ class TaskRow extends StatelessWidget {
                 ),
                 const SizedBox(width: 4.5),
                 Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          task.description ?? "",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
-                        ),
-                      ),
-                    ],
+                    child: Text(
+                  task.descriptionComputed(),
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: ColorsExt.grey3(context),
                   ),
-                ),
+                )),
               ],
             );
           }
