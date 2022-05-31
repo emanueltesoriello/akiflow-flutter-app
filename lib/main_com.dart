@@ -119,21 +119,27 @@ class Application extends StatelessWidget {
           create: (BuildContext context) => locator<TodayCubit>(),
         ),
       ],
-      child: MaterialApp(
-          title: t.appName,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          locale: const Locale('it', 'IT'),
-          supportedLocales: const [
-            Locale('it', 'IT'),
-          ],
-          debugShowCheckedModeBanner: Config.development,
-          navigatorObservers: [routeObserver],
-          theme: lightTheme,
-          home: _Home(userLogged: userLogged)),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.light,
+          statusBarColor: Colors.white,
+        ),
+        child: MaterialApp(
+            title: t.appName,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            locale: const Locale('it', 'IT'),
+            supportedLocales: const [
+              Locale('it', 'IT'),
+            ],
+            debugShowCheckedModeBanner: Config.development,
+            navigatorObservers: [routeObserver],
+            theme: lightTheme,
+            home: _Home(userLogged: userLogged)),
+      ),
     );
   }
 }
