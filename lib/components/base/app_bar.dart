@@ -33,7 +33,7 @@ class AppBarComp extends StatelessWidget {
       children: [
         Container(
           color: ColorsExt.background(context),
-          height: MediaQuery.of(context).padding.top,
+          height: MediaQuery.of(context).padding.top + 4,
         ),
         Container(
           constraints: const BoxConstraints(maxHeight: 56),
