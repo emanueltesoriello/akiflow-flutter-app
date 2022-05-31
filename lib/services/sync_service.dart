@@ -130,27 +130,7 @@ class SyncService {
     List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
     addBreadcrumb("${api.runtimeType} localIds length: ${localIds.length}");
 
-    List<T> existingModels = [];
-
-    int sqlMaxVariableNumber = 999;
-
-    if (localIds.length > sqlMaxVariableNumber) {
-      List<List<dynamic>> chunks = [];
-
-      for (var i = 0; i < localIds.length; i += sqlMaxVariableNumber) {
-        List<dynamic> sublistWithMaxVariables = localIds.sublist(
-            i, i + sqlMaxVariableNumber > localIds.length ? localIds.length : i + sqlMaxVariableNumber);
-        chunks.add(sublistWithMaxVariables);
-      }
-
-      for (var chunk in chunks) {
-        List<T> existingModelsChunk = await databaseRepository.getByIds(chunk);
-        existingModels.addAll(existingModelsChunk);
-      }
-    } else {
-      existingModels = await databaseRepository.getByIds(localIds);
-    }
-
+    List<T> existingModels = await databaseRepository.getByIds(localIds);
     addBreadcrumb("${api.runtimeType} existingModels length: ${existingModels.length}");
 
     result = await compute(

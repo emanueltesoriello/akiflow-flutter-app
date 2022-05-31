@@ -10,6 +10,8 @@ import 'package:sqflite/sqlite_api.dart';
 class DatabaseRepository implements IBaseDatabaseRepository {
   final DatabaseService _databaseService = locator<DatabaseService>();
 
+  static const int sqlMaxVariableNumber = 999;
+
   final String tableName;
   final Function(Map<String, dynamic>) fromSql;
 
@@ -38,6 +40,32 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
   @override
   Future<List<T>> getByIds<T>(List<dynamic> ids) async {
+    List<T> items = [];
+
+    if (ids.length > DatabaseRepository.sqlMaxVariableNumber) {
+      List<List<dynamic>> chunks = [];
+
+      for (var i = 0; i < ids.length; i += DatabaseRepository.sqlMaxVariableNumber) {
+        List<dynamic> sublistWithMaxVariables = ids.sublist(
+            i,
+            i + DatabaseRepository.sqlMaxVariableNumber > ids.length
+                ? ids.length
+                : i + DatabaseRepository.sqlMaxVariableNumber);
+        chunks.add(sublistWithMaxVariables);
+      }
+
+      for (var chunk in chunks) {
+        List<T> existingModelsChunk = await _getByIds(chunk);
+        items.addAll(existingModelsChunk);
+      }
+    } else {
+      items = await _getByIds(ids);
+    }
+
+    return items;
+  }
+
+  Future<List<T>> _getByIds<T>(List<dynamic> ids) async {
     String ins = ids.map((el) => '?').join(',');
     List<Map<String, Object?>> items =
         await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);

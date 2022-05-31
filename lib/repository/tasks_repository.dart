@@ -127,11 +127,36 @@ class TasksRepository extends DatabaseRepository {
   }
 
   Future<List<T>> getByRecurringIds<T>(List<dynamic> ids) async {
+    List<T> items = [];
+
+    if (ids.length > DatabaseRepository.sqlMaxVariableNumber) {
+      List<List<dynamic>> chunks = [];
+
+      for (var i = 0; i < ids.length; i += DatabaseRepository.sqlMaxVariableNumber) {
+        List<dynamic> sublistWithMaxVariables = ids.sublist(
+            i,
+            i + DatabaseRepository.sqlMaxVariableNumber > ids.length
+                ? ids.length
+                : i + DatabaseRepository.sqlMaxVariableNumber);
+        chunks.add(sublistWithMaxVariables);
+      }
+
+      for (var chunk in chunks) {
+        List<T> existingModelsChunk = await _getByRecurringIds(chunk);
+        items.addAll(existingModelsChunk);
+      }
+    } else {
+      items = await _getByRecurringIds(ids);
+    }
+
+    return items;
+  }
+
+  Future<List<T>> _getByRecurringIds<T>(List<dynamic> ids) async {
     String ins = ids.map((el) => '?').join(',');
     List<Map<String, Object?>> items =
         await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE recurring_id in ($ins) ", ids);
 
-    List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
-    return objects;
+    return await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
   }
 }
