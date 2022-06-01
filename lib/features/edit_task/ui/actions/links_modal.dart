@@ -5,8 +5,10 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/actions/create_link_modal.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LinksModal extends StatelessWidget {
@@ -135,11 +137,20 @@ class LinksModal extends StatelessWidget {
                   child: ButtonList(
                       leadingTextIconAsset: "assets/images/icons/_common/link.svg",
                       title: t.editTask.add,
-                      onPressed: () {
-                        // TODO add link
+                      onPressed: () async {
+                        EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+                        String? newLink = await showCupertinoModalBottomSheet(
+                          context: context,
+                          builder: (context) => const CreateLinkModal(),
+                        );
+
+                        if (newLink != null) {
+                          cubit.addLink(newLink);
+                        }
                       }),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 24),
               ],
             ),
           ),

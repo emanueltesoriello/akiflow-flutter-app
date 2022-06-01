@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 203 
+ * Strings: 204 
  *
- * Built on 2022-06-01 at 11:58 UTC
+ * Built on 2022-06-01 at 12:54 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -449,6 +449,7 @@ class _StringsTaskEn {
 	late final _StringsTaskUndoActionsEn undoActions = _StringsTaskUndoActionsEn._(_root);
 	String get sort => 'Sort';
 	String get filter => 'Filter';
+	late final _StringsTaskLinkEn link = _StringsTaskLinkEn._(_root);
 }
 
 // Path: errors
@@ -664,6 +665,16 @@ class _StringsTaskUndoActionsEn {
 	String get snoozed => 'Task snoozed';
 	String get movedToInbox => 'Task moved to inbox';
 	String get updated => 'Task updated';
+}
+
+// Path: task.link
+class _StringsTaskLinkEn {
+	_StringsTaskLinkEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get addLink => 'Add link';
 }
 
 // Path: editTask.repeatingEditDialog
@@ -910,6 +921,7 @@ extension on _StringsEn {
 			'task.undoActions.updated': 'Task updated',
 			'task.sort': 'Sort',
 			'task.filter': 'Filter',
+			'task.link.addLink': 'Add link',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

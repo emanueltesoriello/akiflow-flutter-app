@@ -425,4 +425,17 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(updatedTask: updated));
   }
+
+  void addLink(String newLink) {
+    List<String> links = state.updatedTask.links ?? [];
+
+    links.add(newLink);
+
+    Task updated = state.updatedTask.copyWith(
+      links: links,
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
+  }
 }

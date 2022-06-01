@@ -163,7 +163,10 @@
       "updated": "Task updated"
     },
     "sort": "Sort",
-    "filter": "Filter"
+    "filter": "Filter",
+    "link": {
+      "addLink": "Add link"
+    }
   },
   "errors": {
     "noAccountsFound": "No accounts found"
