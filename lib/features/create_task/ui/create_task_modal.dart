@@ -84,7 +84,38 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                             const SizedBox(height: 8),
                             _description(context),
                             const SizedBox(height: 16),
-                            _actions(context),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Expanded(child: _actions(context)),
+                                InkWell(
+                                  onTap: () {
+                                    context.read<EditTaskCubit>().create();
+
+                                    Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
+
+                                    Navigator.pop(context, taskUpdated);
+                                  },
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Material(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: SizedBox(
+                                      height: 36,
+                                      width: 36,
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                          "assets/images/icons/_common/paperplane_send.svg",
+                                          width: 24,
+                                          height: 24,
+                                          color: Theme.of(context).backgroundColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 16),
                           ],
                         ),
@@ -101,7 +132,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   }
 
   Widget _actions(BuildContext context) {
-    return Row(
+    return Wrap(
+      runSpacing: 8,
       children: [
         PlanForAction(
           task: context.watch<EditTaskCubit>().state.updatedTask,
@@ -156,33 +188,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               },
             );
           },
-        ),
-        const Spacer(),
-        InkWell(
-          onTap: () {
-            context.read<EditTaskCubit>().create();
-
-            Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
-
-            Navigator.pop(context, taskUpdated);
-          },
-          borderRadius: BorderRadius.circular(8),
-          child: Material(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(8),
-            child: SizedBox(
-              height: 36,
-              width: 36,
-              child: Center(
-                child: SvgPicture.asset(
-                  "assets/images/icons/_common/paperplane_send.svg",
-                  width: 24,
-                  height: 24,
-                  color: Theme.of(context).backgroundColor,
-                ),
-              ),
-            ),
-          ),
         ),
       ],
     );
