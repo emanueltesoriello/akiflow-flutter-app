@@ -43,7 +43,9 @@ class _View extends StatelessWidget {
   final Function() setForInbox;
   final Function() setForSomeday;
 
-  const _View({
+  final ValueNotifier<TimeOfDay?> _selectedTime = ValueNotifier(null);
+
+  _View({
     Key? key,
     required this.onSelectDate,
     required this.setForInbox,
@@ -80,6 +82,9 @@ class _View extends StatelessWidget {
 
                           TaskStatusType statusType = context.read<PlanModalCubit>().state.statusType;
                           onSelectDate(date: date, datetime: datetime, statusType: statusType);
+                        },
+                        onSelectTime: (TimeOfDay? datetime) {
+                          _selectedTime.value = datetime;
                         },
                       ),
                       const SizedBox(height: 16),
@@ -144,112 +149,147 @@ class _View extends StatelessWidget {
   Widget _predefinedDate(BuildContext context) {
     DateTime now = DateTime.now();
 
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: Column(children: [
-            BlocBuilder<PlanModalCubit, PlanModalCubitState>(
-              builder: (context, state) {
-                if (state.statusType == TaskStatusType.planned) {
-                  return _predefinedDateItem(
-                    context,
-                    iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
-                    text: t.addTask.today,
-                    trailingText: DateFormat("EEE").format(DateTime.now()),
-                    onPressed: () {
-                      onSelectDate(date: now, datetime: null, statusType: TaskStatusType.planned);
+    return ValueListenableBuilder(
+        valueListenable: _selectedTime,
+        builder: (context, TimeOfDay? timeOfDay, widget) {
+          return BlocBuilder<PlanModalCubit, PlanModalCubitState>(
+            builder: (context, state) {
+              bool useDateTime = timeOfDay != null && state.statusType == TaskStatusType.planned;
 
-                      Navigator.pop(context);
-                    },
-                  );
-                } else {
-                  DateTime laterToday = DateTime(now.year, now.month, now.day, now.hour + 3);
+              String time = useDateTime
+                  ? " - ${DateFormat.Hm().format(DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute))}"
+                  : '';
 
-                  return _predefinedDateItem(
-                    context,
-                    iconAsset: "assets/images/icons/_common/clock.svg",
-                    text: t.addTask.laterToday,
-                    trailingText: DateFormat("EEE HH:mm").format(laterToday),
-                    onPressed: () {
-                      onSelectDate(date: laterToday, datetime: null, statusType: TaskStatusType.snoozed);
+              return Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Column(children: [
+                      Builder(builder: (context) {
+                        if (state.statusType == TaskStatusType.planned) {
+                          return _predefinedDateItem(
+                            context,
+                            iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
+                            text: t.addTask.today,
+                            trailingText: '${DateFormat("EEE").format(DateTime.now())}$time',
+                            onPressed: () {
+                              DateTime? datetime;
+                              DateTime date = now;
 
-                      Navigator.pop(context);
-                    },
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 2),
-            _predefinedDateItem(
-              context,
-              iconAsset:
-                  "assets/images/icons/_common/${DateFormat("dd").format(now.add(const Duration(days: 1)))}_square.svg",
-              text: t.addTask.tomorrow,
-              trailingText: DateFormat("EEE").format(now.add(const Duration(days: 1))),
-              onPressed: () {
-                onSelectDate(
-                    date: now.add(const Duration(days: 1)),
-                    datetime: null,
-                    statusType: context.read<PlanModalCubit>().state.statusType);
+                              if (useDateTime) {
+                                datetime = DateTime(date.year, date.month, date.day, timeOfDay.hour, timeOfDay.minute);
+                              }
 
-                Navigator.pop(context);
-              },
-            ),
-            const SizedBox(height: 2),
-            Builder(builder: (context) {
-              DateTime nextMonday = now.add(Duration(days: 7 - now.weekday + 1));
+                              onSelectDate(date: date, datetime: datetime, statusType: TaskStatusType.planned);
 
-              return _predefinedDateItem(
-                context,
-                iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(nextMonday)}_square.svg",
-                text: t.addTask.nextWeek,
-                trailingText: DateFormat("EEE").format(nextMonday),
-                onPressed: () {
-                  onSelectDate(
-                      date: nextMonday, datetime: null, statusType: context.read<PlanModalCubit>().state.statusType);
+                              Navigator.pop(context);
+                            },
+                          );
+                        } else {
+                          DateTime laterToday = DateTime(now.year, now.month, now.day, now.hour + 3);
 
-                  Navigator.pop(context);
-                },
+                          return _predefinedDateItem(
+                            context,
+                            iconAsset: "assets/images/icons/_common/clock.svg",
+                            text: t.addTask.laterToday,
+                            trailingText: '${DateFormat("EEE HH:mm").format(laterToday)}$time',
+                            onPressed: () {
+                              onSelectDate(date: laterToday, datetime: null, statusType: TaskStatusType.snoozed);
+
+                              Navigator.pop(context);
+                            },
+                          );
+                        }
+                      }),
+                      const SizedBox(height: 2),
+                      _predefinedDateItem(
+                        context,
+                        iconAsset:
+                            "assets/images/icons/_common/${DateFormat("dd").format(now.add(const Duration(days: 1)))}_square.svg",
+                        text: t.addTask.tomorrow,
+                        trailingText: '${DateFormat("EEE").format(now.add(const Duration(days: 1)))}$time',
+                        onPressed: () {
+                          DateTime? datetime;
+                          DateTime tmw = now.add(const Duration(days: 1));
+
+                          if (useDateTime) {
+                            datetime = DateTime(tmw.year, tmw.month, tmw.day, timeOfDay.hour, timeOfDay.minute);
+                          }
+
+                          onSelectDate(
+                              date: tmw,
+                              datetime: datetime,
+                              statusType: context.read<PlanModalCubit>().state.statusType);
+
+                          Navigator.pop(context);
+                        },
+                      ),
+                      const SizedBox(height: 2),
+                      Builder(builder: (context) {
+                        DateTime nextMonday = now.add(Duration(days: 7 - now.weekday + 1));
+
+                        return _predefinedDateItem(
+                          context,
+                          iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(nextMonday)}_square.svg",
+                          text: t.addTask.nextWeek,
+                          trailingText: '${DateFormat("EEE").format(nextMonday)}$time',
+                          onPressed: () {
+                            DateTime? datetime;
+
+                            if (useDateTime) {
+                              datetime = DateTime(
+                                  nextMonday.year, nextMonday.month, nextMonday.day, timeOfDay.hour, timeOfDay.minute);
+                            }
+
+                            onSelectDate(
+                                date: nextMonday,
+                                datetime: datetime,
+                                statusType: context.read<PlanModalCubit>().state.statusType);
+
+                            Navigator.pop(context);
+                          },
+                        );
+                      }),
+                      const SizedBox(height: 2),
+                      BlocBuilder<PlanModalCubit, PlanModalCubitState>(
+                        builder: (context, state) {
+                          if (state.statusType == TaskStatusType.planned) {
+                            return _predefinedDateItem(
+                              context,
+                              iconAsset: "assets/images/icons/_common/slash_circle.svg",
+                              text: t.addTask.remove,
+                              trailingText: t.bottomBar.inbox,
+                              onPressed: () {
+                                setForInbox();
+                                Navigator.pop(context);
+                              },
+                            );
+                          } else {
+                            return _predefinedDateItem(
+                              context,
+                              iconAsset: "assets/images/icons/_common/archivebox.svg",
+                              text: t.task.someday,
+                              trailingText: t.addTask.noDate,
+                              onPressed: () {
+                                setForSomeday();
+                                Navigator.pop(context);
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ]),
+                  ),
+                  Container(
+                    color: Theme.of(context).dividerColor,
+                    width: double.infinity,
+                    height: 1,
+                  )
+                ],
               );
-            }),
-            const SizedBox(height: 2),
-            BlocBuilder<PlanModalCubit, PlanModalCubitState>(
-              builder: (context, state) {
-                if (state.statusType == TaskStatusType.planned) {
-                  return _predefinedDateItem(
-                    context,
-                    iconAsset: "assets/images/icons/_common/slash_circle.svg",
-                    text: t.addTask.remove,
-                    trailingText: t.bottomBar.inbox,
-                    onPressed: () {
-                      setForInbox();
-                      Navigator.pop(context);
-                    },
-                  );
-                } else {
-                  return _predefinedDateItem(
-                    context,
-                    iconAsset: "assets/images/icons/_common/archivebox.svg",
-                    text: t.task.someday,
-                    trailingText: t.addTask.noDate,
-                    onPressed: () {
-                      setForSomeday();
-                      Navigator.pop(context);
-                    },
-                  );
-                }
-              },
-            ),
-          ]),
-        ),
-        Container(
-          color: Theme.of(context).dividerColor,
-          width: double.infinity,
-          height: 1,
-        )
-      ],
-    );
+            },
+          );
+        });
   }
 
   Widget _predefinedDateItem(
@@ -283,12 +323,22 @@ class _View extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(
-              trailingText,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-                color: ColorsExt.grey3(context),
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Text(
+                      trailingText,
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsExt.grey3(context),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

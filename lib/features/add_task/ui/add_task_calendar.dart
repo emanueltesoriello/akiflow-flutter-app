@@ -10,11 +10,13 @@ import 'package:table_calendar/table_calendar.dart';
 class AddTaskCalendar extends StatefulWidget {
   final Function(DateTime, DateTime?) onConfirm;
   final DateTime? initialDate;
+  final Function(TimeOfDay? time)? onSelectTime;
 
   const AddTaskCalendar({
     Key? key,
     required this.onConfirm,
     required this.initialDate,
+    this.onSelectTime,
   }) : super(key: key);
 
   @override
@@ -166,14 +168,26 @@ class _AddTaskCalendarState extends State<AddTaskCalendar> {
                       onTap: () async {
                         TimeOfDay time = TimeOfDay.fromDateTime(selectedDate);
                         _selectedDatetime.value = await showTimePicker(context: context, initialTime: time);
+
+                        if (widget.onSelectTime != null) {
+                          widget.onSelectTime!(_selectedDatetime.value);
+                        }
                       },
-                      child: Text(
-                        t.addTask.addTime,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: ColorsExt.grey2(context),
-                          fontWeight: FontWeight.w500,
-                        ),
+                      child: ValueListenableBuilder(
+                        valueListenable: _selectedDatetime,
+                        builder: (context, TimeOfDay? selectedTime, child) {
+                          return Text(
+                            selectedTime == null
+                                ? t.addTask.addTime
+                                : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
+                                    selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: ColorsExt.grey2(context),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
