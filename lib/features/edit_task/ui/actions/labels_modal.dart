@@ -55,7 +55,7 @@ class _LabelsModalState extends State<LabelsModal> {
                     return ValueListenableBuilder<String>(
                         valueListenable: _searchNotifier,
                         builder: (context, value, child) {
-                          List<Label> labelsFiltered = labels.toList();
+                          List<Label> labelsFiltered = List.from(labels);
 
                           labelsFiltered = labelsFiltered.where((label) {
                             if (label.title == null || label.title!.isEmpty) {
@@ -113,7 +113,7 @@ class _LabelsModalState extends State<LabelsModal> {
 
                               index -= 3;
 
-                              Label label = labels[index];
+                              Label label = labelsFiltered[index];
 
                               return LabelItem(
                                 label,
