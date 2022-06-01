@@ -26,34 +26,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   List<Task> recurrenceTasksToUpdate = [];
   List<Task> recurrenceTasksToCreate = [];
 
-  EditTaskCubit(
-    this._tasksCubit,
-    this._syncCubit, {
-    Task? task,
-    TaskStatusType? taskStatusType,
-    DateTime? date,
-    Label? label,
-    Label? section,
-  }) : super(EditTaskCubitState(
-          originalTask: _buildTask(task, taskStatusType, date, label, section),
-          updatedTask: _buildTask(task, taskStatusType, date, label, section),
-          selectedLabel: label,
-        ));
+  EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState());
 
-  static Task _buildTask(
-    Task? task,
-    TaskStatusType? taskStatusType,
-    DateTime? date,
-    Label? label,
-    Label? section,
-  ) {
-    return task ??
-        const Task().copyWith(
-          status: Nullable(taskStatusType != null ? taskStatusType.id : task?.status),
-          date: Nullable((taskStatusType == TaskStatusType.planned && date != null) ? date.toIso8601String() : null),
-          listId: label?.id,
-          sectionId: Nullable(section?.id),
-        );
+  void attachTaskAndLabel(Task task, {Label? label}) {
+    emit(state.copyWith(originalTask: task, updatedTask: task, selectedLabel: label));
   }
 
   void setRead() {
@@ -70,16 +46,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  Future<void> create({
-    required String title,
-    required String description,
-  }) async {
+  Future<void> create() async {
     DateTime now = DateTime.now().toUtc();
 
     Task updated = state.updatedTask.copyWith(
       id: const Uuid().v4(),
-      title: title,
-      description: description,
       createdAt: (now.toIso8601String()),
       listId: state.selectedLabel?.id,
       readAt: now.toIso8601String(),
@@ -92,6 +63,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshTasksFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
+
+    emit(const EditTaskCubitState());
   }
 
   Future<void> planFor(
@@ -427,5 +400,25 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshTasksFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
+  }
+
+  void updateTitle(String value) {
+    Task updated = state.updatedTask.copyWith(
+      title: value,
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
+  }
+
+  void updateDescription(String value) {
+    String html = value.replaceAll("\n", "<br>");
+
+    Task updated = state.updatedTask.copyWith(
+      description: html,
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
   }
 }

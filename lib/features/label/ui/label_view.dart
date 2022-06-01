@@ -5,13 +5,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
 import 'package:mobile/features/label/ui/section_header.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_task_list.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -79,17 +79,19 @@ class LabelView extends StatelessWidget {
                   },
                   listOpened: labelState.openedSections[section.id] ?? false,
                   onCreateTask: () async {
-                    TaskStatusType taskStatusType = TaskStatusType.inbox;
-                    DateTime date = context.read<TodayCubit>().state.selectedDate;
+                    EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+
+                    Task task = editTaskCubit.state.updatedTask.copyWith(
+                      sectionId: Nullable(section.id),
+                      status: Nullable(TaskStatusType.inbox.id),
+                      listId: labelState.selectedLabel?.id,
+                    );
+
+                    editTaskCubit.attachTaskAndLabel(task, label: labelState.selectedLabel);
 
                     showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context) => AddTaskModal(
-                        taskStatusType: taskStatusType,
-                        date: date,
-                        section: section,
-                        label: labelState.selectedLabel,
-                      ),
+                      builder: (context) => const AddTaskModal(),
                     );
                   },
                   onDelete: () {

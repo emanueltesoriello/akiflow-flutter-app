@@ -11,6 +11,7 @@ import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
@@ -29,6 +30,7 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
 class MainPage extends StatefulWidget {
@@ -378,9 +380,16 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
               Label? label = context.read<MainCubit>().state.selectedLabel;
 
+              EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+
+              Task task = editTaskCubit.state.updatedTask.copyWith(
+                  status: Nullable(taskStatusType.id), date: Nullable(date.toIso8601String()), listId: label?.id);
+
+              editTaskCubit.attachTaskAndLabel(task, label: label);
+
               showCupertinoModalBottomSheet(
                 context: context,
-                builder: (context) => AddTaskModal(taskStatusType: taskStatusType, date: date, label: label),
+                builder: (context) => const AddTaskModal(),
               );
             },
             shape: RoundedRectangleBorder(

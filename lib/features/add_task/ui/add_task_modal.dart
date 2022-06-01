@@ -8,55 +8,19 @@ import 'package:mobile/features/add_task/ui/add_task_duration.dart';
 import 'package:mobile/features/add_task/ui/add_task_labels.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
-class AddTaskModal extends StatelessWidget {
-  final TaskStatusType taskStatusType;
-  final DateTime date;
-  final Label? label;
-  final Label? section;
-
-  const AddTaskModal({
-    Key? key,
-    required this.taskStatusType,
-    required this.date,
-    this.label,
-    this.section,
-  }) : super(key: key);
+class AddTaskModal extends StatefulWidget {
+  const AddTaskModal({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TasksCubit tasksCubit = context.read<TasksCubit>();
-    SyncCubit syncCubit = context.read<SyncCubit>();
-
-    return BlocProvider(
-      create: (context) => EditTaskCubit(
-        tasksCubit,
-        syncCubit,
-        taskStatusType: taskStatusType,
-        date: date,
-        label: label,
-        section: section,
-      ),
-      child: const AddTaskModalView(),
-    );
-  }
+  State<AddTaskModal> createState() => _AddTaskModalState();
 }
 
-class AddTaskModalView extends StatefulWidget {
-  const AddTaskModalView({Key? key}) : super(key: key);
-
-  @override
-  State<AddTaskModalView> createState() => _AddTaskModalViewState();
-}
-
-class _AddTaskModalViewState extends State<AddTaskModalView> {
+class _AddTaskModalState extends State<AddTaskModal> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
@@ -65,6 +29,9 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
   @override
   void initState() {
     titleFocus.requestFocus();
+    EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+    titleController.text = editTaskCubit.state.originalTask.title ?? '';
+    descriptionController.text = editTaskCubit.state.originalTask.description ?? '';
     super.initState();
   }
 
@@ -193,7 +160,7 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
         const Spacer(),
         InkWell(
           onTap: () {
-            context.read<EditTaskCubit>().create(title: titleController.text, description: descriptionController.text);
+            context.read<EditTaskCubit>().create();
 
             Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
 
@@ -239,6 +206,9 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),
+      onChanged: (value) {
+        context.read<EditTaskCubit>().updateDescription(value);
+      },
     );
   }
 
@@ -262,6 +232,9 @@ class _AddTaskModalViewState extends State<AddTaskModalView> {
         fontSize: 20,
         fontWeight: FontWeight.w500,
       ),
+      onChanged: (value) {
+        context.read<EditTaskCubit>().updateTitle(value);
+      },
     );
   }
 }

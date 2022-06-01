@@ -92,7 +92,7 @@ class TodayTaskList extends StatelessWidget {
           TasksCubit tasksCubit = context.read<TasksCubit>();
           SyncCubit syncCubit = context.read<SyncCubit>();
 
-          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit, task: task);
+          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTaskAndLabel(task);
 
           return BlocProvider(
             create: (context) => editTaskCubit,

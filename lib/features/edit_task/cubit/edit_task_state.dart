@@ -14,8 +14,8 @@ class EditTaskCubitState extends Equatable {
 
   const EditTaskCubitState({
     this.loading = false,
-    required this.originalTask,
-    required this.updatedTask,
+    this.originalTask = const Task(),
+    this.updatedTask = const Task(),
     this.selectedDate,
     this.selectedDuration,
     this.setDuration = false,
