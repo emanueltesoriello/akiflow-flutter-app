@@ -25,6 +25,8 @@ import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
+import 'package:mobile/utils/task_extension.dart';
+import 'package:models/task/task.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -211,6 +213,7 @@ class _Home extends StatelessWidget {
             },
           ),
           const UndoBottomView(),
+          const JustCreatedTaskView(),
         ],
       ),
     );
@@ -265,6 +268,89 @@ class UndoBottomView extends StatelessWidget {
                               context.read<TasksCubit>().undo();
                             },
                             child: Text(t.task.undo.toUpperCase(),
+                                style: TextStyle(
+                                    color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15))),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Builder(builder: (context) {
+              if (Platform.isIOS) {
+                return SizedBox(height: MediaQuery.of(context).padding.top + kBottomNavigationBarHeight + 10);
+              } else {
+                return SizedBox(height: MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 16);
+              }
+            }),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class JustCreatedTaskView extends StatelessWidget {
+  const JustCreatedTaskView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TasksCubit, TasksCubitState>(
+      builder: (context, state) {
+        if (state.justCreatedTask == null) {
+          return const SizedBox();
+        }
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Material(
+              color: Colors.transparent,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 51,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: ColorsExt.grey6(context),
+                    border: Border.all(
+                      color: ColorsExt.grey5(context),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            t.task.taskCreatedSuccessfully,
+                            style:
+                                TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Task task = state.justCreatedTask!;
+
+                              TaskStatusType? statusType = task.statusType;
+                              String? date = task.date;
+
+                              if (statusType == null || statusType == TaskStatusType.inbox) {
+                                context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+                              } else {
+                                if (date != null) {
+                                  DateTime dateParsed = DateTime.parse(date).toLocal();
+                                  context.read<MainCubit>().changeHomeView(HomeViewType.today);
+                                  context.read<TodayCubit>().onDateSelected(dateParsed);
+                                } else {
+                                  context.read<MainCubit>().changeHomeView(HomeViewType.today);
+                                }
+                              }
+                            },
+                            child: Text(t.view.toUpperCase(),
                                 style: TextStyle(
                                     color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15))),
                       ],

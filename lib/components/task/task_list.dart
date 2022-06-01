@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -16,7 +18,7 @@ import 'package:reorderables/reorderables.dart';
 
 enum TaskListSorting { ascending, descending }
 
-class TaskList extends StatelessWidget {
+class TaskList extends StatefulWidget {
   final List<Task> tasks;
 
   final Widget? notice;
@@ -36,11 +38,35 @@ class TaskList extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<TaskList> createState() => _TaskListState();
+}
+
+class _TaskListState extends State<TaskList> {
+  StreamSubscription? streamSubscription;
+  ScrollController? scrollController;
+
+  @override
+  void initState() {
+    scrollController = ScrollController();
+
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+
+    if (streamSubscription != null) {
+      streamSubscription!.cancel();
+    }
+
+    streamSubscription = tasksCubit.scrollTopStream.listen((allSelected) {
+      scrollController?.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Task> tasks =
-        List.from(this.tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed));
+        List.from(widget.tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed));
 
-    tasks = TaskExt.sort(tasks, sorting: sorting);
+    tasks = TaskExt.sort(tasks, sorting: widget.sorting);
 
     return RefreshIndicator(
       backgroundColor: ColorsExt.background(context),
@@ -50,7 +76,7 @@ class TaskList extends StatelessWidget {
       child: SlidableAutoCloseBehavior(
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          controller: PrimaryScrollController.of(context) ?? ScrollController(),
+          controller: scrollController,
           slivers: [
             // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
             //be available in flutter stable branch
@@ -73,19 +99,19 @@ class TaskList extends StatelessWidget {
                       oldIndex - 1,
                       newIndex - 1,
                       newTasksListOrdered: tasks,
-                      sorting: sorting,
+                      sorting: widget.sorting,
                     );
               },
               delegate: ReorderableSliverChildBuilderDelegate(
                 (BuildContext context, int index) {
                   if (index == 0) {
-                    if (notice == null) {
+                    if (widget.notice == null) {
                       return const SizedBox(key: ObjectKey(0), height: 0);
                     }
 
                     return Container(
-                      key: ObjectKey(notice),
-                      child: notice!,
+                      key: ObjectKey(widget.notice),
+                      child: widget.notice!,
                     );
                   }
 
@@ -102,9 +128,9 @@ class TaskList extends StatelessWidget {
                     child: TaskRow(
                       key: ObjectKey(task),
                       task: task,
-                      hideInboxLabel: hideInboxLabel,
-                      showLabel: showLabel,
-                      showPlanInfo: showPlanInfo,
+                      hideInboxLabel: widget.hideInboxLabel,
+                      showLabel: widget.showLabel,
+                      showPlanInfo: widget.showPlanInfo,
                       selectTask: () {
                         context.read<TasksCubit>().select(task);
                       },

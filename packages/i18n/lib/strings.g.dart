@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 204 
+ * Strings: 206 
  *
- * Built on 2022-06-01 at 12:54 UTC
+ * Built on 2022-06-01 at 13:54 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -324,6 +324,7 @@ class _StringsEn {
 	String get noTitle => '(No title)';
 	String get connect => 'Connect';
 	String get more => 'More';
+	String get view => 'View';
 }
 
 // Path: onboarding
@@ -450,6 +451,7 @@ class _StringsTaskEn {
 	String get sort => 'Sort';
 	String get filter => 'Filter';
 	late final _StringsTaskLinkEn link = _StringsTaskLinkEn._(_root);
+	String get taskCreatedSuccessfully => 'Task created successfully';
 }
 
 // Path: errors
@@ -922,6 +924,7 @@ extension on _StringsEn {
 			'task.sort': 'Sort',
 			'task.filter': 'Filter',
 			'task.link.addLink': 'Add link',
+			'task.taskCreatedSuccessfully': 'Task created successfully',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',
@@ -997,6 +1000,7 @@ extension on _StringsEn {
 			'noTitle': '(No title)',
 			'connect': 'Connect',
 			'more': 'More',
+			'view': 'View',
 		};
 	}
 }

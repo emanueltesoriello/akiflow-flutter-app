@@ -57,8 +57,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
     TasksCubit tasksCubit = context.read<TasksCubit>();
 
-    tasksCubit.closeStream();
-
     if (streamSubscription != null) {
       streamSubscription!.cancel();
     }
@@ -383,7 +381,10 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
               EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
 
               Task task = editTaskCubit.state.updatedTask.copyWith(
-                  status: Nullable(taskStatusType.id), date: Nullable(date.toIso8601String()), listId: label?.id);
+                status: Nullable(taskStatusType.id),
+                date: taskStatusType == TaskStatusType.inbox ? Nullable(null) : Nullable(date.toIso8601String()),
+                listId: label?.id,
+              );
 
               editTaskCubit.attachTaskAndLabel(task, label: label);
 

@@ -55,9 +55,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       createdAt: (now.toIso8601String()),
       listId: state.selectedLabel?.id,
       readAt: now.toIso8601String(),
+      sorting: DateTime.now().toUtc().millisecondsSinceEpoch,
     );
 
     emit(state.copyWith(updatedTask: updated));
+
+    _tasksCubit.setJustCreatedTask(updated);
 
     await _tasksRepository.add([updated]);
 

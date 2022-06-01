@@ -28,13 +28,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
 
-  StreamController<List<Task>> _editRecurringTasksDialog = StreamController<List<Task>>();
-  Stream get editRecurringTasksDialog => _editRecurringTasksDialog.stream;
+  final StreamController<List<Task>> _editRecurringTasksDialog = StreamController<List<Task>>.broadcast();
+  Stream<List<Task>> get editRecurringTasksDialog => _editRecurringTasksDialog.stream;
 
-  void closeStream() {
-    _editRecurringTasksDialog.close();
-    _editRecurringTasksDialog = StreamController<List<Task>>();
-  }
+  final StreamController<void> _scrollTopStreamController = StreamController<void>.broadcast();
+  Stream<void> get scrollTopStream => _scrollTopStreamController.stream;
 
   late final TodayCubit _todayCubit;
   late final SyncCubit _syncCubit;
@@ -487,6 +485,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     _undoTimerDebounce = Timer(const Duration(seconds: 3), () {
       emit(state.copyWith(queue: []));
+    });
+  }
+
+  Future<void> setJustCreatedTask(Task task) async {
+    _scrollTopStreamController.add(null);
+
+    emit(state.copyWith(justCreatedTask: Nullable(task)));
+
+    Timer(const Duration(seconds: 3), () {
+      emit(state.copyWith(justCreatedTask: Nullable(null)));
     });
   }
 

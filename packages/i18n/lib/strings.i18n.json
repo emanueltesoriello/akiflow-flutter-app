@@ -166,7 +166,8 @@
     "filter": "Filter",
     "link": {
       "addLink": "Add link"
-    }
+    },
+    "taskCreatedSuccessfully": "Task created successfully"
   },
   "errors": {
     "noAccountsFound": "No accounts found"
@@ -258,5 +259,6 @@
   "cancel": "Cancel",
   "noTitle": "(No title)",
   "connect": "Connect",
-  "more": "More"
+  "more": "More",
+  "view": "View"
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/task/task_list.dart';
@@ -14,7 +16,7 @@ import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:reorderables/reorderables.dart';
 
-class TodayTaskList extends StatelessWidget {
+class TodayTaskList extends StatefulWidget {
   final List<Task> tasks;
   final Widget? header;
   final Widget? footer;
@@ -35,14 +37,39 @@ class TodayTaskList extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    List<Task> tasks = List.from(this.tasks);
+  State<TodayTaskList> createState() => _TodayTaskListState();
+}
 
-    tasks = TaskExt.sort(tasks, sorting: sorting);
+class _TodayTaskListState extends State<TodayTaskList> {
+  StreamSubscription? streamSubscription;
+  ScrollController? scrollController;
+
+  @override
+  void initState() {
+    scrollController = ScrollController();
+
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+
+    if (streamSubscription != null) {
+      streamSubscription!.cancel();
+    }
+
+    streamSubscription = tasksCubit.scrollTopStream.listen((allSelected) {
+      scrollController?.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Task> tasks = List.from(widget.tasks);
+
+    tasks = TaskExt.sort(tasks, sorting: widget.sorting);
 
     // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
     //be available in flutter stable branch
     return ReorderableSliverList(
+      controller: scrollController,
       onReorderStarted: (index) {
         int indexWithoutHeaderWidget = index - 1;
 
@@ -61,22 +88,22 @@ class TodayTaskList extends StatelessWidget {
               oldIndex - 1,
               newIndex - 1,
               newTasksListOrdered: tasks,
-              sorting: sorting,
+              sorting: widget.sorting,
             );
       },
       delegate: ReorderableSliverChildBuilderDelegate(
         (BuildContext context, int index) {
           if (index == tasks.length + 1) {
-            if (footer != null) {
-              return Container(margin: const EdgeInsets.fromLTRB(16, 0, 16, 8), child: footer!);
+            if (widget.footer != null) {
+              return Container(margin: const EdgeInsets.fromLTRB(16, 0, 16, 8), child: widget.footer!);
             }
 
             return const SizedBox();
           }
 
           if (index == 0) {
-            if (header != null) {
-              return header!;
+            if (widget.header != null) {
+              return widget.header!;
             }
 
             return const SizedBox();
@@ -84,7 +111,7 @@ class TodayTaskList extends StatelessWidget {
 
           index -= 1;
 
-          if (showTasks == false) {
+          if (widget.showTasks == false) {
             return const SizedBox();
           }
 
@@ -100,8 +127,8 @@ class TodayTaskList extends StatelessWidget {
               key: ObjectKey(task),
               task: task,
               hideInboxLabel: false,
-              showLabel: showLabel,
-              showPlanInfo: showPlanInfo,
+              showLabel: widget.showLabel,
+              showPlanInfo: widget.showPlanInfo,
               selectTask: () {
                 context.read<TasksCubit>().select(task);
               },

@@ -37,6 +37,7 @@ class AuthPage extends StatelessWidget {
                   children: const [
                     MainPage(),
                     UndoBottomView(),
+                    JustCreatedTaskView(),
                   ],
                 ),
               ),
