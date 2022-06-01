@@ -63,7 +63,11 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 double hours = seconds / 3600;
                 double minutes = (hours - hours.floor()) * 60;
 
-                text = "${hours.floor()}h${minutes.floor()}m";
+                if (minutes == 0) {
+                  text = '${hours.floor()}h';
+                } else {
+                  text = '${hours.floor()}h ${minutes.floor()}m';
+                }
               }
 
               return TagBox(
