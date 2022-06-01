@@ -31,9 +31,10 @@ class TagBox extends StatelessWidget {
     return InkWell(
       onTap: (() => onPressed()),
       child: Container(
-        height: isBig ? 34 : 22,
-        width: isSquare ? (isBig ? 34 : 22) : null,
-        padding: const EdgeInsets.symmetric(horizontal: 4),
+        constraints: BoxConstraints(
+          minHeight: isBig ? 32 : 28,
+          minWidth: isSquare ? (isBig ? 32 : 28) : 0,
+        ),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(4),
@@ -43,6 +44,7 @@ class TagBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(width: 6),
             Builder(builder: (context) {
               if (icon == null) {
                 return const SizedBox();
@@ -72,7 +74,7 @@ class TagBox extends StatelessWidget {
                         text!,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 13,
+                          fontSize: isBig ? 15 : 13,
                           color: foregroundColor ?? ColorsExt.grey2(context),
                         ),
                         textAlign: TextAlign.end,
@@ -82,6 +84,7 @@ class TagBox extends StatelessWidget {
                 );
               }),
             ),
+            const SizedBox(width: 6),
           ],
         ),
       ),

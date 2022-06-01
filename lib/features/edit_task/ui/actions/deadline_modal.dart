@@ -71,6 +71,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
                   onConfirm: (DateTime date, DateTime? datetime) {
                     widget.onSelectDate(datetime ?? date);
                   },
+                  showTime: false,
                 ),
                 const Separator(),
                 const SizedBox(height: 50),

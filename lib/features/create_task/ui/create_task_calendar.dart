@@ -11,12 +11,14 @@ class CreateTaskCalendar extends StatefulWidget {
   final Function(DateTime, DateTime?) onConfirm;
   final DateTime? initialDate;
   final Function(TimeOfDay? time)? onSelectTime;
+  final bool showTime;
 
   const CreateTaskCalendar({
     Key? key,
     required this.onConfirm,
     required this.initialDate,
     this.onSelectTime,
+    this.showTime = true,
   }) : super(key: key);
 
   @override
@@ -164,32 +166,37 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
               child: Row(
                 children: [
                   Expanded(
-                    child: InkWell(
-                      onTap: () async {
-                        TimeOfDay time = TimeOfDay.fromDateTime(selectedDate);
-                        _selectedDatetime.value = await showTimePicker(context: context, initialTime: time);
+                    child: Builder(builder: (context) {
+                      if (!widget.showTime) {
+                        return const SizedBox();
+                      }
+                      return InkWell(
+                        onTap: () async {
+                          TimeOfDay time = TimeOfDay.fromDateTime(selectedDate);
+                          _selectedDatetime.value = await showTimePicker(context: context, initialTime: time);
 
-                        if (widget.onSelectTime != null) {
-                          widget.onSelectTime!(_selectedDatetime.value);
-                        }
-                      },
-                      child: ValueListenableBuilder(
-                        valueListenable: _selectedDatetime,
-                        builder: (context, TimeOfDay? selectedTime, child) {
-                          return Text(
-                            selectedTime == null
-                                ? t.addTask.addTime
-                                : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
-                                    selectedDate.day, selectedTime.hour, selectedTime.minute)),
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: ColorsExt.grey2(context),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          );
+                          if (widget.onSelectTime != null) {
+                            widget.onSelectTime!(_selectedDatetime.value);
+                          }
                         },
-                      ),
-                    ),
+                        child: ValueListenableBuilder(
+                          valueListenable: _selectedDatetime,
+                          builder: (context, TimeOfDay? selectedTime, child) {
+                            return Text(
+                              selectedTime == null
+                                  ? t.addTask.addTime
+                                  : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
+                                      selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: ColorsExt.grey2(context),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }),
                   ),
                   InkWell(
                     onTap: () {
