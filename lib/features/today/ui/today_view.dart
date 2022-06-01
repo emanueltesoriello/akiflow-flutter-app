@@ -62,6 +62,7 @@ class _View extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 80),
           child: RefreshIndicator(
+            backgroundColor: ColorsExt.background(context),
             onRefresh: () async {
               return context.read<SyncCubit>().sync();
             },

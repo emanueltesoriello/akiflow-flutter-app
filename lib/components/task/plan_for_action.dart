@@ -64,6 +64,7 @@ class PlanForAction extends StatelessWidget {
       backgroundColor: color,
       icon: leadingIconAsset,
       isBig: true,
+      active: true,
       onPressed: () {
         FocusManager.instance.primaryFocus?.unfocus();
         onTap();

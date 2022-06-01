@@ -12,6 +12,7 @@ class TagBox extends StatelessWidget {
   final Function() onPressed;
   final bool isBig;
   final bool isSquare;
+  final bool active;
 
   const TagBox({
     Key? key,
@@ -24,6 +25,7 @@ class TagBox extends StatelessWidget {
     required this.onPressed,
     this.isBig = false,
     this.isSquare = false,
+    required this.active,
   }) : super(key: key);
 
   @override
@@ -52,7 +54,7 @@ class TagBox extends StatelessWidget {
 
               return SvgPicture.asset(
                 icon!,
-                color: foregroundColor ?? iconColor,
+                color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey3(context),
                 width: iconSize ?? (isBig ? 22 : 14),
                 height: iconSize ?? (isBig ? 22 : 14),
               );

@@ -74,6 +74,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 icon: "assets/images/icons/_common/hourglass.svg",
                 backgroundColor:
                     task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                active: task.duration != null && task.duration != 0,
                 text: text,
                 isBig: true,
                 isSquare: task.duration != null ? false : true,
@@ -91,6 +92,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               return TagBox(
                 icon: "assets/images/icons/_common/repeat.svg",
                 backgroundColor: enabled ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                active: enabled,
                 isBig: true,
                 onPressed: () {
                   var cubit = context.read<EditTaskCubit>();

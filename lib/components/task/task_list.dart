@@ -43,6 +43,7 @@ class TaskList extends StatelessWidget {
     tasks = TaskExt.sort(tasks, sorting: sorting);
 
     return RefreshIndicator(
+      backgroundColor: ColorsExt.background(context),
       onRefresh: () async {
         return context.read<SyncCubit>().sync();
       },

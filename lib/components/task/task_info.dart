@@ -64,6 +64,7 @@ class TaskInfo extends StatelessWidget {
         backgroundColor: ColorsExt.cyan25(context),
         text: t.bottomBar.inbox,
         onPressed: statusClick,
+        active: true,
       );
     } else if (task.statusType == TaskStatusType.someday) {
       return TagBox(
@@ -71,6 +72,7 @@ class TaskInfo extends StatelessWidget {
         backgroundColor: ColorsExt.akiflow10(context),
         text: task.statusType!.name.capitalizeFirstCharacter(),
         onPressed: statusClick,
+        active: true,
       );
     } else if (task.statusType == TaskStatusType.snoozed) {
       return TagBox(
@@ -78,6 +80,7 @@ class TaskInfo extends StatelessWidget {
         backgroundColor: ColorsExt.akiflow10(context),
         text: task.datetimeFormatted,
         onPressed: statusClick,
+        active: true,
       );
     } else if (task.statusType == TaskStatusType.planned && showPlanInfo) {
       return plannedInfo(context);
@@ -87,6 +90,7 @@ class TaskInfo extends StatelessWidget {
           backgroundColor: ColorsExt.cyan25(context),
           text: task.timeFormatted,
           onPressed: statusClick,
+          active: true,
         );
       }
     }
@@ -129,7 +133,12 @@ class TaskInfo extends StatelessWidget {
       text = "$text ${DateFormat("HH:mm").format(parsed)}";
     }
 
-    return TagBox(text: text, backgroundColor: color, onPressed: () {});
+    return TagBox(
+      text: text,
+      backgroundColor: color,
+      onPressed: () {},
+      active: true,
+    );
   }
 
   Widget _label(BuildContext context) {
@@ -151,14 +160,17 @@ class TaskInfo extends StatelessWidget {
       return const SizedBox();
     }
 
+    bool active = label.color != null;
+
     return TagBox(
       icon: "assets/images/icons/_common/number.svg",
       text: label.title,
-      backgroundColor: label.color != null ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
-      iconColor: label.color != null ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
+      backgroundColor: active ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
+      iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
       onPressed: () {
         context.read<MainCubit>().selectLabel(label);
       },
+      active: active,
     );
   }
 }

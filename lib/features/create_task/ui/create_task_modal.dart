@@ -160,6 +160,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         const SizedBox(width: 8),
         TagBox(
           icon: "assets/images/icons/_common/hourglass.svg",
+          active: context.watch<EditTaskCubit>().state.setDuration,
           backgroundColor:
               context.watch<EditTaskCubit>().state.setDuration ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
           isSquare: true,
@@ -179,6 +180,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
             return TagBox(
               icon: "assets/images/icons/_common/number.svg",
+              active: background != null,
               iconColor: background ?? ColorsExt.grey2(context),
               backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey6(context),
               text: state.selectedLabel?.title ?? t.addTask.label,

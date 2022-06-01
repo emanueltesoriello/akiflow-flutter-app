@@ -29,6 +29,7 @@ class _View extends StatelessWidget {
     List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
 
     return RefreshIndicator(
+      backgroundColor: ColorsExt.background(context),
       onRefresh: () async {
         return context.read<SyncCubit>().sync();
       },

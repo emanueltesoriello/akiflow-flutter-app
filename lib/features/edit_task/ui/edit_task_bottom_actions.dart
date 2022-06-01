@@ -56,6 +56,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             }(),
             backgroundColor:
                 task.priority != null && task.priority != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+            active: task.priority != null && task.priority != 0,
             onPressed: () async {
               PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
               EditTaskCubit cubit = context.read<EditTaskCubit>();
@@ -77,6 +78,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             isSquare: true,
             backgroundColor:
                 task.dailyGoal != null && task.dailyGoal == 1 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+            active: task.dailyGoal != null && task.dailyGoal == 1,
             onPressed: () {
               context.read<EditTaskCubit>().toggleDailyGoal();
             },
@@ -87,6 +89,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             isBig: true,
             isSquare: true,
             backgroundColor: task.dueDate != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+            active: task.dueDate != null,
             text: task.dueDateFormatted,
             onPressed: () {
               var cubit = context.read<EditTaskCubit>();
@@ -112,31 +115,34 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             },
           ),
           const SizedBox(width: 11),
-          TagBox(
-            icon: "assets/images/icons/_common/link.svg",
-            isBig: true,
-            isSquare: true,
-            backgroundColor: () {
-              try {
-                if (task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty)) {
-                  return ColorsExt.grey6(context);
-                }
-              } catch (_) {}
+          Builder(builder: (context) {
+            bool active = false;
 
-              return ColorsExt.grey7(context);
-            }(),
-            onPressed: () {
-              var cubit = context.read<EditTaskCubit>();
+            try {
+              if (task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty)) {
+                active = true;
+              }
+            } catch (_) {}
 
-              showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context) => BlocProvider.value(
-                  value: cubit,
-                  child: const LinksModal(),
-                ),
-              );
-            },
-          ),
+            return TagBox(
+              icon: "assets/images/icons/_common/link.svg",
+              isBig: true,
+              isSquare: true,
+              active: active,
+              backgroundColor: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              onPressed: () {
+                var cubit = context.read<EditTaskCubit>();
+
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) => BlocProvider.value(
+                    value: cubit,
+                    child: const LinksModal(),
+                  ),
+                );
+              },
+            );
+          }),
           const Spacer(),
           _menu(context),
         ],

@@ -168,6 +168,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       return TagBox(
         icon: "assets/images/icons/_common/trash.svg",
         backgroundColor: ColorsExt.grey6(context),
+        active: true,
         text: task.statusType!.name.capitalizeFirstCharacter(),
         onPressed: statusClick,
         foregroundColor: ColorsExt.grey3(context),
@@ -215,6 +216,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       backgroundColor:
           label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey6(context),
       iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey3(context),
+      active: label?.color != null,
       onPressed: () {
         var cubit = context.read<EditTaskCubit>();
 

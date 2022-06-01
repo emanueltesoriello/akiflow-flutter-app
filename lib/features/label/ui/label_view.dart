@@ -47,6 +47,7 @@ class LabelView extends StatelessWidget {
         }
 
         return RefreshIndicator(
+          backgroundColor: ColorsExt.background(context),
           onRefresh: () async {
             return context.read<SyncCubit>().sync();
           },
