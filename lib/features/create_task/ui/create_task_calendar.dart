@@ -61,6 +61,11 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
             },
             onDaySelected: (selectedDay, focusedDay) {
               _selectedDay.value = (selectedDay);
+
+              if (!widget.showTime) {
+                widget.onConfirm(_selectedDay.value, null);
+                Navigator.pop(context);
+              }
             },
             headerStyle: const HeaderStyle(
               leftChevronVisible: false,
@@ -154,86 +159,91 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
               },
             ),
           ),
-          Container(
-            color: Theme.of(context).dividerColor,
-            width: double.infinity,
-            height: 1,
-          ),
-          SizedBox(
-            height: 60,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Builder(builder: (context) {
-                      if (!widget.showTime) {
-                        return const SizedBox();
-                      }
-                      return InkWell(
-                        onTap: () async {
-                          TimeOfDay time = TimeOfDay.fromDateTime(selectedDate);
-                          _selectedDatetime.value = await showTimePicker(context: context, initialTime: time);
+          Builder(builder: (context) {
+            if (!widget.showTime) {
+              return const SizedBox();
+            }
 
-                          if (widget.onSelectTime != null) {
-                            widget.onSelectTime!(_selectedDatetime.value);
-                          }
-                        },
-                        child: ValueListenableBuilder(
-                          valueListenable: _selectedDatetime,
-                          builder: (context, TimeOfDay? selectedTime, child) {
-                            return Text(
-                              selectedTime == null
-                                  ? t.addTask.addTime
-                                  : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
-                                      selectedDate.day, selectedTime.hour, selectedTime.minute)),
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: ColorsExt.grey2(context),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            );
-                          },
+            return Column(
+              children: [
+                Container(
+                  color: Theme.of(context).dividerColor,
+                  width: double.infinity,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 60,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () async {
+                              TimeOfDay time = TimeOfDay.fromDateTime(selectedDate);
+                              _selectedDatetime.value = await showTimePicker(context: context, initialTime: time);
+
+                              if (widget.onSelectTime != null) {
+                                widget.onSelectTime!(_selectedDatetime.value);
+                              }
+                            },
+                            child: ValueListenableBuilder(
+                              valueListenable: _selectedDatetime,
+                              builder: (context, TimeOfDay? selectedTime, child) {
+                                return Text(
+                                  selectedTime == null
+                                      ? t.addTask.addTime
+                                      : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
+                                          selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: ColorsExt.grey2(context),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      );
-                    }),
+                        InkWell(
+                          onTap: () {
+                            DateTime date = DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                            );
+
+                            DateTime? datetime;
+
+                            if (_selectedDatetime.value != null) {
+                              datetime = DateTime(
+                                selectedDate.year,
+                                selectedDate.month,
+                                selectedDate.day,
+                                _selectedDatetime.value!.hour,
+                                _selectedDatetime.value!.minute,
+                              );
+                            }
+
+                            widget.onConfirm(date, datetime);
+
+                            Navigator.pop(context);
+                          },
+                          child: SvgPicture.asset("assets/images/icons/_common/checkmark.svg",
+                              width: 24, height: 24, color: ColorsExt.akiflow(context)),
+                        ),
+                      ],
+                    ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      DateTime date = DateTime(
-                        selectedDate.year,
-                        selectedDate.month,
-                        selectedDate.day,
-                      );
-
-                      DateTime? datetime;
-
-                      if (_selectedDatetime.value != null) {
-                        datetime = DateTime(
-                          selectedDate.year,
-                          selectedDate.month,
-                          selectedDate.day,
-                          _selectedDatetime.value!.hour,
-                          _selectedDatetime.value!.minute,
-                        );
-                      }
-
-                      widget.onConfirm(date, datetime);
-
-                      Navigator.pop(context);
-                    },
-                    child: SvgPicture.asset("assets/images/icons/_common/checkmark.svg",
-                        width: 24, height: 24, color: ColorsExt.akiflow(context)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            color: Theme.of(context).dividerColor,
-            width: double.infinity,
-            height: 1,
-          ),
+                ),
+                Container(
+                  color: Theme.of(context).dividerColor,
+                  width: double.infinity,
+                  height: 1,
+                ),
+              ],
+            );
+          }),
         ],
       ),
     );
