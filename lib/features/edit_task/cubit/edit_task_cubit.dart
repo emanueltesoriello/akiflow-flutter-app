@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
@@ -206,8 +207,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  void changePriority() {
-    Task updated = state.updatedTask.changePriority();
+  void setPriority(PriorityEnum? priority) {
+    Task updated = state.updatedTask.copyWith(
+      priority: priority?.value,
+      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+    );
 
     emit(state.copyWith(updatedTask: updated));
   }

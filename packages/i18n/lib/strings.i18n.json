@@ -134,7 +134,13 @@
     "snooze": "Snooze",
     "snoozed": "Snoozed",
     "assign": "Assign",
-    "priority": "Priority",
+    "priority": {
+      "title": "Priority",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "noPriority": "No priority"
+    },
     "moveToInbox": "Move to inbox",
     "planForToday": "Plan for today",
     "setDeadline": "Set Deadline",

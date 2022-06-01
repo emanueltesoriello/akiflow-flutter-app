@@ -7,6 +7,7 @@ import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
+import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -55,8 +56,18 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             }(),
             backgroundColor:
                 task.priority != null && task.priority != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-            onPressed: () {
-              context.read<EditTaskCubit>().changePriority();
+            onPressed: () async {
+              PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
+              EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+              PriorityEnum? newPriority = await showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context) => PriorityModal(currentPriority),
+                closeProgressThreshold: 0,
+                expand: false,
+              );
+
+              cubit.setPriority(newPriority);
             },
           ),
           const SizedBox(width: 11),

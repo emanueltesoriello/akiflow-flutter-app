@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 199 
+ * Strings: 203 
  *
- * Built on 2022-05-31 at 15:34 UTC
+ * Built on 2022-06-01 at 11:58 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -434,7 +434,7 @@ class _StringsTaskEn {
 	String get snooze => 'Snooze';
 	String get snoozed => 'Snoozed';
 	String get assign => 'Assign';
-	String get priority => 'Priority';
+	late final _StringsTaskPriorityEn priority = _StringsTaskPriorityEn._(_root);
 	String get moveToInbox => 'Move to inbox';
 	String get planForToday => 'Plan for today';
 	String get setDeadline => 'Set Deadline';
@@ -633,6 +633,20 @@ class _StringsSettingsIntegrationsEn {
 	late final _StringsSettingsIntegrationsGmailEn gmail = _StringsSettingsIntegrationsGmailEn._(_root);
 	late final _StringsSettingsIntegrationsSlackEn slack = _StringsSettingsIntegrationsSlackEn._(_root);
 	late final _StringsSettingsIntegrationsCalendarEn calendar = _StringsSettingsIntegrationsCalendarEn._(_root);
+}
+
+// Path: task.priority
+class _StringsTaskPriorityEn {
+	_StringsTaskPriorityEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Priority';
+	String get high => 'High';
+	String get medium => 'Medium';
+	String get low => 'Low';
+	String get noPriority => 'No priority';
 }
 
 // Path: task.undoActions
@@ -870,7 +884,11 @@ extension on _StringsEn {
 			'task.snooze': 'Snooze',
 			'task.snoozed': 'Snoozed',
 			'task.assign': 'Assign',
-			'task.priority': 'Priority',
+			'task.priority.title': 'Priority',
+			'task.priority.high': 'High',
+			'task.priority.medium': 'Medium',
+			'task.priority.low': 'Low',
+			'task.priority.noPriority': 'No priority',
 			'task.moveToInbox': 'Move to inbox',
 			'task.planForToday': 'Plan for today',
 			'task.setDeadline': 'Set Deadline',

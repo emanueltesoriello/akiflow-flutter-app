@@ -6,6 +6,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
@@ -268,7 +269,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  Future<void> selectPriority() async {
+  Future<void> setPriority(PriorityEnum? priority) async {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
@@ -278,7 +279,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     bool hasRecurringDataChanges = false;
 
     for (Task task in allSelected) {
-      Task updatedTask = task.changePriority();
+      Task updatedTask = task.copyWith(
+        priority: priority?.value,
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      );
 
       allSelected = allSelected.map((t) {
         return t.id == task.id ? updatedTask : t;

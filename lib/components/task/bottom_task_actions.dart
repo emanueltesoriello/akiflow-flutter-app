@@ -9,6 +9,7 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
+import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -106,9 +107,18 @@ class BottomTaskActions extends StatelessWidget {
                 backColor: ColorsExt.grey5(context),
                 topColor: ColorsExt.grey3(context),
                 icon: 'assets/images/icons/_common/exclamationmark.svg',
-                bottomLabel: t.task.priority,
-                click: () {
-                  context.read<TasksCubit>().selectPriority();
+                bottomLabel: t.task.priority.title,
+                click: () async {
+                  TasksCubit cubit = context.read<TasksCubit>();
+
+                  PriorityEnum? newPriority = await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => const PriorityModal(null),
+                    closeProgressThreshold: 0,
+                    expand: false,
+                  );
+
+                  cubit.setPriority(newPriority);
                 },
               ),
             ),
