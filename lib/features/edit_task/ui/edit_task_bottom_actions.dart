@@ -74,6 +74,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           TagBox(
             icon: "assets/images/icons/_common/target.svg",
             isBig: true,
+            isSquare: true,
             backgroundColor:
                 task.dailyGoal != null && task.dailyGoal == 1 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
             onPressed: () {
@@ -84,6 +85,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           TagBox(
             icon: "assets/images/icons/_common/flags.svg",
             isBig: true,
+            isSquare: true,
             backgroundColor: task.dueDate != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
             text: task.dueDateFormatted,
             onPressed: () {
@@ -113,6 +115,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           TagBox(
             icon: "assets/images/icons/_common/link.svg",
             isBig: true,
+            isSquare: true,
             backgroundColor: () {
               try {
                 if (task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty)) {

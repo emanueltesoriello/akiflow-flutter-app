@@ -31,8 +31,8 @@ class TagBox extends StatelessWidget {
     return InkWell(
       onTap: (() => onPressed()),
       child: Container(
-        height: isBig ? 32 : 22,
-        width: isSquare ? (isBig ? 32 : 22) : null,
+        height: isBig ? 34 : 22,
+        width: isSquare ? (isBig ? 34 : 22) : null,
         padding: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
           color: backgroundColor,
@@ -51,8 +51,8 @@ class TagBox extends StatelessWidget {
               return SvgPicture.asset(
                 icon!,
                 color: foregroundColor ?? iconColor,
-                width: iconSize ?? (isBig ? 17 : 14),
-                height: iconSize ?? (isBig ? 17 : 14),
+                width: iconSize ?? (isBig ? 22 : 14),
+                height: iconSize ?? (isBig ? 22 : 14),
               );
             }),
             Flexible(
