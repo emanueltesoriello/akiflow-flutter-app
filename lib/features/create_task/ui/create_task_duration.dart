@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
-class AddTaskDurationItem extends StatelessWidget {
-  const AddTaskDurationItem({Key? key}) : super(key: key);
+class CreateTaskDurationItem extends StatelessWidget {
+  const CreateTaskDurationItem({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

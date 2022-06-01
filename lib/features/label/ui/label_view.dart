@@ -4,7 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
-import 'package:mobile/features/add_task/ui/add_task_modal.dart';
+import 'package:mobile/features/create_task/ui/create_task_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
@@ -91,7 +91,7 @@ class LabelView extends StatelessWidget {
 
                     showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context) => const AddTaskModal(),
+                      builder: (context) => const CreateTaskModal(),
                     );
                   },
                   onDelete: () {

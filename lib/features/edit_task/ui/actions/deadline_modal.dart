@@ -4,7 +4,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
-import 'package:mobile/features/add_task/ui/add_task_calendar.dart';
+import 'package:mobile/features/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/style/colors.dart';
 
 class DeadlineModal extends StatefulWidget {
@@ -66,7 +66,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
                 const Separator(),
                 _predefinedDate(context, widget.onSelectDate),
                 const Separator(),
-                AddTaskCalendar(
+                CreateTaskCalendar(
                   initialDate: widget.initialDate,
                   onConfirm: (DateTime date, DateTime? datetime) {
                     widget.onSelectDate(datetime ?? date);

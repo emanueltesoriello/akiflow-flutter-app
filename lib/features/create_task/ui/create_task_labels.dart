@@ -6,8 +6,8 @@ import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/utils/label_ext.dart';
 import 'package:models/label/label.dart';
 
-class AddTaskLabels extends StatelessWidget {
-  const AddTaskLabels({Key? key}) : super(key: key);
+class CreateTaskLabels extends StatelessWidget {
+  const CreateTaskLabels({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

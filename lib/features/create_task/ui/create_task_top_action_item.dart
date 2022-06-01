@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/style/colors.dart';
 
-class AddTaskTopActionItem extends StatelessWidget {
+class CreateTaskTopActionItem extends StatelessWidget {
   final Function() onPressed;
   final String? text;
   final String leadingIconAsset;
   final Color color;
   final bool active;
 
-  const AddTaskTopActionItem({
+  const CreateTaskTopActionItem({
     Key? key,
     required this.onPressed,
     required this.leadingIconAsset,
@@ -37,9 +37,7 @@ class AddTaskTopActionItem extends StatelessWidget {
                 leadingIconAsset,
                 width: 22,
                 height: 22,
-                color: active
-                    ? ColorsExt.grey2(context)
-                    : ColorsExt.grey3(context),
+                color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
               ),
               _text(context),
             ],

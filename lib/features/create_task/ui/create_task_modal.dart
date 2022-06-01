@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/components/task/plan_for_action.dart';
-import 'package:mobile/features/add_task/ui/add_task_duration.dart';
-import 'package:mobile/features/add_task/ui/add_task_labels.dart';
+import 'package:mobile/features/create_task/ui/create_task_duration.dart';
+import 'package:mobile/features/create_task/ui/create_task_labels.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
 import 'package:mobile/style/colors.dart';
@@ -13,14 +13,14 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/task/task.dart';
 
-class AddTaskModal extends StatefulWidget {
-  const AddTaskModal({Key? key}) : super(key: key);
+class CreateTaskModal extends StatefulWidget {
+  const CreateTaskModal({Key? key}) : super(key: key);
 
   @override
-  State<AddTaskModal> createState() => _AddTaskModalState();
+  State<CreateTaskModal> createState() => _CreateTaskModalState();
 }
 
-class _AddTaskModalState extends State<AddTaskModal> {
+class _CreateTaskModalState extends State<CreateTaskModal> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
@@ -59,7 +59,7 @@ class _AddTaskModalState extends State<AddTaskModal> {
                       BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                         builder: (context, state) {
                           if (state.setDuration) {
-                            return const AddTaskDurationItem();
+                            return const CreateTaskDurationItem();
                           } else {
                             return const SizedBox();
                           }
@@ -68,7 +68,7 @@ class _AddTaskModalState extends State<AddTaskModal> {
                       BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                         builder: (context, state) {
                           if (state.showLabelsList) {
-                            return const AddTaskLabels();
+                            return const CreateTaskLabels();
                           } else {
                             return const SizedBox();
                           }

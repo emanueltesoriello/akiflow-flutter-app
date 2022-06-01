@@ -7,12 +7,12 @@ import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AddTaskCalendar extends StatefulWidget {
+class CreateTaskCalendar extends StatefulWidget {
   final Function(DateTime, DateTime?) onConfirm;
   final DateTime? initialDate;
   final Function(TimeOfDay? time)? onSelectTime;
 
-  const AddTaskCalendar({
+  const CreateTaskCalendar({
     Key? key,
     required this.onConfirm,
     required this.initialDate,
@@ -20,16 +20,16 @@ class AddTaskCalendar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AddTaskCalendar> createState() => _AddTaskCalendarState();
+  State<CreateTaskCalendar> createState() => _CreateTaskCalendarState();
 }
 
-class _AddTaskCalendarState extends State<AddTaskCalendar> {
+class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
   PageController? _pageController;
 
   final ValueNotifier<DateTime> _selectedDay;
   final ValueNotifier<TimeOfDay?> _selectedDatetime;
 
-  _AddTaskCalendarState()
+  _CreateTaskCalendarState()
       : _selectedDay = ValueNotifier(DateTime.now()),
         _selectedDatetime = ValueNotifier(null);
 

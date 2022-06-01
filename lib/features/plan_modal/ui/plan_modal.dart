@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/features/add_task/ui/add_task_calendar.dart';
-import 'package:mobile/features/add_task/ui/add_task_top_action_item.dart';
+import 'package:mobile/features/create_task/ui/create_task_calendar.dart';
+import 'package:mobile/features/create_task/ui/create_task_top_action_item.dart';
 import 'package:mobile/features/plan_modal/cubit/plan_modal_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -75,7 +75,7 @@ class _View extends StatelessWidget {
                     children: [
                       _planType(),
                       _predefinedDate(context),
-                      AddTaskCalendar(
+                      CreateTaskCalendar(
                         initialDate: context.watch<PlanModalCubit>().state.selectedDate,
                         onConfirm: (DateTime date, DateTime? datetime) {
                           context.read<PlanModalCubit>().selectDate(date);
@@ -112,7 +112,7 @@ class _View extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    AddTaskTopActionItem(
+                    CreateTaskTopActionItem(
                       text: t.addTask.plan,
                       color: ColorsExt.cyan25(context),
                       leadingIconAsset: "assets/images/icons/_common/calendar.svg",
@@ -122,7 +122,7 @@ class _View extends StatelessWidget {
                       },
                     ),
                     const SizedBox(width: 24),
-                    AddTaskTopActionItem(
+                    CreateTaskTopActionItem(
                       text: t.addTask.snooze,
                       color: ColorsExt.pink30(context),
                       leadingIconAsset: "assets/images/icons/_common/clock.svg",

@@ -9,8 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
-import 'package:mobile/features/add_task/ui/add_task_modal.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
+import 'package:mobile/features/create_task/ui/create_task_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
@@ -389,7 +389,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
               showCupertinoModalBottomSheet(
                 context: context,
-                builder: (context) => const AddTaskModal(),
+                builder: (context) => const CreateTaskModal(),
               );
             },
             shape: RoundedRectangleBorder(
