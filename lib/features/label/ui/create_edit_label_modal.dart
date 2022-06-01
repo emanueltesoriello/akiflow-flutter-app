@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/bordered_input_view.dart';
 import 'package:mobile/components/base/button_list.dart';
-import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
@@ -60,68 +59,26 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                         const SizedBox(height: 16),
                         const ScrollChip(),
                         const SizedBox(height: 16),
-                        BorderedInputView(
-                          focus: titleFocus,
-                          initialValue: context.read<LabelCubit>().state.selectedLabel?.title,
-                          onChanged: (value) {
-                            context.read<LabelCubit>().titleChanged(value);
-                          },
-                          hint: "",
-                        ),
-                        const SizedBox(height: 24),
-                        BlocBuilder<LabelCubit, LabelCubitState>(
-                          builder: (context, state) {
-                            Label label = state.selectedLabel!;
-
-                            Color iconBackground;
-                            Color iconForeground;
-
-                            String? colorText;
-
-                            if (label.color != null) {
-                              iconBackground = ColorsExt.getFromName(label.color!).withOpacity(0.1);
-                              iconForeground = ColorsExt.getFromName(label.color!);
-                              colorText = ColorsExt.displayTextFromName(label.color!);
-                            } else {
-                              iconBackground = ColorsExt.grey6(context);
-                              iconForeground = ColorsExt.grey2(context);
-                            }
-
-                            return ButtonListLabel(
-                              title: colorText ?? "",
-                              position: ButtonListPosition.top,
-                              leading: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: iconBackground,
-                                ),
-                                height: 26,
-                                width: 26,
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    "assets/images/icons/_common/number.svg",
-                                    color: iconForeground,
-                                    height: 20,
-                                    width: 20,
-                                  ),
+                        Row(
+                          children: [
+                            colorSelector(context),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: SizedBox(
+                                height: 50,
+                                child: BorderedInputView(
+                                  focus: titleFocus,
+                                  initialValue: context.read<LabelCubit>().state.selectedLabel?.title,
+                                  onChanged: (value) {
+                                    context.read<LabelCubit>().titleChanged(value);
+                                  },
+                                  hint: "",
                                 ),
                               ),
-                              onPressed: () async {
-                                LabelCubit labelCubit = context.read<LabelCubit>();
-
-                                String? rawColorName = await showCupertinoModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => const ColorsModal(),
-                                );
-
-                                if (rawColorName != null) {
-                                  labelCubit.setColor(rawColorName);
-                                }
-                              },
-                            );
-                          },
+                            ),
+                          ],
                         ),
-                        const ButtonListDivider(),
+                        const SizedBox(height: 24),
                         BlocBuilder<LabelCubit, LabelCubitState>(
                           builder: (context, state) {
                             List<Label> folders = context
@@ -144,7 +101,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
 
                             return ButtonListLabel(
                               title: folder?.title ?? t.label.noFolder,
-                              position: ButtonListPosition.bottom,
+                              position: ButtonListPosition.single,
                               leading: SizedBox(
                                 height: 26,
                                 width: 26,
@@ -238,6 +195,67 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget colorSelector(BuildContext context) {
+    LabelCubit labelCubit = context.watch<LabelCubit>();
+
+    Label label = labelCubit.state.selectedLabel!;
+
+    Color iconBackground;
+    Color iconForeground;
+
+    if (label.color != null) {
+      iconBackground = ColorsExt.getFromName(label.color!).withOpacity(0.1);
+      iconForeground = ColorsExt.getFromName(label.color!);
+    } else {
+      iconBackground = ColorsExt.grey6(context);
+      iconForeground = ColorsExt.grey2(context);
+    }
+
+    return InkWell(
+      onTap: () async {
+        LabelCubit labelCubit = context.read<LabelCubit>();
+
+        String? rawColorName = await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => const ColorsModal(),
+        );
+
+        if (rawColorName != null) {
+          labelCubit.setColor(rawColorName);
+        }
+      },
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: ColorsExt.grey4(context),
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: iconBackground,
+            ),
+            height: 26,
+            width: 26,
+            child: Center(
+              child: SvgPicture.asset(
+                "assets/images/icons/_common/number.svg",
+                color: iconForeground,
+                height: 20,
+                width: 20,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

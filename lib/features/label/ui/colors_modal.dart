@@ -30,25 +30,22 @@ class ColorsModal extends StatelessWidget {
                 const SizedBox(height: 12),
                 const ScrollChip(),
                 const SizedBox(height: 12),
-                ListView.builder(
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Text(
+                    t.label.color,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                GridView.builder(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: ColorsExt.paletteColorsDisplayName.keys.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Text(
-                          t.label.color,
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
-                        ),
-                      );
-                    }
-
-                    index -= 1;
-
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 6,
+                  ),
+                  itemCount: ColorsExt.paletteColorsDisplayName.keys.length,
+                  itemBuilder: (BuildContext context, int index) {
                     String rawColorName = ColorsExt.paletteColorsDisplayName.keys.toList()[index];
-                    String colorText = ColorsExt.paletteColorsDisplayName.values.toList()[index];
 
                     Color color = ColorsExt.getFromName(rawColorName);
 
@@ -56,23 +53,16 @@ class ColorsModal extends StatelessWidget {
                       onTap: () {
                         Navigator.pop(context, rawColorName);
                       },
-                      child: SizedBox(
-                        height: 46,
-                        child: Row(
-                          children: [
-                            CircleAvatar(radius: 11, backgroundColor: color),
-                            const SizedBox(width: 10),
-                            Expanded(
-                                child: Text(
-                              colorText,
-                              style: TextStyle(color: ColorsExt.grey2(context), fontSize: 17),
-                            )),
-                          ],
+                      child: Center(
+                        child: SizedBox(
+                          height: 35,
+                          child: CircleAvatar(backgroundColor: color),
                         ),
                       ),
                     );
                   },
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
