@@ -14,7 +14,7 @@ class TodayCubit extends Cubit<TodayCubitState> {
   }
 
   void onDateSelected(DateTime selectedDay) {
-    emit(state.copyWith(selectedDate: selectedDay));
+    emit(state.copyWith(selectedDate: selectedDay, calendarFormat: CalendarFormatState.week));
     tasksCubit.getTodayTasksByDate(selectedDay);
   }
 
@@ -25,7 +25,7 @@ class TodayCubit extends Cubit<TodayCubitState> {
   }
 
   todayClick() {
-    emit(state.copyWith(selectedDate: DateTime.now()));
+    emit(state.copyWith(selectedDate: DateTime.now(), calendarFormat: CalendarFormatState.week));
     tasksCubit.getTodayTasksByDate(DateTime.now());
   }
 
@@ -39,5 +39,13 @@ class TodayCubit extends Cubit<TodayCubitState> {
 
   void openCompletedList() {
     emit(state.copyWith(completedListOpen: !state.completedListOpen));
+  }
+
+  void scrollDownCalendar() {
+    emit(state.copyWith(calendarFormat: CalendarFormatState.month));
+  }
+
+  void scrollUpCalendar() {
+    emit(state.copyWith(calendarFormat: CalendarFormatState.week));
   }
 }
