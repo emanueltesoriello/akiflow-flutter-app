@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/components/task/checkbox_animated.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/task_info.dart';
@@ -104,76 +105,87 @@ class TaskRow extends StatelessWidget {
             TaskExt.openGmailUrlIfAny(updated, authCubit, tasksCubit);
           }
         },
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(0, 16, 16, 12),
-          color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: Builder(
-                  builder: (context) {
-                    Color? color;
+        child: IntrinsicHeight(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 16, 16, 12),
+            color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 14,
+                  child: Builder(
+                    builder: (context) {
+                      Color? color;
 
-                    try {
-                      if (task.content["expiredSnooze"] == true) {
-                        color = ColorsExt.pink(context);
+                      try {
+                        if (task.content["expiredSnooze"] == true) {
+                          color = ColorsExt.pink(context);
+                        }
+                      } catch (_) {}
+
+                      if (task.readAt == null) {
+                        color = ColorsExt.cyan(context);
                       }
-                    } catch (_) {}
 
-                    if (task.readAt == null) {
-                      color = ColorsExt.cyan(context);
-                    }
+                      if (color == null) {
+                        return const SizedBox();
+                      }
 
-                    if (color == null) {
-                      return const SizedBox();
-                    }
-
-                    return Center(
-                      child: Container(
-                        width: 6,
-                        height: 6,
-                        margin: const EdgeInsets.all(16 - 10),
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
+                      return Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          width: 6,
+                          height: 6,
+                          margin: const EdgeInsets.only(left: 5, right: 0, top: 10),
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: Builder(builder: (context) {
+                Builder(builder: ((context) {
                   if (selectMode) {
                     return _radio(context);
                   } else {
-                    return _checkbox(context);
-                  }
-                }),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _firstLine(context),
-                    _secondLine(context),
-                    TaskInfo(
+                    return CheckboxAnimated(
                       task,
-                      hideInboxLabel: hideInboxLabel,
-                      showLabel: showLabel,
-                      selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                      showPlanInfo: showPlanInfo,
-                    ),
-                  ],
+                      key: ObjectKey(task),
+                      onTap: () {
+                        if (!task.isCompletedComputed) {
+                          TasksCubit tasksCubit = context.read<TasksCubit>();
+                          AuthCubit authCubit = context.read<AuthCubit>();
+
+                          TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
+                        }
+
+                        completedClick();
+                      },
+                    );
+                  }
+                })),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _firstLine(context),
+                      _secondLine(context),
+                      TaskInfo(
+                        task,
+                        hideInboxLabel: hideInboxLabel,
+                        showLabel: showLabel,
+                        selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                        showPlanInfo: showPlanInfo,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -293,11 +305,20 @@ class TaskRow extends StatelessWidget {
 
     return InkWell(
       onTap: selectTask,
-      child: SvgPicture.asset(
-        selected ? "assets/images/icons/_common/largecircle_fill_circle.svg" : "assets/images/icons/_common/circle.svg",
-        width: 20,
-        height: 20,
-        color: color,
+      child: Container(
+        height: double.infinity,
+        padding: const EdgeInsets.all(10),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: SvgPicture.asset(
+            selected
+                ? "assets/images/icons/_common/largecircle_fill_circle.svg"
+                : "assets/images/icons/_common/circle.svg",
+            width: 20,
+            height: 20,
+            color: color,
+          ),
+        ),
       ),
     );
   }
