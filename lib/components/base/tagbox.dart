@@ -46,23 +46,27 @@ class TagBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(width: 6),
             Builder(builder: (context) {
               if (icon == null) {
-                return const SizedBox();
+                return const SizedBox(width: 5);
               }
 
-              return SvgPicture.asset(
-                icon!,
-                color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey3(context),
-                width: iconSize ?? (isBig ? 22 : 14),
-                height: iconSize ?? (isBig ? 22 : 14),
+              return Row(
+                children: [
+                  const SizedBox(width: 6),
+                  SvgPicture.asset(
+                    icon!,
+                    color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey3(context),
+                    width: iconSize ?? (isBig ? 22 : 14),
+                    height: iconSize ?? (isBig ? 22 : 14),
+                  ),
+                ],
               );
             }),
             Flexible(
               child: Builder(builder: (context) {
                 if (text == null) {
-                  return const SizedBox();
+                  return const SizedBox(width: 5);
                 }
 
                 return Row(
@@ -82,11 +86,11 @@ class TagBox extends StatelessWidget {
                         textAlign: TextAlign.end,
                       ),
                     ),
+                    const SizedBox(width: 6),
                   ],
                 );
               }),
             ),
-            const SizedBox(width: 6),
           ],
         ),
       ),
