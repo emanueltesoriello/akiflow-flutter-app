@@ -307,7 +307,7 @@ class TaskRow extends StatelessWidget {
       onTap: selectTask,
       child: Container(
         height: double.infinity,
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(3),
         child: Align(
           alignment: Alignment.topCenter,
           child: SvgPicture.asset(

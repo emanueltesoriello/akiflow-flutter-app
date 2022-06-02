@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/components/task/task_row.dart';
+import 'package:mobile/components/task/task_row_drag_mode.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
@@ -60,6 +61,8 @@ class _TodayTaskListState extends State<TodayTaskList> {
     super.initState();
   }
 
+  Task? selected;
+
   @override
   Widget build(BuildContext context) {
     List<Task> tasks = List.from(widget.tasks);
@@ -73,14 +76,19 @@ class _TodayTaskListState extends State<TodayTaskList> {
       onReorderStarted: (index) {
         int indexWithoutHeaderWidget = index - 1;
 
-        context.read<TasksCubit>().select(tasks[indexWithoutHeaderWidget]);
+        selected = tasks[indexWithoutHeaderWidget];
+
+        context.read<TasksCubit>().select(selected!);
       },
       buildDraggableFeedback: (context, constraints, child) {
         return Material(
           elevation: 1,
           color: ColorsExt.grey6(context),
           borderRadius: BorderRadius.zero,
-          child: ConstrainedBox(constraints: constraints, child: child),
+          child: ConstrainedBox(
+            constraints: constraints,
+            child: TaskRowDragMode(selected!),
+          ),
         );
       },
       onReorder: (int oldIndex, int newIndex) {
