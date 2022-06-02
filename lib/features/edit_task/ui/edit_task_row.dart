@@ -158,10 +158,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
   Widget _status(BuildContext context) {
     Task task = context.watch<EditTaskCubit>().state.updatedTask;
 
-    void statusClick() {
-      print(task.status);
-    }
-
     if (task.deletedAt != null ||
         task.statusType == TaskStatusType.deleted ||
         task.statusType == TaskStatusType.permanentlyDeleted) {
@@ -170,7 +166,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
         backgroundColor: ColorsExt.grey6(context),
         active: true,
         text: task.statusType!.name.capitalizeFirstCharacter(),
-        onPressed: statusClick,
         foregroundColor: ColorsExt.grey3(context),
       );
     }

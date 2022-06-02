@@ -50,10 +50,6 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget _status(BuildContext context) {
-    void statusClick() {
-      print(task.status);
-    }
-
     if (task.statusType == TaskStatusType.inbox && hideInboxLabel) {
       return const SizedBox();
     }
@@ -63,7 +59,6 @@ class TaskInfo extends StatelessWidget {
         icon: "assets/images/icons/_common/tray.svg",
         backgroundColor: ColorsExt.cyan25(context),
         text: t.bottomBar.inbox,
-        onPressed: statusClick,
         active: true,
       );
     } else if (task.statusType == TaskStatusType.someday) {
@@ -71,7 +66,6 @@ class TaskInfo extends StatelessWidget {
         icon: "assets/images/icons/_common/archivebox.svg",
         backgroundColor: ColorsExt.akiflow10(context),
         text: task.statusType!.name.capitalizeFirstCharacter(),
-        onPressed: statusClick,
         active: true,
       );
     } else if (task.statusType == TaskStatusType.snoozed) {
@@ -79,7 +73,6 @@ class TaskInfo extends StatelessWidget {
         icon: "assets/images/icons/_common/clock.svg",
         backgroundColor: ColorsExt.akiflow10(context),
         text: task.datetimeFormatted,
-        onPressed: statusClick,
         active: true,
       );
     } else if (task.statusType == TaskStatusType.planned && showPlanInfo) {
@@ -89,7 +82,6 @@ class TaskInfo extends StatelessWidget {
         return TagBox(
           backgroundColor: ColorsExt.cyan25(context),
           text: task.timeFormatted,
-          onPressed: statusClick,
           active: true,
         );
       }
