@@ -94,11 +94,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        bool anyInboxSelected = context.read<TasksCubit>().state.inboxTasks.any((t) => t.selected ?? false);
-        bool anyTodaySelected = context.read<TasksCubit>().state.todayTasks.any((t) => t.selected ?? false);
-        bool anyLabelsSelected = context.read<TasksCubit>().state.labelTasks.any((t) => t.selected ?? false);
-
-        if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
+        if (TaskExt.isSelectMode(context.read<TasksCubit>().state)) {
           context.read<TasksCubit>().clearSelected();
           return false;
         } else {
