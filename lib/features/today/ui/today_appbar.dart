@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
@@ -65,19 +65,9 @@ class _TodayAppBarState extends State<TodayAppBar> {
           data: Theme.of(context).copyWith(useMaterial3: false),
           child: Stack(
             children: [
-              AppBar(
-                centerTitle: false,
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  statusBarIconBrightness: Brightness.dark,
-                  statusBarBrightness: Brightness.light,
-                ),
-                elevation: 0,
-                automaticallyImplyLeading: false,
-                shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
+              AppBarComp(
                 leading: _leading(context),
-                title: _buildTitle(context),
-                titleSpacing: TaskExt.isSelectMode(context.watch<TasksCubit>().state) ? 0 : 16,
+                titleWidget: _buildTitle(context),
                 actions: _buildActions(context),
               ),
               Positioned(

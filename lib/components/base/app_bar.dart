@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -9,6 +10,7 @@ import 'package:mobile/utils/task_extension.dart';
 class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;
   final String? title;
+  final Widget? titleWidget;
   final List<Widget> actions;
   final Function()? onBackClick;
   final bool showLogo;
@@ -19,6 +21,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   const AppBarComp({
     Key? key,
     this.title,
+    this.titleWidget,
     this.showBack = false,
     this.actions = const [],
     this.onBackClick,
@@ -93,6 +96,25 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildTitle(BuildContext context) {
+    TasksCubit bloc = context.watch<TasksCubit>();
+
+    int tasksSelected = TaskExt.countTasksSelected(bloc.state);
+
+    if (tasksSelected != 0) {
+      return Text(
+        t.task.nSelected(count: tasksSelected),
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w500,
+          color: ColorsExt.grey2(context),
+        ),
+      );
+    }
+
+    if (titleWidget != null) {
+      return titleWidget!;
+    }
+
     if (customTitle != null) {
       return customTitle!;
     }

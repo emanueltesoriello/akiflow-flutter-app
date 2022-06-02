@@ -539,11 +539,14 @@ extension TaskExt on Task {
     return text;
   }
 
-  static bool isSelectMode(TasksCubitState state) {
-    bool selectModeInbox = state.inboxTasks.any((element) => element.selected ?? false);
-    bool selectModeToday = state.todayTasks.any((element) => element.selected ?? false);
-    bool selectModeLabels = state.labelTasks.any((element) => element.selected ?? false);
+  static int countTasksSelected(TasksCubitState state) {
+    int selectedInbox = state.inboxTasks.where((element) => element.selected ?? false).toList().length;
+    int selectedToday = state.todayTasks.where((element) => element.selected ?? false).toList().length;
 
-    return selectModeInbox || selectModeToday || selectModeLabels;
+    return selectedInbox + selectedToday;
+  }
+
+  static bool isSelectMode(TasksCubitState state) {
+    return countTasksSelected(state) != 0;
   }
 }

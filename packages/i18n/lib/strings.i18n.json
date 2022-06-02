@@ -167,7 +167,8 @@
     "link": {
       "addLink": "Add link"
     },
-    "taskCreatedSuccessfully": "Task created successfully"
+    "taskCreatedSuccessfully": "Task created successfully",
+    "nSelected": "$count selected"
   },
   "errors": {
     "noAccountsFound": "No accounts found"
