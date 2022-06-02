@@ -78,7 +78,8 @@ class SettingsPage extends StatelessWidget {
             position: ButtonListPosition.center,
             showShevron: false,
             onPressed: () {
-              launchUrl(Uri.parse("https://www.notion.so/akiflow/How-to-use-Akiflow-7476c0787ec64e8aa3567bdeb3ab4540"));
+              launchUrl(Uri.parse("https://www.notion.so/akiflow/How-to-use-Akiflow-7476c0787ec64e8aa3567bdeb3ab4540"),
+                  mode: LaunchMode.externalApplication);
             },
           ),
           ButtonList(
@@ -87,7 +88,7 @@ class SettingsPage extends StatelessWidget {
             position: ButtonListPosition.bottom,
             showShevron: false,
             onPressed: () {
-              launchUrl(Uri.parse("https://product.akiflow.com/changelog"));
+              launchUrl(Uri.parse("https://product.akiflow.com/changelog"), mode: LaunchMode.externalApplication);
             },
           ),
           const SizedBox(height: 16),
@@ -98,7 +99,7 @@ class SettingsPage extends StatelessWidget {
             showShevron: false,
             useSvgColor: true,
             onPressed: () {
-              launchUrl(Uri.parse("https://twitter.com/getakiflow"));
+              launchUrl(Uri.parse("https://twitter.com/getakiflow"), mode: LaunchMode.externalApplication);
             },
           ),
           ButtonList(
@@ -108,7 +109,7 @@ class SettingsPage extends StatelessWidget {
             showShevron: false,
             useSvgColor: true,
             onPressed: () {
-              launchUrl(Uri.parse("https://akiflow-community.slack.com"));
+              launchUrl(Uri.parse("https://akiflow-community.slack.com"), mode: LaunchMode.externalApplication);
             },
           ),
           ButtonList(
@@ -118,7 +119,7 @@ class SettingsPage extends StatelessWidget {
             showShevron: false,
             useSvgColor: true,
             onPressed: () {
-              launchUrl(Uri.parse("mailto:support@akiflow.com"));
+              launchUrl(Uri.parse("mailto:support@akiflow.com"), mode: LaunchMode.externalApplication);
             },
           ),
           const SizedBox(height: 16),

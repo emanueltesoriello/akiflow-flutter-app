@@ -112,7 +112,7 @@ class LinkedContentModal extends StatelessWidget {
                       leadingTextIconAsset: "assets/images/icons/_common/arrow_up_right_square.svg",
                       title: t.linkedContent.open,
                       onPressed: () {
-                        launchUrl(Uri.parse(doc.url ?? ''));
+                        launchUrl(Uri.parse(doc.url ?? ''), mode: LaunchMode.externalApplication);
                       }),
                 ),
                 Container(height: 24),

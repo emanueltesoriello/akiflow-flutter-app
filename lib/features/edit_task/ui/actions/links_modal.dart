@@ -63,7 +63,7 @@ class LinksModal extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    launchUrl(Uri.parse(link));
+                                    launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(

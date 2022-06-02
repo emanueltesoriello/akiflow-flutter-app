@@ -106,7 +106,8 @@ class AboutPage extends StatelessWidget {
                       height: 22,
                     ),
                     onPressed: () {
-                      launchUrl(Uri.parse("https://www.notion.so/akiflow/Security-6d61cefd8c2349b2b4d5561aa82f1832"));
+                      launchUrl(Uri.parse("https://www.notion.so/akiflow/Security-6d61cefd8c2349b2b4d5561aa82f1832"),
+                          mode: LaunchMode.externalApplication);
                     },
                   ),
                   const SizedBox(height: 32),

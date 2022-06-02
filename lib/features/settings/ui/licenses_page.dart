@@ -71,7 +71,7 @@ class _LicenseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => launchUrl(Uri.parse("https://pub.dev/packages/$name")),
+      onTap: () => launchUrl(Uri.parse("https://pub.dev/packages/$name"), mode: LaunchMode.externalApplication),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
