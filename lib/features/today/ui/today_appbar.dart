@@ -7,11 +7,12 @@ import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
+import 'package:mobile/features/today/ui/today_app_bar_calendar.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class TodayAppBar extends StatelessWidget implements PreferredSizeWidget {
+class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool showBack;
   final String? title;
   final List<Widget> actions;
@@ -20,6 +21,8 @@ class TodayAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
   final Widget? customTitle;
   final Widget? child;
+  final double preferredSizeHeight;
+  final double calendarTopMargin;
 
   const TodayAppBar({
     Key? key,
@@ -31,28 +34,64 @@ class TodayAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.customTitle,
     this.child,
+    required this.preferredSizeHeight,
+    required this.calendarTopMargin,
   }) : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(56);
+  Size get preferredSize => Size.fromHeight(preferredSizeHeight);
 
   @override
+  State<TodayAppBar> createState() => _TodayAppBarState();
+}
+
+class _TodayAppBarState extends State<TodayAppBar> {
+  @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(useMaterial3: false),
-      child: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
+    return AnimatedSize(
+      alignment: Alignment.topCenter,
+      duration: const Duration(milliseconds: 200),
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          if (details.delta.dy > 0) {
+            context.read<TodayCubit>().scrollDownCalendar();
+          }
+
+          if (details.delta.dy < 0) {
+            context.read<TodayCubit>().scrollUpCalendar();
+          }
+        },
+        child: Theme(
+          data: Theme.of(context).copyWith(useMaterial3: false),
+          child: Stack(
+            children: [
+              AppBar(
+                centerTitle: false,
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: Brightness.dark,
+                  statusBarBrightness: Brightness.light,
+                ),
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
+                leading: _leading(context),
+                title: _buildTitle(context),
+                titleSpacing: TaskExt.isSelectMode(context.watch<TasksCubit>().state) ? 0 : 16,
+                actions: _buildActions(context),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  margin: EdgeInsets.only(top: widget.calendarTopMargin),
+                  child: const SafeArea(child: TodayAppBarCalendar()),
+                ),
+              ),
+            ],
+          ),
         ),
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
-        leading: _leading(context),
-        title: _buildTitle(context),
-        titleSpacing: TaskExt.isSelectMode(context.watch<TasksCubit>().state) ? 0 : 16,
-        actions: _buildActions(context),
       ),
     );
   }

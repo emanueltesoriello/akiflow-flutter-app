@@ -36,6 +36,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     return Theme(
       data: Theme.of(context).copyWith(useMaterial3: false),
       child: AppBar(
+        centerTitle: false,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,

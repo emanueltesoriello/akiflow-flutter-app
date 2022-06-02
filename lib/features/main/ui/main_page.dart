@@ -127,13 +127,50 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   Widget _body(BuildContext context) {
+    HomeViewType homeViewType = context.watch<MainCubit>().state.homeViewType;
+    Label? label = context.watch<MainCubit>().state.selectedLabel;
+
     return Stack(
       children: [
-        Scaffold(
-          appBar: _appBar(context),
-          floatingActionButton: _floatingButton(),
-          bottomNavigationBar: _bottomBar(context),
-          body: _content(),
+        BlocBuilder<TodayCubit, TodayCubitState>(
+          builder: (context, state) {
+            double todayAppBarHeight;
+            double toolbarHeight = 56;
+            double openedCalendarHeight = 288;
+            double closedCalendarHeight = 80;
+
+            switch (state.calendarFormat) {
+              case CalendarFormatState.month:
+                todayAppBarHeight = toolbarHeight + openedCalendarHeight;
+                break;
+              case CalendarFormatState.week:
+                todayAppBarHeight = toolbarHeight + closedCalendarHeight;
+                break;
+            }
+
+            double contentTopPadding = MediaQuery.of(context).padding.top + toolbarHeight;
+
+            if (homeViewType == HomeViewType.today) {
+              contentTopPadding += closedCalendarHeight;
+            }
+
+            return Scaffold(
+              extendBodyBehindAppBar: true,
+              appBar: _appBar(
+                context,
+                todayAppBarHeight: todayAppBarHeight,
+                calendarTopMargin: toolbarHeight,
+                homeViewType: homeViewType,
+                selectedLabel: label,
+              ),
+              floatingActionButton: _floatingButton(),
+              bottomNavigationBar: _bottomBar(context),
+              body: Padding(
+                padding: EdgeInsets.only(top: contentTopPadding),
+                child: _content(),
+              ),
+            );
+          },
         ),
         BlocBuilder<TasksCubit, TasksCubitState>(
           builder: (context, state) {
@@ -157,10 +194,14 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     );
   }
 
-  PreferredSizeWidget _appBar(BuildContext context) {
-    MainCubitState state = context.watch<MainCubit>().state;
-
-    switch (state.homeViewType) {
+  PreferredSizeWidget _appBar(
+    BuildContext context, {
+    required double calendarTopMargin,
+    required double todayAppBarHeight,
+    required HomeViewType homeViewType,
+    required Label? selectedLabel,
+  }) {
+    switch (homeViewType) {
       case HomeViewType.inbox:
         return AppBarComp(
           title: t.bottomBar.inbox,
@@ -172,11 +213,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           actions: const [TaskListMenu()],
         );
       case HomeViewType.today:
-        return const TodayAppBar();
+        return TodayAppBar(preferredSizeHeight: todayAppBarHeight, calendarTopMargin: calendarTopMargin);
       case HomeViewType.calendar:
         return AppBarComp(title: t.bottomBar.calendar);
       case HomeViewType.label:
-        return LabelAppBar(label: state.selectedLabel!, showDone: false);
+        return LabelAppBar(label: selectedLabel!, showDone: false);
       default:
         return const PreferredSize(preferredSize: Size.zero, child: SizedBox());
     }

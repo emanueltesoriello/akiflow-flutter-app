@@ -35,6 +35,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                 DateTime now = DateTime.now();
 
                 return TableCalendar(
+                  availableGestures: AvailableGestures.horizontalSwipe,
                   calendarFormat:
                       state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month,
                   onCalendarCreated: (pageController) {
