@@ -5,6 +5,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/labels_repository.dart';
+import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 
@@ -53,7 +54,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
   }
 
   void saveLabel(Label label) {
-    label = label.copyWith(updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+    label = label.copyWith(updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())));
     labelsCubit.updateLabel(label);
     emit(state.copyWith(selectedLabel: label));
   }
@@ -78,7 +79,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
   }
 
   Future<void> delete({bool markTasksAsDone = false}) async {
-    Label labelUpdated = state.selectedLabel!.copyWith(deletedAt: DateTime.now().toUtc().toIso8601String());
+    Label labelUpdated = state.selectedLabel!.copyWith(deletedAt: TzUtils.toUtcStringIfNotNull(DateTime.now()));
     emit(state.copyWith(selectedLabel: labelUpdated));
 
     if (markTasksAsDone) {
@@ -110,9 +111,11 @@ class LabelCubit extends Cubit<LabelCubitState> {
     sections.remove(section);
     emit(state.copyWith(sections: sections));
 
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+
     section = section.copyWith(
-      deletedAt: DateTime.now().toUtc().toIso8601String(),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      deletedAt: now,
+      updatedAt: Nullable(now),
     );
 
     await labelsCubit.updateLabel(section);
@@ -121,7 +124,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
   }
 
   Future<void> updateSection(Label sectionUpdated) async {
-    sectionUpdated = sectionUpdated.copyWith(updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+    sectionUpdated = sectionUpdated.copyWith(updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())));
 
     List<Label> sections = List.from(state.sections);
     int index = sections.indexWhere((section) => section.id == sectionUpdated.id);

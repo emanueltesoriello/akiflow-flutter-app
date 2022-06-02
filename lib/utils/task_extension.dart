@@ -7,6 +7,7 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
@@ -454,21 +455,21 @@ extension TaskExt on Task {
   Task markAsDone(Task originalTask) {
     bool done = isCompletedComputed;
 
-    DateTime now = DateTime.now().toUtc();
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
     Task updated = copyWith();
 
     if (!done) {
       updated = updated.copyWith(
         done: true,
-        doneAt: Nullable(now.toIso8601String()),
+        doneAt: Nullable(now),
       );
 
       if (status == TaskStatusType.inbox.id ||
           status == TaskStatusType.snoozed.id ||
           status == TaskStatusType.someday.id) {
         updated = updated.copyWith(
-          date: Nullable(now.toIso8601String()),
+          date: Nullable(now),
           datetime: Nullable(null),
           status: Nullable(TaskStatusType.planned.id),
         );
@@ -484,10 +485,10 @@ extension TaskExt on Task {
     }
 
     if (readAt == null) {
-      updated = updated.copyWith(readAt: now.toIso8601String());
+      updated = updated.copyWith(readAt: now);
     }
 
-    updated = updated.copyWith(updatedAt: Nullable(now.toIso8601String()));
+    updated = updated.copyWith(updatedAt: Nullable(now));
 
     return updated;
   }

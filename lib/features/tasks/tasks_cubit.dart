@@ -14,6 +14,7 @@ import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
@@ -152,7 +153,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> duplicate() async {
-    DateTime? now = DateTime.now().toUtc();
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
     List<Task> duplicates = [];
 
@@ -169,8 +170,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in all) {
       Task newTaskDuplicated = task.copyWith(
         id: const Uuid().v4(),
-        updatedAt: Nullable(now.toIso8601String()),
-        createdAt: (now.toIso8601String()),
+        updatedAt: Nullable(now),
+        createdAt: now,
         selected: false,
       );
 
@@ -211,12 +212,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     bool hasRecurringDataChanges = false;
 
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
         selected: false,
         status: Nullable(TaskStatusType.deleted.id),
-        deletedAt: (DateTime.now().toUtc().toIso8601String()),
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        deletedAt: now,
+        updatedAt: Nullable(now),
       );
 
       allSelected = allSelected.map((t) {
@@ -244,11 +247,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     bool hasRecurringDataChanges = false;
 
+    DateTime now = DateTime.now();
+
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
         listId: label.id,
         selected: false,
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       );
 
       allSelected = allSelected.map((t) {
@@ -276,10 +281,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     bool hasRecurringDataChanges = false;
 
+    DateTime now = DateTime.now();
+
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
         priority: priority?.value,
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       );
 
       allSelected = allSelected.map((t) {
@@ -309,10 +316,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       List<Task> updatedRecurringTasks = [];
 
+      DateTime now = DateTime.now();
+
       for (Task task in tasks) {
         Task updatedRecurringTask = task.copyWith(
           listId: tasksUpdated.first.listId,
-          updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+          updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
           priority: tasksUpdated.first.priority,
           duration: Nullable(tasksUpdated.first.duration),
           deletedAt: tasksUpdated.first.deletedAt,
@@ -344,9 +353,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
 
+    DateTime now = DateTime.now();
+
     for (Task task in allSelected) {
       Task updated = task.copyWith(
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
         dueDate: Nullable(date?.toIso8601String()),
         selected: false,
       );
@@ -395,7 +406,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       updatedTask = updatedTask.copyWith(
         sorting: millis - (i * 1),
-        updatedAt: Nullable(now.toIso8601String()),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
         selected: false,
       );
 
@@ -449,12 +460,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
 
+    DateTime now = DateTime.now();
+
     for (Task task in allSelected) {
       Task updated = task.copyWith(
         date: Nullable(date?.toIso8601String()),
         datetime: Nullable(dateTime?.toIso8601String()),
         status: Nullable(statusType.id),
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
         selected: false,
       );
 
@@ -501,9 +514,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> undo() async {
     List<UndoTask> queue = state.queue.toList();
 
+    DateTime now = DateTime.now();
+
     for (var element in queue) {
       Task updated = element.task.copyWith(
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       );
       await _tasksRepository.updateById(updated.id, data: updated);
     }

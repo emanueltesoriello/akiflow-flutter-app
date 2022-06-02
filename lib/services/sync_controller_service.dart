@@ -20,6 +20,7 @@ import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_integration_service.dart';
 import 'package:mobile/services/sync_service.dart';
+import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/nullable.dart';
@@ -154,6 +155,8 @@ class SyncControllerService {
     if (user != null) {
       List<Account> accounts = await _accountsRepository.get();
 
+      String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+
       for (Account account in accounts) {
         print("get account token for ${account.connectorId} ${account.id}");
 
@@ -168,7 +171,7 @@ class SyncControllerService {
           Map<String, dynamic> details = account.details ?? {};
           details['akiflowLabelId'] = labelId;
 
-          account = account.copyWith(details: details, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+          account = account.copyWith(details: details, updatedAt: Nullable(now));
 
           _accountsRepository.updateById(account.id, data: account);
 

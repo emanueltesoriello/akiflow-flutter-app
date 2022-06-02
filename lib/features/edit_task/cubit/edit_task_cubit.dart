@@ -9,6 +9,7 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
@@ -37,10 +38,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     if (task.readAt == null) {
-      DateTime now = DateTime.now().toUtc();
-
       Task updated = state.updatedTask.copyWith(
-        readAt: now.toIso8601String(),
+        readAt: TzUtils.toUtcStringIfNotNull(DateTime.now()),
       );
 
       emit(state.copyWith(updatedTask: updated));
@@ -48,14 +47,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   Future<void> create() async {
-    DateTime now = DateTime.now().toUtc();
+    DateTime now = DateTime.now();
 
     Task updated = state.updatedTask.copyWith(
       id: const Uuid().v4(),
-      createdAt: (now.toIso8601String()),
+      createdAt: TzUtils.toUtcStringIfNotNull(now),
       listId: state.selectedLabel?.id,
-      readAt: now.toIso8601String(),
-      sorting: DateTime.now().toUtc().millisecondsSinceEpoch,
+      readAt: TzUtils.toUtcStringIfNotNull(now),
+      sorting: now.toUtc().millisecondsSinceEpoch,
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -82,10 +81,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
-      date: Nullable(date?.toIso8601String()),
-      datetime: Nullable(dateTime?.toIso8601String()),
+      date: Nullable(TzUtils.toUtcStringIfNotNull(date)),
+      datetime: Nullable(TzUtils.toUtcStringIfNotNull(dateTime)),
       status: Nullable(statusType.id),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -105,7 +104,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = task.copyWith(
       duration: value != 0 ? Nullable((value * 3600).toInt()) : Nullable(null),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -123,7 +122,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task updated = state.updatedTask.copyWith(
       listId: label.id,
       sectionId: Nullable(null),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(
@@ -157,7 +156,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void removeLink(String link) {
     Task updated = state.updatedTask.copyWith(
       links: (state.updatedTask.links ?? []).where((l) => l != link).toList(),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -166,10 +165,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<void> delete() async {
     Task task = state.updatedTask;
 
+    DateTime now = DateTime.now();
+
     Task updated = task.copyWith(
       status: Nullable(TaskStatusType.deleted.id),
-      deletedAt: (DateTime.now().toUtc().toIso8601String()),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      deletedAt: TzUtils.toUtcStringIfNotNull(now),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -180,7 +181,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = task.copyWith(
       dueDate: Nullable(date?.toIso8601String()),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -193,7 +194,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = state.updatedTask.copyWith(
       dailyGoal: currentDailyGoal == 0 ? 1 : 0,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated, showDuration: false, showLabelsList: false));
@@ -202,7 +203,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void setPriority(PriorityEnum? priority) {
     Task updated = state.updatedTask.copyWith(
       priority: priority?.value,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -219,7 +220,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = state.updatedTask.copyWith(
       recurrence: Nullable(recurrence),
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -249,12 +250,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     List<Task> tasks = [];
 
     String recurringId = const Uuid().v4();
-    DateTime updatedAt = DateTime.now().toUtc();
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
     updated = updated.copyWith(
       recurrence: Nullable([rule.toString()]),
       recurringId: recurringId,
-      updatedAt: Nullable(updatedAt.toIso8601String()),
+      updatedAt: Nullable(now),
     );
 
     await _tasksRepository.updateById(updated.id, data: updated);
@@ -268,8 +269,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       Task newTask = updated.copyWith(
         id: const Uuid().v4(),
-        date: Nullable(date.toIso8601String()),
-        createdAt: updatedAt.toIso8601String(),
+        date: Nullable(TzUtils.toUtcStringIfNotNull(date)),
+        createdAt: now,
       );
 
       tasks.add(newTask);
@@ -285,6 +286,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     DateTime updatedTaskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
 
+    DateTime now = DateTime.now();
+
     for (Task task in tasks) {
       DateTime taskDate = task.date != null ? DateTime.parse(task.date!) : DateTime.now().toUtc();
 
@@ -294,21 +297,21 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       recurrenceTasksToUpdate.add(task.copyWith(
         recurrence: Nullable(null),
-        deletedAt: DateTime.now().toUtc().toIso8601String(),
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+        deletedAt: TzUtils.toUtcStringIfNotNull(now),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       ));
     }
   }
 
   Future<void> duplicate() async {
-    DateTime? now = DateTime.now().toUtc();
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
     Task task = state.updatedTask;
 
     Task newTaskDuplicated = task.copyWith(
       id: const Uuid().v4(),
-      updatedAt: Nullable(now.toIso8601String()),
-      createdAt: (now.toIso8601String()),
+      updatedAt: Nullable(now),
+      createdAt: now,
       selected: false,
     );
 
@@ -322,7 +325,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void onTitleChanged(String value) {
     Task updated = state.updatedTask.copyWith(
       title: value,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -332,7 +335,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     String html = value.replaceAll("\n", "<br>");
     Task updated = state.updatedTask.copyWith(
       description: html,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -364,6 +367,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       List<Task> updatedRecurringTasks = [];
 
+      String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+
       for (Task task in tasks) {
         Task updatedRecurringTask = state.updatedTask.copyWith(
           id: task.id,
@@ -375,7 +380,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           globalCreatedAt: (task.globalCreatedAt),
           globalUpdatedAt: (task.globalUpdatedAt),
           readAt: (task.readAt),
-          updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+          updatedAt: Nullable(now),
         );
 
         updatedRecurringTasks.add(updatedRecurringTask);
@@ -401,7 +406,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void updateTitle(String value) {
     Task updated = state.updatedTask.copyWith(
       title: value,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -412,7 +417,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = state.updatedTask.copyWith(
       description: html,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
@@ -425,7 +430,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = state.updatedTask.copyWith(
       links: links,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));

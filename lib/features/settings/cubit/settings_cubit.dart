@@ -17,6 +17,7 @@ import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
+import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/label/label.dart';
@@ -89,7 +90,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     account = account.copyWith(
       details: settings,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     await _accountsRepository.updateById(account.id, data: account);
@@ -117,7 +118,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     account = account.copyWith(
       details: settings,
-      updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     await _accountsRepository.updateById(account.id, data: account);
@@ -171,7 +172,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       picture: accountData['picture'],
       identifier: accountData['email'],
       status: "INITIATED",
-      createdAt: DateTime.now().toUtc().toIso8601String(),
+      createdAt: TzUtils.toUtcStringIfNotNull(DateTime.now()),
     );
 
     print("set account token in preferences for account ${account.id}");
