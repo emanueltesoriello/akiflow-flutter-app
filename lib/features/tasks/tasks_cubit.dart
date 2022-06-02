@@ -251,7 +251,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
-        listId: label.id,
+        listId: Nullable(label.id),
         selected: false,
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       );
@@ -320,7 +320,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       for (Task task in tasks) {
         Task updatedRecurringTask = task.copyWith(
-          listId: tasksUpdated.first.listId,
+          listId: Nullable(tasksUpdated.first.listId),
           updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
           priority: tasksUpdated.first.priority,
           duration: Nullable(tasksUpdated.first.duration),

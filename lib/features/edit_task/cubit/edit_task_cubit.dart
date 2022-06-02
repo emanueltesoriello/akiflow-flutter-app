@@ -52,7 +52,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task updated = state.updatedTask.copyWith(
       id: const Uuid().v4(),
       createdAt: TzUtils.toUtcStringIfNotNull(now),
-      listId: state.selectedLabel?.id,
+      listId: Nullable(state.selectedLabel?.id),
       readAt: TzUtils.toUtcStringIfNotNull(now),
       sorting: now.toUtc().millisecondsSinceEpoch,
     );
@@ -120,7 +120,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
-      listId: label.id,
+      listId: Nullable(label.id),
       sectionId: Nullable(null),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );

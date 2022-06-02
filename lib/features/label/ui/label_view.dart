@@ -85,7 +85,7 @@ class LabelView extends StatelessWidget {
                     Task task = editTaskCubit.state.updatedTask.copyWith(
                       sectionId: Nullable(section.id),
                       status: Nullable(TaskStatusType.inbox.id),
-                      listId: labelState.selectedLabel?.id,
+                      listId: Nullable(labelState.selectedLabel?.id),
                     );
 
                     editTaskCubit.attachTaskAndLabel(task, label: labelState.selectedLabel);

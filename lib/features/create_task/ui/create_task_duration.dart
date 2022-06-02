@@ -34,8 +34,10 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
 
                     String text;
 
-                    if (minutes == 0) {
+                    if (minutes.floor() == 0) {
                       text = '${hours.floor()}h';
+                    } else if (hours.floor() == 0) {
+                      text = '${minutes.floor()}m';
                     } else {
                       text = '${hours.floor()}h ${minutes.floor()}m';
                     }

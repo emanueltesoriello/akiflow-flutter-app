@@ -420,7 +420,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
               Task task = editTaskCubit.state.updatedTask.copyWith(
                 status: Nullable(taskStatusType.id),
                 date: taskStatusType == TaskStatusType.inbox ? Nullable(null) : Nullable(date.toIso8601String()),
-                listId: label?.id,
+                listId: Nullable(label?.id),
               );
 
               editTaskCubit.attachTaskAndLabel(task, label: label);
