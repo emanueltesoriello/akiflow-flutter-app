@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/components/task/plan_for_action.dart';
+import 'package:mobile/core/chrono_node_js.dart';
 import 'package:mobile/features/create_task/ui/create_task_duration.dart';
 import 'package:mobile/features/create_task/ui/create_task_labels.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
@@ -265,8 +268,42 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         fontSize: 20,
         fontWeight: FontWeight.w500,
       ),
-      onChanged: (value) {
+      onChanged: (value) async {
         context.read<EditTaskCubit>().updateTitle(value);
+
+        String parsed = await ChronoNodeJs.parseDate(value);
+
+        DateTime? date = DateTime.tryParse(jsonDecode(parsed));
+
+        print(date?.toLocal());
+
+        // List<dynamic> list = jsonDecode(parsed);
+
+        // Map<String, dynamic>? startKnownValues = list[0]["start"]["knownValues"];
+        // Map<String, dynamic>? startImpliedValues = list[0]["start"]["impliedValues"];
+        // Map<String, dynamic>? end = list[0]["end"];
+
+        // print("startKnownValues: $startKnownValues");
+        // print("startImpliedValues: $startImpliedValues");
+        // print("end: $end");
+
+        // DateTime start = DateTime(
+        //   ((startKnownValues?["year"] as int? ?? startImpliedValues?["year"]) as int? ?? end?["year"] as int?) ??
+        //       DateTime.now().year,
+        //   ((startKnownValues?["month"] as int? ?? startImpliedValues?["month"]) as int? ?? end?["month"] as int?) ??
+        //       DateTime.now().month,
+        //   ((startKnownValues?["day"] as int? ?? startImpliedValues?["day"]) as int? ?? end?["day"] as int?) ??
+        //       DateTime.now().day,
+        //   ((startKnownValues?["hour"] as int? ?? startImpliedValues?["hour"]) as int? ?? end?["hour"] as int?) ??
+        //       DateTime.now().hour,
+        //   ((startKnownValues?["minute"] as int? ?? startImpliedValues?["minute"]) as int? ?? end?["minute"] as int?) ??
+        //       DateTime.now().minute,
+        //   ((startKnownValues?["second"] as int? ?? startImpliedValues?["second"]) as int? ?? end?["second"] as int?) ??
+        //       DateTime.now().second,
+        //   ((startKnownValues?["millisecond"] as int? ?? startImpliedValues?["millisecond"]) as int? ??
+        //           end?["millisecond"] as int?) ??
+        //       DateTime.now().millisecond,
+        // );
       },
     );
   }

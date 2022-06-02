@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/core/chrono_node_js.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -52,6 +53,8 @@ Future<void> mainCom() async {
   bool userLogged = locator<PreferencesRepository>().user != null;
 
   print("environment: ${Config.development ? "dev" : "prod"}");
+
+  await ChronoNodeJs.init();
 
   await SentryFlutter.init(
     (options) {
