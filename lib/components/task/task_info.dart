@@ -136,7 +136,6 @@ class TaskInfo extends StatelessWidget {
     return TagBox(
       text: text,
       backgroundColor: color,
-      onPressed: () {},
       active: true,
     );
   }

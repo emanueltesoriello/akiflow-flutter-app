@@ -9,7 +9,7 @@ class TagBox extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Color? iconColor;
-  final Function() onPressed;
+  final Function()? onPressed;
   final bool isBig;
   final bool isSquare;
   final bool active;
@@ -22,7 +22,7 @@ class TagBox extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.iconColor,
-    required this.onPressed,
+    this.onPressed,
     this.isBig = false,
     this.isSquare = false,
     required this.active,
@@ -31,7 +31,7 @@ class TagBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (() => onPressed()),
+      onTap: onPressed,
       child: Container(
         constraints: BoxConstraints(
           minHeight: isBig ? 32 : 28,
