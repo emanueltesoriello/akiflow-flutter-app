@@ -77,7 +77,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     required TaskStatusType statusType,
     bool forceUpdate = false,
   }) async {
-    emit(state.copyWith(selectedDate: date));
+    emit(state.copyWith(selectedDate: date, showDuration: false));
 
     Task task = state.updatedTask;
 
@@ -99,14 +99,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setDuration(double value) {
-    emit(state.copyWith(selectedDuration: value));
+    emit(state.copyWith(selectedDuration: value, showDuration: false));
 
     Task task = state.updatedTask;
 
-    double seconds = value * 3600;
-
     Task updated = task.copyWith(
-      duration: Nullable(seconds.toInt()),
+      duration: value != 0 ? Nullable((value * 3600).toInt()) : Nullable(null),
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
@@ -114,20 +112,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void toggleDuration() {
-    emit(state.copyWith(setDuration: !state.setDuration));
-
-    if (state.setDuration == false) {
-      Task updated = state.updatedTask.copyWith(
-        duration: Nullable(null),
-        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
-      );
-
-      emit(state.copyWith(updatedTask: updated));
-    }
+    emit(state.copyWith(showDuration: !state.showDuration));
   }
 
   void toggleLabels() {
-    emit(state.copyWith(showLabelsList: !state.showLabelsList));
+    emit(state.copyWith(showLabelsList: !state.showLabelsList, showDuration: false));
   }
 
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
@@ -207,7 +196,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()),
     );
 
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated, showDuration: false, showLabelsList: false));
   }
 
   void setPriority(PriorityEnum? priority) {
@@ -440,5 +429,29 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
+  }
+
+  void linksTap() {
+    emit(state.copyWith(showDuration: false, showLabelsList: false));
+  }
+
+  void deadlineTap() {
+    emit(state.copyWith(showDuration: false, showLabelsList: false));
+  }
+
+  void priorityTap() {
+    emit(state.copyWith(showDuration: false, showLabelsList: false));
+  }
+
+  void menuTap() {
+    emit(state.copyWith(showDuration: false, showLabelsList: false));
+  }
+
+  void planTap() {
+    emit(state.copyWith(showDuration: false, showLabelsList: false));
+  }
+
+  void recurrenceTap() {
+    emit(state.copyWith(showDuration: false, showLabelsList: false));
   }
 }

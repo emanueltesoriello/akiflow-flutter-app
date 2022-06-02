@@ -1,51 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 
-class CreateTaskDurationItem extends StatelessWidget {
+class CreateTaskDurationItem extends StatefulWidget {
   const CreateTaskDurationItem({Key? key}) : super(key: key);
 
   static const double defaultHour = 2;
+
+  @override
+  State<CreateTaskDurationItem> createState() => _CreateTaskDurationItemState();
+}
+
+class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
+  final ValueNotifier<double> _selectedDuration = ValueNotifier(CreateTaskDurationItem.defaultHour);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-          child: BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-            builder: (context, state) {
-              double hours = state.selectedDuration ?? defaultHour;
-              double minutes = (hours - hours.floor()) * 60;
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: ValueListenableBuilder(
+                  valueListenable: _selectedDuration,
+                  builder: (context, double selectedDuration, child) {
+                    double hours = selectedDuration;
+                    double minutes = (hours - hours.floor()) * 60;
 
-              String text;
+                    String text;
 
-              if (minutes == 0) {
-                text = '${hours.floor()}h';
-              } else {
-                text = '${hours.floor()}h ${minutes.floor()}m';
-              }
+                    if (minutes == 0) {
+                      text = '${hours.floor()}h';
+                    } else {
+                      text = '${hours.floor()}h ${minutes.floor()}m';
+                    }
 
-              return Text(
-                text,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
-                  fontSize: 15,
+                    return Text(
+                      text,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: ColorsExt.grey2(context),
+                        fontSize: 15,
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+              GestureDetector(
+                onTap: () {
+                  context.read<EditTaskCubit>().setDuration(_selectedDuration.value);
+                },
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: SvgPicture.asset(
+                    'assets/images/icons/_common/checkmark.svg',
+                    width: 24,
+                    height: 24,
+                    color: ColorsExt.akiflow(context),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        Slider(
-          value: context.watch<EditTaskCubit>().state.selectedDuration ?? defaultHour,
-          min: 0,
-          max: 4,
-          divisions: 16,
-          thumbColor: ColorsExt.background(context),
-          onChanged: (double value) {
-            context.read<EditTaskCubit>().setDuration(value);
+        ValueListenableBuilder(
+          valueListenable: _selectedDuration,
+          builder: (context, double selectedDuration, child) {
+            return Slider(
+              value: selectedDuration,
+              min: 0,
+              max: 4,
+              divisions: 16,
+              thumbColor: ColorsExt.background(context),
+              onChanged: (double value) {
+                _selectedDuration.value = value;
+              },
+            );
           },
         ),
         const SizedBox(height: 10),

@@ -79,7 +79,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     ),
   ),
   sliderTheme: const SliderThemeData(
-    activeTrackColor: Color(0xff007AFF),
+    activeTrackColor: ColorsLight.akiflow,
     inactiveTrackColor: Color(0x33787880),
     trackShape: RoundedRectSliderTrackShape(),
     trackHeight: 4.0,

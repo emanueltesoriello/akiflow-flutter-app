@@ -61,6 +61,8 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
               EditTaskCubit cubit = context.read<EditTaskCubit>();
 
+              cubit.priorityTap();
+
               PriorityEnum? newPriority = await showCupertinoModalBottomSheet(
                 context: context,
                 builder: (context) => PriorityModal(currentPriority),
@@ -93,6 +95,8 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             text: task.dueDateFormatted,
             onPressed: () {
               var cubit = context.read<EditTaskCubit>();
+
+              cubit.deadlineTap();
 
               showCupertinoModalBottomSheet(
                 context: context,
@@ -133,6 +137,8 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               onPressed: () {
                 var cubit = context.read<EditTaskCubit>();
 
+                cubit.linksTap();
+
                 showCupertinoModalBottomSheet(
                   context: context,
                   builder: (context) => BlocProvider.value(
@@ -169,31 +175,35 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
         ),
       ),
       onSelected: (EditTaskAdditionalAction result) {
+        EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+        cubit.menuTap();
+
         switch (result) {
           case EditTaskAdditionalAction.duplicate:
-            context.read<EditTaskCubit>().duplicate();
+            cubit.duplicate();
             Navigator.pop(context);
             break;
           case EditTaskAdditionalAction.snoozeTomorrow:
-            context.read<EditTaskCubit>().planFor(
-                  DateTime.now().add(const Duration(days: 1)),
-                  statusType: TaskStatusType.snoozed,
-                );
+            cubit.planFor(
+              DateTime.now().add(const Duration(days: 1)),
+              statusType: TaskStatusType.snoozed,
+            );
             break;
           case EditTaskAdditionalAction.snoozeNextWeek:
-            context.read<EditTaskCubit>().planFor(
-                  DateTime.now().add(const Duration(days: 7)),
-                  statusType: TaskStatusType.snoozed,
-                );
+            cubit.planFor(
+              DateTime.now().add(const Duration(days: 7)),
+              statusType: TaskStatusType.snoozed,
+            );
             break;
           case EditTaskAdditionalAction.someday:
-            context.read<EditTaskCubit>().planFor(
-                  null,
-                  statusType: TaskStatusType.someday,
-                );
+            cubit.planFor(
+              null,
+              statusType: TaskStatusType.someday,
+            );
             break;
           case EditTaskAdditionalAction.delete:
-            context.read<EditTaskCubit>().delete();
+            cubit.delete();
             Navigator.pop(context);
             break;
         }

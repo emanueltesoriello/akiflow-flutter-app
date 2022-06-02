@@ -8,7 +8,7 @@ class EditTaskCubitState extends Equatable {
   final Task updatedTask;
   final DateTime? selectedDate;
   final double? selectedDuration;
-  final bool setDuration;
+  final bool showDuration;
   final bool showLabelsList;
   final Label? selectedLabel;
 
@@ -18,7 +18,7 @@ class EditTaskCubitState extends Equatable {
     this.updatedTask = const Task(),
     this.selectedDate,
     this.selectedDuration,
-    this.setDuration = false,
+    this.showDuration = false,
     this.showLabelsList = false,
     this.selectedLabel,
   });
@@ -29,7 +29,7 @@ class EditTaskCubitState extends Equatable {
     Task? updatedTask,
     DateTime? selectedDate,
     double? selectedDuration,
-    bool? setDuration,
+    bool? showDuration,
     bool? showLabelsList,
     Label? selectedLabel,
   }) {
@@ -39,7 +39,7 @@ class EditTaskCubitState extends Equatable {
       updatedTask: updatedTask ?? this.updatedTask,
       selectedDate: selectedDate ?? this.selectedDate,
       selectedDuration: selectedDuration ?? this.selectedDuration,
-      setDuration: setDuration ?? this.setDuration,
+      showDuration: showDuration ?? this.showDuration,
       showLabelsList: showLabelsList ?? this.showLabelsList,
       selectedLabel: selectedLabel ?? this.selectedLabel,
     );
@@ -52,7 +52,7 @@ class EditTaskCubitState extends Equatable {
         updatedTask,
         selectedDate,
         selectedDuration,
-        setDuration,
+        showDuration,
         showLabelsList,
         selectedLabel,
       ];

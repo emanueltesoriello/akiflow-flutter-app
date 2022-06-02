@@ -30,6 +30,8 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             onTap: () {
               EditTaskCubit cubit = context.read<EditTaskCubit>();
 
+              cubit.planTap();
+
               showCupertinoModalBottomSheet(
                 context: context,
                 builder: (context) => BlocProvider.value(
@@ -63,8 +65,10 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 double hours = seconds / 3600;
                 double minutes = (hours - hours.floor()) * 60;
 
-                if (minutes == 0) {
+                if (minutes.floor() == 0) {
                   text = '${hours.floor()}h';
+                } else if (hours.floor() == 0) {
+                  text = '${minutes.floor()}m';
                 } else {
                   text = '${hours.floor()}h ${minutes.floor()}m';
                 }
@@ -75,11 +79,11 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 backgroundColor:
                     task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
                 active: task.duration != null && task.duration != 0,
+                isSquare: task.duration != null && task.duration != 0 ? false : true,
                 text: text,
                 isBig: true,
-                isSquare: task.duration != null ? false : true,
                 onPressed: () {
-                  // TODO edit duration
+                  context.read<EditTaskCubit>().toggleDuration();
                 },
               );
             },
@@ -96,6 +100,8 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 isBig: true,
                 onPressed: () {
                   var cubit = context.read<EditTaskCubit>();
+
+                  cubit.recurrenceTap();
 
                   showCupertinoModalBottomSheet(
                     context: context,

@@ -58,7 +58,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                     children: [
                       BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                         builder: (context, state) {
-                          if (state.setDuration) {
+                          if (state.showDuration) {
                             return const CreateTaskDurationItem();
                           } else {
                             return const SizedBox();
@@ -140,6 +140,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           onTap: () {
             var editTaskCubit = context.read<EditTaskCubit>();
 
+            editTaskCubit.planTap();
+
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => PlanModal(
@@ -158,15 +160,39 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           },
         ),
         const SizedBox(width: 8),
-        TagBox(
-          icon: "assets/images/icons/_common/hourglass.svg",
-          active: context.watch<EditTaskCubit>().state.setDuration,
-          backgroundColor:
-              context.watch<EditTaskCubit>().state.setDuration ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-          isSquare: true,
-          isBig: true,
-          onPressed: () {
-            context.read<EditTaskCubit>().toggleDuration();
+        BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+          builder: (context, state) {
+            Task task = state.updatedTask;
+
+            String? text;
+
+            if (task.duration != null && task.duration != 0) {
+              int seconds = task.duration!;
+
+              double hours = seconds / 3600;
+              double minutes = (hours - hours.floor()) * 60;
+
+              if (minutes.floor() == 0) {
+                text = '${hours.floor()}h';
+              } else if (hours.floor() == 0) {
+                text = '${minutes.floor()}m';
+              } else {
+                text = '${hours.floor()}h ${minutes.floor()}m';
+              }
+            }
+
+            return TagBox(
+              icon: "assets/images/icons/_common/hourglass.svg",
+              active: task.duration != null && task.duration != 0,
+              backgroundColor:
+                  task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              isSquare: task.duration != null && task.duration != 0 ? false : true,
+              isBig: true,
+              text: text,
+              onPressed: () {
+                context.read<EditTaskCubit>().toggleDuration();
+              },
+            );
           },
         ),
         const SizedBox(width: 8),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
+import 'package:mobile/features/create_task/ui/create_task_duration.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_bottom_actions.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_linked_content.dart';
@@ -41,22 +42,36 @@ class _EditTaskModalState extends State<EditTaskModal> {
             color: Theme.of(context).backgroundColor,
             child: ListView(
               shrinkWrap: true,
-              children: const [
-                SizedBox(height: 12),
-                ScrollChip(),
-                SizedBox(height: 12),
-                Padding(
+              children: [
+                const SizedBox(height: 12),
+                const ScrollChip(),
+                const SizedBox(height: 12),
+                BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                  builder: (context, state) {
+                    if (state.showDuration) {
+                      return Column(
+                        children: const [
+                          Separator(),
+                          CreateTaskDurationItem(),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: EditTaskTopActions(),
                 ),
-                SizedBox(height: 12),
-                EditTaskRow(),
-                SizedBox(height: 12),
-                Separator(),
-                EditTaskLinkedContent(),
-                EditTaskLinks(),
-                EditTaskBottomActions(),
-                Separator(),
+                const SizedBox(height: 12),
+                const EditTaskRow(),
+                const SizedBox(height: 12),
+                const Separator(),
+                const EditTaskLinkedContent(),
+                const EditTaskLinks(),
+                const EditTaskBottomActions(),
+                const Separator(),
               ],
             ),
           ),
