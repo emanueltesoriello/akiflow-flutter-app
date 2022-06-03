@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 208 
+ * Strings: 209 
  *
- * Built on 2022-06-03 at 10:28 UTC
+ * Built on 2022-06-03 at 15:12 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -571,6 +571,7 @@ class _StringsLabelEn {
 	String get hideSnoozed => 'Hide Snoozed';
 	String get hideSomeday => 'Hide Someday';
 	late final _StringsLabelDeleteDialogEn deleteDialog = _StringsLabelDeleteDialogEn._(_root);
+	String get sortComingSoon => 'Sort (Coming soon)';
 }
 
 // Path: onboarding.termsAndPrivacy
@@ -1000,6 +1001,7 @@ extension on _StringsEn {
 			'label.deleteDialog.description': 'What do you want to do with the tasks assigned to this label?',
 			'label.deleteDialog.justDeleteTheLabel': 'Just delete the label',
 			'label.deleteDialog.markAllTasksAsDone': 'Mark all tasks as Done',
+			'label.sortComingSoon': 'Sort (Coming soon)',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',
 			'connect': 'Connect',

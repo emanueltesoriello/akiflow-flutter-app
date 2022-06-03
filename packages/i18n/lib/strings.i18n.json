@@ -256,7 +256,8 @@
       "description": "What do you want to do with the tasks assigned to this label?",
       "justDeleteTheLabel": "Just delete the label",
       "markAllTasksAsDone": "Mark all tasks as Done"
-    }
+    },
+    "sortComingSoon": "Sort (Coming soon)"
   },
   "cancel": "Cancel",
   "noTitle": "(No title)",

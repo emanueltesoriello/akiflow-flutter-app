@@ -96,7 +96,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
 
                 break;
               case LabelActions.order:
-                context.read<LabelCubit>().toggleSorting();
+                // context.read<LabelCubit>().toggleSorting();
                 break;
               case LabelActions.newSection:
                 LabelCubit labelCubit = context.read<LabelCubit>();
@@ -171,13 +171,14 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             PopupMenuItem<LabelActions>(
               value: LabelActions.order,
+              enabled: false,
               height: 40,
               padding: EdgeInsets.zero,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: PopupMenuCustomItem(
                   iconAsset: "assets/images/icons/_common/arrow_up_arrow_down.svg",
-                  text: t.label.order,
+                  text: t.label.sortComingSoon,
                 ),
               ),
             ),
