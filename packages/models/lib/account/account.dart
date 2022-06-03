@@ -49,27 +49,29 @@ class Account extends Equatable implements Base {
   final dynamic deletedAt;
   final bool? updated;
 
-  factory Account.fromMap(Map<String, dynamic> json) => Account(
-        id: json['id'] as String?,
-        userId: json['user_id'] as int?,
-        connectorId: json['connector_id'] as String?,
-        accountId: json['account_id'] as String?,
-        originAccountId: json['origin_account_id'] as String?,
-        shortName: json['short_name'] as String?,
-        fullName: json['full_name'] as String?,
-        picture: json['picture'] as String?,
-        identifier: json['identifier'] as String?,
-        syncStatus: json['sync_status'] as dynamic,
-        status: json['status'] as String?,
-        details: json['details'] as Map<String, dynamic>?,
-        autologinToken: json['autologin_token'] as dynamic,
-        globalCreatedAt: json['global_created_at'] as String?,
-        globalUpdatedAt: json['global_updated_at'] as String?,
-        createdAt: json['created_at'] as String?,
-        updatedAt: json['updated_at'] as String?,
-        remoteUpdatedAt: json['remote_updated_at'] as String?,
-        deletedAt: json['deleted_at'] as dynamic,
-        updated: json['updated'] as bool?,
+  factory Account.fromMap(Map<String, dynamic> map) => Account(
+        id: map['id'] as String?,
+        userId: map['user_id'] as int?,
+        connectorId: map['connector_id'] as String?,
+        accountId: map['account_id'] as String?,
+        originAccountId: map['origin_account_id'] as String?,
+        shortName: map['short_name'] as String?,
+        fullName: map['full_name'] as String?,
+        picture: map['picture'] as String?,
+        identifier: map['identifier'] as String?,
+        syncStatus: map['sync_status'] as dynamic,
+        status: map['status'] as String?,
+        details: map['details'] is Map?
+            ? map['details'] as Map<String, dynamic>?
+            : null,
+        autologinToken: map['autologin_token'] as dynamic,
+        globalCreatedAt: map['global_created_at'] as String?,
+        globalUpdatedAt: map['global_updated_at'] as String?,
+        createdAt: map['created_at'] as String?,
+        updatedAt: map['updated_at'] as String?,
+        remoteUpdatedAt: map['remote_updated_at'] as String?,
+        deletedAt: map['deleted_at'] as dynamic,
+        updated: map['updated'] as bool?,
       );
 
   @override

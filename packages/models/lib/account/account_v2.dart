@@ -119,7 +119,9 @@ class AccountV2 extends Equatable implements Base {
       fullName: map['full_name'] as String?,
       picture: map['picture'] as String?,
       identifier: map['identifier'] as String,
-      details: map['details'] as Map<String, dynamic>?,
+      details: map['details'] is Map?
+          ? map['details'] as Map<String, dynamic>?
+          : null,
       createdAt: map['created_at'] as String?,
       updatedAt: map['updated_at'] as String?,
       deletedAt: map['deleted_at'] as String?,
