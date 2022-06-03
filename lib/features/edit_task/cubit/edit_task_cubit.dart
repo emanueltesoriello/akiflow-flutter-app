@@ -47,6 +47,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   Future<void> create() async {
+    if (state.originalTask == state.updatedTask) {
+      return;
+    }
+
     DateTime now = DateTime.now();
 
     Task updated = state.updatedTask.copyWith(
