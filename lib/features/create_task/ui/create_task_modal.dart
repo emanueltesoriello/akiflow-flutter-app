@@ -31,7 +31,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     titleFocus.requestFocus();
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
     titleController.text = editTaskCubit.state.originalTask.title ?? '';
-    descriptionController.text = editTaskCubit.state.originalTask.description ?? '';
+
+    String descriptionHtml = editTaskCubit.state.originalTask.descriptionComputed(joinCharacter: '\n');
+    descriptionController.text = descriptionHtml;
     super.initState();
   }
 
@@ -224,6 +226,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   TextField _description(BuildContext context) {
     return TextField(
       controller: descriptionController,
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(bottom: 16),
         isDense: true,
