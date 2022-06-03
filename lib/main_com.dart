@@ -361,9 +361,9 @@ class JustCreatedTaskView extends StatelessWidget {
             ),
             Builder(builder: (context) {
               if (Platform.isIOS) {
-                return SizedBox(height: MediaQuery.of(context).padding.top + kBottomNavigationBarHeight + 10);
+                return SizedBox(height: MediaQuery.of(context).padding.bottom + bottomBarHeight + 16);
               } else {
-                return SizedBox(height: MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 16);
+                return SizedBox(height: MediaQuery.of(context).padding.bottom + bottomBarHeight + 16);
               }
             }),
           ],

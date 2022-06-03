@@ -179,11 +179,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             bool anyLabelsSelected = state.labelTasks.any((t) => t.selected ?? false);
 
             if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
-              return const SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: BottomTaskActions(),
-                ),
+              return const Align(
+                alignment: Alignment.bottomCenter,
+                child: BottomTaskActions(),
               );
             } else {
               return const SizedBox();
