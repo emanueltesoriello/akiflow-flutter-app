@@ -170,7 +170,7 @@ class BottomTaskActions extends StatelessWidget {
 
                       List<Task> inboxSelected = tasksCubit.state.inboxTasks.where((t) => t.selected ?? false).toList();
                       List<Task> todayTasksSelected =
-                          tasksCubit.state.todayTasks.where((t) => t.selected ?? false).toList();
+                          tasksCubit.state.selectedDayTasks.where((t) => t.selected ?? false).toList();
                       List<Task> labelTasksSelected =
                           tasksCubit.state.labelTasks.where((t) => t.selected ?? false).toList();
                       List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];

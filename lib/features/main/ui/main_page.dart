@@ -171,7 +171,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         BlocBuilder<TasksCubit, TasksCubitState>(
           builder: (context, state) {
             bool anyInboxSelected = state.inboxTasks.any((t) => t.selected ?? false);
-            bool anyTodaySelected = state.todayTasks.any((t) => t.selected ?? false);
+            bool anyTodaySelected = state.selectedDayTasks.any((t) => t.selected ?? false);
             bool anyLabelsSelected = state.labelTasks.any((t) => t.selected ?? false);
 
             if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
@@ -245,9 +245,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
         List<Task> inboxTasks = List.from(state.inboxTasks);
-        List<Task> todayTasks = List.from(state.todayTasks);
-        List<Task> todos =
-            List.from(todayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
+        List<Task> fixedTodayTasks = List.from(state.fixedTodayTasks);
+        List<Task> fixedTodoTodayTasks =
+            List.from(fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
         return Theme(
           data: Theme.of(context).copyWith(useMaterial3: false),
@@ -278,7 +278,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                                 height: bottomBarIconSize,
                                 child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
                                     color: ColorsExt.grey2(context))),
-                            _BottomIconBadge(inboxTasks.length.toString()),
+                            _BottomIconBadge(inboxTasks.length),
                           ],
                         ),
                         activeIcon: Stack(
@@ -289,7 +289,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                               child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
                                   color: Theme.of(context).primaryColor),
                             ),
-                            _BottomIconBadge(inboxTasks.length.toString()),
+                            _BottomIconBadge(inboxTasks.length),
                           ],
                         ),
                         label: t.bottomBar.inbox),
@@ -304,7 +304,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                               color: ColorsExt.grey2(context),
                             ),
                           ),
-                          _BottomIconBadge(todos.length.toString()),
+                          _BottomIconBadge(fixedTodoTodayTasks.length),
                         ],
                       ),
                       activeIcon: Stack(
@@ -317,7 +317,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
-                          _BottomIconBadge(todos.length.toString()),
+                          _BottomIconBadge(fixedTodoTodayTasks.length),
                         ],
                       ),
                       label: t.bottomBar.today,
@@ -448,15 +448,19 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 }
 
 class _BottomIconBadge extends StatelessWidget {
-  final String info;
+  final int count;
 
   const _BottomIconBadge(
-    this.info, {
+    this.count, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (count == 0) {
+      return const SizedBox();
+    }
+
     return Transform.translate(
       offset: const Offset(23, -5),
       child: Container(
@@ -469,7 +473,7 @@ class _BottomIconBadge extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            info,
+            count.toString(),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 9,

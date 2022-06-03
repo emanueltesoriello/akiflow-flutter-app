@@ -27,7 +27,7 @@ class _View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime selectedDate = context.watch<TodayCubit>().state.selectedDate;
-    List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
+    List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.selectedDayTasks);
 
     List<Task> todos;
     List<Task> pinned;

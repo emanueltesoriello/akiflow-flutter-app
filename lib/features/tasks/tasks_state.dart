@@ -35,8 +35,9 @@ class UndoTask {
 class TasksCubitState extends Equatable {
   final bool loading;
   final List<Task> inboxTasks;
-  final List<Task> todayTasks;
+  final List<Task> selectedDayTasks;
   final List<Task> labelTasks;
+  final List<Task> fixedTodayTasks;
   final List<Doc> docs;
   final String? syncStatus;
   final List<UndoTask> queue;
@@ -45,8 +46,9 @@ class TasksCubitState extends Equatable {
   const TasksCubitState({
     this.loading = false,
     this.inboxTasks = const [],
-    this.todayTasks = const [],
+    this.selectedDayTasks = const [],
     this.labelTasks = const [],
+    this.fixedTodayTasks = const [],
     this.docs = const [],
     this.syncStatus,
     this.queue = const [],
@@ -56,8 +58,9 @@ class TasksCubitState extends Equatable {
   TasksCubitState copyWith({
     bool? loading,
     List<Task>? inboxTasks,
-    List<Task>? todayTasks,
+    List<Task>? selectedDayTasks,
     List<Task>? labelTasks,
+    List<Task>? fixedTodayTasks,
     List<Doc>? docs,
     String? syncStatus,
     List<UndoTask>? queue,
@@ -66,8 +69,9 @@ class TasksCubitState extends Equatable {
     return TasksCubitState(
       loading: loading ?? this.loading,
       inboxTasks: inboxTasks ?? this.inboxTasks,
-      todayTasks: todayTasks ?? this.todayTasks,
+      selectedDayTasks: selectedDayTasks ?? this.selectedDayTasks,
       labelTasks: labelTasks ?? this.labelTasks,
+      fixedTodayTasks: fixedTodayTasks ?? this.fixedTodayTasks,
       docs: docs ?? this.docs,
       syncStatus: syncStatus ?? this.syncStatus,
       queue: queue ?? this.queue,
@@ -79,8 +83,9 @@ class TasksCubitState extends Equatable {
   List<Object?> get props => [
         loading,
         inboxTasks,
-        todayTasks,
+        selectedDayTasks,
         labelTasks,
+        fixedTodayTasks,
         docs,
         syncStatus,
         queue,

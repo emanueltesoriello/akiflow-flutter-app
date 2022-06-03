@@ -26,7 +26,7 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.todayTasks);
+    List<Task> todayTasks = List.from(context.watch<TasksCubit>().state.selectedDayTasks);
 
     return RefreshIndicator(
       backgroundColor: ColorsExt.background(context),

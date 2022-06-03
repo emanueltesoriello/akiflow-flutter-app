@@ -74,7 +74,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     Future.wait([
       fetchDocs(),
       fetchInbox(),
-      fetchTodayTasks(_todayCubit.state.selectedDate),
+      fetchTodayTasks(),
+      fetchSelectedDayTasks(_todayCubit.state.selectedDate),
       _labelCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelCubit!.state.selectedLabel!) : Future.value(),
     ]);
   }
@@ -84,9 +85,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(inboxTasks: inboxTasks, syncStatus: "Get today tasks"));
   }
 
-  Future fetchTodayTasks(DateTime date) async {
+  Future fetchTodayTasks() async {
+    List<Task> fixedTodayTasks = await _tasksRepository.getTodayTasks(date: DateTime.now());
+    emit(state.copyWith(fixedTodayTasks: fixedTodayTasks));
+  }
+
+  Future fetchSelectedDayTasks(DateTime date) async {
     List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: date);
-    emit(state.copyWith(todayTasks: todayTasks, syncStatus: "Get labels from repository"));
+    emit(state.copyWith(selectedDayTasks: todayTasks, syncStatus: "Get labels from repository"));
   }
 
   Future fetchDocs() async {
@@ -100,7 +106,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
-    await fetchTodayTasks(selectedDay.toUtc());
+    await fetchSelectedDayTasks(selectedDay.toUtc());
   }
 
   void select(Task task) {
@@ -112,7 +118,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
           }
           return t;
         }).toList(),
-        todayTasks: state.todayTasks.map((t) {
+        selectedDayTasks: state.selectedDayTasks.map((t) {
           if (t.id == task.id) {
             return task.copyWith(selected: !(task.selected ?? false));
           }
@@ -132,7 +138,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void markAsDone() async {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
@@ -158,7 +164,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> duplicates = [];
 
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
@@ -196,14 +202,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    emit(state.copyWith(inboxTasks: newInboxTasks, todayTasks: newTodayTasks, labelTasks: newLabelTasks));
+    emit(state.copyWith(inboxTasks: newInboxTasks, selectedDayTasks: newTodayTasks, labelTasks: newLabelTasks));
 
     _syncCubit.sync([Entity.tasks]);
   }
 
   Future<void> delete() async {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
@@ -240,7 +246,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> assignLabel(Label label) async {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
@@ -274,7 +280,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> setPriority(PriorityEnum? priority) async {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
@@ -348,7 +354,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> setDeadline(DateTime? date) async {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
@@ -376,7 +382,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(
       state.copyWith(
         inboxTasks: state.inboxTasks.map((e) => e.copyWith(selected: false)).toList(),
-        todayTasks: state.todayTasks.map((e) => e.copyWith(selected: false)).toList(),
+        selectedDayTasks: state.selectedDayTasks.map((e) => e.copyWith(selected: false)).toList(),
         labelTasks: state.labelTasks.map((e) => e.copyWith(selected: false)).toList(),
       ),
     );
@@ -427,7 +433,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void moveToInbox() {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], UndoType.moveToInbox);
@@ -436,7 +442,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void planForToday() {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], UndoType.moveToInbox);
@@ -445,7 +451,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   void editPlanOrSnooze(DateTime? date, {required DateTime? dateTime, required TaskStatusType statusType}) {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     UndoType undoType = statusType == TaskStatusType.planned ? UndoType.moveToInbox : UndoType.snooze;
@@ -455,7 +461,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> planFor(DateTime? date, {required DateTime? dateTime, required TaskStatusType statusType}) async {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
-    List<Task> todayTasksSelected = state.todayTasks.where((t) => t.selected ?? false).toList();
+    List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];

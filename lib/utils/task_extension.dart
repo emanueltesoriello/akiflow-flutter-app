@@ -546,7 +546,7 @@ extension TaskExt on Task {
 
   static int countTasksSelected(TasksCubitState state) {
     int selectedInbox = state.inboxTasks.where((element) => element.selected ?? false).toList().length;
-    int selectedToday = state.todayTasks.where((element) => element.selected ?? false).toList().length;
+    int selectedToday = state.selectedDayTasks.where((element) => element.selected ?? false).toList().length;
 
     return selectedInbox + selectedToday;
   }
