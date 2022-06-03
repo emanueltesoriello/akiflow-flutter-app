@@ -213,6 +213,7 @@ class CompactInfo extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.fromLTRB(4, 5, 4, 5),
+        margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3),
           border: Border.all(color: ColorsExt.grey5(context), width: 1),
