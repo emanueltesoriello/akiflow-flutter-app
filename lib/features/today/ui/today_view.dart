@@ -56,6 +56,13 @@ class _View extends StatelessWidget {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
+    pinned.sort((a, b) {
+      try {
+        return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
+      } catch (_) {}
+      return 0;
+    });
+
     return RefreshIndicator(
       backgroundColor: ColorsExt.background(context),
       onRefresh: () async {
@@ -85,7 +92,6 @@ class _View extends StatelessWidget {
             ),
             TodayTaskList(
               tasks: pinned,
-              sorting: TaskListSorting.descending,
               showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
               showLabel: true,
               footer: null,
