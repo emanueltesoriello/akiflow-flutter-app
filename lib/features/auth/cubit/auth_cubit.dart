@@ -36,14 +36,14 @@ class AuthCubit extends Cubit<AuthCubitState> {
   _init() async {
     User? user = _preferencesRepository.user;
 
+    emit(AuthCubitState(user: user));
+
     print("logged in: ${user != null}");
 
     if (user != null) {
       if (Config.development) {
         log(user.accessToken?.toString() ?? "");
       }
-
-      _sentryService.authenticate(user.id.toString(), user.email);
 
       _sentryService.addBreadcrumb(category: 'user', message: 'Fetching updates');
 

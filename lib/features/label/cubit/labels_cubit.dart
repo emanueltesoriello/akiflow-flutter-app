@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
@@ -23,8 +21,6 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   }
 
   _init() async {
-    log("listen labels sync");
-
     _syncCubit.syncCompletedStream.listen((_) async {
       await fetchLabels();
     });

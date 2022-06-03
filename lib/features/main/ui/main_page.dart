@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
+import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
 import 'package:mobile/features/create_task/ui/create_task_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
@@ -26,6 +27,7 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_appbar.dart';
 import 'package:mobile/features/today/ui/today_view.dart';
+import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -73,6 +75,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 },
               ));
     });
+
+    context.read<MainCubit>().onLoggedAppStart();
   }
 
   @override
@@ -408,6 +412,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           padding: EdgeInsets.only(bottom: bottomPadding),
           child: FloatingActionButton(
             onPressed: () async {
+              locator<SentryService>().captureException("test");
               HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
               TaskStatusType taskStatusType =
                   homeViewType == HomeViewType.inbox ? TaskStatusType.inbox : TaskStatusType.planned;

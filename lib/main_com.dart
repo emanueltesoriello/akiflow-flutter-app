@@ -103,7 +103,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<MainCubit>(
           lazy: false,
-          create: (BuildContext context) => MainCubit(locator<SyncCubit>()),
+          create: (BuildContext context) => MainCubit(locator<SyncCubit>(), locator<AuthCubit>()),
         ),
         BlocProvider<AuthCubit>(
           lazy: false,
