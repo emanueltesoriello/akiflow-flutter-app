@@ -61,8 +61,18 @@ class _TodayAppBarState extends State<TodayAppBar> {
             context.read<TodayCubit>().scrollUpCalendar();
           }
         },
-        child: Theme(
-          data: Theme.of(context).copyWith(useMaterial3: false),
+        child: Container(
+          decoration: BoxDecoration(
+            color: ColorsExt.background(context),
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.05),
+                offset: Offset(0, -1),
+                blurRadius: 8,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
           child: Stack(
             children: [
               AppBarComp(

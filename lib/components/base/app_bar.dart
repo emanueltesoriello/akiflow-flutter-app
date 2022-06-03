@@ -16,7 +16,6 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final bool showLogo;
   final Widget? leading;
   final Widget? customTitle;
-  final Widget? child;
 
   const AppBarComp({
     Key? key,
@@ -28,7 +27,6 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     this.showLogo = false,
     this.leading,
     this.customTitle,
-    this.child,
   }) : super(key: key);
 
   @override
@@ -36,10 +34,22 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(useMaterial3: false),
+    return Container(
+      decoration: BoxDecoration(
+        color: ColorsExt.background(context),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            offset: Offset(0, -1),
+            blurRadius: 8,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
       child: AppBar(
         centerTitle: false,
+        backgroundColor: ColorsExt.background(context),
+        surfaceTintColor: ColorsExt.background(context),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,

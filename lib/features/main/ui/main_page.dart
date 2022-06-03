@@ -33,6 +33,8 @@ import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
+const double bottomBarHeight = 72;
+
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -253,143 +255,16 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
         TextStyle labelStyle = TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context));
 
-        return Theme(
-          data: Theme.of(context).copyWith(useMaterial3: false),
-          child: Material(
-            elevation: 4,
-            shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(height: 0.5, color: const Color(0xffE4EDF3)),
-                BottomNavigationBar(
-                  elevation: 16,
-                  type: BottomNavigationBarType.fixed,
-                  selectedLabelStyle: labelStyle,
-                  unselectedLabelStyle: labelStyle,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: SizedBox(
-                          width: bottomBarIconSize,
-                          height: bottomBarIconSize,
-                          child: SvgPicture.asset("assets/images/icons/_common/line_horizontal_3.svg",
-                              color: ColorsExt.grey2(context))),
-                      label: t.bottomBar.menu,
-                    ),
-                    BottomNavigationBarItem(
-                        icon: Stack(
-                          children: [
-                            SizedBox(
-                                width: bottomBarIconSize,
-                                height: bottomBarIconSize,
-                                child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
-                                    color: ColorsExt.grey2(context))),
-                            _BottomIconBadge(inboxTasks.length),
-                          ],
-                        ),
-                        activeIcon: Stack(
-                          children: [
-                            SizedBox(
-                              width: bottomBarIconSize,
-                              height: bottomBarIconSize,
-                              child: SvgPicture.asset("assets/images/icons/_common/tray.svg",
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            _BottomIconBadge(inboxTasks.length),
-                          ],
-                        ),
-                        label: t.bottomBar.inbox),
-                    BottomNavigationBarItem(
-                      icon: Stack(
-                        children: [
-                          SizedBox(
-                            width: bottomBarIconSize,
-                            height: bottomBarIconSize,
-                            child: SvgPicture.asset(
-                              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                              color: ColorsExt.grey2(context),
-                            ),
-                          ),
-                          _BottomIconBadge(fixedTodoTodayTasks.length),
-                        ],
-                      ),
-                      activeIcon: Stack(
-                        children: [
-                          SizedBox(
-                            width: bottomBarIconSize,
-                            height: bottomBarIconSize,
-                            child: SvgPicture.asset(
-                              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          _BottomIconBadge(fixedTodoTodayTasks.length),
-                        ],
-                      ),
-                      label: t.bottomBar.today,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: SizedBox(
-                          width: bottomBarIconSize,
-                          height: bottomBarIconSize,
-                          child: SvgPicture.asset("assets/images/icons/_common/calendar.svg",
-                              color: ColorsExt.grey2(context))),
-                      activeIcon: SizedBox(
-                        width: bottomBarIconSize,
-                        height: bottomBarIconSize,
-                        child: SvgPicture.asset(
-                          "assets/images/icons/_common/calendar.svg",
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      label: t.bottomBar.calendar,
-                    ),
-                  ],
-                  currentIndex: () {
-                    switch (context.watch<MainCubit>().state.homeViewType) {
-                      case HomeViewType.inbox:
-                        return 1;
-                      case HomeViewType.today:
-                        return 2;
-                      case HomeViewType.calendar:
-                        return 3;
-                      default:
-                        return 0;
-                    }
-                  }(),
-                  unselectedItemColor: ColorsExt.grey1(context),
-                  selectedItemColor: () {
-                    if (context.watch<MainCubit>().state.homeViewType == HomeViewType.label) {
-                      return ColorsExt.grey1(context);
-                    } else {
-                      return Theme.of(context).primaryColor;
-                    }
-                  }(),
-                  onTap: (index) {
-                    if (index == 0) {
-                      showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) => const SettingsModal(),
-                        closeProgressThreshold: 0,
-                      );
-                    } else {
-                      switch (index) {
-                        case 1:
-                          context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
-                          break;
-                        case 2:
-                          context.read<MainCubit>().changeHomeView(HomeViewType.today);
-                          break;
-                        case 3:
-                          context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
-                          break;
-                      }
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(height: 0.5, color: const Color(0xffE4EDF3)),
+            CustomBottomNavigationBar(
+                labelStyle: labelStyle,
+                bottomBarIconSize: bottomBarIconSize,
+                inboxTasks: inboxTasks,
+                fixedTodoTodayTasks: fixedTodoTodayTasks),
+          ],
         );
       },
     );
@@ -400,12 +275,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
       builder: (context, state) {
         double bottomPadding;
 
-        if (state.queue.isNotEmpty) {
-          if (Platform.isIOS) {
-            bottomPadding = MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 8;
-          } else {
-            bottomPadding = MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight;
-          }
+        if (state.queue.isNotEmpty || state.justCreatedTask != null) {
+          bottomPadding = bottomBarHeight;
         } else {
           bottomPadding = 0;
         }
@@ -415,8 +286,15 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           child: FloatingActionButton(
             onPressed: () async {
               HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-              TaskStatusType taskStatusType =
-                  homeViewType == HomeViewType.inbox ? TaskStatusType.inbox : TaskStatusType.planned;
+
+              TaskStatusType taskStatusType;
+
+              if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
+                taskStatusType = TaskStatusType.inbox;
+              } else {
+                taskStatusType = TaskStatusType.planned;
+              }
+
               DateTime date = context.read<TodayCubit>().state.selectedDate;
 
               Label? label = context.read<MainCubit>().state.selectedLabel;
@@ -455,6 +333,154 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 }
 
+class CustomBottomNavigationBar extends StatelessWidget {
+  const CustomBottomNavigationBar({
+    Key? key,
+    required this.labelStyle,
+    required this.bottomBarIconSize,
+    required this.inboxTasks,
+    required this.fixedTodoTodayTasks,
+  }) : super(key: key);
+
+  final TextStyle labelStyle;
+  final double bottomBarIconSize;
+  final List<Task> inboxTasks;
+  final List<Task> fixedTodoTodayTasks;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: ColorsExt.background(context),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            offset: Offset(0, -1),
+            blurRadius: 8,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: bottomBarHeight,
+            child: BlocBuilder<MainCubit, MainCubitState>(
+              builder: (context, state) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    NavItem(
+                      active: false,
+                      activeIconAsset: "assets/images/icons/_common/line_horizontal_3.svg",
+                      title: t.bottomBar.menu,
+                    ),
+                    NavItem(
+                      active: state.homeViewType == HomeViewType.inbox,
+                      activeIconAsset: "assets/images/icons/_common/tray.svg",
+                      title: t.bottomBar.inbox,
+                      homeViewType: HomeViewType.inbox,
+                      badge: _BottomIconBadge(inboxTasks.length),
+                    ),
+                    NavItem(
+                      active: state.homeViewType == HomeViewType.today,
+                      activeIconAsset:
+                          "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+                      title: t.bottomBar.today,
+                      homeViewType: HomeViewType.today,
+                      badge: _BottomIconBadge(fixedTodoTodayTasks.length),
+                    ),
+                    NavItem(
+                      active: state.homeViewType == HomeViewType.calendar,
+                      activeIconAsset: "assets/images/icons/_common/calendar.svg",
+                      title: t.bottomBar.calendar,
+                      homeViewType: HomeViewType.calendar,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).padding.bottom),
+        ],
+      ),
+    );
+  }
+}
+
+class NavItem extends StatelessWidget {
+  final String activeIconAsset;
+  final bool active;
+  final String title;
+  final HomeViewType? homeViewType;
+  final Widget? badge;
+
+  const NavItem({
+    Key? key,
+    required this.activeIconAsset,
+    required this.active,
+    required this.title,
+    this.homeViewType,
+    this.badge,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color color;
+
+    if (active) {
+      color = ColorsExt.akiflow(context);
+    } else {
+      color = ColorsExt.grey2(context);
+    }
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          if (homeViewType != null) {
+            context.read<MainCubit>().changeHomeView(homeViewType!);
+          } else {
+            showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => const SettingsModal(),
+              closeProgressThreshold: 0,
+            );
+          }
+        },
+        child: Container(
+          color: ColorsExt.background(context),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Transform.translate(
+                offset: Offset(0, Platform.isAndroid ? -3 : 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Center(child: SvgPicture.asset(activeIconAsset, width: 30, height: 30, color: color))),
+                    Flexible(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (badge != null) Align(alignment: Alignment.topCenter, child: badge!),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _BottomIconBadge extends StatelessWidget {
   final int count;
 
@@ -470,7 +496,7 @@ class _BottomIconBadge extends StatelessWidget {
     }
 
     return Transform.translate(
-      offset: const Offset(23, -5),
+      offset: Offset(17, Platform.isAndroid ? 5 : 8),
       child: Container(
         width: 17,
         height: 17,
