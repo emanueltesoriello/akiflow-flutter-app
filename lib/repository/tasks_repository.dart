@@ -119,7 +119,12 @@ class TasksRepository extends DatabaseRepository {
       SELECT *
       FROM tasks
       WHERE list_id = ?
-        AND deleted_at IS NULL
+      AND deleted_at IS NULL
+      GROUP BY IFNULL(`recurring_id`, `id`)
+      ORDER BY
+          sorting_label ASC NULLS LAST,
+          done ASC,
+          status ASC
 """, [label.id!]);
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
