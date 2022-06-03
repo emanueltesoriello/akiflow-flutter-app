@@ -431,11 +431,7 @@ class TaskRow extends StatelessWidget {
           if (doc != null) {
             return Row(
               children: [
-                SvgPicture.asset(
-                  doc.computedIcon,
-                  width: 18,
-                  height: 18,
-                ),
+                SvgPicture.asset(doc.computedIcon, width: 16, height: 16),
                 const SizedBox(width: 7),
                 Expanded(
                   child: Builder(
