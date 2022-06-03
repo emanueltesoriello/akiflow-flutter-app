@@ -46,7 +46,7 @@ class TasksRepository extends DatabaseRepository {
         AND (date <= ? OR datetime < ?)
         ORDER BY
           CASE
-            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 216000}) >= ?
+            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
               THEN datetime
             ELSE
               sorting
@@ -68,7 +68,7 @@ class TasksRepository extends DatabaseRepository {
         AND ((date > ? AND date < ?) OR (datetime > ? AND datetime < ?))
         ORDER BY
           CASE
-            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 216000}) >= ?
+            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
               THEN datetime
             ELSE
               sorting
