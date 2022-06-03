@@ -30,9 +30,9 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     titleTextStyle: TextStyle(color: ColorsLight.grey2, fontSize: 24, fontWeight: FontWeight.w500),
   ),
   textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: ColorsLight.akiflow,
-    selectionColor: ColorsLight.akiflow,
-    selectionHandleColor: ColorsLight.akiflow,
+    cursorColor: ColorsLight.akiflow10,
+    selectionColor: ColorsLight.akiflow10,
+    selectionHandleColor: ColorsLight.akiflow10,
   ),
   textTheme: const TextTheme(
     bodyText1: TextStyle(),
