@@ -130,7 +130,8 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
   Widget build(BuildContext context) {
     return SizedBox(
       height: double.infinity,
-      child: GestureDetector(
+      child: InkWell(
+        overlayColor: MaterialStateProperty.all(Colors.transparent),
         onTap: () {
           Future.delayed(const Duration(milliseconds: stepDuration * 4 + 400), () {
             widget.onTap();

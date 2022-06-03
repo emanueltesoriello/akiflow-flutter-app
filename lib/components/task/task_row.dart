@@ -262,7 +262,8 @@ class TaskRow extends StatelessWidget {
         color = ColorsExt.grey3(context);
     }
 
-    return GestureDetector(
+    return InkWell(
+      overlayColor: MaterialStateProperty.all(Colors.transparent),
       onTap: selectTask,
       child: Container(
         height: double.infinity,
