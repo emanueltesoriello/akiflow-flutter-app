@@ -21,7 +21,7 @@ class TodayTaskList extends StatefulWidget {
   final List<Task> tasks;
   final Widget? header;
   final Widget? footer;
-  final TaskListSorting sorting;
+  final TaskListSorting? sorting;
   final bool showTasks;
   final bool showLabel;
   final bool showPlanInfo;
@@ -29,12 +29,12 @@ class TodayTaskList extends StatefulWidget {
   const TodayTaskList({
     Key? key,
     required this.tasks,
-    required this.sorting,
     required this.header,
     required this.footer,
     required this.showTasks,
     required this.showLabel,
     required this.showPlanInfo,
+    this.sorting,
   }) : super(key: key);
 
   @override
@@ -67,7 +67,9 @@ class _TodayTaskListState extends State<TodayTaskList> {
   Widget build(BuildContext context) {
     List<Task> tasks = List.from(widget.tasks);
 
-    tasks = TaskExt.sort(tasks, sorting: widget.sorting);
+    if (widget.sorting != null) {
+      tasks = TaskExt.sort(tasks, sorting: widget.sorting);
+    }
 
     // TODO IMPROVEMENT: Use ReorderableListView.builder when onReorderStart will
     //be available in flutter stable branch

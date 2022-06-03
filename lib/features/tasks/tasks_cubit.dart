@@ -392,7 +392,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     int oldIndex,
     int newIndex, {
     required List<Task> newTasksListOrdered,
-    required TaskListSorting sorting,
+    required TaskListSorting? sorting,
   }) async {
     List<Task> updated = newTasksListOrdered.toList();
 
@@ -403,7 +403,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     DateTime now = DateTime.now().toUtc();
     int millis = now.millisecondsSinceEpoch;
 
-    if (sorting == TaskListSorting.descending) {
+    if (sorting != null && sorting == TaskListSorting.descending) {
       updated = updated.reversed.toList();
     }
 

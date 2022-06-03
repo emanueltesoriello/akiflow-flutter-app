@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/create_task/ui/create_task_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
@@ -85,6 +84,8 @@ class LabelView extends StatelessWidget {
                     Task task = editTaskCubit.state.updatedTask.copyWith(
                       sectionId: Nullable(section.id),
                       status: Nullable(TaskStatusType.inbox.id),
+                      date: Nullable(null),
+                      datetime: Nullable(null),
                       listId: Nullable(labelState.selectedLabel?.id),
                     );
 
@@ -179,7 +180,6 @@ class LabelView extends StatelessWidget {
 
                 return TodayTaskList(
                   tasks: tasksWithoutSnoozedAndSomeday,
-                  sorting: TaskListSorting.descending,
                   showTasks: labelState.openedSections[section.id] ?? false,
                   showLabel: false,
                   header: labelState.sections.length > 1 ? header : null,
