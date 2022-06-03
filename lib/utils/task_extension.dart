@@ -94,21 +94,22 @@ extension TaskExt on Task {
   }
 
   bool get isToday {
-    if (datetime != null) {
-      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
-      return dateParsed.day == DateTime.now().day &&
-          dateParsed.month == DateTime.now().month &&
-          dateParsed.year == DateTime.now().year;
-    }
+    DateTime now = DateTime.now();
+
+    bool isDateToday = false;
+    bool isDatetimeToday = false;
 
     if (date != null) {
       DateTime dateParsed = DateTime.parse(date!).toLocal();
-      return dateParsed.day == DateTime.now().day &&
-          dateParsed.month == DateTime.now().month &&
-          dateParsed.year == DateTime.now().year;
+      isDateToday = dateParsed.day == now.day && dateParsed.month == now.month && dateParsed.year == now.year;
     }
 
-    return false;
+    if (datetime != null) {
+      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
+      isDatetimeToday = dateParsed.day == now.day && dateParsed.month == now.month && dateParsed.year == now.year;
+    }
+
+    return isDateToday || isDatetimeToday;
   }
 
   bool get isTomorrow {
@@ -130,21 +131,24 @@ extension TaskExt on Task {
   }
 
   bool get isTodayOrBefore {
-    if (datetime != null) {
-      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
-      return dateParsed.day <= DateTime.now().day &&
-          dateParsed.month <= DateTime.now().month &&
-          dateParsed.year <= DateTime.now().year;
-    }
+    if (isToday) return true;
+
+    DateTime now = DateTime.now();
+
+    bool isDateBefore = false;
+    bool isDatetimeBefore = false;
 
     if (date != null) {
       DateTime dateParsed = DateTime.parse(date!).toLocal();
-      return dateParsed.day <= DateTime.now().day &&
-          dateParsed.month <= DateTime.now().month &&
-          dateParsed.year <= DateTime.now().year;
+      isDateBefore = dateParsed.isBefore(now);
     }
 
-    return false;
+    if (datetime != null) {
+      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
+      isDatetimeBefore = dateParsed.isBefore(now);
+    }
+
+    return isDateBefore || isDatetimeBefore;
   }
 
   DateTime? get endTime {

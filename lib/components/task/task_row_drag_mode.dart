@@ -11,6 +11,7 @@ class TaskRowDragMode extends TaskRow {
           task: task.copyWith(selected: true),
           showLabel: false,
           showPlanInfo: false,
+          hideInboxLabel: true,
           swipeActionPlanClick: () {},
           swipeActionSelectLabelClick: () {},
           swipeActionSnoozeClick: () {},

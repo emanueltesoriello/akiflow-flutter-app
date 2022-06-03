@@ -137,7 +137,7 @@ class TaskRow extends StatelessWidget {
                         child: Container(
                           width: 6,
                           height: 6,
-                          margin: const EdgeInsets.only(left: 5, right: 0, top: 10),
+                          margin: const EdgeInsets.only(left: 5, right: 0, top: 7),
                           decoration: BoxDecoration(
                             color: color,
                             shape: BoxShape.circle,
@@ -243,47 +243,6 @@ class TaskRow extends StatelessWidget {
     return const SizedBox();
   }
 
-  InkWell _checkbox(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (!task.isCompletedComputed) {
-          TasksCubit tasksCubit = context.read<TasksCubit>();
-          AuthCubit authCubit = context.read<AuthCubit>();
-
-          TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
-        }
-
-        completedClick();
-      },
-      child: Builder(builder: (context) {
-        bool completed = task.isCompletedComputed;
-
-        Color color;
-
-        switch (task.priority) {
-          case 1:
-            color = ColorsExt.red(context);
-            break;
-          case 2:
-            color = ColorsExt.yellow(context);
-            break;
-          case 3:
-            color = ColorsExt.green(context);
-            break;
-          default:
-            color = completed ? ColorsExt.grey3(context) : ColorsExt.grey3(context);
-        }
-
-        return SvgPicture.asset(
-          completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
-          width: 20,
-          height: 20,
-          color: color,
-        );
-      }),
-    );
-  }
-
   Widget _radio(BuildContext context) {
     bool selected = task.selected ?? false;
 
@@ -303,11 +262,11 @@ class TaskRow extends StatelessWidget {
         color = ColorsExt.grey3(context);
     }
 
-    return InkWell(
+    return GestureDetector(
       onTap: selectTask,
       child: Container(
         height: double.infinity,
-        padding: const EdgeInsets.all(3),
+        padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
         child: Align(
           alignment: Alignment.topCenter,
           child: SvgPicture.asset(
