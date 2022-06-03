@@ -251,6 +251,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         List<Task> fixedTodoTodayTasks =
             List.from(fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
+        TextStyle labelStyle = TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context));
+
         return Theme(
           data: Theme.of(context).copyWith(useMaterial3: false),
           child: Material(
@@ -263,6 +265,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 BottomNavigationBar(
                   elevation: 16,
                   type: BottomNavigationBarType.fixed,
+                  selectedLabelStyle: labelStyle,
+                  unselectedLabelStyle: labelStyle,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                       icon: SizedBox(

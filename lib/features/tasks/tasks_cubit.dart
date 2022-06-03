@@ -339,26 +339,36 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  Future<void> update(List<Task> tasksUpdated, {bool andFutureTasks = false}) async {
+  Future<void> update(List<Task> tasksSelected, {bool andFutureTasks = false}) async {
     if (andFutureTasks) {
-      List<Task> taskWithRecurrence = tasksUpdated.where((element) => element.recurringId != null).toList();
-      List<String> recurringIds = taskWithRecurrence.map((t) => t.recurringId!).toList();
-      List<Task> tasks = await _tasksRepository.getByRecurringIds(recurringIds);
+      List<Task> inboxTasksWithRecurrence = state.inboxTasks.where((element) => element.recurringId != null).toList();
+      List<Task> todayTasksWithRecurrence =
+          state.selectedDayTasks.where((element) => element.recurringId != null).toList();
+      List<Task> allWithRecurrence = [...inboxTasksWithRecurrence, ...todayTasksWithRecurrence];
+
+      List<String> recurringIds = allWithRecurrence.map((t) => t.recurringId!).toList();
+      List<Task> tasksWithRecurringIds = await _tasksRepository.getByRecurringIds(recurringIds);
 
       // filter tasks with date > today
-      tasks = tasks.where((t) => t.date != null && DateTime.parse(t.date!).isAfter(DateTime.now())).toList();
+      tasksWithRecurringIds = tasksWithRecurringIds
+          .where((t) => t.date != null && DateTime.parse(t.date!).toLocal().isAfter(DateTime.now()))
+          .toList();
+
+      List<Task> allSelectedAndWithRecurrenceId = [...tasksWithRecurringIds, ...tasksSelected];
 
       List<Task> updatedRecurringTasks = [];
 
       DateTime now = DateTime.now();
 
-      for (Task task in tasks) {
+      print(allSelectedAndWithRecurrenceId);
+
+      for (Task task in allSelectedAndWithRecurrenceId) {
         Task updatedRecurringTask = task.copyWith(
-          listId: Nullable(tasksUpdated.first.listId),
+          listId: Nullable(allSelectedAndWithRecurrenceId.first.listId),
           updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
-          priority: tasksUpdated.first.priority,
-          duration: Nullable(tasksUpdated.first.duration),
-          deletedAt: tasksUpdated.first.deletedAt,
+          priority: allSelectedAndWithRecurrenceId.first.priority,
+          duration: Nullable(allSelectedAndWithRecurrenceId.first.duration),
+          deletedAt: TzUtils.toUtcStringIfNotNull(now),
         );
 
         updatedRecurringTasks.add(updatedRecurringTask);
@@ -368,7 +378,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         await _tasksRepository.updateById(task.id!, data: task);
       }
     } else {
-      for (Task task in tasksUpdated) {
+      for (Task task in tasksSelected) {
         await _tasksRepository.updateById(task.id, data: task);
       }
     }
