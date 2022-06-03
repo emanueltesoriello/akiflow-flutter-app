@@ -69,10 +69,24 @@ class TaskInfo extends StatelessWidget {
         active: true,
       );
     } else if (task.statusType == TaskStatusType.snoozed) {
+      String? text;
+
+      if (task.date != null) {
+        DateTime parsed = DateTime.parse(task.date!).toLocal();
+
+        if (task.isYesterday) {
+          text = t.task.yesterday;
+        } else {
+          text = DateFormat("EEE, d MMM").format(parsed);
+        }
+      } else if (task.datetime != null) {
+        text = task.datetimeFormatted;
+      }
+
       return TagBox(
         icon: "assets/images/icons/_common/clock.svg",
         backgroundColor: ColorsExt.akiflow10(context),
-        text: task.datetimeFormatted,
+        text: text ?? t.task.snoozed,
         active: true,
       );
     } else if (task.statusType == TaskStatusType.planned && showPlanInfo) {

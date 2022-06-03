@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 207 
+ * Strings: 208 
  *
- * Built on 2022-06-02 at 13:29 UTC
+ * Built on 2022-06-03 at 10:28 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -453,6 +453,7 @@ class _StringsTaskEn {
 	late final _StringsTaskLinkEn link = _StringsTaskLinkEn._(_root);
 	String get taskCreatedSuccessfully => 'Task created successfully';
 	String nSelected({required Object count}) => '$count selected';
+	String get yesterday => 'Yesterday';
 }
 
 // Path: errors
@@ -927,6 +928,7 @@ extension on _StringsEn {
 			'task.link.addLink': 'Add link',
 			'task.taskCreatedSuccessfully': 'Task created successfully',
 			'task.nSelected': ({required Object count}) => '$count selected',
+			'task.yesterday': 'Yesterday',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

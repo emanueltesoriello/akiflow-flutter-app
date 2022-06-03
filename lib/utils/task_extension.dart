@@ -130,6 +130,24 @@ extension TaskExt on Task {
     return false;
   }
 
+  bool get isYesterday {
+    if (datetime != null) {
+      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
+      return dateParsed.day == DateTime.now().day - 1 &&
+          dateParsed.month == DateTime.now().month &&
+          dateParsed.year == DateTime.now().year;
+    }
+
+    if (date != null) {
+      DateTime dateParsed = DateTime.parse(date!).toLocal();
+      return dateParsed.day == DateTime.now().day - 1 &&
+          dateParsed.month == DateTime.now().month &&
+          dateParsed.year == DateTime.now().year;
+    }
+
+    return false;
+  }
+
   bool get isTodayOrBefore {
     if (isToday) return true;
 
