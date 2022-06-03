@@ -12,6 +12,7 @@ import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:mobile/utils/tz_utils.dart';
@@ -28,6 +29,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
+  final SentryService _sentryService = locator<SentryService>();
 
   final StreamController<List<Task>> _editRecurringTasksDialog = StreamController<List<Task>>.broadcast();
   Stream<List<Task>> get editRecurringTasksDialog => _editRecurringTasksDialog.stream;
@@ -35,13 +37,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final StreamController<void> _scrollTopStreamController = StreamController<void>.broadcast();
   Stream<void> get scrollTopStream => _scrollTopStreamController.stream;
 
-  late final TodayCubit _todayCubit;
   late final SyncCubit _syncCubit;
 
   LabelCubit? _labelCubit;
+  TodayCubit? _todayCubit;
 
   TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
     print("listen tasks sync");
+
+    refreshTasksFromRepository();
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await refreshTasksFromRepository();
@@ -75,38 +79,62 @@ class TasksCubit extends Cubit<TasksCubitState> {
       fetchDocs(),
       fetchInbox(),
       fetchTodayTasks(),
-      fetchSelectedDayTasks(_todayCubit.state.selectedDate),
+      _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
       _labelCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelCubit!.state.selectedLabel!) : Future.value(),
     ]);
   }
 
   Future fetchInbox() async {
-    List<Task> inboxTasks = await _tasksRepository.getInbox();
-    emit(state.copyWith(inboxTasks: inboxTasks, syncStatus: "Get today tasks"));
+    try {
+      List<Task> inboxTasks = await _tasksRepository.getInbox();
+      emit(state.copyWith(inboxTasks: inboxTasks, syncStatus: "Get today tasks"));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 
   Future fetchTodayTasks() async {
-    List<Task> fixedTodayTasks = await _tasksRepository.getTodayTasks(date: DateTime.now());
-    emit(state.copyWith(fixedTodayTasks: fixedTodayTasks));
+    try {
+      List<Task> fixedTodayTasks = await _tasksRepository.getTodayTasks(date: DateTime.now());
+      emit(state.copyWith(fixedTodayTasks: fixedTodayTasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 
   Future fetchSelectedDayTasks(DateTime date) async {
-    List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: date);
-    emit(state.copyWith(selectedDayTasks: todayTasks, syncStatus: "Get labels from repository"));
+    try {
+      List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: date);
+      emit(state.copyWith(selectedDayTasks: todayTasks, syncStatus: "Get labels from repository"));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 
   Future fetchDocs() async {
-    List<Doc> docs = await _docsRepository.get();
-    emit(state.copyWith(docs: docs));
+    try {
+      List<Doc> docs = await _docsRepository.get();
+      emit(state.copyWith(docs: docs));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 
   Future<void> fetchLabelTasks(Label selectedLabel) async {
-    List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
-    emit(state.copyWith(labelTasks: tasks));
+    try {
+      List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
+      emit(state.copyWith(labelTasks: tasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
-    await fetchSelectedDayTasks(selectedDay.toUtc());
+    try {
+      await fetchSelectedDayTasks(selectedDay.toUtc());
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 
   void select(Task task) {
