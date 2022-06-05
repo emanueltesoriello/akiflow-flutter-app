@@ -7,7 +7,7 @@ import 'package:mobile/components/task/plan_for_action.dart';
 import 'package:mobile/features/create_task/ui/create_task_duration.dart';
 import 'package:mobile/features/create_task/ui/create_task_labels.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
+import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

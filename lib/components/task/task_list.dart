@@ -7,7 +7,7 @@ import 'package:mobile/components/task/task_row.dart';
 import 'package:mobile/components/task/task_row_drag_mode.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
-import 'package:mobile/features/plan_modal/ui/plan_modal.dart';
+import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
