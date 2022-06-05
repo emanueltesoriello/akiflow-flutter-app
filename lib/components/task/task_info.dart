@@ -72,7 +72,7 @@ class TaskInfo extends StatelessWidget {
       String? text;
 
       if (task.date != null) {
-        DateTime parsed = DateTime.parse(task.date!).toLocal();
+        DateTime parsed = DateTime.parse(task.date!);
 
         if (task.isYesterday) {
           text = t.task.yesterday;
@@ -119,7 +119,7 @@ class TaskInfo extends StatelessWidget {
     }
 
     if (task.date != null) {
-      DateTime parsed = DateTime.parse(task.date!).toLocal();
+      DateTime parsed = DateTime.parse(task.date!);
 
       if (task.isToday) {
         text = t.addTask.today;

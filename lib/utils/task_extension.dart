@@ -86,7 +86,7 @@ extension TaskExt on Task {
     }
 
     if (date != null) {
-      DateTime dateParsed = DateTime.parse(date!).toLocal();
+      DateTime dateParsed = DateTime.parse(date!);
       return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
     }
 
@@ -100,7 +100,7 @@ extension TaskExt on Task {
     bool isDatetimeToday = false;
 
     if (date != null) {
-      DateTime dateParsed = DateTime.parse(date!).toLocal();
+      DateTime dateParsed = DateTime.parse(date!);
       isDateToday = dateParsed.day == now.day && dateParsed.month == now.month && dateParsed.year == now.year;
     }
 
@@ -121,7 +121,7 @@ extension TaskExt on Task {
     }
 
     if (date != null) {
-      DateTime dateParsed = DateTime.parse(date!).toLocal();
+      DateTime dateParsed = DateTime.parse(date!);
       return dateParsed.day == DateTime.now().day + 1 &&
           dateParsed.month == DateTime.now().month &&
           dateParsed.year == DateTime.now().year;
@@ -139,7 +139,7 @@ extension TaskExt on Task {
     }
 
     if (date != null) {
-      DateTime dateParsed = DateTime.parse(date!).toLocal();
+      DateTime dateParsed = DateTime.parse(date!);
       return dateParsed.day == DateTime.now().day - 1 &&
           dateParsed.month == DateTime.now().month &&
           dateParsed.year == DateTime.now().year;
@@ -157,7 +157,7 @@ extension TaskExt on Task {
     bool isDatetimeBefore = false;
 
     if (date != null) {
-      DateTime dateParsed = DateTime.parse(date!).toLocal();
+      DateTime dateParsed = DateTime.parse(date!);
       isDateBefore = dateParsed.isBefore(now);
     }
 
@@ -189,7 +189,7 @@ extension TaskExt on Task {
       DateTime endTimePlus1h = endTime!.add(const Duration(hours: 1));
       isOverdueDate = endTimePlus1h.toLocal().isBefore(now);
     } else if (date != null && !isToday) {
-      isOverdueDate = DateTime.parse(date!).toLocal().isBefore(now);
+      isOverdueDate = DateTime.parse(date!).isBefore(now);
     }
 
     return isPlanned && !isCompletedComputed && isOverdueDate;
@@ -301,7 +301,7 @@ extension TaskExt on Task {
 
   String get overdueFormatted {
     if (isOverdue) {
-      return DateFormat("EEE, d MMM").format(DateTime.parse(date!).toLocal());
+      return DateFormat("EEE, d MMM").format(DateTime.parse(date!));
     }
 
     return '';
@@ -564,12 +564,14 @@ extension TaskExt on Task {
 
   static int countTasksSelected(TasksCubitState state) {
     int selectedInbox = state.inboxTasks.where((element) => element.selected ?? false).toList().length;
-    int selectedToday = state.selectedDayTasks.where((element) => element.selected ?? false).toList().length;
+
+    List<Task> selectedDayTasks = state.selectedDayTasks.where((element) => element.selected ?? false).toList();
+    int selectedDayCount = selectedDayTasks.where((element) => !state.labelTasks.contains(element)).toList().length;
 
     List<Task> labelTasks = state.labelTasks.where((element) => element.selected ?? false).toList();
     int selectedLabelCount = labelTasks.where((element) => !state.inboxTasks.contains(element)).toList().length;
 
-    return selectedInbox + selectedToday + selectedLabelCount;
+    return selectedInbox + selectedDayCount + selectedLabelCount;
   }
 
   static bool isSelectMode(TasksCubitState state) {

@@ -147,6 +147,12 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => PlanModal(
+                initialDate: editTaskCubit.state.updatedTask.date != null
+                    ? DateTime.parse(editTaskCubit.state.updatedTask.date!)
+                    : DateTime.now(),
+                initialDatetime: editTaskCubit.state.updatedTask.datetime != null
+                    ? DateTime.parse(editTaskCubit.state.updatedTask.datetime!)
+                    : null,
                 onSelectDate: (
                     {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
                   editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);

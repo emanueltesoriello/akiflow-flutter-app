@@ -351,7 +351,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       // filter tasks with date > today
       tasksWithRecurringIds = tasksWithRecurringIds
-          .where((t) => t.date != null && DateTime.parse(t.date!).toLocal().isAfter(DateTime.now()))
+          .where((t) => t.date != null && DateTime.parse(t.date!).isAfter(DateTime.now()))
           .toList();
 
       List<Task> allSelectedAndWithRecurrenceId = [...tasksWithRecurringIds, ...tasksSelected];

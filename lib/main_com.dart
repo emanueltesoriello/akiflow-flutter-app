@@ -342,7 +342,7 @@ class JustCreatedTaskView extends StatelessWidget {
                                 context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
                               } else {
                                 if (date != null) {
-                                  DateTime dateParsed = DateTime.parse(date).toLocal();
+                                  DateTime dateParsed = DateTime.parse(date);
                                   context.read<MainCubit>().changeHomeView(HomeViewType.today);
                                   context.read<TodayCubit>().onDateSelected(dateParsed);
                                 } else {

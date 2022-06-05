@@ -67,7 +67,8 @@ class _DeadlineModalState extends State<DeadlineModal> {
                 _predefinedDate(context, widget.onSelectDate),
                 const Separator(),
                 CreateTaskCalendar(
-                  initialDate: widget.initialDate,
+                  initialDate: widget.initialDate ?? DateTime.now(),
+                  initialDateTime: null,
                   onConfirm: (DateTime date, DateTime? datetime) {
                     widget.onSelectDate(datetime ?? date);
                   },

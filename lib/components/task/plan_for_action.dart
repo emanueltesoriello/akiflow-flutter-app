@@ -36,7 +36,7 @@ class PlanForAction extends StatelessWidget {
 
     if (status != TaskStatusType.completed) {
       if (task.date != null) {
-        DateTime parsed = DateTime.parse(task.date!).toLocal();
+        DateTime parsed = DateTime.parse(task.date!);
 
         if (task.isToday) {
           text = t.addTask.today;

@@ -9,7 +9,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CreateTaskCalendar extends StatefulWidget {
   final Function(DateTime, DateTime?) onConfirm;
-  final DateTime? initialDate;
+  final DateTime initialDate;
+  final DateTime? initialDateTime;
   final Function(TimeOfDay? time)? onSelectTime;
   final bool showTime;
 
@@ -17,6 +18,7 @@ class CreateTaskCalendar extends StatefulWidget {
     Key? key,
     required this.onConfirm,
     required this.initialDate,
+    required this.initialDateTime,
     this.onSelectTime,
     this.showTime = true,
   }) : super(key: key);
@@ -37,7 +39,13 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
 
   @override
   void initState() {
-    _selectedDay.value = widget.initialDate ?? DateTime.now();
+    _selectedDay.value = widget.initialDate;
+
+    if (widget.initialDateTime != null) {
+      _selectedDatetime.value = TimeOfDay.fromDateTime(widget.initialDateTime!);
+    } else {
+      _selectedDatetime.value = null;
+    }
     super.initState();
   }
 

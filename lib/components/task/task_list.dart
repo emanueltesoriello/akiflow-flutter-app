@@ -179,7 +179,9 @@ class _TaskListState extends State<TaskList> {
       builder: (context) => BlocProvider.value(
         value: editTaskCubit,
         child: PlanModal(
-          statusType: statusType,
+          initialDate: task.date != null ? DateTime.parse(task.date!) : DateTime.now(),
+          initialDatetime: task.datetime != null ? DateTime.parse(task.datetime!).toLocal() : null,
+          initialStatusType: statusType,
           onSelectDate: ({required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
             editTaskCubit.planFor(
               date,

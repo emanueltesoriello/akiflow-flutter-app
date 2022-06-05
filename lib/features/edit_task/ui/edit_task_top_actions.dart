@@ -21,12 +21,14 @@ class EditTaskTopActions extends StatefulWidget {
 class _EditTaskTopActionsState extends State<EditTaskTopActions> {
   @override
   Widget build(BuildContext context) {
+    Task updatedTask = context.watch<EditTaskCubit>().state.updatedTask;
+
     return Container(
       constraints: const BoxConstraints(minHeight: 44),
       child: Row(
         children: [
           PlanForAction(
-            task: context.watch<EditTaskCubit>().state.updatedTask,
+            task: updatedTask,
             onTap: () {
               EditTaskCubit cubit = context.read<EditTaskCubit>();
 
@@ -37,6 +39,9 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 builder: (context) => BlocProvider.value(
                   value: cubit,
                   child: PlanModal(
+                    initialDate: updatedTask.date != null ? DateTime.parse(updatedTask.date!) : DateTime.now(),
+                    initialDatetime:
+                        updatedTask.datetime != null ? DateTime.parse(updatedTask.datetime!).toLocal() : null,
                     onSelectDate: (
                         {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
                       cubit.planFor(date, dateTime: datetime, statusType: statusType);
@@ -53,45 +58,43 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             },
           ),
           const SizedBox(width: 8),
-          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-            builder: (context, state) {
-              Task task = state.updatedTask;
+          Builder(builder: ((context) {
+            Task task = updatedTask;
 
-              String? text;
+            String? text;
 
-              if (task.duration != null && task.duration != 0) {
-                int seconds = task.duration!;
+            if (task.duration != null && task.duration != 0) {
+              int seconds = task.duration!;
 
-                double hours = seconds / 3600;
-                double minutes = (hours - hours.floor()) * 60;
+              double hours = seconds / 3600;
+              double minutes = (hours - hours.floor()) * 60;
 
-                if (minutes.floor() == 0) {
-                  text = '${hours.floor()}h';
-                } else if (hours.floor() == 0) {
-                  text = '${minutes.floor()}m';
-                } else {
-                  text = '${hours.floor()}h ${minutes.floor()}m';
-                }
+              if (minutes.floor() == 0) {
+                text = '${hours.floor()}h';
+              } else if (hours.floor() == 0) {
+                text = '${minutes.floor()}m';
+              } else {
+                text = '${hours.floor()}h ${minutes.floor()}m';
               }
+            }
 
-              return TagBox(
-                icon: "assets/images/icons/_common/hourglass.svg",
-                backgroundColor:
-                    task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-                active: task.duration != null && task.duration != 0,
-                isSquare: task.duration != null && task.duration != 0 ? false : true,
-                text: text,
-                isBig: true,
-                onPressed: () {
-                  context.read<EditTaskCubit>().toggleDuration();
-                },
-              );
-            },
-          ),
+            return TagBox(
+              icon: "assets/images/icons/_common/hourglass.svg",
+              backgroundColor:
+                  task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              active: task.duration != null && task.duration != 0,
+              isSquare: task.duration != null && task.duration != 0 ? false : true,
+              text: text,
+              isBig: true,
+              onPressed: () {
+                context.read<EditTaskCubit>().toggleDuration();
+              },
+            );
+          })),
           const SizedBox(width: 8),
-          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-            builder: (context, state) {
-              bool enabled = state.updatedTask.recurrence != null && state.updatedTask.recurrence!.isNotEmpty;
+          Builder(
+            builder: (context) {
+              bool enabled = updatedTask.recurrence != null && updatedTask.recurrence!.isNotEmpty;
 
               return TagBox(
                 icon: "assets/images/icons/_common/repeat.svg",
@@ -109,7 +112,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                       onChange: (RecurrenceRule? rule) {
                         cubit.setRecurrence(rule);
                       },
-                      selectedRecurrence: state.updatedTask.recurrenceComputed,
+                      selectedRecurrence: updatedTask.recurrenceComputed,
                     ),
                   );
                 },

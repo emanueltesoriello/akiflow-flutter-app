@@ -46,6 +46,8 @@ class BottomTaskActions extends StatelessWidget {
                       showCupertinoModalBottomSheet(
                         context: context,
                         builder: (context) => PlanModal(
+                          initialDate: DateTime.now(),
+                          initialDatetime: null,
                           onSelectDate: (
                               {required DateTime? date,
                               required DateTime? datetime,
@@ -77,7 +79,9 @@ class BottomTaskActions extends StatelessWidget {
                       showCupertinoModalBottomSheet(
                         context: context,
                         builder: (context) => PlanModal(
-                          statusType: TaskStatusType.snoozed,
+                          initialDate: DateTime.now(),
+                          initialDatetime: null,
+                          initialStatusType: TaskStatusType.snoozed,
                           onSelectDate: (
                               {required DateTime? date,
                               required DateTime? datetime,
