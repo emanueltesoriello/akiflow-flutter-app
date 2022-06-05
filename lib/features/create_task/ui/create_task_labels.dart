@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/components/label/label_item.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
-import 'package:mobile/utils/label_ext.dart';
+import 'package:mobile/features/edit_task/ui/labels_list.dart';
 import 'package:models/label/label.dart';
 
 class CreateTaskLabels extends StatelessWidget {
@@ -13,31 +11,14 @@ class CreateTaskLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        BlocBuilder<LabelsCubit, LabelsCubitState>(
-          builder: (context, state) {
-            List<Label> labels = state.labels.toList();
-
-            labels = LabelExt.filter(labels);
-
-            return Container(
-              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(8),
-                itemCount: labels.length,
-                itemBuilder: (context, index) {
-                  Label label = labels[index];
-
-                  return LabelItem(
-                    label,
-                    onTap: () {
-                      context.read<EditTaskCubit>().setLabel(label);
-                    },
-                  );
-                },
-              ),
-            );
-          },
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: LabelsList(
+            showHeaders: false,
+            onSelect: (Label selected) {
+              context.read<EditTaskCubit>().setLabel(selected);
+            },
+          ),
         ),
         Container(
           color: Theme.of(context).dividerColor,

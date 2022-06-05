@@ -7,18 +7,16 @@ import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/components/base/sync_progress.dart';
-import 'package:mobile/components/label/label_item.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/edit_task/ui/labels_list.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
 import 'package:mobile/features/label/ui/create_folder_modal.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/search_modal.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:mobile/features/settings/ui/view/button_selectable.dart';
-import 'package:mobile/features/settings/ui/view/folder_item.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -325,123 +323,11 @@ class SettingsModal extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 7.5),
-                BlocBuilder<SettingsCubit, SettingsCubitState>(
-                  builder: (context, settingsState) {
-                    return BlocBuilder<LabelsCubit, LabelsCubitState>(
-                      builder: (context, labelsState) {
-                        if (labelsState.loading) {
-                          return const Center(
-                            child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-                          );
-                        }
-
-                        List<Label> allItems =
-                            labelsState.labels.where((element) => element.deletedAt == null).toList();
-
-                        List<Label> folders = allItems.where((element) => element.type == "folder").toList();
-                        List<Label> labelsWithoutFolder = allItems
-                            .where((element) =>
-                                element.type != "folder" && element.type != "section" && element.parentId == null)
-                            .toList();
-
-                        Map<Label?, List<Label>> folderLabels = {};
-
-                        // Add to top all the labels which don't have parentId
-                        folderLabels[null] = labelsWithoutFolder;
-
-                        for (var folder in folders) {
-                          List<Label> labels = allItems.where((Label label) => label.parentId == folder.id).toList();
-                          folderLabels[folder] = labels;
-                        }
-
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: folderLabels.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 4),
-                          itemBuilder: (context, index) {
-                            Label? folder = folderLabels.keys.elementAt(index);
-                            List<Label> labels = folderLabels.values.elementAt(index);
-
-                            if (folder == null) {
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: labels.length,
-                                itemBuilder: (context, index) {
-                                  Label label = labels[index];
-
-                                  return LabelItem(
-                                    label,
-                                    onTap: () {
-                                      context.read<MainCubit>().selectLabel(label);
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              );
-                            } else {
-                              List<Label>? labels = folderLabels[folder] ?? [];
-
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: FolderItem(
-                                          folder,
-                                          onTap: () {
-                                            context.read<SettingsCubit>().toggleFolder(folder);
-                                          },
-                                        ),
-                                      ),
-                                      Builder(builder: (context) {
-                                        bool open = settingsState.folderOpen[folder] ?? false;
-
-                                        return SvgPicture.asset(
-                                          open
-                                              ? "assets/images/icons/_common/chevron_up.svg"
-                                              : "assets/images/icons/_common/chevron_down.svg",
-                                          width: 16,
-                                          height: 16,
-                                          color: ColorsExt.grey3(context),
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                  Builder(builder: (context) {
-                                    bool open = settingsState.folderOpen[folder] ?? false;
-
-                                    if (!open) {
-                                      return const SizedBox();
-                                    }
-
-                                    return ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                                      itemCount: labels.length,
-                                      itemBuilder: (context, index) {
-                                        Label label = labels[index];
-
-                                        return LabelItem(
-                                          label,
-                                          onTap: () {
-                                            context.read<MainCubit>().selectLabel(label);
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      },
-                                    );
-                                  })
-                                ],
-                              );
-                            }
-                          },
-                        );
-                      },
-                    );
+                LabelsList(
+                  showHeaders: false,
+                  onSelect: (Label selected) {
+                    context.read<MainCubit>().selectLabel(selected);
+                    Navigator.pop(context);
                   },
                 ),
                 const SizedBox(height: 24),

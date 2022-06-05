@@ -220,6 +220,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           builder: (context) => LabelsModal(
             selectLabel: (Label label) {
               cubit.setLabel(label);
+              Navigator.pop(context);
             },
           ),
         );

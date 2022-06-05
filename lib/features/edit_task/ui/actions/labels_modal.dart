@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/bordered_input_view.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/components/label/label_item.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/label_ext.dart';
+import 'package:mobile/features/edit_task/ui/labels_list.dart';
 import 'package:models/label/label.dart';
 
 class LabelsModal extends StatefulWidget {
@@ -22,8 +16,6 @@ class LabelsModal extends StatefulWidget {
 }
 
 class _LabelsModalState extends State<LabelsModal> {
-  final ValueNotifier<String> _searchNotifier = ValueNotifier<String>('');
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -45,88 +37,13 @@ class _LabelsModalState extends State<LabelsModal> {
               children: [
                 const SizedBox(height: 12),
                 const ScrollChip(),
-                const SizedBox(height: 12),
-                BlocBuilder<LabelsCubit, LabelsCubitState>(
-                  builder: (context, state) {
-                    List<Label> labels = state.labels.toList();
-
-                    labels = LabelExt.filter(labels);
-
-                    return ValueListenableBuilder<String>(
-                        valueListenable: _searchNotifier,
-                        builder: (context, value, child) {
-                          List<Label> labelsFiltered = List.from(labels);
-
-                          labelsFiltered = labelsFiltered.where((label) {
-                            if (label.title == null || label.title!.isEmpty) {
-                              return false;
-                            }
-
-                            return (label.title!).toLowerCase().contains(value.toLowerCase());
-                          }).toList();
-
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: const EdgeInsets.all(16),
-                            itemCount: labelsFiltered.length + 3,
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: Text(
-                                    t.editTask.assignLabel,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorsExt.grey2(context),
-                                    ),
-                                  ),
-                                );
-                              }
-
-                              if (index == 1) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: BorderedInputView(
-                                    hint: t.editTask.createOrSearchALabel,
-                                    onChanged: (value) {
-                                      _searchNotifier.value = value;
-                                    },
-                                  ),
-                                );
-                              }
-
-                              if (index == 2) {
-                                Label noLabel = Label(
-                                  title: t.editTask.noLabel,
-                                );
-
-                                return LabelItem(
-                                  noLabel,
-                                  onTap: () {
-                                    widget.selectLabel(noLabel);
-                                    Navigator.pop(context);
-                                  },
-                                );
-                              }
-
-                              index -= 3;
-
-                              Label label = labelsFiltered[index];
-
-                              return LabelItem(
-                                label,
-                                onTap: () {
-                                  widget.selectLabel(label);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
-                        });
-                  },
-                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: LabelsList(
+                    showHeaders: true,
+                    onSelect: widget.selectLabel,
+                  ),
+                )
               ],
             ),
           ),

@@ -20,7 +20,6 @@ import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
-import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
@@ -56,17 +55,6 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     emit(state.copyWith(appVersion: '$version ($buildNumber)'));
 
-    List<Label> allItems = _labelCubit.state.labels;
-    List<Label> folders = allItems.where((element) => element.type == "folder").toList();
-
-    Map<Label, bool> folderOpen = {};
-
-    for (var folder in folders) {
-      folderOpen[folder] = false;
-    }
-
-    emit(state.copyWith(folderOpen: folderOpen));
-
     List<Account> accounts = await _accountsRepository.get();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
   }
@@ -74,14 +62,6 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   void bugReport() {
     _sentryService.captureException(Exception('Bug report'));
     _dialogService.showMessage("Bug report sent");
-  }
-
-  void toggleFolder(Label folder) {
-    Map<Label, bool> openFolder = Map.from(state.folderOpen);
-
-    openFolder[folder] = !(openFolder[folder] ?? false);
-
-    emit(state.copyWith(folderOpen: openFolder));
   }
 
   Future<void> gmailImportOptions(Account account, GmailSyncMode selectedType) async {
