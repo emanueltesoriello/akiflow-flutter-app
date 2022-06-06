@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -353,13 +352,7 @@ class JustCreatedTaskView extends StatelessWidget {
                 ),
               ),
             ),
-            Builder(builder: (context) {
-              if (Platform.isIOS) {
-                return SizedBox(height: MediaQuery.of(context).padding.bottom + bottomBarHeight + 16);
-              } else {
-                return SizedBox(height: MediaQuery.of(context).padding.bottom + bottomBarHeight + 16);
-              }
-            }),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + bottomBarHeight + 16),
           ],
         );
       },
