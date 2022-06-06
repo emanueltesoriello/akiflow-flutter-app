@@ -41,6 +41,15 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    signingConfigs {
+        release {
+            keyAlias localProperties['keyAlias']
+            keyPassword localProperties['keyPassword']
+            storeFile file(localProperties['storeFile'])
+            storePassword localProperties['storePassword']
+        }
+    }
+
     defaultConfig {
         applicationId "com.akiflow.mobile"
         minSdkVersion localProperties.getProperty('flutter.minSdkVersion')
@@ -53,8 +62,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }
