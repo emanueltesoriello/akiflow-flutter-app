@@ -310,7 +310,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 listId: Nullable(label?.id),
               );
 
-              editTaskCubit.attachTaskAndLabel(task, label: label);
+              editTaskCubit.attachTask(task);
 
               showCupertinoModalBottomSheet(
                 context: context,

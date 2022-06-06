@@ -129,7 +129,7 @@ class _TodayTaskListState extends State<TodayTaskList> {
           TasksCubit tasksCubit = context.read<TasksCubit>();
           SyncCubit syncCubit = context.read<SyncCubit>();
 
-          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTaskAndLabel(task);
+          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
 
           return BlocProvider(
             create: (context) => editTaskCubit,

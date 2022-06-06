@@ -89,7 +89,7 @@ class LabelView extends StatelessWidget {
                       listId: Nullable(labelState.selectedLabel?.id),
                     );
 
-                    editTaskCubit.attachTaskAndLabel(task, label: labelState.selectedLabel);
+                    editTaskCubit.attachTask(task);
 
                     showCupertinoModalBottomSheet(
                       context: context,

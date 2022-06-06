@@ -69,7 +69,7 @@ class TaskRow extends StatelessWidget {
           SyncCubit syncCubit = context.read<SyncCubit>();
           AuthCubit authCubit = context.read<AuthCubit>();
 
-          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTaskAndLabel(task);
+          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
 
           await showCupertinoModalBottomSheet(
             context: context,

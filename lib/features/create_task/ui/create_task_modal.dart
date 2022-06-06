@@ -8,6 +8,7 @@ import 'package:mobile/features/create_task/ui/create_task_duration.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
 import 'package:mobile/features/edit_task/ui/labels_list.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -227,8 +228,16 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           builder: (context, state) {
             Color? background;
 
-            if (state.selectedLabel?.color != null) {
-              background = ColorsExt.getFromName(state.selectedLabel!.color!);
+            List<Label> labels = context.read<LabelsCubit>().state.labels;
+
+            Label? label;
+
+            try {
+              label = labels.firstWhere((label) => state.updatedTask.listId!.contains(label.id!));
+            } catch (_) {}
+
+            if (label?.color != null) {
+              background = ColorsExt.getFromName(label!.color!);
             }
 
             return TagBox(
@@ -236,7 +245,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               active: background != null,
               iconColor: background ?? ColorsExt.grey2(context),
               backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey6(context),
-              text: state.selectedLabel?.title ?? t.addTask.label,
+              text: label?.title ?? t.addTask.label,
               isBig: true,
               onPressed: () {
                 context.read<EditTaskCubit>().toggleLabels();

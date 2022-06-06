@@ -30,8 +30,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState());
 
-  void attachTaskAndLabel(Task task, {Label? label}) {
-    emit(state.copyWith(originalTask: task, updatedTask: task, selectedLabel: label));
+  void attachTask(Task task) {
+    emit(state.copyWith(originalTask: task, updatedTask: task));
   }
 
   void setRead() {
@@ -56,7 +56,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task updated = state.updatedTask.copyWith(
       id: const Uuid().v4(),
       createdAt: TzUtils.toUtcStringIfNotNull(now),
-      listId: Nullable(state.selectedLabel?.id),
       readAt: TzUtils.toUtcStringIfNotNull(now),
       sorting: now.toUtc().millisecondsSinceEpoch,
     );
@@ -129,11 +128,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    emit(state.copyWith(
-      selectedLabel: label,
-      showLabelsList: false,
-      updatedTask: updated,
-    ));
+    emit(state.copyWith(showLabelsList: false, updatedTask: updated));
 
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);
