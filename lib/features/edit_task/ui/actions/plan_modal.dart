@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/features/create_task/ui/create_task_top_action_item.dart';
 import 'package:mobile/style/colors.dart';
@@ -84,6 +86,8 @@ class _PlanModalState extends State<PlanModal> {
                             datetime?.minute ?? 0,
                           );
                         },
+                        defaultTimeHour: context.watch<AuthCubit>().state.user?.settings?["tasks"]
+                            ?["snooze.defaultHour"],
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -112,7 +116,7 @@ class _PlanModalState extends State<PlanModal> {
                 children: [
                   CreateTaskTopActionItem(
                     text: t.addTask.plan,
-                    color: ColorsExt.cyan25(context),
+                    color: ColorsExt.grey5(context),
                     leadingIconAsset: "assets/images/icons/_common/calendar.svg",
                     active: status == TaskStatusType.planned,
                     onPressed: () {
@@ -144,18 +148,25 @@ class _PlanModalState extends State<PlanModal> {
   }
 
   Widget _predefinedDate(BuildContext context) {
-    DateTime now = DateTime.now();
-
     return ValueListenableBuilder(
       valueListenable: _selectedStatus,
       builder: (context, statusType, child) => ValueListenableBuilder(
           valueListenable: _selectedDatetime,
           builder: (context, DateTime? datetime, child) {
-            bool useDateTime = statusType == TaskStatusType.planned && datetime != null;
+            bool useDateTime = statusType == TaskStatusType.snoozed || datetime != null;
 
-            String time = useDateTime
-                ? " - ${DateFormat.Hm().format(DateTime(now.year, now.month, now.day, datetime.hour, datetime.minute))}"
-                : '';
+            String text;
+
+            if (useDateTime) {
+              int defaultTimeHour = context.watch<AuthCubit>().state.user?.settings?["tasks"]?["snooze.defaultHour"];
+
+              datetime ??= DateTime(
+                  _selectedDate.value.year, _selectedDate.value.month, _selectedDate.value.day, defaultTimeHour, 0);
+
+              text = " - ${DateFormat("HH:mm").format(datetime)}";
+            } else {
+              text = "";
+            }
 
             return Column(
               children: [
@@ -164,20 +175,22 @@ class _PlanModalState extends State<PlanModal> {
                   child: Column(children: [
                     Builder(
                       builder: (context) {
+                        DateTime now = DateTime.now();
+
                         if (statusType == TaskStatusType.planned) {
                           return _predefinedDateItem(
                             context,
                             iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(now)}_square.svg",
                             text: t.addTask.today,
-                            trailingText: '${DateFormat("EEE").format(DateTime.now())}$time',
+                            trailingText: '${DateFormat("EEE").format(DateTime.now())}$text',
                             onPressed: () {
+                              DateTime now = DateTime.now();
+
                               if (useDateTime) {
-                                datetime = DateTime(_selectedDate.value.year, _selectedDate.value.month,
-                                    _selectedDate.value.day, datetime!.hour, datetime!.minute);
+                                datetime = DateTime(now.year, now.month, now.day, datetime!.hour, datetime!.minute);
                               }
 
-                              widget.onSelectDate(
-                                  date: _selectedDate.value, datetime: datetime, statusType: TaskStatusType.planned);
+                              widget.onSelectDate(date: now, datetime: datetime, statusType: TaskStatusType.planned);
 
                               Navigator.pop(context);
                             },
@@ -190,7 +203,8 @@ class _PlanModalState extends State<PlanModal> {
                             context,
                             iconAsset: "assets/images/icons/_common/clock.svg",
                             text: t.addTask.laterToday,
-                            trailingText: '${DateFormat("EEE HH:mm").format(laterToday)}$time',
+                            trailingText:
+                                '${DateFormat("EEE").format(laterToday)} - ${DateFormat("HH:mm").format(laterToday)}',
                             onPressed: () {
                               widget.onSelectDate(
                                   date: laterToday, datetime: laterTodayMore3Hours, statusType: TaskStatusType.snoozed);
@@ -201,33 +215,39 @@ class _PlanModalState extends State<PlanModal> {
                       },
                     ),
                     const SizedBox(height: 2),
-                    _predefinedDateItem(
-                      context,
-                      iconAsset:
-                          "assets/images/icons/_common/${DateFormat("dd").format(now.add(const Duration(days: 1)))}_square.svg",
-                      text: t.addTask.tomorrow,
-                      trailingText: '${DateFormat("EEE").format(now.add(const Duration(days: 1)))}$time',
-                      onPressed: () {
-                        DateTime tmw = now.add(const Duration(days: 1));
+                    Builder(builder: (context) {
+                      DateTime now = DateTime.now();
 
-                        if (useDateTime) {
-                          datetime = DateTime(tmw.year, tmw.month, tmw.day, datetime!.hour, datetime!.minute);
-                        }
+                      return _predefinedDateItem(
+                        context,
+                        iconAsset:
+                            "assets/images/icons/_common/${DateFormat("dd").format(now.add(const Duration(days: 1)))}_square.svg",
+                        text: t.addTask.tomorrow,
+                        trailingText: '${DateFormat("EEE").format(now.add(const Duration(days: 1)))}$text',
+                        onPressed: () {
+                          DateTime tmw = now.add(const Duration(days: 1));
 
-                        widget.onSelectDate(date: tmw, datetime: datetime, statusType: _selectedStatus.value);
+                          if (useDateTime) {
+                            datetime = DateTime(tmw.year, tmw.month, tmw.day, datetime!.hour, datetime!.minute);
+                          }
 
-                        Navigator.pop(context);
-                      },
-                    ),
+                          widget.onSelectDate(date: tmw, datetime: datetime, statusType: _selectedStatus.value);
+
+                          Navigator.pop(context);
+                        },
+                      );
+                    }),
                     const SizedBox(height: 2),
                     Builder(builder: (context) {
+                      DateTime now = DateTime.now();
+
                       DateTime nextMonday = now.add(Duration(days: 7 - now.weekday + 1));
 
                       return _predefinedDateItem(
                         context,
                         iconAsset: "assets/images/icons/_common/${DateFormat("dd").format(nextMonday)}_square.svg",
                         text: t.addTask.nextWeek,
-                        trailingText: '${DateFormat("EEE").format(nextMonday)}$time',
+                        trailingText: '${DateFormat("EEE").format(nextMonday)}$text',
                         onPressed: () {
                           if (useDateTime) {
                             datetime = DateTime(

@@ -57,8 +57,8 @@ class TagBox extends StatelessWidget {
                   SvgPicture.asset(
                     icon!,
                     color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey3(context),
-                    width: iconSize ?? (isBig ? 22 : 14),
-                    height: iconSize ?? (isBig ? 22 : 14),
+                    width: iconSize ?? (isBig ? 20 : 14),
+                    height: iconSize ?? (isBig ? 20 : 14),
                   ),
                 ],
               );

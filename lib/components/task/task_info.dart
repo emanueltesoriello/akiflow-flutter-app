@@ -77,7 +77,7 @@ class TaskInfo extends StatelessWidget {
         if (task.isYesterday) {
           text = t.task.yesterday;
         } else {
-          text = DateFormat("EEE, d MMM").format(parsed);
+          text = DateFormat("d MMM").format(parsed);
         }
       }
 
@@ -107,18 +107,9 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget plannedInfo(BuildContext context) {
+    Color color = ColorsExt.grey5(context);
+
     String text;
-    Color color;
-
-    TaskStatusType? status = TaskStatusTypeExt.fromId(task.status) ?? TaskStatusType.inbox;
-
-    if ((status == TaskStatusType.inbox || status == TaskStatusType.planned) && status != TaskStatusType.someday) {
-      color = ColorsExt.cyan25(context);
-    } else if (status == TaskStatusType.completed) {
-      color = ColorsExt.green20(context);
-    } else {
-      color = ColorsExt.pink30(context);
-    }
 
     if (task.date != null) {
       DateTime parsed = DateTime.parse(task.date!);
@@ -128,7 +119,7 @@ class TaskInfo extends StatelessWidget {
       } else if (task.isTomorrow) {
         text = t.addTask.tmw;
       } else {
-        text = DateFormat("EEE, d MMM").format(parsed);
+        text = DateFormat("d MMM").format(parsed);
       }
     } else if (task.status == TaskStatusType.someday.id) {
       text = t.task.someday;

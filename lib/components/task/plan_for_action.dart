@@ -3,6 +3,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
@@ -19,34 +20,42 @@ class PlanForAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? leadingIconAsset;
-    String text;
-    Color color;
+    String? text;
+    Color? color;
 
-    TaskStatusType? status = TaskStatusTypeExt.fromId(task.status) ?? TaskStatusType.inbox;
-
-    if ((status == TaskStatusType.inbox || status == TaskStatusType.planned) && status != TaskStatusType.someday) {
+    if (task.statusType == TaskStatusType.inbox) {
+      leadingIconAsset = "assets/images/icons/_common/tray.svg";
       color = ColorsExt.cyan25(context);
-      leadingIconAsset = "assets/images/icons/_common/calendar.svg";
-    } else if (status == TaskStatusType.completed) {
-      color = ColorsExt.green20(context);
-    } else {
-      color = ColorsExt.pink30(context);
-      leadingIconAsset = "assets/images/icons/_common/clock.svg";
-    }
-
-    if (status != TaskStatusType.completed) {
+      text = t.bottomBar.inbox;
+    } else if (task.statusType == TaskStatusType.someday) {
+      leadingIconAsset = "assets/images/icons/_common/archivebox.svg";
+      color = ColorsExt.akiflow10(context);
+      text = task.statusType!.name.capitalizeFirstCharacter();
+    } else if (task.statusType == TaskStatusType.snoozed) {
       if (task.date != null) {
         DateTime parsed = DateTime.parse(task.date!);
 
-        if (task.isToday) {
-          text = t.addTask.today;
-        } else if (task.isTomorrow) {
-          text = t.addTask.tmw;
+        if (task.isYesterday) {
+          text = t.task.yesterday;
         } else {
           text = DateFormat("EEE, d MMM").format(parsed);
         }
-      } else if (task.status == TaskStatusType.someday.id) {
-        text = t.task.someday;
+      }
+
+      if (task.datetime != null) {
+        text = task.datetimeFormatted;
+      }
+
+      leadingIconAsset = "assets/images/icons/_common/clock.svg";
+      color = ColorsExt.akiflow10(context);
+      text = text ?? t.task.snoozed;
+    } else if (task.statusType == TaskStatusType.planned) {
+      leadingIconAsset = "assets/images/icons/_common/calendar.svg";
+      color = ColorsExt.grey5(context);
+
+      if (task.date != null) {
+        DateTime parsed = DateTime.parse(task.date!);
+        text = DateFormat("EEE, d MMM").format(parsed);
       } else {
         text = t.bottomBar.inbox;
       }
@@ -55,8 +64,10 @@ class PlanForAction extends StatelessWidget {
         DateTime parsed = DateTime.parse(task.datetime!).toLocal();
         text = "$text ${DateFormat("HH:mm").format(parsed)}";
       }
-    } else {
-      text = task.doneAtFormatted;
+    } else if (task.date != null && !task.isOverdue) {
+      color = ColorsExt.cyan25(context);
+      DateTime parsed = DateTime.parse(task.date!);
+      text = DateFormat("EEE, d MMM").format(parsed);
     }
 
     return TagBox(

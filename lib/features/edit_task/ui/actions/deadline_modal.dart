@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -73,6 +75,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
                     widget.onSelectDate(datetime ?? date);
                   },
                   showTime: false,
+                  defaultTimeHour: context.watch<AuthCubit>().state.user?.settings?["tasks"]?["snooze.defaultHour"],
                 ),
                 const Separator(),
                 const SizedBox(height: 50),

@@ -13,6 +13,7 @@ class CreateTaskCalendar extends StatefulWidget {
   final DateTime? initialDateTime;
   final Function(TimeOfDay? time)? onSelectTime;
   final bool showTime;
+  final int defaultTimeHour;
 
   const CreateTaskCalendar({
     Key? key,
@@ -21,6 +22,7 @@ class CreateTaskCalendar extends StatefulWidget {
     required this.initialDateTime,
     this.onSelectTime,
     this.showTime = true,
+    required this.defaultTimeHour,
   }) : super(key: key);
 
   @override
@@ -188,7 +190,8 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                         Expanded(
                           child: InkWell(
                             onTap: () async {
-                              TimeOfDay time = TimeOfDay.fromDateTime(selectedDate);
+                              TimeOfDay time =
+                                  _selectedDatetime.value ?? TimeOfDay(hour: widget.defaultTimeHour, minute: 0);
                               _selectedDatetime.value = await showTimePicker(context: context, initialTime: time);
 
                               if (widget.onSelectTime != null) {
