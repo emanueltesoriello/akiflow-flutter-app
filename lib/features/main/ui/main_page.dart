@@ -101,6 +101,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         if (TaskExt.isSelectMode(context.read<TasksCubit>().state)) {
           context.read<TasksCubit>().clearSelected();
           return false;
+        } else if (context.read<MainCubit>().state.selectedLabel != null) {
+          context.read<MainCubit>().changeHomeView(context.read<MainCubit>().state.lastHomeViewType);
+          return false;
         } else {
           if (ModalRoute.of(context)?.settings.name != "/") {
             return false;

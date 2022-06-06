@@ -30,6 +30,7 @@ class MainCubit extends Cubit<MainCubitState> {
   }
 
   void selectLabel(Label label) {
+    emit(state.copyWith(lastHomeViewType: state.homeViewType));
     emit(state.copyWith(selectedLabel: Nullable(label), homeViewType: HomeViewType.label));
     _labelCubitController.add(label);
   }
