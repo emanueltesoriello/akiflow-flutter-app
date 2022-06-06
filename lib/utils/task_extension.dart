@@ -272,16 +272,18 @@ extension TaskExt on Task {
 
     if (datetime != null) {
       prefix = "";
-      formatted = DateFormat.yMMMd().format(DateTime.parse(datetime!).toLocal());
+      formatted = DateFormat("HH:mm").format(DateTime.parse(datetime!).toLocal());
     } else if (date != null) {
       prefix = "";
       formatted = t.task.today;
     }
 
-    if (isTomorrow) {
+    if (isToday) {
+      prefix = t.addTask.today;
+    } else if (isTomorrow) {
       prefix = t.addTask.tmw;
     } else {
-      prefix = "";
+      prefix = DateFormat("dd MMM").format(DateTime.parse(datetime!).toLocal());
     }
 
     if (formatted != null) {

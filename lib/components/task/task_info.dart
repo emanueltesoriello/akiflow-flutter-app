@@ -79,7 +79,9 @@ class TaskInfo extends StatelessWidget {
         } else {
           text = DateFormat("EEE, d MMM").format(parsed);
         }
-      } else if (task.datetime != null) {
+      }
+
+      if (task.datetime != null) {
         text = task.datetimeFormatted;
       }
 

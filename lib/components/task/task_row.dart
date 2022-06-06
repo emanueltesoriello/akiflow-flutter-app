@@ -118,15 +118,15 @@ class TaskRow extends StatelessWidget {
                     builder: (context) {
                       Color? color;
 
+                      if (task.readAt == null) {
+                        color = ColorsExt.cyan(context);
+                      }
+
                       try {
                         if (task.content["expiredSnooze"] == true) {
                           color = ColorsExt.pink(context);
                         }
                       } catch (_) {}
-
-                      if (task.readAt == null) {
-                        color = ColorsExt.cyan(context);
-                      }
 
                       if (color == null) {
                         return const SizedBox();
