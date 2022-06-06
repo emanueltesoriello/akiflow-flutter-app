@@ -156,6 +156,7 @@ class _TodayTaskListState extends State<TodayTaskList> {
                     selectLabel: (Label label) {
                       editTaskCubit.setLabel(label, forceUpdate: true);
                     },
+                    initialSelectedListId: task.listId,
                   ),
                 );
               },

@@ -13,11 +13,13 @@ import 'package:models/label/label.dart';
 class LabelsList extends StatefulWidget {
   final Function(Label selected) onSelect;
   final bool showHeaders;
+  final String? initialSelectedListId;
 
   const LabelsList({
     Key? key,
     required this.showHeaders,
     required this.onSelect,
+    this.initialSelectedListId,
   }) : super(key: key);
 
   @override
@@ -108,10 +110,15 @@ class _LabelsListState extends State<LabelsList> {
       folderLabels[folder] = labelsForFolder;
     }
 
+    int count = folderLabels.length;
+
+    if (widget.showHeaders) count += 2;
+    if (widget.initialSelectedListId != null) count += 1;
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: widget.showHeaders ? folderLabels.length + 3 : folderLabels.length,
+      itemCount: count,
       separatorBuilder: (context, index) => const SizedBox(height: 4),
       itemBuilder: (context, index) {
         if (widget.showHeaders) {
@@ -141,7 +148,15 @@ class _LabelsListState extends State<LabelsList> {
             );
           }
 
-          if (index == 2) {
+          index -= 2;
+        }
+
+        if (widget.initialSelectedListId != null) {
+          if (index == 0) {
+            if (widget.initialSelectedListId == null) {
+              return const SizedBox();
+            }
+
             Label noLabel = Label(
               title: t.editTask.noLabel,
             );
@@ -154,7 +169,7 @@ class _LabelsListState extends State<LabelsList> {
             );
           }
 
-          index -= 3;
+          index -= 1;
         }
 
         Label? folder = folderLabels.keys.elementAt(index);

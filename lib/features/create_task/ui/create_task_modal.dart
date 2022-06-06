@@ -5,12 +5,13 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/components/task/plan_for_action.dart';
 import 'package:mobile/features/create_task/ui/create_task_duration.dart';
-import 'package:mobile/features/create_task/ui/create_task_labels.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
+import 'package:mobile/features/edit_task/ui/labels_list.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
 class CreateTaskModal extends StatefulWidget {
@@ -70,7 +71,25 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                       BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                         builder: (context, state) {
                           if (state.showLabelsList) {
-                            return const CreateTaskLabels();
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: LabelsList(
+                                    showHeaders: false,
+                                    onSelect: (Label selected) {
+                                      context.read<EditTaskCubit>().setLabel(selected);
+                                    },
+                                    initialSelectedListId: state.updatedTask.listId,
+                                  ),
+                                ),
+                                Container(
+                                  color: Theme.of(context).dividerColor,
+                                  width: double.infinity,
+                                  height: 1,
+                                ),
+                              ],
+                            );
                           } else {
                             return const SizedBox();
                           }
