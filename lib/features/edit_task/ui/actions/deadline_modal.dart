@@ -8,6 +8,7 @@ import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:models/extensions/user_ext.dart';
 
 class DeadlineModal extends StatefulWidget {
   final DateTime? initialDate;
@@ -75,7 +76,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
                     widget.onSelectDate(datetime ?? date);
                   },
                   showTime: false,
-                  defaultTimeHour: context.watch<AuthCubit>().state.user?.settings?["tasks"]?["snooze.defaultHour"],
+                  defaultTimeHour: context.watch<AuthCubit>().state.user!.defaultHour,
                 ),
                 const Separator(),
                 const SizedBox(height: 50),

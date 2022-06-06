@@ -8,6 +8,7 @@ import 'package:mobile/features/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/features/create_task/ui/create_task_top_action_item.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
+import 'package:models/extensions/user_ext.dart';
 
 class PlanModal extends StatefulWidget {
   final Function({required DateTime? date, required DateTime? datetime, required TaskStatusType statusType})
@@ -73,6 +74,12 @@ class _PlanModalState extends State<PlanModal> {
                         initialDate: _selectedDate.value,
                         initialDateTime: _selectedDatetime.value,
                         onConfirm: (DateTime date, DateTime? datetime) {
+                          if (_selectedStatus.value == TaskStatusType.snoozed && _selectedDatetime.value == null) {
+                            int defaultHour = context.read<AuthCubit>().state.user!.defaultHour;
+
+                            datetime = DateTime(date.year, date.month, date.day, defaultHour, 0);
+                          }
+
                           _selectedDate.value = date;
                           _selectedDatetime.value = datetime;
                           widget.onSelectDate(date: date, datetime: datetime, statusType: _selectedStatus.value);
@@ -86,8 +93,7 @@ class _PlanModalState extends State<PlanModal> {
                             datetime?.minute ?? 0,
                           );
                         },
-                        defaultTimeHour: context.watch<AuthCubit>().state.user?.settings?["tasks"]
-                            ?["snooze.defaultHour"],
+                        defaultTimeHour: context.watch<AuthCubit>().state.user!.defaultHour,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -158,7 +164,7 @@ class _PlanModalState extends State<PlanModal> {
             String text;
 
             if (useDateTime) {
-              int defaultTimeHour = context.watch<AuthCubit>().state.user?.settings?["tasks"]?["snooze.defaultHour"];
+              int defaultTimeHour = context.watch<AuthCubit>().state.user!.defaultHour;
 
               datetime ??= DateTime(
                   _selectedDate.value.year, _selectedDate.value.month, _selectedDate.value.day, defaultTimeHour, 0);
