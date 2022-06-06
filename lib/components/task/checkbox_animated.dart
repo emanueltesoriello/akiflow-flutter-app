@@ -225,26 +225,38 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
         color = completed ? ColorsExt.green(context) : ColorsExt.grey3(context);
     }
 
+    String firstChildIconAsset;
+    String secondChildIconAsset;
+
+    Color? firstChildColor;
+    Color? secondChildColor;
+
+    if (widget.task.isCompletedComputed) {
+      firstChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+      secondChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
+
+      firstChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
+      secondChildColor = color.withOpacity(_animationTopOpacity.value);
+    } else {
+      if (widget.task.dailyGoal != null && widget.task.dailyGoal == 1) {
+        firstChildIconAsset = "assets/images/icons/_common/Check-empty-goal.svg";
+      } else {
+        firstChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
+        firstChildColor = color.withOpacity(_animationTopOpacity.value);
+      }
+
+      secondChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
+      secondChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+    }
+
     return AnimatedBuilder(
       animation: _animationForegroundColor,
       builder: (BuildContext context, Widget? child) {
         return AnimatedBuilder(
           animation: _animationTopOpacity,
           builder: (BuildContext context, Widget? child) => AnimatedCrossFade(
-            firstChild: SvgPicture.asset(
-              widget.task.isCompletedComputed
-                  ? "assets/images/icons/_common/Check-done.svg"
-                  : "assets/images/icons/_common/Check-empty.svg",
-              color: color.withOpacity(_animationTopOpacity.value),
-            ),
-            secondChild: SvgPicture.asset(
-              !widget.task.isCompletedComputed
-                  ? "assets/images/icons/_common/Check-done.svg"
-                  : "assets/images/icons/_common/Check-empty.svg",
-              color: !widget.task.isCompletedComputed
-                  ? ColorsExt.green(context).withOpacity(_animationTopOpacity.value)
-                  : color.withOpacity(_animationTopOpacity.value),
-            ),
+            firstChild: SvgPicture.asset(firstChildIconAsset, color: firstChildColor),
+            secondChild: SvgPicture.asset(secondChildIconAsset, color: secondChildColor),
             crossFadeState: _crossFadeState,
             duration: const Duration(milliseconds: 200),
           ),
