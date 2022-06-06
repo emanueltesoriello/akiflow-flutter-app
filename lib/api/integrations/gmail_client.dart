@@ -1,44 +1,54 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' as io;
 
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 
-class GmailClient extends BaseClient {
+class GmailClient extends http.BaseClient {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
-  final Client _inner;
+  late final IOClient _httpClient;
+  final io.HttpClient _ioHttpClient;
+
   AccountToken _accountToken;
   Account account;
 
-  GmailClient(this._accountToken, {required this.account}) : _inner = Client();
+  GmailClient(this._accountToken, {required this.account}) : _ioHttpClient = io.HttpClient() {
+    _ioHttpClient.badCertificateCallback = (io.X509Certificate cert, String host, int port) {
+      print("*** ignoring bad certificate ***");
+      return host == "googleapis.com";
+    };
+
+    _httpClient = IOClient(_ioHttpClient);
+  }
 
   @override
-  Future<StreamedResponse> send(BaseRequest request) async {
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
     request.headers['Authorization'] = "Bearer ${_accountToken.accessToken ?? ''}";
 
-    StreamedResponse streamedResponse = await _inner.send(request);
+    http.StreamedResponse streamedResponse = await _httpClient.send(request);
 
     if (streamedResponse.statusCode == 401 || streamedResponse.statusCode == 403) {
       await refreshToken();
 
-      BaseRequest newRequest = _buildNewRequest(request);
+      http.BaseRequest newRequest = _buildNewRequest(request);
 
-      return await _inner.send(newRequest);
+      return await _httpClient.send(newRequest);
     } else {
       return streamedResponse;
     }
   }
 
-  BaseRequest _buildNewRequest(BaseRequest originalRequest) {
+  http.BaseRequest _buildNewRequest(http.BaseRequest originalRequest) {
     originalRequest.headers['Authorization'] = "Bearer ${_accountToken.accessToken ?? ''}";
 
-    if (originalRequest is MultipartRequest) {
-      return MultipartRequest(originalRequest.method, originalRequest.url)
+    if (originalRequest is http.MultipartRequest) {
+      return http.MultipartRequest(originalRequest.method, originalRequest.url)
         ..fields.addAll(originalRequest.fields)
         ..files.addAll(originalRequest.files)
         ..headers.addAll(originalRequest.headers)
@@ -47,8 +57,8 @@ class GmailClient extends BaseClient {
         ..maxRedirects = (originalRequest).maxRedirects
         ..contentLength = (originalRequest).contentLength;
     } else {
-      return Request(originalRequest.method, originalRequest.url)
-        ..encoding = (originalRequest as Request).encoding
+      return http.Request(originalRequest.method, originalRequest.url)
+        ..encoding = (originalRequest as http.Request).encoding
         ..body = (originalRequest).body
         ..headers.addAll(originalRequest.headers)
         ..persistentConnection = (originalRequest).persistentConnection
@@ -59,8 +69,8 @@ class GmailClient extends BaseClient {
   }
 
   Future<void> refreshToken() async {
-    Response response = await _inner.post(Uri.parse('https://oauth2.googleapis.com/token'), body: {
-      "client_id": Platform.isIOS ? Config.googleCredentials.clientIdiOS : Config.googleCredentials.clientIdAndroid,
+    http.Response response = await _httpClient.post(Uri.parse('https://oauth2.googleapis.com/token'), body: {
+      "client_id": io.Platform.isIOS ? Config.googleCredentials.clientIdiOS : Config.googleCredentials.clientIdAndroid,
       "grant_type": 'refresh_token',
       "refresh_token": _accountToken.refreshToken,
     });
