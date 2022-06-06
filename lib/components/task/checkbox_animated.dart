@@ -222,7 +222,7 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
         color = ColorsExt.green(context);
         break;
       default:
-        color = completed ? ColorsExt.grey3(context) : ColorsExt.grey3(context);
+        color = completed ? ColorsExt.green(context) : ColorsExt.grey3(context);
     }
 
     return AnimatedBuilder(

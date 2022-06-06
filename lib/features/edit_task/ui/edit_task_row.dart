@@ -149,7 +149,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
           width: 20,
           height: 20,
-          color: completed ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+          color: completed ? ColorsExt.green(context) : ColorsExt.grey3(context),
         );
       }),
     );
