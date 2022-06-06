@@ -82,7 +82,10 @@ class TaskRow extends StatelessWidget {
           Task updated = editTaskCubit.state.updatedTask;
           Task original = editTaskCubit.state.originalTask;
 
-          if (updated == original) {
+          Task updatedWithoutReadAt = updated.copyWith(readAt: "");
+          Task originalWithoutReadAt = original.copyWith(readAt: "");
+
+          if (updatedWithoutReadAt == originalWithoutReadAt) {
             return;
           }
 
