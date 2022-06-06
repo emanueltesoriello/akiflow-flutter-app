@@ -276,13 +276,7 @@ class UndoBottomView extends StatelessWidget {
                 ),
               ),
             ),
-            Builder(builder: (context) {
-              if (Platform.isIOS) {
-                return SizedBox(height: MediaQuery.of(context).padding.top + kBottomNavigationBarHeight + 10);
-              } else {
-                return SizedBox(height: MediaQuery.of(context).viewInsets.bottom + kBottomNavigationBarHeight + 16);
-              }
-            }),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + bottomBarHeight + 16),
           ],
         );
       },
