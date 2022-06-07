@@ -26,8 +26,6 @@ class _View extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
-    tasks = [];
-
     return BlocBuilder<InboxCubit, InboxCubitState>(
       builder: (context, state) {
         if (tasks.isEmpty) {

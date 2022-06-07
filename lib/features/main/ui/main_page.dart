@@ -389,7 +389,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   children: [
                     NavItem(
                       active: false,
-                      activeIconAsset: "assets/images/icons/_common/line_horizontal_3.svg",
+                      activeIconAsset: "assets/images/icons/_common/menu.svg",
                       title: t.bottomBar.menu,
                       topPadding: topPadding,
                     ),
@@ -481,9 +481,12 @@ class NavItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                        height: 40,
                         width: 40,
-                        child: Center(child: SvgPicture.asset(activeIconAsset, width: 30, height: 30, color: color))),
+                        height: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: SvgPicture.asset(activeIconAsset, color: color),
+                        )),
                     Flexible(
                       child: Text(
                         title,
