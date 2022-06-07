@@ -155,6 +155,7 @@ class _TaskListState extends State<TaskList> {
                             selectLabel: (Label label) {
                               editTaskCubit.setLabel(label, forceUpdate: true);
                             },
+                            showNoLabel: true,
                           ),
                         );
                       },

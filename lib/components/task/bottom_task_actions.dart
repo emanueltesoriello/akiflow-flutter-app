@@ -119,7 +119,9 @@ class BottomTaskActions extends StatelessWidget {
                         builder: (context) => LabelsModal(
                           selectLabel: (Label label) {
                             cubit.assignLabel(label);
+                            Navigator.pop(context);
                           },
+                          showNoLabel: true,
                         ),
                       );
                     },

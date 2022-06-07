@@ -5,12 +5,12 @@ import 'package:models/label/label.dart';
 
 class LabelsModal extends StatefulWidget {
   final Function(Label) selectLabel;
-  final String? initialSelectedListId;
+  final bool showNoLabel;
 
   const LabelsModal({
     Key? key,
     required this.selectLabel,
-    this.initialSelectedListId,
+    required this.showNoLabel,
   }) : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class _LabelsModalState extends State<LabelsModal> {
                   child: LabelsList(
                     showHeaders: true,
                     onSelect: widget.selectLabel,
-                    initialSelectedListId: widget.initialSelectedListId,
+                    showNoLabel: widget.showNoLabel,
                   ),
                 )
               ],

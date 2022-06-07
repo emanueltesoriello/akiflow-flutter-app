@@ -27,6 +27,16 @@ class LabelItem extends StatelessWidget {
       iconForeground = ColorsExt.grey2(context);
     }
 
+    String iconAsset;
+
+    if (label.id != null) {
+      iconAsset = "assets/images/icons/_common/number.svg";
+    } else {
+      iconAsset = "assets/images/icons/_common/slash_circle.svg";
+      iconBackground = Colors.transparent;
+      iconForeground = ColorsExt.grey3(context);
+    }
+
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -42,12 +52,7 @@ class LabelItem extends StatelessWidget {
                   color: iconBackground,
                 ),
                 child: Center(
-                  child: SvgPicture.asset(
-                    "assets/images/icons/_common/number.svg",
-                    width: 16,
-                    height: 16,
-                    color: iconForeground,
-                  ),
+                  child: SvgPicture.asset(iconAsset, width: 16, height: 16, color: iconForeground),
                 ),
               ),
               _text(context),
@@ -70,7 +75,7 @@ class LabelItem extends StatelessWidget {
           label.title!,
           style: TextStyle(
             fontSize: 17,
-            color: ColorsExt.grey2(context),
+            color: label.id != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
           ),
         ),
         Builder(builder: (context) {

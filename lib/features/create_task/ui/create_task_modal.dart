@@ -81,7 +81,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                     onSelect: (Label selected) {
                                       context.read<EditTaskCubit>().setLabel(selected);
                                     },
-                                    initialSelectedListId: state.updatedTask.listId,
+                                    showNoLabel: state.updatedTask.listId != null,
                                   ),
                                 ),
                                 Container(

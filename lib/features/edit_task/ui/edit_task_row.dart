@@ -222,7 +222,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
               cubit.setLabel(label);
               Navigator.pop(context);
             },
-            initialSelectedListId: task.listId,
+            showNoLabel: task.listId != null,
           ),
         );
       },

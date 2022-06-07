@@ -329,6 +329,7 @@ class SettingsModal extends StatelessWidget {
                 const SizedBox(height: 7.5),
                 LabelsList(
                   showHeaders: false,
+                  showNoLabel: false,
                   onSelect: (Label selected) {
                     context.read<MainCubit>().selectLabel(selected);
                     Navigator.pop(context);

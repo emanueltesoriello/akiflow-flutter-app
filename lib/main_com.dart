@@ -110,11 +110,7 @@ class Application extends StatelessWidget {
         ),
         BlocProvider<SettingsCubit>(
           lazy: false,
-          create: (BuildContext context) => SettingsCubit(
-            context.read<LabelsCubit>(),
-            locator<AuthCubit>(),
-            locator<SyncCubit>(),
-          ),
+          create: (BuildContext context) => SettingsCubit(locator<AuthCubit>(), locator<SyncCubit>()),
         ),
         BlocProvider<TodayCubit>(
           lazy: false,

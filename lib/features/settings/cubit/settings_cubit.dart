@@ -9,7 +9,6 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/exceptions/database_exception.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
@@ -34,11 +33,10 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   final DialogService _dialogService = locator<DialogService>();
   final GoogleApi _googleApi = locator<GoogleApi>();
 
-  final LabelsCubit _labelCubit;
   final AuthCubit _authCubit;
   late final SyncCubit _syncCubit;
 
-  SettingsCubit(this._labelCubit, this._authCubit, this._syncCubit) : super(const SettingsCubitState()) {
+  SettingsCubit(this._authCubit, this._syncCubit) : super(const SettingsCubitState()) {
     _syncCubit.syncCompletedStream.listen((_) async {
       List<Account> accounts = await _accountsRepository.get();
       emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
