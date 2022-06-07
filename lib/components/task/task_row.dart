@@ -246,37 +246,25 @@ class TaskRow extends StatelessWidget {
   Widget _radio(BuildContext context) {
     bool selected = task.selected ?? false;
 
-    Color color;
-
-    switch (task.priority) {
-      case 1:
-        color = ColorsExt.red(context);
-        break;
-      case 2:
-        color = ColorsExt.yellow(context);
-        break;
-      case 3:
-        color = ColorsExt.green(context);
-        break;
-      default:
-        color = ColorsExt.grey3(context);
-    }
+    Color color = selected ? ColorsExt.akiflow(context) : ColorsExt.grey3(context);
 
     return InkWell(
       overlayColor: MaterialStateProperty.all(Colors.transparent),
       onTap: selectTask,
       child: Container(
         height: double.infinity,
-        padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+        padding: const EdgeInsets.fromLTRB(2.15, 0, 2.15, 0),
         child: Align(
           alignment: Alignment.topCenter,
-          child: SvgPicture.asset(
-            selected
-                ? "assets/images/icons/_common/largecircle_fill_circle.svg"
-                : "assets/images/icons/_common/circle.svg",
-            width: 20,
-            height: 20,
-            color: color,
+          child: SizedBox(
+            width: 21.67,
+            height: 21.67,
+            child: SvgPicture.asset(
+              selected
+                  ? "assets/images/icons/_common/largecircle_fill_circle_2.svg"
+                  : "assets/images/icons/_common/circle.svg",
+              color: color,
+            ),
           ),
         ),
       ),
