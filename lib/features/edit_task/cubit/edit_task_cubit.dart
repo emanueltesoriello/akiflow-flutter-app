@@ -244,22 +244,27 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   Future<Task> _addTaskWithRecurrence(Task updated) async {
     RecurrenceRule rule = RecurrenceRule.fromString((updated.recurrence ?? []).join(";"));
 
-    List<DateTime> dates = rule.getAllInstances(start: DateTime.now().toUtc());
-
     List<Task> tasks = [];
 
     String recurringId = const Uuid().v4();
     String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
+    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now();
+
     updated = updated.copyWith(
+      date: Nullable(taskDate.toIso8601String()),
       recurrence: Nullable([rule.toString()]),
       recurringId: recurringId,
       updatedAt: Nullable(now),
     );
 
+    if (updated.status != TaskStatusType.planned.id) {
+      updated = updated.copyWith(status: Nullable(TaskStatusType.planned.id));
+    }
+
     await _tasksRepository.updateById(updated.id, data: updated);
 
-    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now();
+    List<DateTime> dates = rule.getAllInstances(start: DateTime.now().toUtc());
 
     for (DateTime date in dates) {
       if (date.isBefore(taskDate) || (isSameDay(date, taskDate))) {
