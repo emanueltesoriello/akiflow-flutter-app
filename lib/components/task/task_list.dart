@@ -173,7 +173,7 @@ class _TaskListState extends State<TaskList> {
     );
   }
 
-  void _showPlan(BuildContext context, Task task, TaskStatusType statusType, EditTaskCubit editTaskCubit) {
+  void _showPlan(BuildContext context, Task task, TaskStatusType initialHeaderStatusType, EditTaskCubit editTaskCubit) {
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => BlocProvider.value(
@@ -181,7 +181,8 @@ class _TaskListState extends State<TaskList> {
         child: PlanModal(
           initialDate: task.date != null ? DateTime.parse(task.date!) : DateTime.now(),
           initialDatetime: task.datetime != null ? DateTime.parse(task.datetime!).toLocal() : null,
-          initialStatusType: statusType,
+          taskStatusType: task.statusType ?? TaskStatusType.planned,
+          initialHeaderStatusType: initialHeaderStatusType,
           onSelectDate: ({required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
             editTaskCubit.planFor(
               date,

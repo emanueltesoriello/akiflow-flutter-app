@@ -48,6 +48,7 @@ class BottomTaskActions extends StatelessWidget {
                         builder: (context) => PlanModal(
                           initialDate: DateTime.now(),
                           initialDatetime: null,
+                          taskStatusType: TaskStatusType.planned,
                           onSelectDate: (
                               {required DateTime? date,
                               required DateTime? datetime,
@@ -81,7 +82,8 @@ class BottomTaskActions extends StatelessWidget {
                         builder: (context) => PlanModal(
                           initialDate: DateTime.now(),
                           initialDatetime: null,
-                          initialStatusType: TaskStatusType.snoozed,
+                          initialHeaderStatusType: TaskStatusType.snoozed,
+                          taskStatusType: TaskStatusType.planned,
                           onSelectDate: (
                               {required DateTime? date,
                               required DateTime? datetime,

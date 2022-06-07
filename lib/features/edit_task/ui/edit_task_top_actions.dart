@@ -42,6 +42,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                     initialDate: updatedTask.date != null ? DateTime.parse(updatedTask.date!) : DateTime.now(),
                     initialDatetime:
                         updatedTask.datetime != null ? DateTime.parse(updatedTask.datetime!).toLocal() : null,
+                    taskStatusType: updatedTask.statusType ?? TaskStatusType.planned,
                     onSelectDate: (
                         {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
                       cubit.planFor(date, dateTime: datetime, statusType: statusType);

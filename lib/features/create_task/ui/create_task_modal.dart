@@ -173,6 +173,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                 initialDatetime: editTaskCubit.state.updatedTask.datetime != null
                     ? DateTime.parse(editTaskCubit.state.updatedTask.datetime!)
                     : null,
+                taskStatusType: editTaskCubit.state.updatedTask.statusType ?? TaskStatusType.inbox,
                 onSelectDate: (
                     {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
                   editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);

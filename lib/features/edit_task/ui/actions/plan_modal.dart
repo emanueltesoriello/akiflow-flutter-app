@@ -15,7 +15,8 @@ class PlanModal extends StatefulWidget {
       onSelectDate;
   final Function() setForInbox;
   final Function() setForSomeday;
-  final TaskStatusType initialStatusType;
+  final TaskStatusType initialHeaderStatusType;
+  final TaskStatusType taskStatusType;
   final DateTime initialDate;
   final DateTime? initialDatetime;
 
@@ -24,9 +25,10 @@ class PlanModal extends StatefulWidget {
     required this.onSelectDate,
     required this.setForInbox,
     required this.setForSomeday,
-    this.initialStatusType = TaskStatusType.planned,
+    this.initialHeaderStatusType = TaskStatusType.planned,
     required this.initialDate,
     required this.initialDatetime,
+    required this.taskStatusType,
   }) : super(key: key);
 
   @override
@@ -42,7 +44,7 @@ class _PlanModalState extends State<PlanModal> {
   void initState() {
     _selectedDate.value = widget.initialDate;
     _selectedDatetime.value = widget.initialDatetime;
-    _selectedStatus.value = widget.initialStatusType;
+    _selectedStatus.value = widget.initialHeaderStatusType;
 
     super.initState();
   }
@@ -271,6 +273,10 @@ class _PlanModalState extends State<PlanModal> {
                       valueListenable: _selectedStatus,
                       builder: (context, statusType, child) {
                         if (statusType == TaskStatusType.planned) {
+                          if (widget.taskStatusType == TaskStatusType.inbox) {
+                            return const SizedBox();
+                          }
+
                           return _predefinedDateItem(
                             context,
                             iconAsset: "assets/images/icons/_common/slash_circle.svg",

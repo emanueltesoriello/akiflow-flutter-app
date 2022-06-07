@@ -179,7 +179,8 @@ class _TodayTaskListState extends State<TodayTaskList> {
         child: PlanModal(
           initialDate: task.date != null ? DateTime.parse(task.date!) : DateTime.now(),
           initialDatetime: task.datetime != null ? DateTime.parse(task.datetime!).toLocal() : null,
-          initialStatusType: statusType,
+          initialHeaderStatusType: statusType,
+          taskStatusType: task.statusType ?? TaskStatusType.planned,
           onSelectDate: ({required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
             editTaskCubit.planFor(
               date,
