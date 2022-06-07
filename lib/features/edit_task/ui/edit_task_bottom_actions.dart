@@ -7,7 +7,6 @@ import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/create_link_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
-import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
 import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -131,6 +130,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
 
             return TagBox(
               icon: "assets/images/icons/_common/link.svg",
+              iconSize: 19.5,
               isBig: true,
               isSquare: true,
               active: active,
@@ -140,25 +140,13 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
 
                 cubit.linksTap();
 
-                if (cubit.state.updatedTask.links == null || cubit.state.updatedTask.links!.isEmpty) {
-                  EditTaskCubit cubit = context.read<EditTaskCubit>();
+                String? newLink = await showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) => const CreateLinkModal(),
+                );
 
-                  String? newLink = await showCupertinoModalBottomSheet(
-                    context: context,
-                    builder: (context) => const CreateLinkModal(),
-                  );
-
-                  if (newLink != null) {
-                    cubit.addLink(newLink);
-                  }
-                } else {
-                  showCupertinoModalBottomSheet(
-                    context: context,
-                    builder: (context) => BlocProvider.value(
-                      value: cubit,
-                      child: const LinksModal(),
-                    ),
-                  );
+                if (newLink != null) {
+                  cubit.addLink(newLink);
                 }
               },
             );
