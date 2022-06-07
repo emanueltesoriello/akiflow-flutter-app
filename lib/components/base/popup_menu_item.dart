@@ -23,7 +23,11 @@ class PopupMenuCustomItem extends StatelessWidget {
             height: 22,
             child: SvgPicture.asset(iconAsset, color: enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
         const SizedBox(width: 8),
-        Expanded(child: Text(text)),
+        Expanded(
+            child: Text(
+          text,
+          style: TextStyle(color: ColorsExt.grey3(context), fontSize: 15, fontWeight: FontWeight.w500),
+        )),
       ],
     );
   }
