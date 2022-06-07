@@ -508,10 +508,10 @@ class _BottomIconBadge extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            count.toString(),
+            count > 99 ? "99+" : count.toString(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 9,
+              fontSize: count > 99 ? 6 : 9,
               fontWeight: FontWeight.w600,
               color: ColorsExt.background(context),
             ),
