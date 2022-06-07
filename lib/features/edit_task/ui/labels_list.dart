@@ -66,6 +66,17 @@ class _LabelsListState extends State<LabelsList> {
 
     List<Label> labels = List.from(state.labels);
 
+    labels.sort((a, b) {
+      try {
+        return (a.sorting ?? DateTime.now().toUtc().millisecondsSinceEpoch) <
+                (b.sorting ?? DateTime.now().toUtc().millisecondsSinceEpoch)
+            ? -1
+            : 1;
+      } catch (_) {}
+
+      return 0;
+    });
+
     labels = labels.where((element) => element.deletedAt == null).toList();
     labels.removeWhere((element) => element.type != null && element.type == "section");
 

@@ -106,7 +106,9 @@ class Label extends Equatable implements Base {
       system: system ?? this.system,
       type: type ?? this.type,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null
+          ? this.remoteUpdatedAt
+          : remoteUpdatedAt.value,
     );
   }
 
@@ -120,6 +122,7 @@ class Label extends Equatable implements Base {
       "type": type,
       "parent_id": parentId,
       "user_id": userId,
+      "sorting": sorting,
       "updated_at": updatedAt,
       "created_at": createdAt,
       "deleted_at": deletedAt,
