@@ -120,7 +120,7 @@ class LabelCubit extends Cubit<LabelCubitState> {
 
     await labelsCubit.updateLabel(section);
 
-    _tasksCubit.refreshTasksFromRepository();
+    _tasksCubit.refreshAllFromRepository();
   }
 
   Future<void> updateSection(Label sectionUpdated) async {

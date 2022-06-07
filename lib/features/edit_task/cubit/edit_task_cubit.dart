@@ -66,7 +66,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.add([updated]);
 
-    _tasksCubit.refreshTasksFromRepository();
+    _tasksCubit.refreshTasksUi(updated);
+
+    _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
 
@@ -92,10 +94,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(updatedTask: updated));
 
+    _tasksCubit.refreshTasksUi(updated);
+
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.status == TaskStatusType.planned.id ? UndoType.plan : UndoType.snooze);
       await _tasksRepository.updateById(updated.id!, data: updated);
-      _tasksCubit.refreshTasksFromRepository();
+      _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync([Entity.tasks]);
     }
   }
@@ -130,9 +134,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(showLabelsList: false, updatedTask: updated));
 
+    _tasksCubit.refreshTasksUi(updated);
+
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);
-      _tasksCubit.refreshTasksFromRepository();
+      _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync([Entity.tasks]);
     }
   }
@@ -144,10 +150,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(updatedTask: updated));
 
+    _tasksCubit.refreshTasksUi(updated);
+
     if (forceUpdate) {
       _tasksCubit.addToUndoQueue([task], updated.isCompletedComputed ? UndoType.markDone : UndoType.markUndone);
       await _tasksRepository.updateById(updated.id!, data: updated);
-      _tasksCubit.refreshTasksFromRepository();
+      _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync([Entity.tasks]);
     }
   }
@@ -321,7 +329,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.add([newTaskDuplicated]);
 
-    _tasksCubit.refreshTasksFromRepository();
+    _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
   }
@@ -392,6 +400,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       for (Task task in updatedRecurringTasks) {
         await _tasksRepository.updateById(task.id!, data: task);
+
+        _tasksCubit.refreshTasksUi(task);
       }
     } else {
       Task original = state.originalTask;
@@ -400,9 +410,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.addToUndoQueue([original], UndoType.updated);
 
       await _tasksRepository.updateById(updated.id!, data: updated);
+
+      _tasksCubit.refreshTasksUi(updated);
     }
 
-    _tasksCubit.refreshTasksFromRepository();
+    _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
   }

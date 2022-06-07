@@ -45,10 +45,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
   TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
     print("listen tasks sync");
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     _syncCubit.syncCompletedStream.listen((_) async {
-      await refreshTasksFromRepository();
+      await refreshAllFromRepository();
     });
   }
 
@@ -74,7 +74,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  refreshTasksFromRepository() async {
+  void refreshTasksUi(Task task) async {
+    emit(state.copyWith(
+      inboxTasks: state.inboxTasks.map((task) => task.id == task.id ? task : task).toList(),
+      selectedDayTasks: state.selectedDayTasks.map((task) => task.id == task.id ? task : task).toList(),
+      labelTasks: state.labelTasks.map((task) => task.id == task.id ? task : task).toList(),
+      fixedTodayTasks: state.fixedTodayTasks.map((task) => task.id == task.id ? task : task).toList(),
+    ));
+  }
+
+  refreshAllFromRepository() async {
     Future.wait([
       fetchDocs(),
       fetchInbox(),
@@ -177,9 +186,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
       Task updated = taskSelected.markAsDone(taskSelected);
 
       await _tasksRepository.updateById(taskSelected.id, data: updated);
+
+      refreshTasksUi(updated);
     }
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     clearSelected();
 
@@ -226,11 +237,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     await _tasksRepository.add(duplicates);
 
-    refreshTasksFromRepository();
+    emit(state.copyWith(inboxTasks: newInboxTasks, selectedDayTasks: newTodayTasks, labelTasks: newLabelTasks));
+
+    refreshAllFromRepository();
 
     clearSelected();
-
-    emit(state.copyWith(inboxTasks: newInboxTasks, selectedDayTasks: newTodayTasks, labelTasks: newLabelTasks));
 
     _syncCubit.sync([Entity.tasks]);
   }
@@ -376,14 +387,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       for (Task task in updatedRecurringTasks) {
         await _tasksRepository.updateById(task.id!, data: task);
+        refreshTasksUi(task);
       }
     } else {
       for (Task task in tasksSelected) {
         await _tasksRepository.updateById(task.id, data: task);
+        refreshTasksUi(task);
       }
     }
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     clearSelected();
 
@@ -407,9 +420,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
 
       await _tasksRepository.updateById(updated.id, data: updated);
+
+      refreshTasksUi(updated);
     }
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     clearSelected();
 
@@ -459,10 +474,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     for (int i = 0; i < updated.length; i++) {
       Task updatedTask = updated[i];
+
       await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
+
+      refreshTasksUi(updatedTask);
     }
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     clearSelected();
 
@@ -516,9 +534,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
       );
 
       await _tasksRepository.updateById(task.id, data: updated);
+
+      refreshTasksUi(updated);
     }
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     clearSelected();
 
@@ -564,12 +584,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
       Task updated = element.task.copyWith(
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       );
+
       await _tasksRepository.updateById(updated.id, data: updated);
+
+      refreshTasksUi(updated);
     }
 
     emit(state.copyWith(queue: []));
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
   }
@@ -579,10 +602,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     for (Task task in labelTasksSelected) {
       Task updated = task.markAsDone(task);
+
       await _tasksRepository.updateById(updated.id, data: updated);
+
+      refreshTasksUi(updated);
     }
 
-    refreshTasksFromRepository();
+    refreshAllFromRepository();
 
     clearSelected();
 
