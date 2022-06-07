@@ -85,9 +85,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
             );
           },
         ),
-        const SizedBox(height: 10),
         _marks(context),
-        const SizedBox(height: 24),
         Container(
           color: Theme.of(context).dividerColor,
           width: double.infinity,
@@ -100,17 +98,45 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
   Widget _marks(BuildContext context) {
     List<Widget> marks = [];
 
-    for (int i = 0; i < 4 + 1; i++) {
-      if (i % 2 == 0) {
+    for (int i = 0; i < 16 + 1; i++) {
+      void onTap() {
+        _selectedDuration.value = i * 0.25;
+      }
+
+      if (i % 8 == 0) {
         marks.add(
           Flexible(
-            child: Center(
-              child: Text(
-                i == 0 ? "0" : "${i}h",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
-                  fontSize: 13,
+            child: GestureDetector(
+              onTap: onTap,
+              child: Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: Text(
+                    i == 0 ? "0" : "${i ~/ 4}h",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey2(context),
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      } else if (i % 2 == 0) {
+        marks.add(
+          Flexible(
+            child: GestureDetector(
+              onTap: onTap,
+              child: Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: Container(
+                    height: 6,
+                    width: 1,
+                    color: ColorsExt.grey3(context),
+                  ),
                 ),
               ),
             ),
@@ -119,11 +145,17 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
       } else {
         marks.add(
           Flexible(
-            child: Center(
+            child: GestureDetector(
+              onTap: onTap,
               child: Container(
-                height: 4,
-                width: 1,
-                color: ColorsExt.grey3(context),
+                color: Colors.transparent,
+                child: Center(
+                  child: Container(
+                    height: 3,
+                    width: 1,
+                    color: ColorsExt.grey3(context),
+                  ),
+                ),
               ),
             ),
           ),
@@ -131,10 +163,15 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
       }
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: marks,
+    return IntrinsicHeight(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: marks,
+        ),
+      ),
     );
   }
 }

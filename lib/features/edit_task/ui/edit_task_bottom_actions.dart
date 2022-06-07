@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/edit_task/ui/actions/create_link_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/links_modal.dart';
 import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
@@ -134,18 +135,31 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               isSquare: true,
               active: active,
               backgroundColor: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-              onPressed: () {
+              onPressed: () async {
                 var cubit = context.read<EditTaskCubit>();
 
                 cubit.linksTap();
 
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => BlocProvider.value(
-                    value: cubit,
-                    child: const LinksModal(),
-                  ),
-                );
+                if (cubit.state.updatedTask.links == null || cubit.state.updatedTask.links!.isEmpty) {
+                  EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+                  String? newLink = await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => const CreateLinkModal(),
+                  );
+
+                  if (newLink != null) {
+                    cubit.addLink(newLink);
+                  }
+                } else {
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => BlocProvider.value(
+                      value: cubit,
+                      child: const LinksModal(),
+                    ),
+                  );
+                }
               },
             );
           }),
