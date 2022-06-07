@@ -169,7 +169,8 @@
     },
     "taskCreatedSuccessfully": "Task created successfully",
     "nSelected": "$count selected",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "awesomeInboxZero": "Awesome! You reached Inbox Zero!"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

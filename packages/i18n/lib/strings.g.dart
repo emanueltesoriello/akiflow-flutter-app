@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 210 
+ * Strings: 211 
  *
- * Built on 2022-06-07 at 10:21 UTC
+ * Built on 2022-06-07 at 13:15 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -454,6 +454,7 @@ class _StringsTaskEn {
 	String get taskCreatedSuccessfully => 'Task created successfully';
 	String nSelected({required Object count}) => '$count selected';
 	String get yesterday => 'Yesterday';
+	String get awesomeInboxZero => 'Awesome! You reached Inbox Zero!';
 }
 
 // Path: errors
@@ -931,6 +932,7 @@ extension on _StringsEn {
 			'task.taskCreatedSuccessfully': 'Task created successfully',
 			'task.nSelected': ({required Object count}) => '$count selected',
 			'task.yesterday': 'Yesterday',
+			'task.awesomeInboxZero': 'Awesome! You reached Inbox Zero!',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

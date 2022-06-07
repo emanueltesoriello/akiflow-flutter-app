@@ -19,6 +19,17 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const HomeViewPlaceholder();
+  }
+}
+
+class HomeViewPlaceholder extends StatelessWidget {
+  const HomeViewPlaceholder({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
