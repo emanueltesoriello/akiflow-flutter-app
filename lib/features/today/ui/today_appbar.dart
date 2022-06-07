@@ -113,7 +113,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
                 text = t.today.title;
                 color = ColorsExt.akiflow(context);
               } else {
-                text = DateFormat('EEE, dd').format(DateTime.now());
+                text = DateFormat('EEE, dd').format(state.selectedDate);
                 color = ColorsExt.grey2(context);
               }
 
