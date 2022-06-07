@@ -154,13 +154,13 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
         child: Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+            padding: const EdgeInsets.fromLTRB(2.15, 0, 2.15, 0),
             child: Stack(
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  width: 20,
-                  height: 20,
+                  width: 21.67,
+                  height: 21.67,
                   child: AnimatedBuilder(
                     animation: _animationCircleScale,
                     builder: (BuildContext context, Widget? child) {
@@ -180,8 +180,8 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
                   ),
                 ),
                 SizedBox(
-                  width: 20,
-                  height: 20,
+                  width: 21.67,
+                  height: 21.67,
                   child: Center(
                     child: AnimatedBuilder(
                       animation: _animationRotation,
