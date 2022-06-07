@@ -26,7 +26,10 @@ class PopupMenuCustomItem extends StatelessWidget {
         Expanded(
             child: Text(
           text,
-          style: TextStyle(color: ColorsExt.grey3(context), fontSize: 15, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+              fontSize: 15,
+              fontWeight: FontWeight.w500),
         )),
       ],
     );

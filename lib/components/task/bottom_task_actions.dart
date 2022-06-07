@@ -148,115 +148,120 @@ class BottomTaskActions extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: PopupMenuButton<BottomTaskAdditionalActions>(
-                    icon: SvgPicture.asset(
-                      "assets/images/icons/_common/ellipsis.svg",
-                      width: 26,
-                      height: 26,
-                      color: ColorsExt.grey2(context),
-                    ),
-                    onSelected: (BottomTaskAdditionalActions result) {
-                      switch (result) {
-                        case BottomTaskAdditionalActions.moveToInbox:
-                          context.read<TasksCubit>().moveToInbox();
-                          break;
-                        case BottomTaskAdditionalActions.planForToday:
-                          context.read<TasksCubit>().planForToday();
-                          break;
-                        case BottomTaskAdditionalActions.setDeadline:
-                          var cubit = context.read<TasksCubit>();
+                  child: Theme(
+                    data: Theme.of(context)
+                        .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
+                    child: PopupMenuButton<BottomTaskAdditionalActions>(
+                      icon: SvgPicture.asset(
+                        "assets/images/icons/_common/ellipsis.svg",
+                        width: 26,
+                        height: 26,
+                        color: ColorsExt.grey2(context),
+                      ),
+                      onSelected: (BottomTaskAdditionalActions result) {
+                        switch (result) {
+                          case BottomTaskAdditionalActions.moveToInbox:
+                            context.read<TasksCubit>().moveToInbox();
+                            break;
+                          case BottomTaskAdditionalActions.planForToday:
+                            context.read<TasksCubit>().planForToday();
+                            break;
+                          case BottomTaskAdditionalActions.setDeadline:
+                            var cubit = context.read<TasksCubit>();
 
-                          showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) => BlocProvider.value(
-                              value: cubit,
-                              child: DeadlineModal(
-                                initialDate: () {
-                                  try {
-                                    return DateTime.tryParse(context.watch<EditTaskCubit>().state.updatedTask.dueDate!);
-                                  } catch (_) {
-                                    return null;
-                                  }
-                                }(),
-                                onSelectDate: (DateTime? date) {
-                                  cubit.setDeadline(date);
-                                },
+                            showCupertinoModalBottomSheet(
+                              context: context,
+                              builder: (context) => BlocProvider.value(
+                                value: cubit,
+                                child: DeadlineModal(
+                                  initialDate: () {
+                                    try {
+                                      return DateTime.tryParse(
+                                          context.watch<EditTaskCubit>().state.updatedTask.dueDate!);
+                                    } catch (_) {
+                                      return null;
+                                    }
+                                  }(),
+                                  onSelectDate: (DateTime? date) {
+                                    cubit.setDeadline(date);
+                                  },
+                                ),
                               ),
-                            ),
-                          );
+                            );
 
-                          break;
-                        case BottomTaskAdditionalActions.duplicate:
-                          context.read<TasksCubit>().duplicate();
-                          break;
-                        case BottomTaskAdditionalActions.markAsDone:
-                          TasksCubit tasksCubit = context.read<TasksCubit>();
-                          tasksCubit.markAsDone();
+                            break;
+                          case BottomTaskAdditionalActions.duplicate:
+                            context.read<TasksCubit>().duplicate();
+                            break;
+                          case BottomTaskAdditionalActions.markAsDone:
+                            TasksCubit tasksCubit = context.read<TasksCubit>();
+                            tasksCubit.markAsDone();
 
-                          List<Task> inboxSelected =
-                              tasksCubit.state.inboxTasks.where((t) => t.selected ?? false).toList();
-                          List<Task> todayTasksSelected =
-                              tasksCubit.state.selectedDayTasks.where((t) => t.selected ?? false).toList();
-                          List<Task> labelTasksSelected =
-                              tasksCubit.state.labelTasks.where((t) => t.selected ?? false).toList();
-                          List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+                            List<Task> inboxSelected =
+                                tasksCubit.state.inboxTasks.where((t) => t.selected ?? false).toList();
+                            List<Task> todayTasksSelected =
+                                tasksCubit.state.selectedDayTasks.where((t) => t.selected ?? false).toList();
+                            List<Task> labelTasksSelected =
+                                tasksCubit.state.labelTasks.where((t) => t.selected ?? false).toList();
+                            List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
 
-                          Task task = all.first;
+                            Task task = all.first;
 
-                          AuthCubit authCubit = context.read<AuthCubit>();
+                            AuthCubit authCubit = context.read<AuthCubit>();
 
-                          TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
-                          break;
-                        case BottomTaskAdditionalActions.delete:
-                          context.read<TasksCubit>().delete();
-                          break;
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<BottomTaskAdditionalActions>>[
-                      PopupMenuItem<BottomTaskAdditionalActions>(
-                        value: BottomTaskAdditionalActions.moveToInbox,
-                        child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/tray.svg",
-                          text: t.task.moveToInbox,
+                            TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
+                            break;
+                          case BottomTaskAdditionalActions.delete:
+                            context.read<TasksCubit>().delete();
+                            break;
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<BottomTaskAdditionalActions>>[
+                        PopupMenuItem<BottomTaskAdditionalActions>(
+                          value: BottomTaskAdditionalActions.moveToInbox,
+                          child: PopupMenuCustomItem(
+                            iconAsset: "assets/images/icons/_common/tray.svg",
+                            text: t.task.moveToInbox,
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<BottomTaskAdditionalActions>(
-                        value: BottomTaskAdditionalActions.planForToday,
-                        child: PopupMenuCustomItem(
-                          iconAsset:
-                              "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                          text: t.task.planForToday,
+                        PopupMenuItem<BottomTaskAdditionalActions>(
+                          value: BottomTaskAdditionalActions.planForToday,
+                          child: PopupMenuCustomItem(
+                            iconAsset:
+                                "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+                            text: t.task.planForToday,
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<BottomTaskAdditionalActions>(
-                        value: BottomTaskAdditionalActions.setDeadline,
-                        child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/flags.svg",
-                          text: t.task.setDeadline,
+                        PopupMenuItem<BottomTaskAdditionalActions>(
+                          value: BottomTaskAdditionalActions.setDeadline,
+                          child: PopupMenuCustomItem(
+                            iconAsset: "assets/images/icons/_common/flags.svg",
+                            text: t.task.setDeadline,
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<BottomTaskAdditionalActions>(
-                        value: BottomTaskAdditionalActions.duplicate,
-                        child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/square_on_square.svg",
-                          text: t.task.duplicate,
+                        PopupMenuItem<BottomTaskAdditionalActions>(
+                          value: BottomTaskAdditionalActions.duplicate,
+                          child: PopupMenuCustomItem(
+                            iconAsset: "assets/images/icons/_common/square_on_square.svg",
+                            text: t.task.duplicate,
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<BottomTaskAdditionalActions>(
-                        value: BottomTaskAdditionalActions.markAsDone,
-                        child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
-                          text: t.task.markAsDone,
+                        PopupMenuItem<BottomTaskAdditionalActions>(
+                          value: BottomTaskAdditionalActions.markAsDone,
+                          child: PopupMenuCustomItem(
+                            iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
+                            text: t.task.markAsDone,
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<BottomTaskAdditionalActions>(
-                        value: BottomTaskAdditionalActions.delete,
-                        child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/trash.svg",
-                          text: t.task.delete,
+                        PopupMenuItem<BottomTaskAdditionalActions>(
+                          value: BottomTaskAdditionalActions.delete,
+                          child: PopupMenuCustomItem(
+                            iconAsset: "assets/images/icons/_common/trash.svg",
+                            text: t.task.delete,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],

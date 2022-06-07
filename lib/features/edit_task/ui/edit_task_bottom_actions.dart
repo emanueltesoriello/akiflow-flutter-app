@@ -159,94 +159,97 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
   }
 
   Widget _menu(BuildContext context) {
-    return PopupMenuButton<EditTaskAdditionalAction>(
-      icon: Container(
-        height: 32,
-        width: 32,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3),
-          color: ColorsExt.grey6(context),
-        ),
-        child: Center(
-          child: SvgPicture.asset(
-            "assets/images/icons/_common/ellipsis.svg",
-            width: 22,
-            height: 22,
-            color: ColorsExt.grey2(context),
+    return Theme(
+      data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
+      child: PopupMenuButton<EditTaskAdditionalAction>(
+        icon: Container(
+          height: 32,
+          width: 32,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(3),
+            color: ColorsExt.grey6(context),
+          ),
+          child: Center(
+            child: SvgPicture.asset(
+              "assets/images/icons/_common/ellipsis.svg",
+              width: 22,
+              height: 22,
+              color: ColorsExt.grey2(context),
+            ),
           ),
         ),
+        onSelected: (EditTaskAdditionalAction result) {
+          EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+          cubit.menuTap();
+
+          switch (result) {
+            case EditTaskAdditionalAction.duplicate:
+              cubit.duplicate();
+              Navigator.pop(context);
+              break;
+            case EditTaskAdditionalAction.snoozeTomorrow:
+              cubit.planFor(
+                DateTime.now().add(const Duration(days: 1)),
+                statusType: TaskStatusType.snoozed,
+              );
+              break;
+            case EditTaskAdditionalAction.snoozeNextWeek:
+              cubit.planFor(
+                DateTime.now().add(const Duration(days: 7)),
+                statusType: TaskStatusType.snoozed,
+              );
+              break;
+            case EditTaskAdditionalAction.someday:
+              cubit.planFor(
+                null,
+                statusType: TaskStatusType.someday,
+              );
+              break;
+            case EditTaskAdditionalAction.delete:
+              cubit.delete();
+              Navigator.pop(context);
+              break;
+          }
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<EditTaskAdditionalAction>>[
+          PopupMenuItem<EditTaskAdditionalAction>(
+            value: EditTaskAdditionalAction.duplicate,
+            child: PopupMenuCustomItem(
+              iconAsset: "assets/images/icons/_common/square_on_square.svg",
+              text: t.task.duplicate,
+            ),
+          ),
+          PopupMenuItem<EditTaskAdditionalAction>(
+            value: EditTaskAdditionalAction.snoozeTomorrow,
+            child: PopupMenuCustomItem(
+              iconAsset: "assets/images/icons/_common/clock.svg",
+              text: t.task.snoozeTomorrow,
+            ),
+          ),
+          PopupMenuItem<EditTaskAdditionalAction>(
+            value: EditTaskAdditionalAction.snoozeNextWeek,
+            child: PopupMenuCustomItem(
+              iconAsset: "assets/images/icons/_common/clock.svg",
+              text: t.task.snoozeNextWeek,
+            ),
+          ),
+          PopupMenuItem<EditTaskAdditionalAction>(
+            value: EditTaskAdditionalAction.someday,
+            child: PopupMenuCustomItem(
+              iconAsset: "assets/images/icons/_common/tray.svg",
+              text: t.task.someday,
+            ),
+          ),
+          PopupMenuItem<EditTaskAdditionalAction>(
+            value: EditTaskAdditionalAction.delete,
+            child: PopupMenuCustomItem(
+              iconAsset: "assets/images/icons/_common/trash.svg",
+              text: t.task.delete,
+            ),
+          ),
+        ],
       ),
-      onSelected: (EditTaskAdditionalAction result) {
-        EditTaskCubit cubit = context.read<EditTaskCubit>();
-
-        cubit.menuTap();
-
-        switch (result) {
-          case EditTaskAdditionalAction.duplicate:
-            cubit.duplicate();
-            Navigator.pop(context);
-            break;
-          case EditTaskAdditionalAction.snoozeTomorrow:
-            cubit.planFor(
-              DateTime.now().add(const Duration(days: 1)),
-              statusType: TaskStatusType.snoozed,
-            );
-            break;
-          case EditTaskAdditionalAction.snoozeNextWeek:
-            cubit.planFor(
-              DateTime.now().add(const Duration(days: 7)),
-              statusType: TaskStatusType.snoozed,
-            );
-            break;
-          case EditTaskAdditionalAction.someday:
-            cubit.planFor(
-              null,
-              statusType: TaskStatusType.someday,
-            );
-            break;
-          case EditTaskAdditionalAction.delete:
-            cubit.delete();
-            Navigator.pop(context);
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<EditTaskAdditionalAction>>[
-        PopupMenuItem<EditTaskAdditionalAction>(
-          value: EditTaskAdditionalAction.duplicate,
-          child: PopupMenuCustomItem(
-            iconAsset: "assets/images/icons/_common/square_on_square.svg",
-            text: t.task.duplicate,
-          ),
-        ),
-        PopupMenuItem<EditTaskAdditionalAction>(
-          value: EditTaskAdditionalAction.snoozeTomorrow,
-          child: PopupMenuCustomItem(
-            iconAsset: "assets/images/icons/_common/clock.svg",
-            text: t.task.snoozeTomorrow,
-          ),
-        ),
-        PopupMenuItem<EditTaskAdditionalAction>(
-          value: EditTaskAdditionalAction.snoozeNextWeek,
-          child: PopupMenuCustomItem(
-            iconAsset: "assets/images/icons/_common/clock.svg",
-            text: t.task.snoozeNextWeek,
-          ),
-        ),
-        PopupMenuItem<EditTaskAdditionalAction>(
-          value: EditTaskAdditionalAction.someday,
-          child: PopupMenuCustomItem(
-            iconAsset: "assets/images/icons/_common/tray.svg",
-            text: t.task.someday,
-          ),
-        ),
-        PopupMenuItem<EditTaskAdditionalAction>(
-          value: EditTaskAdditionalAction.delete,
-          child: PopupMenuCustomItem(
-            iconAsset: "assets/images/icons/_common/trash.svg",
-            text: t.task.delete,
-          ),
-        ),
-      ],
     );
   }
 }

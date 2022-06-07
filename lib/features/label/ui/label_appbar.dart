@@ -62,163 +62,166 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        PopupMenuButton<LabelActions>(
-          padding: const EdgeInsets.all(0),
-          icon: SvgPicture.asset(
-            "assets/images/icons/_common/ellipsis.svg",
-            width: 22,
-            height: 22,
-            color: ColorsExt.grey2(context),
-          ),
-          onSelected: (LabelActions result) async {
-            switch (result) {
-              case LabelActions.edit:
-                LabelsCubit labelsCubit = context.read<LabelsCubit>();
-                LabelCubit currentLabelCubit = context.read<LabelCubit>();
-                MainCubit mainCubit = context.read<MainCubit>();
+        Theme(
+          data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
+          child: PopupMenuButton<LabelActions>(
+            padding: const EdgeInsets.all(0),
+            icon: SvgPicture.asset(
+              "assets/images/icons/_common/ellipsis.svg",
+              width: 22,
+              height: 22,
+              color: ColorsExt.grey2(context),
+            ),
+            onSelected: (LabelActions result) async {
+              switch (result) {
+                case LabelActions.edit:
+                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
+                  LabelCubit currentLabelCubit = context.read<LabelCubit>();
+                  MainCubit mainCubit = context.read<MainCubit>();
 
-                // Use a reference to the current label to update ui after updated the label
-                LabelCubit labelUpdateCubit = LabelCubit(label, labelsCubit: labelsCubit);
+                  // Use a reference to the current label to update ui after updated the label
+                  LabelCubit labelUpdateCubit = LabelCubit(label, labelsCubit: labelsCubit);
 
-                bool? update = await showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => BlocProvider(
-                    key: ObjectKey(label),
-                    create: (context) => labelUpdateCubit,
-                    child: const CreateEditLabelModal(isCreating: false),
-                  ),
-                );
-
-                if (update != null && update == true) {
-                  currentLabelCubit.saveLabel(labelUpdateCubit.state.selectedLabel!);
-                  mainCubit.selectLabel(labelUpdateCubit.state.selectedLabel!);
-                }
-
-                break;
-              case LabelActions.order:
-                // context.read<LabelCubit>().toggleSorting();
-                break;
-              case LabelActions.newSection:
-                LabelCubit labelCubit = context.read<LabelCubit>();
-
-                Label currentLabel = labelCubit.state.selectedLabel!;
-                Label newSection = Label(id: const Uuid().v4(), parentId: currentLabel.id!, type: "section");
-
-                LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                Label? section = await showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => BlocProvider(
-                    key: ObjectKey(newSection),
-                    create: (context) => LabelCubit(newSection, labelsCubit: labelsCubit),
-                    child: CreateEditSectionModal(section: newSection),
-                  ),
-                );
-
-                if (section != null) {
-                  labelCubit.addSectionToLocalUi(section);
-                  labelsCubit.addLabel(section);
-                }
-
-                break;
-              case LabelActions.showDone:
-                context.read<LabelCubit>().toggleShowDone();
-                break;
-              case LabelActions.delete:
-                LabelCubit labelCubit = context.read<LabelCubit>();
-                LabelsCubit labelsCubit = context.read<LabelsCubit>();
-                MainCubit mainCubit = context.read<MainCubit>();
-
-                Label labelToDelete = labelCubit.state.selectedLabel!;
-
-                showDialog(
+                  bool? update = await showCupertinoModalBottomSheet(
                     context: context,
-                    builder: (context) => DeleteLabelDialog(
-                          labelToDelete,
-                          justDeleteTheLabelClick: () {
-                            labelCubit.delete();
+                    builder: (context) => BlocProvider(
+                      key: ObjectKey(label),
+                      create: (context) => labelUpdateCubit,
+                      child: const CreateEditLabelModal(isCreating: false),
+                    ),
+                  );
 
-                            Label deletedLabel = labelCubit.state.selectedLabel!;
-                            labelsCubit.updateLabel(deletedLabel);
+                  if (update != null && update == true) {
+                    currentLabelCubit.saveLabel(labelUpdateCubit.state.selectedLabel!);
+                    mainCubit.selectLabel(labelUpdateCubit.state.selectedLabel!);
+                  }
 
-                            mainCubit.changeHomeView(HomeViewType.inbox);
-                          },
-                          markAllTasksAsDoneClick: () {
-                            labelCubit.delete(markTasksAsDone: true);
+                  break;
+                case LabelActions.order:
+                  // context.read<LabelCubit>().toggleSorting();
+                  break;
+                case LabelActions.newSection:
+                  LabelCubit labelCubit = context.read<LabelCubit>();
 
-                            Label deletedLabel = labelCubit.state.selectedLabel!;
-                            labelsCubit.updateLabel(deletedLabel);
+                  Label currentLabel = labelCubit.state.selectedLabel!;
+                  Label newSection = Label(id: const Uuid().v4(), parentId: currentLabel.id!, type: "section");
 
-                            mainCubit.changeHomeView(HomeViewType.inbox);
-                          },
-                        ));
+                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
-                break;
-            }
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<LabelActions>>[
-            PopupMenuItem<LabelActions>(
-              value: LabelActions.edit,
-              height: 40,
-              padding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: PopupMenuCustomItem(
-                  iconAsset: "assets/images/icons/_common/pencil.svg",
-                  text: t.label.editLabel,
+                  Label? section = await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => BlocProvider(
+                      key: ObjectKey(newSection),
+                      create: (context) => LabelCubit(newSection, labelsCubit: labelsCubit),
+                      child: CreateEditSectionModal(section: newSection),
+                    ),
+                  );
+
+                  if (section != null) {
+                    labelCubit.addSectionToLocalUi(section);
+                    labelsCubit.addLabel(section);
+                  }
+
+                  break;
+                case LabelActions.showDone:
+                  context.read<LabelCubit>().toggleShowDone();
+                  break;
+                case LabelActions.delete:
+                  LabelCubit labelCubit = context.read<LabelCubit>();
+                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
+                  MainCubit mainCubit = context.read<MainCubit>();
+
+                  Label labelToDelete = labelCubit.state.selectedLabel!;
+
+                  showDialog(
+                      context: context,
+                      builder: (context) => DeleteLabelDialog(
+                            labelToDelete,
+                            justDeleteTheLabelClick: () {
+                              labelCubit.delete();
+
+                              Label deletedLabel = labelCubit.state.selectedLabel!;
+                              labelsCubit.updateLabel(deletedLabel);
+
+                              mainCubit.changeHomeView(HomeViewType.inbox);
+                            },
+                            markAllTasksAsDoneClick: () {
+                              labelCubit.delete(markTasksAsDone: true);
+
+                              Label deletedLabel = labelCubit.state.selectedLabel!;
+                              labelsCubit.updateLabel(deletedLabel);
+
+                              mainCubit.changeHomeView(HomeViewType.inbox);
+                            },
+                          ));
+
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<LabelActions>>[
+              PopupMenuItem<LabelActions>(
+                value: LabelActions.edit,
+                height: 40,
+                padding: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PopupMenuCustomItem(
+                    iconAsset: "assets/images/icons/_common/pencil.svg",
+                    text: t.label.editLabel,
+                  ),
                 ),
               ),
-            ),
-            PopupMenuItem<LabelActions>(
-              value: LabelActions.order,
-              enabled: false,
-              height: 40,
-              padding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: PopupMenuCustomItem(
-                  iconAsset: "assets/images/icons/_common/arrow_up_arrow_down.svg",
-                  text: t.label.sortComingSoon,
+              PopupMenuItem<LabelActions>(
+                value: LabelActions.order,
+                enabled: false,
+                height: 40,
+                padding: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PopupMenuCustomItem(
+                    iconAsset: "assets/images/icons/_common/arrow_up_arrow_down.svg",
+                    text: t.label.sortComingSoon,
+                  ),
                 ),
               ),
-            ),
-            PopupMenuItem<LabelActions>(
-              value: LabelActions.newSection,
-              height: 40,
-              padding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: PopupMenuCustomItem(
-                  iconAsset: "assets/images/icons/_common/plus.svg",
-                  text: t.label.newSection,
+              PopupMenuItem<LabelActions>(
+                value: LabelActions.newSection,
+                height: 40,
+                padding: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PopupMenuCustomItem(
+                    iconAsset: "assets/images/icons/_common/plus.svg",
+                    text: t.label.newSection,
+                  ),
                 ),
               ),
-            ),
-            PopupMenuItem<LabelActions>(
-              value: LabelActions.showDone,
-              height: 40,
-              padding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: PopupMenuCustomItem(
-                  iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
-                  text: showDone ? t.label.hideDone : t.label.showDone,
+              PopupMenuItem<LabelActions>(
+                value: LabelActions.showDone,
+                height: 40,
+                padding: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PopupMenuCustomItem(
+                    iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
+                    text: showDone ? t.label.hideDone : t.label.showDone,
+                  ),
                 ),
               ),
-            ),
-            PopupMenuItem<LabelActions>(
-              value: LabelActions.delete,
-              height: 40,
-              padding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: PopupMenuCustomItem(
-                  iconAsset: "assets/images/icons/_common/trash.svg",
-                  text: t.label.deleteLabel,
+              PopupMenuItem<LabelActions>(
+                value: LabelActions.delete,
+                height: 40,
+                padding: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PopupMenuCustomItem(
+                    iconAsset: "assets/images/icons/_common/trash.svg",
+                    text: t.label.deleteLabel,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         )
       ],
     );
