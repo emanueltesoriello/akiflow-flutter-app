@@ -256,6 +256,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   static const double bottomBarIconSize = 30;
 
   Widget _bottomBar(BuildContext context) {
+    double topPadding = MediaQuery.of(context).padding.top;
+
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
         List<Task> inboxTasks = List.from(state.inboxTasks);
@@ -270,10 +272,12 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           children: [
             Container(height: 0.5, color: const Color(0xffE4EDF3)),
             CustomBottomNavigationBar(
-                labelStyle: labelStyle,
-                bottomBarIconSize: bottomBarIconSize,
-                inboxTasks: inboxTasks,
-                fixedTodoTodayTasks: fixedTodoTodayTasks),
+              labelStyle: labelStyle,
+              bottomBarIconSize: bottomBarIconSize,
+              inboxTasks: inboxTasks,
+              fixedTodoTodayTasks: fixedTodoTodayTasks,
+              topPadding: topPadding,
+            ),
           ],
         );
       },
@@ -350,12 +354,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
     required this.bottomBarIconSize,
     required this.inboxTasks,
     required this.fixedTodoTodayTasks,
+    required this.topPadding,
   }) : super(key: key);
 
   final TextStyle labelStyle;
   final double bottomBarIconSize;
   final List<Task> inboxTasks;
   final List<Task> fixedTodoTodayTasks;
+  final double topPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -385,6 +391,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       active: false,
                       activeIconAsset: "assets/images/icons/_common/line_horizontal_3.svg",
                       title: t.bottomBar.menu,
+                      topPadding: topPadding,
                     ),
                     NavItem(
                       active: state.homeViewType == HomeViewType.inbox,
@@ -392,6 +399,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       title: t.bottomBar.inbox,
                       homeViewType: HomeViewType.inbox,
                       badge: _BottomIconBadge(inboxTasks.length),
+                      topPadding: topPadding,
                     ),
                     NavItem(
                       active: state.homeViewType == HomeViewType.today,
@@ -400,12 +408,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       title: t.bottomBar.today,
                       homeViewType: HomeViewType.today,
                       badge: _BottomIconBadge(fixedTodoTodayTasks.length),
+                      topPadding: topPadding,
                     ),
                     NavItem(
                       active: state.homeViewType == HomeViewType.calendar,
                       activeIconAsset: "assets/images/icons/_common/calendar.svg",
                       title: t.bottomBar.calendar,
                       homeViewType: HomeViewType.calendar,
+                      topPadding: topPadding,
                     ),
                   ],
                 );
@@ -425,12 +435,14 @@ class NavItem extends StatelessWidget {
   final String title;
   final HomeViewType? homeViewType;
   final Widget? badge;
+  final double topPadding;
 
   const NavItem({
     Key? key,
     required this.activeIconAsset,
     required this.active,
     required this.title,
+    required this.topPadding,
     this.homeViewType,
     this.badge,
   }) : super(key: key);
@@ -453,7 +465,7 @@ class NavItem extends StatelessWidget {
           } else {
             showCupertinoModalBottomSheet(
               context: context,
-              builder: (context) => const SettingsModal(),
+              builder: (context) => SettingsModal(topPadding: topPadding),
               closeProgressThreshold: 0,
             );
           }

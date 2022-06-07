@@ -29,7 +29,9 @@ import 'package:uuid/uuid.dart';
 enum AddListType { addLabel, addFolder }
 
 class SettingsModal extends StatelessWidget {
-  const SettingsModal({Key? key}) : super(key: key);
+  final double topPadding;
+
+  const SettingsModal({Key? key, required this.topPadding}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class SettingsModal extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         decoration: const BoxDecoration(color: Colors.transparent),
-        constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.9),
+        constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height - topPadding - 56),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
