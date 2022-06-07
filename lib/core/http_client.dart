@@ -1,27 +1,16 @@
-import 'dart:io' as io;
-
-import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
+import 'package:http/http.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/user.dart';
 
-class HttpClient extends http.BaseClient {
+class HttpClient extends BaseClient {
   final PreferencesRepository _preferences;
 
-  final io.HttpClient _ioHttpClient;
-  late final IOClient _httpClient;
+  final Client _inner;
 
-  HttpClient(this._preferences) : _ioHttpClient = io.HttpClient() {
-    _ioHttpClient.badCertificateCallback = (io.X509Certificate cert, String host, int port) {
-      print("*** ignoring bad certificate ***");
-      return host == "api.akiflow.com" || host == "app.akiflow.com";
-    };
-
-    _httpClient = IOClient(_ioHttpClient);
-  }
+  HttpClient(this._preferences) : _inner = Client();
 
   @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
+  Future<StreamedResponse> send(BaseRequest request) {
     User? user = _preferences.user;
 
     if (user != null) {
@@ -30,6 +19,6 @@ class HttpClient extends http.BaseClient {
 
     request.headers['Content-Type'] = "application/json";
 
-    return _httpClient.send(request);
+    return _inner.send(request);
   }
 }
