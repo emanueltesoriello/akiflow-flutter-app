@@ -23,42 +23,51 @@ class ApiClient implements IBaseApi {
     bool withDeleted = true,
     DateTime? updatedAfter,
     bool allPages = true,
+    Uri? nextPageUrl,
   }) async {
-    int page = 1;
-
-    Map<String, dynamic> params = {
-      "per_page": perPage.toString(),
-      "with_deleted": withDeleted.toString(),
-      "page": page.toString(),
-    };
-
-    if (updatedAfter != null) {
-      params["updatedAfter"] = updatedAfter.toIso8601String();
-    }
-
     Map<String, dynamic> response;
 
     List<T> result = [];
 
-    do {
-      params["page"] = page.toString();
-      Uri urlWithQueryParameters = url.replace(queryParameters: params);
+    Uri urlWithQueryParameters;
 
-      print(urlWithQueryParameters);
+    if (nextPageUrl != null) {
+      urlWithQueryParameters = nextPageUrl;
+    } else {
+      Map<String, dynamic> params = {
+        "per_page": perPage.toString(),
+        "with_deleted": withDeleted.toString(),
+      };
 
-      Response responseRaw = await _httpClient.get(urlWithQueryParameters);
-
-      response = jsonDecode(responseRaw.body);
-      if (response.containsKey("errors")) {
-        throw ApiException(response);
+      if (updatedAfter != null) {
+        params["updatedAfter"] = updatedAfter.toIso8601String();
       }
-      if (response.containsKey("data") && response["data"] != null) {
-        List<dynamic> items = response["data"];
-        List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromMap));
-        result.addAll(objects);
-      }
-      page++;
-    } while (response["next_page_url"] != null);
+
+      urlWithQueryParameters = url.replace(queryParameters: params);
+    }
+
+    print(urlWithQueryParameters);
+
+    Response responseRaw = await _httpClient.get(urlWithQueryParameters);
+
+    response = jsonDecode(responseRaw.body);
+    if (response.containsKey("errors")) {
+      throw ApiException(response);
+    }
+    if (response.containsKey("data") && response["data"] != null) {
+      List<dynamic> items = response["data"];
+      List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromMap));
+      result.addAll(objects);
+    }
+
+    if (response["next_page_url"] != null) {
+      result.addAll(await getItems<T>(
+        perPage: perPage,
+        withDeleted: withDeleted,
+        updatedAfter: updatedAfter,
+        nextPageUrl: Uri.parse(response["next_page_url"]),
+      ));
+    }
 
     return result;
   }
