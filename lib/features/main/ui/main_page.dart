@@ -224,33 +224,24 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     }
   }
 
-  final PageController _pageController = PageController(initialPage: 1);
-
   Widget _content() {
-    return BlocConsumer<MainCubit, MainCubitState>(listener: (context, state) {
-      switch (state.homeViewType) {
-        case HomeViewType.inbox:
-          _pageController.animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-          break;
-        case HomeViewType.today:
-          _pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-          break;
-        case HomeViewType.calendar:
-          _pageController.animateToPage(3, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-          break;
-        default:
-      }
-    }, builder: (context, state) {
-      if (state.homeViewType != HomeViewType.label) {
-        return PageView(
-          controller: _pageController,
-          children: _views,
-        );
-      } else {
-        Label label = state.selectedLabel!;
-        return LabelView(key: ObjectKey(label));
-      }
-    });
+    return BlocBuilder<MainCubit, MainCubitState>(
+      builder: (context, state) {
+        switch (state.homeViewType) {
+          case HomeViewType.inbox:
+            return _views[1];
+          case HomeViewType.today:
+            return _views[2];
+          case HomeViewType.calendar:
+            return _views[3];
+          case HomeViewType.label:
+            Label label = state.selectedLabel!;
+            return LabelView(key: ObjectKey(label));
+          default:
+            return const SizedBox();
+        }
+      },
+    );
   }
 
   static const double bottomBarIconSize = 30;
