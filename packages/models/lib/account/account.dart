@@ -61,9 +61,13 @@ class Account extends Equatable implements Base {
         identifier: map['identifier'] as String?,
         syncStatus: map['sync_status'] as dynamic,
         status: map['status'] as String?,
-        details: map['details'] is Map?
-            ? map['details'] as Map<String, dynamic>?
-            : null,
+        details: () {
+          try {
+            return map['details'] as Map<String, dynamic>?;
+          } catch (_) {
+            return null;
+          }
+        }(),
         autologinToken: map['autologin_token'] as dynamic,
         globalCreatedAt: map['global_created_at'] as String?,
         globalUpdatedAt: map['global_updated_at'] as String?,
