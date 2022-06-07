@@ -73,14 +73,18 @@ class SettingsModal extends StatelessWidget {
                               Text(
                                 state.user?.name ?? "n/d",
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 state.user?.email ?? "n/d",
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   color: ColorsExt.grey3(context),
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           );

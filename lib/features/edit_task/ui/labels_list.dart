@@ -7,7 +7,6 @@ import 'package:mobile/components/label/label_item.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/settings/ui/view/folder_item.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/label_ext.dart';
 import 'package:models/label/label.dart';
 
 class LabelsList extends StatefulWidget {
@@ -67,14 +66,13 @@ class _LabelsListState extends State<LabelsList> {
 
     List<Label> labels = List.from(state.labels);
 
-    labels = LabelExt.filter(labels);
-
     labels = labels.where((element) => element.deletedAt == null).toList();
+    labels.removeWhere((element) => element.type != null && element.type == "section");
 
     labels = labels.where((label) {
       if (value.isEmpty) return true;
 
-      if (label.type == "folder" || label.type == "section") {
+      if (label.type == "folder") {
         return true;
       }
 
