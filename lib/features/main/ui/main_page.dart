@@ -139,7 +139,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           builder: (context, state) {
             double todayAppBarHeight;
             double toolbarHeight = 56;
-            double openedCalendarHeight = 288;
+            double openedCalendarHeight = 248;
             double closedCalendarHeight = 80;
 
             switch (state.calendarFormat) {

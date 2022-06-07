@@ -63,6 +63,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
             onCalendarCreated: (pageController) {
               _pageController = pageController;
             },
+            rowHeight: 40,
             focusedDay: selectedDate,
             firstDay: now.subtract(const Duration(days: 365)),
             lastDay: now.add(const Duration(days: 365)),
@@ -99,22 +100,40 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
             ),
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, day, focusedDay) {
-                return Center(
-                  child: Text(
-                    DateFormat("d").format(day),
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
+                return SizedBox(
+                  height: 24,
+                  child: Center(
+                    child: Text(
+                      DateFormat("d").format(day),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsExt.grey2(context),
+                      ),
                     ),
                   ),
                 );
               },
               selectedBuilder: (context, day, focusedDay) {
-                return CalendarSelectedDay(day);
+                return SizedBox(height: 24, child: CalendarSelectedDay(day));
               },
               todayBuilder: (context, day, focusedDay) {
-                return CalendarToday(day);
+                return SizedBox(height: 24, child: CalendarToday(day));
+              },
+              outsideBuilder: (context, day, focused) {
+                return SizedBox(
+                  height: 24,
+                  child: Center(
+                    child: Text(
+                      DateFormat("d").format(day),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsExt.grey3(context),
+                      ),
+                    ),
+                  ),
+                );
               },
               headerTitleBuilder: (context, day) {
                 return Padding(
@@ -169,6 +188,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
               },
             ),
           ),
+          const SizedBox(height: 16),
           Builder(builder: (context) {
             if (!widget.showTime) {
               return const SizedBox();

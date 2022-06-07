@@ -29,6 +29,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
             DateTime now = DateTime.now();
 
             return TableCalendar(
+              rowHeight: 40,
               availableGestures: AvailableGestures.horizontalSwipe,
               calendarFormat:
                   state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month,
@@ -62,22 +63,40 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
               ),
               calendarBuilders: CalendarBuilders(
                 defaultBuilder: (context, day, focusedDay) {
-                  return Center(
-                    child: Text(
-                      DateFormat("d").format(day),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey2(context),
+                  return SizedBox(
+                    height: 24,
+                    child: Center(
+                      child: Text(
+                        DateFormat("d").format(day),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey2(context),
+                        ),
                       ),
                     ),
                   );
                 },
                 selectedBuilder: (context, day, focusedDay) {
-                  return CalendarSelectedDay(day);
+                  return SizedBox(height: 24, child: CalendarSelectedDay(day));
                 },
                 todayBuilder: (context, day, focusedDay) {
-                  return CalendarToday(day);
+                  return SizedBox(height: 24, child: CalendarToday(day));
+                },
+                outsideBuilder: (context, day, focused) {
+                  return SizedBox(
+                    height: 24,
+                    child: Center(
+                      child: Text(
+                        DateFormat("d").format(day),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey3(context),
+                        ),
+                      ),
+                    ),
+                  );
                 },
                 headerTitleBuilder: (context, day) {
                   return Padding(
