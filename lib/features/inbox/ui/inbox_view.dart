@@ -45,15 +45,18 @@ class _View extends StatelessWidget {
                   return null;
                 }
 
-                return Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Notice(
-                    title: t.notice.inboxTitle,
-                    subtitle: t.notice.inboxSubtitle,
-                    icon: Icons.info_outline,
-                    onClose: () {
-                      context.read<InboxCubit>().inboxNoticeClosed();
-                    },
+                return GestureDetector(
+                  onLongPress: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Notice(
+                      title: t.notice.inboxTitle,
+                      subtitle: t.notice.inboxSubtitle,
+                      icon: Icons.info_outline,
+                      onClose: () {
+                        context.read<InboxCubit>().inboxNoticeClosed();
+                      },
+                    ),
                   ),
                 );
               }(),
