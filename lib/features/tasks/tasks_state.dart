@@ -42,6 +42,7 @@ class TasksCubitState extends Equatable {
   final String? syncStatus;
   final List<UndoTask> queue;
   final Task? justCreatedTask;
+  final bool firstLoadCompleted;
 
   const TasksCubitState({
     this.loading = false,
@@ -53,6 +54,7 @@ class TasksCubitState extends Equatable {
     this.syncStatus,
     this.queue = const [],
     this.justCreatedTask,
+    this.firstLoadCompleted = false,
   });
 
   TasksCubitState copyWith({
@@ -65,6 +67,7 @@ class TasksCubitState extends Equatable {
     String? syncStatus,
     List<UndoTask>? queue,
     Nullable<Task?>? justCreatedTask,
+    bool? firstLoadCompleted,
   }) {
     return TasksCubitState(
       loading: loading ?? this.loading,
@@ -76,6 +79,7 @@ class TasksCubitState extends Equatable {
       syncStatus: syncStatus ?? this.syncStatus,
       queue: queue ?? this.queue,
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
+      firstLoadCompleted: firstLoadCompleted ?? this.firstLoadCompleted,
     );
   }
 
@@ -90,5 +94,6 @@ class TasksCubitState extends Equatable {
         syncStatus,
         queue,
         justCreatedTask,
+        firstLoadCompleted,
       ];
 }

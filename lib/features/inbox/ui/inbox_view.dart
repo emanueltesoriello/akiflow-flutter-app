@@ -24,37 +24,41 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
+    return BlocBuilder<TasksCubit, TasksCubitState>(
+      builder: (context, tasksState) {
+        List<Task> tasks = List.from(tasksState.inboxTasks);
 
-    return BlocBuilder<InboxCubit, InboxCubitState>(
-      builder: (context, state) {
-        if (tasks.isEmpty) {
-          return const HomeViewPlaceholder();
-        }
-
-        return TaskList(
-          tasks: tasks,
-          hideInboxLabel: true,
-          sorting: TaskListSorting.ascending,
-          showLabel: true,
-          showPlanInfo: false,
-          notice: () {
-            if (!state.showInboxNotice) {
-              return null;
+        return BlocBuilder<InboxCubit, InboxCubitState>(
+          builder: (context, state) {
+            if (tasksState.firstLoadCompleted && tasks.isEmpty) {
+              return const HomeViewPlaceholder();
             }
 
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Notice(
-                title: t.notice.inboxTitle,
-                subtitle: t.notice.inboxSubtitle,
-                icon: Icons.info_outline,
-                onClose: () {
-                  context.read<InboxCubit>().inboxNoticeClosed();
-                },
-              ),
+            return TaskList(
+              tasks: tasks,
+              hideInboxLabel: true,
+              sorting: TaskListSorting.ascending,
+              showLabel: true,
+              showPlanInfo: false,
+              notice: () {
+                if (!state.showInboxNotice) {
+                  return null;
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Notice(
+                    title: t.notice.inboxTitle,
+                    subtitle: t.notice.inboxSubtitle,
+                    icon: Icons.info_outline,
+                    onClose: () {
+                      context.read<InboxCubit>().inboxNoticeClosed();
+                    },
+                  ),
+                );
+              }(),
             );
-          }(),
+          },
         );
       },
     );

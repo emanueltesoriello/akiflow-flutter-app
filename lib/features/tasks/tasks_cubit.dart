@@ -84,13 +84,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   refreshAllFromRepository() async {
-    Future.wait([
+    await Future.wait([
       fetchDocs(),
       fetchInbox(),
       fetchTodayTasks(),
       _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
       _labelCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelCubit!.state.selectedLabel!) : Future.value(),
     ]);
+
+    emit(state.copyWith(firstLoadCompleted: true));
   }
 
   Future fetchInbox() async {
