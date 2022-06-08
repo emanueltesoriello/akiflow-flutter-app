@@ -12,6 +12,7 @@ import 'package:mobile/features/edit_task/ui/integrations/todoist.dart';
 import 'package:mobile/features/edit_task/ui/integrations/trello.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
+import 'package:models/account/account.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
@@ -26,11 +27,13 @@ import 'package:url_launcher/url_launcher.dart';
 class LinkedContentModal extends StatelessWidget {
   final Task task;
   final Doc doc;
+  final Account? account;
 
   const LinkedContentModal({
     Key? key,
     required this.task,
     required this.doc,
+    required this.account,
   }) : super(key: key);
 
   @override
@@ -88,7 +91,12 @@ class LinkedContentModal extends StatelessWidget {
                             } else if (doc is GmailDoc) {
                               return GmailLinkedContent(doc: doc, itemBuilder: _item);
                             } else if (doc is SlackDoc) {
-                              return SlackLinkedContent(task: task, doc: doc, itemBuilder: _item);
+                              return SlackLinkedContent(
+                                task: task,
+                                doc: doc,
+                                itemBuilder: _item,
+                                account: account,
+                              );
                             } else if (doc is TodoistDoc) {
                               return TodoistLinkedContent(task: task, doc: doc, itemBuilder: _item);
                             } else if (doc is TrelloDoc) {
@@ -129,6 +137,10 @@ class LinkedContentModal extends StatelessWidget {
     required String title,
     required String value,
   }) {
+    if (value.isEmpty) {
+      return const SizedBox();
+    }
+
     return SizedBox(
       height: 40,
       child: Center(

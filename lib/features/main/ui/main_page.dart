@@ -465,7 +465,6 @@ class NavItem extends StatelessWidget {
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => SettingsModal(topPadding: topPadding),
-              closeProgressThreshold: 0,
             );
           }
         },

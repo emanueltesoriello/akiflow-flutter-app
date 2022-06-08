@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/utils/doc_extension.dart';
+import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/doc/slack_doc.dart';
 import 'package:models/task/task.dart';
 
 class SlackLinkedContent extends StatelessWidget {
   final Task task;
   final Doc doc;
+  final Account? account;
   final Function itemBuilder;
 
   const SlackLinkedContent({
@@ -14,6 +17,7 @@ class SlackLinkedContent extends StatelessWidget {
     required this.task,
     required this.doc,
     required this.itemBuilder,
+    required this.account,
   }) : super(key: key);
 
   @override
@@ -23,7 +27,7 @@ class SlackLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.workspace,
-          value: doc.content?["workspaceName"] ?? '',
+          value: (doc as SlackDoc).getWorkspace(account),
         ),
         itemBuilder(
           context,

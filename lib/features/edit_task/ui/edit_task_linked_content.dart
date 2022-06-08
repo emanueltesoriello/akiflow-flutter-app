@@ -5,10 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/linked_content_modal.dart';
+import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/account/account.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
@@ -69,11 +71,17 @@ class EditTaskLinkedContent extends StatelessWidget {
 
         return InkWell(
           onTap: () {
+            SettingsCubit settingsCubit = context.read<SettingsCubit>();
+
+            Account? account = settingsCubit.state.accounts
+                .firstWhereOrNull((element) => element.connectorId == docWithType.connectorId);
+
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => LinkedContentModal(
                 task: task,
                 doc: docWithType,
+                account: account,
               ),
             );
           },
@@ -93,6 +101,8 @@ class EditTaskLinkedContent extends StatelessWidget {
                     Expanded(
                       child: Text(
                         docWithType.getLinkedContentSummary,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
                       ),
                     ),

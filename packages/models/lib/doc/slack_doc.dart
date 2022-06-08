@@ -1,3 +1,4 @@
+import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
@@ -27,8 +28,6 @@ class SlackDoc extends Doc implements DocBase {
   String get getLinkedContentSummary {
     final summaryPieces = [];
 
-    // check workspace (SlackDocModel.ts)
-
     try {
       if (content?["channelName"] != null) {
         summaryPieces.add(content?["channelName"]);
@@ -41,12 +40,18 @@ class SlackDoc extends Doc implements DocBase {
       }
     } catch (_) {}
 
-    return summaryPieces.join(' - ');
+    if (summaryPieces.isEmpty) {
+      return super.getLinkedContentSummary;
+    } else {
+      return summaryPieces.join(' - ');
+    }
   }
 
-  String? getWorkspace() {
-    // TODO slack workspace
-    return null;
+  String? getWorkspace(Account? account) {
+    if (account != null) {
+      return account.identifier;
+    }
+    return '';
   }
 
   @override
