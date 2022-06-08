@@ -30,7 +30,7 @@ class _View extends StatelessWidget {
 
         return BlocBuilder<InboxCubit, InboxCubitState>(
           builder: (context, state) {
-            if (tasksState.firstLoadCompleted && tasks.isEmpty) {
+            if (tasksState.tasksLoaded && tasks.isEmpty) {
               return const HomeViewPlaceholder();
             }
 

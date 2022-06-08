@@ -64,13 +64,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      emit(state.copyWith(loading: true));
-
       emit(state.copyWith(syncStatus: "Syncing..."));
 
       await _syncCubit.sync([Entity.tasks]);
-
-      emit(state.copyWith(loading: false));
     }
   }
 
@@ -92,7 +88,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       _labelCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelCubit!.state.selectedLabel!) : Future.value(),
     ]);
 
-    emit(state.copyWith(firstLoadCompleted: true));
+    emit(state.copyWith(tasksLoaded: true));
   }
 
   Future fetchInbox() async {

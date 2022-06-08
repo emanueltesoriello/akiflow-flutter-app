@@ -33,7 +33,6 @@ class UndoTask {
 }
 
 class TasksCubitState extends Equatable {
-  final bool loading;
   final List<Task> inboxTasks;
   final List<Task> selectedDayTasks;
   final List<Task> labelTasks;
@@ -42,10 +41,9 @@ class TasksCubitState extends Equatable {
   final String? syncStatus;
   final List<UndoTask> queue;
   final Task? justCreatedTask;
-  final bool firstLoadCompleted;
+  final bool tasksLoaded;
 
   const TasksCubitState({
-    this.loading = false,
     this.inboxTasks = const [],
     this.selectedDayTasks = const [],
     this.labelTasks = const [],
@@ -54,11 +52,10 @@ class TasksCubitState extends Equatable {
     this.syncStatus,
     this.queue = const [],
     this.justCreatedTask,
-    this.firstLoadCompleted = false,
+    this.tasksLoaded = false,
   });
 
   TasksCubitState copyWith({
-    bool? loading,
     List<Task>? inboxTasks,
     List<Task>? selectedDayTasks,
     List<Task>? labelTasks,
@@ -67,10 +64,9 @@ class TasksCubitState extends Equatable {
     String? syncStatus,
     List<UndoTask>? queue,
     Nullable<Task?>? justCreatedTask,
-    bool? firstLoadCompleted,
+    bool? tasksLoaded,
   }) {
     return TasksCubitState(
-      loading: loading ?? this.loading,
       inboxTasks: inboxTasks ?? this.inboxTasks,
       selectedDayTasks: selectedDayTasks ?? this.selectedDayTasks,
       labelTasks: labelTasks ?? this.labelTasks,
@@ -79,13 +75,12 @@ class TasksCubitState extends Equatable {
       syncStatus: syncStatus ?? this.syncStatus,
       queue: queue ?? this.queue,
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
-      firstLoadCompleted: firstLoadCompleted ?? this.firstLoadCompleted,
+      tasksLoaded: tasksLoaded ?? this.tasksLoaded,
     );
   }
 
   @override
   List<Object?> get props => [
-        loading,
         inboxTasks,
         selectedDayTasks,
         labelTasks,
@@ -94,6 +89,6 @@ class TasksCubitState extends Equatable {
         syncStatus,
         queue,
         justCreatedTask,
-        firstLoadCompleted,
+        tasksLoaded,
       ];
 }
