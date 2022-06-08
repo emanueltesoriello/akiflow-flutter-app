@@ -42,6 +42,7 @@ class TasksCubitState extends Equatable {
   final List<UndoTask> queue;
   final Task? justCreatedTask;
   final bool tasksLoaded;
+  final bool firstTimeLoaded;
 
   const TasksCubitState({
     this.inboxTasks = const [],
@@ -53,6 +54,7 @@ class TasksCubitState extends Equatable {
     this.queue = const [],
     this.justCreatedTask,
     this.tasksLoaded = false,
+    this.firstTimeLoaded = true,
   });
 
   TasksCubitState copyWith({
@@ -65,6 +67,7 @@ class TasksCubitState extends Equatable {
     List<UndoTask>? queue,
     Nullable<Task?>? justCreatedTask,
     bool? tasksLoaded,
+    bool? firstTimeLoaded,
   }) {
     return TasksCubitState(
       inboxTasks: inboxTasks ?? this.inboxTasks,
@@ -76,6 +79,7 @@ class TasksCubitState extends Equatable {
       queue: queue ?? this.queue,
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
       tasksLoaded: tasksLoaded ?? this.tasksLoaded,
+      firstTimeLoaded: firstTimeLoaded ?? this.firstTimeLoaded,
     );
   }
 
@@ -90,5 +94,6 @@ class TasksCubitState extends Equatable {
         queue,
         justCreatedTask,
         tasksLoaded,
+        firstTimeLoaded,
       ];
 }

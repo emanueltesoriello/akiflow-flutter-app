@@ -41,6 +41,9 @@ abstract class PreferencesRepository {
 
   AccountToken? getAccountToken(String accountId);
   Future<void> setAccountToken(String accountId, AccountToken token);
+
+  bool get firstTimeLoaded;
+  Future<void> setFirstTimeLoaded(bool value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -197,5 +200,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     if (value != null) {
       await _prefs.setString("lastSyncForAccountId_$accountId", value.toIso8601String());
     }
+  }
+
+  @override
+  bool get firstTimeLoaded {
+    return _prefs.getBool("firstTimeLoaded") ?? false;
+  }
+
+  @override
+  Future<void> setFirstTimeLoaded(bool value) async {
+    await _prefs.setBool("firstTimeLoaded", value);
   }
 }

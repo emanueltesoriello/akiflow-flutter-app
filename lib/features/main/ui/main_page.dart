@@ -225,21 +225,29 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   Widget _content() {
-    return BlocBuilder<MainCubit, MainCubitState>(
+    return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
-        switch (state.homeViewType) {
-          case HomeViewType.inbox:
-            return _views[1];
-          case HomeViewType.today:
-            return _views[2];
-          case HomeViewType.calendar:
-            return _views[3];
-          case HomeViewType.label:
-            Label label = state.selectedLabel!;
-            return LabelView(key: ObjectKey(label));
-          default:
-            return const SizedBox();
+        if (state.firstTimeLoaded == false) {
+          return const FirstSyncProgress();
         }
+
+        return BlocBuilder<MainCubit, MainCubitState>(
+          builder: (context, state) {
+            switch (state.homeViewType) {
+              case HomeViewType.inbox:
+                return _views[1];
+              case HomeViewType.today:
+                return _views[2];
+              case HomeViewType.calendar:
+                return _views[3];
+              case HomeViewType.label:
+                Label label = state.selectedLabel!;
+                return LabelView(key: ObjectKey(label));
+              default:
+                return const SizedBox();
+            }
+          },
+        );
       },
     );
   }
@@ -532,6 +540,42 @@ class _BottomIconBadge extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class FirstSyncProgress extends StatelessWidget {
+  const FirstSyncProgress({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Stack(
+        children: [
+          SizedBox(
+            width: 66,
+            height: 66,
+            child: CircularProgressIndicator(
+              strokeWidth: 5,
+              color: ColorsExt.akiflow20(context),
+            ),
+          ),
+          SizedBox(
+            width: 66,
+            height: 66,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Image.asset(
+                  "assets/images/app_icon/top.png",
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

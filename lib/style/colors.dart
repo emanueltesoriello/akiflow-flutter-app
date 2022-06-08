@@ -57,6 +57,10 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.akiflow10 : ColorsDark.akiflow10;
   }
 
+  static akiflow20(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.akiflow20 : ColorsDark.akiflow20;
+  }
+
   static pink(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.pink : ColorsDark.pink;
   }

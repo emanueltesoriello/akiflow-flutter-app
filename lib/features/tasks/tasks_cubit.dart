@@ -45,10 +45,18 @@ class TasksCubit extends Cubit<TasksCubitState> {
   TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
     print("listen tasks sync");
 
+    bool firstTimeLoaded = _preferencesRepository.firstTimeLoaded;
+    emit(state.copyWith(firstTimeLoaded: firstTimeLoaded));
+
     refreshAllFromRepository();
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await refreshAllFromRepository();
+
+      if (!firstTimeLoaded) {
+        _preferencesRepository.setFirstTimeLoaded(true);
+        emit(state.copyWith(firstTimeLoaded: true));
+      }
     });
   }
 
