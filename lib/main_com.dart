@@ -78,6 +78,12 @@ class Application extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarDividerColor: ColorsExt.grey5(context),
+    ));
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<DialogCubit>(
