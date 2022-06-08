@@ -8,6 +8,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/repository/docs_repository.dart';
@@ -452,12 +453,19 @@ class TasksCubit extends Cubit<TasksCubitState> {
     int newIndex, {
     required List<Task> newTasksListOrdered,
     required TaskListSorting? sorting,
+    required HomeViewType homeViewType,
   }) async {
     List<Task> updated = newTasksListOrdered.toList();
 
     Task task = updated.removeAt(oldIndex);
 
     updated.insert(newIndex, task);
+
+    if (homeViewType == HomeViewType.inbox) {
+      emit(state.copyWith(inboxTasks: updated));
+    } else if (homeViewType == HomeViewType.today) {
+      emit(state.copyWith(selectedDayTasks: updated));
+    }
 
     DateTime now = DateTime.now().toUtc();
     int millis = now.millisecondsSinceEpoch;
@@ -482,8 +490,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       Task updatedTask = updated[i];
 
       await _tasksRepository.updateById(updatedTask.id, data: updatedTask);
-
-      refreshTasksUi(updatedTask);
     }
 
     refreshAllFromRepository();

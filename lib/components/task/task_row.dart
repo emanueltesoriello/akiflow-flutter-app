@@ -42,6 +42,7 @@ class TaskRow extends StatelessWidget {
   final bool showLabel;
   final bool showPlanInfo;
   final double additionalTopPadding;
+  final bool enableLongPressToSelect;
 
   const TaskRow({
     Key? key,
@@ -56,6 +57,7 @@ class TaskRow extends StatelessWidget {
     required this.showLabel,
     required this.showPlanInfo,
     this.additionalTopPadding = 0,
+    this.enableLongPressToSelect = false,
   }) : super(key: key);
 
   @override
@@ -65,7 +67,8 @@ class TaskRow extends StatelessWidget {
       groupTag: "task",
       startActionPane: _startActions(context),
       endActionPane: _endActions(context),
-      child: InkWell(
+      child: GestureDetector(
+        onLongPress: enableLongPressToSelect ? () => selectTask() : null,
         onTap: () async {
           TasksCubit tasksCubit = context.read<TasksCubit>();
           SyncCubit syncCubit = context.read<SyncCubit>();

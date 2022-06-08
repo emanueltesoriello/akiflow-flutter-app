@@ -54,10 +54,10 @@ class LabelView extends StatelessWidget {
             return context.read<SyncCubit>().sync();
           },
           child: SlidableAutoCloseBehavior(
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
+            child: ListView(
               controller: scrollController,
-              slivers: labelState.sections.map((section) {
+              padding: EdgeInsets.zero,
+              children: labelState.sections.map((section) {
                 List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
 
                 List<Task> tasksWithoutSnoozedAndSomeday = List.from(tasks);
@@ -194,12 +194,14 @@ class LabelView extends StatelessWidget {
                 }
 
                 return TodayTaskList(
+                  key: ObjectKey("${labelState.selectedLabel?.id}_${section.id ?? ''}"),
                   tasks: tasksWithoutSnoozedAndSomeday,
                   showTasks: labelState.openedSections[section.id] ?? false,
                   showLabel: false,
                   header: labelState.sections.length > 1 ? header : null,
                   footer: footer,
                   showPlanInfo: true,
+                  enableReorder: false,
                 );
               }).toList(),
             ),

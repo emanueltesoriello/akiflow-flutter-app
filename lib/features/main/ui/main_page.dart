@@ -255,7 +255,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 const CalendarView(),
                 if (state.selectedLabel != null)
                   BlocProvider(
-                    key: UniqueKey(),
+                    key: ObjectKey(state.selectedLabel),
                     create: (context) => LabelCubit(state.selectedLabel!, labelsCubit: context.read<LabelsCubit>()),
                     child: LabelView(
                       key: ObjectKey(state.selectedLabel),

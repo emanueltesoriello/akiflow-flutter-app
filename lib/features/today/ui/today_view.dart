@@ -69,11 +69,11 @@ class _View extends StatelessWidget {
         return context.read<SyncCubit>().sync();
       },
       child: SlidableAutoCloseBehavior(
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          controller: PrimaryScrollController.of(context) ?? ScrollController(),
-          slivers: [
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
             TodayTaskList(
+              key: const ObjectKey("todos"),
               tasks: todos,
               sorting: TaskListSorting.descending,
               showTasks: context.watch<TodayCubit>().state.todosListOpen,
@@ -91,6 +91,7 @@ class _View extends StatelessWidget {
               ),
             ),
             TodayTaskList(
+              key: const ObjectKey("pinned"),
               tasks: pinned,
               showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
               showLabel: true,
@@ -107,6 +108,7 @@ class _View extends StatelessWidget {
               ),
             ),
             TodayTaskList(
+              key: const ObjectKey("completed"),
               tasks: completed,
               sorting: TaskListSorting.descending,
               showTasks: context.watch<TodayCubit>().state.completedListOpen,
