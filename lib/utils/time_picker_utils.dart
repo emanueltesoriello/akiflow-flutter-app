@@ -1,20 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:mobile/style/colors.dart';
 
 class TimePickerUtils {
-  static void pickDate(
+  static Future<void> pick(
     BuildContext context, {
-    required Function(TimeOfDay? date) picked,
+    required TimeOfDay initialTime,
+    required Function(TimeOfDay?) onTimeSelected,
   }) async {
     final ThemeData theme = Theme.of(context);
 
     switch (theme.platform) {
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
-        _buildCupertinoDatePicker(context, picked);
+        _buildCupertinoDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
+        onTimeSelected(selected);
         break;
       default:
-        _buildMaterialDatePicker(context, picked);
+        _buildMaterialDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
+        onTimeSelected(selected);
         break;
     }
   }
@@ -22,39 +27,50 @@ class TimePickerUtils {
   /// create android date picker
   static _buildMaterialDatePicker(
     BuildContext context,
-    Function(TimeOfDay? date) picked,
-  ) async {
-    final TimeOfDay? date = await showTimePicker(
+    TimeOfDay initialTime, {
+    required Function(TimeOfDay?) onTimeSelected,
+  }) async {
+    TimeOfDay? selected = await showRoundedTimePicker(
       context: context,
-      initialTime:
-          TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: Theme.of(context).primaryColor,
-            colorScheme: ColorScheme.light(
-              primary: Theme.of(context).colorScheme.secondary,
-              secondary: Theme.of(context).colorScheme.secondary,
-            ),
-            buttonTheme:
-                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-          ),
-          child: child!,
-        );
-      },
+      initialTime: initialTime,
+      borderRadius: 8,
+      locale: const Locale("it", "IT"),
+      theme: ThemeData(
+        fontFamily: "Inter",
+        primaryColor: ColorsExt.akiflow(context),
+        colorScheme: ColorScheme.light(
+          primary: ColorsExt.akiflow(context),
+          secondary: ColorsExt.akiflow(context),
+        ),
+        primarySwatch: MaterialColor(ColorsExt.akiflow(context).value, {
+          50: ColorsExt.akiflow(context),
+          100: ColorsExt.akiflow(context),
+          200: ColorsExt.akiflow(context),
+          300: ColorsExt.akiflow(context),
+          400: ColorsExt.akiflow(context),
+          500: ColorsExt.akiflow(context),
+          600: ColorsExt.akiflow(context),
+          700: ColorsExt.akiflow(context),
+          800: ColorsExt.akiflow(context),
+          900: ColorsExt.akiflow(context),
+        }),
+      ),
     );
 
-    picked(date);
+    onTimeSelected(selected);
   }
+
+  static TimeOfDay? selected;
 
   /// create ios date picker
   static _buildCupertinoDatePicker(
     BuildContext context,
-    Function(TimeOfDay? date) picked,
-  ) {
-    picked(TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute));
+    TimeOfDay initialTime, {
+    required Function(TimeOfDay?) onTimeSelected,
+  }) async {
+    selected = null;
 
-    showModalBottomSheet(
+    await showModalBottomSheet(
         context: context,
         builder: (BuildContext builder) {
           return Container(
@@ -64,11 +80,19 @@ class TimePickerUtils {
               use24hFormat: true,
               mode: CupertinoDatePickerMode.time,
               onDateTimeChanged: (date) {
-                picked(TimeOfDay(hour: date.hour, minute: date.minute));
+                selected = TimeOfDay(hour: date.hour, minute: date.minute);
               },
-              initialDateTime: DateTime.now(),
+              initialDateTime: DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+                initialTime.hour,
+                initialTime.minute,
+              ),
             ),
           );
         });
+
+    onTimeSelected(selected);
   }
 }

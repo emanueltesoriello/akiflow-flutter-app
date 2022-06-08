@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/components/calendar/calendar_selected_day.dart';
 import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/time_picker_utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CreateTaskCalendar extends StatefulWidget {
@@ -210,13 +211,19 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                         Expanded(
                           child: InkWell(
                             onTap: () async {
-                              TimeOfDay time =
+                              TimeOfDay initialTime =
                                   _selectedDatetime.value ?? TimeOfDay(hour: widget.defaultTimeHour, minute: 0);
-                              _selectedDatetime.value = await showTimePicker(context: context, initialTime: time);
+                              TimePickerUtils.pick(
+                                context,
+                                initialTime: initialTime,
+                                onTimeSelected: (selected) {
+                                  _selectedDatetime.value = selected;
 
-                              if (widget.onSelectTime != null) {
-                                widget.onSelectTime!(_selectedDatetime.value);
-                              }
+                                  if (widget.onSelectTime != null) {
+                                    widget.onSelectTime!(_selectedDatetime.value);
+                                  }
+                                },
+                              );
                             },
                             child: ValueListenableBuilder(
                               valueListenable: _selectedDatetime,
