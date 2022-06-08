@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,7 +21,9 @@ import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
 class LabelView extends StatelessWidget {
-  const LabelView({Key? key}) : super(key: key);
+  LabelView({Key? key}) : super(key: key);
+
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,7 @@ class LabelView extends StatelessWidget {
           child: SlidableAutoCloseBehavior(
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              controller: PrimaryScrollController.of(context) ?? ScrollController(),
+              controller: scrollController,
               slivers: labelState.sections.map((section) {
                 List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
 
@@ -147,6 +150,12 @@ class LabelView extends StatelessWidget {
                           iconAsset: iconAsset,
                           text: text,
                           onPressed: () {
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              double position = scrollController.position.maxScrollExtent;
+                              scrollController.animateTo(position,
+                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                            });
+
                             context.read<LabelCubit>().toggleShowSnoozed();
                           },
                         );
@@ -169,7 +178,13 @@ class LabelView extends StatelessWidget {
                         return CompactInfo(
                           iconAsset: iconAsset,
                           text: text,
-                          onPressed: () {
+                          onPressed: () async {
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              double position = scrollController.position.maxScrollExtent;
+                              scrollController.animateTo(position,
+                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                            });
+
                             context.read<LabelCubit>().toggleShowSomeday();
                           },
                         );
