@@ -9,25 +9,22 @@ class CalendarSelectedDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 24,
-        height: 24,
-        padding: const EdgeInsets.all(2.5),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Center(
-          child: Text(
-            DateFormat("d").format(day),
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: ColorsExt.background(context),
-            ),
-            textAlign: TextAlign.center,
+    return Container(
+      width: 24,
+      height: 24,
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Center(
+        child: Text(
+          DateFormat("d").format(day),
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            color: ColorsExt.background(context),
           ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
