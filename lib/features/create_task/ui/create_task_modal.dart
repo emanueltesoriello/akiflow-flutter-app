@@ -105,7 +105,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                             _title(context),
                             const SizedBox(height: 8),
                             _description(context),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -276,7 +276,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
       style: TextStyle(
         color: ColorsExt.grey2(context),
         fontSize: 17,
-        fontWeight: FontWeight.w500,
       ),
       onChanged: (value) {
         context.read<EditTaskCubit>().updateDescription(value);
