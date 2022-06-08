@@ -140,7 +140,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
     try {
-      await fetchSelectedDayTasks(selectedDay.toUtc());
+      await fetchSelectedDayTasks(selectedDay);
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
