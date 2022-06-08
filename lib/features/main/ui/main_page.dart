@@ -43,14 +43,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
-  final List<Widget> _views = [
-    const SizedBox(),
-    const InboxView(),
-    const TodayView(),
-    const CalendarView(),
-  ];
-
   StreamSubscription? streamSubscription;
+  final PageController _pageController = PageController(initialPage: 1);
 
   @override
   void initState() {
@@ -112,20 +106,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           return true;
         }
       },
-      child: StreamBuilder<Label?>(
-        stream: context.read<MainCubit>().labelCubitStream,
-        builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return _body(context);
-          } else {
-            return BlocProvider(
-              key: UniqueKey(),
-              create: (context) => LabelCubit(snapshot.data!, labelsCubit: context.read<LabelsCubit>()),
-              child: _body(context),
-            );
-          }
-        },
-      ),
+      child: _body(context),
     );
   }
 
@@ -231,21 +212,59 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           return const FirstSyncProgress();
         }
 
-        return BlocBuilder<MainCubit, MainCubitState>(
-          builder: (context, state) {
+        return BlocConsumer<MainCubit, MainCubitState>(
+          listener: (context, state) {
+            int? page;
+
             switch (state.homeViewType) {
               case HomeViewType.inbox:
-                return _views[1];
+                page = 1;
+                break;
               case HomeViewType.today:
-                return _views[2];
+                page = 2;
+                break;
               case HomeViewType.calendar:
-                return _views[3];
+                page = 3;
+                break;
               case HomeViewType.label:
-                Label label = state.selectedLabel!;
-                return LabelView(key: ObjectKey(label));
+                page = 4;
+
+                break;
               default:
-                return const SizedBox();
             }
+
+            if (page == null) return;
+
+            if (page == 4) {
+              _pageController.jumpToPage(page);
+            } else if ((state.lastHomeViewType == HomeViewType.label || state.homeViewType == HomeViewType.label)) {
+              _pageController.jumpToPage(page);
+            } else {
+              _pageController.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            }
+          },
+          builder: (context, state) {
+            return PageView(
+              key: const ObjectKey("pageView"),
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                const SizedBox(),
+                const InboxView(),
+                const TodayView(),
+                const CalendarView(),
+                if (state.selectedLabel != null)
+                  BlocProvider(
+                    key: UniqueKey(),
+                    create: (context) => LabelCubit(state.selectedLabel!, labelsCubit: context.read<LabelsCubit>()),
+                    child: LabelView(
+                      key: ObjectKey(state.selectedLabel),
+                    ),
+                  )
+                else
+                  const SizedBox()
+              ],
+            );
           },
         );
       },

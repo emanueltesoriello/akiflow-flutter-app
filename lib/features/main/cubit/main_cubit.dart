@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
@@ -18,21 +16,18 @@ class MainCubit extends Cubit<MainCubitState> {
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
 
-  final StreamController<Label?> _labelCubitController = StreamController<Label?>.broadcast();
-  Stream<Label?> get labelCubitStream => _labelCubitController.stream;
-
   MainCubit(this._syncCubit, this._authCubit) : super(const MainCubitState()) {
     _syncCubit.sync();
   }
 
   void changeHomeView(HomeViewType homeViewType) {
+    emit(state.copyWith(lastHomeViewType: state.homeViewType));
     emit(state.copyWith(homeViewType: homeViewType, selectedLabel: Nullable(null)));
   }
 
   void selectLabel(Label label) {
     emit(state.copyWith(lastHomeViewType: state.homeViewType));
     emit(state.copyWith(selectedLabel: Nullable(label), homeViewType: HomeViewType.label));
-    _labelCubitController.add(label);
   }
 
   void onLoggedAppStart() {
