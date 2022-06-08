@@ -244,7 +244,7 @@ class Doc extends DocBase implements Base {
       return description!;
     }
 
-    return '';
+    return url ?? '';
   }
 
   @override

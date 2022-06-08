@@ -457,6 +457,8 @@ class TaskRow extends StatelessWidget {
 
                       return Text(
                         docWithType.getSummary,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
                       );
                     },
