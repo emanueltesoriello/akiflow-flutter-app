@@ -105,7 +105,10 @@ class _TodayTaskListState extends State<TodayTaskList> {
         (BuildContext context, int index) {
           if (index == tasks.length + 1) {
             if (widget.footer != null) {
-              return Container(margin: const EdgeInsets.fromLTRB(16, 0, 16, 8), child: widget.footer!);
+              return GestureDetector(
+                onLongPress: () {},
+                child: Container(margin: const EdgeInsets.fromLTRB(16, 0, 16, 8), child: widget.footer!),
+              );
             }
 
             return const SizedBox();
@@ -113,7 +116,7 @@ class _TodayTaskListState extends State<TodayTaskList> {
 
           if (index == 0) {
             if (widget.header != null) {
-              return widget.header!;
+              return GestureDetector(onLongPress: () {}, child: widget.header!);
             }
 
             return const SizedBox();
