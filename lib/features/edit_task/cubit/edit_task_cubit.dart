@@ -47,7 +47,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   Future<void> create() async {
-    if (state.originalTask == state.updatedTask) {
+    if (TaskExt.hasData(state.updatedTask) == false) {
       return;
     }
 

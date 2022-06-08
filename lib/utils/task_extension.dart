@@ -579,4 +579,14 @@ extension TaskExt on Task {
   static bool isSelectMode(TasksCubitState state) {
     return countTasksSelected(state) != 0;
   }
+
+  static bool hasData(Task updatedTask) {
+    return updatedTask.title != null ||
+        updatedTask.description != null ||
+        updatedTask.date != null ||
+        updatedTask.datetime != null ||
+        updatedTask.status != 1 ||
+        updatedTask.duration != null ||
+        updatedTask.listId != null;
+  }
 }
