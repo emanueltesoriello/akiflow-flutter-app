@@ -77,6 +77,8 @@ class LinkedContentModal extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   doc.getLinkedContentSummary,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                                 ),
