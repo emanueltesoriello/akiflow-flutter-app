@@ -139,6 +139,7 @@ class _TodayTaskListState extends State<TodayTaskList> {
               hideInboxLabel: false,
               showLabel: widget.showLabel,
               showPlanInfo: widget.showPlanInfo,
+              additionalTopPadding: index == 0 ? 4 : 0,
               selectTask: () {
                 context.read<TasksCubit>().select(task);
               },

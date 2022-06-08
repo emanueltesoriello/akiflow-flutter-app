@@ -32,32 +32,29 @@ class _View extends StatelessWidget {
           return const HomeViewPlaceholder();
         }
 
-        return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: TaskList(
-            tasks: tasks,
-            hideInboxLabel: true,
-            sorting: TaskListSorting.ascending,
-            showLabel: true,
-            showPlanInfo: false,
-            notice: () {
-              if (!state.showInboxNotice) {
-                return null;
-              }
+        return TaskList(
+          tasks: tasks,
+          hideInboxLabel: true,
+          sorting: TaskListSorting.ascending,
+          showLabel: true,
+          showPlanInfo: false,
+          notice: () {
+            if (!state.showInboxNotice) {
+              return null;
+            }
 
-              return Padding(
-                padding: const EdgeInsets.all(16),
-                child: Notice(
-                  title: t.notice.inboxTitle,
-                  subtitle: t.notice.inboxSubtitle,
-                  icon: Icons.info_outline,
-                  onClose: () {
-                    context.read<InboxCubit>().inboxNoticeClosed();
-                  },
-                ),
-              );
-            }(),
-          ),
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Notice(
+                title: t.notice.inboxTitle,
+                subtitle: t.notice.inboxSubtitle,
+                icon: Icons.info_outline,
+                onClose: () {
+                  context.read<InboxCubit>().inboxNoticeClosed();
+                },
+              ),
+            );
+          }(),
         );
       },
     );

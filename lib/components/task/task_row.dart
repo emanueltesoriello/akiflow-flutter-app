@@ -41,6 +41,7 @@ class TaskRow extends StatelessWidget {
   final bool selectMode;
   final bool showLabel;
   final bool showPlanInfo;
+  final double additionalTopPadding;
 
   const TaskRow({
     Key? key,
@@ -54,6 +55,7 @@ class TaskRow extends StatelessWidget {
     this.selectMode = false,
     required this.showLabel,
     required this.showPlanInfo,
+    this.additionalTopPadding = 0,
   }) : super(key: key);
 
   @override
@@ -107,7 +109,7 @@ class TaskRow extends StatelessWidget {
         },
         child: IntrinsicHeight(
           child: Container(
-            padding: const EdgeInsets.fromLTRB(0, 16, 16, 12),
+            padding: EdgeInsets.fromLTRB(0, 16 + additionalTopPadding, 16, 12),
             color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
