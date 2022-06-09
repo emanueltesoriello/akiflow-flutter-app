@@ -16,6 +16,7 @@ import 'package:mobile/style/theme.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
+import 'package:models/integrations/gmail.dart';
 import 'package:models/user.dart';
 
 class GmailDetailsIntegrationsPage extends StatelessWidget {
@@ -29,14 +30,6 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           AppBarComp(
             title: t.settings.integrations.gmail.title,
             showBack: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.sync),
-                onPressed: () {
-                  context.read<SettingsCubit>().syncGmail();
-                },
-              ),
-            ],
           ),
           Expanded(
             child: ListView(
@@ -138,8 +131,22 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
     return BlocBuilder<SettingsCubit, SettingsCubitState>(
       builder: (context, state) {
         Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+        String subtitle;
 
-        String subtitle = GmailSyncMode.titleFromKey(gmailAccount.details?['syncMode']);
+        switch (gmailAccount.details?['syncMode']) {
+          case 1:
+            subtitle = t.settings.integrations.gmail.toImportTask.useAkiflowLabel;
+            break;
+          case 0:
+            subtitle = t.settings.integrations.gmail.toImportTask.useStarToImport;
+            break;
+          case -1:
+            subtitle = t.settings.integrations.gmail.toImportTask.doNothing;
+            break;
+          default:
+            subtitle = t.settings.integrations.gmail.toImportTask.askMeEveryTime;
+            break;
+        }
 
         return IntegrationSetting(
           title: t.settings.integrations.gmail.toImportTask.title,

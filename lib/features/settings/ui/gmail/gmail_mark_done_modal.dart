@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:models/integrations/gmail.dart';
 
 enum GmailMarkAsDoneType {
   unstarTheEmail('unstar'),

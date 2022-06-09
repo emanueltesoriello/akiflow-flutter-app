@@ -170,7 +170,14 @@
     "taskCreatedSuccessfully": "Task created successfully",
     "nSelected": "$count selected",
     "yesterday": "Yesterday",
-    "awesomeInboxZero": "Awesome! You reached Inbox Zero!"
+    "awesomeInboxZero": "Awesome! You reached Inbox Zero!",
+    "gmail": {
+      "doYouAlsoWantTo": "Do you also want to unstar the email on Gmail?",
+      "unstarTheEmail": "Unstar the email",
+      "goToGmail": "Go to Gmail",
+      "doNothing": "Do nothing",
+      "unlabelTheEmail": "Unlabel the email"
+    }
   },
   "errors": {
     "noAccountsFound": "No accounts found"

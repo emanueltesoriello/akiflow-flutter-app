@@ -84,6 +84,7 @@ void setupLocator({
   PushCubit pushCubit = PushCubit();
   AuthCubit authCubit = AuthCubit(syncCubit, pushCubit);
 
+  tasksCubit.attachAuthCubit(authCubit);
   tasksCubit.attachTodayCubit(todayCubit);
   todayCubit.attachTasksCubit(tasksCubit);
 

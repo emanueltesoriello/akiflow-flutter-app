@@ -5,7 +5,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/button_action.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
-import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
@@ -17,7 +16,6 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
-import 'package:models/task/task.dart';
 
 enum BottomTaskAdditionalActions { moveToInbox, planForToday, setDeadline, duplicate, markAsDone, delete }
 
@@ -196,20 +194,6 @@ class BottomTaskActions extends StatelessWidget {
                           case BottomTaskAdditionalActions.markAsDone:
                             TasksCubit tasksCubit = context.read<TasksCubit>();
                             tasksCubit.markAsDone();
-
-                            List<Task> inboxSelected =
-                                tasksCubit.state.inboxTasks.where((t) => t.selected ?? false).toList();
-                            List<Task> todayTasksSelected =
-                                tasksCubit.state.selectedDayTasks.where((t) => t.selected ?? false).toList();
-                            List<Task> labelTasksSelected =
-                                tasksCubit.state.labelTasks.where((t) => t.selected ?? false).toList();
-                            List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
-
-                            Task task = all.first;
-
-                            AuthCubit authCubit = context.read<AuthCubit>();
-
-                            TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
                             break;
                           case BottomTaskAdditionalActions.delete:
                             context.read<TasksCubit>().delete();

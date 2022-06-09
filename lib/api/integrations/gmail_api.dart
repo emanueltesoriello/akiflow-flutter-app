@@ -4,9 +4,11 @@ import 'package:collection/collection.dart';
 import 'package:http/http.dart';
 import 'package:mobile/api/integrations/gmail_client.dart';
 import 'package:mobile/api/integrations/integration_base_api.dart';
-import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
+import 'package:mobile/exceptions/integrations/gmail.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/doc/doc.dart';
+import 'package:models/extensions/account_ext.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,12 +26,9 @@ class GmailApi implements IIntegrationBaseApi {
     _client = GmailClient(accountToken, account: account);
   }
 
-  GmailSyncMode get gmailSyncMode =>
-      account.details?['syncMode'] == 1 ? GmailSyncMode.useAkiflowLabel : GmailSyncMode.useStarToImport;
-
   @override
   Future<List<GmailMessage>> getItems() async {
-    if (gmailSyncMode == GmailSyncMode.useAkiflowLabel) {
+    if (account.gmailSyncMode == GmailSyncMode.useAkiflowLabel) {
       await createAkiflowLabelIfNotExists();
     }
 
@@ -51,7 +50,7 @@ class GmailApi implements IIntegrationBaseApi {
 
       Map<String, dynamic> queryParameters = {
         "pageToken": nextPageToken,
-        "q": gmailSyncMode == GmailSyncMode.useAkiflowLabel ? "label:akiflow" : "is:starred",
+        "q": account.gmailSyncMode == GmailSyncMode.useAkiflowLabel ? "label:akiflow" : "is:starred",
       };
 
       urlWithQueryParameters = urlWithQueryParameters.replace(queryParameters: queryParameters);
@@ -83,7 +82,7 @@ class GmailApi implements IIntegrationBaseApi {
     List<String> messageIds = [];
     List<String> threadIds = [];
 
-    bool shouldUseThreadId = gmailSyncMode == GmailSyncMode.useAkiflowLabel;
+    bool shouldUseThreadId = account.gmailSyncMode == GmailSyncMode.useAkiflowLabel;
 
     if (shouldUseThreadId) {
       for (GmailMessageMetadata messageMetadata in messagesMetadata) {
@@ -308,6 +307,34 @@ GET /gmail/v1/users/${account.identifier}/threads/$threadId?format=metadata&meta
       Response result = await _client.post(uri, body: jsonEncode(label), headers: {'Content-Type': 'application/json'});
 
       await saveAkiflowLabelId(jsonDecode(result.body)?['id']);
+    }
+  }
+
+  Future<void> unstar(Doc doc) async {
+    Uri uri;
+
+    if (account.gmailSyncMode == GmailSyncMode.useAkiflowLabel) {
+      uri = Uri.parse("$endpoint/users/${account.identifier}/messages/${doc.originId}/modify");
+    } else {
+      uri = Uri.parse("$endpoint/users/${account.identifier}/messages/${doc.originId}/modify");
+    }
+
+    String? labelId = account.details?['akiflowLabelId'];
+
+    Map<String, dynamic> requestBody = {
+      "removeLabelIds": account.gmailSyncMode == GmailSyncMode.useAkiflowLabel ? [labelId] : ['STARRED']
+    };
+
+    Response response =
+        await _client.post(uri, headers: {'Content-Type': 'application/json'}, body: jsonEncode(requestBody));
+
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    if (!data.containsKey("id") || data["id"] == null) {
+      throw GmailUnstarException("Unstar failed for doc ${doc.originId} account ${account.identifier}",
+          jsonEncode(requestBody), response.body);
+    } else {
+      print("Unstar successful for doc ${doc.originId} result id ${data['id']}");
     }
   }
 }

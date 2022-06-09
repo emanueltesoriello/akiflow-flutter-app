@@ -9,7 +9,6 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/exceptions/database_exception.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
@@ -19,6 +18,7 @@ import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
@@ -153,9 +153,9 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
       createdAt: TzUtils.toUtcStringIfNotNull(DateTime.now()),
     );
 
-    print("set account token in preferences for account ${account.id}");
+    print("set account token in preferences for account ${account.accountId}");
 
-    await _preferencesRepository.setAccountToken(account.id!, accountToken);
+    await _preferencesRepository.setAccountToken(account.accountId!, accountToken);
 
     try {
       Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);

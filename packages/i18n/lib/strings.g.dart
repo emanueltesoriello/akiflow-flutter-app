@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 211 
+ * Strings: 216 
  *
- * Built on 2022-06-07 at 13:15 UTC
+ * Built on 2022-06-09 at 13:49 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -455,6 +455,7 @@ class _StringsTaskEn {
 	String nSelected({required Object count}) => '$count selected';
 	String get yesterday => 'Yesterday';
 	String get awesomeInboxZero => 'Awesome! You reached Inbox Zero!';
+	late final _StringsTaskGmailEn gmail = _StringsTaskGmailEn._(_root);
 }
 
 // Path: errors
@@ -682,6 +683,20 @@ class _StringsTaskLinkEn {
 
 	// Translations
 	String get addLink => 'Add link';
+}
+
+// Path: task.gmail
+class _StringsTaskGmailEn {
+	_StringsTaskGmailEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get doYouAlsoWantTo => 'Do you also want to unstar the email on Gmail?';
+	String get unstarTheEmail => 'Unstar the email';
+	String get goToGmail => 'Go to Gmail';
+	String get doNothing => 'Do nothing';
+	String get unlabelTheEmail => 'Unlabel the email';
 }
 
 // Path: editTask.repeatingEditDialog
@@ -933,6 +948,11 @@ extension on _StringsEn {
 			'task.nSelected': ({required Object count}) => '$count selected',
 			'task.yesterday': 'Yesterday',
 			'task.awesomeInboxZero': 'Awesome! You reached Inbox Zero!',
+			'task.gmail.doYouAlsoWantTo': 'Do you also want to unstar the email on Gmail?',
+			'task.gmail.unstarTheEmail': 'Unstar the email',
+			'task.gmail.goToGmail': 'Go to Gmail',
+			'task.gmail.doNothing': 'Do nothing',
+			'task.gmail.unlabelTheEmail': 'Unlabel the email',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

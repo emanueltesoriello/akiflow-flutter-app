@@ -2,42 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/style/colors.dart';
-
-enum GmailSyncMode {
-  useAkiflowLabel(1),
-  useStarToImport(0),
-  doNothing(-1),
-  askMeEveryTime(null);
-
-  final int? key;
-  const GmailSyncMode(this.key);
-
-  factory GmailSyncMode.fromKey(int? key) {
-    switch (key) {
-      case 1:
-        return useAkiflowLabel;
-      case 0:
-        return useStarToImport;
-      case -1:
-        return doNothing;
-      default:
-        return askMeEveryTime;
-    }
-  }
-
-  static String titleFromKey(int? key) {
-    switch (key) {
-      case 1:
-        return t.settings.integrations.gmail.toImportTask.useAkiflowLabel;
-      case 0:
-        return t.settings.integrations.gmail.toImportTask.useStarToImport;
-      case -1:
-        return t.settings.integrations.gmail.toImportTask.doNothing;
-      default:
-        return t.settings.integrations.gmail.toImportTask.askMeEveryTime;
-    }
-  }
-}
+import 'package:models/integrations/gmail.dart';
 
 class GmaiImportTaskModal extends StatefulWidget {
   final GmailSyncMode initialType;

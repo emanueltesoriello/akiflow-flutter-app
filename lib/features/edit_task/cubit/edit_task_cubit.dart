@@ -158,6 +158,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync([Entity.tasks]);
     }
+
+    _tasksCubit.handleDocAction([updated]);
   }
 
   void removeLink(String link) {

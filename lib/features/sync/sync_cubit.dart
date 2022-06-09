@@ -37,7 +37,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
     if (user != null) {
       emit(state.copyWith(loading: true));
 
-      await _syncControllerService.syncIntegration();
+      await _syncControllerService.syncIntegrationWithCheckUser();
 
       emit(state.copyWith(loading: false));
     }

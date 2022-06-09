@@ -117,6 +117,12 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
+      try {
+        await _syncIntegration();
+      } catch (e, s) {
+        _sentryService.captureException(e, stackTrace: s);
+      }
+
       if (entities == null) {
         await _syncEntity(Entity.accountsV2);
         await _syncEntity(Entity.accounts);
@@ -133,16 +139,9 @@ class SyncControllerService {
     _isSyncing = false;
 
     syncCompletedController.add(0);
-
-    try {
-      syncIntegration();
-    } catch (e) {
-      _isSyncing = false;
-      rethrow;
-    }
   }
 
-  syncIntegration() async {
+  Future<void> syncIntegrationWithCheckUser() async {
     if (_isSyncing) {
       print("sync integration already in progress");
       return;
@@ -153,44 +152,53 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      List<Account> accounts = await _accountsRepository.get();
-
-      String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
-
-      for (Account account in accounts) {
-        print("get account token for ${account.connectorId} ${account.id}");
-
-        AccountToken? accountToken = _preferencesRepository.getAccountToken(account.id!);
-
-        if (accountToken == null) {
-          print("no account token for ${account.connectorId} ${account.id}");
-          continue;
-        }
-
-        GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {
-          Map<String, dynamic> details = account.details ?? {};
-          details['akiflowLabelId'] = labelId;
-
-          account = account.copyWith(details: details, updatedAt: Nullable(now));
-
-          _accountsRepository.updateById(account.id, data: account);
-
-          print("updated gmail akiflow label");
-        });
-
-        DateTime? lastSync = _preferencesRepository.lastSyncForAccountId(account.id!);
-
-        print("sync integration for account ${account.id}");
-
-        await _syncEntityIntegration(gmailApi, lastSync, account);
-
-        print("sync integration for account ${account.id} done");
-      }
+      await _syncIntegration();
     }
 
     _isSyncing = false;
 
     syncCompletedController.add(0);
+  }
+
+  Future<void> _syncIntegration() async {
+    List<Account> accounts = await _accountsRepository.get();
+
+    if (accounts.isEmpty) {
+      print("no accounts to sync");
+      return;
+    }
+
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+
+    for (Account account in accounts) {
+      AccountToken? accountToken = _preferencesRepository.getAccountToken(account.accountId!);
+
+      if (accountToken == null) {
+        print("no account token for ${account.accountId}");
+        continue;
+      } else {
+        print("account token for ${account.accountId}");
+      }
+
+      GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {
+        Map<String, dynamic> details = account.details ?? {};
+        details['akiflowLabelId'] = labelId;
+
+        account = account.copyWith(details: details, updatedAt: Nullable(now));
+
+        _accountsRepository.updateById(account.id, data: account);
+
+        print("updated gmail akiflow label: $labelId");
+      });
+
+      DateTime? lastSync = _preferencesRepository.lastSyncForAccountId(account.id!);
+
+      print("sync integration for account ${account.accountId}");
+
+      await _syncEntityIntegration(gmailApi, lastSync, account);
+
+      print("sync integration for account ${account.accountId} done");
+    }
   }
 
   Future<void> _syncEntity(Entity entity) async {

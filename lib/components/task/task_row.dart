@@ -9,7 +9,6 @@ import 'package:mobile/components/task/checkbox_animated.dart';
 import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/task_info.dart';
-import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
@@ -72,7 +71,6 @@ class TaskRow extends StatelessWidget {
         onTap: () async {
           TasksCubit tasksCubit = context.read<TasksCubit>();
           SyncCubit syncCubit = context.read<SyncCubit>();
-          AuthCubit authCubit = context.read<AuthCubit>();
 
           EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
 
@@ -107,7 +105,7 @@ class TaskRow extends StatelessWidget {
           }
 
           if (updated.isCompletedComputed != original.isCompletedComputed) {
-            TaskExt.openGmailUrlIfAny(updated, authCubit, tasksCubit);
+            tasksCubit.handleDocAction([updated]);
           }
         },
         child: IntrinsicHeight(
@@ -160,13 +158,6 @@ class TaskRow extends StatelessWidget {
                       task,
                       key: ObjectKey(task),
                       onTap: () {
-                        if (!task.isCompletedComputed) {
-                          TasksCubit tasksCubit = context.read<TasksCubit>();
-                          AuthCubit authCubit = context.read<AuthCubit>();
-
-                          TaskExt.openGmailUrlIfAny(task, authCubit, tasksCubit);
-                        }
-
                         completedClick();
                       },
                     );

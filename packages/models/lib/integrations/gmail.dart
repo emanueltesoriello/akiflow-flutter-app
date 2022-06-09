@@ -40,3 +40,26 @@ class GmailMessage {
     );
   }
 }
+
+enum GmailSyncMode {
+  useAkiflowLabel(1),
+  useStarToImport(0),
+  doNothing(-1),
+  askMeEveryTime(null);
+
+  final int? key;
+  const GmailSyncMode(this.key);
+
+  factory GmailSyncMode.fromKey(int? key) {
+    switch (key) {
+      case 1:
+        return useAkiflowLabel;
+      case 0:
+        return useStarToImport;
+      case -1:
+        return doNothing;
+      default:
+        return askMeEveryTime;
+    }
+  }
+}

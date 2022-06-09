@@ -67,7 +67,7 @@ class GmailClient extends BaseClient {
 
     var result = jsonDecode(response.body);
 
-    AccountToken accountWithNewAccessToken = _preferencesRepository.getAccountToken(account.id!)!;
+    AccountToken accountWithNewAccessToken = _preferencesRepository.getAccountToken(account.accountId!)!;
 
     DateTime now = DateTime.now();
     DateTime expiration = now.add(Duration(seconds: result['expires_in'] as int? ?? 0));
@@ -79,7 +79,7 @@ class GmailClient extends BaseClient {
       tokenType: result?['token_type'],
     );
 
-    await _preferencesRepository.setAccountToken(_accountToken.id!, accountWithNewAccessToken);
+    await _preferencesRepository.setAccountToken(account.accountId!, accountWithNewAccessToken);
 
     _accountToken = accountWithNewAccessToken;
 

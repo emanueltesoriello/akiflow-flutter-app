@@ -11,6 +11,7 @@ import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
 import 'package:mobile/features/create_task/ui/create_task_modal.dart';
+import 'package:mobile/features/edit_task/cubit/doc_action.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
@@ -19,6 +20,7 @@ import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/main/ui/gmail_actions_dialog.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
@@ -29,6 +31,7 @@ import 'package:mobile/features/today/ui/today_view.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/extensions/account_ext.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
@@ -68,6 +71,23 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                   tasksCubit.update(allSelected, andFutureTasks: true);
                 },
               ));
+    });
+
+    tasksCubit.docActionsStream.listen((List<GmailDocAction> actions) async {
+      for (final action in actions) {
+        await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => GmailActionDialog(
+            syncMode: action.account.gmailSyncMode,
+            goToGmail: () {
+              tasksCubit.goToGmail(action.doc);
+            },
+            unstarOrUnlabel: () {
+              tasksCubit.unstarGmail(action.account, action.doc);
+            },
+          ),
+        );
+      }
     });
 
     context.read<MainCubit>().onLoggedAppStart();
