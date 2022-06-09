@@ -4,8 +4,8 @@ import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LicensesPage extends StatelessWidget {
-  const LicensesPage({Key? key}) : super(key: key);
+class LicencesPage extends StatelessWidget {
+  const LicencesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +27,18 @@ class LicensesPage extends StatelessWidget {
                 _LicenseItem(name: "fast_i18n", type: "MIT"),
                 _LicenseItem(name: "flutter_appauth", type: "MIT"),
                 _LicenseItem(name: "flutter_bloc", type: "MIT"),
+                _LicenseItem(name: "flutter_rounded_date_picker", type: "MIT"),
                 _LicenseItem(name: "flutter_slidable", type: "MIT"),
                 _LicenseItem(name: "flutter_svg", type: "MIT"),
-                _LicenseItem(name: "flutter_widget_from_html", type: "MIT"),
                 _LicenseItem(name: "get_it", type: "MIT"),
+                _LicenseItem(name: "html", type: "MIT"),
                 _LicenseItem(name: "http", type: "MIT"),
                 _LicenseItem(name: "intl", type: "MIT"),
-                _LicenseItem(name: "jiffy", type: "MIT"),
                 _LicenseItem(name: "modal_bottom_sheet", type: "MIT"),
                 _LicenseItem(name: "package_info_plus", type: "MIT"),
                 _LicenseItem(name: "path", type: "MIT"),
                 _LicenseItem(name: "path_provider", type: "MIT"),
                 _LicenseItem(name: "pusher_beams", type: "MIT"),
-                _LicenseItem(name: "reorderables", type: "MIT"),
                 _LicenseItem(name: "rrule", type: "MIT"),
                 _LicenseItem(name: "sentry_flutter", type: "MIT"),
                 _LicenseItem(name: "shared_preferences", type: "MIT"),

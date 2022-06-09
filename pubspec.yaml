@@ -24,7 +24,6 @@ dependencies:
   i18n:
     path: ./packages/i18n
   intl: ^0.17.0
-  jiffy: ^5.0.0
   modal_bottom_sheet: ^2.0.1
   models:
     path: ./packages/models
