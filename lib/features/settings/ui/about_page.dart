@@ -7,7 +7,7 @@ import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/button_list_divider.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/settings/ui/licenses_page.dart';
+import 'package:mobile/features/settings/ui/licences_page.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -91,7 +91,7 @@ class AboutPage extends StatelessWidget {
                     showShevron: false,
                     textMainAxisAlignment: MainAxisAlignment.start,
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LicensesPage()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LicencesPage()));
                     },
                   ),
                   const ButtonListDivider(),
