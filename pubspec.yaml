@@ -8,6 +8,7 @@ environment:
   sdk: ">=2.17.1 <3.0.0"
 
 dependencies:
+  async: ^2.9.0
   equatable: ^2.0.3
   flutter:
     sdk: flutter
@@ -44,8 +45,6 @@ dev_dependencies:
   flutter_launcher_icons_maker: ^0.10.1
   flutter_lints: ^2.0.1
   flutter_native_splash: ^2.2.2
-  flutter_test:
-    sdk: flutter
 
 flutter_native_splash:
   color: "#FAFBFD"

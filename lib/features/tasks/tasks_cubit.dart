@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
@@ -136,9 +137,19 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
+  CancelableOperation<List<Task>>? cancellableOperation;
+
+  Future<List<Task>> fromCancelable(Future<List<Task>> future) async {
+    if (cancellableOperation != null) {
+      cancellableOperation!.cancel();
+    }
+    cancellableOperation = CancelableOperation<List<Task>>.fromFuture(future);
+    return cancellableOperation!.value;
+  }
+
   Future fetchSelectedDayTasks(DateTime date) async {
     try {
-      List<Task> todayTasks = await _tasksRepository.getTodayTasks(date: date);
+      List<Task> todayTasks = await fromCancelable(_tasksRepository.getTodayTasks(date: date));
       emit(state.copyWith(selectedDayTasks: todayTasks, syncStatus: "Get labels from repository"));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
