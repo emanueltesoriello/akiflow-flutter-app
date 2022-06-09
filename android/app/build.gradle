@@ -59,6 +59,10 @@ android {
         manifestPlaceholders += [
                 'appAuthRedirectScheme': 'com.akiflow.mobile'
         ]
+        ndk {
+            // Filter for architectures supported by Flutter.
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+        }
     }
 
     buildTypes {
