@@ -8,5 +8,6 @@
   "google_credentials": {
     "client_id_android": "315613968770-q31o9sq9po225sg58ap0m2rkv9jfc18c.apps.googleusercontent.com",
     "client_id_ios": "315613968770-7bvsf78cs8chif4rm6im1lduv1j1n65o.apps.googleusercontent.com"
-  }
+  },
+  "segment_api_key": "DZseBYBuiU55K0yJP5JtRpJTFsdhzYkX"
 }

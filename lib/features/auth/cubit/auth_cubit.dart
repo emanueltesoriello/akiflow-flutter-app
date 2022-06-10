@@ -10,11 +10,13 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 part 'auth_state.dart';
 
@@ -25,6 +27,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
   final UserApi _userApi = locator<UserApi>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   final SyncCubit _syncCubit;
   final PushCubit _pushCubit;
@@ -99,6 +102,14 @@ class AuthCubit extends Cubit<AuthCubitState> {
       await _pushCubit.login(user);
 
       _syncCubit.sync();
+
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+      String version = packageInfo.version;
+      String buildNumber = packageInfo.buildNumber;
+
+      _analyticsService.alias(user);
+      _analyticsService.identify(user: user, version: version, buildNumber: buildNumber);
     } else {
       _dialogService.showGenericError();
     }
@@ -114,6 +125,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
     emit(state.copyWith(user: Nullable(null)));
 
     await _pushCubit.logout();
+
+    _analyticsService.logout();
   }
 
   Future<void> updateUserSettings(Map<String, dynamic> settings) async {

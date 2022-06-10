@@ -1,4 +1,8 @@
 PODS:
+  - Amplitude (8.10.0):
+    - AnalyticsConnector (~> 1.0.0)
+  - Analytics (4.1.6)
+  - AnalyticsConnector (1.0.0)
   - AppAuth (1.4.0):
     - AppAuth/Core (= 1.4.0)
     - AppAuth/ExternalUserAgent (= 1.4.0)
@@ -10,6 +14,10 @@ PODS:
     - Flutter
   - flutter_native_splash (0.0.1):
     - Flutter
+  - flutter_segment (0.0.1):
+    - Analytics (= 4.1.6)
+    - Flutter
+    - Segment-Amplitude (= 3.3.2)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -21,6 +29,9 @@ PODS:
     - Flutter
     - PushNotifications (~> 4.0)
   - PushNotifications (4.0.0)
+  - Segment-Amplitude (3.3.2):
+    - Amplitude (~> 8.3)
+    - Analytics
   - Sentry (7.11.0):
     - Sentry/Core (= 7.11.0)
   - Sentry/Core (7.11.0)
@@ -40,6 +51,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_appauth (from `.symlinks/plugins/flutter_appauth/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
+  - flutter_segment (from `.symlinks/plugins/flutter_segment/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - pusher_beams_ios (from `.symlinks/plugins/pusher_beams_ios/ios`)
@@ -50,9 +62,13 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Amplitude
+    - Analytics
+    - AnalyticsConnector
     - AppAuth
     - FMDB
     - PushNotifications
+    - Segment-Amplitude
     - Sentry
 
 EXTERNAL SOURCES:
@@ -62,6 +78,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_appauth/ios"
   flutter_native_splash:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
+  flutter_segment:
+    :path: ".symlinks/plugins/flutter_segment/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
@@ -78,15 +96,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  Amplitude: 2904f346250510b9e19a4e2262017bcf1d4368f9
+  Analytics: eefe524436f904b8bb3f8c8c3425280e43b34efc
+  AnalyticsConnector: 4c386d5972ac9da86e22d668564dbbac97558754
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_appauth: 05c3778a1e4ae23364dd2ef37cbae14b244f646b
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
+  flutter_segment: 9cdace39639298eb31ad1555e5916edf8f9fc6b8
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   pusher_beams_ios: 3991e6c6186aa392e2c82687f727ffd5075ea268
   PushNotifications: 2b2174b28bf48b1fe552686d1f95c53d62a4781d
+  Segment-Amplitude: 6c1e59c8c278a21029ba7a6a788fcb31b9233a2c
   Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
   sentry_flutter: efb3df2c203cd03aad255892a8d628a458656d14
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad

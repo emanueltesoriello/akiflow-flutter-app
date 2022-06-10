@@ -1,23 +1,42 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 part 'main_state.dart';
 
 class MainCubit extends Cubit<MainCubitState> {
   final SentryService _sentryService = locator<SentryService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
 
   MainCubit(this._syncCubit, this._authCubit) : super(const MainCubitState()) {
-    _syncCubit.sync();
+    User? user = _preferencesRepository.user;
+
+    if (user != null) {
+      _syncCubit.sync();
+      _initAnalytics(user);
+    }
+  }
+
+  _initAnalytics(User user) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    String version = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+
+    await _analyticsService.identify(user: user, version: version, buildNumber: buildNumber);
   }
 
   void changeHomeView(HomeViewType homeViewType) {

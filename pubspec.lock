@@ -249,6 +249,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  flutter_segment:
+    dependency: "direct main"
+    description:
+      name: flutter_segment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.7.0"
   flutter_slidable:
     dependency: "direct main"
     description:

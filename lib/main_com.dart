@@ -20,6 +20,7 @@ import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
@@ -51,6 +52,8 @@ Future<void> mainCom() async {
   bool userLogged = locator<PreferencesRepository>().user != null;
 
   print("environment: ${Config.development ? "dev" : "prod"}");
+
+  locator<AnalyticsService>().config();
 
   await SentryFlutter.init(
     (options) {

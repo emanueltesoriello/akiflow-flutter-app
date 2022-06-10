@@ -31,7 +31,6 @@ abstract class Config {
     return _development;
   }
 
-  /// Sentry DSN based on the environment
   static String get sentryDsn {
     return _config['sentry_dsn'] as String;
   }
@@ -53,6 +52,10 @@ abstract class Config {
       _config['google_credentials']['client_id_android'] as String,
       _config['google_credentials']['client_id_ios'] as String,
     );
+  }
+
+  static String get segmentApiKey {
+    return _config['segment_api_key'] as String;
   }
 }
 

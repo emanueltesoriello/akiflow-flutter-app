@@ -22,6 +22,7 @@ import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/events_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/push_notification_service.dart';
@@ -76,6 +77,7 @@ void setupLocator({
   locator.registerSingleton<SentryService>(SentryService());
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
   locator.registerSingleton<PushNotificationService>(PushNotificationService());
+  locator.registerSingleton<AnalyticsService>(AnalyticsService());
 
   /// Blocs
   TodayCubit todayCubit = TodayCubit();

@@ -28,6 +28,7 @@ class LicencesPage extends StatelessWidget {
                 _LicenseItem(name: "flutter_appauth", type: "MIT"),
                 _LicenseItem(name: "flutter_bloc", type: "MIT"),
                 _LicenseItem(name: "flutter_rounded_date_picker", type: "MIT"),
+                _LicenseItem(name: "flutter_segment", type: "MIT"),
                 _LicenseItem(name: "flutter_slidable", type: "MIT"),
                 _LicenseItem(name: "flutter_svg", type: "MIT"),
                 _LicenseItem(name: "get_it", type: "MIT"),
