@@ -263,6 +263,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
       controller: descriptionController,
       maxLines: null,
       keyboardType: TextInputType.multiline,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(bottom: 16),
         isDense: true,
@@ -287,6 +288,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     return TextField(
       controller: titleController,
       focusNode: titleFocus,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.zero,
         isDense: true,

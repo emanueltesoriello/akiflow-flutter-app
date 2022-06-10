@@ -67,6 +67,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       controller: _descriptionController,
       maxLines: null,
       keyboardType: TextInputType.multiline,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         isDense: true,
         hintText: t.addTask.descriptionHint,
@@ -113,6 +114,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     return TextField(
       controller: _titleController,
       maxLines: null,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.zero,
         isDense: true,
