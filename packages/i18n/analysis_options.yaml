@@ -1,0 +1,8 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    library_private_types_in_public_api: false
+    unnecessary_nullable_for_final_variable_declarations: false
+    unnecessary_brace_in_string_interps: false
+    unnecessary_late: false
