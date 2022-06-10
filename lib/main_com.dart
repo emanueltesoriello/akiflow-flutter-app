@@ -27,6 +27,8 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
+import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,7 +55,11 @@ Future<void> mainCom() async {
 
   print("environment: ${Config.development ? "dev" : "prod"}");
 
-  locator<AnalyticsService>().config();
+  await locator<AnalyticsService>().config();
+
+  if (userLogged) {
+    _identifyAnalytics(locator<PreferencesRepository>().user!);
+  }
 
   await SentryFlutter.init(
     (options) {
@@ -63,6 +69,15 @@ Future<void> mainCom() async {
     },
     appRunner: () => runApp(Application(userLogged: userLogged)),
   );
+}
+
+_identifyAnalytics(User user) async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  String version = packageInfo.version;
+  String buildNumber = packageInfo.buildNumber;
+
+  await locator<AnalyticsService>().identify(user: user, version: version, buildNumber: buildNumber);
 }
 
 bool dialogShown = false;

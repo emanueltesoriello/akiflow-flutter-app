@@ -9,7 +9,6 @@ import 'package:mobile/services/sentry_service.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 part 'main_state.dart';
 
@@ -26,17 +25,9 @@ class MainCubit extends Cubit<MainCubitState> {
 
     if (user != null) {
       _syncCubit.sync();
-      _initAnalytics(user);
     }
-  }
 
-  _initAnalytics(User user) async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    String version = packageInfo.version;
-    String buildNumber = packageInfo.buildNumber;
-
-    await _analyticsService.identify(user: user, version: version, buildNumber: buildNumber);
+    _analyticsService.track("Launch");
   }
 
   void changeHomeView(HomeViewType homeViewType) {

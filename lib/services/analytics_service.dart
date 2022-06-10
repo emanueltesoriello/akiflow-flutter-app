@@ -51,4 +51,10 @@ class AnalyticsService {
 
     await Segment.reset();
   }
+
+  Future<void> track(String event) async {
+    print("*** AnalyticsService track: $event ***");
+
+    await Segment.track(eventName: event, properties: {"mobile": true});
+  }
 }
