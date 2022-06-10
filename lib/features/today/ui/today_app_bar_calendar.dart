@@ -36,6 +36,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
               onCalendarCreated: (pageController) {
                 _pageController = pageController;
               },
+              sixWeekMonthsEnforced: true,
               focusedDay: state.selectedDate,
               firstDay: now.subtract(const Duration(days: 365)),
               lastDay: now.add(const Duration(days: 365)),

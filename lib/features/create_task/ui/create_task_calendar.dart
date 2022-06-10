@@ -68,6 +68,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
             focusedDay: selectedDate,
             firstDay: now.subtract(const Duration(days: 365)),
             lastDay: now.add(const Duration(days: 365)),
+            sixWeekMonthsEnforced: true,
             selectedDayPredicate: (day) {
               return isSameDay(selectedDate, day);
             },
