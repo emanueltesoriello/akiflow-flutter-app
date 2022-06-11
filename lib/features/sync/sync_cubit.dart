@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/user.dart';
 
@@ -21,6 +22,8 @@ class SyncCubit extends Cubit<SyncCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
+      locator<AnalyticsService>().track("Trigger sync now");
+
       emit(state.copyWith(loading: true));
 
       await _syncControllerService.sync(entities);

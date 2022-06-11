@@ -12,6 +12,7 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
@@ -172,6 +173,8 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     emit(state.copyWith(connected: true));
     emit(state.copyWith(connected: false));
+
+    locator<AnalyticsService>().track("Connector Connected");
 
     _syncCubit.syncIntegration([IntegrationEntity.gmail]);
   }

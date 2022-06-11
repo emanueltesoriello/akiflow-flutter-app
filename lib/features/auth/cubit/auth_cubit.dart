@@ -67,6 +67,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   void loginClick() async {
+    locator<AnalyticsService>().track("Login started");
+
     FlutterAppAuth appAuth = const FlutterAppAuth();
 
     final AuthorizationResponse? result = await appAuth.authorize(

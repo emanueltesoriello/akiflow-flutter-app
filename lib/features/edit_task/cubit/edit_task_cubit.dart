@@ -7,6 +7,7 @@ import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:mobile/utils/tz_utils.dart';
@@ -69,6 +70,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshTasksUi(updated);
 
     _tasksCubit.refreshAllFromRepository();
+
+    locator<AnalyticsService>().track("New Task");
 
     _syncCubit.sync([Entity.tasks]);
 

@@ -28,6 +28,7 @@ class MainCubit extends Cubit<MainCubitState> {
     }
 
     _analyticsService.track("Launch");
+    _analyticsService.track("Show Main Window");
   }
 
   void changeHomeView(HomeViewType homeViewType) {
