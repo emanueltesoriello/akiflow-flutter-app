@@ -106,12 +106,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _syncCubit.sync([Entity.tasks]);
     }
 
-    if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
+    if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
+      locator<AnalyticsService>().track("Task Rescheduled");
+    } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
       locator<AnalyticsService>().track("Task moved to Inbox");
     } else if (statusType == TaskStatusType.planned) {
       locator<AnalyticsService>().track("Task planned");
-    } else if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
-      locator<AnalyticsService>().track("Task Rescheduled");
     }
   }
 
