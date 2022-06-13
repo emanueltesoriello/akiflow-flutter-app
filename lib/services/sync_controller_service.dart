@@ -17,6 +17,7 @@ import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/events_repository.dart';
 import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_integration_service.dart';
 import 'package:mobile/services/sync_service.dart';
@@ -68,6 +69,9 @@ class SyncControllerService {
     Entity.tasks: SyncService(
       api: _taskApi,
       databaseRepository: _tasksRepository,
+      hasDataToImport: () {
+        locator<AnalyticsService>().track('Tasks imported');
+      },
     ),
     Entity.labels: SyncService(
       api: _labelApi,

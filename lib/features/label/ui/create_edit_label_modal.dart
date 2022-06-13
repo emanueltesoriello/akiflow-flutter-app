@@ -137,7 +137,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                           onTap: () {
                             if (widget.isCreating) {
                               Label label = context.read<LabelCubit>().state.selectedLabel!;
-                              context.read<LabelsCubit>().addLabel(label);
+                              context.read<LabelsCubit>().addLabel(label, labelType: LabelType.label);
                               Navigator.pop(context);
                             } else {
                               Navigator.pop(context, true);

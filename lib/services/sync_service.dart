@@ -15,10 +15,12 @@ class SyncService {
 
   final ApiClient api;
   final DatabaseRepository databaseRepository;
+  final Function()? hasDataToImport;
 
   SyncService({
     required this.api,
     required this.databaseRepository,
+    this.hasDataToImport,
   });
 
   // Returns the last sync time updated.
@@ -79,7 +81,11 @@ class SyncService {
     addBreadcrumb("${api.runtimeType} update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
 
     // Upsert only after retrieved max remote update at.
-    await _upsertItems(remoteItems);
+    bool hasDataToImportValue = await _upsertItems(remoteItems);
+
+    if (hasDataToImportValue && hasDataToImport != null) {
+      hasDataToImport!();
+    }
 
     return maxRemoteUpdateAt;
   }
@@ -131,7 +137,8 @@ class SyncService {
     addBreadcrumb("${api.runtimeType} local to remote: done");
   }
 
-  Future<void> _upsertItems<T>(List<dynamic> remoteItems) async {
+  /// Return if there is data to import.
+  Future<bool> _upsertItems<T>(List<dynamic> remoteItems) async {
     addBreadcrumb("${api.runtimeType} upsert remote items: ${remoteItems.length} to db");
 
     bool anyInsertErrors = false;
@@ -156,7 +163,7 @@ class SyncService {
 
     if (changedModels.isEmpty && nonExistingModels.isEmpty) {
       addBreadcrumb("${api.runtimeType} no items to upsert");
-      return;
+      return false;
     }
 
     if (nonExistingModels.isNotEmpty) {
@@ -176,6 +183,8 @@ class SyncService {
     }
 
     addBreadcrumb("${api.runtimeType} upsert remote items: done");
+
+    return true;
   }
 
   Future<bool> _addRemoteTaskToLocalDb(itemsToInsert) async {

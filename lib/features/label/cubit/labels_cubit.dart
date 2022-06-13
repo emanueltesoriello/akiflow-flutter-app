@@ -4,11 +4,14 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/labels_repository.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:models/label/label.dart';
 import 'package:models/user.dart';
 
 part 'labels_state.dart';
+
+enum LabelType { folder, label, section }
 
 class LabelsCubit extends Cubit<LabelsCubitState> {
   final LabelsRepository _labelsRepository = locator<LabelsRepository>();
@@ -26,7 +29,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     });
   }
 
-  Future<void> addLabel(Label newLabel) async {
+  Future<void> addLabel(Label newLabel, {required LabelType labelType}) async {
     User user = _preferencesRepository.user!;
 
     newLabel = newLabel.copyWith(userId: user.id);
@@ -38,6 +41,18 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     await _labelsRepository.add([newLabel]);
 
     _syncCubit.sync([Entity.labels]);
+
+    switch (labelType) {
+      case LabelType.folder:
+        locator<AnalyticsService>().track("New Label Folder");
+        break;
+      case LabelType.label:
+        locator<AnalyticsService>().track("New Label");
+        break;
+      case LabelType.section:
+        locator<AnalyticsService>().track("New Section");
+        break;
+    }
   }
 
   Future<void> updateLabel(Label label) async {

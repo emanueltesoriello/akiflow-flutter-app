@@ -62,7 +62,7 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
                         InkWell(
                           onTap: () {
                             Label newFolder = context.read<LabelCubit>().state.selectedLabel!;
-                            context.read<LabelsCubit>().addLabel(newFolder);
+                            context.read<LabelsCubit>().addLabel(newFolder, labelType: LabelType.folder);
                             Navigator.pop(context);
                           },
                           child: Container(

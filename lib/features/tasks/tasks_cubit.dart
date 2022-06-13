@@ -19,6 +19,7 @@ import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/repository/docs_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -323,6 +324,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     } else {
       await update(allSelected);
     }
+
+    locator<AnalyticsService>().track("Tasks deleted");
   }
 
   Future<void> assignLabel(Label label) async {
@@ -471,6 +474,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync([Entity.tasks]);
+
+    if (date != null) {
+      locator<AnalyticsService>().track("Tasks deadline set");
+    } else {
+      locator<AnalyticsService>().track("Tasks deadline unset");
+    }
   }
 
   void clearSelected() {
@@ -590,6 +599,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync([Entity.tasks]);
+
+    if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
+      locator<AnalyticsService>().track("Tasks unplanned");
+    } else if (statusType == TaskStatusType.snoozed) {
+      locator<AnalyticsService>().track("Tasks snoozed");
+    } else if (statusType == TaskStatusType.planned) {
+      locator<AnalyticsService>().track("Tasks planned");
+    }
   }
 
   Timer? _undoTimerDebounce;
@@ -642,6 +659,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
     refreshAllFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
+
+    switch (queue.first.type) {
+      case UndoType.restore:
+        locator<AnalyticsService>().track("Task Restored");
+        break;
+      default:
+    }
   }
 
   Future<void> markLabelTasksAsDone() async {

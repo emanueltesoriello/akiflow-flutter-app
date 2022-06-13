@@ -119,7 +119,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
 
                   if (section != null) {
                     labelCubit.addSectionToLocalUi(section);
-                    labelsCubit.addLabel(section);
+                    labelsCubit.addLabel(section, labelType: LabelType.section);
                   }
 
                   break;

@@ -105,6 +105,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync([Entity.tasks]);
     }
+
+    if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
+      locator<AnalyticsService>().track("Task moved to Inbox");
+    } else if (statusType == TaskStatusType.planned) {
+      locator<AnalyticsService>().track("Task planned");
+    } else if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
+      locator<AnalyticsService>().track("Task Rescheduled");
+    }
   }
 
   void setDuration(double value) {
@@ -118,6 +126,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
+
+    locator<AnalyticsService>().track("Edit Task Duration");
   }
 
   void toggleDuration() {
@@ -144,6 +154,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync([Entity.tasks]);
     }
+
+    locator<AnalyticsService>().track("Edit Task Label");
   }
 
   Future<void> markAsDone({bool forceUpdate = false}) async {
@@ -163,6 +175,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     _tasksCubit.handleDocAction([updated]);
+
+    if (updated.isCompletedComputed) {
+      locator<AnalyticsService>().track("Task Done");
+    } else {
+      locator<AnalyticsService>().track("Task Undone");
+    }
   }
 
   void removeLink(String link) {
@@ -252,6 +270,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     emit(state.copyWith(updatedTask: updated));
+
+    locator<AnalyticsService>().track("Edit Task Priority");
   }
 
   Future<Task> _addTaskWithRecurrence(Task updated) async {
@@ -422,6 +442,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync([Entity.tasks]);
+
+    locator<AnalyticsService>().track("Edit Task");
   }
 
   void updateTitle(String value) {
