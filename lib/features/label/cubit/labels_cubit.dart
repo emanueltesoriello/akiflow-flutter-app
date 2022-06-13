@@ -20,6 +20,8 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   final SyncCubit _syncCubit;
 
   LabelsCubit(this._syncCubit) : super(const LabelsCubitState()) {
+    fetchLabels();
+
     _init();
   }
 
