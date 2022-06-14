@@ -16,7 +16,5 @@ class TaskRowDragMode extends TaskRow {
           swipeActionSelectLabelClick: () {},
           swipeActionSnoozeClick: () {},
           selectMode: true,
-        ) {
-    print(task.id);
-  }
+        );
 }

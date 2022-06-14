@@ -26,7 +26,7 @@ class TrelloDoc extends Doc implements DocBase {
   @override
   String get getLinkedContentSummary {
     final summaryPieces = [];
-    if (content?["boardName"]) {
+    if (content?["boardName"] != null && content?["boardName"] != '') {
       summaryPieces.add(content?["boardName"]);
     }
     return summaryPieces.join(' - ');

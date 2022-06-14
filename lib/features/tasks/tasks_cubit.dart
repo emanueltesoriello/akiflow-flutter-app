@@ -416,8 +416,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       DateTime now = DateTime.now();
 
-      print(allSelectedAndWithRecurrenceId);
-
       for (Task task in allSelectedAndWithRecurrenceId) {
         Task updatedRecurringTask = task.copyWith(
           listId: Nullable(allSelectedAndWithRecurrenceId.first.listId),
