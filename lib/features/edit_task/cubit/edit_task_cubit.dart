@@ -71,7 +71,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     _tasksCubit.refreshAllFromRepository();
 
-    locator<AnalyticsService>().track("New Task");
+    AnalyticsService.track("New Task");
 
     _syncCubit.sync([Entity.tasks]);
 
@@ -107,11 +107,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
-      locator<AnalyticsService>().track("Task Rescheduled");
+      AnalyticsService.track("Task Rescheduled");
     } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
-      locator<AnalyticsService>().track("Task moved to Inbox");
+      AnalyticsService.track("Task moved to Inbox");
     } else if (statusType == TaskStatusType.planned) {
-      locator<AnalyticsService>().track("Task planned");
+      AnalyticsService.track("Task planned");
     }
   }
 
@@ -127,7 +127,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(updatedTask: updated));
 
-    locator<AnalyticsService>().track("Edit Task Duration");
+    AnalyticsService.track("Edit Task Duration");
   }
 
   void toggleDuration() {
@@ -155,7 +155,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _syncCubit.sync([Entity.tasks]);
     }
 
-    locator<AnalyticsService>().track("Edit Task Label");
+    AnalyticsService.track("Edit Task Label");
   }
 
   Future<void> markAsDone({bool forceUpdate = false}) async {
@@ -177,9 +177,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.handleDocAction([updated]);
 
     if (updated.isCompletedComputed) {
-      locator<AnalyticsService>().track("Task Done");
+      AnalyticsService.track("Task Done");
     } else {
-      locator<AnalyticsService>().track("Task Undone");
+      AnalyticsService.track("Task Undone");
     }
   }
 
@@ -271,7 +271,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(updatedTask: updated));
 
-    locator<AnalyticsService>().track("Edit Task Priority");
+    AnalyticsService.track("Edit Task Priority");
   }
 
   Future<Task> _addTaskWithRecurrence(Task updated) async {
@@ -443,7 +443,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     _syncCubit.sync([Entity.tasks]);
 
-    locator<AnalyticsService>().track("Edit Task");
+    AnalyticsService.track("Edit Task");
   }
 
   void updateTitle(String value) {

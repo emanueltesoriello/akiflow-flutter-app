@@ -46,13 +46,13 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     switch (labelType) {
       case LabelType.folder:
-        locator<AnalyticsService>().track("New Label Folder");
+        AnalyticsService.track("New Label Folder");
         break;
       case LabelType.label:
-        locator<AnalyticsService>().track("New Label");
+        AnalyticsService.track("New Label");
         break;
       case LabelType.section:
-        locator<AnalyticsService>().track("New Section");
+        AnalyticsService.track("New Section");
         break;
     }
   }

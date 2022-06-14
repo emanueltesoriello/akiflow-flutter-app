@@ -5,20 +5,22 @@ import 'package:mobile/core/config.dart';
 import 'package:models/user.dart';
 
 class AnalyticsService {
-  Future<void> config() async {
+  const AnalyticsService._();
+
+  static Future<void> config() async {
     print("*** AnalyticsService config ***");
 
     await Segment.config(
       options: SegmentConfig(
         writeKey: Config.segmentApiKey,
-        trackApplicationLifecycleEvents: false,
+        trackApplicationLifecycleEvents: true,
         amplitudeIntegrationEnabled: false,
         debug: Config.development,
       ),
     );
   }
 
-  Future<void> identify({required User user, required String version, required String buildNumber}) async {
+  static Future<void> identify({required User user, required String version, required String buildNumber}) async {
     print("*** AnalyticsService identify: ${user.email} ***");
 
     Map<String, dynamic> traits = {
@@ -36,7 +38,7 @@ class AnalyticsService {
     Segment.identify(userId: user.email, traits: traits);
   }
 
-  Future<void> alias(User user) async {
+  static Future<void> alias(User user) async {
     String? anonymousId = await Segment.getAnonymousId;
 
     print("*** AnalyticsService alias: ${user.email}: anonymousId: $anonymousId ***");
@@ -46,15 +48,17 @@ class AnalyticsService {
     }
   }
 
-  Future<void> logout() async {
+  static void logout() {
     print("*** AnalyticsService logout ***");
 
-    await Segment.reset();
+    Segment.reset();
   }
 
-  Future<void> track(String event) async {
-    print("*** AnalyticsService track: $event ***");
+  static void track(String event) {
+    if (Config.development) {
+      print("*** AnalyticsService track: $event ***");
+    }
 
-    await Segment.track(eventName: event, properties: {"mobile": true});
+    Segment.track(eventName: event, properties: {"mobile": true});
   }
 }

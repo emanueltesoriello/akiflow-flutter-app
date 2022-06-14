@@ -27,7 +27,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
   final UserApi _userApi = locator<UserApi>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   final SyncCubit _syncCubit;
   final PushCubit _pushCubit;
@@ -67,7 +66,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   void loginClick() async {
-    locator<AnalyticsService>().track("Login started");
+    AnalyticsService.track("Login started");
 
     FlutterAppAuth appAuth = const FlutterAppAuth();
 
@@ -110,8 +109,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
       String version = packageInfo.version;
       String buildNumber = packageInfo.buildNumber;
 
-      _analyticsService.alias(user);
-      _analyticsService.identify(user: user, version: version, buildNumber: buildNumber);
+      await AnalyticsService.alias(user);
+      AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
     } else {
       _dialogService.showGenericError();
     }
@@ -128,7 +127,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     await _pushCubit.logout();
 
-    _analyticsService.logout();
+    AnalyticsService.logout();
   }
 
   Future<void> updateUserSettings(Map<String, dynamic> settings) async {

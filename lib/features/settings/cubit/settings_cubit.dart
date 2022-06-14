@@ -174,7 +174,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     emit(state.copyWith(connected: true));
     emit(state.copyWith(connected: false));
 
-    locator<AnalyticsService>().track("Connector Connected");
+    AnalyticsService.track("Connector Connected");
 
     _syncCubit.syncIntegration([IntegrationEntity.gmail]);
   }

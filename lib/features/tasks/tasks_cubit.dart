@@ -325,7 +325,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       await update(allSelected);
     }
 
-    locator<AnalyticsService>().track("Tasks deleted");
+    AnalyticsService.track("Tasks deleted");
   }
 
   Future<void> assignLabel(Label label) async {
@@ -476,9 +476,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync([Entity.tasks]);
 
     if (date != null) {
-      locator<AnalyticsService>().track("Tasks deadline set");
+      AnalyticsService.track("Tasks deadline set");
     } else {
-      locator<AnalyticsService>().track("Tasks deadline unset");
+      AnalyticsService.track("Tasks deadline unset");
     }
   }
 
@@ -601,11 +601,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync([Entity.tasks]);
 
     if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
-      locator<AnalyticsService>().track("Tasks unplanned");
+      AnalyticsService.track("Tasks unplanned");
     } else if (statusType == TaskStatusType.snoozed) {
-      locator<AnalyticsService>().track("Tasks snoozed");
+      AnalyticsService.track("Tasks snoozed");
     } else if (statusType == TaskStatusType.planned) {
-      locator<AnalyticsService>().track("Tasks planned");
+      AnalyticsService.track("Tasks planned");
     }
   }
 
@@ -662,7 +662,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     switch (queue.first.type) {
       case UndoType.restore:
-        locator<AnalyticsService>().track("Task Restored");
+        AnalyticsService.track("Task Restored");
         break;
       default:
     }

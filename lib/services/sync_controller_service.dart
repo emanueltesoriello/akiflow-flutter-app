@@ -69,8 +69,8 @@ class SyncControllerService {
     Entity.tasks: SyncService(
       api: _taskApi,
       databaseRepository: _tasksRepository,
-      hasDataToImport: () {
-        locator<AnalyticsService>().track('Tasks imported');
+      hasDataToImport: () async {
+        AnalyticsService.track('Tasks imported');
       },
     ),
     Entity.labels: SyncService(
@@ -121,6 +121,8 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
+      AnalyticsService.track("Trigger sync now");
+
       try {
         await _syncIntegration();
       } catch (e, s) {

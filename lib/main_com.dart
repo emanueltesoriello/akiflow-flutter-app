@@ -55,7 +55,7 @@ Future<void> mainCom() async {
 
   print("environment: ${Config.development ? "dev" : "prod"}");
 
-  await locator<AnalyticsService>().config();
+  await AnalyticsService.config();
 
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
@@ -77,7 +77,7 @@ _identifyAnalytics(User user) async {
   String version = packageInfo.version;
   String buildNumber = packageInfo.buildNumber;
 
-  await locator<AnalyticsService>().identify(user: user, version: version, buildNumber: buildNumber);
+  await AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
 }
 
 bool dialogShown = false;

@@ -14,21 +14,20 @@ part 'main_state.dart';
 
 class MainCubit extends Cubit<MainCubitState> {
   final SentryService _sentryService = locator<SentryService>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
 
   MainCubit(this._syncCubit, this._authCubit) : super(const MainCubitState()) {
+    AnalyticsService.track("Launch");
+
     User? user = _preferencesRepository.user;
 
     if (user != null) {
       _syncCubit.sync();
+      AnalyticsService.track("Show Main Window");
     }
-
-    _analyticsService.track("Launch");
-    _analyticsService.track("Show Main Window");
   }
 
   void changeHomeView(HomeViewType homeViewType) {
