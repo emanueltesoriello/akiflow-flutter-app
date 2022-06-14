@@ -13,7 +13,6 @@ import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:mobile/services/analytics_service.dart';
-import 'package:mobile/services/dialog_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/tz_utils.dart';
@@ -22,6 +21,8 @@ import 'package:models/account/account_token.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 part 'settings_state.dart';
@@ -31,7 +32,6 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   final SentryService _sentryService = locator<SentryService>();
-  final DialogService _dialogService = locator<DialogService>();
   final GoogleApi _googleApi = locator<GoogleApi>();
 
   final AuthCubit _authCubit;
@@ -56,11 +56,6 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     List<Account> accounts = await _accountsRepository.get();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
-  }
-
-  void bugReport() {
-    _sentryService.captureException(Exception('Bug report'));
-    _dialogService.showMessage("Bug report sent");
   }
 
   Future<void> gmailImportOptions(Account account, GmailSyncMode selectedType) async {
@@ -181,5 +176,22 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
   void syncGmail() {
     _syncCubit.syncIntegration([IntegrationEntity.gmail]);
+  }
+
+  Future<void> sendEmail() async {
+    try {
+      SentryId? sentryId = await _sentryService.captureException(Exception('Bug report'));
+
+      if (sentryId != null) {
+        launchUrl(
+          Uri.parse("mailto:support@akiflow.com?subject=Mobile%20Request%20${sentryId.toString()}"),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        launchUrl(Uri.parse("mailto:support@akiflow.com"), mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {
+      launchUrl(Uri.parse("mailto:support@akiflow.com"), mode: LaunchMode.externalApplication);
+    }
   }
 }

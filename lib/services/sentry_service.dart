@@ -5,7 +5,7 @@ import 'package:mobile/core/config.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class SentryService {
-  Future<void> captureException(exception, {stackTrace}) async {
+  Future<SentryId?> captureException(exception, {stackTrace}) async {
     if (Config.development) {
       print(exception);
       print(stackTrace);
@@ -13,13 +13,13 @@ class SentryService {
     } else {
       if (SentryService.ignoreException(exception)) {
         print("ignoring exception: $exception");
-        return;
+        return null;
       }
 
       print(exception);
       print(stackTrace);
 
-      await Sentry.captureException(exception, stackTrace: stackTrace);
+      return await Sentry.captureException(exception, stackTrace: stackTrace);
     }
   }
 

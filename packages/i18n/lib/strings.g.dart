@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 216 
+ * Strings: 215 
  *
- * Built on 2022-06-10 at 12:47 UTC
+ * Built on 2022-06-14 at 12:45 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -383,7 +383,6 @@ class _StringsSettingsEn {
 	String get helpCenter => 'Help center';
 	String get followUsOnTwitter => 'Follow Us on Twitter';
 	String get joinOurCommunity => 'Join our community';
-	String get bugReport => 'Bug report';
 	String get labels => 'Labels';
 	String get searchComingSoon => 'Search is coming soon in the near future!';
 	String get changeLog => 'Change log';
@@ -846,7 +845,6 @@ extension on _StringsEn {
 			'settings.helpCenter': 'Help center',
 			'settings.followUsOnTwitter': 'Follow Us on Twitter',
 			'settings.joinOurCommunity': 'Join our community',
-			'settings.bugReport': 'Bug report',
 			'settings.labels': 'Labels',
 			'settings.searchComingSoon': 'Search is coming soon in the near future!',
 			'settings.changeLog': 'Change log',

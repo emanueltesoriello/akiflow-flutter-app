@@ -119,15 +119,7 @@ class SettingsPage extends StatelessWidget {
             showShevron: false,
             useSvgColor: true,
             onPressed: () {
-              launchUrl(Uri.parse("mailto:support@akiflow.com"), mode: LaunchMode.externalApplication);
-            },
-          ),
-          const SizedBox(height: 16),
-          ButtonList(
-            title: t.settings.bugReport,
-            position: ButtonListPosition.single,
-            onPressed: () {
-              context.read<SettingsCubit>().bugReport();
+              context.read<SettingsCubit>().sendEmail();
             },
           ),
           const SizedBox(height: 16),
