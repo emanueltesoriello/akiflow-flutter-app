@@ -115,7 +115,7 @@ class TasksRepository extends DatabaseRepository {
   }
 
   Future<List<Task>> getLabelTasks(Label label) async {
-    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
+    String query = """
       SELECT *
       FROM tasks
       WHERE list_id = ?
@@ -124,8 +124,10 @@ class TasksRepository extends DatabaseRepository {
       ORDER BY
           sorting_label ASC NULLS LAST,
           done ASC,
-          status ASC
-""", [label.id!]);
+          status ASC;
+""";
+
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery(query, [label.id!]);
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
