@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 215 
  *
- * Built on 2022-06-14 at 12:45 UTC
+ * Built on 2022-06-14 at 14:23 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -515,7 +515,7 @@ class _StringsEditTaskEn {
 	// Translations
 	String get add => 'Add';
 	String get assignLabel => 'Assign Label';
-	String get createOrSearchALabel => 'Create or search a label';
+	String get searchALabel => 'Search a label';
 	String get noLabel => 'No label';
 	String get removeLabel => 'Remove label';
 	String get deadline => 'Deadline';
@@ -975,7 +975,7 @@ extension on _StringsEn {
 			'linkedContent.board': 'Board',
 			'editTask.add': 'Add',
 			'editTask.assignLabel': 'Assign Label',
-			'editTask.createOrSearchALabel': 'Create or search a label',
+			'editTask.searchALabel': 'Search a label',
 			'editTask.noLabel': 'No label',
 			'editTask.removeLabel': 'Remove label',
 			'editTask.deadline': 'Deadline',

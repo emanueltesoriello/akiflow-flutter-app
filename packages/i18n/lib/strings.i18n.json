@@ -209,7 +209,7 @@
   "editTask": {
     "add": "Add",
     "assignLabel": "Assign Label",
-    "createOrSearchALabel": "Create or search a label",
+    "searchALabel": "Search a label",
     "noLabel": "No label",
     "removeLabel": "Remove label",
     "deadline": "Deadline",

@@ -64,23 +64,9 @@ class _LabelsListState extends State<LabelsList> {
       );
     }
 
-    List<Label> labels = List.from(state.labels);
+    List<Label> all = List.from(state.labels);
 
-    labels.sort((a, b) {
-      try {
-        return (a.sorting ?? DateTime.now().toUtc().millisecondsSinceEpoch) <
-                (b.sorting ?? DateTime.now().toUtc().millisecondsSinceEpoch)
-            ? -1
-            : 1;
-      } catch (_) {}
-
-      return 0;
-    });
-
-    labels = labels.where((element) => element.deletedAt == null).toList();
-    labels.removeWhere((element) => element.type != null && element.type == "section");
-
-    labels = labels.where((label) {
+    List<Label> searchFiltered = all.where((label) {
       if (value.isEmpty) return true;
 
       if (label.type == "folder") {
@@ -94,32 +80,22 @@ class _LabelsListState extends State<LabelsList> {
       return (label.title!).toLowerCase().contains(value.toLowerCase());
     }).toList();
 
-    List<Label> folders = labels.where((element) => element.type == "folder").toList();
-    List<Label> labelsWithoutFolder = labels
-        .where((element) => element.type != "folder" && element.type != "section" && element.parentId == null)
-        .toList();
+    List<Label> foldersAndLabels = searchFiltered;
+    foldersAndLabels = foldersAndLabels.where((element) => element.deletedAt == null).toList();
+    foldersAndLabels.removeWhere((element) => element.type != null && element.type == "section");
 
-    labelsWithoutFolder = labelsWithoutFolder.where((label) {
-      if (value.isEmpty) return true;
+    List<dynamic> list = [];
 
-      if (label.title == null || label.title!.isEmpty) {
-        return false;
+    // add only if is folder or if parentId == null
+    for (var label in foldersAndLabels) {
+      if (label.type == "folder") {
+        list.add(label);
+      } else if (label.parentId == null) {
+        list.add(label);
       }
-
-      return (label.title!).toLowerCase().contains(value.toLowerCase());
-    }).toList();
-
-    Map<Label?, List<Label>> folderLabels = {};
-
-    // Add to top all the labels which don't have parentId
-    folderLabels[null] = labelsWithoutFolder;
-
-    for (var folder in folders) {
-      List<Label> labelsForFolder = labels.where((Label label) => label.parentId == folder.id).toList();
-      folderLabels[folder] = labelsForFolder;
     }
 
-    int count = folderLabels.length;
+    int count = list.length;
 
     if (widget.showHeaders) count += 2;
     if (widget.showNoLabel) count += 1;
@@ -149,7 +125,7 @@ class _LabelsListState extends State<LabelsList> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: BorderedInputView(
-                hint: t.editTask.createOrSearchALabel,
+                hint: t.editTask.searchALabel,
                 onChanged: (value) {
                   _searchNotifier.value = value;
                 },
@@ -177,89 +153,96 @@ class _LabelsListState extends State<LabelsList> {
           index -= 1;
         }
 
-        Label? folder = folderLabels.keys.elementAt(index);
-        List<Label> labels = folderLabels.values.elementAt(index);
+        Label label = list[index];
 
-        if (folder == null) {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: labels.length,
-            itemBuilder: (context, index) {
-              Label label = labels[index];
+        if (label.type == "folder") {
+          Label folder = label;
+          List<Label>? labels = state.labels.where((element) => element.parentId == label.id).toList();
 
-              return LabelItem(
-                label,
-                onTap: () {
-                  widget.onSelect(label);
-                },
-              );
-            },
-          );
+          return _folderRow(folder, labels, value);
         } else {
-          List<Label>? labels = folderLabels[folder] ?? [];
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: FolderItem(
-                      folder,
-                      onTap: () {
-                        toggleFolder(folder);
-                      },
-                    ),
-                  ),
-                  ValueListenableBuilder(
-                    valueListenable: _folderOpenNotifier,
-                    builder: (context, Map<Label, bool> folderOpen, child) {
-                      bool open = folderOpen[folder] ?? false;
-
-                      return SvgPicture.asset(
-                        open
-                            ? "assets/images/icons/_common/chevron_up.svg"
-                            : "assets/images/icons/_common/chevron_down.svg",
-                        width: 16,
-                        height: 16,
-                        color: ColorsExt.grey3(context),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              ValueListenableBuilder(
-                valueListenable: _folderOpenNotifier,
-                builder: (context, Map<Label, bool> folderOpen, child) {
-                  bool open = folderOpen[folder] ?? false;
-
-                  if (!open) {
-                    return const SizedBox();
-                  }
-
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: labels.length,
-                    itemBuilder: (context, index) {
-                      Label label = labels[index];
-
-                      return LabelItem(
-                        label,
-                        onTap: () {
-                          widget.onSelect(label);
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
+          return LabelItem(
+            label,
+            onTap: () {
+              widget.onSelect(label);
+            },
           );
         }
       },
+    );
+  }
+
+  Widget _folderRow(Label folder, List<Label> labels, String searchValue) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: FolderItem(
+                folder,
+                onTap: () {
+                  toggleFolder(folder);
+                },
+              ),
+            ),
+            ValueListenableBuilder(
+              valueListenable: _folderOpenNotifier,
+              builder: (context, Map<Label, bool> folderOpen, child) {
+                bool open = folderOpen[folder] ?? false;
+
+                return SvgPicture.asset(
+                  open ? "assets/images/icons/_common/chevron_up.svg" : "assets/images/icons/_common/chevron_down.svg",
+                  width: 16,
+                  height: 16,
+                  color: ColorsExt.grey3(context),
+                );
+              },
+            ),
+          ],
+        ),
+        ValueListenableBuilder(
+          valueListenable: _folderOpenNotifier,
+          builder: (context, Map<Label, bool> folderOpen, child) {
+            bool open = folderOpen[folder] ?? false;
+
+            if (!open) {
+              return const SizedBox();
+            }
+
+            List<Label> searchFiltered = labels.where((label) {
+              if (searchValue.isEmpty) return true;
+
+              if (label.type == "folder") {
+                return true;
+              }
+
+              if (label.title == null || label.title!.isEmpty) {
+                return false;
+              }
+
+              return (label.title!).toLowerCase().contains(searchValue.toLowerCase());
+            }).toList();
+
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: searchFiltered.length,
+              itemBuilder: (context, index) {
+                Label label = searchFiltered[index];
+
+                return LabelItem(
+                  label,
+                  onTap: () {
+                    widget.onSelect(label);
+                  },
+                );
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 
