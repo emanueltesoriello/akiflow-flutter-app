@@ -17,7 +17,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_rounded_date_picker: ^3.0.1
-  flutter_segment: ^3.7.0
+  flutter_segment: ^3.9.0
   flutter_slidable: ^1.2.1
   flutter_svg: ^1.1.0
   get_it: ^7.2.0
