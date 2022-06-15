@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/create_task/ui/create_task_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
@@ -11,7 +14,6 @@ import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
 import 'package:mobile/features/label/ui/section_header.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/features/today/ui/today_task_list.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -19,14 +21,39 @@ import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
-class LabelView extends StatelessWidget {
-  LabelView({Key? key}) : super(key: key);
+class LabelView extends StatefulWidget {
+  const LabelView({Key? key}) : super(key: key);
 
-  final ScrollController scrollController = ScrollController();
+  @override
+  State<LabelView> createState() => _LabelViewState();
+}
+
+class _LabelViewState extends State<LabelView> {
+  StreamSubscription? streamSubscription;
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+
+    if (streamSubscription != null) {
+      streamSubscription!.cancel();
+    }
+
+    streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Task> labelTasks = context.watch<TasksCubit>().state.labelTasks;
+    List<Task> labelTasks = List.from(context.watch<TasksCubit>().state.labelTasks);
+
+    labelTasks = TaskExt.sort(labelTasks, sorting: TaskListSorting.sortingAscending);
 
     return BlocBuilder<LabelsCubit, LabelsCubitState>(
       builder: (context, labelState) {
@@ -55,6 +82,7 @@ class LabelView extends StatelessWidget {
           child: SlidableAutoCloseBehavior(
             child: ListView(
               controller: scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
               children: labelState.sections.map((section) {
                 List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
@@ -187,15 +215,16 @@ class LabelView extends StatelessWidget {
                   );
                 }
 
-                return TodayTaskList(
-                  key: ObjectKey("${labelState.selectedLabel?.id}_${section.id ?? ''}"),
+                return TaskList(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   tasks: tasksWithoutSnoozedAndSomeday,
-                  showTasks: labelState.openedSections[section.id] ?? false,
+                  visible: labelState.openedSections[section.id] ?? false,
                   showLabel: false,
                   header: labelState.sections.length > 1 ? header : null,
                   footer: footer,
                   showPlanInfo: true,
-                  enableReorder: false,
+                  sorting: TaskListSorting.sortingLabelAscending,
                 );
               }).toList(),
             ),

@@ -15,7 +15,7 @@ class LabelsCubitState extends Equatable {
     this.loading = false,
     this.labels = const [],
     this.selectedLabel,
-    this.sorting = TaskListSorting.descending,
+    this.sorting = TaskListSorting.sortingDescending,
     this.showDone = false,
     this.sections = const [],
     this.openedSections = const {},

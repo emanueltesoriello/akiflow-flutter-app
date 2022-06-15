@@ -46,8 +46,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
   final StreamController<List<Task>> _editRecurringTasksDialog = StreamController<List<Task>>.broadcast();
   Stream<List<Task>> get editRecurringTasksDialog => _editRecurringTasksDialog.stream;
 
-  final StreamController<void> _scrollTopStreamController = StreamController<void>.broadcast();
-  Stream<void> get scrollTopStream => _scrollTopStreamController.stream;
+  final StreamController<void> _scrollListStreamController = StreamController<void>.broadcast();
+  Stream<void> get scrollListStream => _scrollListStreamController.stream;
 
   final StreamController<List<GmailDocAction>> _docActionsController =
       StreamController<List<GmailDocAction>>.broadcast();
@@ -507,23 +507,38 @@ class TasksCubit extends Cubit<TasksCubitState> {
       emit(state.copyWith(inboxTasks: updated));
     } else if (homeViewType == HomeViewType.today) {
       emit(state.copyWith(selectedDayTasks: updated));
+    } else if (homeViewType == HomeViewType.label) {
+      emit(state.copyWith(labelTasks: updated));
     }
 
     DateTime now = DateTime.now().toUtc();
+    Nullable<String?>? nowString = Nullable(TzUtils.toUtcStringIfNotNull(now));
     int millis = now.millisecondsSinceEpoch;
 
-    if (sorting != null && sorting == TaskListSorting.descending) {
+    if (sorting != null &&
+        (sorting == TaskListSorting.sortingAscending || sorting == TaskListSorting.sortingLabelAscending)) {
       updated = updated.reversed.toList();
     }
 
     for (int i = 0; i < updated.length; i++) {
       Task updatedTask = updated[i];
 
-      updatedTask = updatedTask.copyWith(
-        sorting: millis - (i * 1),
-        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
-        selected: false,
-      );
+      switch (sorting) {
+        case TaskListSorting.sortingLabelAscending:
+          updatedTask = updatedTask.copyWith(
+            sortingLabel: millis - (i * 1),
+            updatedAt: nowString,
+            selected: false,
+          );
+          break;
+        default:
+          updatedTask = updatedTask.copyWith(
+            sorting: millis - (i * 1),
+            updatedAt: nowString,
+            selected: false,
+          );
+          break;
+      }
 
       updated[i] = updatedTask;
     }
@@ -628,7 +643,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> setJustCreatedTask(Task task) async {
-    _scrollTopStreamController.add(null);
+    _scrollListStreamController.add(null);
 
     emit(state.copyWith(justCreatedTask: Nullable(task)));
 

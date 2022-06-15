@@ -25,6 +25,8 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
       await _syncControllerService.sync(entities);
 
+      print("sync completed");
+
       emit(state.copyWith(loading: false));
     }
   }

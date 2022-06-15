@@ -129,10 +129,10 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
   void toggleSorting() {
     TaskListSorting sorting = state.sorting;
 
-    if (sorting == TaskListSorting.ascending) {
-      emit(state.copyWith(sorting: TaskListSorting.descending));
+    if (sorting == TaskListSorting.sortingAscending) {
+      emit(state.copyWith(sorting: TaskListSorting.sortingDescending));
     } else {
-      emit(state.copyWith(sorting: TaskListSorting.ascending));
+      emit(state.copyWith(sorting: TaskListSorting.sortingAscending));
     }
   }
 

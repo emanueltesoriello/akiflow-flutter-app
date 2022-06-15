@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,7 +10,6 @@ import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/features/today/ui/today_task_list.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -21,8 +23,33 @@ class TodayView extends StatelessWidget {
   }
 }
 
-class _View extends StatelessWidget {
+class _View extends StatefulWidget {
   const _View({Key? key}) : super(key: key);
+
+  @override
+  State<_View> createState() => _ViewState();
+}
+
+class _ViewState extends State<_View> {
+  StreamSubscription? streamSubscription;
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+
+    if (streamSubscription != null) {
+      streamSubscription!.cancel();
+    }
+
+    streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,15 +97,18 @@ class _View extends StatelessWidget {
       },
       child: SlidableAutoCloseBehavior(
         child: ListView(
+          controller: scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           children: [
-            TodayTaskList(
+            TaskList(
               key: const ObjectKey("todos"),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               tasks: todos,
-              sorting: TaskListSorting.descending,
-              showTasks: context.watch<TodayCubit>().state.todosListOpen,
+              sorting: TaskListSorting.sortingAscending,
+              visible: context.watch<TodayCubit>().state.todosListOpen,
               showLabel: true,
-              footer: null,
               showPlanInfo: false,
               header: _Header(
                 t.today.toDos,
@@ -90,13 +120,15 @@ class _View extends StatelessWidget {
                 usePrimaryColor: true,
               ),
             ),
-            TodayTaskList(
+            TaskList(
               key: const ObjectKey("pinned"),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               tasks: pinned,
-              showTasks: context.watch<TodayCubit>().state.pinnedListOpen,
+              visible: context.watch<TodayCubit>().state.pinnedListOpen,
               showLabel: true,
-              footer: null,
               showPlanInfo: false,
+              sorting: TaskListSorting.dateAscending,
               header: _Header(
                 t.today.pinnedInCalendar,
                 tasks: pinned,
@@ -107,13 +139,14 @@ class _View extends StatelessWidget {
                 usePrimaryColor: false,
               ),
             ),
-            TodayTaskList(
+            TaskList(
               key: const ObjectKey("completed"),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               tasks: completed,
-              sorting: TaskListSorting.descending,
-              showTasks: context.watch<TodayCubit>().state.completedListOpen,
+              sorting: TaskListSorting.sortingDescending,
+              visible: context.watch<TodayCubit>().state.completedListOpen,
               showLabel: true,
-              footer: null,
               showPlanInfo: false,
               header: _Header(
                 t.today.done,

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -8,6 +11,7 @@ import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
 class InboxView extends StatelessWidget {
@@ -19,14 +23,40 @@ class InboxView extends StatelessWidget {
   }
 }
 
-class _View extends StatelessWidget {
+class _View extends StatefulWidget {
   const _View({Key? key}) : super(key: key);
+
+  @override
+  State<_View> createState() => _ViewState();
+}
+
+class _ViewState extends State<_View> {
+  StreamSubscription? streamSubscription;
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+
+    if (streamSubscription != null) {
+      streamSubscription!.cancel();
+    }
+
+    streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, tasksState) {
         List<Task> tasks = List.from(tasksState.inboxTasks);
+
+        tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
 
         return BlocBuilder<InboxCubit, InboxCubitState>(
           builder: (context, state) {
@@ -37,10 +67,11 @@ class _View extends StatelessWidget {
             return TaskList(
               tasks: tasks,
               hideInboxLabel: true,
-              sorting: TaskListSorting.ascending,
+              scrollController: scrollController,
+              sorting: TaskListSorting.sortingDescending,
               showLabel: true,
               showPlanInfo: false,
-              notice: () {
+              header: () {
                 if (!state.showInboxNotice) {
                   return null;
                 }

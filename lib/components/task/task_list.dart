@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -18,25 +17,35 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
-enum TaskListSorting { ascending, descending }
+enum TaskListSorting { sortingAscending, sortingDescending, dateAscending, sortingLabelAscending }
 
 class TaskList extends StatefulWidget {
   final List<Task> tasks;
 
-  final Widget? notice;
+  final Widget? header;
+  final Widget? footer;
   final bool hideInboxLabel;
   final TaskListSorting sorting;
   final bool showLabel;
   final bool showPlanInfo;
+  final bool shrinkWrap;
+  final bool visible;
+  final ScrollController? scrollController;
+  final ScrollPhysics physics;
 
   const TaskList({
     Key? key,
     required this.tasks,
     required this.sorting,
-    this.notice,
+    this.header,
+    this.footer,
     this.hideInboxLabel = false,
     required this.showLabel,
     required this.showPlanInfo,
+    this.shrinkWrap = false,
+    this.visible = true,
+    this.scrollController,
+    this.physics = const AlwaysScrollableScrollPhysics(),
   }) : super(key: key);
 
   @override
@@ -44,32 +53,15 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  StreamSubscription? streamSubscription;
-  ScrollController? scrollController;
-  Task? selected;
-
-  @override
-  void initState() {
-    scrollController = ScrollController();
-
-    TasksCubit tasksCubit = context.read<TasksCubit>();
-
-    if (streamSubscription != null) {
-      streamSubscription!.cancel();
-    }
-
-    streamSubscription = tasksCubit.scrollTopStream.listen((allSelected) {
-      scrollController?.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<Task> tasks =
-        List.from(widget.tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed));
+    List<Task> tasks = List.from(widget.tasks);
 
     tasks = TaskExt.sort(tasks, sorting: widget.sorting);
+
+    if (!widget.visible) {
+      tasks = [];
+    }
 
     return RefreshIndicator(
       backgroundColor: ColorsExt.background(context),
@@ -79,7 +71,9 @@ class _TaskListState extends State<TaskList> {
       child: SlidableAutoCloseBehavior(
         child: ReorderableListView.builder(
           itemCount: tasks.length,
-          scrollController: scrollController,
+          scrollController: widget.scrollController,
+          physics: widget.physics,
+          shrinkWrap: widget.shrinkWrap,
           onReorder: (int oldIndex, int newIndex) {
             if (oldIndex < newIndex) {
               newIndex--;
@@ -94,12 +88,7 @@ class _TaskListState extends State<TaskList> {
                 );
           },
           onReorderStart: (index) {
-            print(index);
-            int indexWithoutHeaderWidget = index;
-
-            selected = tasks[indexWithoutHeaderWidget];
-
-            context.read<TasksCubit>().select(selected!);
+            context.read<TasksCubit>().select(tasks[index]);
           },
           proxyDecorator: (Widget child, int index, Animation<double> animation) {
             return AnimatedBuilder(
@@ -113,7 +102,7 @@ class _TaskListState extends State<TaskList> {
                     elevation: elevation,
                     color: ColorsExt.grey6(context),
                     borderRadius: BorderRadius.zero,
-                    child: TaskRowDragMode(selected!),
+                    child: TaskRowDragMode(tasks[index]),
                   ),
                 );
               },
@@ -121,17 +110,28 @@ class _TaskListState extends State<TaskList> {
             );
           },
           header: Builder(builder: (context) {
-            if (widget.notice == null) {
+            if (widget.header == null) {
               return const SizedBox(key: ObjectKey(0), height: 0);
             }
 
             return Container(
-              key: ObjectKey(widget.notice),
-              child: widget.notice!,
+              key: ObjectKey(widget.header),
+              child: widget.header!,
+            );
+          }),
+          footer: Builder(builder: (context) {
+            if (widget.footer == null) {
+              return const SizedBox(key: ObjectKey(0), height: 0);
+            }
+
+            return Container(
+              key: ObjectKey(widget.footer),
+              child: widget.footer!,
             );
           }),
           itemBuilder: (context, index) {
             Task task = tasks[index];
+
             TasksCubit tasksCubit = context.read<TasksCubit>();
             SyncCubit syncCubit = context.read<SyncCubit>();
 

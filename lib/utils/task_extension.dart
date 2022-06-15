@@ -351,6 +351,30 @@ extension TaskExt on Task {
     return content?["eventLockInCalendar"] != null ? content["eventLockInCalendar"] : "private";
   }
 
+  DateTime? get dateParsed {
+    if (date != null) {
+      return DateTime.parse(date!);
+    }
+
+    return null;
+  }
+
+  DateTime? get sortingParsed {
+    if (sorting != null) {
+      return DateTime.fromMillisecondsSinceEpoch(sorting!).toLocal();
+    }
+
+    return null;
+  }
+
+  DateTime? get sortingLabelParsed {
+    if (sortingLabel != null) {
+      return DateTime.fromMillisecondsSinceEpoch(sortingLabel!).toLocal();
+    }
+
+    return null;
+  }
+
   static bool hasRecurringDataChanges({required Task original, required Task updated}) {
     bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
@@ -406,14 +430,19 @@ extension TaskExt on Task {
 
   static List<Task> sort(
     List<Task> tasks, {
-    required TaskListSorting? sorting,
+    required TaskListSorting sorting,
   }) {
     tasks.sort((a, b) {
       try {
-        if (sorting == TaskListSorting.ascending) {
-          return a.sorting! < b.sorting! ? 1 : -1;
-        } else {
-          return a.sorting! > b.sorting! ? 1 : -1;
+        switch (sorting) {
+          case TaskListSorting.sortingAscending:
+            return a.sortingParsed!.compareTo(b.sortingParsed!);
+          case TaskListSorting.sortingDescending:
+            return a.sortingParsed!.compareTo(b.sortingParsed!) * -1;
+          case TaskListSorting.sortingLabelAscending:
+            return a.sortingLabelParsed!.compareTo(b.sortingLabelParsed!);
+          case TaskListSorting.dateAscending:
+            return a.dateParsed!.compareTo(b.dateParsed!);
         }
       } catch (_) {
         return 0;
