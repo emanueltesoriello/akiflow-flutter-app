@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sql;
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _databaseName = 'local.db';
@@ -21,13 +22,41 @@ class DatabaseService {
 
     await Directory(dirname(path)).create(recursive: true);
 
-    database = await sql.openDatabase(_databaseName);
+    List<Function(sql.Batch)> migrations = [migration1addTasksDocField];
 
-    print("database opened at $path, starting setup");
+    database = await sql.openDatabase(
+      _databaseName,
+      version: 2,
+      onCreate: (db, version) {
+        print('Creating database');
 
-    await _setup();
+        var batch = db.batch();
+        _setup(batch);
 
-    print("database setup completed");
+        for (var migration in migrations) {
+          migration(batch);
+        }
+
+        batch.commit();
+
+        print('Database created');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        print('onUpgrade: $oldVersion -> $newVersion');
+
+        var batch = db.batch();
+
+        if (oldVersion == 0) {
+          migration1addTasksDocField(batch);
+        }
+
+        await batch.commit();
+
+        print('Database upgraded');
+      },
+    );
+
+    print("database opened at $path, starting setup, version: ${await database!.getVersion()}");
 
     return database!;
   }
@@ -46,22 +75,20 @@ class DatabaseService {
     await open();
   }
 
-  Future<void> _setup() async {
-    database!.transaction((txn) async {
-      await _setupAccounts(txn);
-      await _setupCalendars(txn);
-      await _setupContacts(txn);
-      await _setupDocs(txn);
-      await _setupEventModifiers(txn);
-      await _setupEvents(txn);
-      await _setupList(txn);
-      await _setupMigrations(txn);
-      await _setupTasks(txn);
-    });
+  Future<void> _setup(Batch batch) async {
+    _setupAccounts(batch);
+    _setupCalendars(batch);
+    _setupContacts(batch);
+    _setupDocs(batch);
+    _setupEventModifiers(batch);
+    _setupEvents(batch);
+    _setupList(batch);
+    _setupMigrations(batch);
+    _setupTasks(batch);
   }
 
-  Future<void> _setupAccounts(txn) async {
-    await txn.execute('''
+  void _setupAccounts(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS accounts(
   `account_id` VARCHAR(100) PRIMARY KEY,
   `connector_id` VARCHAR(50),
@@ -82,16 +109,16 @@ CREATE TABLE IF NOT EXISTS accounts(
   `id` UUID
 )
     ''');
-    await txn.execute('''
+    batch.execute('''
       CREATE INDEX IF NOT EXISTS accounts_account_id ON accounts(`account_id`)
     ''');
-    await txn.execute('''
+    batch.execute('''
       CREATE INDEX IF NOT EXISTS accounts_identifier ON accounts(`identifier`)
     ''');
   }
 
-  Future<void> _setupCalendars(txn) async {
-    await txn.execute('''
+  void _setupCalendars(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS calendars(
   `id` UUID PRIMARY KEY,
   `origin_id` VARCHAR(255),
@@ -118,13 +145,13 @@ CREATE TABLE IF NOT EXISTS calendars(
   `deleted_at` TEXT
 )
     ''');
-    await txn.execute('''
+    batch.execute('''
       CREATE INDEX IF NOT EXISTS calendars_akiflow_primary ON calendars(`akiflow_primary`)
     ''');
   }
 
-  Future<void> _setupContacts(txn) async {
-    await txn.execute('''
+  void _setupContacts(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS contacts(
   `id` UUID PRIMARY KEY,
   `origin_id` VARCHAR(255),
@@ -147,13 +174,13 @@ CREATE TABLE IF NOT EXISTS contacts(
   `deleted_at` TEXT
 )
     ''');
-    await txn.execute('''
+    batch.execute('''
       CREATE INDEX IF NOT EXISTS contacts_search_text ON contacts(`search_text`)
     ''');
   }
 
-  Future<void> _setupDocs(txn) async {
-    await txn.execute('''
+  void _setupDocs(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS docs(
   `id` UUID PRIMARY KEY,
   `connector_id` VARCHAR(50),
@@ -189,19 +216,18 @@ CREATE TABLE IF NOT EXISTS docs(
   `initialSyncMode` INTEGER
 )
     ''');
-    await txn
-        .execute('CREATE UNIQUE INDEX IF NOT EXISTS docs_connector_id_origin_id ON docs(`connector_id`,`origin_id`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS docs_custom_index1 ON docs(`custom_index1`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS docs_important ON docs(`important`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS docs_priority ON docs(`priority`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS docs_search_text ON docs(`search_text`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS docs_sorting ON docs(`sorting`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS docs_task_id ON docs(`task_id`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS docs_usages ON docs(`usages`)');
+    batch.execute('CREATE UNIQUE INDEX IF NOT EXISTS docs_connector_id_origin_id ON docs(`connector_id`,`origin_id`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS docs_custom_index1 ON docs(`custom_index1`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS docs_important ON docs(`important`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS docs_priority ON docs(`priority`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS docs_search_text ON docs(`search_text`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS docs_sorting ON docs(`sorting`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS docs_task_id ON docs(`task_id`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS docs_usages ON docs(`usages`)');
   }
 
-  Future<void> _setupEventModifiers(txn) async {
-    await txn.execute('''
+  void _setupEventModifiers(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS event_modifiers(
   `id` UUID PRIMARY KEY,
   `akiflow_account_id` UUID,
@@ -221,8 +247,8 @@ CREATE TABLE IF NOT EXISTS event_modifiers(
     ''');
   }
 
-  Future<void> _setupEvents(txn) async {
-    await txn.execute('''
+  void _setupEvents(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS events(
   `id` UUID PRIMARY KEY,
   `customorigin_id` VARCHAR(255),
@@ -276,16 +302,16 @@ CREATE TABLE IF NOT EXISTS events(
   `recurrence_sync_retry` INTEGER
 )
     ''');
-    await txn.execute('CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS events_end_time ON events(`end_time`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS events_recurring_id ON events(`recurring_id`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS events_start_date ON events(`start_date`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS events_start_time ON events(`start_time`)');
-    await txn.execute('CREATE INDEX IF NOT EXISTS events_task_id ON events(`task_id`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS events_end_time ON events(`end_time`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS events_recurring_id ON events(`recurring_id`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS events_start_date ON events(`start_date`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS events_start_time ON events(`start_time`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS events_task_id ON events(`task_id`)');
   }
 
-  Future<void> _setupList(txn) async {
-    await txn.execute('''
+  void _setupList(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS lists(
   `id` UUID PRIMARY KEY,
   `title` VARCHAR(255),
@@ -305,14 +331,14 @@ CREATE TABLE IF NOT EXISTS lists(
     ''');
   }
 
-  Future<void> _setupMigrations(txn) async {
-    await txn.execute('''
+  void _setupMigrations(Batch batch) {
+    batch.execute('''
       CREATE TABLE IF NOT EXISTS migrations(`name` VARCHAR(255) PRIMARY KEY ,`created_at` TEXT )
     ''');
   }
 
-  Future<void> _setupTasks(txn) async {
-    await txn.execute('''
+  void _setupTasks(Batch batch) {
+    batch.execute('''
 CREATE TABLE IF NOT EXISTS tasks(
   `id` UUID PRIMARY KEY,
   `title` VARCHAR(255),
@@ -347,5 +373,14 @@ CREATE TABLE IF NOT EXISTS tasks(
   `due_date` TEXT
 )
     ''');
+  }
+
+  void migration1addTasksDocField(Batch batch) {
+    print('processing migration_1_addTasksDocField...');
+
+    batch.execute('ALTER TABLE tasks ADD COLUMN connector_id VARCHAR(255)');
+    batch.execute('ALTER TABLE tasks ADD COLUMN origin_account_id VARCHAR(255)');
+    batch.execute('ALTER TABLE tasks ADD COLUMN akiflow_account_id VARCHAR(255)');
+    batch.execute('ALTER TABLE tasks ADD COLUMN doc TEXT');
   }
 }

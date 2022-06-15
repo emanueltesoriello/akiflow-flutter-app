@@ -11,7 +11,7 @@ import 'package:mobile/features/edit_task/ui/integrations/slack.dart';
 import 'package:mobile/features/edit_task/ui/integrations/todoist.dart';
 import 'package:mobile/features/edit_task/ui/integrations/trello.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/doc_extension.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
@@ -69,7 +69,7 @@ class LinkedContentModal extends StatelessWidget {
                           child: Row(
                             children: [
                               SvgPicture.asset(
-                                doc.computedIcon,
+                                task.computedIcon(doc),
                                 width: 18,
                                 height: 18,
                               ),

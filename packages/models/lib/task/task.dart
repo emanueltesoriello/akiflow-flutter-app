@@ -37,6 +37,11 @@ class Task extends Equatable implements Base {
   final List<String>? links;
   final List<String>? recurrence;
   final dynamic content;
+  final String? connectorId;
+  final String? originId;
+  final String? originAccountId;
+  final String? akiflowAccountId;
+  final dynamic doc;
 
   const Task({
     this.id,
@@ -69,6 +74,11 @@ class Task extends Equatable implements Base {
     this.links,
     this.recurrence,
     this.content,
+    this.connectorId,
+    this.originId,
+    this.originAccountId,
+    this.akiflowAccountId,
+    this.doc,
   });
 
   Task copyWith({
@@ -102,6 +112,11 @@ class Task extends Equatable implements Base {
     Nullable<String?>? updatedAt,
     Nullable<String?>? remoteUpdatedAt,
     dynamic content,
+    String? connectorId,
+    String? originId,
+    String? originAccountId,
+    String? akiflowAccountId,
+    dynamic doc,
   }) {
     return Task(
       id: id ?? this.id,
@@ -136,6 +151,11 @@ class Task extends Equatable implements Base {
           ? this.remoteUpdatedAt
           : remoteUpdatedAt.value,
       content: content ?? this.content,
+      connectorId: connectorId ?? this.connectorId,
+      originId: originId ?? this.originId,
+      originAccountId: originAccountId ?? this.originAccountId,
+      akiflowAccountId: akiflowAccountId ?? this.akiflowAccountId,
+      doc: doc ?? this.doc,
     );
   }
 
@@ -180,6 +200,11 @@ class Task extends Equatable implements Base {
           ? null
           : List<dynamic>.from(recurrence!.map((x) => x)),
       'content': content,
+      'connector_id': connectorId,
+      'origin_id': originId,
+      'origin_account_id': originAccountId,
+      'akiflow_account_id': akiflowAccountId,
+      'doc': doc,
     };
   }
 
@@ -230,6 +255,16 @@ class Task extends Equatable implements Base {
           ? List<String>.from(map['recurrence'] as List<dynamic>)
           : null,
       content: map['content'] != null ? map['content'] as dynamic : null,
+      connectorId:
+          map['connector_id'] != null ? map['connector_id'] as String? : null,
+      originId: map['origin_id'] != null ? map['origin_id'] as String? : null,
+      originAccountId: map['origin_account_id'] != null
+          ? map['origin_account_id'] as String?
+          : null,
+      akiflowAccountId: map['akiflow_account_id'] != null
+          ? map['akiflow_account_id'] as String?
+          : null,
+      doc: map['doc'] != null ? map['doc'] as dynamic : null,
     );
   }
 
@@ -265,6 +300,11 @@ class Task extends Equatable implements Base {
           ? null
           : recurrence?.toList().join(';'),
       "content": content != null ? jsonEncode(content) : null,
+      "connector_id": connectorId,
+      "origin_id": originId,
+      "origin_account_id": originAccountId,
+      "akiflow_account_id": akiflowAccountId,
+      "doc": doc != null ? jsonEncode(doc) : null,
     };
   }
 
@@ -299,6 +339,10 @@ class Task extends Equatable implements Base {
 
     if (data.containsKey("content") && data["content"] != null) {
       data["content"] = jsonDecode(data["content"] as String);
+    }
+
+    if (data.containsKey("doc") && data["doc"] != null) {
+      data["doc"] = jsonDecode(data["doc"] as String);
     }
 
     Task task = Task.fromMap(data);
@@ -341,6 +385,11 @@ class Task extends Equatable implements Base {
       links,
       recurrence,
       content,
+      connectorId,
+      originId,
+      originAccountId,
+      akiflowAccountId,
+      doc,
     ];
   }
 }

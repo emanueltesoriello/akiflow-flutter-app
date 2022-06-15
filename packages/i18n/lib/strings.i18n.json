@@ -271,5 +271,9 @@
   "noTitle": "(No title)",
   "connect": "Connect",
   "more": "More",
-  "view": "View"
+  "view": "View",
+  "integrations": {
+    "todoist": "Todoist",
+    "slack": "Slack"
+  }
 }

@@ -10,6 +10,7 @@ import 'package:mobile/features/settings/ui/view/integration_list_item.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:mobile/utils/doc_extension.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:models/account/account.dart';
 
 class IntegrationsPage extends StatelessWidget {
@@ -62,7 +63,7 @@ class IntegrationsPage extends StatelessWidget {
                         Account account = accounts[index];
 
                         String? title = DocExt.titleFromConnectorId(account.connectorId);
-                        String? iconAsset = DocExt.iconFromConnectorId(account.connectorId);
+                        String? iconAsset = TaskExt.iconFromConnectorId(account.connectorId);
 
                         EdgeInsets insets;
                         BorderRadius borderRadius;

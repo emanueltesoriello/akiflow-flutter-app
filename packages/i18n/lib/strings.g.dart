@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 215 
+ * Strings: 217 
  *
- * Built on 2022-06-14 at 14:23 UTC
+ * Built on 2022-06-15 at 15:06 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -325,6 +325,7 @@ class _StringsEn {
 	String get connect => 'Connect';
 	String get more => 'More';
 	String get view => 'View';
+	late final _StringsIntegrationsEn integrations = _StringsIntegrationsEn._(_root);
 }
 
 // Path: onboarding
@@ -574,6 +575,17 @@ class _StringsLabelEn {
 	String get hideSomeday => 'Hide Someday';
 	late final _StringsLabelDeleteDialogEn deleteDialog = _StringsLabelDeleteDialogEn._(_root);
 	String get sortComingSoon => 'Sort (Coming soon)';
+}
+
+// Path: integrations
+class _StringsIntegrationsEn {
+	_StringsIntegrationsEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get todoist => 'Todoist';
+	String get slack => 'Slack';
 }
 
 // Path: onboarding.termsAndPrivacy
@@ -1029,6 +1041,8 @@ extension on _StringsEn {
 			'connect': 'Connect',
 			'more': 'More',
 			'view': 'View',
+			'integrations.todoist': 'Todoist',
+			'integrations.slack': 'Slack',
 		};
 	}
 }

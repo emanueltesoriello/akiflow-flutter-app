@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +8,7 @@ import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
+import 'package:models/task/task_doc.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -375,6 +375,61 @@ extension TaskExt on Task {
     return null;
   }
 
+  TaskDoc? get taskDoc {
+    if (doc != null) {
+      return TaskDoc.fromMap(doc!);
+    }
+
+    return null;
+  }
+
+  String computedIcon(Doc? doc) {
+    if (connectorId != null) {
+      return iconFromConnectorId(connectorId);
+    } else {
+      return iconFromConnectorId(doc?.connectorId);
+    }
+  }
+
+  static String iconFromConnectorId(String? connectorId) {
+    switch (connectorId) {
+      case "asana":
+        return "assets/images/icons/asana/asana.svg";
+      case "clickup":
+        return "assets/images/icons/clickup/clickup.svg";
+      case "dropbox":
+        return "assets/images/icons/dropbox/dropbox.svg";
+      case "google":
+        return "assets/images/icons/google/google.svg";
+      case "gmail":
+        return "assets/images/icons/google/gmail.svg";
+      case "jira":
+        return "assets/images/icons/jira/jira.svg";
+      case "skype":
+        return "assets/images/icons/skype/skype.svg";
+      case "teams":
+        return "assets/images/icons/teams/teams.svg";
+      case "notion":
+        return "assets/images/icons/notion/notion.svg";
+      case "slack":
+        return "assets/images/icons/slack/slack.svg";
+      case "superhuman":
+        return "assets/images/icons/superhuman/superhuman-grey-dark.svg";
+      case "todoist":
+        return "assets/images/icons/todoist/todoist.svg";
+      case "trello":
+        return "assets/images/icons/trello/trello.svg";
+      case "twitter":
+        return "assets/images/icons/twitter/twitter.svg";
+      case "zapier":
+        return "assets/images/icons/zapier/zapier.svg";
+      case "zoom":
+        return "assets/images/icons/zoom/zoom.svg";
+      default:
+        return "assets/images/icons/_common/info.svg";
+    }
+  }
+
   static bool hasRecurringDataChanges({required Task original, required Task updated}) {
     bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
@@ -549,12 +604,6 @@ extension TaskExt on Task {
     } else {
       return TaskStatusType.inbox;
     }
-  }
-
-  Doc? doc(List<Doc> docs) {
-    Doc? doc = docs.firstWhereOrNull((doc) => doc.taskId == id);
-
-    return doc;
   }
 
   static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {

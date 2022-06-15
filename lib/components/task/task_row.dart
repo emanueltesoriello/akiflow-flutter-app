@@ -15,7 +15,6 @@ import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/doc_extension.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
@@ -403,7 +402,7 @@ class TaskRow extends StatelessWidget {
       (doc) => doc.taskId == task.id,
     );
 
-    if ((task.description == null || task.description!.isEmpty) && doc == null) {
+    if ((task.description == null || task.description!.isEmpty) && doc == null && task.taskDoc == null) {
       return const SizedBox();
     }
 
@@ -412,40 +411,47 @@ class TaskRow extends StatelessWidget {
       children: [
         const SizedBox(height: 4),
         Builder(builder: (context) {
-          if (doc != null) {
+          if (doc != null || task.taskDoc != null) {
             return Row(
               children: [
-                SvgPicture.asset(doc.computedIcon, width: 16, height: 16),
+                SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
                 const SizedBox(width: 7),
                 Expanded(
                   child: Builder(
                     builder: (context) {
                       Doc docWithType;
 
-                      switch (doc.connectorId) {
+                      switch (doc?.connectorId ?? task.connectorId) {
                         case "asana":
-                          docWithType = AsanaDoc(doc);
+                          docWithType = AsanaDoc(doc!);
                           break;
                         case "clickup":
-                          docWithType = ClickupDoc(doc);
+                          docWithType = ClickupDoc(doc!);
                           break;
                         case "gmail":
-                          docWithType = GmailDoc(doc);
+                          docWithType = GmailDoc(doc!);
                           break;
                         case "notion":
-                          docWithType = NotionDoc(doc);
+                          docWithType = NotionDoc(doc!);
                           break;
                         case "slack":
-                          docWithType = SlackDoc(doc);
+                          docWithType = SlackDoc(doc!);
                           break;
                         case "todoist":
-                          docWithType = TodoistDoc(doc);
+                          if (task.taskDoc != null) {
+                            docWithType = TodoistDoc(Doc(
+                              connectorId: task.connectorId,
+                              content: {"projectName": task.taskDoc?.projectName},
+                            ));
+                          } else {
+                            docWithType = TodoistDoc(doc!);
+                          }
                           break;
                         case "trello":
-                          docWithType = TrelloDoc(doc);
+                          docWithType = TrelloDoc(doc!);
                           break;
                         default:
-                          docWithType = doc;
+                          docWithType = doc!;
                           break;
                       }
 

@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
-import 'package:mobile/utils/doc_extension.dart';
+import 'package:mobile/utils/task_extension.dart';
 
 class IntegrationDetailsHeader extends StatelessWidget {
   final bool isActive;
@@ -42,7 +42,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
               child: Row(
                 children: [
                   const SizedBox(width: 16),
-                  SizedBox(width: 32, height: 32, child: SvgPicture.asset(DocExt.iconFromConnectorId(connectorId))),
+                  SizedBox(width: 32, height: 32, child: SvgPicture.asset(TaskExt.iconFromConnectorId(connectorId))),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(

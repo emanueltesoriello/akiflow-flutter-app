@@ -14,6 +14,7 @@ import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:mobile/utils/doc_extension.dart';
+import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/integrations/gmail.dart';
@@ -194,7 +195,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           leadingWidget: Stack(
             fit: StackFit.expand,
             children: [
-              SvgPicture.asset(DocExt.iconFromConnectorId("gmail")),
+              SvgPicture.asset(TaskExt.iconFromConnectorId("gmail")),
               Builder(builder: (context) {
                 if (gmailAccount.picture == null || gmailAccount.picture!.isEmpty) {
                   return const SizedBox();
