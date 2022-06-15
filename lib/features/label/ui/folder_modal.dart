@@ -4,6 +4,7 @@ import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/label/label.dart';
 
+/// Return new [Label] as the folder selected
 class FolderModal extends StatelessWidget {
   final List<Label> folders;
 

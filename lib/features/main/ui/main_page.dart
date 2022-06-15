@@ -15,7 +15,6 @@ import 'package:mobile/features/edit_task/cubit/doc_action.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
-import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
@@ -115,7 +114,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         if (TaskExt.isSelectMode(context.read<TasksCubit>().state)) {
           context.read<TasksCubit>().clearSelected();
           return false;
-        } else if (context.read<MainCubit>().state.selectedLabel != null) {
+        } else if (context.read<LabelsCubit>().state.selectedLabel != null) {
           context.read<MainCubit>().changeHomeView(context.read<MainCubit>().state.lastHomeViewType);
           return false;
         } else {
@@ -132,7 +131,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   Widget _body(BuildContext context) {
     HomeViewType homeViewType = context.watch<MainCubit>().state.homeViewType;
-    Label? label = context.watch<MainCubit>().state.selectedLabel;
+    Label? label = context.watch<LabelsCubit>().state.selectedLabel;
 
     return Stack(
       children: [
@@ -264,6 +263,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             }
           },
           builder: (context, state) {
+            Label? selectedLabel = context.watch<LabelsCubit>().state.selectedLabel;
+
             return PageView(
               key: const ObjectKey("pageView"),
               controller: _pageController,
@@ -273,16 +274,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 const InboxView(),
                 const TodayView(),
                 const CalendarView(),
-                if (state.selectedLabel != null)
-                  BlocProvider(
-                    key: ObjectKey(state.selectedLabel),
-                    create: (context) => LabelCubit(state.selectedLabel!, labelsCubit: context.read<LabelsCubit>()),
-                    child: LabelView(
-                      key: ObjectKey(state.selectedLabel),
-                    ),
-                  )
-                else
-                  const SizedBox()
+                if (selectedLabel != null) LabelView(key: ObjectKey(selectedLabel)) else const SizedBox()
               ],
             );
           },
@@ -349,7 +341,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
               DateTime date = context.read<TodayCubit>().state.selectedDate;
 
-              Label? label = context.read<MainCubit>().state.selectedLabel;
+              Label? label = context.read<LabelsCubit>().state.selectedLabel;
 
               EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
 

@@ -31,7 +31,7 @@ class Label extends Equatable implements Base {
   final String? updatedAt;
   final String? deletedAt;
   final String? globalUpdatedAt;
-  final dynamic parentId;
+  final String? parentId;
   final String? globalCreatedAt;
   final dynamic system;
   final String? type;
@@ -48,7 +48,7 @@ class Label extends Equatable implements Base {
         updatedAt: json['updated_at'] as String?,
         deletedAt: json['deleted_at'] as String?,
         globalUpdatedAt: json['global_updated_at'] as String?,
-        parentId: json['parent_id'] as dynamic,
+        parentId: json['parent_id'] as String?,
         globalCreatedAt: json['global_created_at'] as String?,
         system: json['system'] as dynamic,
         type: json['type'] as String?,
@@ -84,7 +84,7 @@ class Label extends Equatable implements Base {
     String? createdAt,
     String? deletedAt,
     String? globalUpdatedAt,
-    dynamic parentId,
+    Nullable<String?>? parentId,
     String? globalCreatedAt,
     dynamic system,
     String? type,
@@ -101,7 +101,7 @@ class Label extends Equatable implements Base {
       createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
-      parentId: parentId ?? this.parentId,
+      parentId: parentId == null ? this.parentId : parentId.value,
       globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
       system: system ?? this.system,
       type: type ?? this.type,

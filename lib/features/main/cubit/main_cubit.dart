@@ -6,8 +6,6 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sentry_service.dart';
-import 'package:models/label/label.dart';
-import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 
 part 'main_state.dart';
@@ -32,12 +30,12 @@ class MainCubit extends Cubit<MainCubitState> {
 
   void changeHomeView(HomeViewType homeViewType) {
     emit(state.copyWith(lastHomeViewType: state.homeViewType));
-    emit(state.copyWith(homeViewType: homeViewType, selectedLabel: Nullable(null)));
+    emit(state.copyWith(homeViewType: homeViewType));
   }
 
-  void selectLabel(Label label) {
+  void selectLabel() {
     emit(state.copyWith(lastHomeViewType: state.homeViewType));
-    emit(state.copyWith(selectedLabel: Nullable(label), homeViewType: HomeViewType.label));
+    emit(state.copyWith(homeViewType: HomeViewType.label));
   }
 
   void onLoggedAppStart() {

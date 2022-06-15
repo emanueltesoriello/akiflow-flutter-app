@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
-import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
 import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
@@ -76,79 +75,68 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               switch (result) {
                 case LabelActions.edit:
                   LabelsCubit labelsCubit = context.read<LabelsCubit>();
-                  LabelCubit currentLabelCubit = context.read<LabelCubit>();
-                  MainCubit mainCubit = context.read<MainCubit>();
 
-                  // Use a reference to the current label to update ui after updated the label
-                  LabelCubit labelUpdateCubit = LabelCubit(label, labelsCubit: labelsCubit);
+                  List<Label> folders = labelsCubit.state.labels
+                      .where((label) => label.type == "folder" && label.deletedAt == null)
+                      .toList();
 
-                  bool? update = await showCupertinoModalBottomSheet(
+                  Label? updated = await showCupertinoModalBottomSheet(
                     context: context,
-                    builder: (context) => BlocProvider(
-                      key: ObjectKey(label),
-                      create: (context) => labelUpdateCubit,
-                      child: const CreateEditLabelModal(isCreating: false),
+                    builder: (context) => CreateEditLabelModal(
+                      label: labelsCubit.state.selectedLabel!,
+                      folders: folders,
                     ),
                   );
 
-                  if (update != null && update == true) {
-                    currentLabelCubit.saveLabel(labelUpdateCubit.state.selectedLabel!);
-                    mainCubit.selectLabel(labelUpdateCubit.state.selectedLabel!);
+                  if (updated != null) {
+                    labelsCubit.saveLabel(updated);
                   }
-
                   break;
                 case LabelActions.order:
                   // context.read<LabelCubit>().toggleSorting();
                   break;
                 case LabelActions.newSection:
-                  LabelCubit labelCubit = context.read<LabelCubit>();
-
-                  Label currentLabel = labelCubit.state.selectedLabel!;
+                  Label currentLabel = context.read<LabelsCubit>().state.selectedLabel!;
                   Label newSection = Label(id: const Uuid().v4(), parentId: currentLabel.id!, type: "section");
 
                   LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
                   Label? section = await showCupertinoModalBottomSheet(
                     context: context,
-                    builder: (context) => BlocProvider(
-                      key: ObjectKey(newSection),
-                      create: (context) => LabelCubit(newSection, labelsCubit: labelsCubit),
-                      child: CreateEditSectionModal(section: newSection),
-                    ),
+                    builder: (context) => CreateEditSectionModal(initialSection: newSection),
                   );
 
                   if (section != null) {
-                    labelCubit.addSectionToLocalUi(section);
+                    labelsCubit.addSectionToLocalUi(section);
                     labelsCubit.addLabel(section, labelType: LabelType.section);
                   }
 
                   break;
                 case LabelActions.showDone:
-                  context.read<LabelCubit>().toggleShowDone();
+                  context.read<LabelsCubit>().toggleShowDone();
                   break;
                 case LabelActions.delete:
-                  LabelCubit labelCubit = context.read<LabelCubit>();
                   LabelsCubit labelsCubit = context.read<LabelsCubit>();
                   MainCubit mainCubit = context.read<MainCubit>();
 
-                  Label labelToDelete = labelCubit.state.selectedLabel!;
+                  Label labelToDelete = labelsCubit.state.selectedLabel!;
 
                   showDialog(
                       context: context,
                       builder: (context) => DeleteLabelDialog(
                             labelToDelete,
                             justDeleteTheLabelClick: () {
-                              labelCubit.delete();
+                              labelsCubit.delete();
 
-                              Label deletedLabel = labelCubit.state.selectedLabel!;
+                              Label deletedLabel = labelsCubit.state.selectedLabel!;
                               labelsCubit.updateLabel(deletedLabel);
 
                               mainCubit.changeHomeView(HomeViewType.inbox);
                             },
                             markAllTasksAsDoneClick: () {
-                              labelCubit.delete(markTasksAsDone: true);
+                              labelsCubit.delete(markTasksAsDone: true);
 
-                              Label deletedLabel = labelCubit.state.selectedLabel!;
+                              Label deletedLabel = labelsCubit.state.selectedLabel!;
                               labelsCubit.updateLabel(deletedLabel);
 
                               mainCubit.changeHomeView(HomeViewType.inbox);

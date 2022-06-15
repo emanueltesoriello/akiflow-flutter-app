@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:mobile/style/colors.dart';
 
 class BorderedInputView extends StatefulWidget {
-  final Function(String) onChanged;
   final String hint;
+  final Function(String)? onChanged;
   final FocusNode? focus;
   final String? initialValue;
   final bool enabled;
   final Widget? leading;
+  final TextEditingController? controller;
 
   const BorderedInputView({
     Key? key,
-    required this.onChanged,
     required this.hint,
+    this.onChanged,
     this.focus,
     this.initialValue,
     this.enabled = true,
     this.leading,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -24,10 +26,12 @@ class BorderedInputView extends StatefulWidget {
 }
 
 class _BorderedInputViewState extends State<BorderedInputView> {
-  final TextEditingController _controller = TextEditingController();
+  late final TextEditingController _controller;
 
   @override
   void initState() {
+    _controller = widget.controller ?? TextEditingController();
+
     if (widget.initialValue != null) {
       _controller.text = widget.initialValue!;
     }

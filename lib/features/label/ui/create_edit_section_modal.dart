@@ -7,9 +7,9 @@ import 'package:models/label/label.dart';
 
 // Return new section as a `Label` using `Navigator.pop(context, newSection)` to refresh sections ui
 class CreateEditSectionModal extends StatefulWidget {
-  final Label section;
+  final Label initialSection;
 
-  const CreateEditSectionModal({Key? key, required this.section}) : super(key: key);
+  const CreateEditSectionModal({Key? key, required this.initialSection}) : super(key: key);
 
   @override
   State<CreateEditSectionModal> createState() => _CreateEditSectionModalState();
@@ -17,12 +17,14 @@ class CreateEditSectionModal extends StatefulWidget {
 
 class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
   final FocusNode titleFocus = FocusNode();
+  final TextEditingController titleController = TextEditingController();
   late final ValueNotifier<Label> section;
 
   @override
   void initState() {
     super.initState();
-    section = ValueNotifier(widget.section);
+    section = ValueNotifier(widget.initialSection);
+    titleController.text = section.value.title ?? '';
     titleFocus.requestFocus();
   }
 
@@ -56,6 +58,7 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                             Expanded(
                               child: TextField(
                                 focusNode: titleFocus,
+                                controller: titleController,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.zero,
                                   isDense: true,

@@ -8,7 +8,6 @@ import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/ui/labels_list.dart';
-import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
 import 'package:mobile/features/label/ui/create_folder_modal.dart';
@@ -274,35 +273,39 @@ class SettingsModal extends StatelessWidget {
                               height: 22,
                               color: ColorsExt.grey3(context),
                             ),
-                            onSelected: (AddListType result) {
+                            onSelected: (AddListType result) async {
                               switch (result) {
                                 case AddListType.addLabel:
+                                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
                                   Label newLabel = Label(id: const Uuid().v4(), color: "palette-red");
 
-                                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
+                                  List<Label> folders = labelsCubit.state.labels
+                                      .where((label) => label.type == "folder" && label.deletedAt == null)
+                                      .toList();
 
-                                  showCupertinoModalBottomSheet(
+                                  Label? newLabelUpdated = await showCupertinoModalBottomSheet(
                                     context: context,
-                                    builder: (context) => BlocProvider(
-                                      key: ObjectKey(newLabel),
-                                      create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
-                                      child: const CreateEditLabelModal(isCreating: true),
-                                    ),
+                                    builder: (context) => CreateEditLabelModal(folders: folders, label: newLabel),
                                   );
+
+                                  if (newLabelUpdated != null) {
+                                    labelsCubit.addLabel(newLabelUpdated, labelType: LabelType.label);
+                                  }
                                   break;
                                 case AddListType.addFolder:
-                                  Label newLabel = Label(id: const Uuid().v4(), type: "folder");
-
                                   LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
-                                  showCupertinoModalBottomSheet(
+                                  Label newFolderInitial = Label(id: const Uuid().v4(), type: "folder");
+
+                                  Label? newFolder = await showCupertinoModalBottomSheet(
                                     context: context,
-                                    builder: (context) => BlocProvider(
-                                      key: ObjectKey(newLabel),
-                                      create: (context) => LabelCubit(newLabel, labelsCubit: labelsCubit),
-                                      child: const CreateFolderModal(),
-                                    ),
+                                    builder: (context) => CreateFolderModal(initialFolder: newFolderInitial),
                                   );
+
+                                  if (newFolder != null) {
+                                    labelsCubit.addLabel(newFolder, labelType: LabelType.folder);
+                                  }
                                   break;
                               }
                             },
@@ -332,7 +335,8 @@ class SettingsModal extends StatelessWidget {
                     showHeaders: false,
                     showNoLabel: false,
                     onSelect: (Label selected) {
-                      context.read<MainCubit>().selectLabel(selected);
+                      context.read<LabelsCubit>().selectLabel(selected);
+                      context.read<MainCubit>().changeHomeView(HomeViewType.label);
                       Navigator.pop(context);
                     },
                   ),

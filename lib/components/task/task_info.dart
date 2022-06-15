@@ -166,7 +166,8 @@ class TaskInfo extends StatelessWidget {
       backgroundColor: active ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
       iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
       onPressed: () {
-        context.read<MainCubit>().selectLabel(label);
+        context.read<LabelsCubit>().selectLabel(label);
+        context.read<MainCubit>().changeHomeView(HomeViewType.label);
       },
       active: active,
     );

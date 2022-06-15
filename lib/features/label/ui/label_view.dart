@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/create_task/ui/create_task_modal.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
 import 'package:mobile/features/label/ui/section_header.dart';
@@ -29,7 +28,7 @@ class LabelView extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Task> labelTasks = context.watch<TasksCubit>().state.labelTasks;
 
-    return BlocBuilder<LabelCubit, LabelCubitState>(
+    return BlocBuilder<LabelsCubit, LabelsCubitState>(
       builder: (context, labelState) {
         List<Task> filtered = labelTasks.toList();
 
@@ -78,7 +77,7 @@ class LabelView extends StatelessWidget {
                   taskCount: count,
                   showActionsMenu: section.id != null,
                   onClick: () {
-                    context.read<LabelCubit>().toggleOpenSection(section.id);
+                    context.read<LabelsCubit>().toggleOpenSection(section.id);
                   },
                   listOpened: labelState.openedSections[section.id] ?? false,
                   onCreateTask: () async {
@@ -100,23 +99,18 @@ class LabelView extends StatelessWidget {
                     );
                   },
                   onDelete: () {
-                    context.read<LabelCubit>().deleteSection(section);
+                    context.read<LabelsCubit>().deleteSection(section);
                   },
                   onRename: () async {
-                    LabelCubit labelCubit = context.read<LabelCubit>();
                     LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
                     Label? sectionUpdated = await showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context) => BlocProvider(
-                        key: ObjectKey(section),
-                        create: (context) => LabelCubit(section, labelsCubit: labelsCubit),
-                        child: CreateEditSectionModal(section: section),
-                      ),
+                      builder: (context) => CreateEditSectionModal(initialSection: section),
                     );
 
                     if (sectionUpdated != null) {
-                      labelCubit.updateSection(sectionUpdated);
+                      labelsCubit.updateSection(sectionUpdated);
                     }
                   },
                 );
@@ -156,7 +150,7 @@ class LabelView extends StatelessWidget {
                                   duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                             });
 
-                            context.read<LabelCubit>().toggleShowSnoozed();
+                            context.read<LabelsCubit>().toggleShowSnoozed();
                           },
                         );
                       }),
@@ -185,7 +179,7 @@ class LabelView extends StatelessWidget {
                                   duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                             });
 
-                            context.read<LabelCubit>().toggleShowSomeday();
+                            context.read<LabelsCubit>().toggleShowSomeday();
                           },
                         );
                       }),

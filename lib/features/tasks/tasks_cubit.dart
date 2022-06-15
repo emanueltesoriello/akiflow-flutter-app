@@ -11,7 +11,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/doc_action.dart';
 import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
-import 'package:mobile/features/label/cubit/create_edit/label_cubit.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
@@ -56,7 +56,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   late final SyncCubit _syncCubit;
 
   AuthCubit? _authCubit;
-  LabelCubit? _labelCubit;
+  LabelsCubit? _labelsCubit;
   TodayCubit? _todayCubit;
 
   TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
@@ -85,8 +85,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _todayCubit = todayCubit;
   }
 
-  attachLabelCubit(LabelCubit labelCubit) {
-    _labelCubit = labelCubit;
+  attachLabelCubit(LabelsCubit labelsCubit) {
+    _labelsCubit = labelsCubit;
   }
 
   syncAllAndRefresh() async {
@@ -114,7 +114,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       fetchInbox(),
       fetchTodayTasks(),
       _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
-      _labelCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelCubit!.state.selectedLabel!) : Future.value(),
+      _labelsCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!) : Future.value(),
     ]);
 
     emit(state.copyWith(tasksLoaded: true));
