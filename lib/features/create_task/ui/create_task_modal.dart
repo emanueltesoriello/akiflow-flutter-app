@@ -245,7 +245,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               icon: "assets/images/icons/_common/number.svg",
               active: background != null,
               iconColor: background ?? ColorsExt.grey2(context),
-              backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey6(context),
+              backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey7(context),
               text: label?.title ?? t.addTask.label,
               isBig: true,
               onPressed: () {
