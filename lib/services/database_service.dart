@@ -22,8 +22,6 @@ class DatabaseService {
 
     await Directory(dirname(path)).create(recursive: true);
 
-    List<Function(sql.Batch)> migrations = [migration1addTasksDocField];
-
     database = await sql.openDatabase(
       _databaseName,
       version: 2,
@@ -33,6 +31,10 @@ class DatabaseService {
         var batch = db.batch();
 
         _setup(batch);
+
+        List<Function(sql.Batch)> migrations = [
+          addTasksDocField,
+        ];
 
         for (var migration in migrations) {
           migration(batch);
@@ -47,8 +49,8 @@ class DatabaseService {
 
         var batch = db.batch();
 
-        if (oldVersion == 0) {
-          migration1addTasksDocField(batch);
+        if (oldVersion < 2) {
+          addTasksDocField(batch);
         }
 
         await batch.commit();
@@ -376,7 +378,7 @@ CREATE TABLE IF NOT EXISTS tasks(
     ''');
   }
 
-  void migration1addTasksDocField(Batch batch) {
+  void addTasksDocField(Batch batch) {
     print('processing migration_1_addTasksDocField...');
 
     batch.execute('ALTER TABLE tasks ADD COLUMN connector_id VARCHAR(255)');
