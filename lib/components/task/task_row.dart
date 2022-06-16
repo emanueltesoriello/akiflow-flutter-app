@@ -120,7 +120,7 @@ class TaskRow extends StatelessWidget {
                     builder: (context) {
                       Color? color;
 
-                      if (task.readAt == null) {
+                      if (task.statusType == TaskStatusType.inbox && task.readAt == null) {
                         color = ColorsExt.cyan(context);
                       }
 
