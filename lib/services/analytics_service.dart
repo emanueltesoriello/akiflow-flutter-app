@@ -24,8 +24,8 @@ class AnalyticsService {
     print("*** AnalyticsService identify: ${user.email} ***");
 
     Map<String, dynamic> traits = {
-      "release": version,
-      "releaseNumber": buildNumber,
+      "release_mobile": version,
+      "releaseNumber_mobile": buildNumber,
       "platform": Platform.isAndroid ? "android" : "ios",
       "email": user.email,
       "name": user.name,
