@@ -122,7 +122,7 @@ class TasksRepository extends DatabaseRepository {
       AND deleted_at IS NULL
       GROUP BY IFNULL(`recurring_id`, `id`)
       ORDER BY
-          sorting_label ASC NULLS LAST,
+          sorting_label ASC,
           done ASC,
           status ASC;
 """;

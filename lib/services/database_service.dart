@@ -28,9 +28,10 @@ class DatabaseService {
       _databaseName,
       version: 2,
       onCreate: (db, version) {
-        print('Creating database');
+        print('Creating database version $version');
 
         var batch = db.batch();
+
         _setup(batch);
 
         for (var migration in migrations) {
