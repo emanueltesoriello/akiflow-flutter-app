@@ -419,7 +419,7 @@ class TaskRow extends StatelessWidget {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      Doc docWithType;
+                      Doc? docWithType;
 
                       switch (doc?.connectorId ?? task.connectorId) {
                         case "asana":
@@ -451,12 +451,11 @@ class TaskRow extends StatelessWidget {
                           docWithType = TrelloDoc(doc!);
                           break;
                         default:
-                          docWithType = doc!;
                           break;
                       }
 
                       return Text(
-                        docWithType.getSummary,
+                        docWithType?.getSummary ?? "",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),

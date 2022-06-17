@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/tagbox.dart';
@@ -13,6 +16,7 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 
 class EditTaskRow extends StatefulWidget {
   const EditTaskRow({
@@ -25,14 +29,11 @@ class EditTaskRow extends StatefulWidget {
 
 class _EditTaskRowState extends State<EditTaskRow> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
     _titleController.text = context.read<EditTaskCubit>().state.updatedTask.title ?? '';
-
-    String descriptionHtml = context.read<EditTaskCubit>().state.updatedTask.descriptionComputed(joinCharacter: '\n');
-    _descriptionController.text = descriptionHtml;
+    quillController = QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0));
     super.initState();
   }
 
@@ -62,29 +63,66 @@ class _EditTaskRowState extends State<EditTaskRow> {
     );
   }
 
+  QuillController quillController =
+      QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0));
+
+  WebViewController? wController;
+
   Widget _description(BuildContext context) {
-    return TextField(
-      controller: _descriptionController,
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        isDense: true,
-        hintText: t.addTask.descriptionHint,
-        border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 17,
+    return Column(
+      children: [
+        SizedBox(
+          height: 0,
+          width: 0,
+          child: WebViewPlus(
+            javascriptMode: JavascriptMode.unrestricted,
+            initialUrl: "assets/quill/index.html",
+            onWebViewCreated: (controller) {
+              wController = controller.webViewController;
+            },
+            javascriptChannels: {
+              JavascriptChannel(
+                name: 'Log',
+                onMessageReceived: (JavascriptMessage message) {
+                  print(message.message);
+                },
+              ),
+              JavascriptChannel(
+                  name: "Load",
+                  onMessageReceived: (JavascriptMessage message) async {
+                    EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+                    String html = cubit.state.updatedTask.description ?? '';
+
+                    var delta = await wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
+
+                    List<dynamic> data = jsonDecode(delta)["ops"];
+
+                    Document document = Document.fromJson(data);
+
+                    quillController =
+                        QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+
+                    quillController.addListener(() async {
+                      List<dynamic> delta = quillController.document.toDelta().toJson();
+
+                      String json = jsonEncode(delta).replaceAll("\\", "\\\\");
+
+                      var html = await wController!.runJavascriptReturningResult("""deltaToHtml('$json');""");
+
+                      cubit.updateDescription(html);
+                    });
+
+                    setState(() {});
+                  }),
+            },
+          ),
         ),
-      ),
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 17,
-        fontWeight: FontWeight.w400,
-      ),
-      onChanged: (String value) {
-        context.read<EditTaskCubit>().onDescriptionChanged(value);
-      },
+        QuillEditor.basic(
+          controller: quillController,
+          readOnly: false,
+        )
+      ],
     );
   }
 

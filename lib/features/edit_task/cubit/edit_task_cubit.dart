@@ -368,16 +368,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  void onDescriptionChanged(String value) {
-    String html = value.replaceAll("\n", "<br>");
-    Task updated = state.updatedTask.copyWith(
-      description: html,
-      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
-    );
-
-    emit(state.copyWith(updatedTask: updated));
-  }
-
   modalDismissed({bool updateAllFuture = false}) async {
     if (recurrenceTasksToUpdate.isNotEmpty) {
       for (Task task in recurrenceTasksToUpdate) {
@@ -455,9 +445,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  void updateDescription(String value) {
-    String html = value.replaceAll("\n", "<br>");
-
+  void updateDescription(String html) {
     Task updated = state.updatedTask.copyWith(
       description: html,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
