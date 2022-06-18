@@ -21,6 +21,8 @@
     });
 
     function htmlToDelta(html) {
+      html = html.replace(/<st>/g, "<s>").replace(/<\/st>/g, "</s>");
+
       let delta = quill.clipboard.convert(html);
 
       quill.setContents(delta);
@@ -34,6 +36,8 @@
       quill.setContents(deltaParsed);
 
       let html = quill.root.innerHTML;
+
+      html = html.replace(/<s>/g, "<st>").replace(/<\/s>/g, "</st>");
 
       return html;
     }
