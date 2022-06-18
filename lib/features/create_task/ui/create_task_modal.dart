@@ -34,7 +34,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
     titleController.text = editTaskCubit.state.originalTask.title ?? '';
 
-    String descriptionHtml = editTaskCubit.state.originalTask.descriptionComputed(joinCharacter: '\n');
+    String descriptionHtml = editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
     super.initState();
   }

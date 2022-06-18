@@ -1205,7 +1205,7 @@ packages:
     source: hosted
     version: "2.2.0"
   webview_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: webview_flutter
       url: "https://pub.dartlang.org"
@@ -1225,13 +1225,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.1"
-  webview_flutter_plus:
-    dependency: "direct main"
-    description:
-      name: webview_flutter_plus
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0+2"
   webview_flutter_wkwebview:
     dependency: transitive
     description:

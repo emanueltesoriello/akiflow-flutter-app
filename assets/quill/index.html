@@ -14,7 +14,10 @@
 
     document.addEventListener("DOMContentLoaded", function () {
       Load.postMessage("load");
-      quill = new Quill(document.querySelector("#editor"), {});
+      quill = new Quill(document.querySelector("#editor"), {
+        runScripts: "dangerously",
+        resources: "usable",
+      });
     });
 
     function htmlToDelta(html) {
@@ -22,13 +25,13 @@
 
       quill.setContents(delta);
 
-      return JSON.stringify(quill.getContents());
+      return JSON.stringify(quill.getContents()["ops"]);
     }
 
     function deltaToHtml(delta) {
-      var delta = JSON.parse(delta);
+      var deltaParsed = JSON.parse(delta);
 
-      quill.setContents(delta);
+      quill.setContents(deltaParsed);
 
       let html = quill.root.innerHTML;
 

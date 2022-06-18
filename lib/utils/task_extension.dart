@@ -1,4 +1,3 @@
-import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list.dart';
@@ -609,25 +608,6 @@ extension TaskExt on Task {
   static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {
     List<Task> completed = List.from(tasks.where((element) => element.isCompletedComputed));
     return completed.where((element) => element.isTodayOrBefore).toList();
-  }
-
-  String descriptionComputed({String? joinCharacter}) {
-    String htmlData = description ?? '';
-    String text;
-
-    try {
-      var document = parse(htmlData);
-
-      text = (document.body?.nodes ?? []).map((node) => node.text).join(joinCharacter ?? ' ').trim();
-
-      if (text.isEmpty) {
-        text = htmlData;
-      }
-    } catch (e) {
-      text = htmlData;
-    }
-
-    return text;
   }
 
   static int countTasksSelected(TasksCubitState state) {

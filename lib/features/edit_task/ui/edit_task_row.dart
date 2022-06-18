@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
-import 'package:webview_flutter_plus/webview_flutter_plus.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class EditTaskRow extends StatefulWidget {
   const EditTaskRow({
@@ -30,11 +32,22 @@ class EditTaskRow extends StatefulWidget {
 class _EditTaskRowState extends State<EditTaskRow> {
   final TextEditingController _titleController = TextEditingController();
 
+  late QuillController quillController;
+  WebViewController? wController;
+  StreamSubscription? streamSubscription;
+
   @override
   void initState() {
     _titleController.text = context.read<EditTaskCubit>().state.updatedTask.title ?? '';
     quillController = QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0));
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -63,22 +76,17 @@ class _EditTaskRowState extends State<EditTaskRow> {
     );
   }
 
-  QuillController quillController =
-      QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0));
-
-  WebViewController? wController;
-
   Widget _description(BuildContext context) {
     return Column(
       children: [
         SizedBox(
-          height: 0,
-          width: 0,
-          child: WebViewPlus(
+          height: 1,
+          width: 1,
+          child: WebView(
             javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: "assets/quill/index.html",
-            onWebViewCreated: (controller) {
-              wController = controller.webViewController;
+            onWebViewCreated: (controller) async {
+              wController = controller;
+              await wController!.loadFlutterAsset('assets/quill/index.html');
             },
             javascriptChannels: {
               JavascriptChannel(
@@ -94,21 +102,32 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
                     String html = cubit.state.updatedTask.description ?? '';
 
-                    var delta = await wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
+                    String deltaJson = await wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
 
-                    List<dynamic> data = jsonDecode(delta)["ops"];
+                    List<dynamic> delta;
 
-                    Document document = Document.fromJson(data);
+                    // JS interface on Android platform comes as quoted string
+                    if (Platform.isAndroid) {
+                      delta = jsonDecode(jsonDecode(deltaJson));
+                    } else {
+                      delta = jsonDecode(deltaJson);
+                    }
 
-                    quillController =
-                        QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+                    Document document = Document.fromJson(delta);
 
-                    quillController.addListener(() async {
+                    quillController = QuillController(document: document, selection: quillController.selection);
+
+                    streamSubscription = quillController.changes.listen((change) async {
                       List<dynamic> delta = quillController.document.toDelta().toJson();
 
-                      String json = jsonEncode(delta).replaceAll("\\", "\\\\");
+                      String deltaJson = jsonEncode(delta).replaceAll("\\", "\\\\");
 
-                      var html = await wController!.runJavascriptReturningResult("""deltaToHtml('$json');""");
+                      String html = await wController!.runJavascriptReturningResult("deltaToHtml(`$deltaJson`);");
+
+                      // JS interface on Android platform comes as quoted string
+                      if (Platform.isAndroid) {
+                        html = jsonDecode(html);
+                      }
 
                       cubit.updateDescription(html);
                     });

@@ -43,7 +43,7 @@ dependencies:
   timeago: ^3.2.2
   url_launcher: ^6.0.20
   uuid: ^3.0.6
-  webview_flutter_plus: ^0.3.0+2
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_launcher_icons_maker: ^0.10.1
@@ -96,7 +96,6 @@ flutter:
     - assets/images/icons/twitter/
     - assets/images/icons/zapier/
     - assets/images/icons/zoom/
-    - assets/js/
     - assets/quill/
 
   fonts:
