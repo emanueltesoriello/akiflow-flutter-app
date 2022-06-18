@@ -104,16 +104,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
     return Theme(
       data: Theme.of(context)
           .copyWith(textSelectionTheme: TextSelectionThemeData(cursorColor: ColorsExt.akiflow(context))),
-      child: QuillEditor(
+      child: QuillEditor.basic(
         controller: quillController,
         readOnly: false,
-        scrollController: ScrollController(),
-        scrollable: true,
-        focusNode: FocusNode(),
-        autoFocus: false,
-        expands: false,
-        padding: EdgeInsets.zero,
-        keyboardAppearance: Brightness.light,
       ),
     );
   }

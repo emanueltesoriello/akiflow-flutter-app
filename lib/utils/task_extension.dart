@@ -1,3 +1,4 @@
+import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list.dart';
@@ -603,6 +604,24 @@ extension TaskExt on Task {
     } else {
       return TaskStatusType.inbox;
     }
+  }
+
+  String get descriptionParsed {
+    String text;
+
+    try {
+      var document = parse(description);
+
+      text = (document.body?.nodes ?? []).map((node) => node.text).join(' ').trim();
+
+      if (text.isEmpty) {
+        text = description ?? '';
+      }
+    } catch (e) {
+      text = description ?? '';
+    }
+
+    return text;
   }
 
   static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {

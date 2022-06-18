@@ -477,7 +477,7 @@ class TaskRow extends StatelessWidget {
                 const SizedBox(width: 4.5),
                 Expanded(
                     child: Text(
-                  task.description ?? "",
+                  task.descriptionParsed,
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 15,
