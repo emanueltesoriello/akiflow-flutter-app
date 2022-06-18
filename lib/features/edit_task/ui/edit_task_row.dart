@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +11,7 @@ import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/quill_converter.dart';
 import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -38,10 +37,35 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   @override
   void initState() {
-    _titleController.text = context.read<EditTaskCubit>().state.updatedTask.title ?? '';
+    EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+    _titleController.text = cubit.state.updatedTask.title ?? '';
+
     quillController = QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0));
 
+    initDescription().whenComplete(() {
+      streamSubscription = quillController.changes.listen((change) async {
+        List<dynamic> delta = quillController.document.toDelta().toJson();
+
+        String html = await QuillConverter.deltaToHtml(delta);
+
+        cubit.updateDescription(html);
+      });
+    });
+
     super.initState();
+  }
+
+  Future initDescription() async {
+    EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+    String html = cubit.state.updatedTask.description ?? '';
+
+    Document document = await QuillConverter.htmlToDelta(html);
+
+    setState(() {
+      quillController = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+    });
   }
 
   @override
@@ -77,71 +101,20 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _description(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 1,
-          width: 1,
-          child: WebView(
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (controller) async {
-              wController = controller;
-              await wController!.loadFlutterAsset('assets/quill/index.html');
-            },
-            javascriptChannels: {
-              JavascriptChannel(
-                name: 'Log',
-                onMessageReceived: (JavascriptMessage message) {
-                  print(message.message);
-                },
-              ),
-              JavascriptChannel(
-                  name: "Load",
-                  onMessageReceived: (JavascriptMessage message) async {
-                    EditTaskCubit cubit = context.read<EditTaskCubit>();
-
-                    String html = cubit.state.updatedTask.description ?? '';
-
-                    String deltaJson = await wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
-
-                    List<dynamic> delta;
-
-                    // JS interface on Android platform comes as quoted string
-                    if (Platform.isAndroid) {
-                      delta = jsonDecode(jsonDecode(deltaJson));
-                    } else {
-                      delta = jsonDecode(deltaJson);
-                    }
-
-                    Document document = Document.fromJson(delta);
-
-                    quillController = QuillController(document: document, selection: quillController.selection);
-
-                    streamSubscription = quillController.changes.listen((change) async {
-                      List<dynamic> delta = quillController.document.toDelta().toJson();
-
-                      String deltaJson = jsonEncode(delta).replaceAll("\\", "\\\\");
-
-                      String html = await wController!.runJavascriptReturningResult("deltaToHtml(`$deltaJson`);");
-
-                      // JS interface on Android platform comes as quoted string
-                      if (Platform.isAndroid) {
-                        html = jsonDecode(html);
-                      }
-
-                      cubit.updateDescription(html);
-                    });
-
-                    setState(() {});
-                  }),
-            },
-          ),
-        ),
-        QuillEditor.basic(
-          controller: quillController,
-          readOnly: false,
-        )
-      ],
+    return Theme(
+      data: Theme.of(context)
+          .copyWith(textSelectionTheme: TextSelectionThemeData(cursorColor: ColorsExt.akiflow(context))),
+      child: QuillEditor(
+        controller: quillController,
+        readOnly: false,
+        scrollController: ScrollController(),
+        scrollable: true,
+        focusNode: FocusNode(),
+        autoFocus: false,
+        expands: false,
+        padding: EdgeInsets.zero,
+        keyboardAppearance: Brightness.light,
+      ),
     );
   }
 
