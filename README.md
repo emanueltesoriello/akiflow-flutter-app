@@ -13,11 +13,11 @@ Production: `flutter run -t lib / main.dart`
 
 ## Flow
 
-! [Flutter Bloc & Cubit Tutorial - Reso Coder] (https://i0.wp.com/resocoder.com/wp-content/uploads/2020/07/bloc_architecture_full.png?resize=778%2C195&ssl=1)
+![Flutter Bloc & Cubit Tutorial - Reso Coder](https://i0.wp.com/resocoder.com/wp-content/uploads/2020/07/bloc_architecture_full.png?resize=778%2C195&ssl=1)
 
 The application is composed of several packages, defined for execute operations in an isolated way, to facilitate the development while keeping each component simple to perform operations for the scope for which it was created.
 
-The application uses [BLoC] (https://github.com/felangel/bloc/tree/master/packages/flutter_bloc) as the State Management package. So call methods (*events*) on a feature blocks *(bloc)* located within the `features / cubit` package, defined one for each feature or context.
+The application uses [BLoC](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc) as the State Management package. So call methods (*events*) on a feature blocks *(bloc)* located within the `features / cubit` package, defined one for each feature or context.
 
 From the controller class *\_cubit.dart*, will be updated the *state* of the *bloc* which will notify the `ui` part to render the changes just received via `BlocBuilder`.
 
