@@ -26,7 +26,9 @@ class TodoistDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return (content?["parentTaskTitle"] ?? content?["projectName"]) ??
+    return content?["parentTaskTitle"] ??
+        content?["projectName"] ??
+        content?["project_name"] ??
         super.getSummary;
   }
 

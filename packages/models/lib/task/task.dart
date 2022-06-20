@@ -41,7 +41,7 @@ class Task extends Equatable implements Base {
   final String? originId;
   final String? originAccountId;
   final String? akiflowAccountId;
-  final dynamic doc;
+  final Map<String, dynamic>? doc;
 
   const Task({
     this.id,

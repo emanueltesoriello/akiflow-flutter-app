@@ -46,7 +46,7 @@ class Doc extends DocBase implements Base {
   final String? url;
   final String? localUrl;
   final String? type;
-  final dynamic content;
+  final Map<String, dynamic>? content;
   final dynamic priority;
   final int? sorting;
   final dynamic originUpdatedAt;
@@ -73,7 +73,7 @@ class Doc extends DocBase implements Base {
         url: json['url'] as String?,
         localUrl: json['local_url'] as String?,
         type: json['type'] as String?,
-        content: json['content'] as dynamic,
+        content: json['content'] as Map<String, dynamic>?,
         priority: json['priority'] as dynamic,
         sorting: json['sorting'] as int?,
         originUpdatedAt: json['origin_updated_at'] as dynamic,
@@ -130,7 +130,7 @@ class Doc extends DocBase implements Base {
     String? url,
     String? localUrl,
     String? type,
-    dynamic content,
+    Map<String, dynamic>? content,
     dynamic priority,
     int? sorting,
     dynamic originUpdatedAt,
@@ -201,7 +201,7 @@ class Doc extends DocBase implements Base {
 
     try {
       copy['content'] =
-          jsonDecode(json['content'] as String) as Map<String, dynamic>;
+          jsonDecode(json['content'] as String) as Map<String, dynamic>?;
     } catch (_) {}
 
     return Doc.fromMap(copy);

@@ -204,7 +204,8 @@
     "user": "User",
     "starredAt": "Starred at",
     "dueDate": "Due date",
-    "board": "Board"
+    "board": "Board",
+    "savedOn": "Saved on"
   },
   "editTask": {
     "add": "Add",

@@ -5,10 +5,16 @@ import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/utils/tz_utils.dart';
+import 'package:models/doc/asana_doc.dart';
+import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/doc/gmail_doc.dart';
+import 'package:models/doc/notion_doc.dart';
+import 'package:models/doc/slack_doc.dart';
+import 'package:models/doc/todoist_doc.dart';
+import 'package:models/doc/trello_doc.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
-import 'package:models/task/task_doc.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -375,14 +381,6 @@ extension TaskExt on Task {
     return null;
   }
 
-  TaskDoc? get taskDoc {
-    if (doc != null) {
-      return TaskDoc.fromMap(doc!);
-    }
-
-    return null;
-  }
-
   String computedIcon(Doc? doc) {
     if (connectorId != null) {
       return iconFromConnectorId(connectorId);
@@ -653,5 +651,64 @@ extension TaskExt on Task {
         updatedTask.status != 1 ||
         updatedTask.duration != null ||
         updatedTask.listId != null;
+  }
+
+  static Doc _fromBuiltinDoc(Task task) {
+    return Doc(
+      taskId: task.id,
+      title: task.title,
+      description: task.description,
+      connectorId: task.connectorId,
+      originId: task.originId,
+      accountId: task.originAccountId,
+      url: task.doc?['url'],
+      localUrl: task.doc?['localUrl'],
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+      deletedAt: task.deletedAt,
+      globalUpdatedAt: task.globalUpdatedAt,
+      globalCreatedAt: task.globalCreatedAt,
+      remoteUpdatedAt: task.remoteUpdatedAt,
+      content: task.doc,
+    );
+  }
+
+  Doc? computedDoc(Doc? doc) {
+    String? connectorId = doc?.connectorId ?? this.connectorId;
+
+    if (connectorId == null) {
+      return null;
+    }
+
+    print(this.doc);
+
+    doc = doc ?? _fromBuiltinDoc(this);
+
+    switch (connectorId) {
+      case "asana":
+        return AsanaDoc(doc);
+      case "clickup":
+        return ClickupDoc(doc);
+      case "gmail":
+        return GmailDoc(doc);
+      case "notion":
+        return NotionDoc(doc);
+      case "slack":
+        if (this.doc != null) {
+          return SlackDoc(_fromBuiltinDoc(this));
+        } else {
+          return SlackDoc(doc);
+        }
+      case "todoist":
+        if (this.doc != null) {
+          return TodoistDoc(_fromBuiltinDoc(this));
+        } else {
+          return TodoistDoc(doc);
+        }
+      case "trello":
+        return TrelloDoc(doc);
+      default:
+        return null;
+    }
   }
 }

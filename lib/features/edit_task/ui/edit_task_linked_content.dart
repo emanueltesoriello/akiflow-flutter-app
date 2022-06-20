@@ -11,14 +11,8 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
-import 'package:models/doc/asana_doc.dart';
-import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
-import 'package:models/doc/gmail_doc.dart';
-import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
-import 'package:models/doc/todoist_doc.dart';
-import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
 class EditTaskLinkedContent extends StatelessWidget {
@@ -36,48 +30,9 @@ class EditTaskLinkedContent extends StatelessWidget {
           (doc) => doc.taskId == task.id,
         );
 
-        if (doc?.content == null && task.taskDoc == null) {
-          return const SizedBox();
-        }
+        doc = task.computedDoc(doc);
 
-        Doc? docWithType;
-
-        switch (doc?.connectorId ?? task.connectorId) {
-          case "asana":
-            docWithType = AsanaDoc(doc!);
-            break;
-          case "clickup":
-            docWithType = ClickupDoc(doc!);
-            break;
-          case "gmail":
-            docWithType = GmailDoc(doc!);
-            break;
-          case "notion":
-            docWithType = NotionDoc(doc!);
-            break;
-          case "slack":
-            docWithType = SlackDoc(doc!);
-            break;
-          case "todoist":
-            if (task.taskDoc != null) {
-              docWithType = TodoistDoc(Doc(
-                connectorId: task.connectorId,
-                url: task.taskDoc!.url,
-                content: {"projectName": task.taskDoc?.projectName},
-              ));
-            } else {
-              docWithType = TodoistDoc(doc!);
-            }
-            break;
-          case "trello":
-            docWithType = TrelloDoc(doc!);
-            break;
-          default:
-            docWithType = doc;
-            break;
-        }
-
-        if (docWithType == null) {
+        if (doc == null) {
           return const SizedBox();
         }
 
@@ -85,14 +40,14 @@ class EditTaskLinkedContent extends StatelessWidget {
           onTap: () {
             SettingsCubit settingsCubit = context.read<SettingsCubit>();
 
-            Account? account = settingsCubit.state.accounts
-                .firstWhereOrNull((element) => element.connectorId == docWithType!.connectorId);
+            Account? account =
+                settingsCubit.state.accounts.firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
 
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => LinkedContentModal(
                 task: task,
-                doc: docWithType!,
+                doc: doc!,
                 account: account,
               ),
             );
@@ -112,7 +67,18 @@ class EditTaskLinkedContent extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        docWithType.getLinkedContentSummary,
+                        () {
+                          if (doc is SlackDoc) {
+                            SettingsCubit settingsCubit = context.read<SettingsCubit>();
+
+                            Account? account = settingsCubit.state.accounts
+                                .firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
+
+                            return doc.getLinkedContentSummaryWithAccount(account);
+                          } else {
+                            return doc!.getLinkedContentSummary;
+                          }
+                        }(),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),

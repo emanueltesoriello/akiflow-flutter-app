@@ -17,14 +17,7 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:models/doc/asana_doc.dart';
-import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
-import 'package:models/doc/gmail_doc.dart';
-import 'package:models/doc/notion_doc.dart';
-import 'package:models/doc/slack_doc.dart';
-import 'package:models/doc/todoist_doc.dart';
-import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
 class TaskRow extends StatelessWidget {
@@ -402,16 +395,14 @@ class TaskRow extends StatelessWidget {
       (doc) => doc.taskId == task.id,
     );
 
-    if ((task.description == null || task.description!.isEmpty) && doc == null && task.taskDoc == null) {
-      return const SizedBox();
-    }
+    doc = task.computedDoc(doc);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: 4),
         Builder(builder: (context) {
-          if (doc != null || task.taskDoc != null && (doc?.connectorId ?? task.connectorId) != null) {
+          if (doc != null) {
             return Row(
               children: [
                 SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
@@ -419,43 +410,8 @@ class TaskRow extends StatelessWidget {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      Doc? docWithType;
-
-                      switch (doc?.connectorId ?? task.connectorId) {
-                        case "asana":
-                          docWithType = AsanaDoc(doc!);
-                          break;
-                        case "clickup":
-                          docWithType = ClickupDoc(doc!);
-                          break;
-                        case "gmail":
-                          docWithType = GmailDoc(doc!);
-                          break;
-                        case "notion":
-                          docWithType = NotionDoc(doc!);
-                          break;
-                        case "slack":
-                          docWithType = SlackDoc(doc!);
-                          break;
-                        case "todoist":
-                          if (task.taskDoc != null) {
-                            docWithType = TodoistDoc(Doc(
-                              connectorId: task.connectorId,
-                              content: {"projectName": task.taskDoc?.projectName},
-                            ));
-                          } else {
-                            docWithType = TodoistDoc(doc!);
-                          }
-                          break;
-                        case "trello":
-                          docWithType = TrelloDoc(doc!);
-                          break;
-                        default:
-                          break;
-                      }
-
                       return Text(
-                        docWithType?.getSummary ?? "",
+                        doc?.getSummary ?? "",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
@@ -465,7 +421,7 @@ class TaskRow extends StatelessWidget {
                 ),
               ],
             );
-          } else {
+          } else if (task.descriptionParsed.isNotEmpty) {
             return Row(
               children: [
                 SvgPicture.asset(
@@ -486,6 +442,8 @@ class TaskRow extends StatelessWidget {
                 )),
               ],
             );
+          } else {
+            return const SizedBox();
           }
         }),
       ],

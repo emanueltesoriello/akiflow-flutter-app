@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 217 
+ * Strings: 218 
  *
- * Built on 2022-06-15 at 15:06 UTC
+ * Built on 2022-06-20 at 15:57 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -505,6 +505,7 @@ class _StringsLinkedContentEn {
 	String get starredAt => 'Starred at';
 	String get dueDate => 'Due date';
 	String get board => 'Board';
+	String get savedOn => 'Saved on';
 }
 
 // Path: editTask
@@ -985,6 +986,7 @@ extension on _StringsEn {
 			'linkedContent.starredAt': 'Starred at',
 			'linkedContent.dueDate': 'Due date',
 			'linkedContent.board': 'Board',
+			'linkedContent.savedOn': 'Saved on',
 			'editTask.add': 'Add',
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.searchALabel': 'Search a label',

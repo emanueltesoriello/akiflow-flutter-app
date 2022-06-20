@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
@@ -718,7 +719,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<GmailDocAction> docActions = [];
 
     for (Task task in all) {
-      Doc? doc = task.doc(docs);
+      Doc? doc = docs.firstWhereOrNull((element) => element.taskId == task.id);
 
       if (doc?.connectorId == "gmail") {
         String? markAsDoneKey = _authCubit!.state.user?.settings?['popups']['gmail.unstar'];

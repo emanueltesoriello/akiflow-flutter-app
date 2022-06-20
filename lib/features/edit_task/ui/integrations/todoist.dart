@@ -23,11 +23,11 @@ class TodoistLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.project,
-          value: doc.content?["projectName"] ?? '',
+          value: doc.content?["projectName"] ?? doc.content?["project_name"] ?? '',
         ),
         itemBuilder(
           context,
-          title: t.linkedContent.parentTask,
+          title: t.linkedContent.title,
           value: task.title ?? '',
         ),
         itemBuilder(

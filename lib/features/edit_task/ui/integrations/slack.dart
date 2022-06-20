@@ -32,24 +32,18 @@ class SlackLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.channel,
-          value: doc.content?["channelName"] ?? '',
-        ),
-        itemBuilder(
-          context,
-          title: t.linkedContent.message,
-          value: doc.title ?? '',
+          value: doc.content?["channelName"] ?? doc.content?["channel_name"] ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.user,
-          value: doc.content?["userName"] ?? '',
+          value: doc.content?["userName"] ?? doc.content?["user_name"] ?? '',
         ),
         itemBuilder(
           context,
-          title: t.linkedContent.starredAt,
+          title: t.linkedContent.savedOn,
           value: doc.starredAtFormatted,
         ),
-        // TODO slack attachments `SlackStarredMessageLinkedContent`
       ],
     );
   }
