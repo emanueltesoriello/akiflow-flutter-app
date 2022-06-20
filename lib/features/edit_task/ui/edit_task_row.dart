@@ -17,6 +17,7 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:tuple/tuple.dart' as tuple;
 import 'package:webview_flutter/webview_flutter.dart';
 
 class EditTaskRow extends StatefulWidget {
@@ -35,6 +36,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   WebViewController? wController;
   StreamSubscription? streamSubscription;
+
+  final FocusNode _descriptionFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -63,6 +66,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
     Document document = await QuillConverter.htmlToDelta(html);
 
     quillController.value = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+
+    quillController.value.moveCursorToEnd();
   }
 
   @override
@@ -98,14 +103,29 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _description(BuildContext context) {
-    return Theme(
-      data: Theme.of(context)
-          .copyWith(textSelectionTheme: TextSelectionThemeData(cursorColor: ColorsExt.akiflow(context))),
-      child: ValueListenableBuilder(
-        valueListenable: quillController,
-        builder: (context, QuillController value, child) => QuillEditor.basic(
-          controller: value,
-          readOnly: false,
+    return ValueListenableBuilder(
+      valueListenable: quillController,
+      builder: (context, QuillController value, child) => QuillEditor(
+        controller: value,
+        readOnly: false,
+        scrollController: ScrollController(),
+        scrollable: true,
+        focusNode: _descriptionFocusNode,
+        autoFocus: false,
+        expands: false,
+        padding: EdgeInsets.zero,
+        keyboardAppearance: Brightness.light,
+        placeholder: t.task.description,
+        customStyles: DefaultStyles(
+          placeHolder: DefaultTextBlockStyle(
+            const TextStyle(
+              color: Colors.grey,
+              fontSize: 18,
+            ),
+            const tuple.Tuple2(0, 0),
+            const tuple.Tuple2(0, 0),
+            null,
+          ),
         ),
       ),
     );

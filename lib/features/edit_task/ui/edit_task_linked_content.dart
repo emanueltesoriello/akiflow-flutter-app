@@ -77,6 +77,10 @@ class EditTaskLinkedContent extends StatelessWidget {
             break;
         }
 
+        if (docWithType == null) {
+          return const SizedBox();
+        }
+
         return InkWell(
           onTap: () {
             SettingsCubit settingsCubit = context.read<SettingsCubit>();
@@ -108,7 +112,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        docWithType?.getLinkedContentSummary ?? "",
+                        docWithType.getLinkedContentSummary ?? "",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),

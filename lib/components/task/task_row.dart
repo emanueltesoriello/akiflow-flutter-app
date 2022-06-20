@@ -411,7 +411,7 @@ class TaskRow extends StatelessWidget {
       children: [
         const SizedBox(height: 4),
         Builder(builder: (context) {
-          if (doc != null || task.taskDoc != null) {
+          if (doc != null || task.taskDoc != null && (doc?.connectorId ?? task.connectorId) != null) {
             return Row(
               children: [
                 SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
