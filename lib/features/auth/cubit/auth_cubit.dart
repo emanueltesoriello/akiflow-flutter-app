@@ -13,7 +13,6 @@ import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
-import 'package:mobile/services/intercom_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
@@ -27,8 +26,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final AuthApi _authApi = locator<AuthApi>();
   final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
-  final IntercomService _intercomService = locator<IntercomService>();
-
   final UserApi _userApi = locator<UserApi>();
 
   final SyncCubit _syncCubit;
@@ -63,7 +60,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
       emit(AuthCubitState(user: user));
 
       _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
-      _intercomService.authenticate(user.email);
+
       await _pushCubit.login(user);
     }
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
@@ -111,33 +110,6 @@ class SettingsPage extends StatelessWidget {
             useSvgColor: true,
             onPressed: () {
               launchUrl(Uri.parse("https://akiflow-community.slack.com"), mode: LaunchMode.externalApplication);
-            },
-          ),
-          ButtonList(
-            title: t.settings.chatWithUs,
-            leading: "assets/images/icons/_common/intercom.svg",
-            trailingWidget: FutureBuilder<dynamic>(
-                future: Intercom.instance.unreadConversationCount(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Visibility(
-                      visible: snapshot.data>0,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Text(
-                          snapshot.data.toString(),
-                          style: const TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                      ),
-                    );
-                  }
-                  return const SizedBox();
-                }),
-            position: ButtonListPosition.bottom,
-            showShevron: false,
-            useSvgColor: true,
-            onPressed: () {
-              context.read<SettingsCubit>().launchIntercom();
             },
           ),
           ButtonList(
