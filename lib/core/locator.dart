@@ -24,7 +24,6 @@ import 'package:mobile/repository/labels_repository.dart';
 import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/dialog_service.dart';
-import 'package:mobile/services/intercom_service.dart';
 import 'package:mobile/services/push_notification_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
@@ -75,8 +74,6 @@ void setupLocator({
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
-  locator.registerSingleton<IntercomService>(IntercomService());
-
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
   locator.registerSingleton<PushNotificationService>(PushNotificationService());
 
