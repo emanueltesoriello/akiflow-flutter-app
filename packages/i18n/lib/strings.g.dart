@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 217 
+ * Strings: 218 
  *
- * Built on 2022-06-15 at 15:06 UTC
+ * Built on 2022-06-20 at 09:26 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -387,6 +387,7 @@ class _StringsSettingsEn {
 	String get labels => 'Labels';
 	String get searchComingSoon => 'Search is coming soon in the near future!';
 	String get changeLog => 'Change log';
+	String get chatWithUs => 'Chat with us';
 	String get sendUsAnEmail => 'Send us an Email';
 	late final _StringsSettingsMyAccountEn myAccount = _StringsSettingsMyAccountEn._(_root);
 	late final _StringsSettingsAboutEn about = _StringsSettingsAboutEn._(_root);
@@ -860,6 +861,7 @@ extension on _StringsEn {
 			'settings.labels': 'Labels',
 			'settings.searchComingSoon': 'Search is coming soon in the near future!',
 			'settings.changeLog': 'Change log',
+			'settings.chatWithUs': 'Chat with us',
 			'settings.sendUsAnEmail': 'Send us an Email',
 			'settings.myAccount.title': 'My account',
 			'settings.myAccount.connectedAs': 'Connected as',
