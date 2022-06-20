@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
@@ -108,10 +109,30 @@ class SettingsModal extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       InkWell(
-                        child: SvgPicture.asset(
-                          "assets/images/icons/_common/gear_alt.svg",
-                          color: ColorsExt.grey2(context),
-                        ),
+                        child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                          SvgPicture.asset(
+                            "assets/images/icons/_common/gear_alt.svg",
+                            color: ColorsExt.grey2(context),
+                          ),
+                          FutureBuilder<dynamic>(
+                              future: Intercom.instance.unreadConversationCount(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Visibility(
+                                    visible: snapshot.data > 0,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.red,
+                                      maxRadius: 8,
+                                      child: Text(
+                                        snapshot.data.toString(),
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return const SizedBox();
+                              }),
+                        ]),
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
                         },
