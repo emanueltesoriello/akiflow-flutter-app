@@ -8,7 +8,6 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/main_com.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/text_style.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthPage extends StatelessWidget {
@@ -94,7 +93,11 @@ class AuthPage extends StatelessWidget {
                   ActionButton(
                     child: Text(
                       t.onboarding.login,
-                      style: TextStyleExt.button(context),
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                     onPressed: () {
                       context.read<AuthCubit>().loginClick();
