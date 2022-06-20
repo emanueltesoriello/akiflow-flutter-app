@@ -30,8 +30,9 @@ class EditTaskRow extends StatefulWidget {
 
 class _EditTaskRowState extends State<EditTaskRow> {
   final TextEditingController _titleController = TextEditingController();
+  final ValueNotifier<QuillController> quillController = ValueNotifier<QuillController>(
+      QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0)));
 
-  late QuillController quillController;
   WebViewController? wController;
   StreamSubscription? streamSubscription;
 
@@ -41,11 +42,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
     _titleController.text = cubit.state.updatedTask.title ?? '';
 
-    quillController = QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0));
-
     initDescription().whenComplete(() {
-      streamSubscription = quillController.changes.listen((change) async {
-        List<dynamic> delta = quillController.document.toDelta().toJson();
+      streamSubscription = quillController.value.changes.listen((change) async {
+        List<dynamic> delta = quillController.value.document.toDelta().toJson();
 
         String html = await QuillConverter.deltaToHtml(delta);
 
@@ -63,9 +62,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
     Document document = await QuillConverter.htmlToDelta(html);
 
-    setState(() {
-      quillController = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
-    });
+    quillController.value = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
   }
 
   @override
@@ -104,9 +101,12 @@ class _EditTaskRowState extends State<EditTaskRow> {
     return Theme(
       data: Theme.of(context)
           .copyWith(textSelectionTheme: TextSelectionThemeData(cursorColor: ColorsExt.akiflow(context))),
-      child: QuillEditor.basic(
-        controller: quillController,
-        readOnly: false,
+      child: ValueListenableBuilder(
+        valueListenable: quillController,
+        builder: (context, QuillController value, child) => QuillEditor.basic(
+          controller: value,
+          readOnly: false,
+        ),
       ),
     );
   }
