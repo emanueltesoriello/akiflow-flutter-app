@@ -196,8 +196,8 @@ class GmailApi implements IIntegrationBaseApi {
     }
 
     Map<String, dynamic>? payload = messageResult['payload'];
-    String? subject = payload?['headers'].firstWhere((header) => header?['name'] == 'Subject')?['value'];
-    String? from = payload?['headers'].firstWhere((header) => header?['name'] == 'From')?['value'];
+    String? subject = payload?['headers'].firstWhereOrNull((header) => header?['name'] == 'Subject')?['value'];
+    String? from = payload?['headers'].firstWhereOrNull((header) => header?['name'] == 'From')?['value'];
 
     return GmailMessage(
       id: messageResult['id'],
