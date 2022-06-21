@@ -48,305 +48,331 @@ class SettingsModal extends StatelessWidget {
             padding: const EdgeInsets.only(top: 16),
             child: ScrollConfiguration(
               behavior: NoScrollBehav(),
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
                 children: [
                   const ScrollChip(),
                   const SizedBox(height: 19),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        "assets/images/logo/logo_outline.svg",
-                        width: 48,
-                        height: 48,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: BlocBuilder<AuthCubit, AuthCubitState>(
-                          builder: (context, state) {
-                            if (state.user == null) {
-                              return const SizedBox();
-                            }
-
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  state.user?.name ?? "n/d",
-                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  state.user?.email ?? "n/d",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: ColorsExt.grey3(context),
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      InkWell(
-                        child: SvgPicture.asset(
-                          "assets/images/icons/_common/search.svg",
-                          color: ColorsExt.grey3(context),
-                        ),
-                        onTap: () {
-                          showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) => const SearchModal(),
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 12),
-                      InkWell(
-                        child: SvgPicture.asset(
-                          "assets/images/icons/_common/gear_alt.svg",
-                          color: ColorsExt.grey2(context),
-                        ),
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
-                        },
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 32),
-                  BlocBuilder<MainCubit, MainCubitState>(
-                    builder: (context, state) {
-                      HomeViewType homeViewType = state.homeViewType;
-
-                      return ButtonSelectable(
-                        title: t.bottomBar.inbox,
-                        leading: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: SvgPicture.asset(
-                            "assets/images/icons/_common/tray.svg",
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.inbox,
-                        trailing: Builder(builder: (context) {
-                          List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
-
-                          return Text(
-                            tasks.length.toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2_5(context),
-                            ),
-                          );
-                        }),
-                        onPressed: () {
-                          context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 2),
-                  BlocBuilder<MainCubit, MainCubitState>(
-                    builder: (context, state) {
-                      HomeViewType homeViewType = state.homeViewType;
-
-                      return ButtonSelectable(
-                        title: t.bottomBar.today,
-                        leading: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: SvgPicture.asset(
-                            "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                            color: ColorsExt.grey1(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.today,
-                        trailing: Builder(builder: (context) {
-                          List<Task> fixedTodayTasks = List.from(context.watch<TasksCubit>().state.fixedTodayTasks);
-                          List<Task> fixedTodoTodayTasks = List.from(fixedTodayTasks
-                              .where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
-
-                          return Text(
-                            fixedTodoTodayTasks.length.toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2_5(context),
-                            ),
-                          );
-                        }),
-                        onPressed: () {
-                          context.read<MainCubit>().changeHomeView(HomeViewType.today);
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 2),
-                  BlocBuilder<MainCubit, MainCubitState>(
-                    builder: (context, state) {
-                      HomeViewType homeViewType = state.homeViewType;
-
-                      return ButtonSelectable(
-                        title: t.task.someday,
-                        leading: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: SvgPicture.asset(
-                            "assets/images/icons/_common/archivebox.svg",
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.someday,
-                        trailing: Text(
-                          t.comingSoon,
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
-                        onPressed: () {
-                          // TODO someday list
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 2),
-                  BlocBuilder<MainCubit, MainCubitState>(
-                    builder: (context, state) {
-                      HomeViewType homeViewType = state.homeViewType;
-
-                      return ButtonSelectable(
-                        title: t.allTasks,
-                        leading: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: SvgPicture.asset(
-                            "assets/images/icons/_common/rectangle_grid_1x2.svg",
-                            height: 19,
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.someday,
-                        trailing: Text(
-                          t.comingSoon,
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
-                        onPressed: () {
-                          // TODO all tasks list
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  const Separator(),
-                  const SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            t.settings.labels.toUpperCase(),
-                            style:
-                                TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
-                          ),
-                        ),
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
-                          child: PopupMenuButton<AddListType>(
-                            icon: SvgPicture.asset(
-                              "assets/images/icons/_common/plus.svg",
-                              width: 22,
-                              height: 22,
-                              color: ColorsExt.grey3(context),
-                            ),
-                            onSelected: (AddListType result) async {
-                              switch (result) {
-                                case AddListType.addLabel:
-                                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                                  Label newLabel = Label(id: const Uuid().v4(), color: "palette-red");
-
-                                  List<Label> folders = labelsCubit.state.labels
-                                      .where((label) => label.type == "folder" && label.deletedAt == null)
-                                      .toList();
-
-                                  Label? newLabelUpdated = await showCupertinoModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => CreateEditLabelModal(folders: folders, label: newLabel),
-                                  );
-
-                                  if (newLabelUpdated != null) {
-                                    labelsCubit.addLabel(newLabelUpdated, labelType: LabelType.label);
-                                  }
-                                  break;
-                                case AddListType.addFolder:
-                                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                                  Label newFolderInitial = Label(id: const Uuid().v4(), type: "folder");
-
-                                  Label? newFolder = await showCupertinoModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => CreateFolderModal(initialFolder: newFolderInitial),
-                                  );
-
-                                  if (newFolder != null) {
-                                    labelsCubit.addLabel(newFolder, labelType: LabelType.folder);
-                                  }
-                                  break;
-                              }
-                            },
-                            itemBuilder: (BuildContext context) => <PopupMenuEntry<AddListType>>[
-                              PopupMenuItem<AddListType>(
-                                value: AddListType.addLabel,
-                                child: PopupMenuCustomItem(
-                                  iconAsset: "assets/images/icons/_common/number.svg",
-                                  text: t.label.addLabel,
-                                ),
-                              ),
-                              PopupMenuItem<AddListType>(
-                                value: AddListType.addFolder,
-                                child: PopupMenuCustomItem(
-                                  iconAsset: "assets/images/icons/_common/folder.svg",
-                                  text: t.label.addFolder,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: const [
+                        _Header(),
+                        SizedBox(height: 19),
+                        Separator(),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 7.5),
-                  LabelsList(
-                    showHeaders: false,
-                    showNoLabel: false,
-                    onSelect: (Label selected) {
-                      context.read<LabelsCubit>().selectLabel(selected);
-                      context.read<MainCubit>().changeHomeView(HomeViewType.label);
-                      Navigator.pop(context);
-                    },
+                  Expanded(
+                    child: ListView(
+                      physics: const ClampingScrollPhysics(),
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        BlocBuilder<MainCubit, MainCubitState>(
+                          builder: (context, state) {
+                            HomeViewType homeViewType = state.homeViewType;
+
+                            return ButtonSelectable(
+                              title: t.bottomBar.inbox,
+                              leading: SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: SvgPicture.asset(
+                                  "assets/images/icons/_common/tray.svg",
+                                  color: ColorsExt.grey2(context),
+                                ),
+                              ),
+                              selected: homeViewType == HomeViewType.inbox,
+                              trailing: Builder(builder: (context) {
+                                List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
+
+                                return Text(
+                                  tasks.length.toString(),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorsExt.grey2_5(context),
+                                  ),
+                                );
+                              }),
+                              onPressed: () {
+                                context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 2),
+                        BlocBuilder<MainCubit, MainCubitState>(
+                          builder: (context, state) {
+                            HomeViewType homeViewType = state.homeViewType;
+
+                            return ButtonSelectable(
+                              title: t.bottomBar.today,
+                              leading: SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: SvgPicture.asset(
+                                  "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+                                  color: ColorsExt.grey1(context),
+                                ),
+                              ),
+                              selected: homeViewType == HomeViewType.today,
+                              trailing: Builder(builder: (context) {
+                                List<Task> fixedTodayTasks =
+                                    List.from(context.watch<TasksCubit>().state.fixedTodayTasks);
+                                List<Task> fixedTodoTodayTasks = List.from(fixedTodayTasks
+                                    .where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
+
+                                return Text(
+                                  fixedTodoTodayTasks.length.toString(),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorsExt.grey2_5(context),
+                                  ),
+                                );
+                              }),
+                              onPressed: () {
+                                context.read<MainCubit>().changeHomeView(HomeViewType.today);
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 2),
+                        BlocBuilder<MainCubit, MainCubitState>(
+                          builder: (context, state) {
+                            HomeViewType homeViewType = state.homeViewType;
+
+                            return ButtonSelectable(
+                              title: t.task.someday,
+                              leading: SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: SvgPicture.asset(
+                                  "assets/images/icons/_common/archivebox.svg",
+                                  color: ColorsExt.grey3(context),
+                                ),
+                              ),
+                              selected: homeViewType == HomeViewType.someday,
+                              trailing: Text(
+                                t.comingSoon,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: ColorsExt.grey3(context),
+                                ),
+                              ),
+                              onPressed: () {
+                                // TODO someday list
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 2),
+                        BlocBuilder<MainCubit, MainCubitState>(
+                          builder: (context, state) {
+                            HomeViewType homeViewType = state.homeViewType;
+
+                            return ButtonSelectable(
+                              title: t.allTasks,
+                              leading: SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: SvgPicture.asset(
+                                  "assets/images/icons/_common/rectangle_grid_1x2.svg",
+                                  height: 19,
+                                  color: ColorsExt.grey3(context),
+                                ),
+                              ),
+                              selected: homeViewType == HomeViewType.someday,
+                              trailing: Text(
+                                t.comingSoon,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: ColorsExt.grey3(context),
+                                ),
+                              ),
+                              onPressed: () {
+                                // TODO all tasks list
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        const Separator(),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  t.settings.labels.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+                                ),
+                              ),
+                              Theme(
+                                data: Theme.of(context).copyWith(
+                                    useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
+                                child: PopupMenuButton<AddListType>(
+                                  icon: SvgPicture.asset(
+                                    "assets/images/icons/_common/plus.svg",
+                                    width: 22,
+                                    height: 22,
+                                    color: ColorsExt.grey3(context),
+                                  ),
+                                  onSelected: (AddListType result) async {
+                                    switch (result) {
+                                      case AddListType.addLabel:
+                                        LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                                        Label newLabel = Label(id: const Uuid().v4(), color: "palette-red");
+
+                                        List<Label> folders = labelsCubit.state.labels
+                                            .where((label) => label.type == "folder" && label.deletedAt == null)
+                                            .toList();
+
+                                        Label? newLabelUpdated = await showCupertinoModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => CreateEditLabelModal(folders: folders, label: newLabel),
+                                        );
+
+                                        if (newLabelUpdated != null) {
+                                          labelsCubit.addLabel(newLabelUpdated, labelType: LabelType.label);
+                                        }
+                                        break;
+                                      case AddListType.addFolder:
+                                        LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                                        Label newFolderInitial = Label(id: const Uuid().v4(), type: "folder");
+
+                                        Label? newFolder = await showCupertinoModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => CreateFolderModal(initialFolder: newFolderInitial),
+                                        );
+
+                                        if (newFolder != null) {
+                                          labelsCubit.addLabel(newFolder, labelType: LabelType.folder);
+                                        }
+                                        break;
+                                    }
+                                  },
+                                  itemBuilder: (BuildContext context) => <PopupMenuEntry<AddListType>>[
+                                    PopupMenuItem<AddListType>(
+                                      value: AddListType.addLabel,
+                                      child: PopupMenuCustomItem(
+                                        iconAsset: "assets/images/icons/_common/number.svg",
+                                        text: t.label.addLabel,
+                                      ),
+                                    ),
+                                    PopupMenuItem<AddListType>(
+                                      value: AddListType.addFolder,
+                                      child: PopupMenuCustomItem(
+                                        iconAsset: "assets/images/icons/_common/folder.svg",
+                                        text: t.label.addFolder,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 7.5),
+                        LabelsList(
+                          showHeaders: false,
+                          showNoLabel: false,
+                          onSelect: (Label selected) {
+                            context.read<LabelsCubit>().selectLabel(selected);
+                            context.read<MainCubit>().changeHomeView(HomeViewType.label);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 24),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SvgPicture.asset(
+          "assets/images/logo/logo_outline.svg",
+          width: 48,
+          height: 48,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: BlocBuilder<AuthCubit, AuthCubitState>(
+            builder: (context, state) {
+              if (state.user == null) {
+                return const SizedBox();
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    state.user?.name ?? "n/d",
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    state.user?.email ?? "n/d",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: ColorsExt.grey3(context),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        InkWell(
+          child: SvgPicture.asset(
+            "assets/images/icons/_common/search.svg",
+            color: ColorsExt.grey3(context),
+          ),
+          onTap: () {
+            showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => const SearchModal(),
+            );
+          },
+        ),
+        const SizedBox(width: 12),
+        InkWell(
+          child: SvgPicture.asset(
+            "assets/images/icons/_common/gear_alt.svg",
+            color: ColorsExt.grey2(context),
+          ),
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+          },
+        ),
+      ],
     );
   }
 }
