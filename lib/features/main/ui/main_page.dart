@@ -220,7 +220,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
       case HomeViewType.calendar:
         return AppBarComp(title: t.bottomBar.calendar);
       case HomeViewType.label:
-        return LabelAppBar(label: selectedLabel!, showDone: false);
+        bool showDone = context.watch<LabelsCubit>().state.showDone;
+        return LabelAppBar(label: selectedLabel!, showDone: showDone);
       default:
         return const PreferredSize(preferredSize: Size.zero, child: SizedBox());
     }
