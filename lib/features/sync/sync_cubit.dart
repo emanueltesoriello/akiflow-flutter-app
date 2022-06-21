@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/api/core_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/services/sync_controller_service.dart';
@@ -18,17 +19,23 @@ class SyncCubit extends Cubit<SyncCubitState> {
   sync({List<Entity>? entities, bool loading = false}) async {
     print("start sync $entities");
 
-    emit(state.copyWith(loading: loading));
+    try {
+      await CoreApi().check();
 
-    User? user = _preferencesRepository.user;
+      emit(state.copyWith(loading: loading));
 
-    if (user != null) {
-      await _syncControllerService.sync(entities);
+      User? user = _preferencesRepository.user;
 
-      print("sync completed");
+      if (user != null) {
+        await _syncControllerService.sync(entities);
+
+        print("sync completed");
+      }
+
+      emit(state.copyWith(loading: false));
+    } catch (_) {
+      emit(state.copyWith(loading: false));
     }
-
-    emit(state.copyWith(loading: false));
   }
 
   syncIntegration([List<IntegrationEntity>? entities]) async {

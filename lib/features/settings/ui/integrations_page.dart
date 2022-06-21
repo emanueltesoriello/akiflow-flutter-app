@@ -27,7 +27,7 @@ class IntegrationsPage extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 BlocBuilder<SettingsCubit, SettingsCubitState>(
                   builder: (context, state) {
