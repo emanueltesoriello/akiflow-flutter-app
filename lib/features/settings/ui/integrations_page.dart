@@ -41,6 +41,7 @@ class IntegrationsPage extends StatelessWidget {
 
                     return ListView.builder(
                       shrinkWrap: true,
+                      padding: const EdgeInsets.only(top: 20),
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: accounts.length + 1,
                       itemBuilder: (context, index) {
@@ -90,12 +91,15 @@ class IntegrationsPage extends StatelessWidget {
                                 if (account.picture == null || account.picture!.isEmpty) {
                                   return const SizedBox();
                                 }
-                                return Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: CircleAvatar(
-                                        radius: 8,
-                                        backgroundColor: ColorsExt.grey3(context),
-                                        backgroundImage: NetworkImage(account.picture!)));
+                                return Transform.translate(
+                                  offset: const Offset(5, 5),
+                                  child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: CircleAvatar(
+                                          radius: 8,
+                                          backgroundColor: ColorsExt.grey3(context),
+                                          backgroundImage: NetworkImage(account.picture!))),
+                                );
                               })
                             ],
                           ),
