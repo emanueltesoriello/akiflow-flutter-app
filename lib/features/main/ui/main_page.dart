@@ -332,48 +332,52 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
         return Padding(
           padding: EdgeInsets.only(bottom: bottomPadding),
-          child: FloatingActionButton(
-            onPressed: () async {
-              HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
+          child: SizedBox(
+            width: 52,
+            height: 52,
+            child: FloatingActionButton(
+              onPressed: () async {
+                HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
 
-              TaskStatusType taskStatusType;
+                TaskStatusType taskStatusType;
 
-              if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
-                taskStatusType = TaskStatusType.inbox;
-              } else {
-                taskStatusType = TaskStatusType.planned;
-              }
+                if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
+                  taskStatusType = TaskStatusType.inbox;
+                } else {
+                  taskStatusType = TaskStatusType.planned;
+                }
 
-              DateTime date = context.read<TodayCubit>().state.selectedDate;
+                DateTime date = context.read<TodayCubit>().state.selectedDate;
 
-              Label? label = context.read<LabelsCubit>().state.selectedLabel;
+                Label? label = context.read<LabelsCubit>().state.selectedLabel;
 
-              EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+                EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
 
-              Task task = editTaskCubit.state.updatedTask.copyWith(
-                status: Nullable(taskStatusType.id),
-                date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
-                    ? Nullable(null)
-                    : Nullable(date.toIso8601String()),
-                listId: Nullable(label?.id),
-              );
+                Task task = editTaskCubit.state.updatedTask.copyWith(
+                  status: Nullable(taskStatusType.id),
+                  date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
+                      ? Nullable(null)
+                      : Nullable(date.toIso8601String()),
+                  listId: Nullable(label?.id),
+                );
 
-              editTaskCubit.attachTask(task);
+                editTaskCubit.attachTask(task);
 
-              showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context) => SingleChildScrollView(
-                  controller: ModalScrollController.of(context),
-                  child: const CreateTaskModal(),
-                ),
-              );
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: SvgPicture.asset(
-              "assets/images/icons/_common/plus.svg",
-              color: ColorsExt.background(context),
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) => SingleChildScrollView(
+                    controller: ModalScrollController.of(context),
+                    child: const CreateTaskModal(),
+                  ),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: SvgPicture.asset(
+                "assets/images/icons/_common/plus.svg",
+                color: ColorsExt.background(context),
+              ),
             ),
           ),
         );
@@ -515,12 +519,15 @@ class NavItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                        width: 40,
-                        height: 40,
                         child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: SvgPicture.asset(activeIconAsset, color: color),
-                        )),
+                      padding: const EdgeInsets.all(5),
+                      child: SvgPicture.asset(
+                        activeIconAsset,
+                        color: color,
+                        width: 26,
+                        height: 26,
+                      ),
+                    )),
                     Flexible(
                       child: Text(
                         title,
@@ -555,7 +562,7 @@ class _BottomIconBadge extends StatelessWidget {
     }
 
     return Transform.translate(
-      offset: Offset(17, Platform.isAndroid ? 5 : 8),
+      offset: const Offset(14, 10),
       child: Container(
         width: 17,
         height: 17,
