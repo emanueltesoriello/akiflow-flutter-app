@@ -305,7 +305,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(height: 0.5, color: const Color(0xffE4EDF3)),
             CustomBottomNavigationBar(
               labelStyle: labelStyle,
               bottomBarIconSize: bottomBarIconSize,
