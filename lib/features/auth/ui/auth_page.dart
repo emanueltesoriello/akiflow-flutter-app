@@ -6,7 +6,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
-import 'package:mobile/main_com.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,13 +31,7 @@ class AuthPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Stack(
-                  children: const [
-                    MainPage(),
-                    UndoBottomView(),
-                    JustCreatedTaskView(),
-                  ],
-                ),
+                builder: (context) => const MainPage(),
               ),
             );
           }

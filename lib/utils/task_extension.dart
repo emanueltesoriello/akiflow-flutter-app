@@ -1,10 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/task/task_list.dart';
+import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
+import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
+import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/utils/tz_utils.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/doc.dart';
@@ -707,6 +714,47 @@ extension TaskExt on Task {
         return TrelloDoc(doc);
       default:
         return null;
+    }
+  }
+
+  static Future<void> editTask(BuildContext context, Task task) async {
+    TasksCubit tasksCubit = context.read<TasksCubit>();
+    SyncCubit syncCubit = context.read<SyncCubit>();
+
+    EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
+
+    await showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => BlocProvider(
+        create: (context) => editTaskCubit,
+        child: const EditTaskModal(),
+      ),
+    );
+
+    Task updated = editTaskCubit.state.updatedTask;
+    Task original = editTaskCubit.state.originalTask;
+
+    if (updated == original) {
+      return;
+    }
+
+    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
+      showDialog(
+          context: context,
+          builder: (context) => RecurringEditDialog(
+                onlyThisTap: () {
+                  editTaskCubit.modalDismissed();
+                },
+                allTap: () {
+                  editTaskCubit.modalDismissed(updateAllFuture: true);
+                },
+              ));
+    } else {
+      editTaskCubit.modalDismissed();
+    }
+
+    if (updated.isCompletedComputed != original.isCompletedComputed) {
+      tasksCubit.handleDocAction([updated]);
     }
   }
 }

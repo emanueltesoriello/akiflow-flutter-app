@@ -10,13 +10,9 @@ import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/edit_task/ui/edit_task_modal.dart';
-import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 
@@ -61,44 +57,7 @@ class TaskRow extends StatelessWidget {
       child: GestureDetector(
         onLongPress: enableLongPressToSelect ? () => selectTask() : null,
         onTap: () async {
-          TasksCubit tasksCubit = context.read<TasksCubit>();
-          SyncCubit syncCubit = context.read<SyncCubit>();
-
-          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-
-          await showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context) => BlocProvider(
-              create: (context) => editTaskCubit,
-              child: const EditTaskModal(),
-            ),
-          );
-
-          Task updated = editTaskCubit.state.updatedTask;
-          Task original = editTaskCubit.state.originalTask;
-
-          if (updated == original) {
-            return;
-          }
-
-          if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
-            showDialog(
-                context: context,
-                builder: (context) => RecurringEditDialog(
-                      onlyThisTap: () {
-                        editTaskCubit.modalDismissed();
-                      },
-                      allTap: () {
-                        editTaskCubit.modalDismissed(updateAllFuture: true);
-                      },
-                    ));
-          } else {
-            editTaskCubit.modalDismissed();
-          }
-
-          if (updated.isCompletedComputed != original.isCompletedComputed) {
-            tasksCubit.handleDocAction([updated]);
-          }
+          TaskExt.editTask(context, task);
         },
         child: IntrinsicHeight(
           child: Container(
