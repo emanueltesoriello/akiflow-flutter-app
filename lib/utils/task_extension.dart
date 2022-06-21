@@ -680,8 +680,6 @@ extension TaskExt on Task {
       return null;
     }
 
-    print(this.doc);
-
     doc = doc ?? _fromBuiltinDoc(this);
 
     switch (connectorId) {

@@ -807,41 +807,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  pusher_beams:
-    dependency: "direct main"
-    description:
-      name: pusher_beams
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
-  pusher_beams_android:
-    dependency: transitive
-    description:
-      name: pusher_beams_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
-  pusher_beams_ios:
-    dependency: transitive
-    description:
-      name: pusher_beams_ios
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
-  pusher_beams_platform_interface:
-    dependency: transitive
-    description:
-      name: pusher_beams_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4"
-  pusher_beams_web:
-    dependency: transitive
-    description:
-      name: pusher_beams_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   quiver:
     dependency: transitive
     description:
