@@ -9,6 +9,7 @@ import 'package:mobile/components/task/notice.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -61,7 +62,27 @@ class _ViewState extends State<_View> {
         return BlocBuilder<InboxCubit, InboxCubitState>(
           builder: (context, state) {
             if (tasksState.tasksLoaded && tasks.isEmpty) {
-              return const HomeViewPlaceholder();
+              return RefreshIndicator(
+                onRefresh: () async {
+                  return context.read<SyncCubit>().sync();
+                },
+                child: Center(
+                  child: CustomScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    slivers: [
+                      SliverFillRemaining(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: const [
+                            HomeViewPlaceholder(),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
             }
 
             return TaskList(
