@@ -7,21 +7,16 @@ import 'package:models/user.dart';
 part 'push_state.dart';
 
 class PushCubit extends Cubit<PushCubitState> {
+  // ignore: unused_field
   final PushNotificationService _pushNotificationService = locator<PushNotificationService>();
 
   PushCubit() : super(const PushCubitState()) {
     _init();
   }
 
-  _init() async {
-    await _pushNotificationService.start();
-  }
+  _init() async {}
 
-  login(User user) async {
-    await _pushNotificationService.updateUserId(user);
-  }
+  login(User user) async {}
 
-  logout() async {
-    await _pushNotificationService.stop();
-  }
+  logout() async {}
 }
