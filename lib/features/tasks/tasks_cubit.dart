@@ -111,6 +111,38 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }
 
+  //   void refreshTasksUi(Task task) async {
+  //   bool hasUpdated = state.inboxTasks.any((element) => element.id == task.id) ||
+  //       state.selectedDayTasks.any((element) => element.id == task.id) ||
+  //       state.labelTasks.any((element) => element.id == task.id) ||
+  //       state.fixedTodayTasks.any((element) => element.id == task.id);
+
+  //   print("hasUpdated: $hasUpdated");
+  //   print("task.statusType: ${task.statusType}");
+  //   print("task.date: ${task.date}");
+
+  //   if (hasUpdated) {
+  //     emit(state.copyWith(
+  //       inboxTasks: state.inboxTasks.map((task) => task.id == task.id ? task : task).toList(),
+  //       selectedDayTasks: state.selectedDayTasks.map((task) => task.id == task.id ? task : task).toList(),
+  //       labelTasks: state.labelTasks.map((task) => task.id == task.id ? task : task).toList(),
+  //       fixedTodayTasks: state.fixedTodayTasks.map((task) => task.id == task.id ? task : task).toList(),
+  //     ));
+  //   } else if (task.statusType == TaskStatusType.inbox) {
+  //     emit(state.copyWith(inboxTasks: state.inboxTasks..add(task)));
+  //   } else if (task.statusType == TaskStatusType.planned) {
+  //     if (task.isSameDateOf(DateTime.now())) {
+  //       emit(state.copyWith(fixedTodayTasks: state.fixedTodayTasks..add(task)));
+  //     } else if (task.isSameDateOf(_todayCubit!.state.selectedDate)) {
+  //       emit(state.copyWith(selectedDayTasks: state.selectedDayTasks..add(task)));
+  //     }
+  //   }
+
+  //   if (task.listId != null && task.listId == _labelsCubit!.state.selectedLabel?.id) {
+  //     emit(state.copyWith(labelTasks: state.labelTasks..add(task)));
+  //   }
+  // }
+
   refreshAllFromRepository() async {
     await Future.wait([
       fetchDocs(),

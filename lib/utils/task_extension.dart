@@ -90,11 +90,6 @@ extension TaskStatusTypeExt on TaskStatusType {
 
 extension TaskExt on Task {
   bool isSameDateOf(DateTime ofDate) {
-    if (datetime != null) {
-      DateTime dateParsed = DateTime.parse(datetime!).toLocal();
-      return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
-    }
-
     if (date != null) {
       DateTime dateParsed = DateTime.parse(date!);
       return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
