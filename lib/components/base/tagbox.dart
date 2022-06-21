@@ -34,8 +34,8 @@ class TagBox extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         constraints: BoxConstraints(
-          minHeight: isBig ? 32 : 28,
-          minWidth: isSquare ? (isBig ? 32 : 28) : 0,
+          minHeight: isBig ? 32 : 22,
+          minWidth: isSquare ? (isBig ? 32 : 22) : 0,
         ),
         decoration: BoxDecoration(
           color: backgroundColor,

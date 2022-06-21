@@ -61,7 +61,8 @@ class TaskRow extends StatelessWidget {
         },
         child: IntrinsicHeight(
           child: Container(
-            padding: EdgeInsets.fromLTRB(0, 16 + additionalTopPadding, 16, 12),
+            constraints: const BoxConstraints(minHeight: 50),
+            padding: EdgeInsets.fromLTRB(0, 12 + additionalTopPadding, 12, 12),
             color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,25 +147,28 @@ class TaskRow extends StatelessWidget {
       text = t.noTitle;
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            text,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                  ? ColorsExt.grey3(context)
-                  : ColorsExt.grey1(context),
+    return SizedBox(
+      height: 22,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              text,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
+                    ? ColorsExt.grey3(context)
+                    : ColorsExt.grey1(context),
+              ),
             ),
           ),
-        ),
-        _overdue(context),
-      ],
+          _overdue(context),
+        ],
+      ),
     );
   }
 
@@ -356,56 +360,57 @@ class TaskRow extends StatelessWidget {
 
     doc = task.computedDoc(doc);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 4),
-        Builder(builder: (context) {
-          if (doc != null) {
-            return Row(
-              children: [
-                SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
-                const SizedBox(width: 7),
-                Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      return Text(
-                        doc?.getSummary ?? "",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
-                      );
-                    },
-                  ),
+    if (doc == null && task.descriptionParsed.isEmpty) {
+      return const SizedBox();
+    }
+
+    return SizedBox(
+      height: 24,
+      child: Builder(builder: (context) {
+        if (doc != null) {
+          return Row(
+            children: [
+              SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
+              const SizedBox(width: 7),
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    return Text(
+                      doc?.getSummary ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                    );
+                  },
                 ),
-              ],
-            );
-          } else if (task.descriptionParsed.isNotEmpty) {
-            return Row(
-              children: [
-                SvgPicture.asset(
-                  "assets/images/icons/_common/arrow_turn_down_right.svg",
+              ),
+            ],
+          );
+        } else if (task.descriptionParsed.isNotEmpty) {
+          return Row(
+            children: [
+              SvgPicture.asset(
+                "assets/images/icons/_common/arrow_turn_down_right.svg",
+                color: ColorsExt.grey3(context),
+                width: 16,
+                height: 16,
+              ),
+              const SizedBox(width: 4.5),
+              Expanded(
+                  child: Text(
+                task.descriptionParsed,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 15,
                   color: ColorsExt.grey3(context),
-                  width: 16,
-                  height: 16,
                 ),
-                const SizedBox(width: 4.5),
-                Expanded(
-                    child: Text(
-                  task.descriptionParsed,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: ColorsExt.grey3(context),
-                  ),
-                )),
-              ],
-            );
-          } else {
-            return const SizedBox();
-          }
-        }),
-      ],
+              )),
+            ],
+          );
+        } else {
+          return const SizedBox();
+        }
+      }),
     );
   }
 }

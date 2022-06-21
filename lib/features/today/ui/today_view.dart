@@ -44,8 +44,10 @@ class _ViewState extends State<_View> {
 
     streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        scrollController.animateTo(scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        try {
+          scrollController.animateTo(scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        } catch (_) {}
       });
     });
     super.initState();

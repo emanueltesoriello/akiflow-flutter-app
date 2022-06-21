@@ -34,18 +34,30 @@ class TaskInfo extends StatelessWidget {
       return const SizedBox();
     }
 
-    return Column(
-      children: [
-        const SizedBox(height: 10.5),
-        Wrap(
-          spacing: 4,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            _status(context),
-            _label(context),
-          ],
-        ),
-      ],
+    List<Widget> children = [
+      _status(context),
+      _label(context),
+    ];
+
+    if (children.every((element) => element is SizedBox)) {
+      return const SizedBox();
+    }
+
+    return SizedBox(
+      height: 22 + 10.5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Wrap(
+            spacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              _status(context),
+              _label(context),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
