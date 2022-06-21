@@ -169,6 +169,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: PopupMenuCustomItem(
                     iconAsset: "assets/images/icons/_common/arrow_up_arrow_down.svg",
                     text: t.label.sortComingSoon,
+                    enabled: false,
                   ),
                 ),
               ),
