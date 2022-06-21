@@ -105,26 +105,33 @@ class _EditTaskRowState extends State<EditTaskRow> {
   Widget _description(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: quillController,
-      builder: (context, QuillController value, child) => QuillEditor(
-        controller: value,
-        readOnly: false,
-        scrollController: ScrollController(),
-        scrollable: true,
-        focusNode: _descriptionFocusNode,
-        autoFocus: false,
-        expands: false,
-        padding: EdgeInsets.zero,
-        keyboardAppearance: Brightness.light,
-        placeholder: t.task.description,
-        customStyles: DefaultStyles(
-          placeHolder: DefaultTextBlockStyle(
-            const TextStyle(
-              color: Colors.grey,
-              fontSize: 18,
+      builder: (context, QuillController value, child) => Theme(
+        data: Theme.of(context).copyWith(
+          textSelectionTheme: TextSelectionThemeData(
+            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+          ),
+        ),
+        child: QuillEditor(
+          controller: value,
+          readOnly: false,
+          scrollController: ScrollController(),
+          scrollable: true,
+          focusNode: _descriptionFocusNode,
+          autoFocus: false,
+          expands: false,
+          padding: EdgeInsets.zero,
+          keyboardAppearance: Brightness.dark,
+          placeholder: t.task.description,
+          customStyles: DefaultStyles(
+            placeHolder: DefaultTextBlockStyle(
+              const TextStyle(
+                color: Colors.grey,
+                fontSize: 18,
+              ),
+              const tuple.Tuple2(0, 0),
+              const tuple.Tuple2(0, 0),
+              null,
             ),
-            const tuple.Tuple2(0, 0),
-            const tuple.Tuple2(0, 0),
-            null,
           ),
         ),
       ),
