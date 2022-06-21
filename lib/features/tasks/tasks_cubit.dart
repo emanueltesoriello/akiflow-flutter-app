@@ -54,7 +54,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       StreamController<List<GmailDocAction>>.broadcast();
   Stream<List<GmailDocAction>> get docActionsStream => _docActionsController.stream;
 
-  late final SyncCubit _syncCubit;
+  final SyncCubit _syncCubit;
 
   AuthCubit? _authCubit;
   LabelsCubit? _labelsCubit;
@@ -64,7 +64,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     print("listen tasks sync");
 
     bool firstTimeLoaded = _preferencesRepository.firstTimeLoaded;
-    emit(state.copyWith(firstTimeLoaded: firstTimeLoaded));
 
     refreshAllFromRepository();
 
@@ -73,8 +72,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       if (!firstTimeLoaded) {
         _preferencesRepository.setFirstTimeLoaded(true);
-        emit(state.copyWith(firstTimeLoaded: true));
       }
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
+      });
     });
   }
 
@@ -96,7 +98,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     if (user != null) {
       emit(state.copyWith(syncStatus: "Syncing..."));
 
-      await _syncCubit.sync([Entity.tasks]);
+      await _syncCubit.sync(entities: [Entity.tasks]);
     }
   }
 
@@ -236,7 +238,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
 
     handleDocAction(tasksChanged);
   }
@@ -287,7 +289,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   Future<void> delete() async {
@@ -444,7 +446,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   Future<void> setDeadline(DateTime? date) async {
@@ -472,7 +474,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
 
     if (date != null) {
       AnalyticsService.track("Tasks deadline set");
@@ -554,7 +556,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   void moveToInbox() {
@@ -612,7 +614,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
 
     if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
       AnalyticsService.track("Tasks unplanned");
@@ -672,7 +674,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     refreshAllFromRepository();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
 
     switch (queue.first.type) {
       case UndoType.restore:
@@ -697,7 +699,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     clearSelected();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
 
     emit(state.copyWith(labelTasks: []));
   }

@@ -13,35 +13,31 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
   Stream get syncCompletedStream => _syncControllerService.syncCompletedStream;
 
-  SyncCubit() : super(const SyncCubitState());
+  SyncCubit() : super(const SyncCubitState(loading: true));
 
-  sync([List<Entity>? entities]) async {
-    print("start sync $entities from ");
+  sync({List<Entity>? entities, bool loading = false}) async {
+    print("start sync $entities");
+
+    emit(state.copyWith(loading: loading));
 
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      emit(state.copyWith(loading: true));
-
       await _syncControllerService.sync(entities);
 
       print("sync completed");
-
-      emit(state.copyWith(loading: false));
     }
+
+    emit(state.copyWith(loading: false));
   }
 
   syncIntegration([List<IntegrationEntity>? entities]) async {
-    print("start sync integration $entities from ");
+    print("start sync integration $entities");
 
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      emit(state.copyWith(loading: true));
-
       await _syncControllerService.syncIntegrationWithCheckUser();
-
-      emit(state.copyWith(loading: false));
     }
   }
 

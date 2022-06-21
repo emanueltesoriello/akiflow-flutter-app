@@ -102,7 +102,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _pushCubit.login(user);
 
-      _syncCubit.sync();
+      _syncCubit.sync(loading: true);
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
 

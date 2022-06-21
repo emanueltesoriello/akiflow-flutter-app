@@ -47,7 +47,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.add([newLabel]);
 
-    _syncCubit.sync([Entity.labels]);
+    _syncCubit.sync(entities: [Entity.labels]);
 
     switch (labelType) {
       case LabelType.folder:
@@ -73,7 +73,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.updateById(label.id, data: label);
 
-    _syncCubit.sync([Entity.labels]);
+    _syncCubit.sync(entities: [Entity.labels]);
   }
 
   Future<void> addSectionToDatabase(Label newSection) async {
@@ -87,7 +87,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
     await _labelsRepository.add([newSection]);
 
-    await _syncCubit.sync([Entity.labels]);
+    await _syncCubit.sync(entities: [Entity.labels]);
 
     await _init();
   }

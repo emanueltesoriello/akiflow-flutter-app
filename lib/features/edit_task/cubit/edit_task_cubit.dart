@@ -73,7 +73,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     AnalyticsService.track("New Task");
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
 
     emit(const EditTaskCubitState());
   }
@@ -103,7 +103,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.addToUndoQueue([task], updated.status == TaskStatusType.planned.id ? UndoType.plan : UndoType.snooze);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
-      _syncCubit.sync([Entity.tasks]);
+      _syncCubit.sync(entities: [Entity.tasks]);
     }
 
     if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
@@ -152,7 +152,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
-      _syncCubit.sync([Entity.tasks]);
+      _syncCubit.sync(entities: [Entity.tasks]);
     }
 
     AnalyticsService.track("Edit Task Label");
@@ -171,7 +171,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       _tasksCubit.addToUndoQueue([task], updated.isCompletedComputed ? UndoType.markDone : UndoType.markUndone);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
-      _syncCubit.sync([Entity.tasks]);
+      _syncCubit.sync(entities: [Entity.tasks]);
     }
 
     _tasksCubit.handleDocAction([updated]);
@@ -356,7 +356,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     _tasksCubit.refreshAllFromRepository();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   void onTitleChanged(String value) {
@@ -431,7 +431,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     _tasksCubit.refreshAllFromRepository();
 
-    _syncCubit.sync([Entity.tasks]);
+    _syncCubit.sync(entities: [Entity.tasks]);
 
     AnalyticsService.track("Edit Task");
   }

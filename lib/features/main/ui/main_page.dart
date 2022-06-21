@@ -100,7 +100,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     bool isAuthenticatingOAuth = context.read<SettingsCubit>().state.isAuthenticatingOAuth;
     if (state == AppLifecycleState.resumed && isAuthenticatingOAuth == false) {
-      context.read<SyncCubit>().sync();
+      context.read<SyncCubit>().sync(loading: true);
     }
   }
 
@@ -232,59 +232,57 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   Widget _content() {
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, state) {
-        if (state.firstTimeLoaded == false) {
-          return const FirstSyncProgress();
+    SyncCubit syncCubit = context.watch<SyncCubit>();
+
+    if (syncCubit.state.loading) {
+      return const FirstSyncProgress();
+    }
+
+    return BlocConsumer<MainCubit, MainCubitState>(
+      listener: (context, state) {
+        int? page;
+
+        switch (state.homeViewType) {
+          case HomeViewType.inbox:
+            page = 1;
+            break;
+          case HomeViewType.today:
+            page = 2;
+            break;
+          case HomeViewType.calendar:
+            page = 3;
+            break;
+          case HomeViewType.label:
+            page = 4;
+
+            break;
+          default:
         }
 
-        return BlocConsumer<MainCubit, MainCubitState>(
-          listener: (context, state) {
-            int? page;
+        if (page == null) return;
 
-            switch (state.homeViewType) {
-              case HomeViewType.inbox:
-                page = 1;
-                break;
-              case HomeViewType.today:
-                page = 2;
-                break;
-              case HomeViewType.calendar:
-                page = 3;
-                break;
-              case HomeViewType.label:
-                page = 4;
+        if (page == 4) {
+          _pageController.jumpToPage(page);
+        } else if ((state.lastHomeViewType == HomeViewType.label || state.homeViewType == HomeViewType.label)) {
+          _pageController.jumpToPage(page);
+        } else {
+          _pageController.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        }
+      },
+      builder: (context, state) {
+        Label? selectedLabel = context.watch<LabelsCubit>().state.selectedLabel;
 
-                break;
-              default:
-            }
-
-            if (page == null) return;
-
-            if (page == 4) {
-              _pageController.jumpToPage(page);
-            } else if ((state.lastHomeViewType == HomeViewType.label || state.homeViewType == HomeViewType.label)) {
-              _pageController.jumpToPage(page);
-            } else {
-              _pageController.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-            }
-          },
-          builder: (context, state) {
-            Label? selectedLabel = context.watch<LabelsCubit>().state.selectedLabel;
-
-            return PageView(
-              key: const ObjectKey("pageView"),
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                const SizedBox(),
-                const InboxView(),
-                const TodayView(),
-                const CalendarView(),
-                if (selectedLabel != null) LabelView(key: ObjectKey(selectedLabel)) else const SizedBox()
-              ],
-            );
-          },
+        return PageView(
+          key: const ObjectKey("pageView"),
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            const SizedBox(),
+            const InboxView(),
+            const TodayView(),
+            const CalendarView(),
+            if (selectedLabel != null) LabelView(key: ObjectKey(selectedLabel)) else const SizedBox()
+          ],
         );
       },
     );

@@ -23,7 +23,7 @@ class MainCubit extends Cubit<MainCubitState> {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      _syncCubit.sync();
+      _syncCubit.sync(loading: true);
       AnalyticsService.track("Show Main Window");
     }
   }
