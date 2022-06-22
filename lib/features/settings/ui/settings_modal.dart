@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/components/base/badged_icon.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
@@ -23,6 +25,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../../components/base/icon_badge.dart';
 
 enum AddListType { addLabel, addFolder }
 
@@ -364,9 +368,19 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         InkWell(
-          child: SvgPicture.asset(
-            "assets/images/icons/_common/gear_alt.svg",
-            color: ColorsExt.grey2(context),
+          child: BadgedIcon(
+            icon: "assets/images/icons/_common/gear_alt.svg",
+            badge: FutureBuilder<dynamic>(
+                future: Intercom.instance.unreadConversationCount(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return IconBadge(
+                      snapshot.data,
+                      offset: const Offset(12, -9),
+                    );
+                  }
+                  return const SizedBox();
+                }),
           ),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));

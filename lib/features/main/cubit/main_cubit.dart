@@ -8,11 +8,14 @@ import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/user.dart';
 
+import '../../../services/intercom_service.dart';
+
 part 'main_state.dart';
 
 class MainCubit extends Cubit<MainCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
+  final IntercomService _intercomService = locator<IntercomService>();
 
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
@@ -45,6 +48,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
     if (user != null) {
       _sentryService.authenticate(user.id.toString(), user.email);
+      _intercomService.authenticate(user.email);
     }
   }
 }

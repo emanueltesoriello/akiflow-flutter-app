@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
@@ -37,6 +38,8 @@ import 'package:models/extensions/account_ext.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
+
+import '../../../components/base/icon_badge.dart';
 
 const double bottomBarHeight = 72;
 
@@ -427,13 +430,23 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       activeIconAsset: "assets/images/icons/_common/menu.svg",
                       title: t.bottomBar.menu,
                       topPadding: topPadding,
+                      badge: FutureBuilder<dynamic>(
+                          future: Intercom.instance.unreadConversationCount(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return IconBadge(
+                                snapshot.data,
+                              );
+                            }
+                            return const SizedBox();
+                          }),
                     ),
                     NavItem(
                       active: state.homeViewType == HomeViewType.inbox,
                       activeIconAsset: "assets/images/icons/_common/tray.svg",
                       title: t.bottomBar.inbox,
                       homeViewType: HomeViewType.inbox,
-                      badge: _BottomIconBadge(inboxTasksCount),
+                      badge: IconBadge(inboxTasksCount),
                       topPadding: topPadding,
                     ),
                     NavItem(
@@ -442,7 +455,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
                       title: t.bottomBar.today,
                       homeViewType: HomeViewType.today,
-                      badge: _BottomIconBadge(fixedTodoTodayTasksCount),
+                      badge: IconBadge(fixedTodoTodayTasksCount),
                       topPadding: topPadding,
                     ),
                     NavItem(
@@ -536,46 +549,6 @@ class NavItem extends StatelessWidget {
               ),
               if (badge != null) Align(alignment: Alignment.topCenter, child: badge!),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _BottomIconBadge extends StatelessWidget {
-  final int count;
-
-  const _BottomIconBadge(
-    this.count, {
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (count == 0) {
-      return const SizedBox();
-    }
-
-    return Transform.translate(
-      offset: const Offset(14, 10),
-      child: Container(
-        width: 17,
-        height: 17,
-        decoration: BoxDecoration(
-          color: ColorsExt.akiflow(context),
-          border: Border.all(color: ColorsExt.background(context), width: 1),
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Text(
-            count > 99 ? "99+" : count.toString(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: count > 99 ? 6 : 9,
-              fontWeight: FontWeight.w600,
-              color: ColorsExt.background(context),
-            ),
           ),
         ),
       ),
