@@ -53,6 +53,14 @@ abstract class Config {
   static String get segmentApiKey {
     return _config['segment_api_key'] as String;
   }
+
+  static IntercomCredential get intercomCredential {
+    return IntercomCredential(
+      appId: _config['intercom']['app_id'] as String,
+      iosApiKey: _config['intercom']['ios_api_key'] as String,
+      androidApiKey: _config['intercom']['android_api_key'] as String,
+    );
+  }
 }
 
 class GoogleCredentials {
@@ -60,4 +68,12 @@ class GoogleCredentials {
   final String clientIdiOS;
 
   GoogleCredentials(this.clientIdAndroid, this.clientIdiOS);
+}
+
+class IntercomCredential {
+  final String appId;
+  final String iosApiKey;
+  final String androidApiKey;
+
+  IntercomCredential({required this.appId, required this.iosApiKey, required this.androidApiKey});
 }

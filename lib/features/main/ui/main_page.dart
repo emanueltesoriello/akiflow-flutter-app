@@ -8,6 +8,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
+import 'package:mobile/components/base/icon_badge.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
@@ -38,8 +39,6 @@ import 'package:models/extensions/account_ext.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
-
-import '../../../components/base/icon_badge.dart';
 
 const double bottomBarHeight = 72;
 

@@ -59,10 +59,9 @@ Future<void> mainCom() async {
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
-  await Intercom.instance.initialize('hqlby49q',
-      iosApiKey: 'ios_sdk-c80c16999ffce9cb6988a6478b18de09a932c4ed',
-      androidApiKey: 'android_sdk-02d22b9bbde45e6ca6419ac5af05878bae1a74c6');
-      
+  await Intercom.instance.initialize(Config.intercomCredential.appId,
+      iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
+
   await SentryFlutter.init(
     (options) {
       options.beforeSend = beforeSend;

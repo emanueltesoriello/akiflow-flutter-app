@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/badged_icon.dart';
+import 'package:mobile/components/base/icon_badge.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/components/base/scroll_chip.dart';
 import 'package:mobile/components/base/separator.dart';
@@ -25,8 +26,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../../components/base/icon_badge.dart';
 
 enum AddListType { addLabel, addFolder }
 
