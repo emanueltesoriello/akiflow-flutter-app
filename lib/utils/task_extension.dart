@@ -24,6 +24,7 @@ import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -664,7 +665,7 @@ extension TaskExt on Task {
       originId: task.originId,
       accountId: task.originAccountId,
       url: task.doc?['url'],
-      localUrl: task.doc?['localUrl'],
+      localUrl: task.doc?['local_url'],
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
       deletedAt: task.deletedAt,
@@ -750,6 +751,28 @@ extension TaskExt on Task {
 
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
+    }
+  }
+
+  Future<void> openLinkedContentUrl([Doc? doc]) async {
+    String? localUrl = doc?.localUrl ?? doc?.content?["local_url"] ?? content?["local_url"];
+
+    if (localUrl == null || localUrl.isEmpty) {
+      localUrl = doc?.url ?? '';
+    }
+
+    Uri uri = Uri.parse(localUrl);
+
+    bool opened;
+
+    if (uri.host == "mail.google.com") {
+      opened = await launchUrl(Uri.parse("googlegmail://"), mode: LaunchMode.externalApplication);
+    } else {
+      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+
+    if (opened == false) {
+      launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication);
     }
   }
 }

@@ -22,7 +22,6 @@ import 'package:models/doc/slack_doc.dart';
 import 'package:models/doc/todoist_doc.dart';
 import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LinkedContentModal extends StatelessWidget {
   final Task task;
@@ -122,7 +121,7 @@ class LinkedContentModal extends StatelessWidget {
                       leadingTextIconAsset: "assets/images/icons/_common/arrow_up_right_square.svg",
                       title: t.linkedContent.open,
                       onPressed: () {
-                        launchUrl(Uri.parse(doc.url ?? ''), mode: LaunchMode.externalApplication);
+                        task.openLinkedContentUrl(doc);
                       }),
                 ),
                 Container(height: 24),

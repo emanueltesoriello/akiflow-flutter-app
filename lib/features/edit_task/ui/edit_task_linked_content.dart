@@ -13,7 +13,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class EditTaskLinkedContent extends StatelessWidget {
   const EditTaskLinkedContent({Key? key}) : super(key: key);
@@ -62,7 +61,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          launchUrl(Uri.parse(doc!.url ?? ''), mode: LaunchMode.externalApplication);
+                          task.openLinkedContentUrl(doc);
                         },
                         child: Row(
                           children: [
