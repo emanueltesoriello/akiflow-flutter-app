@@ -13,6 +13,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EditTaskLinkedContent extends StatelessWidget {
   const EditTaskLinkedContent({Key? key}) : super(key: key);
@@ -58,25 +59,36 @@ class EditTaskLinkedContent extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Row(
                   children: [
-                    SvgPicture.asset(
-                      task.computedIcon(doc),
-                      width: 18,
-                      height: 18,
-                    ),
-                    const SizedBox(width: 10),
                     Expanded(
-                      child: Text(
-                        () {
-                          SettingsCubit settingsCubit = context.read<SettingsCubit>();
+                      child: GestureDetector(
+                        onTap: () {
+                          launchUrl(Uri.parse(doc!.url ?? ''), mode: LaunchMode.externalApplication);
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              task.computedIcon(doc),
+                              width: 18,
+                              height: 18,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                () {
+                                  SettingsCubit settingsCubit = context.read<SettingsCubit>();
 
-                          Account? account = settingsCubit.state.accounts
-                              .firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
+                                  Account? account = settingsCubit.state.accounts
+                                      .firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
 
-                          return doc!.getLinkedContentSummary(account);
-                        }(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+                                  return doc!.getLinkedContentSummary(account);
+                                }(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),
