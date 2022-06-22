@@ -31,7 +31,6 @@ class AuthApi implements IAuthApi {
     });
 
     Response responseRaw = await _httpClient.post(url, body: jsonEncode(body));
-
     return User.fromMap(json.decode(responseRaw.body));
   }
 }
