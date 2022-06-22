@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:models/account/account.dart';
 import 'package:models/base.dart';
 import 'package:models/doc/doc_base.dart';
 import 'package:models/nullable.dart';
@@ -257,7 +258,7 @@ class Doc extends DocBase implements Base {
   }
 
   @override
-  String get getLinkedContentSummary {
+  String getLinkedContentSummary([Account? account]) {
     return url ?? '';
   }
 }

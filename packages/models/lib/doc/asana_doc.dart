@@ -1,3 +1,4 @@
+import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
@@ -25,7 +26,7 @@ class AsanaDoc extends Doc implements DocBase {
         );
 
   @override
-  String get getLinkedContentSummary {
+  String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
     if (content?["workspaceName"] != null && content?["workspaceName"] != '') {
       summaryPieces.add(content?["workspaceName"]);
@@ -41,6 +42,7 @@ class AsanaDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return (content?["parentTaskTitle"] ?? content?["projectName"]) ?? super.getSummary;
+    return (content?["parentTaskTitle"] ?? content?["projectName"]) ??
+        super.getSummary;
   }
 }

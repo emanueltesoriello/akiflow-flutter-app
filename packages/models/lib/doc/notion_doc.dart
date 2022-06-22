@@ -1,3 +1,4 @@
+import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
@@ -24,7 +25,7 @@ class NotionDoc extends Doc implements DocBase {
           content: doc.content,
         );
   @override
-  String get getLinkedContentSummary {
+  String getLinkedContentSummary([Account? account]) {
     return content?["workspaceName"] ?? '';
   }
 

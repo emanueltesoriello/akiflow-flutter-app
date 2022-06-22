@@ -12,7 +12,6 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
-import 'package:models/doc/slack_doc.dart';
 import 'package:models/task/task.dart';
 
 class EditTaskLinkedContent extends StatelessWidget {
@@ -68,16 +67,12 @@ class EditTaskLinkedContent extends StatelessWidget {
                     Expanded(
                       child: Text(
                         () {
-                          if (doc is SlackDoc) {
-                            SettingsCubit settingsCubit = context.read<SettingsCubit>();
+                          SettingsCubit settingsCubit = context.read<SettingsCubit>();
 
-                            Account? account = settingsCubit.state.accounts
-                                .firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
+                          Account? account = settingsCubit.state.accounts
+                              .firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
 
-                            return doc.getLinkedContentSummaryWithAccount(account);
-                          } else {
-                            return doc!.getLinkedContentSummary;
-                          }
+                          return doc!.getLinkedContentSummary(account);
                         }(),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

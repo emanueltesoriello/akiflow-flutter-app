@@ -1,3 +1,4 @@
+import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
@@ -33,7 +34,7 @@ class TodoistDoc extends Doc implements DocBase {
   }
 
   @override
-  String get getLinkedContentSummary {
+  String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
 
     if (content?["projectName"] != null && content?["projectName"] != '') {

@@ -25,11 +25,16 @@ class SlackDoc extends Doc implements DocBase {
           content: doc.content,
         );
 
-  String getLinkedContentSummaryWithAccount(Account? account) {
+  @override
+  String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
 
     try {
-      summaryPieces.add(getWorkspace(account));
+      String? workspace = getWorkspace(account);
+
+      if (workspace != null) {
+        summaryPieces.add(workspace);
+      }
     } catch (_) {}
 
     try {
@@ -47,7 +52,7 @@ class SlackDoc extends Doc implements DocBase {
     } catch (_) {}
 
     if (summaryPieces.isEmpty) {
-      return super.getLinkedContentSummary;
+      return super.getLinkedContentSummary();
     } else {
       return "Slack: ${summaryPieces.join(' - ')}";
     }
@@ -57,7 +62,7 @@ class SlackDoc extends Doc implements DocBase {
     if (account != null) {
       return account.identifier;
     }
-    return '';
+    return null;
   }
 
   @override

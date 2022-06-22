@@ -1,3 +1,4 @@
+import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
@@ -25,7 +26,7 @@ class ClickupDoc extends Doc implements DocBase {
         );
 
   @override
-  String get getLinkedContentSummary {
+  String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
     if (content?["teamName"] != null && content?["teamName"] != '') {
       summaryPieces.add(content?["teamName"]);
@@ -47,6 +48,7 @@ class ClickupDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return (content?["parentTaskTitle"] ?? content?["listName"]) ?? super.getSummary;
+    return (content?["parentTaskTitle"] ?? content?["listName"]) ??
+        super.getSummary;
   }
 }
