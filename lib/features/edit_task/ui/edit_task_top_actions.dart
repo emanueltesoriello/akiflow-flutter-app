@@ -34,6 +34,15 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
 
               cubit.planTap();
 
+              TaskStatusType initialHeaderStatusType;
+
+              if (updatedTask.statusType == TaskStatusType.snoozed ||
+                  updatedTask.statusType == TaskStatusType.someday) {
+                initialHeaderStatusType = TaskStatusType.snoozed;
+              } else {
+                initialHeaderStatusType = TaskStatusType.planned;
+              }
+
               showCupertinoModalBottomSheet(
                 context: context,
                 builder: (context) => BlocProvider.value(
@@ -43,6 +52,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                     initialDatetime:
                         updatedTask.datetime != null ? DateTime.parse(updatedTask.datetime!).toLocal() : null,
                     taskStatusType: updatedTask.statusType ?? TaskStatusType.planned,
+                    initialHeaderStatusType: initialHeaderStatusType,
                     onSelectDate: (
                         {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
                       cubit.planFor(date, dateTime: datetime, statusType: statusType);

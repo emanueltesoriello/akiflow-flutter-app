@@ -81,7 +81,7 @@ class BottomTaskActions extends StatelessWidget {
                           initialDate: DateTime.now(),
                           initialDatetime: null,
                           initialHeaderStatusType: TaskStatusType.snoozed,
-                          taskStatusType: TaskStatusType.planned,
+                          taskStatusType: TaskStatusType.snoozed,
                           onSelectDate: (
                               {required DateTime? date,
                               required DateTime? datetime,

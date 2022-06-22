@@ -151,69 +151,66 @@ class _LabelViewState extends State<LabelView> {
                 Widget? footer;
 
                 if (snoozedCount != 0 || somedayCount != 0) {
-                  footer = Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Builder(builder: (context) {
-                        if (snoozedCount == 0) {
-                          return const SizedBox();
-                        }
+                  List<Widget> wrapped = [];
 
-                        String text;
-                        String? iconAsset;
+                  if (snoozedCount != 0) {
+                    wrapped.add(() {
+                      String text;
+                      String? iconAsset;
 
-                        if (!labelState.showSnoozed) {
-                          text = "$snoozedCount ${t.task.snoozed}";
-                          iconAsset = "assets/images/icons/_common/clock.svg";
-                        } else {
-                          text = t.label.hideSnoozed;
-                        }
+                      if (!labelState.showSnoozed) {
+                        text = "$snoozedCount ${t.task.snoozed}";
+                        iconAsset = "assets/images/icons/_common/clock.svg";
+                      } else {
+                        text = t.label.hideSnoozed;
+                      }
 
-                        return CompactInfo(
-                          iconAsset: iconAsset,
-                          text: text,
-                          onPressed: () {
-                            SchedulerBinding.instance.addPostFrameCallback((_) {
-                              double position = scrollController.position.maxScrollExtent;
-                              scrollController.animateTo(position,
-                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                            });
+                      return CompactInfo(
+                        iconAsset: iconAsset,
+                        text: text,
+                        onPressed: () {
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            double position = scrollController.position.maxScrollExtent;
+                            scrollController.animateTo(position,
+                                duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                          });
 
-                            context.read<LabelsCubit>().toggleShowSnoozed();
-                          },
-                        );
-                      }),
-                      Builder(builder: (context) {
-                        if (somedayCount == 0) {
-                          return const SizedBox();
-                        }
+                          context.read<LabelsCubit>().toggleShowSnoozed();
+                        },
+                      );
+                    }());
+                  }
 
-                        String text;
-                        String? iconAsset;
+                  if (somedayCount != 0) {
+                    wrapped.add(() {
+                      String text;
+                      String? iconAsset;
 
-                        if (!labelState.showSomeday) {
-                          text = "$somedayCount ${t.task.someday}";
-                          iconAsset = "assets/images/icons/_common/archivebox.svg";
-                        } else {
-                          text = t.label.hideSomeday;
-                        }
+                      if (!labelState.showSomeday) {
+                        text = "$somedayCount ${t.task.someday}";
+                        iconAsset = "assets/images/icons/_common/archivebox.svg";
+                      } else {
+                        text = t.label.hideSomeday;
+                      }
 
-                        return CompactInfo(
-                          iconAsset: iconAsset,
-                          text: text,
-                          onPressed: () async {
-                            SchedulerBinding.instance.addPostFrameCallback((_) {
-                              double position = scrollController.position.maxScrollExtent;
-                              scrollController.animateTo(position,
-                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                            });
+                      return CompactInfo(
+                        iconAsset: iconAsset,
+                        text: text,
+                        onPressed: () async {
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            double position = scrollController.position.maxScrollExtent;
+                            scrollController.animateTo(position,
+                                duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                          });
 
-                            context.read<LabelsCubit>().toggleShowSomeday();
-                          },
-                        );
-                      }),
-                    ],
+                          context.read<LabelsCubit>().toggleShowSomeday();
+                        },
+                      );
+                    }());
+                  }
+                  footer = Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
                   );
                 }
 

@@ -273,8 +273,29 @@ class _PlanModalState extends State<PlanModal> {
                       valueListenable: _selectedStatus,
                       builder: (context, statusType, child) {
                         if (statusType == TaskStatusType.planned) {
+                          DateTime now = DateTime.now();
+
+                          DateTime nextWeekend = now.add(Duration(days: (6 - now.weekday) % DateTime.daysPerWeek));
+
                           if (widget.taskStatusType == TaskStatusType.inbox) {
-                            return const SizedBox();
+                            return _predefinedDateItem(
+                              context,
+                              iconAsset:
+                                  "assets/images/icons/_common/${DateFormat("dd").format(nextWeekend)}_square.svg",
+                              text: t.addTask.nextWeekend,
+                              trailingText: '${DateFormat("EEE").format(nextWeekend)}$text',
+                              onPressed: () {
+                                if (useDateTime) {
+                                  datetime = DateTime(nextWeekend.year, nextWeekend.month, nextWeekend.day,
+                                      datetime!.hour, datetime!.minute);
+                                }
+
+                                widget.onSelectDate(
+                                    date: nextWeekend, datetime: datetime, statusType: _selectedStatus.value);
+
+                                Navigator.pop(context);
+                              },
+                            );
                           }
 
                           return _predefinedDateItem(
