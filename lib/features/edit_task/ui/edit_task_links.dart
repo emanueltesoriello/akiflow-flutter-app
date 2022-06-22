@@ -66,6 +66,11 @@ class EditTaskLinks extends StatelessWidget {
                                         networkIcon,
                                         width: 16,
                                         height: 16,
+                                        errorBuilder: (context, error, stacktrace) => Image.asset(
+                                          "assets/images/icons/web/faviconV2.png",
+                                          width: 16,
+                                          height: 16,
+                                        ),
                                       ),
                                     ),
                                   );

@@ -326,7 +326,7 @@ class Task extends Equatable implements Base {
     List<String> linksList = [];
     if (data.containsKey("links") && data["links"] != null) {
       String object = data["links"] as String;
-      linksList = object.split(',');
+      linksList = object.split(';');
       data.remove("links");
     }
 
