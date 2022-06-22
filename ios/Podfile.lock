@@ -42,6 +42,10 @@ PODS:
     - Flutter
   - image_picker_ios (0.0.1):
     - Flutter
+  - Intercom (12.2.1)
+  - intercom_flutter (5.0.0):
+    - Flutter
+    - Intercom (~> 12.2.1)
   - OrderedSet (5.0.0)
   - package_info_plus (0.4.5):
     - Flutter
@@ -86,6 +90,7 @@ DEPENDENCIES:
   - flutter_segment (from `.symlinks/plugins/flutter_segment/ios`)
   - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - intercom_flutter (from `.symlinks/plugins/intercom_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
@@ -103,6 +108,7 @@ SPEC REPOS:
     - AppAuth
     - AppsFlyerFramework
     - FMDB
+    - Intercom
     - OrderedSet
     - Segment-Amplitude
     - segment-appsflyer-ios
@@ -129,6 +135,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/gallery_saver/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  intercom_flutter:
+    :path: ".symlinks/plugins/intercom_flutter/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
@@ -163,6 +171,8 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
   image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
+  Intercom: 6e92a01ce20685e84e308a4103513e0938cabc2c
+  intercom_flutter: e3db563211475d49470a8dfa6ba25d00eb92a768
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
@@ -176,6 +186,6 @@ SPEC CHECKSUMS:
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
 
-PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.11.2

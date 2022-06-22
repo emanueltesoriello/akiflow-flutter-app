@@ -166,6 +166,8 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
         return const EdgeInsets.only(left: 1, top: 1, right: 1);
       case ButtonListPosition.center:
         return const EdgeInsets.all(1);
+      case ButtonListPosition.mid:
+        return const EdgeInsets.all(1);
       case ButtonListPosition.bottom:
         return const EdgeInsets.only(left: 1, bottom: 1, right: 1);
       case ButtonListPosition.onlyHorizontalPadding:
@@ -185,6 +187,8 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
           topRight: Radius.circular(radius),
         );
       case ButtonListPosition.center:
+        return BorderRadius.zero;
+      case ButtonListPosition.mid:
         return BorderRadius.zero;
       case ButtonListPosition.bottom:
         return const BorderRadius.only(

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -58,7 +59,10 @@ Future<void> mainCom() async {
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
-
+  await Intercom.instance.initialize('hqlby49q',
+      iosApiKey: 'ios_sdk-c80c16999ffce9cb6988a6478b18de09a932c4ed',
+      androidApiKey: 'android_sdk-02d22b9bbde45e6ca6419ac5af05878bae1a74c6');
+      
   await SentryFlutter.init(
     (options) {
       options.beforeSend = beforeSend;

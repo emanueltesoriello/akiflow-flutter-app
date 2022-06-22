@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/api/integrations/google_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
@@ -176,6 +177,10 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
   void syncGmail() {
     _syncCubit.syncIntegration([IntegrationEntity.gmail]);
+  }
+
+  Future<void> launchIntercom() async {
+    await Intercom.instance.displayMessenger();
   }
 
   Future<void> sendEmail() async {
