@@ -296,9 +296,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
         List<Task> inboxTasks = List.from(state.inboxTasks);
-        List<Task> fixedTodayTasks = List.from(state.fixedTodayTasks);
-        List<Task> fixedTodoTodayTasks =
-            List.from(fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
         TextStyle labelStyle = TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context));
 
@@ -308,8 +305,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             CustomBottomNavigationBar(
               labelStyle: labelStyle,
               bottomBarIconSize: bottomBarIconSize,
-              inboxTasks: inboxTasks,
-              fixedTodoTodayTasks: fixedTodoTodayTasks,
+              inboxTasksCount: inboxTasks.length,
+              fixedTodoTodayTasksCount: state.todayCount,
               topPadding: topPadding,
             ),
           ],
@@ -390,15 +387,15 @@ class CustomBottomNavigationBar extends StatelessWidget {
     Key? key,
     required this.labelStyle,
     required this.bottomBarIconSize,
-    required this.inboxTasks,
-    required this.fixedTodoTodayTasks,
+    required this.inboxTasksCount,
+    required this.fixedTodoTodayTasksCount,
     required this.topPadding,
   }) : super(key: key);
 
   final TextStyle labelStyle;
   final double bottomBarIconSize;
-  final List<Task> inboxTasks;
-  final List<Task> fixedTodoTodayTasks;
+  final int inboxTasksCount;
+  final int fixedTodoTodayTasksCount;
   final double topPadding;
 
   @override
@@ -436,7 +433,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       activeIconAsset: "assets/images/icons/_common/tray.svg",
                       title: t.bottomBar.inbox,
                       homeViewType: HomeViewType.inbox,
-                      badge: _BottomIconBadge(inboxTasks.length),
+                      badge: _BottomIconBadge(inboxTasksCount),
                       topPadding: topPadding,
                     ),
                     NavItem(
@@ -445,7 +442,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
                       title: t.bottomBar.today,
                       homeViewType: HomeViewType.today,
-                      badge: _BottomIconBadge(fixedTodoTodayTasks.length),
+                      badge: _BottomIconBadge(fixedTodoTodayTasksCount),
                       topPadding: topPadding,
                     ),
                     NavItem(

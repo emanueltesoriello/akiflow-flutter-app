@@ -43,6 +43,9 @@ class TasksCubitState extends Equatable {
   final Task? justCreatedTask;
   final bool tasksLoaded;
 
+  int get todayCount =>
+      fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore).toList().length;
+
   const TasksCubitState({
     this.inboxTasks = const [],
     this.selectedDayTasks = const [],
