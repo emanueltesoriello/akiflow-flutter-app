@@ -8,4 +8,12 @@ extension UserExt on User {
       return 8;
     }
   }
+
+  int get defaultDuration {
+    try {
+      return settings!["tasks"]["defaultTasksDuration"];
+    } catch (e) {
+      return 2 * 60 * 60;
+    }
+  }
 }

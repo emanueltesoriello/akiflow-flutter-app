@@ -115,13 +115,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  void setDuration(double value) {
-    emit(state.copyWith(selectedDuration: value, showDuration: false));
+  void setDuration(int seconds) {
+    emit(state.copyWith(selectedDuration: seconds.toDouble(), showDuration: false));
 
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
-      duration: value != 0 ? Nullable((value * 3600).toInt()) : Nullable(null),
+      duration: seconds != 0 ? Nullable(seconds) : Nullable(null),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 

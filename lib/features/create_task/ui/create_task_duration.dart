@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:models/extensions/user_ext.dart';
+import 'package:models/task/task.dart';
+import 'package:models/user.dart';
 
 class CreateTaskDurationItem extends StatefulWidget {
   const CreateTaskDurationItem({Key? key}) : super(key: key);
-
-  static const double defaultHour = 2;
 
   @override
   State<CreateTaskDurationItem> createState() => _CreateTaskDurationItemState();
 }
 
 class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
-  final ValueNotifier<double> _selectedDuration = ValueNotifier(CreateTaskDurationItem.defaultHour);
+  late final ValueNotifier<int> _selectedDuration;
+
+  @override
+  void initState() {
+    Task task = context.read<EditTaskCubit>().state.updatedTask;
+
+    if (task.duration != null) {
+      _selectedDuration = ValueNotifier(task.duration!);
+    } else {
+      User user = context.read<AuthCubit>().state.user!;
+      _selectedDuration = ValueNotifier(user.defaultDuration);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +43,10 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                 alignment: Alignment.center,
                 child: ValueListenableBuilder(
                   valueListenable: _selectedDuration,
-                  builder: (context, double selectedDuration, child) {
-                    double hours = selectedDuration;
-                    double minutes = (hours - hours.floor()) * 60;
+                  builder: (context, int selectedDuration, child) {
+                    Duration duration = Duration(seconds: selectedDuration);
 
-                    String text;
-
-                    if (minutes.floor() == 0) {
-                      text = '${hours.floor()}h';
-                    } else if (hours.floor() == 0) {
-                      text = '${minutes.floor()}m';
-                    } else {
-                      text = '${hours.floor()}h ${minutes.floor()}m';
-                    }
+                    String text = "${duration.inHours}h ${duration.inMinutes.remainder(60)}m";
 
                     return Text(
                       text,
@@ -72,15 +78,15 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
         ),
         ValueListenableBuilder(
           valueListenable: _selectedDuration,
-          builder: (context, double selectedDuration, child) {
+          builder: (context, int selectedDuration, child) {
             return Slider(
-              value: selectedDuration,
+              value: selectedDuration / 3600,
               min: 0,
               max: 4,
               divisions: 16,
               thumbColor: ColorsExt.background(context),
               onChanged: (double value) {
-                _selectedDuration.value = value;
+                _selectedDuration.value = (value * 3600).toInt();
               },
             );
           },
@@ -100,7 +106,8 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
 
     for (int i = 0; i < 16 + 1; i++) {
       void onTap() {
-        _selectedDuration.value = i * 0.25;
+        int val = (i * 0.25 * 3600).toInt();
+        _selectedDuration.value = val;
       }
 
       if (i % 8 == 0) {
