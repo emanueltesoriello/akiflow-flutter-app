@@ -56,16 +56,10 @@ class PriorityModal extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      SvgPicture.asset(
-                        "assets/images/icons/_common/exclamationmark.svg",
-                        width: 28,
-                        height: 28,
-                      ),
-                      const SizedBox(width: 8),
                       Text(
                         t.task.priority.title,
                         style: TextStyle(
-                          fontSize: 17,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                           color: ColorsExt.grey2(context),
                         ),
@@ -140,8 +134,8 @@ class PriorityModal extends StatelessWidget {
           children: [
             SvgPicture.asset(
               icon,
-              width: 28,
-              height: 28,
+              width: 22,
+              height: 22,
             ),
             const SizedBox(width: 12),
             Expanded(
