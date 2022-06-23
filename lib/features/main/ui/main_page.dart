@@ -143,31 +143,15 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         const QuillWebView(),
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
-            double todayAppBarHeight;
             double toolbarHeight = 56;
-            double openedCalendarHeight = 280;
-            double closedCalendarHeight = 80;
-
-            switch (state.calendarFormat) {
-              case CalendarFormatState.month:
-                todayAppBarHeight = toolbarHeight + openedCalendarHeight;
-                break;
-              case CalendarFormatState.week:
-                todayAppBarHeight = toolbarHeight + closedCalendarHeight;
-                break;
-            }
 
             double contentTopPadding = MediaQuery.of(context).padding.top + toolbarHeight;
-
-            if (homeViewType == HomeViewType.today) {
-              contentTopPadding += closedCalendarHeight;
-            }
 
             return Scaffold(
               extendBodyBehindAppBar: true,
               appBar: _appBar(
                 context,
-                todayAppBarHeight: todayAppBarHeight,
+                todayAppBarHeight: toolbarHeight,
                 calendarTopMargin: toolbarHeight,
                 homeViewType: homeViewType,
                 selectedLabel: label,

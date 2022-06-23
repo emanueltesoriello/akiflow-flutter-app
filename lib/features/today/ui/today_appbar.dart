@@ -7,7 +7,6 @@ import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/features/today/ui/today_app_bar_calendar.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -48,51 +47,11 @@ class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _TodayAppBarState extends State<TodayAppBar> {
   @override
   Widget build(BuildContext context) {
-    return AnimatedSize(
-      alignment: Alignment.topCenter,
-      duration: const Duration(milliseconds: 200),
-      child: GestureDetector(
-        onPanUpdate: (details) {
-          if (details.delta.dy > 0) {
-            context.read<TodayCubit>().scrollDownCalendar();
-          }
-
-          if (details.delta.dy < 0) {
-            context.read<TodayCubit>().scrollUpCalendar();
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: ColorsExt.background(context),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-                offset: Offset(0, -1),
-                blurRadius: 8,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              AppBarComp(
-                leading: _leading(context),
-                titleWidget: _buildTitle(context),
-                actions: _buildActions(context),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  margin: EdgeInsets.only(top: widget.calendarTopMargin),
-                  child: const SafeArea(child: TodayAppBarCalendar()),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return AppBarComp(
+      leading: _leading(context),
+      titleWidget: _buildTitle(context),
+      actions: _buildActions(context),
+      shadow: false,
     );
   }
 

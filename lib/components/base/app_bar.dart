@@ -16,6 +16,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final bool showLogo;
   final Widget? leading;
   final Widget? customTitle;
+  final bool shadow;
 
   const AppBarComp({
     Key? key,
@@ -27,6 +28,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     this.showLogo = false,
     this.leading,
     this.customTitle,
+    this.shadow = true,
   }) : super(key: key);
 
   @override
@@ -37,14 +39,16 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       decoration: BoxDecoration(
         color: ColorsExt.background(context),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
-            offset: Offset(0, -1),
-            blurRadius: 8,
-            spreadRadius: 2,
-          ),
-        ],
+        boxShadow: shadow
+            ? const [
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.05),
+                  offset: Offset(0, -1),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                ),
+              ]
+            : null,
       ),
       child: AppBar(
         centerTitle: false,
@@ -57,7 +61,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         ),
         elevation: 4,
         automaticallyImplyLeading: false,
-        shadowColor: const Color.fromRGBO(0, 0, 0, 0.3),
+        shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
         title: _buildTitle(context),
         titleSpacing: leading != null ? 0 : 16,
         leading: _buildLeading(context),

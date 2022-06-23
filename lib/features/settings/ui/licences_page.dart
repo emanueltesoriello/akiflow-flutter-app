@@ -43,6 +43,7 @@ class LicencesPage extends StatelessWidget {
                 _LicenseItem(name: "rrule", type: "MIT"),
                 _LicenseItem(name: "sentry_flutter", type: "MIT"),
                 _LicenseItem(name: "shared_preferences", type: "MIT"),
+                _LicenseItem(name: "sliding_up_panel", type: "MIT"),
                 _LicenseItem(name: "sqflite", type: "MIT"),
                 _LicenseItem(name: "table_calendar", type: "MIT"),
                 _LicenseItem(name: "timeago", type: "MIT"),

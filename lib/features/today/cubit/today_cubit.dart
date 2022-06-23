@@ -41,11 +41,11 @@ class TodayCubit extends Cubit<TodayCubitState> {
     emit(state.copyWith(completedListOpen: !state.completedListOpen));
   }
 
-  void scrollDownCalendar() {
-    emit(state.copyWith(calendarFormat: CalendarFormatState.month));
+  void panelClosed() {
+    emit(state.copyWith(calendarFormat: CalendarFormatState.week));
   }
 
-  void scrollUpCalendar() {
-    emit(state.copyWith(calendarFormat: CalendarFormatState.week));
+  void panelOpened() {
+    emit(state.copyWith(calendarFormat: CalendarFormatState.month));
   }
 }

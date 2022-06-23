@@ -10,7 +10,9 @@ import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
+import 'package:mobile/features/today/ui/today_app_bar_calendar.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/panel.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
@@ -33,6 +35,8 @@ class _View extends StatefulWidget {
 class _ViewState extends State<_View> {
   StreamSubscription? streamSubscription;
   ScrollController scrollController = ScrollController();
+  ValueNotifier<double> calendarOffsetNotifier = ValueNotifier<double>(200);
+  PanelController panelController = PanelController();
 
   @override
   void initState() {
@@ -92,75 +96,122 @@ class _ViewState extends State<_View> {
       return 0;
     });
 
-    return RefreshIndicator(
-      backgroundColor: ColorsExt.background(context),
-      onRefresh: () async {
-        return context.read<SyncCubit>().sync();
+    return BlocListener<TodayCubit, TodayCubitState>(
+      listener: (context, state) {
+        if (state.calendarFormat == CalendarFormatState.month) {
+          panelController.close();
+        } else {
+          panelController.open();
+        }
       },
-      child: SlidableAutoCloseBehavior(
-        child: ListView(
-          controller: scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          children: [
-            TaskList(
-              key: const ObjectKey("todos"),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              tasks: todos,
-              sorting: TaskListSorting.sortingAscending,
-              visible: context.watch<TodayCubit>().state.todosListOpen,
-              showLabel: true,
-              showPlanInfo: false,
-              header: _Header(
-                t.today.toDos,
-                tasks: todos,
-                onClick: () {
-                  context.read<TodayCubit>().openTodoList();
-                },
-                listOpened: context.watch<TodayCubit>().state.todosListOpen,
-                usePrimaryColor: true,
+      child: SlidingUpPanel(
+        slideDirection: SlideDirection.DOWN,
+        controller: panelController,
+        maxHeight: 280,
+        minHeight: 80,
+        defaultPanelState: PanelState.CLOSED,
+
+        panel: ValueListenableBuilder(
+          valueListenable: calendarOffsetNotifier,
+          builder: (context, value, child) {
+            return Container(
+              color: Colors.white,
+              child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+            );
+            return Transform.translate(
+              offset: Offset(0, calendarOffsetNotifier.value),
+              child: const TodayAppBarCalendar(),
+            );
+          },
+        ),
+        // onPanelClosed: () {
+        //   context.read<TodayCubit>().panelOpened();
+        // },
+        // onPanelOpened: () {
+        //   context.read<TodayCubit>().panelClosed();
+        // },
+        // onPanelSlide: (percentage) {
+        //   calendarOffsetNotifier.value = 200 - (200 * percentage);
+        // },
+        collapsed: Container(
+          color: Colors.white,
+          child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+        ),
+
+        body: Container(
+          margin: const EdgeInsets.only(top: 80),
+          child: RefreshIndicator(
+            backgroundColor: ColorsExt.background(context),
+            onRefresh: () async {
+              return context.read<SyncCubit>().sync();
+            },
+            child: SlidableAutoCloseBehavior(
+              child: ListView(
+                controller: scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                children: [
+                  TaskList(
+                    key: const ObjectKey("todos"),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    tasks: todos,
+                    sorting: TaskListSorting.sortingAscending,
+                    visible: context.watch<TodayCubit>().state.todosListOpen,
+                    showLabel: true,
+                    showPlanInfo: false,
+                    header: _Header(
+                      t.today.toDos,
+                      tasks: todos,
+                      onClick: () {
+                        context.read<TodayCubit>().openTodoList();
+                      },
+                      listOpened: context.watch<TodayCubit>().state.todosListOpen,
+                      usePrimaryColor: true,
+                    ),
+                  ),
+                  TaskList(
+                    key: const ObjectKey("pinned"),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    tasks: pinned,
+                    visible: context.watch<TodayCubit>().state.pinnedListOpen,
+                    showLabel: true,
+                    showPlanInfo: false,
+                    sorting: TaskListSorting.dateAscending,
+                    header: _Header(
+                      t.today.pinnedInCalendar,
+                      tasks: pinned,
+                      onClick: () {
+                        context.read<TodayCubit>().openPinnedList();
+                      },
+                      listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
+                      usePrimaryColor: false,
+                    ),
+                  ),
+                  TaskList(
+                    key: const ObjectKey("completed"),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    tasks: completed,
+                    sorting: TaskListSorting.sortingDescending,
+                    visible: context.watch<TodayCubit>().state.completedListOpen,
+                    showLabel: true,
+                    showPlanInfo: false,
+                    header: _Header(
+                      t.today.done,
+                      tasks: completed,
+                      onClick: () {
+                        context.read<TodayCubit>().openCompletedList();
+                      },
+                      listOpened: context.watch<TodayCubit>().state.completedListOpen,
+                      usePrimaryColor: false,
+                    ),
+                  ),
+                ],
               ),
             ),
-            TaskList(
-              key: const ObjectKey("pinned"),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              tasks: pinned,
-              visible: context.watch<TodayCubit>().state.pinnedListOpen,
-              showLabel: true,
-              showPlanInfo: false,
-              sorting: TaskListSorting.dateAscending,
-              header: _Header(
-                t.today.pinnedInCalendar,
-                tasks: pinned,
-                onClick: () {
-                  context.read<TodayCubit>().openPinnedList();
-                },
-                listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
-                usePrimaryColor: false,
-              ),
-            ),
-            TaskList(
-              key: const ObjectKey("completed"),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              tasks: completed,
-              sorting: TaskListSorting.sortingDescending,
-              visible: context.watch<TodayCubit>().state.completedListOpen,
-              showLabel: true,
-              showPlanInfo: false,
-              header: _Header(
-                t.today.done,
-                tasks: completed,
-                onClick: () {
-                  context.read<TodayCubit>().openCompletedList();
-                },
-                listOpened: context.watch<TodayCubit>().state.completedListOpen,
-                usePrimaryColor: false,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

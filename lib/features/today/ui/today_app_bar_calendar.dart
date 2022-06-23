@@ -10,7 +10,9 @@ import 'package:mobile/utils/datetime_ext.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TodayAppBarCalendar extends StatefulWidget {
-  const TodayAppBarCalendar({Key? key}) : super(key: key);
+  final CalendarFormatState? calendarFormat;
+
+  const TodayAppBarCalendar({Key? key, this.calendarFormat}) : super(key: key);
 
   @override
   State<TodayAppBarCalendar> createState() => _TodayAppBarCalendarState();
@@ -49,8 +51,9 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                   rowHeight: 40,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   daysOfWeekVisible: false,
-                  calendarFormat:
-                      state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month,
+                  calendarFormat: widget.calendarFormat != null
+                      ? (widget.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month)
+                      : (state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month),
                   onCalendarCreated: (pageController) {
                     _pageController = pageController;
                   },
