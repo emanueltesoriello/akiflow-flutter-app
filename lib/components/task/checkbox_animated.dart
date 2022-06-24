@@ -154,7 +154,7 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
         child: Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(2.15, 0, 2.15, 0),
+            padding: const EdgeInsets.all(2.17),
             child: Stack(
               alignment: Alignment.center,
               children: [

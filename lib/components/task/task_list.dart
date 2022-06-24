@@ -146,7 +146,6 @@ class _TaskListState extends State<TaskList> {
                 hideInboxLabel: widget.hideInboxLabel,
                 showLabel: widget.showLabel,
                 showPlanInfo: widget.showPlanInfo,
-                additionalTopPadding: index == 0 ? 4 : 0,
                 selectTask: () {
                   context.read<TasksCubit>().select(task);
                 },

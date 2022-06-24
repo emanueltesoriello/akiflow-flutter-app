@@ -28,7 +28,6 @@ class TaskRow extends StatelessWidget {
   final bool selectMode;
   final bool showLabel;
   final bool showPlanInfo;
-  final double additionalTopPadding;
   final bool enableLongPressToSelect;
 
   const TaskRow({
@@ -43,7 +42,6 @@ class TaskRow extends StatelessWidget {
     this.selectMode = false,
     required this.showLabel,
     required this.showPlanInfo,
-    this.additionalTopPadding = 0,
     this.enableLongPressToSelect = false,
   }) : super(key: key);
 
@@ -62,7 +60,7 @@ class TaskRow extends StatelessWidget {
         child: IntrinsicHeight(
           child: Container(
             constraints: const BoxConstraints(minHeight: 50),
-            padding: EdgeInsets.fromLTRB(0, 12 + additionalTopPadding, 12, 12),
+            padding: const EdgeInsets.only(bottom: 12),
             color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +90,7 @@ class TaskRow extends StatelessWidget {
                         child: Container(
                           width: 6,
                           height: 6,
-                          margin: const EdgeInsets.only(left: 5, right: 0, top: 7),
+                          margin: const EdgeInsets.only(left: 5, right: 0, top: 22),
                           decoration: BoxDecoration(
                             color: color,
                             shape: BoxShape.circle,
@@ -102,34 +100,40 @@ class TaskRow extends StatelessWidget {
                     },
                   ),
                 ),
-                Builder(builder: ((context) {
-                  if (selectMode) {
-                    return _radio(context);
-                  } else {
-                    return CheckboxAnimated(
-                      task,
-                      key: ObjectKey(task),
-                      onTap: () {
-                        completedClick();
-                      },
-                    );
-                  }
-                })),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Builder(builder: ((context) {
+                    if (selectMode) {
+                      return _radio(context);
+                    } else {
+                      return CheckboxAnimated(
+                        task,
+                        key: ObjectKey(task),
+                        onTap: () {
+                          completedClick();
+                        },
+                      );
+                    }
+                  })),
+                ),
                 const SizedBox(width: 5),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _firstLine(context),
-                      _secondLine(context),
-                      TaskInfo(
-                        task,
-                        hideInboxLabel: hideInboxLabel,
-                        showLabel: showLabel,
-                        selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                        showPlanInfo: showPlanInfo,
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _firstLine(context),
+                        _secondLine(context),
+                        TaskInfo(
+                          task,
+                          hideInboxLabel: hideInboxLabel,
+                          showLabel: showLabel,
+                          selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                          showPlanInfo: showPlanInfo,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -153,16 +157,19 @@ class TaskRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Text(
-              text,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-                color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                    ? ColorsExt.grey3(context)
-                    : ColorsExt.grey1(context),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                text,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
+                      ? ColorsExt.grey3(context)
+                      : ColorsExt.grey1(context),
+                ),
               ),
             ),
           ),
@@ -204,7 +211,7 @@ class TaskRow extends StatelessWidget {
       onTap: selectTask,
       child: Container(
         height: double.infinity,
-        padding: const EdgeInsets.fromLTRB(2.15, 0, 2.15, 0),
+        padding: const EdgeInsets.all(2.17),
         child: Align(
           alignment: Alignment.topCenter,
           child: SizedBox(
