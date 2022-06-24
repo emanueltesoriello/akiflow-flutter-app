@@ -19,21 +19,26 @@ class IconBadge extends StatelessWidget {
     return Transform.translate(
       offset: offset ?? Offset(17, Platform.isAndroid ? 5 : 8),
       child: Container(
-        width: 17,
-        height: 17,
         decoration: BoxDecoration(
-          color: ColorsExt.akiflow(context),
-          border: Border.all(color: ColorsExt.background(context), width: 1),
+          border: Border.all(color: ColorsExt.background(context), width: 2),
           shape: BoxShape.circle,
         ),
-        child: Center(
-          child: Text(
-            count > 99 ? "99+" : count.toString(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: count > 99 ? 6 : 9,
-              fontWeight: FontWeight.w600,
-              color: ColorsExt.background(context),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: ColorsExt.akiflow(context),
+          ),
+          height: 16,
+          width: 16,
+          child: Center(
+            child: Text(
+              count > 99 ? "99+" : count.toString(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: count > 99 ? 6 : 9,
+                fontWeight: FontWeight.w600,
+                color: ColorsExt.background(context),
+              ),
             ),
           ),
         ),
