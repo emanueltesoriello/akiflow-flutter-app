@@ -16,4 +16,12 @@ extension UserExt on User {
       return 2 * 60 * 60;
     }
   }
+
+  String? get markAsDone {
+    try {
+      return settings?['popups']['gmail.unstar'].toString();
+    } catch (e) {
+      return null;
+    }
+  }
 }

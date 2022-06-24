@@ -17,6 +17,7 @@ import 'package:mobile/utils/doc_extension.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
+import 'package:models/extensions/user_ext.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/user.dart';
 
@@ -83,7 +84,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
 
         return BlocBuilder<AuthCubit, AuthCubitState>(
           builder: (context, authState) {
-            String? markAsDone = authState.user?.settings?['popups']['gmail.unstar'];
+            String? markAsDone = authState.user!.markAsDone;
             GmailSyncMode syncMode = GmailSyncMode.fromKey(gmailAccount.details?['syncMode']);
             String subtitle = GmailMarkAsDoneType.titleFromKey(markAsDone, syncMode);
 
