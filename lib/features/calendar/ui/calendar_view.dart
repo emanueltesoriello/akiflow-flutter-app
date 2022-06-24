@@ -82,6 +82,7 @@ class HomeViewPlaceholder extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(height: MediaQuery.of(context).padding.top + 56),
         ],
       ),
     );
