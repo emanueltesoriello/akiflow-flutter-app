@@ -10,8 +10,8 @@ class ScrollChip extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          height: 6,
-          width: 36,
+          height: 5,
+          width: 32,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(3),
             color: ColorsExt.grey4(context),
