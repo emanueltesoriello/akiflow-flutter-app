@@ -58,7 +58,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
   Widget _buildTitle(BuildContext context) {
     return InkWell(
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-      onTap: () => context.read<TodayCubit>().toggleCalendarFormat(),
+      onTap: () => context.read<TodayCubit>().tapAppBarTextDate(),
       child: Row(
         children: [
           BlocBuilder<TodayCubit, TodayCubitState>(

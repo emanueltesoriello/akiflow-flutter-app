@@ -12,6 +12,7 @@ class TodayCubitState extends Equatable {
   final bool todosListOpen;
   final bool pinnedListOpen;
   final bool completedListOpen;
+  final PanelState panelState;
 
   const TodayCubitState({
     this.loading = false,
@@ -20,16 +21,17 @@ class TodayCubitState extends Equatable {
     this.todosListOpen = true,
     this.pinnedListOpen = true,
     this.completedListOpen = false,
+    this.panelState = PanelState.CLOSED,
   });
 
-  TodayCubitState copyWith({
-    bool? loading,
-    DateTime? selectedDate,
-    CalendarFormatState? calendarFormat,
-    bool? todosListOpen,
-    bool? pinnedListOpen,
-    bool? completedListOpen,
-  }) {
+  TodayCubitState copyWith(
+      {bool? loading,
+      DateTime? selectedDate,
+      CalendarFormatState? calendarFormat,
+      bool? todosListOpen,
+      bool? pinnedListOpen,
+      bool? completedListOpen,
+      PanelState? panelState}) {
     return TodayCubitState(
       loading: loading ?? this.loading,
       selectedDate: selectedDate ?? this.selectedDate,
@@ -37,9 +39,18 @@ class TodayCubitState extends Equatable {
       todosListOpen: todosListOpen ?? this.todosListOpen,
       pinnedListOpen: pinnedListOpen ?? this.pinnedListOpen,
       completedListOpen: completedListOpen ?? this.completedListOpen,
+      panelState: panelState ?? this.panelState,
     );
   }
 
   @override
-  List<Object?> get props => [loading, selectedDate, calendarFormat, todosListOpen, pinnedListOpen, completedListOpen];
+  List<Object?> get props => [
+        loading,
+        selectedDate,
+        calendarFormat,
+        todosListOpen,
+        pinnedListOpen,
+        completedListOpen,
+        panelState,
+      ];
 }

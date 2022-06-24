@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/utils/panel.dart';
 
 part 'today_state.dart';
 
@@ -9,6 +12,9 @@ class TodayCubit extends Cubit<TodayCubitState> {
 
   TodayCubit() : super(TodayCubitState(selectedDate: DateTime.now()));
 
+  final StreamController<PanelState> _panelStateStreamController = StreamController<PanelState>.broadcast();
+  Stream<PanelState> get panelStateStream => _panelStateStreamController.stream;
+
   void attachTasksCubit(TasksCubit tasksCubit) {
     this.tasksCubit = tasksCubit;
   }
@@ -16,17 +22,23 @@ class TodayCubit extends Cubit<TodayCubitState> {
   void onDateSelected(DateTime selectedDay) {
     emit(state.copyWith(selectedDate: selectedDay, calendarFormat: CalendarFormatState.week));
     tasksCubit.getTodayTasksByDate(selectedDay);
+    _panelStateStreamController.add(PanelState.CLOSED);
   }
 
-  toggleCalendarFormat() {
-    emit(state.copyWith(
-        calendarFormat:
-            state.calendarFormat == CalendarFormatState.month ? CalendarFormatState.week : CalendarFormatState.month));
+  tapAppBarTextDate() {
+    PanelState current = state.panelState;
+
+    if (current == PanelState.CLOSED) {
+      _panelStateStreamController.add(PanelState.OPEN);
+    } else {
+      _panelStateStreamController.add(PanelState.CLOSED);
+    }
   }
 
   todayClick() {
     emit(state.copyWith(selectedDate: DateTime.now(), calendarFormat: CalendarFormatState.week));
     tasksCubit.getTodayTasksByDate(DateTime.now());
+    _panelStateStreamController.add(PanelState.CLOSED);
   }
 
   void openTodoList() {
@@ -42,10 +54,10 @@ class TodayCubit extends Cubit<TodayCubitState> {
   }
 
   void panelClosed() {
-    emit(state.copyWith(calendarFormat: CalendarFormatState.week));
+    emit(state.copyWith(panelState: PanelState.CLOSED));
   }
 
   void panelOpened() {
-    emit(state.copyWith(calendarFormat: CalendarFormatState.month));
+    emit(state.copyWith(panelState: PanelState.OPEN));
   }
 }
