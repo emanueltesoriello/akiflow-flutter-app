@@ -191,11 +191,16 @@ class _LabelsListState extends State<LabelsList> {
               builder: (context, Map<Label, bool> folderOpen, child) {
                 bool open = folderOpen[folder] ?? false;
 
-                return SvgPicture.asset(
-                  open ? "assets/images/icons/_common/chevron_up.svg" : "assets/images/icons/_common/chevron_down.svg",
-                  width: 16,
-                  height: 16,
-                  color: ColorsExt.grey3(context),
+                return GestureDetector(
+                  onTap: () => toggleFolder(folder),
+                  child: SvgPicture.asset(
+                    open
+                        ? "assets/images/icons/_common/chevron_up.svg"
+                        : "assets/images/icons/_common/chevron_down.svg",
+                    width: 16,
+                    height: 16,
+                    color: ColorsExt.grey3(context),
+                  ),
                 );
               },
             ),
