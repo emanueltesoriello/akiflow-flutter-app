@@ -16,6 +16,10 @@ class QuillConverter {
   static Future<Document> htmlToDelta(String html) async {
     html = html.replaceAll('\n', '');
 
+    if (html.isEmpty) {
+      return Document();
+    }
+
     try {
       String deltaJson = await wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
 
