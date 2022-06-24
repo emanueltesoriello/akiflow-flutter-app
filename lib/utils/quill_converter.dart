@@ -30,7 +30,7 @@ class QuillConverter {
 
       return Document.fromJson(delta);
     } catch (e) {
-      print("html data: $html");
+      locator<SentryService>().addBreadcrumb(message: "html data: $html", category: "debug");
       locator<SentryService>().captureException(e);
       return Document();
     }
