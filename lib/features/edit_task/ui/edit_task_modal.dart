@@ -9,6 +9,7 @@ import 'package:mobile/features/edit_task/ui/edit_task_linked_content.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_links.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_row.dart';
 import 'package:mobile/features/edit_task/ui/edit_task_top_actions.dart';
+import 'package:mobile/utils/no_scroll_behav.dart';
 
 class EditTaskModal extends StatefulWidget {
   const EditTaskModal({Key? key}) : super(key: key);
@@ -40,39 +41,42 @@ class _EditTaskModalState extends State<EditTaskModal> {
           ),
           child: Container(
             color: Theme.of(context).backgroundColor,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                const SizedBox(height: 12),
-                const ScrollChip(),
-                const SizedBox(height: 12),
-                BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                  builder: (context, state) {
-                    if (state.showDuration) {
-                      return Column(
-                        children: const [
-                          Separator(),
-                          CreateTaskDurationItem(),
-                        ],
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: EditTaskTopActions(),
-                ),
-                const SizedBox(height: 12),
-                const EditTaskRow(),
-                const SizedBox(height: 12),
-                const Separator(),
-                const EditTaskLinkedContent(),
-                const EditTaskLinks(),
-                const EditTaskBottomActions(),
-                const Separator(),
-              ],
+            child: ScrollConfiguration(
+              behavior: NoScrollBehav(),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  const SizedBox(height: 12),
+                  const ScrollChip(),
+                  const SizedBox(height: 12),
+                  BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                    builder: (context, state) {
+                      if (state.showDuration) {
+                        return Column(
+                          children: const [
+                            Separator(),
+                            CreateTaskDurationItem(),
+                          ],
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: EditTaskTopActions(),
+                  ),
+                  const SizedBox(height: 12),
+                  const EditTaskRow(),
+                  const SizedBox(height: 12),
+                  const Separator(),
+                  const EditTaskLinkedContent(),
+                  const EditTaskLinks(),
+                  const EditTaskBottomActions(),
+                  const Separator(),
+                ],
+              ),
             ),
           ),
         ),
