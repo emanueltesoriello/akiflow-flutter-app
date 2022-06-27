@@ -147,6 +147,14 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   }
 
   List<Widget> _buildActions(BuildContext context) {
+    TasksCubit bloc = context.watch<TasksCubit>();
+
+    int tasksSelected = TaskExt.countTasksSelected(bloc.state);
+
+    if (tasksSelected != 0) {
+      return [];
+    }
+
     return [
       Container(width: 16),
       ...actions,
