@@ -29,6 +29,12 @@
     "inboxTitle": "Here is where the magic happens",
     "inboxSubtitle": "Inbox is where all your new tasks are collected"
   },
+  "expiry":{
+    "title":"Your Free Trial has Expired",
+    "description":"Upgrade your plan to pick up where you left off.",
+    "button":"Upgrade your plan",
+    "alternate":"or Logout and delete all data."
+  },
   "settings": {
     "title": "Settings",
     "upgradeToPro": "Upgrade to pro",
@@ -51,6 +57,7 @@
       "manageSubscriptionAndBillingPreferences": "Manage subscription & billing preferences",
       "logout": "Log out"
     },
+
     "about": {
       "title": "About",
       "version": "Version",
