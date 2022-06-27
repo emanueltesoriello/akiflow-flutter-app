@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:mobile/components/base/app_bar.dart';
-import 'package:mobile/components/base/icon_badge.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
@@ -21,12 +17,13 @@ import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/main/ui/bottom_nav_bar.dart';
+import 'package:mobile/features/main/ui/first_sync_progress.dart';
 import 'package:mobile/features/main/ui/gmail_actions_dialog.dart';
 import 'package:mobile/features/main/ui/just_created_task_button.dart';
 import 'package:mobile/features/main/ui/quill_web_view.dart';
 import 'package:mobile/features/main/ui/undo_button.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
@@ -364,217 +361,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           ),
         );
       },
-    );
-  }
-}
-
-class CustomBottomNavigationBar extends StatelessWidget {
-  const CustomBottomNavigationBar({
-    Key? key,
-    required this.labelStyle,
-    required this.bottomBarIconSize,
-    required this.inboxTasksCount,
-    required this.fixedTodoTodayTasksCount,
-    required this.topPadding,
-  }) : super(key: key);
-
-  final TextStyle labelStyle;
-  final double bottomBarIconSize;
-  final int inboxTasksCount;
-  final int fixedTodoTodayTasksCount;
-  final double topPadding;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: ColorsExt.background(context),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
-            offset: Offset(0, -1),
-            blurRadius: 8,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: bottomBarHeight,
-            child: BlocBuilder<MainCubit, MainCubitState>(
-              builder: (context, state) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    NavItem(
-                      active: false,
-                      activeIconAsset: "assets/images/icons/_common/menu.svg",
-                      title: t.bottomBar.menu,
-                      topPadding: topPadding,
-                      badge: FutureBuilder<dynamic>(
-                          future: Intercom.instance.unreadConversationCount(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return IconBadge(
-                                snapshot.data,
-                              );
-                            }
-                            return const SizedBox();
-                          }),
-                    ),
-                    NavItem(
-                      active: state.homeViewType == HomeViewType.inbox,
-                      activeIconAsset: "assets/images/icons/_common/tray.svg",
-                      title: t.bottomBar.inbox,
-                      homeViewType: HomeViewType.inbox,
-                      badge: IconBadge(inboxTasksCount),
-                      topPadding: topPadding,
-                    ),
-                    NavItem(
-                      active: state.homeViewType == HomeViewType.today,
-                      activeIconAsset:
-                          "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                      title: t.bottomBar.today,
-                      homeViewType: HomeViewType.today,
-                      badge: IconBadge(fixedTodoTodayTasksCount),
-                      topPadding: topPadding,
-                    ),
-                    NavItem(
-                      active: state.homeViewType == HomeViewType.calendar,
-                      activeIconAsset: "assets/images/icons/_common/calendar.svg",
-                      title: t.bottomBar.calendar,
-                      homeViewType: HomeViewType.calendar,
-                      topPadding: topPadding,
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom),
-        ],
-      ),
-    );
-  }
-}
-
-class NavItem extends StatelessWidget {
-  final String activeIconAsset;
-  final bool active;
-  final String title;
-  final HomeViewType? homeViewType;
-  final Widget? badge;
-  final double topPadding;
-
-  const NavItem({
-    Key? key,
-    required this.activeIconAsset,
-    required this.active,
-    required this.title,
-    required this.topPadding,
-    this.homeViewType,
-    this.badge,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Color color;
-
-    if (active) {
-      color = ColorsExt.akiflow(context);
-    } else {
-      color = ColorsExt.grey2(context);
-    }
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          if (homeViewType != null) {
-            context.read<MainCubit>().changeHomeView(homeViewType!);
-
-            if (homeViewType == HomeViewType.today) {
-              context.read<TodayCubit>().onDateSelected(DateTime.now());
-            }
-          } else {
-            showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => SettingsModal(topPadding: topPadding),
-            );
-          }
-        },
-        child: Container(
-          color: ColorsExt.background(context),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Transform.translate(
-                offset: Offset(0, Platform.isAndroid ? -3 : 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                        child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: SvgPicture.asset(
-                        activeIconAsset,
-                        color: color,
-                        width: 26,
-                        height: 26,
-                      ),
-                    )),
-                    Flexible(
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (badge != null) Align(alignment: Alignment.topCenter, child: badge!),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class FirstSyncProgress extends StatelessWidget {
-  const FirstSyncProgress({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: [
-          SizedBox(
-            width: 66,
-            height: 66,
-            child: CircularProgressIndicator(
-              strokeWidth: 5,
-              color: ColorsExt.akiflow20(context),
-            ),
-          ),
-          SizedBox(
-            width: 66,
-            height: 66,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Image.asset(
-                  "assets/images/app_icon/top.png",
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
