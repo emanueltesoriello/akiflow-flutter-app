@@ -159,6 +159,14 @@ class SlidingUpPanel extends StatefulWidget {
   /// by default the Panel is open and must be swiped closed by the user.
   final PanelState defaultPanelState;
 
+  /// Allows to set the height of the body.
+  /// If it is null, it automatically sizes itself to device height.
+  final double? bodyHeight;
+
+  /// Allows to set the width of the body.
+  /// If it is null, it automatically sizes itself to device width.
+  final double? bodyWidth;
+
   const SlidingUpPanel(
       {Key? key,
       this.panel,
@@ -195,7 +203,9 @@ class SlidingUpPanel extends StatefulWidget {
       this.slideDirection = SlideDirection.UP,
       this.defaultPanelState = PanelState.CLOSED,
       this.header,
-      this.footer})
+      this.footer,
+      this.bodyHeight,
+      this.bodyWidth})
       : assert(panel != null || panelBuilder != null),
         assert(0 <= backdropOpacity && backdropOpacity <= 1.0),
         assert(snapPoint == null || 0 < snapPoint && snapPoint < 1.0),
@@ -263,8 +273,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                   );
                 },
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
+                  height: widget.bodyHeight ?? MediaQuery.of(context).size.height,
+                  width: widget.bodyWidth ?? MediaQuery.of(context).size.width,
                   child: widget.body,
                 ),
               )

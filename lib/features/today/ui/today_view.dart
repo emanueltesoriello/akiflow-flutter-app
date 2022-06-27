@@ -113,6 +113,7 @@ class _ViewState extends State<_View> {
     return Stack(
       children: [
         SlidingUpPanel(
+          bodyHeight: MediaQuery.of(context).size.height - toolbarHeight - bottomBarHeight - todayViewTopMargin,
           slideDirection: SlideDirection.DOWN,
           controller: panelController,
           maxHeight: 280,
