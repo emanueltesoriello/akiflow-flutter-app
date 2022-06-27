@@ -60,7 +60,7 @@ class TaskRow extends StatelessWidget {
         child: IntrinsicHeight(
           child: Container(
             constraints: const BoxConstraints(minHeight: 50),
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 12, right: 14),
             color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,12 +158,13 @@ class TaskRow extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 2),
+              padding: const EdgeInsets.only(top: 4),
               child: Text(
                 text,
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
+                  height: 1,
                   fontSize: 17,
                   fontWeight: FontWeight.w500,
                   color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
