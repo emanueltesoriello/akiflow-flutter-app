@@ -18,7 +18,6 @@ import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/bottom_nav_bar.dart';
-import 'package:mobile/features/main/ui/first_sync_progress.dart';
 import 'package:mobile/features/main/ui/gmail_actions_dialog.dart';
 import 'package:mobile/features/main/ui/just_created_task_button.dart';
 import 'package:mobile/features/main/ui/quill_web_view.dart';
@@ -30,14 +29,13 @@ import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_appbar.dart';
 import 'package:mobile/features/today/ui/today_view.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/style/sizes.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/extensions/account_ext.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
-
-const double bottomBarHeight = 72;
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -138,29 +136,21 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return Stack(
       children: [
         const QuillWebView(),
-        BlocBuilder<TodayCubit, TodayCubitState>(
-          builder: (context, state) {
-            double toolbarHeight = 56;
-
-            double contentTopPadding = MediaQuery.of(context).padding.top + toolbarHeight;
-
-            return Scaffold(
-              extendBodyBehindAppBar: true,
-              appBar: _appBar(
-                context,
-                todayAppBarHeight: toolbarHeight,
-                calendarTopMargin: toolbarHeight,
-                homeViewType: homeViewType,
-                selectedLabel: label,
-              ),
-              floatingActionButton: _floatingButton(),
-              bottomNavigationBar: _bottomBar(context),
-              body: Padding(
-                padding: EdgeInsets.only(top: contentTopPadding),
-                child: _content(),
-              ),
-            );
-          },
+        Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: _appBar(
+            context,
+            todayAppBarHeight: toolbarHeight,
+            calendarTopMargin: toolbarHeight,
+            homeViewType: homeViewType,
+            selectedLabel: label,
+          ),
+          floatingActionButton: _floatingButton(),
+          bottomNavigationBar: _bottomBar(context),
+          body: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + toolbarHeight),
+            child: _content(),
+          ),
         ),
         BlocBuilder<TasksCubit, TasksCubitState>(
           builder: (context, state) {
@@ -215,13 +205,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   Widget _content() {
-    SyncCubit syncCubit = context.watch<SyncCubit>();
-
-    if (syncCubit.state.loading) {
-      return const FirstSyncProgress();
-    }
-
-    return BlocConsumer<MainCubit, MainCubitState>(
+    return BlocListener<MainCubit, MainCubitState>(
       listener: (context, state) {
         int? page;
 
@@ -252,22 +236,23 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           _pageController.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
         }
       },
-      builder: (context, state) {
-        Label? selectedLabel = context.watch<LabelsCubit>().state.selectedLabel;
+      child: BlocBuilder<LabelsCubit, LabelsCubitState>(
+        builder: (context, labelsState) {
+          Label? selectedLabel = labelsState.selectedLabel;
 
-        return PageView(
-          key: const ObjectKey("pageView"),
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            const SizedBox(),
-            const InboxView(),
-            const TodayView(),
-            const CalendarView(),
-            if (selectedLabel != null) LabelView(key: ObjectKey(selectedLabel)) else const SizedBox()
-          ],
-        );
-      },
+          return PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              const SizedBox(),
+              const InboxView(),
+              const TodayView(),
+              const CalendarView(),
+              if (selectedLabel != null) LabelView(key: ObjectKey(selectedLabel)) else const SizedBox()
+            ],
+          );
+        },
+      ),
     );
   }
 

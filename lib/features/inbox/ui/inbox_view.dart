@@ -9,6 +9,7 @@ import 'package:mobile/components/task/notice.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/features/main/ui/first_sync_progress.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -53,69 +54,82 @@ class _ViewState extends State<_View> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, tasksState) {
-        List<Task> tasks = List.from(tasksState.inboxTasks);
+    return Stack(
+      children: [
+        BlocBuilder<TasksCubit, TasksCubitState>(
+          builder: (context, tasksState) {
+            List<Task> tasks = List.from(tasksState.inboxTasks);
 
-        tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
+            tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
 
-        return BlocBuilder<InboxCubit, InboxCubitState>(
-          builder: (context, state) {
-            if (tasksState.tasksLoaded && tasks.isEmpty) {
-              return RefreshIndicator(
-                onRefresh: () async {
-                  return context.read<SyncCubit>().sync();
-                },
-                child: Center(
-                  child: CustomScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    slivers: [
-                      SliverFillRemaining(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: const [
-                            HomeViewPlaceholder(),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            return TaskList(
-              tasks: tasks,
-              hideInboxLabel: true,
-              scrollController: scrollController,
-              sorting: TaskListSorting.sortingDescending,
-              showLabel: true,
-              showPlanInfo: false,
-              header: () {
-                if (!state.showInboxNotice) {
-                  return null;
+            return BlocBuilder<InboxCubit, InboxCubitState>(
+              builder: (context, state) {
+                if (tasksState.tasksLoaded && tasks.isEmpty) {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      return context.read<SyncCubit>().sync();
+                    },
+                    child: Center(
+                      child: CustomScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: [
+                          SliverFillRemaining(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: const [
+                                HomeViewPlaceholder(),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
                 }
 
-                return GestureDetector(
-                  onLongPress: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Notice(
-                      title: t.notice.inboxTitle,
-                      subtitle: t.notice.inboxSubtitle,
-                      icon: Icons.info_outline,
-                      onClose: () {
-                        context.read<InboxCubit>().inboxNoticeClosed();
-                      },
-                    ),
-                  ),
+                return TaskList(
+                  tasks: tasks,
+                  hideInboxLabel: true,
+                  scrollController: scrollController,
+                  sorting: TaskListSorting.sortingDescending,
+                  showLabel: true,
+                  showPlanInfo: false,
+                  header: () {
+                    if (!state.showInboxNotice) {
+                      return null;
+                    }
+
+                    return GestureDetector(
+                      onLongPress: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Notice(
+                          title: t.notice.inboxTitle,
+                          subtitle: t.notice.inboxSubtitle,
+                          icon: Icons.info_outline,
+                          onClose: () {
+                            context.read<InboxCubit>().inboxNoticeClosed();
+                          },
+                        ),
+                      ),
+                    );
+                  }(),
                 );
-              }(),
+              },
             );
           },
-        );
-      },
+        ),
+        BlocBuilder<SyncCubit, SyncCubitState>(
+          builder: (context, state) {
+            if (state.loading) {
+              return const FirstSyncProgress();
+            } else {
+              return const SizedBox();
+            }
+          },
+        ),
+      ],
     );
   }
 }

@@ -5,9 +5,9 @@ import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/icon_badge.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/main/ui/nav_item.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/style/sizes.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({
