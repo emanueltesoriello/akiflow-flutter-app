@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 218 
+ * Strings: 223 
  *
- * Built on 2022-06-20 at 09:26 UTC
+ * Built on 2022-06-23 at 10:17 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -309,6 +309,7 @@ class _StringsEn {
 	late final _StringsOnboardingEn onboarding = _StringsOnboardingEn._(_root);
 	late final _StringsBottomBarEn bottomBar = _StringsBottomBarEn._(_root);
 	late final _StringsNoticeEn notice = _StringsNoticeEn._(_root);
+	late final _StringsExpiryEn expiry = _StringsExpiryEn._(_root);
 	late final _StringsSettingsEn settings = _StringsSettingsEn._(_root);
 	late final _StringsAddTaskEn addTask = _StringsAddTaskEn._(_root);
 	late final _StringsTaskEn task = _StringsTaskEn._(_root);
@@ -366,6 +367,19 @@ class _StringsNoticeEn {
 	// Translations
 	String get inboxTitle => 'Here is where the magic happens';
 	String get inboxSubtitle => 'Inbox is where all your new tasks are collected';
+}
+
+// Path: expiry
+class _StringsExpiryEn {
+	_StringsExpiryEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Your Free Trial has Expired';
+	String get description => 'Upgrade your plan to pick up where you left off.';
+	String get button => 'Upgrade your plan';
+	String get alternate => 'or Logout and delete all data.';
 }
 
 // Path: settings
@@ -850,6 +864,10 @@ extension on _StringsEn {
 			'bottomBar.calendar': 'Calendar',
 			'notice.inboxTitle': 'Here is where the magic happens',
 			'notice.inboxSubtitle': 'Inbox is where all your new tasks are collected',
+			'expiry.title': 'Your Free Trial has Expired',
+			'expiry.description': 'Upgrade your plan to pick up where you left off.',
+			'expiry.button': 'Upgrade your plan',
+			'expiry.alternate': 'or Logout and delete all data.',
 			'settings.title': 'Settings',
 			'settings.upgradeToPro': 'Upgrade to pro',
 			'settings.general': 'General',

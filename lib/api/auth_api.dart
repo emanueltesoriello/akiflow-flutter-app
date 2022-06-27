@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
@@ -20,7 +21,8 @@ class AuthApi implements IAuthApi {
 
   @override
   Future<User> auth({required String code, required String codeVerifier}) async {
-    Uri url = Uri.parse("${Config.oauthEndpoint}/redirect/token");
+    Uri loginUrl = Uri.parse("${Config.oauthEndpoint}/redirect/token");
+    Uri userUrl = Uri.parse("${Config.oauthEndpoint}/api/user?version=akiflow2");
 
     Map body = ({
       "client_id": Config.oauthClientId,
@@ -30,7 +32,24 @@ class AuthApi implements IAuthApi {
       "code": code
     });
 
-    Response responseRaw = await _httpClient.post(url, body: jsonEncode(body));
-    return User.fromMap(json.decode(responseRaw.body));
+    Response responseRaw = await _httpClient.post(loginUrl, body: jsonEncode(body));
+    User user = User.fromMap(json.decode(responseRaw.body));
+    Response infoResponse = await _httpClient.get(userUrl, headers: {
+      HttpHeaders.authorizationHeader: "Bearer ${user.accessToken!}",
+    });
+    if (infoResponse.statusCode == 404) {
+      //TODO: force logout
+      return user;
+    }
+    try {
+      User userInfo = User.fromMap(json.decode(infoResponse.body));
+      return user.copyWith(
+          intercomHashIos: userInfo.intercomHashIos,
+          intercomHashAndroid: userInfo.intercomHashAndroid,
+          status: userInfo.status,
+          planExpireDate: userInfo.planExpireDate);
+    } on FormatException {
+      return user;
+    }
   }
 }

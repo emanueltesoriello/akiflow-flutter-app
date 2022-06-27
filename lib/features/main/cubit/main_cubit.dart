@@ -40,14 +40,17 @@ class MainCubit extends Cubit<MainCubitState> {
     emit(state.copyWith(homeViewType: HomeViewType.label));
   }
 
-  void onLoggedAppStart() {
+  void onLoggedAppStart() async {
     User? user = _authCubit.state.user;
 
     print("onLoggedAppStart user: ${user?.id}");
 
     if (user != null) {
       _sentryService.authenticate(user.id.toString(), user.email);
-      _intercomService.authenticate(user.email);
+      await _intercomService.authenticate(
+          email: user.email,
+          intercomHashAndroid: user.intercomHashAndroid,
+          intercomHashIos: user.intercomHashIos);
     }
   }
 }

@@ -40,12 +40,30 @@ class UserApi extends ApiClient {
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
     if (response.containsKey("errors")) {
-      print(response);
       throw ApiException(response);
     }
 
     User userUpdated = User.fromMap(response["data"]);
 
     return userUpdated.settings;
+  }
+
+  Future<User?> getUserData() async {
+    Uri userUrl = Uri.parse("${Config.oauthEndpoint}/api/user?version=akiflow2");
+    Response infoResponse = await _httpClient.get(userUrl);
+    try {
+      final user = User.fromMap(json.decode(infoResponse.body));
+      return user;
+    } on FormatException {
+      return null;
+    }
+  }
+
+  Future<bool> hasValidPlan() async {
+    User? user = await getUserData();
+    if (user != null) {
+      return DateTime.parse(user.planExpireDate!).isAfter(DateTime.now());
+    }
+    return false;
   }
 }
