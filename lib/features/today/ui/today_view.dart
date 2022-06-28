@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/features/main/ui/first_sync_progress.dart';
@@ -17,6 +16,8 @@ import 'package:mobile/style/sizes.dart';
 import 'package:mobile/utils/panel.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
+
+import 'today_header.dart';
 
 class TodayView extends StatelessWidget {
   const TodayView({Key? key}) : super(key: key);
@@ -162,7 +163,7 @@ class _ViewState extends State<_View> {
                       visible: context.watch<TodayCubit>().state.todosListOpen,
                       showLabel: true,
                       showPlanInfo: false,
-                      header: _Header(
+                      header: TodayHeader(
                         t.today.toDos,
                         tasks: todos,
                         onClick: () {
@@ -181,7 +182,7 @@ class _ViewState extends State<_View> {
                       showLabel: true,
                       showPlanInfo: false,
                       sorting: TaskListSorting.dateAscending,
-                      header: _Header(
+                      header: TodayHeader(
                         t.today.pinnedInCalendar,
                         tasks: pinned,
                         onClick: () {
@@ -200,7 +201,7 @@ class _ViewState extends State<_View> {
                       visible: context.watch<TodayCubit>().state.completedListOpen,
                       showLabel: true,
                       showPlanInfo: false,
-                      header: _Header(
+                      header: TodayHeader(
                         t.today.done,
                         tasks: completed,
                         onClick: () {
@@ -225,68 +226,6 @@ class _ViewState extends State<_View> {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header(
-    this.title, {
-    Key? key,
-    required this.tasks,
-    required this.listOpened,
-    required this.onClick,
-    required this.usePrimaryColor,
-  }) : super(key: key);
-
-  final String title;
-  final List<Task> tasks;
-  final bool listOpened;
-  final Function() onClick;
-  final bool usePrimaryColor;
-
-  @override
-  Widget build(BuildContext context) {
-    if (tasks.isEmpty) {
-      return const SizedBox();
-    }
-
-    return InkWell(
-      onTap: onClick,
-      child: Container(
-        height: 42,
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: ColorsExt.grey5(context),
-              width: 1,
-            ),
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context))),
-            const SizedBox(width: 4),
-            Text("(${tasks.length})",
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: usePrimaryColor ? ColorsExt.akiflow(context) : ColorsExt.grey2(context))),
-            const Spacer(),
-            SvgPicture.asset(
-              listOpened
-                  ? "assets/images/icons/_common/chevron_up.svg"
-                  : "assets/images/icons/_common/chevron_down.svg",
-              color: ColorsExt.grey3(context),
-              width: 20,
-              height: 20,
-            )
-          ],
-        ),
       ),
     );
   }

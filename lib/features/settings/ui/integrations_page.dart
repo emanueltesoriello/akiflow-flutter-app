@@ -19,12 +19,12 @@ class IntegrationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarComp(
+        title: t.settings.integrations.title,
+        showBack: true,
+      ),
       body: Column(
         children: [
-          AppBarComp(
-            title: t.settings.integrations.title,
-            showBack: true,
-          ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -32,91 +32,69 @@ class IntegrationsPage extends StatelessWidget {
                 BlocBuilder<SettingsCubit, SettingsCubitState>(
                   builder: (context, state) {
                     List<Account> accounts = state.accounts.toList();
-
                     accounts.removeWhere((element) => element.connectorId == "akiflow");
-
-                    if (accounts.isEmpty) {
-                      return const SizedBox();
-                    }
-
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(top: 20),
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: accounts.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                t.settings.integrations.connected.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                          );
-                        }
-
-                        index -= 1;
-
-                        Account account = accounts[index];
-
-                        String? title = DocExt.titleFromConnectorId(account.connectorId);
-                        String? iconAsset = TaskExt.iconFromConnectorId(account.connectorId);
-
-                        EdgeInsets insets;
-                        BorderRadius borderRadius;
-
-                        if (index == 0) {
-                          insets = const EdgeInsets.only(top: 1, left: 1, right: 1, bottom: 1);
-                          borderRadius = const BorderRadius.only(
-                              topLeft: Radius.circular(radius), topRight: Radius.circular(radius));
-                        } else if (index == accounts.length - 1) {
-                          insets = const EdgeInsets.only(left: 1, right: 1, bottom: 1);
-                          borderRadius = const BorderRadius.only(
-                              bottomLeft: Radius.circular(radius), bottomRight: Radius.circular(radius));
-                        } else {
-                          insets = const EdgeInsets.only(left: 1, right: 1, bottom: 1);
-                          borderRadius = BorderRadius.zero;
-                        }
-
-                        return IntegrationListItem(
-                          leadingWidget: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              SvgPicture.asset(iconAsset),
-                              Builder(builder: (context) {
-                                if (account.picture == null || account.picture!.isEmpty) {
-                                  return const SizedBox();
-                                }
-                                return Transform.translate(
-                                  offset: const Offset(5, 5),
-                                  child: Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: CircleAvatar(
-                                          radius: 8,
-                                          backgroundColor: ColorsExt.grey3(context),
-                                          backgroundImage: NetworkImage(account.picture!))),
-                                );
-                              })
-                            ],
+                    return Visibility(
+                      visible: accounts.isNotEmpty,
+                      replacement: const SizedBox(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
+                          Text(
+                            t.settings.integrations.connected.toUpperCase(),
+                            style:
+                                TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                           ),
-                          title: title,
-                          identifier: account.identifier ?? '',
-                          insets: insets,
-                          borderRadius: borderRadius,
-                          enabled: account.connectorId == 'gmail',
-                          trailingWidget: account.connectorId != 'gmail' ? const SizedBox() : null,
-                          onPressed: () {
-                            if (account.connectorId == 'gmail') {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
-                            }
-                          },
-                        );
-                      },
+                          ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(top: 5),
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: accounts.length,
+                            itemBuilder: (context, index) {
+                              Account account = accounts[index];
+                              String? title = DocExt.titleFromConnectorId(account.connectorId);
+                              String? iconAsset = TaskExt.iconFromConnectorId(account.connectorId);
+
+                              return IntegrationListItem(
+                                leadingWidget: Stack(
+                                  children: [
+                                    SvgPicture.asset(
+                                      iconAsset,
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                                    Visibility(
+                                      visible: account.picture == null || account.picture!.isEmpty,
+                                      replacement: const SizedBox(),
+                                      child: Transform.translate(
+                                        offset: const Offset(5, 5),
+                                        child: Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: CircleAvatar(
+                                                radius: 8,
+                                                backgroundColor: ColorsExt.grey3(context),
+                                                backgroundImage: NetworkImage(account.picture!))),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                title: title,
+                                identifier: account.identifier ?? '',
+                                insets: _getEdgeInsets(index, accounts.length),
+                                borderRadius: _getBorderRadius(index, accounts.length),
+                                enabled: account.connectorId == 'gmail',
+                                trailingWidget: account.connectorId != 'gmail' ? const SizedBox() : null,
+                                onPressed: () {
+                                  if (account.connectorId == 'gmail') {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -127,8 +105,11 @@ class IntegrationsPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 IntegrationListItem(
-                  leadingWidget: SvgPicture.asset(
-                    "assets/images/icons/google/gmail.svg",
+                  leadingWidget: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: SvgPicture.asset(
+                      "assets/images/icons/google/gmail.svg",
+                    ),
                   ),
                   title: t.settings.integrations.gmail.title,
                   insets: const EdgeInsets.all(1),
@@ -145,5 +126,25 @@ class IntegrationsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+BorderRadius _getBorderRadius(int index, int accountsLength) {
+  if (index == 0) {
+    return const BorderRadius.only(topLeft: Radius.circular(radius), topRight: Radius.circular(radius));
+  } else if (index == accountsLength - 1) {
+    return const BorderRadius.only(bottomLeft: Radius.circular(radius), bottomRight: Radius.circular(radius));
+  } else {
+    return BorderRadius.zero;
+  }
+}
+
+EdgeInsets _getEdgeInsets(int index, int accountsLength) {
+  if (index == 0) {
+    return const EdgeInsets.only(top: 1, left: 1, right: 1, bottom: 1);
+  } else if (index == accountsLength - 1) {
+    return const EdgeInsets.only(left: 1, right: 1, bottom: 1);
+  } else {
+    return const EdgeInsets.only(left: 1, right: 1, bottom: 1);
   }
 }

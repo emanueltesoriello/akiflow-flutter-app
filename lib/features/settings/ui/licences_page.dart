@@ -10,12 +10,12 @@ class LicencesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarComp(
+        title: t.settings.about.licensesInfo,
+        showBack: true,
+      ),
       body: Column(
         children: [
-          AppBarComp(
-            title: t.settings.about.licensesInfo,
-            showBack: true,
-          ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),
