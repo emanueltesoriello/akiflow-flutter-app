@@ -441,6 +441,15 @@ extension TaskExt on Task {
         (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete);
   }
 
+  static bool hasDataChanges({required Task original, required Task updated}) {
+    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
+    bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
+    bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
+    bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
+
+    return askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete;
+  }
+
   static bool hasEditedData({required Task original, required Task updated}) {
     return original.title != updated.title ||
         original.priority != updated.priority ||

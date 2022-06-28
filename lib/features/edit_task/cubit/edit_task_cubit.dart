@@ -422,7 +422,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       Task original = state.originalTask;
       Task updated = state.updatedTask;
 
-      _tasksCubit.addToUndoQueue([original], UndoType.updated);
+      if (TaskExt.hasDataChanges(original: original, updated: updated)) {
+        _tasksCubit.addToUndoQueue([original], UndoType.updated);
+      }
 
       await _tasksRepository.updateById(updated.id!, data: updated);
 
