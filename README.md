@@ -1,13 +1,39 @@
 
 # Akiflow Mobile App
 
-## Run Development App
+## Run
 
 Use the `.vscode / launch.json` to launch the app with the specific environment or:
 
 Development: `flutter run -t lib / main_dev.dart`
 
 Production: `flutter run -t lib / main.dart`
+
+## Build
+
+### Android APK
+
+Use only if it's necessary installs the app externally to Play Store:
+
+`flutter build apk --release -t lib/main.dart`
+
+### Android Appbundle
+
+Create the build to upload to Play Store channels:
+
+`flutter build appbundle --release -t lib/main.dart`
+
+### iOS
+
+`flutter build ipa --release -t lib/main.dart`
+
+After build completed, it will be shown the path to the Runner archive like: */Users/{username}/akiflow/build/ios/archive/Runner.xcarchive*.
+
+Then just run:
+
+`open /Users/{username}/akiflow/build/ios/archive/Runner.xcarchive`
+
+then tap "Distribute App" and follow the procedure through Xcode.
 
 # Flow and Structure
 
