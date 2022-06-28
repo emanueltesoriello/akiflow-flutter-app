@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -192,6 +193,7 @@ class BottomTaskActions extends StatelessWidget {
                             context.read<TasksCubit>().duplicate();
                             break;
                           case BottomTaskAdditionalActions.markAsDone:
+                            HapticFeedback.heavyImpact();
                             TasksCubit tasksCubit = context.read<TasksCubit>();
                             tasksCubit.markAsDone();
                             break;

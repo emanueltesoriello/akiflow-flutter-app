@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
@@ -192,6 +193,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
     return InkWell(
       onTap: () {
+        HapticFeedback.heavyImpact();
         context.read<EditTaskCubit>().markAsDone();
       },
       child: Builder(builder: (context) {

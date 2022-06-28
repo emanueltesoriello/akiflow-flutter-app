@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/components/task/task_row.dart';
@@ -88,6 +89,7 @@ class _TaskListState extends State<TaskList> {
                 );
           },
           onReorderStart: (index) {
+            HapticFeedback.selectionClick();
             context.read<TasksCubit>().select(tasks[index]);
           },
           proxyDecorator: (Widget child, int index, Animation<double> animation) {
@@ -147,13 +149,16 @@ class _TaskListState extends State<TaskList> {
                 showLabel: widget.showLabel,
                 showPlanInfo: widget.showPlanInfo,
                 selectTask: () {
+                  HapticFeedback.selectionClick();
                   context.read<TasksCubit>().select(task);
                 },
                 selectMode: tasks.any((element) => element.selected ?? false),
                 completedClick: () {
+                  HapticFeedback.heavyImpact();
                   editTaskCubit.markAsDone(forceUpdate: true);
                 },
                 swipeActionPlanClick: () {
+                  HapticFeedback.mediumImpact();
                   _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
                 },
                 swipeActionSelectLabelClick: () {
@@ -168,6 +173,7 @@ class _TaskListState extends State<TaskList> {
                   );
                 },
                 swipeActionSnoozeClick: () {
+                  HapticFeedback.mediumImpact();
                   _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
                 },
               ),

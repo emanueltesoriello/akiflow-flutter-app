@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -301,6 +302,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             height: 52,
             child: FloatingActionButton(
               onPressed: () async {
+                HapticFeedback.mediumImpact();
+
                 HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
 
                 TaskStatusType taskStatusType;
