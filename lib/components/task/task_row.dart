@@ -336,18 +336,18 @@ class _Title extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 2),
-      child: SizedBox(
-        height: 22,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 22),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Text(
                 text,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  height: 1,
+                  height: 1.3,
                   fontSize: 17,
                   fontWeight: FontWeight.w500,
                   color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
