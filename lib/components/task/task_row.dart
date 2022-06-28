@@ -151,14 +151,14 @@ class TaskRow extends StatelessWidget {
       text = t.noTitle;
     }
 
-    return SizedBox(
-      height: 22,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 4),
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: SizedBox(
+        height: 22,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
               child: Text(
                 text,
                 maxLines: 1,
@@ -173,9 +173,9 @@ class TaskRow extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          _overdue(context),
-        ],
+            _overdue(context),
+          ],
+        ),
       ),
     );
   }
@@ -374,51 +374,56 @@ class TaskRow extends StatelessWidget {
 
     return SizedBox(
       height: 24,
-      child: Builder(builder: (context) {
-        if (doc != null) {
-          return Row(
-            children: [
-              SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
-              const SizedBox(width: 7),
-              Expanded(
-                child: Builder(
-                  builder: (context) {
-                    return Text(
-                      doc?.getSummary ?? "",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        } else if (task.descriptionParsed.isNotEmpty) {
-          return Row(
-            children: [
-              SvgPicture.asset(
-                "assets/images/icons/_common/arrow_turn_down_right.svg",
-                color: ColorsExt.grey3(context),
-                width: 16,
-                height: 16,
-              ),
-              const SizedBox(width: 4.5),
-              Expanded(
-                  child: Text(
-                task.descriptionParsed,
-                maxLines: 1,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: ColorsExt.grey3(context),
-                ),
-              )),
-            ],
-          );
-        } else {
-          return const SizedBox();
-        }
-      }),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Builder(builder: (context) {
+            if (doc != null) {
+              return Row(
+                children: [
+                  SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
+                  const SizedBox(width: 7),
+                  Expanded(
+                    child: Builder(
+                      builder: (context) {
+                        return Text(
+                          doc?.getSummary ?? "",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            } else if (task.descriptionParsed.isNotEmpty) {
+              return Row(
+                children: [
+                  SvgPicture.asset(
+                    "assets/images/icons/_common/arrow_turn_down_right.svg",
+                    color: ColorsExt.grey3(context),
+                    width: 16,
+                    height: 16,
+                  ),
+                  const SizedBox(width: 4.5),
+                  Expanded(
+                      child: Text(
+                    task.descriptionParsed,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: ColorsExt.grey3(context),
+                    ),
+                  )),
+                ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          }),
+        ],
+      ),
     );
   }
 }
