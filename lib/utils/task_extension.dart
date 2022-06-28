@@ -625,21 +625,13 @@ extension TaskExt on Task {
   }
 
   String get descriptionParsed {
-    String text;
-
     try {
       var document = parse(description);
 
-      text = (document.body?.nodes ?? []).map((node) => node.text).join(' ').trim();
+      return (document.body?.nodes ?? []).map((node) => node.text).join(' ').trim();
+    } catch (_) {}
 
-      if (text.isEmpty) {
-        text = description ?? '';
-      }
-    } catch (e) {
-      text = description ?? '';
-    }
-
-    return text;
+    return '';
   }
 
   static List<Task> filterCompletedTodayOrBeforeTasks(List<Task> tasks) {

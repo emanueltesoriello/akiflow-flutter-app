@@ -52,7 +52,7 @@ class _CreateLinkModalState extends State<CreateLinkModal> {
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.zero,
                                   isDense: true,
-                                  hintText: t.task.link.addLink,
+                                  hintText: t.task.links.addLink,
                                   border: InputBorder.none,
                                   hintStyle: TextStyle(
                                     color: ColorsExt.grey3(context),

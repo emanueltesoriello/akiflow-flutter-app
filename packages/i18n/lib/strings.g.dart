@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 223 
+ * Strings: 224 
  *
- * Built on 2022-06-23 at 10:17 UTC
+ * Built on 2022-06-28 at 13:37 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -465,7 +465,7 @@ class _StringsTaskEn {
 	late final _StringsTaskUndoActionsEn undoActions = _StringsTaskUndoActionsEn._(_root);
 	String get sort => 'Sort';
 	String get filter => 'Filter';
-	late final _StringsTaskLinkEn link = _StringsTaskLinkEn._(_root);
+	late final _StringsTaskLinksEn links = _StringsTaskLinksEn._(_root);
 	String get taskCreatedSuccessfully => 'Task created successfully';
 	String nSelected({required Object count}) => '$count selected';
 	String get yesterday => 'Yesterday';
@@ -702,13 +702,14 @@ class _StringsTaskUndoActionsEn {
 	String get updated => 'Task updated';
 }
 
-// Path: task.link
-class _StringsTaskLinkEn {
-	_StringsTaskLinkEn._(this._root);
+// Path: task.links
+class _StringsTaskLinksEn {
+	_StringsTaskLinksEn._(this._root);
 
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
+	String get links => 'links';
 	String get addLink => 'Add link';
 }
 
@@ -974,7 +975,8 @@ extension on _StringsEn {
 			'task.undoActions.updated': 'Task updated',
 			'task.sort': 'Sort',
 			'task.filter': 'Filter',
-			'task.link.addLink': 'Add link',
+			'task.links.links': 'links',
+			'task.links.addLink': 'Add link',
 			'task.taskCreatedSuccessfully': 'Task created successfully',
 			'task.nSelected': ({required Object count}) => '$count selected',
 			'task.yesterday': 'Yesterday',

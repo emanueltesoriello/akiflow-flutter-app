@@ -29,11 +29,11 @@
     "inboxTitle": "Here is where the magic happens",
     "inboxSubtitle": "Inbox is where all your new tasks are collected"
   },
-  "expiry":{
-    "title":"Your Free Trial has Expired",
-    "description":"Upgrade your plan to pick up where you left off.",
-    "button":"Upgrade your plan",
-    "alternate":"or Logout and delete all data."
+  "expiry": {
+    "title": "Your Free Trial has Expired",
+    "description": "Upgrade your plan to pick up where you left off.",
+    "button": "Upgrade your plan",
+    "alternate": "or Logout and delete all data."
   },
   "settings": {
     "title": "Settings",
@@ -48,7 +48,7 @@
     "labels": "Labels",
     "searchComingSoon": "Search is coming soon in the near future!",
     "changeLog": "Change log",
-    "chatWithUs":"Chat with us",
+    "chatWithUs": "Chat with us",
     "sendUsAnEmail": "Send us an Email",
     "myAccount": {
       "title": "My account",
@@ -57,7 +57,6 @@
       "manageSubscriptionAndBillingPreferences": "Manage subscription & billing preferences",
       "logout": "Log out"
     },
-
     "about": {
       "title": "About",
       "version": "Version",
@@ -171,7 +170,8 @@
     },
     "sort": "Sort",
     "filter": "Filter",
-    "link": {
+    "links": {
+      "links": "links",
       "addLink": "Add link"
     },
     "taskCreatedSuccessfully": "Task created successfully",
