@@ -9,6 +9,8 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/datetime_ext.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../components/base/date_display.dart';
+
 class TodayAppBarCalendar extends StatefulWidget {
   final CalendarFormatState? calendarFormat;
 
@@ -141,20 +143,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Flexible(
-                              child: Container(
-                                constraints: const BoxConstraints(minWidth: 100),
-                                child: Text(
-                                  DateFormat("MMMM").format(day),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorsExt.grey2(context),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            DateDisplay(date: day),
                             const SizedBox(width: 12),
                             InkWell(
                               onTap: () {

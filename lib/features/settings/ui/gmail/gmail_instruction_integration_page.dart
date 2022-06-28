@@ -24,12 +24,12 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
         }
       },
       child: Scaffold(
+        appBar: AppBarComp(
+          title: t.settings.integrations.gmail.title,
+          showBack: true,
+        ),
         body: Column(
           children: [
-            AppBarComp(
-              title: t.settings.integrations.gmail.title,
-              showBack: true,
-            ),
             Expanded(
               child: Column(
                 children: [

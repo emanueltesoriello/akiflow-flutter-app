@@ -27,12 +27,12 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarComp(
+        title: t.settings.integrations.gmail.title,
+        showBack: true,
+      ),
       body: Column(
         children: [
-          AppBarComp(
-            title: t.settings.integrations.gmail.title,
-            showBack: true,
-          ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),
