@@ -17,14 +17,14 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarComp(
+        title: t.settings.about.title,
+        showBack: true,
+      ),
       body: Column(
         children: [
-          AppBarComp(
-            title: t.settings.about.title,
-            showBack: true,
-          ),
           Expanded(
-            child: Container(
+            child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,29 +49,31 @@ class AboutPage extends StatelessWidget {
                         Expanded(
                           child: BlocBuilder<AuthCubit, AuthCubitState>(
                             builder: (context, state) {
-                              if (state.user == null) {
-                                return const SizedBox();
-                              }
-
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    t.settings.about.version,
-                                    style: TextStyle(
-                                        fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  BlocBuilder<SettingsCubit, SettingsCubitState>(
-                                    builder: (context, state) {
-                                      return Text(
-                                        state.appVersion ?? "",
-                                        style: TextStyle(
-                                            fontSize: 12, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                                      );
-                                    },
-                                  ),
-                                ],
+                              return Visibility(
+                                visible: state.user != null,
+                                replacement: const SizedBox(),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      t.settings.about.version,
+                                      style: TextStyle(
+                                          fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    BlocBuilder<SettingsCubit, SettingsCubitState>(
+                                      builder: (context, state) {
+                                        return Text(
+                                          state.appVersion ?? "",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: ColorsExt.grey3(context)),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               );
                             },
                           ),

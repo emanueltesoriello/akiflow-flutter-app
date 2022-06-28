@@ -51,16 +51,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   const SizedBox(height: 12),
                   BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                     builder: (context, state) {
-                      if (state.showDuration) {
-                        return Column(
+                      return Visibility(
+                        visible: state.showDuration,
+                        replacement: const SizedBox(),
+                        child: Column(
                           children: const [
                             Separator(),
                             CreateTaskDurationItem(),
                           ],
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
+                        ),
+                      );
                     },
                   ),
                   const Padding(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/components/base/date_display.dart';
 import 'package:mobile/components/calendar/calendar_selected_day.dart';
 import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/style/colors.dart';
@@ -158,20 +159,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Flexible(
-                        child: Container(
-                          constraints: const BoxConstraints(minWidth: 100),
-                          child: Text(
-                            DateFormat("MMMM").format(day),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
-                          ),
-                        ),
-                      ),
+                      DateDisplay(date: day),
                       const SizedBox(width: 12),
                       InkWell(
                         onTap: () {

@@ -68,18 +68,18 @@ class PriorityModal extends StatelessWidget {
                   ),
                 ),
                 Builder(builder: (context) {
-                  if (selectedPriority != null && selectedPriority == PriorityEnum.none) {
-                    return const SizedBox();
-                  }
-
-                  return _item(
-                    context,
-                    active: selectedPriority == PriorityEnum.none,
-                    text: t.task.priority.noPriority,
-                    click: () {
-                      Navigator.pop(context, PriorityEnum.none);
-                    },
-                    icon: "assets/images/icons/_common/slash_circle.svg",
+                  return Visibility(
+                    visible: selectedPriority != null && selectedPriority == PriorityEnum.none,
+                    replacement: const SizedBox(),
+                    child: _item(
+                      context,
+                      active: selectedPriority == PriorityEnum.none,
+                      text: t.task.priority.noPriority,
+                      click: () {
+                        Navigator.pop(context, PriorityEnum.none);
+                      },
+                      icon: "assets/images/icons/_common/slash_circle.svg",
+                    ),
                   );
                 }),
                 _item(

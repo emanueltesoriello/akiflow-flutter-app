@@ -15,12 +15,12 @@ class MyAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarComp(
+        title: t.settings.myAccount.title,
+        showBack: true,
+      ),
       body: Column(
         children: [
-          AppBarComp(
-            title: t.settings.myAccount.title,
-            showBack: true,
-          ),
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(16),
