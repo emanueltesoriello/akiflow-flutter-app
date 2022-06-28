@@ -3,11 +3,11 @@
 
 ## Run
 
-Use the `.vscode / launch.json` to launch the app with the specific environment or:
+Use the `.vscode/launch.json` to launch the app with the specific environment or:
 
-Development: `flutter run -t lib / main_dev.dart`
+Development: `flutter run -t lib/main_dev.dart`
 
-Production: `flutter run -t lib / main.dart`
+Production: `flutter run -t lib/main.dart`
 
 ## Build
 
