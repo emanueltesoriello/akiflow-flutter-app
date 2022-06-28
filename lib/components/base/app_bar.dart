@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/components/base/sync_progress.dart';
+import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -17,6 +19,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
   final Widget? customTitle;
   final bool shadow;
+  final bool showSyncButton;
 
   const AppBarComp({
     Key? key,
@@ -29,6 +32,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.customTitle,
     this.shadow = true,
+    this.showSyncButton = false,
   }) : super(key: key);
 
   @override
@@ -156,7 +160,16 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return [
-      Container(width: 16),
+      BlocBuilder<SyncCubit, SyncCubitState>(
+        builder: (context, state) {
+          if (showSyncButton == false || state.loading == false) {
+            return const SizedBox();
+          }
+
+          return const SyncProgress();
+        },
+      ),
+      const SizedBox(width: 8),
       ...actions,
     ];
   }

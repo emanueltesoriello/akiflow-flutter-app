@@ -192,6 +192,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             height: 30,
           ),
           actions: const [TaskListMenu()],
+          showSyncButton: true,
         );
       case HomeViewType.today:
         return TodayAppBar(preferredSizeHeight: todayAppBarHeight, calendarTopMargin: calendarTopMargin);

@@ -52,6 +52,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
       titleWidget: _buildTitle(context),
       actions: _buildActions(context),
       shadow: false,
+      showSyncButton: true,
     );
   }
 

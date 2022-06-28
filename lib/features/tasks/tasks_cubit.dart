@@ -64,14 +64,16 @@ class TasksCubit extends Cubit<TasksCubitState> {
     print("listen tasks sync");
 
     bool firstTimeLoaded = _preferencesRepository.firstTimeLoaded;
+    emit(state.copyWith(loading: firstTimeLoaded == false));
 
     refreshAllFromRepository();
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await refreshAllFromRepository();
 
-      if (!firstTimeLoaded) {
+      if (firstTimeLoaded == false) {
         _preferencesRepository.setFirstTimeLoaded(true);
+        emit(state.copyWith(loading: false));
       }
 
       Future.delayed(const Duration(milliseconds: 500), () {

@@ -64,9 +64,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
       _intercomService.authenticate(
-          email: user.email,
-          intercomHashAndroid: user.intercomHashAndroid,
-          intercomHashIos: user.intercomHashIos);
+          email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
       await _pushCubit.login(user);
     }
   }
@@ -108,7 +106,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
       await _pushCubit.login(user);
 
-      _syncCubit.sync(loading: true);
+      _syncCubit.sync();
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
 

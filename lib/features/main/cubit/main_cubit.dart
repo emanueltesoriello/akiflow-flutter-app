@@ -48,9 +48,7 @@ class MainCubit extends Cubit<MainCubitState> {
     if (user != null) {
       _sentryService.authenticate(user.id.toString(), user.email);
       await _intercomService.authenticate(
-          email: user.email,
-          intercomHashAndroid: user.intercomHashAndroid,
-          intercomHashIos: user.intercomHashIos);
+          email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
     }
   }
 }

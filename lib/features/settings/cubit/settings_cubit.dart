@@ -73,7 +73,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     List<Account> accounts = await _accountsRepository.get();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
-    _syncCubit.sync();
+    _syncCubit.sync(loading: true);
   }
 
   void gmailBehaviorOnMarkAsDone(GmailMarkAsDoneType selectedType) {
@@ -101,7 +101,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     List<Account> accounts = await _accountsRepository.get();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
-    _syncCubit.sync();
+    _syncCubit.sync(loading: true);
   }
 
   Future<void> connectGmail() async {

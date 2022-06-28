@@ -60,6 +60,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
+      showSyncButton: true,
       actions: [
         Theme(
           data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),

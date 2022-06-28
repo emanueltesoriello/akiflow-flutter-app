@@ -42,6 +42,7 @@ class TasksCubitState extends Equatable {
   final List<UndoTask> queue;
   final Task? justCreatedTask;
   final bool tasksLoaded;
+  final bool loading;
 
   int get todayCount =>
       fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore).toList().length;
@@ -56,6 +57,7 @@ class TasksCubitState extends Equatable {
     this.queue = const [],
     this.justCreatedTask,
     this.tasksLoaded = false,
+    this.loading = false,
   });
 
   TasksCubitState copyWith({
@@ -68,6 +70,7 @@ class TasksCubitState extends Equatable {
     List<UndoTask>? queue,
     Nullable<Task?>? justCreatedTask,
     bool? tasksLoaded,
+    bool? loading,
   }) {
     return TasksCubitState(
       inboxTasks: inboxTasks ?? this.inboxTasks,
@@ -79,6 +82,7 @@ class TasksCubitState extends Equatable {
       queue: queue ?? this.queue,
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
       tasksLoaded: tasksLoaded ?? this.tasksLoaded,
+      loading: loading ?? this.loading,
     );
   }
 
@@ -93,5 +97,6 @@ class TasksCubitState extends Equatable {
         queue,
         justCreatedTask,
         tasksLoaded,
+        loading,
       ];
 }

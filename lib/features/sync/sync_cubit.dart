@@ -20,9 +20,9 @@ class SyncCubit extends Cubit<SyncCubitState> {
     print("start sync $entities");
 
     try {
-      await CoreApi().check();
-
       emit(state.copyWith(loading: loading));
+
+      await CoreApi().check();
 
       User? user = _preferencesRepository.user;
 
