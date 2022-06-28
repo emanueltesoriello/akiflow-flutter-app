@@ -38,7 +38,6 @@ class TasksCubitState extends Equatable {
   final List<Task> labelTasks;
   final List<Task> fixedTodayTasks;
   final List<Doc> docs;
-  final String? syncStatus;
   final List<UndoTask> queue;
   final Task? justCreatedTask;
   final bool tasksLoaded;
@@ -53,7 +52,6 @@ class TasksCubitState extends Equatable {
     this.labelTasks = const [],
     this.fixedTodayTasks = const [],
     this.docs = const [],
-    this.syncStatus,
     this.queue = const [],
     this.justCreatedTask,
     this.tasksLoaded = false,
@@ -66,7 +64,6 @@ class TasksCubitState extends Equatable {
     List<Task>? labelTasks,
     List<Task>? fixedTodayTasks,
     List<Doc>? docs,
-    String? syncStatus,
     List<UndoTask>? queue,
     Nullable<Task?>? justCreatedTask,
     bool? tasksLoaded,
@@ -78,7 +75,6 @@ class TasksCubitState extends Equatable {
       labelTasks: labelTasks ?? this.labelTasks,
       fixedTodayTasks: fixedTodayTasks ?? this.fixedTodayTasks,
       docs: docs ?? this.docs,
-      syncStatus: syncStatus ?? this.syncStatus,
       queue: queue ?? this.queue,
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
       tasksLoaded: tasksLoaded ?? this.tasksLoaded,
@@ -93,7 +89,6 @@ class TasksCubitState extends Equatable {
         labelTasks,
         fixedTodayTasks,
         docs,
-        syncStatus,
         queue,
         justCreatedTask,
         tasksLoaded,

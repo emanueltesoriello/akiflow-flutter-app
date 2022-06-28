@@ -497,6 +497,10 @@ extension TaskExt on Task {
     List<Task> tasks, {
     required TaskListSorting sorting,
   }) {
+    if (sorting == TaskListSorting.none) {
+      return tasks;
+    }
+
     tasks.sort((a, b) {
       try {
         switch (sorting) {
@@ -508,6 +512,10 @@ extension TaskExt on Task {
             return a.sortingLabelParsed!.compareTo(b.sortingLabelParsed!);
           case TaskListSorting.dateAscending:
             return a.dateParsed!.compareTo(b.dateParsed!);
+          case TaskListSorting.doneAtDescending:
+            return a.doneAt!.compareTo(b.doneAt!) * -1;
+          case TaskListSorting.none:
+            return 0;
         }
       } catch (_) {
         return 0;

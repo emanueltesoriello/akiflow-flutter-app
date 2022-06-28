@@ -55,8 +55,6 @@ class _LabelViewState extends State<LabelView> {
   Widget build(BuildContext context) {
     List<Task> labelTasks = List.from(context.watch<TasksCubit>().state.labelTasks);
 
-    labelTasks = TaskExt.sort(labelTasks, sorting: TaskListSorting.sortingAscending);
-
     return BlocBuilder<LabelsCubit, LabelsCubitState>(
       builder: (context, labelState) {
         List<Task> filtered = labelTasks.toList();

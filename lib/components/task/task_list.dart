@@ -18,7 +18,14 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
-enum TaskListSorting { sortingAscending, sortingDescending, dateAscending, sortingLabelAscending }
+enum TaskListSorting {
+  sortingAscending,
+  sortingDescending,
+  dateAscending,
+  sortingLabelAscending,
+  doneAtDescending,
+  none
+}
 
 class TaskList extends StatefulWidget {
   final List<Task> tasks;
