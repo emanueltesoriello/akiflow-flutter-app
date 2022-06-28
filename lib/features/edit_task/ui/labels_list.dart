@@ -176,42 +176,48 @@ class _LabelsListState extends State<LabelsList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: FolderItem(
-                folder,
-                onTap: () {
-                  toggleFolder(folder);
+        Builder(builder: (context) {
+          if (searchValue.isNotEmpty) {
+            return const SizedBox();
+          }
+
+          return Row(
+            children: [
+              Expanded(
+                child: FolderItem(
+                  folder,
+                  onTap: () {
+                    toggleFolder(folder);
+                  },
+                ),
+              ),
+              ValueListenableBuilder(
+                valueListenable: _folderOpenNotifier,
+                builder: (context, Map<Label, bool> folderOpen, child) {
+                  bool open = folderOpen[folder] ?? false;
+
+                  return GestureDetector(
+                    onTap: () => toggleFolder(folder),
+                    child: SvgPicture.asset(
+                      open
+                          ? "assets/images/icons/_common/chevron_up.svg"
+                          : "assets/images/icons/_common/chevron_down.svg",
+                      width: 16,
+                      height: 16,
+                      color: ColorsExt.grey3(context),
+                    ),
+                  );
                 },
               ),
-            ),
-            ValueListenableBuilder(
-              valueListenable: _folderOpenNotifier,
-              builder: (context, Map<Label, bool> folderOpen, child) {
-                bool open = folderOpen[folder] ?? false;
-
-                return GestureDetector(
-                  onTap: () => toggleFolder(folder),
-                  child: SvgPicture.asset(
-                    open
-                        ? "assets/images/icons/_common/chevron_up.svg"
-                        : "assets/images/icons/_common/chevron_down.svg",
-                    width: 16,
-                    height: 16,
-                    color: ColorsExt.grey3(context),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
         ValueListenableBuilder(
           valueListenable: _folderOpenNotifier,
           builder: (context, Map<Label, bool> folderOpen, child) {
             bool open = folderOpen[folder] ?? false;
 
-            if (!open) {
+            if (!open && searchValue.isEmpty) {
               return const SizedBox();
             }
 
@@ -232,13 +238,14 @@ class _LabelsListState extends State<LabelsList> {
             return ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: searchValue.isEmpty ? 16 : 0),
               itemCount: searchFiltered.length,
               itemBuilder: (context, index) {
                 Label label = searchFiltered[index];
 
                 return LabelItem(
                   label,
+                  folder: searchValue.isEmpty ? null : folder,
                   onTap: () {
                     widget.onSelect(label);
                   },

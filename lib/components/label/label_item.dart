@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:i18n/strings.g.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/label/label.dart';
 
 class LabelItem extends StatelessWidget {
   final Label label;
+  final Label? folder;
   final Function() onTap;
 
   const LabelItem(
     this.label, {
     Key? key,
+    this.folder,
     required this.onTap,
   }) : super(key: key);
 
@@ -79,7 +80,7 @@ class LabelItem extends StatelessWidget {
           ),
         ),
         Builder(builder: (context) {
-          if (label.type == null || label.type != "folder") {
+          if (folder == null) {
             return const SizedBox();
           }
 
@@ -90,7 +91,7 @@ class LabelItem extends StatelessWidget {
                   width: 16, height: 16, color: ColorsExt.grey3(context)),
               const SizedBox(width: 4),
               Text(
-                t.addTask.folder,
+                folder?.title ?? "",
                 style: TextStyle(
                   fontSize: 15,
                   color: ColorsExt.grey3(context),
