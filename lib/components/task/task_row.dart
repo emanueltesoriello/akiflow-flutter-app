@@ -15,6 +15,7 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TaskRow extends StatelessWidget {
   final Task task;
@@ -65,46 +66,12 @@ class TaskRow extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 14,
-                  child: Builder(
-                    builder: (context) {
-                      Color? color;
-
-                      if (task.statusType == TaskStatusType.inbox && task.readAt == null) {
-                        color = ColorsExt.cyan(context);
-                      }
-
-                      try {
-                        if (task.content["expiredSnooze"] == true) {
-                          color = ColorsExt.pink(context);
-                        }
-                      } catch (_) {}
-
-                      if (color == null) {
-                        return const SizedBox();
-                      }
-
-                      return Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          width: 6,
-                          height: 6,
-                          margin: const EdgeInsets.only(left: 5, right: 0, top: 22),
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                _DotPrefix(task),
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
                   child: Builder(builder: ((context) {
                     if (selectMode) {
-                      return _radio(context);
+                      return _SelectableRadioButton(task, selectTask: selectTask);
                     } else {
                       return CheckboxAnimated(
                         task,
@@ -123,8 +90,8 @@ class TaskRow extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _firstLine(context),
-                        _secondLine(context),
+                        _Title(task),
+                        _Subtitle(task),
                         TaskInfo(
                           task,
                           hideInboxLabel: hideInboxLabel,
@@ -137,92 +104,6 @@ class TaskRow extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _firstLine(BuildContext context) {
-    String? text = task.title;
-
-    if (text == null || text.isEmpty) {
-      text = t.noTitle;
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 2),
-      child: SizedBox(
-        height: 22,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Text(
-                text,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  height: 1,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                      ? ColorsExt.grey3(context)
-                      : ColorsExt.grey1(context),
-                ),
-              ),
-            ),
-            _overdue(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _overdue(BuildContext context) {
-    if (task.isOverdue) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 2),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              "assets/images/icons/_common/Clock_alert.svg",
-              width: 20,
-              height: 20,
-              color: ColorsExt.red(context),
-            ),
-            const SizedBox(width: 4),
-          ],
-        ),
-      );
-    }
-
-    return const SizedBox();
-  }
-
-  Widget _radio(BuildContext context) {
-    bool selected = task.selected ?? false;
-
-    Color color = selected ? ColorsExt.akiflow(context) : ColorsExt.grey3(context);
-
-    return InkWell(
-      overlayColor: MaterialStateProperty.all(Colors.transparent),
-      onTap: selectTask,
-      child: Container(
-        height: double.infinity,
-        padding: const EdgeInsets.all(2.17),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: SizedBox(
-            width: 21.67,
-            height: 21.67,
-            child: SvgPicture.asset(
-              selected
-                  ? "assets/images/icons/_common/largecircle_fill_circle_2.svg"
-                  : "assets/images/icons/_common/circle.svg",
-              color: color,
             ),
           ),
         ),
@@ -358,8 +239,161 @@ class TaskRow extends StatelessWidget {
       );
     });
   }
+}
 
-  Widget _secondLine(BuildContext context) {
+class _DotPrefix extends StatelessWidget {
+  final Task task;
+
+  const _DotPrefix(this.task, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 14,
+      child: Builder(
+        builder: (context) {
+          Color? color;
+
+          if (task.statusType == TaskStatusType.inbox && task.readAt == null) {
+            color = ColorsExt.cyan(context);
+          }
+
+          try {
+            if (task.content["expiredSnooze"] == true) {
+              color = ColorsExt.pink(context);
+            }
+          } catch (_) {}
+
+          if (color == null) {
+            return const SizedBox();
+          }
+
+          return Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: 6,
+              height: 6,
+              margin: const EdgeInsets.only(left: 5, right: 0, top: 22),
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _SelectableRadioButton extends StatelessWidget {
+  final Task task;
+  final Function() selectTask;
+
+  const _SelectableRadioButton(this.task, {Key? key, required this.selectTask}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    bool selected = task.selected ?? false;
+
+    Color color = selected ? ColorsExt.akiflow(context) : ColorsExt.grey3(context);
+
+    return InkWell(
+      overlayColor: MaterialStateProperty.all(Colors.transparent),
+      onTap: selectTask,
+      child: Container(
+        height: double.infinity,
+        padding: const EdgeInsets.all(2.17),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            width: 21.67,
+            height: 21.67,
+            child: SvgPicture.asset(
+              selected
+                  ? "assets/images/icons/_common/largecircle_fill_circle_2.svg"
+                  : "assets/images/icons/_common/circle.svg",
+              color: color,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  final Task task;
+
+  const _Title(this.task, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String? text = task.title;
+
+    if (text == null || text.isEmpty) {
+      text = t.noTitle;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: SizedBox(
+        height: 22,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  height: 1,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
+                      ? ColorsExt.grey3(context)
+                      : ColorsExt.grey1(context),
+                ),
+              ),
+            ),
+            _overdue(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _overdue(BuildContext context) {
+    if (task.isOverdue) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              "assets/images/icons/_common/Clock_alert.svg",
+              width: 20,
+              height: 20,
+              color: ColorsExt.red(context),
+            ),
+            const SizedBox(width: 4),
+          ],
+        ),
+      );
+    }
+
+    return const SizedBox();
+  }
+}
+
+class _Subtitle extends StatelessWidget {
+  final Task task;
+
+  const _Subtitle(this.task, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     List<Doc> docs = context.watch<TasksCubit>().state.docs;
 
     Doc? doc = docs.firstWhereOrNull(
@@ -368,7 +402,9 @@ class TaskRow extends StatelessWidget {
 
     doc = task.computedDoc(doc);
 
-    if (doc == null && task.descriptionParsed.isEmpty) {
+    List<String> links = task.links ?? [];
+
+    if (doc == null && task.descriptionParsed.isEmpty && links.isEmpty) {
       return const SizedBox();
     }
 
@@ -418,6 +454,73 @@ class TaskRow extends StatelessWidget {
                   )),
                 ],
               );
+            } else if (links.isNotEmpty) {
+              String link = links.first;
+
+              String? iconAsset = TaskExt.iconAssetFromUrl(link);
+              String? networkIcon = TaskExt.iconNetworkFromUrl(link);
+
+              return Row(children: [
+                SvgPicture.asset(
+                  "assets/images/icons/_common/arrow_turn_down_right.svg",
+                  color: ColorsExt.grey3(context),
+                  width: 16,
+                  height: 16,
+                ),
+                const SizedBox(width: 4.5),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Builder(builder: (context) {
+                          if (iconAsset != null) {
+                            return SvgPicture.asset(
+                              iconAsset,
+                              width: 16,
+                              height: 16,
+                            );
+                          } else if (networkIcon != null) {
+                            return SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: Center(
+                                child: Image.network(
+                                  networkIcon,
+                                  width: 16,
+                                  height: 16,
+                                  errorBuilder: (context, error, stacktrace) => Image.asset(
+                                    "assets/images/icons/web/faviconV2.png",
+                                    width: 16,
+                                    height: 16,
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
+                        const SizedBox(width: 9),
+                        Flexible(
+                          child: Text(
+                            link,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: ColorsExt.grey3(context),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ]);
             } else {
               return const SizedBox();
             }
