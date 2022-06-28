@@ -21,7 +21,7 @@ class TodayCubitState extends Equatable {
     this.todosListOpen = true,
     this.pinnedListOpen = true,
     this.completedListOpen = false,
-    this.panelState = PanelState.CLOSED,
+    this.panelState = PanelState.closed,
   });
 
   TodayCubitState copyWith(

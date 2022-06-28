@@ -22,23 +22,23 @@ class TodayCubit extends Cubit<TodayCubitState> {
   void onDateSelected(DateTime selectedDay) {
     emit(state.copyWith(selectedDate: selectedDay, calendarFormat: CalendarFormatState.week));
     tasksCubit.getTodayTasksByDate(selectedDay);
-    _panelStateStreamController.add(PanelState.CLOSED);
+    _panelStateStreamController.add(PanelState.closed);
   }
 
   tapAppBarTextDate() {
     PanelState current = state.panelState;
 
-    if (current == PanelState.CLOSED) {
-      _panelStateStreamController.add(PanelState.OPEN);
+    if (current == PanelState.closed) {
+      _panelStateStreamController.add(PanelState.opened);
     } else {
-      _panelStateStreamController.add(PanelState.CLOSED);
+      _panelStateStreamController.add(PanelState.closed);
     }
   }
 
   todayClick() {
     emit(state.copyWith(selectedDate: DateTime.now(), calendarFormat: CalendarFormatState.week));
     tasksCubit.getTodayTasksByDate(DateTime.now());
-    _panelStateStreamController.add(PanelState.CLOSED);
+    _panelStateStreamController.add(PanelState.closed);
   }
 
   void openTodoList() {
@@ -54,10 +54,10 @@ class TodayCubit extends Cubit<TodayCubitState> {
   }
 
   void panelClosed() {
-    emit(state.copyWith(panelState: PanelState.CLOSED));
+    emit(state.copyWith(panelState: PanelState.closed));
   }
 
   void panelOpened() {
-    emit(state.copyWith(panelState: PanelState.OPEN));
+    emit(state.copyWith(panelState: PanelState.opened));
   }
 }

@@ -61,10 +61,10 @@ class _ViewState extends State<_View> {
 
     todayCubit.panelStateStream.listen((PanelState panelState) {
       switch (panelState) {
-        case PanelState.OPEN:
+        case PanelState.opened:
           panelController.open();
           break;
-        case PanelState.CLOSED:
+        case PanelState.closed:
           panelController.close();
           break;
       }
@@ -115,11 +115,11 @@ class _ViewState extends State<_View> {
 
     return SlidingUpPanel(
       bodyHeight: MediaQuery.of(context).size.height - toolbarHeight - bottomBarHeight - todayViewTopMargin,
-      slideDirection: SlideDirection.DOWN,
+      slideDirection: SlideDirection.down,
       controller: panelController,
       maxHeight: 280,
       minHeight: 80,
-      defaultPanelState: PanelState.CLOSED,
+      defaultPanelState: PanelState.closed,
       panel: ValueListenableBuilder(
         valueListenable: calendarOffsetNotifier,
         builder: (context, value, child) {
