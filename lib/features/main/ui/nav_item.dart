@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
@@ -40,6 +41,8 @@ class NavItem extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () {
+          HapticFeedback.mediumImpact();
+
           if (homeViewType != null) {
             context.read<MainCubit>().changeHomeView(homeViewType!);
 

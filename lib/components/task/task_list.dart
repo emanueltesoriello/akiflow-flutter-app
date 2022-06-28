@@ -161,7 +161,6 @@ class _TaskListState extends State<TaskList> {
                 },
                 selectMode: tasks.any((element) => element.selected ?? false),
                 completedClick: () {
-                  HapticFeedback.heavyImpact();
                   editTaskCubit.markAsDone(forceUpdate: true);
                 },
                 swipeActionPlanClick: () {

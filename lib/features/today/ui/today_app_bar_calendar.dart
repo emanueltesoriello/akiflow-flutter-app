@@ -6,6 +6,7 @@ import 'package:mobile/components/calendar/calendar_selected_day.dart';
 import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/style/sizes.dart';
 import 'package:mobile/utils/datetime_ext.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -50,7 +51,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                   ],
                 ),
                 TableCalendar(
-                  rowHeight: 40,
+                  rowHeight: todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   daysOfWeekVisible: false,
                   calendarFormat: widget.calendarFormat != null

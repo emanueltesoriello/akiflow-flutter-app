@@ -113,120 +113,122 @@ class _ViewState extends State<_View> {
       return 0;
     });
 
-    return SlidingUpPanel(
-      bodyHeight: MediaQuery.of(context).size.height - toolbarHeight - bottomBarHeight - todayViewTopMargin,
-      slideDirection: SlideDirection.down,
-      controller: panelController,
-      maxHeight: 280,
-      minHeight: 80,
-      defaultPanelState: PanelState.closed,
-      panel: ValueListenableBuilder(
-        valueListenable: calendarOffsetNotifier,
-        builder: (context, value, child) {
-          return Container(
-            color: Colors.white,
-            child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
-          );
+    return LayoutBuilder(builder: (context, constraints) {
+      return SlidingUpPanel(
+        bodyHeight: constraints.maxHeight,
+        slideDirection: SlideDirection.down,
+        controller: panelController,
+        maxHeight: 280,
+        minHeight: todayViewTopMargin,
+        defaultPanelState: PanelState.closed,
+        panel: ValueListenableBuilder(
+          valueListenable: calendarOffsetNotifier,
+          builder: (context, value, child) {
+            return Container(
+              color: Colors.white,
+              child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+            );
+          },
+        ),
+        onPanelClosed: () {
+          context.read<TodayCubit>().panelClosed();
         },
-      ),
-      onPanelClosed: () {
-        context.read<TodayCubit>().panelClosed();
-      },
-      onPanelOpened: () {
-        context.read<TodayCubit>().panelOpened();
-      },
-      collapsed: Container(
-        color: Colors.white,
-        child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
-      ),
-      body: Stack(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: todayViewTopMargin),
-            child: RefreshIndicator(
-              backgroundColor: ColorsExt.background(context),
-              onRefresh: () async {
-                return context.read<SyncCubit>().sync();
-              },
-              child: SlidableAutoCloseBehavior(
-                child: ListView(
-                  controller: scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  children: [
-                    TaskList(
-                      key: const ObjectKey("todos"),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      tasks: todos,
-                      sorting: TaskListSorting.sortingDescending,
-                      visible: context.watch<TodayCubit>().state.todosListOpen,
-                      showLabel: true,
-                      showPlanInfo: false,
-                      header: TodayHeader(
-                        t.today.toDos,
+        onPanelOpened: () {
+          context.read<TodayCubit>().panelOpened();
+        },
+        collapsed: Container(
+          color: Colors.white,
+          child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+        ),
+        body: Container(
+          margin: const EdgeInsets.only(top: todayViewTopMargin),
+          child: Stack(
+            children: [
+              RefreshIndicator(
+                backgroundColor: ColorsExt.background(context),
+                onRefresh: () async {
+                  return context.read<SyncCubit>().sync();
+                },
+                child: SlidableAutoCloseBehavior(
+                  child: ListView(
+                    controller: scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    children: [
+                      TaskList(
+                        key: const ObjectKey("todos"),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         tasks: todos,
-                        onClick: () {
-                          context.read<TodayCubit>().openTodoList();
-                        },
-                        listOpened: context.watch<TodayCubit>().state.todosListOpen,
-                        usePrimaryColor: true,
+                        sorting: TaskListSorting.sortingDescending,
+                        visible: context.watch<TodayCubit>().state.todosListOpen,
+                        showLabel: true,
+                        showPlanInfo: false,
+                        header: TodayHeader(
+                          t.today.toDos,
+                          tasks: todos,
+                          onClick: () {
+                            context.read<TodayCubit>().openTodoList();
+                          },
+                          listOpened: context.watch<TodayCubit>().state.todosListOpen,
+                          usePrimaryColor: true,
+                        ),
                       ),
-                    ),
-                    TaskList(
-                      key: const ObjectKey("pinned"),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      tasks: pinned,
-                      visible: context.watch<TodayCubit>().state.pinnedListOpen,
-                      showLabel: true,
-                      showPlanInfo: false,
-                      sorting: TaskListSorting.dateAscending,
-                      header: TodayHeader(
-                        t.today.pinnedInCalendar,
+                      TaskList(
+                        key: const ObjectKey("pinned"),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         tasks: pinned,
-                        onClick: () {
-                          context.read<TodayCubit>().openPinnedList();
-                        },
-                        listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
-                        usePrimaryColor: false,
+                        visible: context.watch<TodayCubit>().state.pinnedListOpen,
+                        showLabel: true,
+                        showPlanInfo: false,
+                        sorting: TaskListSorting.dateAscending,
+                        header: TodayHeader(
+                          t.today.pinnedInCalendar,
+                          tasks: pinned,
+                          onClick: () {
+                            context.read<TodayCubit>().openPinnedList();
+                          },
+                          listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
+                          usePrimaryColor: false,
+                        ),
                       ),
-                    ),
-                    TaskList(
-                      key: const ObjectKey("completed"),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      tasks: completed,
-                      sorting: TaskListSorting.doneAtDescending,
-                      visible: context.watch<TodayCubit>().state.completedListOpen,
-                      showLabel: true,
-                      showPlanInfo: false,
-                      header: TodayHeader(
-                        t.today.done,
+                      TaskList(
+                        key: const ObjectKey("completed"),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         tasks: completed,
-                        onClick: () {
-                          context.read<TodayCubit>().openCompletedList();
-                        },
-                        listOpened: context.watch<TodayCubit>().state.completedListOpen,
-                        usePrimaryColor: false,
+                        sorting: TaskListSorting.doneAtDescending,
+                        visible: context.watch<TodayCubit>().state.completedListOpen,
+                        showLabel: true,
+                        showPlanInfo: false,
+                        header: TodayHeader(
+                          t.today.done,
+                          tasks: completed,
+                          onClick: () {
+                            context.read<TodayCubit>().openCompletedList();
+                          },
+                          listOpened: context.watch<TodayCubit>().state.completedListOpen,
+                          usePrimaryColor: false,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+              Builder(
+                builder: (context) {
+                  if (tasksCubit.state.loading) {
+                    return const FirstSyncProgress();
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+            ],
           ),
-          Builder(
-            builder: (context) {
-              if (tasksCubit.state.loading) {
-                return const FirstSyncProgress();
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }
