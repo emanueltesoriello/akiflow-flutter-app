@@ -173,6 +173,7 @@ class _TaskListState extends State<TaskList> {
                     context: context,
                     builder: (context) => LabelsModal(
                       selectLabel: (Label label) {
+                        Navigator.pop(context);
                         editTaskCubit.setLabel(label, forceUpdate: true);
                       },
                       showNoLabel: true,
