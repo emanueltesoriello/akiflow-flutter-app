@@ -385,10 +385,6 @@ class _Header extends StatelessWidget {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
           },
-          onLongPress: () {
-            // REMOVE ASAP
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const HapticPage()));
-          },
         ),
       ],
     );
