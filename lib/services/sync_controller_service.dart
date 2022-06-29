@@ -123,12 +123,6 @@ class SyncControllerService {
     if (user != null) {
       AnalyticsService.track("Trigger sync now");
 
-      try {
-        await _syncIntegration();
-      } catch (e, s) {
-        _sentryService.captureException(e, stackTrace: s);
-      }
-
       if (entities == null) {
         await _syncEntity(Entity.accountsV2);
         await _syncEntity(Entity.accounts);
@@ -139,6 +133,13 @@ class SyncControllerService {
         for (Entity entity in entities) {
           await _syncEntity(entity);
         }
+      }
+
+      // check after docs sync to prevent docs duplicates
+      try {
+        await _syncIntegration();
+      } catch (e, s) {
+        _sentryService.captureException(e, stackTrace: s);
       }
     }
 
