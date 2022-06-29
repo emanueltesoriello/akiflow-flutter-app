@@ -61,9 +61,6 @@ class UserApi extends ApiClient {
 
   Future<bool> hasValidPlan() async {
     User? user = await getUserData();
-    if (user != null) {
-      return DateTime.parse(user.planExpireDate!).isAfter(DateTime.now());
-    }
-    return false;
+    return user != null ? DateTime.parse(user.planExpireDate!).isAfter(DateTime.now()) : false;
   }
 }

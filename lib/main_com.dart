@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
+import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -26,10 +31,6 @@ import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
-import 'package:models/user.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -50,7 +51,8 @@ Future<void> mainCom() async {
 
   setupLocator(preferences: preferences, databaseService: databaseService);
 
-  bool userLogged = locator<PreferencesRepository>().user != null;
+  bool userLogged =
+      locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
 
   print("environment: ${Config.development ? "dev" : "prod"}");
 
@@ -104,63 +106,73 @@ class Application extends StatelessWidget {
     ));
 
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<DialogCubit>(
-          lazy: false,
-          create: (BuildContext context) => DialogCubit(),
-        ),
-        BlocProvider<PushCubit>(
-          lazy: false,
-          create: (BuildContext context) => locator<PushCubit>(),
-        ),
-        BlocProvider<SyncCubit>(
-          lazy: false,
-          create: (BuildContext context) => locator<SyncCubit>(),
-        ),
-        BlocProvider<TasksCubit>(
-          lazy: false,
-          create: (BuildContext context) => locator<TasksCubit>(),
-        ),
-        BlocProvider<LabelsCubit>(
-          lazy: false,
-          create: (BuildContext context) => LabelsCubit(locator<SyncCubit>()),
-        ),
-        BlocProvider<MainCubit>(
-          lazy: false,
-          create: (BuildContext context) => MainCubit(locator<SyncCubit>(), locator<AuthCubit>()),
-        ),
-        BlocProvider<AuthCubit>(
-          lazy: false,
-          create: (BuildContext context) => locator<AuthCubit>(),
-        ),
-        BlocProvider<SettingsCubit>(
-          lazy: false,
-          create: (BuildContext context) => SettingsCubit(locator<AuthCubit>(), locator<SyncCubit>()),
-        ),
-        BlocProvider<TodayCubit>(
-          lazy: false,
-          create: (BuildContext context) => locator<TodayCubit>(),
-        ),
-        BlocProvider<EditTaskCubit>(
-          lazy: false,
-          create: (BuildContext context) => EditTaskCubit(locator<TasksCubit>(), locator<SyncCubit>()),
-        ),
-      ],
-      child: MaterialApp(
-        title: t.appName,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+        providers: [
+          BlocProvider<DialogCubit>(
+            lazy: false,
+            create: (BuildContext context) => DialogCubit(),
+          ),
+          BlocProvider<PushCubit>(
+            lazy: false,
+            create: (BuildContext context) => locator<PushCubit>(),
+          ),
+          BlocProvider<SyncCubit>(
+            lazy: false,
+            create: (BuildContext context) => locator<SyncCubit>(),
+          ),
+          BlocProvider<TasksCubit>(
+            lazy: false,
+            create: (BuildContext context) => locator<TasksCubit>(),
+          ),
+          BlocProvider<LabelsCubit>(
+            lazy: false,
+            create: (BuildContext context) => LabelsCubit(locator<SyncCubit>()),
+          ),
+          BlocProvider<MainCubit>(
+            lazy: false,
+            create: (BuildContext context) => MainCubit(locator<SyncCubit>(), locator<AuthCubit>()),
+          ),
+          BlocProvider<AuthCubit>(
+            lazy: false,
+            create: (BuildContext context) => locator<AuthCubit>(),
+          ),
+          BlocProvider<SettingsCubit>(
+            lazy: false,
+            create: (BuildContext context) => SettingsCubit(locator<AuthCubit>(), locator<SyncCubit>()),
+          ),
+          BlocProvider<TodayCubit>(
+            lazy: false,
+            create: (BuildContext context) => locator<TodayCubit>(),
+          ),
+          BlocProvider<EditTaskCubit>(
+            lazy: false,
+            create: (BuildContext context) => EditTaskCubit(locator<TasksCubit>(), locator<SyncCubit>()),
+          ),
         ],
-        locale: const Locale('en', 'US'),
-        supportedLocales: const [Locale('en', 'US')],
-        debugShowCheckedModeBanner: Config.development,
-        navigatorObservers: [routeObserver],
-        theme: lightTheme,
-        home: _Home(userLogged: userLogged),
-      ),
-    );
+        child: Builder(builder: (context) {
+          return FocusDetector(
+            onForegroundGained: () {
+              context.read<MainCubit>().onFocusGained();
+              print('\Gained');
+            },
+            onForegroundLost: () {
+              context.read<MainCubit>().onFocusLost();
+              print('\nLost');
+            },
+            child: MaterialApp(
+                title: t.appName,
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                locale: const Locale('en', 'US'),
+                supportedLocales: const [Locale('en', 'US')],
+                debugShowCheckedModeBanner: Config.development,
+                navigatorObservers: [routeObserver],
+                theme: lightTheme,
+                home: _Home(userLogged: userLogged)),
+          );
+        }));
   }
 }
 
@@ -223,9 +235,10 @@ class _Home extends StatelessWidget {
       },
       child: Builder(
         builder: (context) {
-          if (userLogged) {
+          AuthCubit bloc = context.watch<AuthCubit>();
+          if (bloc.state.user != null) {
             return const MainPage();
-          } else {
+          } else {  
             return const AuthPage();
           }
         },

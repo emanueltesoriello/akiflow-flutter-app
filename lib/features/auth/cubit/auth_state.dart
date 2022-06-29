@@ -11,6 +11,7 @@ class AuthCubitState extends Equatable {
 
   AuthCubitState copyWith({
     bool? loading,
+    bool? authenticated,
     Nullable<User?>? user,
   }) {
     return AuthCubitState(

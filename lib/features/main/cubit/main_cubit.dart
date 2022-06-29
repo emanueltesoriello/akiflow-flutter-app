@@ -8,6 +8,9 @@ import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/intercom_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/user.dart';
+import '../../../extensions/date_extension.dart';
+
+import '../../../api/user_api.dart';
 
 part 'main_state.dart';
 
@@ -15,6 +18,7 @@ class MainCubit extends Cubit<MainCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final IntercomService _intercomService = locator<IntercomService>();
+  final UserApi _userApi = locator<UserApi>();
 
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
@@ -42,13 +46,31 @@ class MainCubit extends Cubit<MainCubitState> {
 
   void onLoggedAppStart() async {
     User? user = _authCubit.state.user;
-
     print("onLoggedAppStart user: ${user?.id}");
+  }
 
-    if (user != null) {
-      _sentryService.authenticate(user.id.toString(), user.email);
-      await _intercomService.authenticate(
-          email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+  onFocusGained() async {
+    print('hiwkjcnlkqnlclcJoelle');
+    User? appUser = _preferencesRepository.user;
+    User? user = await _userApi.getUserData();
+    DateTime? lastAppUseAt = _preferencesRepository.lastAppUseAt;
+    if (user != null && appUser != null) {
+      if (DateTime.now().daysBetweenLessThanHundred(lastAppUseAt)) {
+        _preferencesRepository.saveUser(appUser.copyWith(
+            intercomHashIos: user.intercomHashIos,
+            intercomHashAndroid: user.intercomHashAndroid,
+            status: user.status,
+            planExpireDate: user.planExpireDate));
+        _sentryService.authenticate(user.id.toString(), user.email);
+        await _intercomService.authenticate(
+            email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+      } else {
+        await _authCubit.logout();
+      }
     }
+  }
+
+  void onFocusLost() async {
+    _preferencesRepository.setLastAppUseAt(DateTime(2020));
   }
 }

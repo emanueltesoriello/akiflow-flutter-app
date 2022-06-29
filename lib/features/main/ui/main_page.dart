@@ -38,6 +38,8 @@ import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
+import '../../auth/cubit/auth_cubit.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -288,16 +290,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   BlocBuilder<TasksCubit, TasksCubitState> _floatingButton() {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
-        double bottomPadding;
-
-        if (state.queue.isNotEmpty || state.justCreatedTask != null) {
-          bottomPadding = bottomBarHeight;
-        } else {
-          bottomPadding = 0;
-        }
-
         return Padding(
-          padding: EdgeInsets.only(bottom: bottomPadding),
+          padding:
+              EdgeInsets.only(bottom: state.queue.isNotEmpty || state.justCreatedTask != null ? bottomBarHeight : 0),
           child: SizedBox(
             width: 52,
             height: 52,

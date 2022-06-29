@@ -1,7 +1,14 @@
 extension DateExtension on DateTime {
-    
-    int daysBetween(DateTime to) {
+  double daysBetween(DateTime to) {
     to = DateTime(to.year, to.month, to.day);
-    return (to.difference(this).inHours / 24).round();
+    return (difference(to).inHours / 24);
+  }
+
+  bool daysBetweenLessThanHundred(DateTime? to) {
+    if (to != null) {
+      to = DateTime(to.year, to.month, to.day);
+      return daysBetween(to) < 100;
+    }
+    return true;
   }
 }
