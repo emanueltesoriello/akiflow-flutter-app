@@ -146,3 +146,12 @@ In the *root* of the application source code there are also the following packag
 
  2. the `pubspec.yaml` file where dependencies are established with the various *packages* and application configurations and features for *fonts*, configuration of *assets* and *launch screen* and *app icons* generations.
  Whenever a package is added, remember to add its reference to the `LicencesPage.dart` widget.
+
+`flutter pub run fast_i18n`
+
+## JS integration
+
+Bundle node package as a single {package-name}.js file (if bundling with webpack use `output.libraryTarget = "window"`)
+then import in `assets/js/` folder.
+
+Follow `ChronoNodeJs.dart` class to use the package.

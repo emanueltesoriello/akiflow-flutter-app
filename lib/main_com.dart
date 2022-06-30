@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
+import 'package:mobile/core/chrono_node_js.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -61,6 +62,8 @@ Future<void> mainCom() async {
   }
   await Intercom.instance.initialize(Config.intercomCredential.appId,
       iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
+
+  await ChronoNodeJs.init();
 
   await SentryFlutter.init(
     (options) {
