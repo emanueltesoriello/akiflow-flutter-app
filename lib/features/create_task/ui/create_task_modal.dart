@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +11,9 @@ import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
 import 'package:mobile/features/edit_task/ui/labels_list.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
@@ -27,10 +27,15 @@ class CreateTaskModal extends StatefulWidget {
 }
 
 class _CreateTaskModalState extends State<CreateTaskModal> {
-  final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
   final FocusNode titleFocus = FocusNode();
+
+  final StyleableTextFieldControllerBackground titleController = StyleableTextFieldControllerBackground(
+    styles: TextPartStyleDefinitions(
+      definitionList: [],
+    ),
+  );
 
   @override
   void initState() {
@@ -312,41 +317,25 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         fontWeight: FontWeight.w500,
       ),
       onChanged: (value) async {
-        context.read<EditTaskCubit>().updateTitle(value);
+        EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
 
-        String parsed = await ChronoNodeJs.parseDate(value);
+        Color color = ColorsExt.cyan25(context);
 
-        DateTime? date = DateTime.tryParse(jsonDecode(parsed));
+        List<ChronoModel>? chronoParsed = await ChronoNodeJs.parse(value);
 
-        print(date?.toLocal());
+        if (chronoParsed == null || chronoParsed.isEmpty) {
+          return;
+        }
 
-        // List<dynamic> list = jsonDecode(parsed);
+        List<TextPartStyleDefinition> newDefinitions = [];
 
-        // Map<String, dynamic>? startKnownValues = list[0]["start"]["knownValues"];
-        // Map<String, dynamic>? startImpliedValues = list[0]["start"]["impliedValues"];
-        // Map<String, dynamic>? end = list[0]["end"];
+        for (var chrono in chronoParsed) {
+          newDefinitions.add(TextPartStyleDefinition(pattern: "(?:(${chrono.text!})+)", color: color));
+        }
 
-        // print("startKnownValues: $startKnownValues");
-        // print("startImpliedValues: $startImpliedValues");
-        // print("end: $end");
+        titleController.setDefinitions(newDefinitions);
 
-        // DateTime start = DateTime(
-        //   ((startKnownValues?["year"] as int? ?? startImpliedValues?["year"]) as int? ?? end?["year"] as int?) ??
-        //       DateTime.now().year,
-        //   ((startKnownValues?["month"] as int? ?? startImpliedValues?["month"]) as int? ?? end?["month"] as int?) ??
-        //       DateTime.now().month,
-        //   ((startKnownValues?["day"] as int? ?? startImpliedValues?["day"]) as int? ?? end?["day"] as int?) ??
-        //       DateTime.now().day,
-        //   ((startKnownValues?["hour"] as int? ?? startImpliedValues?["hour"]) as int? ?? end?["hour"] as int?) ??
-        //       DateTime.now().hour,
-        //   ((startKnownValues?["minute"] as int? ?? startImpliedValues?["minute"]) as int? ?? end?["minute"] as int?) ??
-        //       DateTime.now().minute,
-        //   ((startKnownValues?["second"] as int? ?? startImpliedValues?["second"]) as int? ?? end?["second"] as int?) ??
-        //       DateTime.now().second,
-        //   ((startKnownValues?["millisecond"] as int? ?? startImpliedValues?["millisecond"]) as int? ??
-        //           end?["millisecond"] as int?) ??
-        //       DateTime.now().millisecond,
-        // );
+        editTaskCubit.updateTitle(value, chrono: chronoParsed);
       },
     );
   }
