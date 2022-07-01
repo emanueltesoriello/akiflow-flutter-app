@@ -97,8 +97,7 @@ flutter:
     - assets/images/icons/web/
     - assets/images/icons/zapier/
     - assets/images/icons/zoom/
-    - assets/quill/
-    - assets/js/
+    - assets/html/
 
   fonts:
     - family: Inter
