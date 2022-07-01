@@ -97,36 +97,40 @@ class AuthCubit extends Cubit<AuthCubitState> {
     );
 
     if (result != null) {
-      User user = await _authApi.auth(code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
-      await _preferencesRepository.saveUser(user);
-      bool hasValidPlan = await _userApi.hasValidPlan();
-      if (hasValidPlan) {
-        try {
-          Map<String, dynamic>? settings = await _userApi.getSettings();
+      User? user = await _authApi.auth(code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
+      if (user != null) {
+        await _preferencesRepository.saveUser(user);
+        bool hasValidPlan = await _userApi.hasValidPlan();
+        if (hasValidPlan) {
+          try {
+            Map<String, dynamic>? settings = await _userApi.getSettings();
 
-          if (settings != null) {
-            user = user.copyWith(settings: settings);
-            await _preferencesRepository.saveUser(user);
-          }
-        } catch (_) {}
+            if (settings != null) {
+              user = user.copyWith(settings: settings);
+              await _preferencesRepository.saveUser(user);
+            }
+          } catch (_) {}
 
-        _sentryService.authenticate(user.id.toString(), user.email);
+          _sentryService.authenticate(user!.id.toString(), user.email);
 
-        emit(state.copyWith(user: Nullable(user)));
+          emit(state.copyWith(user: Nullable(user)));
 
-        await _pushCubit.login(user);
+          await _pushCubit.login(user);
 
-        _syncCubit.sync();
+          _syncCubit.sync();
 
-        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-        String version = packageInfo.version;
-        String buildNumber = packageInfo.buildNumber;
+          String version = packageInfo.version;
+          String buildNumber = packageInfo.buildNumber;
 
-        await AnalyticsService.alias(user);
-        AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
-      } else {
-        emit(state.copyWith(user: Nullable(user), hasValidPlan: false));
+          await AnalyticsService.alias(user);
+          AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
+        } else {
+          emit(state.copyWith(user: Nullable(user), hasValidPlan: false));
+        }
+      }else{
+          emit(state.copyWith(user: Nullable(user)));
       }
     } else {
       _dialogService.showGenericError();
