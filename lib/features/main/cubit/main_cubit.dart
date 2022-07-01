@@ -58,7 +58,7 @@ class MainCubit extends Cubit<MainCubitState> {
     DateTime? lastAppUseAt = _preferencesRepository.lastAppUseAt;
     if (user != null && appUser != null) {
       if (DateTime.now().daysBetweenLessThanHundred(lastAppUseAt)) {
-        bool? hasValidPlan = await _userApi.hasValidPlan();
+        bool? hasValidPlan = DateTime.parse(user.planExpireDate!).isAfter(DateTime.now());
         if (hasValidPlan) {
           _preferencesRepository.saveUser(appUser.copyWith(
               intercomHashIos: user.intercomHashIos,
