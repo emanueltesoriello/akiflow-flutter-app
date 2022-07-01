@@ -31,20 +31,33 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
   final FocusNode titleFocus = FocusNode();
 
-  final StyleableTextFieldControllerBackground titleController = StyleableTextFieldControllerBackground(
-    styles: TextPartStyleDefinitions(
-      definitionList: [],
-    ),
-  );
+  late final StyleableTextFieldControllerBackground titleController;
 
   @override
   void initState() {
+    titleController = StyleableTextFieldControllerBackground(
+        styles: TextPartStyleDefinitions(
+          definitionList: [],
+        ),
+        parsedTextClick: (parsedText) async {
+          titleController.addNonParsableText(parsedText);
+
+          TextSelection currentSelection = titleController.selection;
+          titleController.text = titleController.text;
+          titleController.selection = currentSelection;
+
+          List<ChronoModel>? chronoParsed = await ChronoNodeJs.parse(titleController.text);
+
+          _checkTitleWithChrono(chronoParsed, titleController.text);
+        });
+
     titleFocus.requestFocus();
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
     titleController.text = editTaskCubit.state.originalTask.title ?? '';
 
     String descriptionHtml = editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
+
     super.initState();
   }
 
@@ -317,26 +330,46 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         fontWeight: FontWeight.w500,
       ),
       onChanged: (value) async {
-        EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
-
-        Color color = ColorsExt.cyan25(context);
-
         List<ChronoModel>? chronoParsed = await ChronoNodeJs.parse(value);
 
-        if (chronoParsed == null || chronoParsed.isEmpty) {
-          return;
-        }
+        _checkContainsNonParsableText();
 
-        List<TextPartStyleDefinition> newDefinitions = [];
-
-        for (var chrono in chronoParsed) {
-          newDefinitions.add(TextPartStyleDefinition(pattern: "(?:(${chrono.text!})+)", color: color));
-        }
-
-        titleController.setDefinitions(newDefinitions);
-
-        editTaskCubit.updateTitle(value, chrono: chronoParsed);
+        _checkTitleWithChrono(chronoParsed, value);
       },
     );
+  }
+
+  void _checkContainsNonParsableText() {
+    List<String> newNonParsableText = [];
+
+    for (var textNonParsable in titleController.listPartNonParsable) {
+      if (titleController.text.contains(textNonParsable)) {
+        newNonParsableText.add(textNonParsable);
+      }
+    }
+
+    titleController.setNonParsableTexts(newNonParsableText);
+  }
+
+  void _checkTitleWithChrono(List<ChronoModel>? chronoParsed, String text) {
+    if (chronoParsed == null || chronoParsed.isEmpty) {
+      context.read<EditTaskCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
+      return;
+    }
+
+    for (var textNonParsable in titleController.listPartNonParsable) {
+      chronoParsed.removeWhere((chrono) => chrono.text == textNonParsable);
+    }
+
+    Color color = ColorsExt.cyan25(context);
+
+    List<TextPartStyleDefinition> newDefinitions = [];
+    for (var chrono in chronoParsed) {
+      newDefinitions.add(TextPartStyleDefinition(pattern: "(?:(${chrono.text!})+)", color: color));
+    }
+
+    titleController.setDefinitions(newDefinitions);
+
+    context.read<EditTaskCubit>().updateTitle(text, chrono: chronoParsed);
   }
 }

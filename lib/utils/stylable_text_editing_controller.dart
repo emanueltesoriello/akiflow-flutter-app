@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -62,10 +63,17 @@ class TextPartStyleDefinitions {
 class StyleableTextFieldControllerBackground extends TextEditingController {
   StyleableTextFieldControllerBackground({
     required this.styles,
-  }) : combinedPattern = styles.createCombinedPatternBasedOnStyleMap();
+    required this.parsedTextClick,
+    List<String>? initialListPartNonParsable,
+  })  : combinedPatternToDetect = styles.createCombinedPatternBasedOnStyleMap(),
+        listPartNonParsable = initialListPartNonParsable ?? [];
 
   TextPartStyleDefinitions styles;
-  Pattern combinedPattern;
+  Pattern combinedPatternToDetect;
+  List<String> listPartNonParsable;
+  Function(String parsedText) parsedTextClick;
+
+  bool _foundTextParsed = false;
 
   @override
   TextSpan buildTextSpan({
@@ -75,12 +83,19 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   }) {
     final List<InlineSpan> textSpanChildren = <InlineSpan>[];
 
+    _foundTextParsed = false;
+
     text.splitMapJoin(
-      combinedPattern,
+      combinedPatternToDetect,
       onMatch: (Match match) {
         final String? textPart = match.group(0);
 
         if (textPart == null) return '';
+
+        if (listPartNonParsable.contains(textPart)) {
+          _addTextSpan(textSpanChildren, textPart);
+          return '';
+        }
 
         final TextPartStyleDefinition? styleDefinition = styles.getStyleOfTextPart(
           textPart,
@@ -89,7 +104,12 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
 
         if (styleDefinition == null) return '';
 
-        _addTextSpanWithBackground(textSpanChildren, textPart, ColorsExt.cyan25(context));
+        if (_foundTextParsed == false) {
+          _addTextSpanWithBackground(textSpanChildren, textPart, ColorsExt.cyan25(context));
+          _foundTextParsed = true;
+        } else {
+          _addTextSpan(textSpanChildren, textPart);
+        }
 
         return '';
       },
@@ -116,6 +136,10 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
           color: Colors.black,
           fontWeight: FontWeight.w500,
         ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            parsedTextClick(textToBeStyled!);
+          },
       ),
     );
   }
@@ -134,6 +158,14 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
 
   void setDefinitions(List<TextPartStyleDefinition> newDefinitions) {
     styles = TextPartStyleDefinitions(definitionList: newDefinitions);
-    combinedPattern = styles.createCombinedPatternBasedOnStyleMap();
+    combinedPatternToDetect = styles.createCombinedPatternBasedOnStyleMap();
+  }
+
+  void addNonParsableText(String text) {
+    listPartNonParsable.add(text);
+  }
+
+  void setNonParsableTexts(List<String> newNonParsableText) {
+    listPartNonParsable = newNonParsableText;
   }
 }

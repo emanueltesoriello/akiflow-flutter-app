@@ -449,6 +449,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     if (chrono != null && chrono.isNotEmpty) {
       _planWithChrono(chrono.first);
+    } else {
+      planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
     }
   }
 
