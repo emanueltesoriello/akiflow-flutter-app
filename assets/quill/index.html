@@ -9,8 +9,10 @@
     <div id="editor"></div>
   </body>
   <script type="text/javascript" src="./quill.min.js"></script>
+  <script type="text/javascript" src="./chrono-node@2.3.8.js"></script>
   <script>
     var quill;
+    var chrono;
 
     document.addEventListener("DOMContentLoaded", function () {
       Load.postMessage("load");
@@ -18,7 +20,100 @@
         runScripts: "dangerously",
         resources: "usable",
       });
+
+      chrono = chrono.casual.clone();
+
+      chrono.parsers.push({
+        pattern: () => {
+          return /\btod\b/i;
+        },
+        extract: () => {
+          const today = Date.today();
+          return {
+            day: today.getDate(),
+            month: today.getMonth() + 1,
+            year: today.getFullYear(),
+          };
+        },
+      });
+      chrono.parsers.push({
+        pattern: () => {
+          return /\btoda\b/i;
+        },
+        extract: () => {
+          const today = new Date();
+          return {
+            day: today.getDate(),
+            month: today.getMonth() + 1,
+            year: today.getFullYear(),
+          };
+        },
+      });
+      chrono.parsers.push({
+        pattern: () => {
+          return /\btom\b/i;
+        },
+        extract: () => {
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          return {
+            day: tomorrow.getDate(),
+            month: tomorrow.getMonth() + 1,
+            year: tomorrow.getFullYear(),
+          };
+        },
+      });
+      chrono.parsers.push({
+        pattern: () => {
+          return /\btmrw\b/i;
+        },
+        extract: () => {
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          return {
+            day: tomorrow.getDate(),
+            month: tomorrow.getMonth() + 1,
+            year: tomorrow.getFullYear(),
+          };
+        },
+      });
+      chrono.parsers.push({
+        pattern: () => {
+          return /\btmw\b/i;
+        },
+        extract: () => {
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          return {
+            day: tomorrow.getDate(),
+            month: tomorrow.getMonth() + 1,
+            year: tomorrow.getFullYear(),
+          };
+        },
+      });
+      chrono.parsers.push({
+        pattern: () => {
+          return /\btmr\b/i;
+        },
+        extract: () => {
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          return {
+            day: tomorrow.getDate(),
+            month: tomorrow.getMonth() + 1,
+            year: tomorrow.getFullYear(),
+          };
+        },
+      });
     });
+
+    function chronoParse(value) {
+      return JSON.stringify(chrono.parse(value));
+    }
 
     function htmlToDelta(html) {
       html = html.replace(/<st>/g, "<s>").replace(/<\/st>/g, "</s>");

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/utils/quill_converter.dart';
+import 'package:mobile/utils/interactive_webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class QuillWebView extends StatefulWidget {
-  const QuillWebView({Key? key}) : super(key: key);
+class InternalWebView extends StatefulWidget {
+  const InternalWebView({Key? key}) : super(key: key);
 
   @override
-  State<QuillWebView> createState() => _QuillWebViewState();
+  State<InternalWebView> createState() => _InternalWebViewState();
 }
 
-class _QuillWebViewState extends State<QuillWebView> {
+class _InternalWebViewState extends State<InternalWebView> {
   WebViewController? wController;
 
   @override
@@ -24,7 +24,7 @@ class _QuillWebViewState extends State<QuillWebView> {
 
           await wController!.loadFlutterAsset('assets/quill/index.html');
 
-          QuillConverter.attach(wController!);
+          InteractiveWebView.attach(wController!);
         },
         javascriptChannels: {
           JavascriptChannel(

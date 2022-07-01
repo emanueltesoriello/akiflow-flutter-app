@@ -13,8 +13,8 @@ class ChronoModel extends Equatable {
       int year = start!.knownValues?.year ?? start!.impliedValues!.year!;
       int month = start!.knownValues?.month ?? start!.impliedValues!.month!;
       int day = start!.knownValues?.day ?? start!.impliedValues!.day!;
-      int hour = start!.knownValues?.hour ?? start!.impliedValues!.hour!;
-      int minute = start!.knownValues?.minute ?? start!.impliedValues!.minute!;
+      int hour = start?.knownValues?.hour ?? start?.impliedValues?.hour ?? 0;
+      int minute = start?.knownValues?.minute ?? start?.impliedValues?.minute ?? 0;
 
       return DateTime(year, month, day, hour, minute);
     } catch (_) {}
@@ -23,12 +23,12 @@ class ChronoModel extends Equatable {
   }
 
   const ChronoModel({
-    required this.reference,
-    required this.refDate,
-    required this.index,
-    required this.text,
+    this.reference,
+    this.refDate,
+    this.index,
+    this.text,
     required this.start,
-    required this.end,
+    this.end,
   });
 
   ChronoModel copyWith({
@@ -119,8 +119,9 @@ class ChronoDate extends Equatable {
   final Reference? reference;
   final Values? knownValues;
   final Values? impliedValues;
+
   const ChronoDate({
-    required this.reference,
+    this.reference,
     required this.knownValues,
     required this.impliedValues,
   });
@@ -167,13 +168,13 @@ class Values extends Equatable {
   final int? millisecond;
 
   const Values({
-    required this.year,
-    required this.month,
-    required this.day,
-    required this.hour,
-    required this.minute,
-    required this.second,
-    required this.millisecond,
+    this.year,
+    this.month,
+    this.day,
+    this.hour,
+    this.minute,
+    this.second,
+    this.millisecond,
   });
 
   Values copyWith({
