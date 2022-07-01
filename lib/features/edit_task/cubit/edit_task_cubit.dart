@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
+import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/repository/tasks_repository.dart';
@@ -438,13 +439,39 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task");
   }
 
-  void updateTitle(String value) {
+  void updateTitle(String value, {List<ChronoModel>? chrono}) {
     Task updated = state.updatedTask.copyWith(
       title: value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(updatedTask: updated));
+
+    if (chrono != null && chrono.isNotEmpty) {
+      _planWithChrono(chrono.first);
+    } else {
+      planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
+    }
+  }
+
+  void _planWithChrono(ChronoModel chrono) {
+    DateTime? date = chrono.impliedDate;
+
+    if (date == null) return;
+
+    DateTime? datetime;
+
+    if (chrono.start?.knownValues?.hour != null && chrono.start?.knownValues?.minute != null) {
+      datetime = date;
+    }
+
+    Task updated = state.updatedTask;
+
+    TaskStatusType type = updated.statusType == TaskStatusType.planned || updated.statusType == TaskStatusType.snoozed
+        ? updated.statusType!
+        : TaskStatusType.planned;
+
+    planFor(date, dateTime: datetime, statusType: type);
   }
 
   void updateDescription(String html) {
