@@ -22,7 +22,6 @@ dependencies:
   flutter_segment: ^3.9.0
   flutter_slidable: ^1.2.1
   flutter_svg: ^1.1.0
-  focus_detector: ^2.0.1
   get_it: ^7.2.0
   html: ^0.15.0
   http: ^0.13.4
@@ -45,6 +44,7 @@ dependencies:
   tuple: ^2.0.0
   url_launcher: ^6.0.20
   uuid: ^3.0.6
+  visibility_detector: ^0.3.3
   webview_flutter: ^3.0.4
 
 dev_dependencies:

@@ -30,10 +30,12 @@
     "inboxSubtitle": "Inbox is where all your new tasks are collected"
   },
   "expiry": {
+    "or":"or ",
+    "logout":"Log out ",
     "title": "Your Free Trial has Expired",
     "description": "Upgrade your plan to pick up where you left off.",
     "button": "Upgrade your plan",
-    "alternate": "or Logout and delete all data."
+    "alternate": "and delete all data."
   },
   "settings": {
     "title": "Settings",

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:focus_detector/focus_detector.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:models/user.dart';
@@ -31,6 +30,9 @@ import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
+
+import 'features/auth/ui/trial_expired_page.dart';
+import 'services/focus_detector_service.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -150,15 +152,13 @@ class Application extends StatelessWidget {
         ],
         child: Builder(builder: (context) {
           return FocusDetector(
-            onForegroundGained: () {
-              context.read<MainCubit>().onFocusGained();
-              print('\Gained');
-            },
-            onForegroundLost: () {
-              context.read<MainCubit>().onFocusLost();
-              print('\nLost');
-            },
-            child: MaterialApp(
+              onForegroundGained: () {
+                context.read<MainCubit>().onFocusGained();
+              },
+              onForegroundLost: () {
+                context.read<MainCubit>().onFocusLost();
+              },
+              child: MaterialApp(
                 title: t.appName,
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
@@ -170,8 +170,23 @@ class Application extends StatelessWidget {
                 debugShowCheckedModeBanner: Config.development,
                 navigatorObservers: [routeObserver],
                 theme: lightTheme,
-                home: _Home(userLogged: userLogged)),
-          );
+                home: BlocListener<AuthCubit, AuthCubitState>(
+                  listener: (context, state) {
+                    if (state.hasValidPlan == false) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const TrialExpiredPage(),
+                      ));
+                    }
+                    if (state.user == null) {
+                      print('null');
+                      Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const AuthPage(),
+                      ));
+                    }
+                  },
+                  child: _Home(userLogged: userLogged),
+                ),
+              ));
         }));
   }
 }
@@ -236,9 +251,12 @@ class _Home extends StatelessWidget {
       child: Builder(
         builder: (context) {
           AuthCubit bloc = context.watch<AuthCubit>();
-          if (bloc.state.user != null) {
+
+          if (bloc.state.user != null && bloc.state.hasValidPlan == null || bloc.state.hasValidPlan == true) {
             return const MainPage();
-          } else {  
+          } else if (bloc.state.user != null && bloc.state.hasValidPlan == false) {
+            return const TrialExpiredPage();
+          } else {
             return const AuthPage();
           }
         },

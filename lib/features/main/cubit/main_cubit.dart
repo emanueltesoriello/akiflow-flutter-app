@@ -46,24 +46,31 @@ class MainCubit extends Cubit<MainCubitState> {
 
   void onLoggedAppStart() async {
     User? user = _authCubit.state.user;
+
+    await onFocusGained();
     print("onLoggedAppStart user: ${user?.id}");
   }
 
   onFocusGained() async {
-    print('hiwkjcnlkqnlclcJoelle');
     User? appUser = _preferencesRepository.user;
     User? user = await _userApi.getUserData();
+
     DateTime? lastAppUseAt = _preferencesRepository.lastAppUseAt;
     if (user != null && appUser != null) {
       if (DateTime.now().daysBetweenLessThanHundred(lastAppUseAt)) {
-        _preferencesRepository.saveUser(appUser.copyWith(
-            intercomHashIos: user.intercomHashIos,
-            intercomHashAndroid: user.intercomHashAndroid,
-            status: user.status,
-            planExpireDate: user.planExpireDate));
-        _sentryService.authenticate(user.id.toString(), user.email);
-        await _intercomService.authenticate(
-            email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+        bool? hasValidPlan = await _userApi.hasValidPlan();
+        if (hasValidPlan) {
+          _preferencesRepository.saveUser(appUser.copyWith(
+              intercomHashIos: user.intercomHashIos,
+              intercomHashAndroid: user.intercomHashAndroid,
+              status: user.status,
+              planExpireDate: user.planExpireDate));
+          _sentryService.authenticate(user.id.toString(), user.email);
+          await _intercomService.authenticate(
+              email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+        } else {
+          await _authCubit.planExpired();
+        }
       } else {
         await _authCubit.logout();
       }
@@ -71,6 +78,6 @@ class MainCubit extends Cubit<MainCubitState> {
   }
 
   void onFocusLost() async {
-    _preferencesRepository.setLastAppUseAt(DateTime(2020));
+    _preferencesRepository.setLastAppUseAt(DateTime.now());
   }
 }

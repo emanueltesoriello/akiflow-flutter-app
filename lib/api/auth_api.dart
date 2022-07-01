@@ -38,7 +38,6 @@ class AuthApi implements IAuthApi {
       HttpHeaders.authorizationHeader: "Bearer ${user.accessToken!}",
     });
     if (infoResponse.statusCode == 404) {
-      //TODO: force logout
       return user;
     }
     try {

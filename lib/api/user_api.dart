@@ -51,6 +51,9 @@ class UserApi extends ApiClient {
   Future<User?> getUserData() async {
     Uri userUrl = Uri.parse("${Config.oauthEndpoint}/api/user?version=akiflow2");
     Response infoResponse = await _httpClient.get(userUrl);
+    if (infoResponse.statusCode == 404) {
+      return null;
+    }
     try {
       final user = User.fromMap(json.decode(infoResponse.body));
       return user;
