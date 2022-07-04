@@ -75,8 +75,6 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   List<String> listPartNonParsable;
   Function(String parsedText, bool? isFromAction) parsedTextClick;
 
-  bool _foundTextParsed = false;
-
   @override
   TextSpan buildTextSpan({
     required BuildContext context,
@@ -85,7 +83,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   }) {
     final List<InlineSpan> textSpanChildren = <InlineSpan>[];
 
-    _foundTextParsed = false;
+    String? lastMatch = combinedPatternToDetect.allMatches(text).last.group(0);
 
     text.splitMapJoin(
       combinedPatternToDetect,
@@ -106,15 +104,13 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
 
         if (styleDefinition == null) return '';
 
-        if (_foundTextParsed == false) {
+        if (lastMatch != null && lastMatch == textPart) {
           _addTextSpanWithBackground(
             textSpanChildren,
             textPart,
             styleDefinition.isFromAction,
             ColorsExt.cyan25(context),
           );
-
-          _foundTextParsed = true;
         } else {
           _addTextSpan(textSpanChildren, textPart);
         }
