@@ -25,6 +25,7 @@ class AnalyticsService {
 
     Map<String, dynamic> traits = {
       "release_mobile": version,
+      "mobile_user": true,
       "releaseNumber_mobile": buildNumber,
       "platform": Platform.isAndroid ? "android" : "ios",
       "email": user.email,
