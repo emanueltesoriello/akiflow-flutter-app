@@ -8,11 +8,18 @@ import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/intercom_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/user.dart';
-import '../../../extensions/date_extension.dart';
 
 import '../../../api/user_api.dart';
 
 part 'main_state.dart';
+
+bool daysBetweenLessThanHundred(DateTime? to) {
+  if (to != null) {
+    to = DateTime(to.year, to.month, to.day);
+    return (DateTime.now().difference(to).inHours / 24) < 100;
+  }
+  return true;
+}
 
 class MainCubit extends Cubit<MainCubitState> {
   final SentryService _sentryService = locator<SentryService>();
@@ -57,7 +64,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
     DateTime? lastAppUseAt = _preferencesRepository.lastAppUseAt;
     if (user != null && appUser != null) {
-      if (DateTime.now().daysBetweenLessThanHundred(lastAppUseAt)) {
+      if (daysBetweenLessThanHundred(lastAppUseAt)) {
         bool? hasValidPlan = DateTime.parse(user.planExpireDate!).isAfter(DateTime.now());
         if (hasValidPlan) {
           _preferencesRepository.saveUser(appUser.copyWith(
