@@ -10,8 +10,6 @@ class InternalWebView extends StatefulWidget {
 }
 
 class _InternalWebViewState extends State<InternalWebView> {
-  WebViewController? wController;
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -20,11 +18,9 @@ class _InternalWebViewState extends State<InternalWebView> {
       child: WebView(
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (controller) async {
-          wController = controller;
+          await controller.loadFlutterAsset('assets/html/index.html');
 
-          await wController!.loadFlutterAsset('assets/quill/index.html');
-
-          InteractiveWebView.attach(wController!);
+          InteractiveWebView.attach(controller);
         },
         javascriptChannels: {
           JavascriptChannel(
