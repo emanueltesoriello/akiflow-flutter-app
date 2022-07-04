@@ -43,6 +43,7 @@ dependencies:
   tuple: ^2.0.0
   url_launcher: ^6.0.20
   uuid: ^3.0.6
+  visibility_detector: ^0.3.3
   webview_flutter: ^3.0.4
 
 dev_dependencies:

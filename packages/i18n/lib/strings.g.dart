@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 224 
+ * Strings: 226 
  *
- * Built on 2022-06-28 at 13:37 UTC
+ * Built on 2022-07-01 at 08:23 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -376,10 +376,12 @@ class _StringsExpiryEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
+	String get or => 'or ';
+	String get logout => 'Log out ';
 	String get title => 'Your Free Trial has Expired';
 	String get description => 'Upgrade your plan to pick up where you left off.';
 	String get button => 'Upgrade your plan';
-	String get alternate => 'or Logout and delete all data.';
+	String get alternate => 'and delete all data.';
 }
 
 // Path: settings
@@ -865,10 +867,12 @@ extension on _StringsEn {
 			'bottomBar.calendar': 'Calendar',
 			'notice.inboxTitle': 'Here is where the magic happens',
 			'notice.inboxSubtitle': 'Inbox is where all your new tasks are collected',
+			'expiry.or': 'or ',
+			'expiry.logout': 'Log out ',
 			'expiry.title': 'Your Free Trial has Expired',
 			'expiry.description': 'Upgrade your plan to pick up where you left off.',
 			'expiry.button': 'Upgrade your plan',
-			'expiry.alternate': 'or Logout and delete all data.',
+			'expiry.alternate': 'and delete all data.',
 			'settings.title': 'Settings',
 			'settings.upgradeToPro': 'Upgrade to pro',
 			'settings.general': 'General',

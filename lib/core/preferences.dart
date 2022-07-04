@@ -28,6 +28,11 @@ abstract class PreferencesRepository {
   Future<void> setLastTasksSyncAt(DateTime? value);
 
   DateTime? get lastLabelsSyncAt;
+
+  DateTime? get lastAppUseAt;
+
+  Future<void> setLastAppUseAt(DateTime? value);
+
   Future<void> setLastLabelsSyncAt(DateTime? value);
 
   DateTime? get lastEventsSyncAt;
@@ -132,6 +137,19 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     if (value != null) {
       await _prefs.setString("lastTasksSyncAt", value.toIso8601String());
     }
+  }
+
+  @override
+  Future<void> setLastAppUseAt(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastAppUseAt", value.toIso8601String());
+    }
+  }
+
+  @override
+  DateTime? get lastAppUseAt {
+    String? value = _prefs.getString("lastAppUseAt");
+    return value == null ? null : DateTime.parse(value);
   }
 
   @override

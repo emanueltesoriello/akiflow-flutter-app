@@ -8,7 +8,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:models/user.dart';
 
 abstract class IAuthApi {
-  Future<User> auth({
+  Future<User?> auth({
     required String code,
     required String codeVerifier,
   });
@@ -20,7 +20,7 @@ class AuthApi implements IAuthApi {
   AuthApi();
 
   @override
-  Future<User> auth({required String code, required String codeVerifier}) async {
+  Future<User?> auth({required String code, required String codeVerifier}) async {
     Uri loginUrl = Uri.parse("${Config.oauthEndpoint}/redirect/token");
     Uri userUrl = Uri.parse("${Config.oauthEndpoint}/api/user?version=akiflow2");
 
@@ -38,8 +38,7 @@ class AuthApi implements IAuthApi {
       HttpHeaders.authorizationHeader: "Bearer ${user.accessToken!}",
     });
     if (infoResponse.statusCode == 404) {
-      //TODO: force logout
-      return user;
+      return null;
     }
     try {
       User userInfo = User.fromMap(json.decode(infoResponse.body));

@@ -27,7 +27,7 @@ class AuthPage extends StatelessWidget {
           }
         },
         listener: (context, state) {
-          if (state.user != null) {
+          if (state.user != null && (state.hasValidPlan == null || state.hasValidPlan == true)) {
             Navigator.push(
               context,
               MaterialPageRoute(
