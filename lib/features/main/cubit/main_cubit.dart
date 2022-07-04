@@ -13,10 +13,10 @@ import '../../../api/user_api.dart';
 
 part 'main_state.dart';
 
-bool daysBetweenLessThanHundred(DateTime? to) {
+bool daysBetweenLessThan(DateTime? to, int number) {
   if (to != null) {
     to = DateTime(to.year, to.month, to.day);
-    return (DateTime.now().difference(to).inHours / 24) < 100;
+    return (DateTime.now().difference(to).inHours / 24) < number;
   }
   return true;
 }
@@ -64,7 +64,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
     DateTime? lastAppUseAt = _preferencesRepository.lastAppUseAt;
     if (user != null && appUser != null) {
-      if (daysBetweenLessThanHundred(lastAppUseAt)) {
+      if (daysBetweenLessThan(lastAppUseAt,100)) {
         bool? hasValidPlan = DateTime.parse(user.planExpireDate!).isAfter(DateTime.now());
         if (hasValidPlan) {
           _preferencesRepository.saveUser(appUser.copyWith(
