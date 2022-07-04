@@ -21,8 +21,8 @@ import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/bottom_nav_bar.dart';
 import 'package:mobile/features/main/ui/gmail_actions_dialog.dart';
 import 'package:mobile/features/main/ui/just_created_task_button.dart';
-import 'package:mobile/features/main/ui/quill_web_view.dart';
 import 'package:mobile/features/main/ui/undo_button.dart';
+import 'package:mobile/features/main/ui/webview.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -136,7 +136,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
     return Stack(
       children: [
-        const QuillWebView(),
+        const InternalWebView(),
         Scaffold(
           extendBodyBehindAppBar: true,
           appBar: _appBar(

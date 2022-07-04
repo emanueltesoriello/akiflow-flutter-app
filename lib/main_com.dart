@@ -10,7 +10,6 @@ import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mobile/core/chrono_node_js.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -66,8 +65,6 @@ Future<void> mainCom() async {
   }
   await Intercom.instance.initialize(Config.intercomCredential.appId,
       iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
-
-  await ChronoNodeJs.init();
 
   await SentryFlutter.init(
     (options) {

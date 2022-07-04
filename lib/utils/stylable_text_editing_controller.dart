@@ -8,10 +8,12 @@ class TextPartStyleDefinition {
   TextPartStyleDefinition({
     required this.pattern,
     required this.color,
+    required this.isFromAction,
   });
 
   final String pattern;
   final Color color;
+  final bool? isFromAction;
 }
 
 class TextPartStyleDefinitions {
@@ -71,7 +73,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   TextPartStyleDefinitions styles;
   Pattern combinedPatternToDetect;
   List<String> listPartNonParsable;
-  Function(String parsedText) parsedTextClick;
+  Function(String parsedText, bool? isFromAction) parsedTextClick;
 
   bool _foundTextParsed = false;
 
@@ -105,7 +107,13 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
         if (styleDefinition == null) return '';
 
         if (_foundTextParsed == false) {
-          _addTextSpanWithBackground(textSpanChildren, textPart, ColorsExt.cyan25(context));
+          _addTextSpanWithBackground(
+            textSpanChildren,
+            textPart,
+            styleDefinition.isFromAction,
+            ColorsExt.cyan25(context),
+          );
+
           _foundTextParsed = true;
         } else {
           _addTextSpan(textSpanChildren, textPart);
@@ -126,6 +134,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   void _addTextSpanWithBackground(
     List<InlineSpan> textSpanChildren,
     String? textToBeStyled,
+    bool? isFromAction,
     Color color,
   ) {
     textSpanChildren.add(
@@ -138,7 +147,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
         ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            parsedTextClick(textToBeStyled!);
+            parsedTextClick(textToBeStyled!, isFromAction);
           },
       ),
     );

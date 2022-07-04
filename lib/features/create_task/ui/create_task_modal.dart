@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/components/task/plan_for_action.dart';
-import 'package:mobile/core/chrono_node_js.dart';
+import 'package:mobile/extensions/date_extension.dart';
 import 'package:mobile/features/create_task/ui/create_task_duration.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
@@ -13,6 +13,7 @@ import 'package:mobile/features/edit_task/ui/labels_list.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:mobile/utils/interactive_webview.dart';
 import 'package:mobile/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -39,16 +40,28 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         styles: TextPartStyleDefinitions(
           definitionList: [],
         ),
-        parsedTextClick: (parsedText) async {
+        parsedTextClick: (parsedText, isFromAction) async {
           titleController.addNonParsableText(parsedText);
 
           TextSelection currentSelection = titleController.selection;
-          titleController.text = titleController.text;
-          titleController.selection = currentSelection;
 
-          List<ChronoModel>? chronoParsed = await ChronoNodeJs.parse(titleController.text);
+          List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(titleController.text);
 
           _checkTitleWithChrono(chronoParsed, titleController.text);
+
+          if (isFromAction != null && isFromAction) {
+            String newText = titleController.text.replaceFirst(RegExp(parsedText), "");
+            titleController.text = newText;
+          } else {
+            titleController.text = titleController.text;
+          }
+
+          try {
+            titleController.selection = currentSelection;
+          } catch (_) {
+            titleController.selection =
+                TextSelection(baseOffset: titleController.text.length, extentOffset: titleController.text.length);
+          }
         });
 
     titleFocus.requestFocus();
@@ -199,8 +212,24 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                     : null,
                 taskStatusType: editTaskCubit.state.updatedTask.statusType ?? TaskStatusType.inbox,
                 onSelectDate: (
-                    {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) {
+                    {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) async {
                   editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
+
+                  if (date != null) {
+                    String shortDate = date.shortDateFormatted;
+                    String? shortTime = datetime?.timeFormatted;
+
+                    titleController.text += shortDate;
+
+                    if (shortTime != null) {
+                      titleController.text += shortTime;
+                    }
+                  }
+
+                  titleFocus.requestFocus();
+
+                  List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(titleController.text);
+                  _checkTitleWithChrono(chronoParsed, titleController.text, isFromAction: true);
                 },
                 setForInbox: () {
                   editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
@@ -330,11 +359,13 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         fontWeight: FontWeight.w500,
       ),
       onChanged: (value) async {
-        List<ChronoModel>? chronoParsed = await ChronoNodeJs.parse(value);
+        context.read<EditTaskCubit>().updateTitle(value);
+
+        List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(value);
 
         _checkContainsNonParsableText();
 
-        _checkTitleWithChrono(chronoParsed, value);
+        _checkTitleWithChrono(chronoParsed, value, isFromAction: false);
       },
     );
   }
@@ -351,7 +382,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     titleController.setNonParsableTexts(newNonParsableText);
   }
 
-  void _checkTitleWithChrono(List<ChronoModel>? chronoParsed, String text) {
+  void _checkTitleWithChrono(List<ChronoModel>? chronoParsed, String text, {bool? isFromAction}) {
     if (chronoParsed == null || chronoParsed.isEmpty) {
       context.read<EditTaskCubit>().planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
       return;
@@ -365,7 +396,11 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
     List<TextPartStyleDefinition> newDefinitions = [];
     for (var chrono in chronoParsed) {
-      newDefinitions.add(TextPartStyleDefinition(pattern: "(?:(${chrono.text!})+)", color: color));
+      newDefinitions.add(TextPartStyleDefinition(
+        pattern: "(?:(${chrono.text!})+)",
+        color: color,
+        isFromAction: isFromAction,
+      ));
     }
 
     titleController.setDefinitions(newDefinitions);

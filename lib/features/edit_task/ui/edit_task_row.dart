@@ -12,7 +12,7 @@ import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/quill_converter.dart';
+import 'package:mobile/utils/interactive_webview.dart';
 import 'package:mobile/utils/string_ext.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -50,7 +50,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       streamSubscription = quillController.value.changes.listen((change) async {
         List<dynamic> delta = quillController.value.document.toDelta().toJson();
 
-        String html = await QuillConverter.deltaToHtml(delta);
+        String html = await InteractiveWebView.deltaToHtml(delta);
 
         cubit.updateDescription(html);
       });
@@ -64,7 +64,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
     String html = cubit.state.updatedTask.description ?? '';
 
-    Document document = await QuillConverter.htmlToDelta(html);
+    Document document = await InteractiveWebView.htmlToDelta(html);
 
     quillController.value = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
 
