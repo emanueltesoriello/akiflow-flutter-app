@@ -3,14 +3,15 @@ import 'dart:io';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class QuillConverter {
-  static WebViewController? wController;
+class InteractiveWebView {
+  static WebViewController? _wController;
 
   static void attach(WebViewController controller) {
-    wController = controller;
+    _wController = controller;
   }
 
   static Future<Document> htmlToDelta(String html) async {
@@ -21,7 +22,7 @@ class QuillConverter {
     }
 
     try {
-      String deltaJson = await wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
+      String deltaJson = await _wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
 
       List<dynamic> delta;
 
@@ -43,7 +44,7 @@ class QuillConverter {
   static Future<String> deltaToHtml(List delta) async {
     String deltaJson = jsonEncode(delta).replaceAll("\\", "\\\\");
 
-    String html = await wController!.runJavascriptReturningResult("deltaToHtml(`$deltaJson`);");
+    String html = await _wController!.runJavascriptReturningResult("deltaToHtml(`$deltaJson`);");
 
     // JS interface on Android platform comes as quoted string
     if (Platform.isAndroid) {
@@ -51,5 +52,20 @@ class QuillConverter {
     }
 
     return html;
+  }
+
+  static Future<List<ChronoModel>?> chronoParse(String value) async {
+    try {
+      value = value.replaceAll("\n", "");
+
+      String result = await _wController!.runJavascriptReturningResult("chronoParse(`$value`);");
+
+      List<dynamic> objects = jsonDecode(result);
+
+      return objects.map((e) => ChronoModel.fromMap(e)).toList();
+    } catch (e, s) {
+      print(s);
+      return null;
+    }
   }
 }

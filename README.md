@@ -151,7 +151,5 @@ In the *root* of the application source code there are also the following packag
 
 ## JS integration
 
-Bundle node package as a single {package-name}.js file (if bundling with webpack use `output.libraryTarget = "window"`)
-then import in `assets/js/` folder.
-
-Follow `ChronoNodeJs.dart` class to use the package.
+Put JS code inside the folder `/assets/html/` and edit the file `index.html` to include the JS code and create
+custom methods to handle the events.

@@ -14,7 +14,6 @@ dependencies:
     sdk: flutter
   flutter_appauth: ^2.4.1
   flutter_bloc: ^8.0.1
-  flutter_js: ^0.5.0+6
   flutter_localizations:
     sdk: flutter
   flutter_quill: ^5.0.3
@@ -99,8 +98,7 @@ flutter:
     - assets/images/icons/web/
     - assets/images/icons/zapier/
     - assets/images/icons/zoom/
-    - assets/quill/
-    - assets/js/
+    - assets/html/
 
   fonts:
     - family: Inter

@@ -67,8 +67,6 @@ Future<void> mainCom() async {
   await Intercom.instance.initialize(Config.intercomCredential.appId,
       iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
 
-  await ChronoNodeJs.init();
-
   await SentryFlutter.init(
     (options) {
       options.beforeSend = beforeSend;

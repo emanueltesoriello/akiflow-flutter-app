@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension DateExtension on DateTime {
   double daysBetween(DateTime to) {
     to = DateTime(to.year, to.month, to.day);
@@ -10,5 +12,13 @@ extension DateExtension on DateTime {
       return daysBetween(to) < 100;
     }
     return true;
+  }
+
+  String get shortDateFormatted {
+    return DateFormat("d MMM").format(this);
+  }
+
+  String get timeFormatted {
+    return DateFormat("HH:mm").format(this);
   }
 }
