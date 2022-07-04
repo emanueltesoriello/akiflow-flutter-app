@@ -105,14 +105,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync(entities: [Entity.tasks]);
-    }
 
-    if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
-      AnalyticsService.track("Task Rescheduled");
-    } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
-      AnalyticsService.track("Task moved to Inbox");
-    } else if (statusType == TaskStatusType.planned) {
-      AnalyticsService.track("Task planned");
+      if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
+        AnalyticsService.track("Task Rescheduled");
+      } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
+        AnalyticsService.track("Task moved to Inbox");
+      } else if (statusType == TaskStatusType.planned) {
+        AnalyticsService.track("Task planned");
+      }
     }
   }
 
