@@ -229,6 +229,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                   titleFocus.requestFocus();
 
                   List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(titleController.text);
+
                   _checkTitleWithChrono(chronoParsed, titleController.text, isFromAction: true);
                 },
                 setForInbox: () {

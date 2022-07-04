@@ -60,7 +60,14 @@ class InteractiveWebView {
 
       String result = await _wController!.runJavascriptReturningResult("chronoParse(`$value`);");
 
-      List<dynamic> objects = jsonDecode(result);
+      List<dynamic> objects;
+
+      // JS interface on Android platform comes as quoted string
+      if (Platform.isAndroid) {
+        objects = jsonDecode(jsonDecode(result));
+      } else {
+        objects = jsonDecode(result);
+      }
 
       return objects.map((e) => ChronoModel.fromMap(e)).toList();
     } catch (e, s) {
