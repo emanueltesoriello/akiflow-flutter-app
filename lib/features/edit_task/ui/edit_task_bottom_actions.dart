@@ -75,7 +75,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           ),
           const SizedBox(width: 11),
           TagBox(
-            icon: "assets/images/icons/_common/target.svg",
+            icon: "assets/images/icons/_common/target_active.svg",
             isBig: true,
             isSquare: true,
             backgroundColor:
