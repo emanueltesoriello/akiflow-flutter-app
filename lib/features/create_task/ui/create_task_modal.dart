@@ -364,6 +364,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             controller: isTitleEditing ? _simpleTitleController : titleController,
             focusNode: titleFocus,
             textCapitalization: TextCapitalization.sentences,
+            maxLines: null,
+            keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
               isDense: true,
