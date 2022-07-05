@@ -16,7 +16,7 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 
-class TaskRow extends StatelessWidget {
+class TaskRow extends StatefulWidget {
   final Task task;
 
   final Function() completedClick;
@@ -46,58 +46,85 @@ class TaskRow extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<TaskRow> createState() => _TaskRowState();
+}
+
+class _TaskRowState extends State<TaskRow> {
+  CheckboxAnimatedController? _checkboxController;
+
+  @override
   Widget build(BuildContext context) {
     return Slidable(
-      key: ValueKey(task.id),
+      key: ValueKey(widget.task.id),
       groupTag: "task",
       startActionPane: _startActions(context),
       endActionPane: _endActions(context),
       child: GestureDetector(
-        onLongPress: enableLongPressToSelect ? () => selectTask() : null,
+        onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
         onTap: () async {
-          TaskExt.editTask(context, task);
+          TaskExt.editTask(context, widget.task);
         },
         child: IntrinsicHeight(
           child: Container(
             constraints: const BoxConstraints(minHeight: 50),
-            padding: const EdgeInsets.only(bottom: 12, right: 14),
-            color: (task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+            padding: const EdgeInsets.only(right: 14),
+            color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _DotPrefix(task),
-                Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Builder(builder: ((context) {
-                    if (selectMode) {
-                      return _SelectableRadioButton(task, selectTask: selectTask);
+                GestureDetector(
+                  onTap: () {
+                    if (widget.selectMode) {
+                      widget.selectTask();
                     } else {
-                      return CheckboxAnimated(
-                        task,
-                        key: ObjectKey(task),
-                        onTap: () {
-                          completedClick();
-                        },
-                      );
+                      _checkboxController!.completedClick();
                     }
-                  })),
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    width: 48,
+                    child: Row(
+                      children: [
+                        _DotPrefix(widget.task),
+                        Container(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Builder(builder: ((context) {
+                            if (widget.selectMode) {
+                              return _SelectableRadioButton(widget.task);
+                            } else {
+                              return CheckboxAnimated(
+                                onControllerReady: (controller) {
+                                  _checkboxController = controller;
+                                },
+                                task: widget.task,
+                                key: ObjectKey(widget.task),
+                                onCompleted: () {
+                                  widget.completedClick();
+                                },
+                              );
+                            }
+                          })),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                const SizedBox(width: 5),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _Title(task),
-                        _Subtitle(task),
+                        _Title(widget.task),
+                        _Subtitle(widget.task),
                         TaskInfo(
-                          task,
-                          hideInboxLabel: hideInboxLabel,
-                          showLabel: showLabel,
+                          widget.task,
+                          hideInboxLabel: widget.hideInboxLabel,
+                          showLabel: widget.showLabel,
                           selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                          showPlanInfo: showPlanInfo,
+                          showPlanInfo: widget.showPlanInfo,
                         ),
+                        const SizedBox(height: 12),
                       ],
                     ),
                   ),
@@ -118,7 +145,7 @@ class TaskRow extends StatelessWidget {
         closeOnCancel: true,
         dismissThreshold: 0.5,
         confirmDismiss: () async {
-          completedClick();
+          widget.completedClick();
           return false;
         },
         onDismissed: () {},
@@ -150,7 +177,7 @@ class TaskRow extends StatelessWidget {
             label: withLabel ? t.task.done.toUpperCase() : null,
             click: () {
               Slidable.of(context)?.close();
-              completedClick();
+              widget.completedClick();
             },
           );
         }),
@@ -166,7 +193,7 @@ class TaskRow extends StatelessWidget {
         closeOnCancel: true,
         dismissThreshold: 0.75,
         confirmDismiss: () async {
-          swipeActionPlanClick();
+          widget.swipeActionPlanClick();
           return false;
         },
         onDismissed: () {},
@@ -198,7 +225,7 @@ class TaskRow extends StatelessWidget {
               icon: 'assets/images/icons/_common/number.svg',
               click: () {
                 Slidable.of(context)?.close();
-                swipeActionSelectLabelClick();
+                widget.swipeActionSelectLabelClick();
               },
             );
           }),
@@ -212,7 +239,7 @@ class TaskRow extends StatelessWidget {
               icon: 'assets/images/icons/_common/clock.svg',
               click: () {
                 Slidable.of(context)?.close();
-                swipeActionSnoozeClick();
+                widget.swipeActionSnoozeClick();
               },
             );
           }),
@@ -233,7 +260,7 @@ class TaskRow extends StatelessWidget {
         label: withLabel ? t.task.plan.toUpperCase() : null,
         click: () {
           Slidable.of(context)?.close();
-          swipeActionPlanClick();
+          widget.swipeActionPlanClick();
         },
       );
     });
@@ -287,9 +314,8 @@ class _DotPrefix extends StatelessWidget {
 
 class _SelectableRadioButton extends StatelessWidget {
   final Task task;
-  final Function() selectTask;
 
-  const _SelectableRadioButton(this.task, {Key? key, required this.selectTask}) : super(key: key);
+  const _SelectableRadioButton(this.task, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -297,23 +323,19 @@ class _SelectableRadioButton extends StatelessWidget {
 
     Color color = selected ? ColorsExt.akiflow(context) : ColorsExt.grey3(context);
 
-    return InkWell(
-      overlayColor: MaterialStateProperty.all(Colors.transparent),
-      onTap: selectTask,
-      child: Container(
-        height: double.infinity,
-        padding: const EdgeInsets.all(2.17),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: SizedBox(
-            width: 21.67,
-            height: 21.67,
-            child: SvgPicture.asset(
-              selected
-                  ? "assets/images/icons/_common/largecircle_fill_circle_2.svg"
-                  : "assets/images/icons/_common/circle.svg",
-              color: color,
-            ),
+    return Container(
+      height: double.infinity,
+      padding: const EdgeInsets.all(2.17),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          width: 21.67,
+          height: 21.67,
+          child: SvgPicture.asset(
+            selected
+                ? "assets/images/icons/_common/largecircle_fill_circle_2.svg"
+                : "assets/images/icons/_common/circle.svg",
+            color: color,
           ),
         ),
       ),

@@ -7,11 +7,19 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:models/task/task.dart';
 
+class CheckboxAnimatedController {
+  Function() completedClick;
+
+  CheckboxAnimatedController({required this.completedClick});
+}
+
 class CheckboxAnimated extends StatefulWidget {
   final Task task;
-  final Function() onTap;
+  final Function() onCompleted;
+  final Function(CheckboxAnimatedController controller) onControllerReady;
 
-  const CheckboxAnimated(this.task, {Key? key, required this.onTap}) : super(key: key);
+  const CheckboxAnimated({Key? key, required this.task, required this.onCompleted, required this.onControllerReady})
+      : super(key: key);
 
   @override
   State<CheckboxAnimated> createState() => _CheckboxAnimatedState();
@@ -46,9 +54,35 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
 
   static const int stepDuration = 200;
 
+  late final CheckboxAnimatedController _controller;
+
   @override
   void initState() {
     super.initState();
+
+    _controller = CheckboxAnimatedController(completedClick: () {
+      HapticFeedback.heavyImpact();
+
+      Future.delayed(const Duration(milliseconds: stepDuration * 4 + 400), () {
+        widget.onCompleted();
+      });
+
+      _controllerCircleScale.reset();
+      _controllerRotation.reset();
+      _controllerBackgroundOpacity.reset();
+      _controllerForegroundColor.reset();
+      _controllerTopOpacity.reset();
+      _controllerTopScale.reset();
+
+      _controllerRotation.forward();
+      _controllerCircleScale.forward();
+      _controllerBackgroundOpacity.forward();
+      _controllerForegroundColor.forward();
+      _controllerTopOpacity.forward();
+      _controllerTopScale.forward();
+    });
+
+    widget.onControllerReady(_controller);
 
     // ROTATION
     _controllerRotation = AnimationController(
@@ -131,78 +165,54 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
   Widget build(BuildContext context) {
     return SizedBox(
       height: double.infinity,
-      child: InkWell(
-        overlayColor: MaterialStateProperty.all(Colors.transparent),
-        onTap: () {
-          HapticFeedback.heavyImpact();
-
-          Future.delayed(const Duration(milliseconds: stepDuration * 4 + 400), () {
-            widget.onTap();
-          });
-
-          _controllerCircleScale.reset();
-          _controllerRotation.reset();
-          _controllerBackgroundOpacity.reset();
-          _controllerForegroundColor.reset();
-          _controllerTopOpacity.reset();
-          _controllerTopScale.reset();
-
-          _controllerRotation.forward();
-          _controllerCircleScale.forward();
-          _controllerBackgroundOpacity.forward();
-          _controllerForegroundColor.forward();
-          _controllerTopOpacity.forward();
-          _controllerTopScale.forward();
-        },
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: const EdgeInsets.all(2.17),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: 21.67,
-                  height: 21.67,
-                  child: AnimatedBuilder(
-                    animation: _animationCircleScale,
-                    builder: (BuildContext context, Widget? child) {
-                      return Transform.scale(
-                        scale: _animationCircleScale.value,
-                        child: AnimatedBuilder(
-                          animation: _controllerBackgroundOpacity,
-                          builder: (BuildContext context, Widget? child) => Container(
-                            decoration: BoxDecoration(
-                              color: ColorsExt.grey5(context).withOpacity(_animationBackgroundOpacity.value),
-                              borderRadius: BorderRadius.circular(32),
-                            ),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(2.17),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 21.67,
+                height: 21.67,
+                child: AnimatedBuilder(
+                  animation: _animationCircleScale,
+                  builder: (BuildContext context, Widget? child) {
+                    return Transform.scale(
+                      scale: _animationCircleScale.value,
+                      child: AnimatedBuilder(
+                        animation: _controllerBackgroundOpacity,
+                        builder: (BuildContext context, Widget? child) => Container(
+                          decoration: BoxDecoration(
+                            color: ColorsExt.grey5(context).withOpacity(_animationBackgroundOpacity.value),
+                            borderRadius: BorderRadius.circular(32),
                           ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 21.67,
+                height: 21.67,
+                child: Center(
+                  child: AnimatedBuilder(
+                    animation: _animationRotation,
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: _animationRotation.value * pi / 180,
+                        child: AnimatedBuilder(
+                          animation: _animationTopScale,
+                          builder: (context, child) =>
+                              Transform.scale(scale: _animationTopScale.value, child: checkmark()),
                         ),
                       );
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 21.67,
-                  height: 21.67,
-                  child: Center(
-                    child: AnimatedBuilder(
-                      animation: _animationRotation,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: _animationRotation.value * pi / 180,
-                          child: AnimatedBuilder(
-                            animation: _animationTopScale,
-                            builder: (context, child) =>
-                                Transform.scale(scale: _animationTopScale.value, child: checkmark()),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
