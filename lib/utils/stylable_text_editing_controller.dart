@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -134,17 +133,23 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     Color color,
   ) {
     textSpanChildren.add(
-      TextSpan(
-        text: textToBeStyled,
+      WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: GestureDetector(
+          onTap: () => parsedTextClick(textToBeStyled!, isFromAction),
+          child: Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: Text(textToBeStyled!)),
+        ),
         style: TextStyle(
           background: Paint()..color = color,
           color: Colors.black,
           fontWeight: FontWeight.w500,
         ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            parsedTextClick(textToBeStyled!, isFromAction);
-          },
       ),
     );
   }

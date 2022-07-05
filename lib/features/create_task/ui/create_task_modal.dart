@@ -33,6 +33,10 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   final FocusNode titleFocus = FocusNode();
 
   late final StyleableTextFieldControllerBackground titleController;
+  final TextEditingController _simpleTitleController = TextEditingController();
+
+  final ValueNotifier<bool> _isTitleEditing = ValueNotifier<bool>(false);
+  Function()? focusListener;
 
   @override
   void initState() {
@@ -71,7 +75,21 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     String descriptionHtml = editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
 
+    focusListener = () {
+      if (!titleFocus.hasFocus) {
+        checkTitleChrono(titleController.text);
+      }
+    };
+
+    titleFocus.addListener(focusListener!);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    titleFocus.removeListener(focusListener!);
+    super.dispose();
   }
 
   @override
@@ -338,37 +356,71 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     );
   }
 
-  TextField _title(BuildContext context) {
-    return TextField(
-      controller: titleController,
-      focusNode: titleFocus,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.zero,
-        isDense: true,
-        hintText: t.addTask.titleHint,
-        border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-      onChanged: (value) async {
-        context.read<EditTaskCubit>().updateTitle(value);
+  Widget _title(BuildContext context) {
+    return ValueListenableBuilder(
+        valueListenable: _isTitleEditing,
+        builder: (context, bool isTitleEditing, child) {
+          return TextField(
+            controller: isTitleEditing ? _simpleTitleController : titleController,
+            focusNode: titleFocus,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.zero,
+              isDense: true,
+              hintText: t.addTask.titleHint,
+              border: InputBorder.none,
+              hintStyle: TextStyle(
+                color: ColorsExt.grey3(context),
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            style: TextStyle(
+              color: ColorsExt.grey2(context),
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
+            onTap: () {
+              if (!isTitleEditing) {
+                _simpleTitleController.text = titleController.text;
+                _simpleTitleController.selection = titleController.selection;
 
-        List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(value);
+                _isTitleEditing.value = true;
+              }
+            },
+            onChanged: (value) async {
+              if (isTitleEditing) {
+                titleController.text = value;
+                titleController.selection = _simpleTitleController.selection;
 
-        _checkContainsNonParsableText();
+                int currentSelection = _simpleTitleController.selection.baseOffset;
+                String lastCharInserted = value.substring(currentSelection - 1, currentSelection);
 
-        _checkTitleWithChrono(chronoParsed, value, isFromAction: false);
-      },
-    );
+                if (lastCharInserted == " ") {
+                  checkTitleChrono(value);
+                }
+              } else {
+                _simpleTitleController.text = value;
+                _simpleTitleController.selection = titleController.selection;
+              }
+
+              context.read<EditTaskCubit>().updateTitle(value);
+
+              List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(value);
+
+              _checkContainsNonParsableText();
+
+              _checkTitleWithChrono(chronoParsed, value, isFromAction: false);
+            },
+          );
+        });
+  }
+
+  void checkTitleChrono(String value) {
+    _isTitleEditing.value = false;
+
+    titleController.text = value;
+    titleController.selection = _simpleTitleController.selection;
   }
 
   void _checkContainsNonParsableText() {
