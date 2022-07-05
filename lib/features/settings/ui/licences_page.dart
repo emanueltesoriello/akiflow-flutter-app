@@ -31,6 +31,7 @@ class LicencesPage extends StatelessWidget {
                 _LicenseItem(name: "flutter_segment", type: "MIT"),
                 _LicenseItem(name: "flutter_slidable", type: "MIT"),
                 _LicenseItem(name: "flutter_svg", type: "MIT"),
+                _LicenseItem(name: "flutter_switch", type: "MIT"),
                 _LicenseItem(name: "get_it", type: "MIT"),
                 _LicenseItem(name: "html", type: "MIT"),
                 _LicenseItem(name: "http", type: "MIT"),
