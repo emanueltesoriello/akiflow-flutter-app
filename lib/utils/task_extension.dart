@@ -392,6 +392,14 @@ extension TaskExt on Task {
     }
   }
 
+  bool get isDailyGoal {
+    try {
+      return dailyGoal! == 1;
+    } catch (_) {
+      return false;
+    }
+  }
+
   static String iconFromConnectorId(String? connectorId) {
     switch (connectorId) {
       case "asana":

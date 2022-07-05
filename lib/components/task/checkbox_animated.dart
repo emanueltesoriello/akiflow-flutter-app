@@ -245,36 +245,53 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
     Color? secondChildColor;
 
     if (widget.task.isCompletedComputed) {
-      firstChildIconAsset = "assets/images/icons/_common/Check-done.svg";
-      secondChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
-
-      firstChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
-      secondChildColor = color.withOpacity(_animationTopOpacity.value);
+      if (widget.task.isDailyGoal) {
+        firstChildIconAsset = "assets/images/icons/_common/check_done_goal.svg";
+        secondChildIconAsset = "assets/images/icons/_common/Check-empty-goal.svg";
+      } else {
+        firstChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+        secondChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
+        firstChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
+        secondChildColor = color.withOpacity(_animationTopOpacity.value);
+      }
     } else {
-      if (widget.task.dailyGoal != null && widget.task.dailyGoal == 1) {
+      if (widget.task.isDailyGoal) {
         firstChildIconAsset = "assets/images/icons/_common/Check-empty-goal.svg";
+        secondChildIconAsset = "assets/images/icons/_common/check_done_goal.svg";
       } else {
         firstChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
-        firstChildColor = color.withOpacity(_animationTopOpacity.value);
-      }
+        secondChildIconAsset = "assets/images/icons/_common/Check-done.svg";
 
-      secondChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
-      secondChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+        firstChildColor = color.withOpacity(_animationTopOpacity.value);
+        secondChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
+      }
     }
 
-    return AnimatedBuilder(
-      animation: _animationForegroundColor,
-      builder: (BuildContext context, Widget? child) {
-        return AnimatedBuilder(
-          animation: _animationTopOpacity,
-          builder: (BuildContext context, Widget? child) => AnimatedCrossFade(
-            firstChild: SvgPicture.asset(firstChildIconAsset, color: firstChildColor),
-            secondChild: SvgPicture.asset(secondChildIconAsset, color: secondChildColor),
-            crossFadeState: _crossFadeState,
-            duration: const Duration(milliseconds: 200),
-          ),
-        );
-      },
-    );
+    if (widget.task.isDailyGoal) {
+      return AnimatedBuilder(
+        animation: _animationTopOpacity,
+        builder: (BuildContext context, Widget? child) => AnimatedCrossFade(
+          firstChild: SvgPicture.asset(firstChildIconAsset),
+          secondChild: SvgPicture.asset(secondChildIconAsset),
+          crossFadeState: _crossFadeState,
+          duration: const Duration(milliseconds: 200),
+        ),
+      );
+    } else {
+      return AnimatedBuilder(
+        animation: _animationForegroundColor,
+        builder: (BuildContext context, Widget? child) {
+          return AnimatedBuilder(
+            animation: _animationTopOpacity,
+            builder: (BuildContext context, Widget? child) => AnimatedCrossFade(
+              firstChild: SvgPicture.asset(firstChildIconAsset, color: firstChildColor),
+              secondChild: SvgPicture.asset(secondChildIconAsset, color: secondChildColor),
+              crossFadeState: _crossFadeState,
+              duration: const Duration(milliseconds: 200),
+            ),
+          );
+        },
+      );
+    }
   }
 }
