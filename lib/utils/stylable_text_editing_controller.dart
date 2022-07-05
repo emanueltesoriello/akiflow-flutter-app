@@ -1,7 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/style/colors.dart';
-
-TextStyle style = const TextStyle(color: Colors.black);
 
 class TextPartStyleDefinition {
   TextPartStyleDefinition({
@@ -82,7 +81,11 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   }) {
     final List<InlineSpan> textSpanChildren = <InlineSpan>[];
 
-    String? lastMatch = combinedPatternToDetect.allMatches(text).last.group(0);
+    String? lastMatch;
+
+    try {
+      lastMatch = combinedPatternToDetect.allMatches(text).last.group(0);
+    } catch (_) {}
 
     text.splitMapJoin(
       combinedPatternToDetect,
@@ -92,7 +95,11 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
         if (textPart == null) return '';
 
         if (listPartNonParsable.contains(textPart)) {
-          _addTextSpan(textSpanChildren, textPart);
+          _addTextSpan(
+            textSpanChildren,
+            textToBeStyled: textPart,
+            foregroundColor: ColorsExt.grey2(context),
+          );
           return '';
         }
 
@@ -104,20 +111,29 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
         if (styleDefinition == null) return '';
 
         if (lastMatch != null && lastMatch == textPart) {
-          _addTextSpanWithBackground(
+          _addWidgetSpanWithBackground(
             textSpanChildren,
-            textPart,
-            styleDefinition.isFromAction,
-            ColorsExt.cyan25(context),
+            textToBeStyled: textPart,
+            isFromAction: styleDefinition.isFromAction,
+            backgroundColor: ColorsExt.cyan25(context),
+            foregroundColor: ColorsExt.grey2(context),
           );
         } else {
-          _addTextSpan(textSpanChildren, textPart);
+          _addTextSpan(
+            textSpanChildren,
+            textToBeStyled: textPart,
+            foregroundColor: ColorsExt.grey2(context),
+          );
         }
 
         return '';
       },
       onNonMatch: (String text) {
-        _addTextSpan(textSpanChildren, text);
+        _addTextSpan(
+          textSpanChildren,
+          textToBeStyled: text,
+          foregroundColor: ColorsExt.grey2(context),
+        );
 
         return '';
       },
@@ -126,42 +142,80 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     return TextSpan(style: style, children: textSpanChildren);
   }
 
-  void _addTextSpanWithBackground(
-    List<InlineSpan> textSpanChildren,
-    String? textToBeStyled,
-    bool? isFromAction,
-    Color color,
-  ) {
+  void _addWidgetSpanWithBackground(
+    List<InlineSpan> textSpanChildren, {
+    required String? textToBeStyled,
+    required bool? isFromAction,
+    required Color foregroundColor,
+    required Color backgroundColor,
+  }) {
     textSpanChildren.add(
       WidgetSpan(
         alignment: PlaceholderAlignment.middle,
         child: GestureDetector(
           onTap: () => parsedTextClick(textToBeStyled!, isFromAction),
           child: Container(
-              padding: const EdgeInsets.all(3),
+              height: 26,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               decoration: BoxDecoration(
-                color: color,
+                color: backgroundColor,
                 borderRadius: BorderRadius.circular(3),
               ),
-              child: Text(textToBeStyled!)),
-        ),
-        style: TextStyle(
-          background: Paint()..color = color,
-          color: Colors.black,
-          fontWeight: FontWeight.w500,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    textToBeStyled!,
+                    style: TextStyle(
+                      color: foregroundColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                    ),
+                  ),
+                ],
+              )),
         ),
       ),
     );
   }
 
-  void _addTextSpan(
-    List<InlineSpan> textSpanChildren,
-    String? textToBeStyled,
-  ) {
+  void _addTextSpanWithBackground(
+    List<InlineSpan> textSpanChildren, {
+    required String? textToBeStyled,
+    required bool? isFromAction,
+    required Color foregroundColor,
+    required Color backgroundColor,
+  }) {
     textSpanChildren.add(
       TextSpan(
         text: textToBeStyled,
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(
+          background: Paint()..color = backgroundColor,
+          color: foregroundColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 17,
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            parsedTextClick(textToBeStyled!, isFromAction);
+          },
+      ),
+    );
+  }
+
+  void _addTextSpan(
+    List<InlineSpan> textSpanChildren, {
+    required String? textToBeStyled,
+    required Color foregroundColor,
+  }) {
+    textSpanChildren.add(
+      TextSpan(
+        text: textToBeStyled,
+        style: TextStyle(
+          color: foregroundColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
+        ),
       ),
     );
   }
