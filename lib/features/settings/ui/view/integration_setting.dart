@@ -127,6 +127,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                                   ],
                                 ),
                               ),
+                              const SizedBox(width: 16),
                               Builder(builder: (context) {
                                 if (widget.trailingWidget != null) {
                                   return widget.trailingWidget!;

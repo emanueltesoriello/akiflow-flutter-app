@@ -22,6 +22,7 @@ dependencies:
   flutter_segment: ^3.9.0
   flutter_slidable: ^1.2.1
   flutter_svg: ^1.1.1+1
+  flutter_switch: ^0.3.2
   get_it: ^7.2.0
   html: ^0.15.0
   http: ^0.13.4

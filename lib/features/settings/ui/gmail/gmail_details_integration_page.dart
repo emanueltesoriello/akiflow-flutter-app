@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
@@ -55,10 +55,16 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
                     return IntegrationSetting(
                       title: t.settings.integrations.gmail.useSuperhuman,
                       subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
-                      trailingWidget: CupertinoSwitch(
+                      trailingWidget: FlutterSwitch(
+                        width: 48,
+                        height: 24,
+                        toggleSize: 20,
                         activeColor: ColorsExt.akiflow(context),
+                        inactiveColor: ColorsExt.grey5(context),
                         value: isSuperhumanEnabled ?? false,
-                        onChanged: (value) {
+                        borderRadius: 24,
+                        padding: 2,
+                        onToggle: (value) {
                           context
                               .read<SettingsCubit>()
                               .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
