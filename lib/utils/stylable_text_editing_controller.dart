@@ -157,6 +157,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
           child: Container(
               height: 26,
               padding: const EdgeInsets.symmetric(horizontal: 5),
+              margin: const EdgeInsets.only(top: 2.5),
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(3),
@@ -193,7 +194,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
           background: Paint()..color = backgroundColor,
           color: foregroundColor,
           fontWeight: FontWeight.w500,
-          fontSize: 17,
+          fontSize: 20,
         ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
