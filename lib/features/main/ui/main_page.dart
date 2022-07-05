@@ -197,7 +197,15 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
       case HomeViewType.today:
         return TodayAppBar(preferredSizeHeight: todayAppBarHeight, calendarTopMargin: calendarTopMargin);
       case HomeViewType.calendar:
-        return const PreferredSize(preferredSize: Size.zero, child: SizedBox());
+        return AppBarComp(
+          title: t.bottomBar.calendar,
+          leading: SvgPicture.asset(
+            "assets/images/icons/_common/calendar.svg",
+            width: 26,
+            height: 26,
+          ),
+          showSyncButton: true,
+        );
       case HomeViewType.label:
         bool showDone = context.watch<LabelsCubit>().state.showDone;
         return LabelAppBar(label: selectedLabel!, showDone: showDone);
