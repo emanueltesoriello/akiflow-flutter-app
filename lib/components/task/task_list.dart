@@ -161,6 +161,7 @@ class _TaskListState extends State<TaskList> {
                 },
                 selectMode: tasks.any((element) => element.selected ?? false),
                 completedClick: () {
+                  HapticFeedback.mediumImpact();
                   editTaskCubit.markAsDone(forceUpdate: true);
                 },
                 swipeActionPlanClick: () {
@@ -168,6 +169,7 @@ class _TaskListState extends State<TaskList> {
                   _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
                 },
                 swipeActionSelectLabelClick: () {
+                  HapticFeedback.mediumImpact();
                   showCupertinoModalBottomSheet(
                     context: context,
                     builder: (context) => LabelsModal(
