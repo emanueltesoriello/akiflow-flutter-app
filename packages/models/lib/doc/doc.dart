@@ -115,7 +115,7 @@ class Doc extends DocBase implements Base {
         'remote_updated_at': remoteUpdatedAt,
         'updated': updated,
         'taskData': taskData,
-      };
+      }..removeWhere((key, value) => key == "id" && value == null);
 
   Doc copyWith({
     String? id,

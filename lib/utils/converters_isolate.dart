@@ -4,7 +4,6 @@ import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:uuid/uuid.dart';
 
 class RawListConvert {
   final List<dynamic> items;
@@ -204,7 +203,6 @@ List<Doc> docsFromGmailData(DocsFromGmailDataModel data) {
 
   for (GmailMessage messageContent in data.messages) {
     result.add(Doc(
-      id: const Uuid().v4(),
       title: messageContent.subject,
       originId: messageContent.messageId,
       searchText: "${messageContent.subject?.toLowerCase()} ${messageContent.from?.toLowerCase()}",

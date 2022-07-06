@@ -37,7 +37,7 @@ class SyncIntegrationService {
     List<Doc> docs = await compute(docsFromGmailData, docsFromGmailDataModel);
 
     if (docs.isEmpty) {
-      return DateTime.now();
+      return null;
     }
 
     List<Doc> localDocs = await getExistingDocs(docs);

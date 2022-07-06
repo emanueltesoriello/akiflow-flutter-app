@@ -135,9 +135,16 @@ class SyncControllerService {
         }
       }
 
+      syncCompletedController.add(0);
+
       // check after docs sync to prevent docs duplicates
       try {
-        await _syncIntegration();
+        bool hasNewDocs = await _syncIntegration();
+
+        if (hasNewDocs) {
+          await _syncEntity(Entity.docs);
+          await _syncEntity(Entity.tasks);
+        }
       } catch (e, s) {
         _sentryService.captureException(e, stackTrace: s);
       }
@@ -159,7 +166,12 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      await _syncIntegration();
+      bool hasNewDocs = await _syncIntegration();
+
+      if (hasNewDocs) {
+        await _syncEntity(Entity.docs);
+        await _syncEntity(Entity.tasks);
+      }
     }
 
     _isSyncing = false;
@@ -167,15 +179,18 @@ class SyncControllerService {
     syncCompletedController.add(0);
   }
 
-  Future<void> _syncIntegration() async {
+  /// Return `true` if there are new docs to import
+  Future<bool> _syncIntegration() async {
     List<Account> accounts = await _accountsRepository.get();
 
     if (accounts.isEmpty) {
       print("no accounts to sync");
-      return;
+      return false;
     }
 
     String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+
+    bool hasNewDocs = false;
 
     for (Account account in accounts) {
       AccountToken? accountToken = _preferencesRepository.getAccountToken(account.accountId!);
@@ -202,10 +217,16 @@ class SyncControllerService {
 
       print("sync integration for account ${account.accountId}");
 
-      await _syncEntityIntegration(gmailApi, lastSync, account);
+      bool hasNewDocsCheck = await _syncEntityIntegration(gmailApi, lastSync, account);
+
+      if (hasNewDocsCheck == true) {
+        hasNewDocs = true;
+      }
 
       print("sync integration for account ${account.accountId} done");
     }
+
+    return hasNewDocs;
   }
 
   Future<void> _syncEntity(Entity entity) async {
@@ -224,7 +245,8 @@ class SyncControllerService {
     }
   }
 
-  Future<void> _syncEntityIntegration(IIntegrationBaseApi api, DateTime? lastSync, Account account) async {
+  /// Return `true` if there are new docs to import
+  Future<bool> _syncEntityIntegration(IIntegrationBaseApi api, DateTime? lastSync, Account account) async {
     try {
       print("Syncing integration $api...");
 
@@ -242,11 +264,16 @@ class SyncControllerService {
 
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
 
-      await _preferencesRepository.setLastSyncForAccountId(account.id!, lastSyncUpdated);
-
       await _syncEntity(Entity.docs);
+
+      if (lastSyncUpdated != null) {
+        await _preferencesRepository.setLastSyncForAccountId(account.id!, lastSyncUpdated);
+        return true;
+      }
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
+
+    return false;
   }
 }
