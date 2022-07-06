@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
@@ -70,6 +72,8 @@ class TimePickerUtils {
   }) async {
     selected = null;
 
+    Timer? timer;
+
     await showModalBottomSheet(
         context: context,
         builder: (BuildContext builder) {
@@ -80,7 +84,11 @@ class TimePickerUtils {
               use24hFormat: true,
               mode: CupertinoDatePickerMode.time,
               onDateTimeChanged: (date) {
-                selected = TimeOfDay(hour: date.hour, minute: date.minute);
+                timer?.cancel();
+
+                timer = Timer(const Duration(milliseconds: 500), () {
+                  selected = TimeOfDay(hour: date.hour, minute: date.minute);
+                });
               },
               initialDateTime: DateTime(
                 DateTime.now().year,
