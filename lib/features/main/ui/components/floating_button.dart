@@ -5,6 +5,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
+
 import '../../../../style/colors.dart';
 import '../../../../utils/task_extension.dart';
 import '../../../create_task/ui/create_task_modal.dart';
@@ -52,12 +53,9 @@ class FloatingButton extends StatelessWidget {
 
                 editTaskCubit.attachTask(task);
 
-                await showCupertinoModalBottomSheet(
+                showCupertinoModalBottomSheet(
                   context: context,
-                  builder: (context) => SingleChildScrollView(
-                    controller: ModalScrollController.of(context),
-                    child: const CreateTaskModal(),
-                  ),
+                  builder: (context) => const CreateTaskModal(),
                 );
               },
               shape: RoundedRectangleBorder(

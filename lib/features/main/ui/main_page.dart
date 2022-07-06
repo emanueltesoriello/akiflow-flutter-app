@@ -334,10 +334,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
                 showCupertinoModalBottomSheet(
                   context: context,
-                  builder: (context) => SingleChildScrollView(
-                    controller: ModalScrollController.of(context),
-                    child: const CreateTaskModal(),
-                  ),
+                  builder: (context) => const CreateTaskModal(),
                 );
               },
               shape: RoundedRectangleBorder(

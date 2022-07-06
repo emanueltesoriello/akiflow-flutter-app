@@ -30,7 +30,7 @@ dependencies:
     path: ./packages/i18n
   intercom_flutter: ^7.3.0
   intl: ^0.17.0
-  modal_bottom_sheet: ^2.0.1
+  modal_bottom_sheet: ^2.1.0
   models:
     path: ./packages/models
   package_info_plus: ^1.4.2

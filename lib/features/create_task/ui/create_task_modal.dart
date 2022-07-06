@@ -14,6 +14,7 @@ import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/interactive_webview.dart';
+import 'package:mobile/utils/no_scroll_behav.dart';
 import 'package:mobile/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -37,6 +38,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
   final ValueNotifier<bool> _isTitleEditing = ValueNotifier<bool>(false);
   Function()? focusListener;
+
+  final ScrollController _parentScrollController = ScrollController();
 
   @override
   void initState() {
@@ -95,8 +98,11 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
-      child: Wrap(
+      color: Theme.of(context).backgroundColor,
+      child: ListView(
+        controller: _parentScrollController,
+        physics: const ClampingScrollPhysics(),
+        shrinkWrap: true,
         children: [
           Container(
             decoration: const BoxDecoration(
@@ -125,24 +131,35 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                       BlocBuilder<EditTaskCubit, EditTaskCubitState>(
                         builder: (context, state) {
                           if (state.showLabelsList) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: LabelsList(
-                                    showHeaders: false,
-                                    onSelect: (Label selected) {
-                                      context.read<EditTaskCubit>().setLabel(selected);
-                                    },
-                                    showNoLabel: state.updatedTask.listId != null,
+                            return SizedBox(
+                              height: 242,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: ScrollConfiguration(
+                                      behavior: NoScrollBehav(),
+                                      child: SingleChildScrollView(
+                                        physics: const ClampingScrollPhysics(),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12),
+                                          child: LabelsList(
+                                            showHeaders: false,
+                                            onSelect: (Label selected) {
+                                              context.read<EditTaskCubit>().setLabel(selected);
+                                            },
+                                            showNoLabel: state.updatedTask.listId != null,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  color: Theme.of(context).dividerColor,
-                                  width: double.infinity,
-                                  height: 1,
-                                ),
-                              ],
+                                  Container(
+                                    color: Theme.of(context).dividerColor,
+                                    width: double.infinity,
+                                    height: 1,
+                                  ),
+                                ],
+                              ),
                             );
                           } else {
                             return const SizedBox();
