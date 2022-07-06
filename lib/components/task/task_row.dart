@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/button_action.dart';
+import 'package:mobile/components/base/slidable_button_action.dart';
 import 'package:mobile/components/task/checkbox_animated.dart';
-import 'package:mobile/components/task/slidable_container.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
@@ -205,56 +204,92 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
 
   ActionPane _startActions(BuildContext context) {
     return ActionPane(
-      motion: const BehindMotion(),
+      motion: const DrawerMotion(),
       extentRatio: 0.2,
       dismissible: DismissiblePane(
         closeOnCancel: true,
-        dismissThreshold: 0.5,
+        dismissThreshold: 0.25,
         confirmDismiss: () async {
           widget.completedClick();
           return false;
         },
         onDismissed: () {},
-        motion: SlidableContainer(
-          child: SlidableMotion(
-            dismissThreshold: 0.5,
-            motionChild: _doneButton(withLabel: true),
-            staticChild: _doneButton(),
-            leftToRight: true,
+        motion: SlidableMotion(
+          dismissThreshold: 0.25,
+          motionChild: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Container(
+                  color: ColorsExt.green20(context),
+                  padding: const EdgeInsets.symmetric(horizontal: 27),
+                  child: _doneWithLabel(context),
+                ),
+              ),
+            ],
           ),
+          staticChild: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                color: ColorsExt.green20(context),
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: _doneWithLabel(context, withLabel: false),
+              ),
+            ],
+          ),
+          leftToRight: true,
         ),
       ),
       children: [
-        Flexible(child: SlidableContainer(child: _doneButton())),
-      ],
-    );
-  }
-
-  Widget _doneButton({bool withLabel = false}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const SizedBox(width: 16),
         Builder(builder: (context) {
-          return ButtonAction(
-            backColor: ColorsExt.green20(context),
-            topColor: ColorsExt.green(context),
-            icon: 'assets/images/icons/_common/Check-done.svg',
-            label: withLabel ? t.task.done.toUpperCase() : null,
-            click: () {
-              Slidable.of(context)?.close();
-              widget.completedClick();
-            },
+          // builder is used to get the context of the slidable, not remove!
+          return CustomSlidableAction(
+            backgroundColor: ColorsExt.green20(context),
+            foregroundColor: ColorsExt.green(context),
+            onPressed: (context) {},
+            padding: EdgeInsets.zero,
+            child: SlidableButtonAction(
+              backColor: ColorsExt.green20(context),
+              topColor: ColorsExt.green(context),
+              icon: 'assets/images/icons/_common/Check-done.svg',
+              leftToRight: true,
+              click: () {
+                Slidable.of(context)?.close();
+                widget.swipeActionSelectLabelClick();
+              },
+            ),
           );
         }),
       ],
     );
   }
 
+  Row _doneWithLabel(BuildContext context, {bool withLabel = true}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          child: SlidableButtonAction(
+            backColor: ColorsExt.green20(context),
+            topColor: ColorsExt.green(context),
+            icon: 'assets/images/icons/_common/Check-done.svg',
+            label: withLabel ? t.task.done.toUpperCase() : null,
+            leftToRight: true,
+            click: () {
+              Slidable.of(context)?.close();
+              widget.completedClick();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   ActionPane _endActions(BuildContext context) {
     return ActionPane(
-      motion: const BehindMotion(),
-      extentRatio: 0.5,
+      motion: const DrawerMotion(),
+      extentRatio: 0.6,
       dismissible: DismissiblePane(
         closeOnCancel: true,
         dismissThreshold: 0.75,
@@ -263,73 +298,115 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
           return false;
         },
         onDismissed: () {},
-        motion: SlidableContainer(
-          child: SlidableMotion(
-            dismissThreshold: 0.75,
-            motionChild: _endActionsPane(withLabel: true),
-            staticChild: _endActionsPane(),
-            leftToRight: false,
+        motion: SlidableMotion(
+          dismissThreshold: 0.75,
+          motionChild: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Container(
+                  color: ColorsExt.cyan25(context),
+                  padding: const EdgeInsets.symmetric(horizontal: 27),
+                  child: _planWithLabel(context),
+                ),
+              ),
+            ],
           ),
+          staticChild: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                color: ColorsExt.cyan25(context),
+                width: MediaQuery.of(context).size.width * 0.6,
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: _planWithLabel(context),
+              ),
+            ],
+          ),
+          leftToRight: false,
         ),
       ),
       children: [
-        Flexible(child: SlidableContainer(child: _endActionsPane())),
-      ],
-    );
-  }
-
-  Widget _endActionsPane({bool withLabel = false}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        const SizedBox(width: 16),
-        Flexible(
-          child: Builder(builder: (context) {
-            return ButtonAction(
+        Builder(builder: (context) {
+          // builder is used to get the context of the slidable, not remove!
+          return CustomSlidableAction(
+            backgroundColor: ColorsExt.grey5(context),
+            foregroundColor: ColorsExt.grey3(context),
+            onPressed: (context) {},
+            padding: EdgeInsets.zero,
+            child: SlidableButtonAction(
               backColor: ColorsExt.grey5(context),
               topColor: ColorsExt.grey3(context),
               icon: 'assets/images/icons/_common/number.svg',
+              leftToRight: false,
               click: () {
                 Slidable.of(context)?.close();
                 widget.swipeActionSelectLabelClick();
               },
-            );
-          }),
-        ),
-        const SizedBox(width: 16),
-        Flexible(
-          child: Builder(builder: (context) {
-            return ButtonAction(
+            ),
+          );
+        }),
+        Builder(builder: (context) {
+          // builder is used to get the context of the slidable, not remove!
+          return CustomSlidableAction(
+            backgroundColor: ColorsExt.pink30(context),
+            foregroundColor: ColorsExt.pink(context),
+            onPressed: (context) {},
+            padding: EdgeInsets.zero,
+            child: SlidableButtonAction(
               backColor: ColorsExt.pink30(context),
               topColor: ColorsExt.pink(context),
               icon: 'assets/images/icons/_common/clock.svg',
+              leftToRight: false,
               click: () {
                 Slidable.of(context)?.close();
                 widget.swipeActionSnoozeClick();
               },
-            );
-          }),
-        ),
-        const SizedBox(width: 16),
-        Flexible(child: _planButton(withLabel: withLabel)),
-        const SizedBox(width: 16),
+            ),
+          );
+        }),
+        Builder(builder: (context) {
+          // builder is used to get the context of the slidable, not remove!
+          return CustomSlidableAction(
+            backgroundColor: ColorsExt.cyan25(context),
+            foregroundColor: ColorsExt.cyan(context),
+            onPressed: (context) {},
+            padding: EdgeInsets.zero,
+            child: SlidableButtonAction(
+              backColor: ColorsExt.cyan25(context),
+              topColor: ColorsExt.cyan(context),
+              icon: 'assets/images/icons/_common/calendar.svg',
+              leftToRight: false,
+              click: () {
+                Slidable.of(context)?.close();
+                widget.swipeActionPlanClick();
+              },
+            ),
+          );
+        }),
       ],
     );
   }
 
-  Widget _planButton({bool withLabel = false}) {
-    return Builder(builder: (context) {
-      return ButtonAction(
-        backColor: ColorsExt.cyan25(context),
-        topColor: ColorsExt.cyan(context),
-        icon: 'assets/images/icons/_common/calendar.svg',
-        label: withLabel ? t.task.plan.toUpperCase() : null,
-        click: () {
-          Slidable.of(context)?.close();
-          widget.swipeActionPlanClick();
-        },
-      );
-    });
+  Row _planWithLabel(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Flexible(
+          child: SlidableButtonAction(
+            backColor: ColorsExt.cyan25(context),
+            topColor: ColorsExt.cyan(context),
+            icon: 'assets/images/icons/_common/calendar.svg',
+            label: t.task.plan.toUpperCase(),
+            leftToRight: false,
+            click: () {
+              Slidable.of(context)?.close();
+              widget.swipeActionPlanClick();
+            },
+          ),
+        ),
+      ],
+    );
   }
 }
 
