@@ -22,7 +22,12 @@ class InteractiveWebView {
     }
 
     try {
-      String deltaJson = await _wController!.runJavascriptReturningResult("""htmlToDelta('$html');""");
+      String deltaJson = await _wController!.runJavascriptReturningResult("""htmlToDelta(`$html`);""");
+
+      if (deltaJson == "null") {
+        locator<SentryService>().captureException(Exception("can't parse html: $html"));
+        return Document();
+      }
 
       List<dynamic> delta;
 
@@ -42,16 +47,22 @@ class InteractiveWebView {
   }
 
   static Future<String> deltaToHtml(List delta) async {
-    String deltaJson = jsonEncode(delta).replaceAll("\\", "\\\\");
+    try {
+      String deltaJson = jsonEncode(delta).replaceAll("\\", "\\\\");
 
-    String html = await _wController!.runJavascriptReturningResult("deltaToHtml(`$deltaJson`);");
+      String html = await _wController!.runJavascriptReturningResult("deltaToHtml(`$deltaJson`);");
 
-    // JS interface on Android platform comes as quoted string
-    if (Platform.isAndroid) {
-      html = jsonDecode(html);
+      // JS interface on Android platform comes as quoted string
+      if (Platform.isAndroid) {
+        html = jsonDecode(html);
+      }
+
+      return html;
+    } catch (e) {
+      locator<SentryService>().addBreadcrumb(message: "delta to html: ${jsonEncode(delta)}", category: "debug");
+      locator<SentryService>().captureException(e);
+      rethrow;
     }
-
-    return html;
   }
 
   static Future<List<ChronoModel>?> chronoParse(String value) async {
