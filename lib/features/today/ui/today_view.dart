@@ -60,14 +60,16 @@ class _ViewState extends State<_View> {
     });
 
     todayCubit.panelStateStream.listen((PanelState panelState) {
-      switch (panelState) {
-        case PanelState.opened:
-          panelController.open();
-          break;
-        case PanelState.closed:
-          panelController.close();
-          break;
-      }
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        switch (panelState) {
+          case PanelState.opened:
+            panelController.open();
+            break;
+          case PanelState.closed:
+            panelController.close();
+            break;
+        }
+      });
     });
     super.initState();
   }
