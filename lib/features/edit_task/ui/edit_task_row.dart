@@ -19,6 +19,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:tuple/tuple.dart' as tuple;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class EditTaskRow extends StatefulWidget {
@@ -121,8 +122,12 @@ class _EditTaskRowState extends State<EditTaskRow> {
           autoFocus: false,
           expands: false,
           padding: EdgeInsets.zero,
-          keyboardAppearance: Brightness.dark,
+          keyboardAppearance: Brightness.light,
           placeholder: t.task.description,
+          linkActionPickerDelegate: (BuildContext context, String link, node) async {
+            launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+            return LinkMenuAction.none;
+          },
           customStyles: DefaultStyles(
             placeHolder: DefaultTextBlockStyle(
               const TextStyle(
