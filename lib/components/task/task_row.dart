@@ -17,8 +17,11 @@ import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 
 class TaskRow extends StatefulWidget {
-  final Task task;
+  static const int dailyGoalScaleDurationInMillis = 500;
+  static const int dailyGoalBackgroundAppearDelay = 250;
+  static const int fadeOutDurationInMillis = 500;
 
+  final Task task;
   final Function() completedClick;
   final Function() swipeActionPlanClick;
   final Function() swipeActionSelectLabelClick;
@@ -54,11 +57,26 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
 
   late AnimationController _dailyGoalAnimationController;
 
+  late AnimationController _fadeOutAnimationController;
+  late Animation<double> _fadeOutAnimation;
+
   @override
   void initState() {
     super.initState();
     _dailyGoalAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this, lowerBound: 0, upperBound: 1, value: 0);
+        duration: const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis),
+        vsync: this,
+        lowerBound: 0,
+        upperBound: 1,
+        value: 0);
+
+    _fadeOutAnimationController = AnimationController(
+        duration: const Duration(milliseconds: TaskRow.fadeOutDurationInMillis),
+        vsync: this,
+        lowerBound: 0,
+        upperBound: 1,
+        value: 0);
+    _fadeOutAnimation = Tween<double>(begin: 0, end: 1).animate(_fadeOutAnimationController);
   }
 
   @override
@@ -122,11 +140,16 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                     onCompleted: () async {
                                       if (widget.task.isDailyGoal) {
                                         _dailyGoalAnimationController.value = 1;
-                                        await Future.delayed(const Duration(milliseconds: 250));
+                                        await Future.delayed(
+                                            const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
                                         _dailyGoalAnimationController.reverse(from: 1);
-                                        await Future.delayed(const Duration(milliseconds: 500));
+                                        await Future.delayed(
+                                            const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
                                       }
 
+                                      _fadeOutAnimationController.forward(from: 0);
+                                      await Future.delayed(
+                                          const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
                                       widget.completedClick();
                                     },
                                   );
@@ -158,6 +181,19 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                       ),
                     ),
                   ],
+                ),
+              ),
+              IgnorePointer(
+                child: AnimatedBuilder(
+                  animation: _fadeOutAnimation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: _fadeOutAnimation.value,
+                      child: Container(
+                          constraints: const BoxConstraints(minHeight: 50),
+                          color: Theme.of(context).scaffoldBackgroundColor),
+                    );
+                  },
                 ),
               ),
             ],
