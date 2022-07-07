@@ -5,7 +5,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/slidable_sender.dart';
 import 'package:mobile/features/onboarding/cubit/onboarding_cubit.dart';
 import 'package:mobile/features/onboarding/ui/box_with_info.dart';
-import 'package:mobile/features/onboarding/ui/onboarding_integrations.dart';
 import 'package:mobile/features/onboarding/ui/task_row_fake.dart';
 import 'package:mobile/style/sizes.dart';
 import 'package:models/task/task.dart';
@@ -123,7 +122,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
             child: TextButton(
                 onPressed: () {
                   context.read<OnboardingCubit>().skipAll();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingIntegrations()));
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingIntegrations()));
                 },
                 style: ButtonStyle(
                   textStyle: MaterialStateProperty.all(TextStyle(
@@ -231,7 +230,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
         _animate();
         break;
       case OnboardingNextAction.close:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingIntegrations()));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingIntegrations()));
         break;
     }
   }
