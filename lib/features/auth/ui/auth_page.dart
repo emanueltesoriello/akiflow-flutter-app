@@ -46,8 +46,8 @@ class AuthPage extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: Image.asset(
-                      "assets/images/logo/logo_full_256x256.png",
+                    child: SvgPicture.asset(
+                      "assets/images/logo/logo_full.svg",
                       height: 56,
                       width: 56,
                     ),
