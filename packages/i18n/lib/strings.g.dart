@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 226 
+ * Strings: 231 
  *
- * Built on 2022-07-01 at 08:23 UTC
+ * Built on 2022-07-07 at 12:33 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -343,6 +343,11 @@ class _StringsOnboardingEn {
 	String get or => 'or';
 	String get signInWithGoogle => 'Sign in with Google';
 	late final _StringsOnboardingTermsAndPrivacyEn termsAndPrivacy = _StringsOnboardingTermsAndPrivacyEn._(_root);
+	String get longTapMultipleSelection => 'Long Tap to make multiple selection';
+	String get skipAll => 'Skip all';
+	String get swipeLeftMoreOption => 'Swipe left to show more options';
+	String get swipeMorePlanTask => 'Swipe more to directly plan your task or add a new task';
+	String get swipeRightToMarkAsDone => 'Swipe right to mark a task as done or delete it';
 }
 
 // Path: bottomBar
@@ -861,6 +866,11 @@ extension on _StringsEn {
 			'onboarding.termsAndPrivacy.andThe': ' and the ',
 			'onboarding.termsAndPrivacy.privacyPolicy': 'Privacy Policy',
 			'onboarding.termsAndPrivacy.ofAkiflow': ' of Akiflow',
+			'onboarding.longTapMultipleSelection': 'Long Tap to make multiple selection',
+			'onboarding.skipAll': 'Skip all',
+			'onboarding.swipeLeftMoreOption': 'Swipe left to show more options',
+			'onboarding.swipeMorePlanTask': 'Swipe more to directly plan your task or add a new task',
+			'onboarding.swipeRightToMarkAsDone': 'Swipe right to mark a task as done or delete it',
 			'bottomBar.menu': 'Menu',
 			'bottomBar.inbox': 'Inbox',
 			'bottomBar.today': 'Today',

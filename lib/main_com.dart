@@ -6,10 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
-import 'package:models/user.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -20,6 +16,7 @@ import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
+import 'package:mobile/features/onboarding/cubit/onboarding_cubit.dart';
 import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
@@ -30,6 +27,10 @@ import 'package:mobile/services/database_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
+import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'features/auth/ui/trial_expired_page.dart';
 import 'services/focus_detector_service.dart';
@@ -148,6 +149,10 @@ class Application extends StatelessWidget {
           BlocProvider<EditTaskCubit>(
             lazy: false,
             create: (BuildContext context) => EditTaskCubit(locator<TasksCubit>(), locator<SyncCubit>()),
+          ),
+          BlocProvider<OnboardingCubit>(
+            lazy: false,
+            create: (BuildContext context) => OnboardingCubit(),
           ),
         ],
         child: Builder(builder: (context) {

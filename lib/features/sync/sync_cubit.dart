@@ -18,6 +18,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
   sync({List<Entity>? entities, bool loading = false}) async {
     print("start sync $entities");
+    return;
 
     try {
       emit(state.copyWith(loading: loading));

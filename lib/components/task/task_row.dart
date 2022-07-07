@@ -7,6 +7,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/slidable_button_action.dart';
 import 'package:mobile/components/task/checkbox_animated.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
+import 'package:mobile/components/task/slidable_sender.dart';
 import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
@@ -31,6 +32,7 @@ class TaskRow extends StatefulWidget {
   final bool showLabel;
   final bool showPlanInfo;
   final bool enableLongPressToSelect;
+  final bool isOnboarding;
 
   const TaskRow({
     Key? key,
@@ -45,6 +47,7 @@ class TaskRow extends StatefulWidget {
     required this.showLabel,
     required this.showPlanInfo,
     this.enableLongPressToSelect = false,
+    this.isOnboarding = false,
   }) : super(key: key);
 
   @override
@@ -86,118 +89,129 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      key: ValueKey(widget.task.id),
-      groupTag: "task",
-      startActionPane: _startActions(context),
-      endActionPane: _endActions(context),
-      child: GestureDetector(
-        onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
-        onTap: () async {
-          TaskExt.editTask(context, widget.task);
-        },
-        child: IntrinsicHeight(
-          child: Stack(
-            children: [
-              _BackgroundDailyGoal(
-                task: widget.task,
-                dailyGoalAnimationController: _dailyGoalAnimationController,
-              ),
-              Container(
-                constraints: const BoxConstraints(minHeight: 50),
-                padding: const EdgeInsets.only(right: 14),
-                color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (widget.selectMode) {
-                          widget.selectTask();
-                        } else {
-                          _checkboxController!.completedClick();
-                        }
-                      },
-                      child: Container(
-                        color: Colors.transparent,
-                        width: 48,
-                        child: Row(
-                          children: [
-                            _DotPrefix(widget.task),
-                            Container(
-                              padding: const EdgeInsets.only(top: 12),
-                              child: Builder(builder: ((context) {
-                                if (widget.selectMode) {
-                                  return _SelectableRadioButton(widget.task);
-                                } else {
-                                  return CheckboxAnimated(
-                                    onControllerReady: (controller) {
-                                      _checkboxController = controller;
-                                    },
-                                    task: widget.task,
-                                    key: ObjectKey(widget.task),
-                                    onCompleted: () async {
-                                      if (widget.task.isDailyGoal) {
-                                        _dailyGoalAnimationController.value = 1;
-                                        await Future.delayed(
-                                            const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
-                                        _dailyGoalAnimationController.reverse(from: 1);
-                                        await Future.delayed(
-                                            const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
-                                      }
+    return ClipRRect(
+      borderRadius: widget.isOnboarding ? BorderRadius.circular(8) : BorderRadius.zero,
+      child: Slidable(
+        key: ValueKey(widget.task.id),
+        groupTag: "task",
+        startActionPane: _startActions(context),
+        endActionPane: _endActions(context),
+        child: Builder(builder: (context) {
+          Widget child = GestureDetector(
+            onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
+            onTap: () async {
+              TaskExt.editTask(context, widget.task);
+            },
+            child: IntrinsicHeight(
+              child: Stack(
+                children: [
+                  _BackgroundDailyGoal(
+                    task: widget.task,
+                    dailyGoalAnimationController: _dailyGoalAnimationController,
+                  ),
+                  Container(
+                    constraints: const BoxConstraints(minHeight: 50),
+                    padding: const EdgeInsets.only(right: 14),
+                    color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (widget.selectMode) {
+                              widget.selectTask();
+                            } else {
+                              _checkboxController!.completedClick();
+                            }
+                          },
+                          child: Container(
+                            color: Colors.transparent,
+                            width: 48,
+                            child: Row(
+                              children: [
+                                _DotPrefix(widget.task),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 12),
+                                  child: Builder(builder: ((context) {
+                                    if (widget.selectMode) {
+                                      return _SelectableRadioButton(widget.task);
+                                    } else {
+                                      return CheckboxAnimated(
+                                        onControllerReady: (controller) {
+                                          _checkboxController = controller;
+                                        },
+                                        task: widget.task,
+                                        key: ObjectKey(widget.task),
+                                        onCompleted: () async {
+                                          if (widget.task.isDailyGoal) {
+                                            _dailyGoalAnimationController.value = 1;
+                                            await Future.delayed(
+                                                const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
+                                            _dailyGoalAnimationController.reverse(from: 1);
+                                            await Future.delayed(
+                                                const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
+                                          }
 
-                                      _fadeOutAnimationController.forward(from: 0);
-                                      await Future.delayed(
-                                          const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
-                                      widget.completedClick();
-                                    },
-                                  );
-                                }
-                              })),
+                                          _fadeOutAnimationController.forward(from: 0);
+                                          await Future.delayed(
+                                              const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
+                                          widget.completedClick();
+                                        },
+                                      );
+                                    }
+                                  })),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _Title(widget.task),
-                            _Subtitle(widget.task),
-                            TaskInfo(
-                              widget.task,
-                              hideInboxLabel: widget.hideInboxLabel,
-                              showLabel: widget.showLabel,
-                              selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                              showPlanInfo: widget.showPlanInfo,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _Title(widget.task),
+                                _Subtitle(widget.task),
+                                TaskInfo(
+                                  widget.task,
+                                  hideInboxLabel: widget.hideInboxLabel,
+                                  showLabel: widget.showLabel,
+                                  selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                                  showPlanInfo: widget.showPlanInfo,
+                                ),
+                                const SizedBox(height: 12),
+                              ],
                             ),
-                            const SizedBox(height: 12),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  IgnorePointer(
+                    child: AnimatedBuilder(
+                      animation: _fadeOutAnimation,
+                      builder: (context, child) {
+                        return Opacity(
+                          opacity: _fadeOutAnimation.value,
+                          child: Container(
+                              constraints: const BoxConstraints(minHeight: 50),
+                              color: Theme.of(context).scaffoldBackgroundColor),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-              IgnorePointer(
-                child: AnimatedBuilder(
-                  animation: _fadeOutAnimation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _fadeOutAnimation.value,
-                      child: Container(
-                          constraints: const BoxConstraints(minHeight: 50),
-                          color: Theme.of(context).scaffoldBackgroundColor),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+
+          if (widget.isOnboarding) {
+            return SlidableControllerSender(child: child);
+          } else {
+            return child;
+          }
+        }),
       ),
     );
   }

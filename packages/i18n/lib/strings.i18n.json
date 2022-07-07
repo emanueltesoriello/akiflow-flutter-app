@@ -17,7 +17,12 @@
       "andThe": " and the ",
       "privacyPolicy": "Privacy Policy",
       "ofAkiflow": " of Akiflow"
-    }
+    },
+    "longTapMultipleSelection": "Long Tap to make multiple selection",
+    "skipAll": "Skip all",
+    "swipeLeftMoreOption": "Swipe left to show more options",
+    "swipeMorePlanTask": "Swipe more to directly plan your task or add a new task",
+    "swipeRightToMarkAsDone": "Swipe right to mark a task as done or delete it"
   },
   "bottomBar": {
     "menu": "Menu",
@@ -30,8 +35,8 @@
     "inboxSubtitle": "Inbox is where all your new tasks are collected"
   },
   "expiry": {
-    "or":"or ",
-    "logout":"Log out ",
+    "or": "or ",
+    "logout": "Log out ",
     "title": "Your Free Trial has Expired",
     "description": "Upgrade your plan to pick up where you left off.",
     "button": "Upgrade your plan",
