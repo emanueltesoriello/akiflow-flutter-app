@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
@@ -23,7 +24,7 @@ class TrialExpiredPage extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: Image.asset(
+                child: SvgPicture.asset(
                   "assets/images/logo/logo_full.svg",
                   height: 56,
                   width: 56,

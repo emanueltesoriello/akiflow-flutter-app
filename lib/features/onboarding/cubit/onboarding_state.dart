@@ -5,7 +5,7 @@ class OnboardingCubitState extends Equatable {
   final int page;
 
   const OnboardingCubitState({
-    this.show = true,
+    this.show = false,
     this.page = 0,
   });
 
