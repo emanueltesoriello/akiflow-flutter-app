@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/repository/accounts_repository.dart';
 import 'package:models/account/account.dart';
 
@@ -13,7 +14,15 @@ class OnboardingCubit extends Cubit<OnboardingCubitState> {
 
   static final AccountsRepository _accountsRepository = locator<AccountsRepository>();
 
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
+
   OnboardingCubit() : super(const OnboardingCubitState()) {
+    bool onboardingCompleted = _preferencesRepository.onboardingCompleted;
+
+    if (onboardingCompleted == false) {
+      emit(state.copyWith(show: true));
+    }
+
     _getGmailAccounts();
   }
 
@@ -55,7 +64,12 @@ class OnboardingCubit extends Cubit<OnboardingCubitState> {
     }
   }
 
+  void onboardingCompleted() {
+    _preferencesRepository.setOnboardingCompleted(true);
+  }
+
   void skipAll() {
     emit(state.copyWith(show: false));
+    onboardingCompleted();
   }
 }

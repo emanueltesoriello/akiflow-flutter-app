@@ -6,7 +6,7 @@ class OnboardingCubitState extends Equatable {
   final List<Account> gmailAccounts;
 
   const OnboardingCubitState({
-    this.show = true,
+    this.show = false,
     this.page = 0,
     this.gmailAccounts = const [],
   });

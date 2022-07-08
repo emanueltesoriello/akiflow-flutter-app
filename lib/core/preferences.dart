@@ -49,6 +49,9 @@ abstract class PreferencesRepository {
 
   bool get firstTimeLoaded;
   Future<void> setFirstTimeLoaded(bool value);
+
+  bool get onboardingCompleted;
+  Future<void> setOnboardingCompleted(bool value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -228,5 +231,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setFirstTimeLoaded(bool value) async {
     await _prefs.setBool("firstTimeLoaded", value);
+  }
+
+  @override
+  bool get onboardingCompleted {
+    return _prefs.getBool("onboardingCompleted") ?? false;
+  }
+
+  @override
+  Future<void> setOnboardingCompleted(bool value) async {
+    await _prefs.setBool("onboardingCompleted", value);
   }
 }

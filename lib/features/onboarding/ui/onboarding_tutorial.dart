@@ -123,7 +123,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
             child: TextButton(
                 onPressed: () {
                   context.read<OnboardingCubit>().skipAll();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingIntegrations()));
+                  _openOnboardingIntegrations(context);
                 },
                 style: ButtonStyle(
                   textStyle: MaterialStateProperty.all(TextStyle(
@@ -231,7 +231,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
         _animate();
         break;
       case OnboardingNextAction.close:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingIntegrations()));
+        _openOnboardingIntegrations(context);
         break;
     }
   }
@@ -250,5 +250,11 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
       await Future.delayed(const Duration(milliseconds: 300));
       controller!.animateTo(0.3, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
+  }
+
+  void _openOnboardingIntegrations(BuildContext context) {
+    context.read<OnboardingCubit>().onboardingCompleted();
+    return;
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingIntegrations()));
   }
 }
