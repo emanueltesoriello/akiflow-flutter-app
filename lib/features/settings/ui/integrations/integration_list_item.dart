@@ -11,9 +11,10 @@ class IntegrationListItem extends StatefulWidget {
   final BorderRadius borderRadius;
   final bool enabled;
   final bool useSvgColor;
-  final Widget? trailingWidget;
+  final Widget? trailing;
   final MainAxisAlignment? textMainAxisAlignment;
   final String? identifier;
+  final bool active;
 
   const IntegrationListItem({
     Key? key,
@@ -21,12 +22,13 @@ class IntegrationListItem extends StatefulWidget {
     required this.onPressed,
     this.enabled = true,
     this.useSvgColor = false,
-    this.trailingWidget,
+    this.trailing,
     this.textMainAxisAlignment,
     required this.leadingWidget,
     this.identifier,
     this.insets = const EdgeInsets.symmetric(horizontal: 16),
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
+    required this.active,
   }) : super(key: key);
 
   @override
@@ -99,7 +101,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                         animation: _animation!,
                         builder: (_, child) => Container(
                           margin: widget.insets,
-                          padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                           decoration: BoxDecoration(
                             borderRadius: widget.borderRadius,
                             color: _animation!.value,
@@ -140,7 +142,9 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                             children: [
                                               CircleAvatar(
                                                 radius: 5,
-                                                backgroundColor: ColorsExt.green(context),
+                                                backgroundColor: widget.active
+                                                    ? ColorsExt.green(context)
+                                                    : ColorsExt.orange(context),
                                               ),
                                               const SizedBox(width: 4),
                                               Flexible(
@@ -161,8 +165,8 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                 ),
                               ),
                               Builder(builder: (context) {
-                                if (widget.trailingWidget != null) {
-                                  return widget.trailingWidget!;
+                                if (widget.trailing != null) {
+                                  return widget.trailing!;
                                 }
 
                                 return SvgPicture.asset(
@@ -189,7 +193,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
     return Row(
       children: [
         const SizedBox(width: 16),
-        SizedBox(width: 32, height: 32, child: widget.leadingWidget),
+        widget.leadingWidget,
         const SizedBox(width: 16),
       ],
     );

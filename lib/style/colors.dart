@@ -81,6 +81,14 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.white : ColorsDark.grey1;
   }
 
+  static orange(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.orange : ColorsDark.orange;
+  }
+
+  static orange20(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.orange20 : ColorsDark.orange20;
+  }
+
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

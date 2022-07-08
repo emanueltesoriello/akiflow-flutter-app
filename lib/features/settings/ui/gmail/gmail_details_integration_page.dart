@@ -8,8 +8,8 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
-import 'package:mobile/features/settings/ui/view/integration_list_item.dart';
-import 'package:mobile/features/settings/ui/view/integration_setting.dart';
+import 'package:mobile/features/settings/ui/integrations/integration_list_item.dart';
+import 'package:mobile/features/settings/ui/integrations/integration_setting.dart';
 import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
@@ -220,8 +220,9 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           identifier: gmailAccount.identifier ?? '',
           insets: const EdgeInsets.all(1),
           borderRadius: BorderRadius.circular(radius),
-          trailingWidget: const SizedBox(),
+          trailing: const SizedBox(),
           onPressed: () {},
+          active: true,
         );
       },
     );

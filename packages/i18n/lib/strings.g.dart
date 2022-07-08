@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 231 
+ * Strings: 236 
  *
- * Built on 2022-07-07 at 12:33 UTC
+ * Built on 2022-07-08 at 13:00 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -348,6 +348,10 @@ class _StringsOnboardingEn {
 	String get swipeLeftMoreOption => 'Swipe left to show more options';
 	String get swipeMorePlanTask => 'Swipe more to directly plan your task or add a new task';
 	String get swipeRightToMarkAsDone => 'Swipe right to mark a task as done or delete it';
+	late final _StringsOnboardingGmailEn gmail = _StringsOnboardingGmailEn._(_root);
+	String get reconnect => 'Reconnect';
+	String get allAccountsConnected => 'All accounts connected';
+	String get startAkiflow => 'Start Akiflow';
 }
 
 // Path: bottomBar
@@ -625,6 +629,17 @@ class _StringsOnboardingTermsAndPrivacyEn {
 	String get ofAkiflow => ' of Akiflow';
 }
 
+// Path: onboarding.gmail
+class _StringsOnboardingGmailEn {
+	_StringsOnboardingGmailEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get skipForNow => 'Skip for now';
+	String get reconnectGmailAccount => 'Reconnect Gmail account';
+}
+
 // Path: settings.myAccount
 class _StringsSettingsMyAccountEn {
 	_StringsSettingsMyAccountEn._(this._root);
@@ -871,6 +886,11 @@ extension on _StringsEn {
 			'onboarding.swipeLeftMoreOption': 'Swipe left to show more options',
 			'onboarding.swipeMorePlanTask': 'Swipe more to directly plan your task or add a new task',
 			'onboarding.swipeRightToMarkAsDone': 'Swipe right to mark a task as done or delete it',
+			'onboarding.gmail.skipForNow': 'Skip for now',
+			'onboarding.gmail.reconnectGmailAccount': 'Reconnect Gmail account',
+			'onboarding.reconnect': 'Reconnect',
+			'onboarding.allAccountsConnected': 'All accounts connected',
+			'onboarding.startAkiflow': 'Start Akiflow',
 			'bottomBar.menu': 'Menu',
 			'bottomBar.inbox': 'Inbox',
 			'bottomBar.today': 'Today',

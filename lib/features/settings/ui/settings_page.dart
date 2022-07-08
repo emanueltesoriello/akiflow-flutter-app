@@ -7,7 +7,7 @@ import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/notification_count_icon.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/about_page.dart';
-import 'package:mobile/features/settings/ui/integrations_page.dart';
+import 'package:mobile/features/settings/ui/integrations/integrations_page.dart';
 import 'package:mobile/features/settings/ui/my_account_page.dart';
 import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
 import 'package:url_launcher/url_launcher.dart';

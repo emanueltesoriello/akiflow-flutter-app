@@ -22,7 +22,14 @@
     "skipAll": "Skip all",
     "swipeLeftMoreOption": "Swipe left to show more options",
     "swipeMorePlanTask": "Swipe more to directly plan your task or add a new task",
-    "swipeRightToMarkAsDone": "Swipe right to mark a task as done or delete it"
+    "swipeRightToMarkAsDone": "Swipe right to mark a task as done or delete it",
+    "gmail": {
+      "skipForNow": "Skip for now",
+      "reconnectGmailAccount": "Reconnect Gmail account"
+    },
+    "reconnect": "Reconnect",
+    "allAccountsConnected": "All accounts connected",
+    "startAkiflow": "Start Akiflow"
   },
   "bottomBar": {
     "menu": "Menu",

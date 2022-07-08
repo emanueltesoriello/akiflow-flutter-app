@@ -60,7 +60,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
         borderRadius: BorderRadius.circular(radius),
       ),
       primary: ColorsLight.akiflow,
-      textStyle: const TextStyle(fontWeight: FontWeight.bold, color: ColorsLight.akiflow),
+      textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.akiflow),
     ),
   ),
   pageTransitionsTheme: const PageTransitionsTheme(
