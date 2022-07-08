@@ -198,40 +198,43 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: InkWell(
-                            onTap: () async {
-                              TimeOfDay initialTime =
-                                  _selectedDatetime.value ?? TimeOfDay(hour: widget.defaultTimeHour, minute: 0);
-                              TimePickerUtils.pick(
-                                context,
-                                initialTime: initialTime,
-                                onTimeSelected: (selected) {
-                                  _selectedDatetime.value = selected;
+                          child: ValueListenableBuilder(
+                            valueListenable: _selectedDatetime,
+                            builder: (context, TimeOfDay? selectedTime, child) {
+                              return TextButton(
+                                  onPressed: () {
+                                    TimeOfDay initialTime =
+                                        _selectedDatetime.value ?? TimeOfDay(hour: widget.defaultTimeHour, minute: 0);
+                                    TimePickerUtils.pick(
+                                      context,
+                                      initialTime: initialTime,
+                                      onTimeSelected: (selected) {
+                                        _selectedDatetime.value = selected;
 
-                                  if (widget.onSelectTime != null) {
-                                    widget.onSelectTime!(_selectedDatetime.value);
-                                  }
-                                },
-                              );
-                            },
-                            child: ValueListenableBuilder(
-                              valueListenable: _selectedDatetime,
-                              builder: (context, TimeOfDay? selectedTime, child) {
-                                return Text(
-                                  selectedTime == null
-                                      ? t.addTask.addTime
-                                      : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
-                                          selectedDate.day, selectedTime.hour, selectedTime.minute)),
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: ColorsExt.grey2(context),
-                                    fontWeight: FontWeight.w500,
+                                        if (widget.onSelectTime != null) {
+                                          widget.onSelectTime!(_selectedDatetime.value);
+                                        }
+                                      },
+                                    );
+                                  },
+                                  style: const ButtonStyle(
+                                    alignment: Alignment.centerLeft,
                                   ),
-                                );
-                              },
-                            ),
+                                  child: Text(
+                                    selectedTime == null
+                                        ? t.addTask.addTime
+                                        : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
+                                            selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: ColorsExt.grey2(context),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ));
+                            },
                           ),
                         ),
+                        const SizedBox(width: 16),
                         InkWell(
                           onTap: () {
                             DateTime date = DateTime(

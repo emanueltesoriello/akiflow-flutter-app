@@ -56,6 +56,9 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius),
+      ),
       primary: ColorsLight.akiflow,
       textStyle: const TextStyle(fontWeight: FontWeight.bold, color: ColorsLight.akiflow),
     ),
