@@ -199,8 +199,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           title: t.bottomBar.inbox,
           leading: SvgPicture.asset(
             "assets/images/icons/_common/tray.svg",
-            width: 30,
-            height: 30,
+            width: 26,
+            height: 26,
           ),
           actions: const [TaskListMenu()],
           showSyncButton: true,

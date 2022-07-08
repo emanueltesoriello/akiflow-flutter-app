@@ -67,7 +67,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
         title: _buildTitle(context),
-        titleSpacing: leading != null ? 0 : 16,
+        titleSpacing: leading != null || showBack == true ? 0 : 16,
         leading: _buildLeading(context),
         actions: _buildActions(context),
       ),
@@ -97,9 +97,9 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     }
 
     if (showBack) {
-      return Center(
-        child: InkWell(
-          onTap: (() => Navigator.pop(context)),
+      return InkWell(
+        onTap: (() => Navigator.pop(context)),
+        child: Center(
           child: SvgPicture.asset(
             "assets/images/icons/_common/arrow_left.svg",
             height: 26,
@@ -122,7 +122,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
       return Text(
         t.task.nSelected(count: tasksSelected),
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 22,
           fontWeight: FontWeight.w500,
           color: ColorsExt.grey2(context),
         ),
@@ -146,7 +146,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
       textAlign: TextAlign.start,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: ColorsExt.grey2(context)),
+      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: ColorsExt.grey2(context)),
     );
   }
 

@@ -82,7 +82,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
                 textAlign: TextAlign.start,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: color),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: color),
               );
             },
           ),

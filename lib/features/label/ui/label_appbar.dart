@@ -70,7 +70,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               "assets/images/icons/_common/ellipsis.svg",
               width: 22,
               height: 22,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey3(context),
             ),
             onSelected: (LabelActions result) async {
               switch (result) {
