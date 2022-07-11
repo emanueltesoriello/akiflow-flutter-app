@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/tagbox.dart';
-import 'package:mobile/components/task/plan_for_action.dart';
-import 'package:mobile/extensions/date_extension.dart';
-import 'package:mobile/features/create_task/ui/create_task_duration.dart';
+
+import 'package:mobile/features/create_task/ui/components/create_task_actions.dart';
+import 'package:mobile/features/create_task/ui/components/description_field.dart';
+import 'package:mobile/features/create_task/ui/components/label_widget.dart';
+import 'package:mobile/features/create_task/ui/components/send_task_button.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
-import 'package:mobile/features/edit_task/ui/labels_list.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
+
 import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/interactive_webview.dart';
-import 'package:mobile/utils/no_scroll_behav.dart';
 import 'package:mobile/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/utils/task_extension.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:models/label/label.dart';
-import 'package:models/task/task.dart';
+
+import 'components/duration_widget.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key}) : super(key: key);
@@ -119,95 +114,29 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                 child: SafeArea(
                   child: Column(
                     children: [
-                      BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                        builder: (context, state) {
-                          if (state.showDuration) {
-                            return const CreateTaskDurationItem();
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
-                      ),
-                      BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                        builder: (context, state) {
-                          if (state.showLabelsList) {
-                            return SizedBox(
-                              height: 242,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: ScrollConfiguration(
-                                      behavior: NoScrollBehav(),
-                                      child: SingleChildScrollView(
-                                        physics: const ClampingScrollPhysics(),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12),
-                                          child: LabelsList(
-                                            showHeaders: false,
-                                            onSelect: (Label selected) {
-                                              context.read<EditTaskCubit>().setLabel(selected);
-                                            },
-                                            showNoLabel: state.updatedTask.listId != null,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    color: Theme.of(context).dividerColor,
-                                    width: double.infinity,
-                                    height: 1,
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
-                      ),
+                      const DurationWidget(),
+                      const LabelWidget(),
                       const SizedBox(height: 16),
-                      Container(
+                      Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _title(context),
                             const SizedBox(height: 8),
-                            _description(context),
+                            DescriptionField(descriptionController: descriptionController),
                             const SizedBox(height: 8),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Expanded(child: _actions(context)),
-                                InkWell(
-                                  onTap: () {
-                                    HapticFeedback.mediumImpact();
-
-                                    context.read<EditTaskCubit>().create();
-
-                                    Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
-
-                                    Navigator.pop(context, taskUpdated);
+                                CreateTaskActions(
+                                  titleController: titleController,
+                                  titleFocus: titleFocus,
+                                  callback: (List<ChronoModel>? chronoParsed) {
+                                    _checkTitleWithChrono(chronoParsed, titleController.text, isFromAction: true);
                                   },
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Material(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: SizedBox(
-                                      height: 36,
-                                      width: 36,
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/images/icons/_common/paperplane_send.svg",
-                                          width: 24,
-                                          height: 24,
-                                          color: Theme.of(context).backgroundColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ),
+                                const SendTaskButton(),
                               ],
                             ),
                             const SizedBox(height: 16),
@@ -222,154 +151,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _actions(BuildContext context) {
-    return Wrap(
-      runSpacing: 8,
-      children: [
-        PlanForAction(
-          task: context.watch<EditTaskCubit>().state.updatedTask,
-          onTap: () {
-            var editTaskCubit = context.read<EditTaskCubit>();
-
-            editTaskCubit.planTap();
-
-            showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => PlanModal(
-                initialDate: editTaskCubit.state.updatedTask.date != null
-                    ? DateTime.parse(editTaskCubit.state.updatedTask.date!)
-                    : DateTime.now(),
-                initialDatetime: editTaskCubit.state.updatedTask.datetime != null
-                    ? DateTime.parse(editTaskCubit.state.updatedTask.datetime!)
-                    : null,
-                taskStatusType: editTaskCubit.state.updatedTask.statusType ?? TaskStatusType.inbox,
-                onSelectDate: (
-                    {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) async {
-                  editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
-
-                  if (date != null) {
-                    String shortDate = date.shortDateFormatted;
-                    String? shortTime = datetime?.timeFormatted;
-
-                    titleController.text += shortDate;
-
-                    if (shortTime != null) {
-                      titleController.text += shortTime;
-                    }
-                  }
-
-                  titleFocus.requestFocus();
-
-                  List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(titleController.text);
-
-                  _checkTitleWithChrono(chronoParsed, titleController.text, isFromAction: true);
-                },
-                setForInbox: () {
-                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
-                },
-                setForSomeday: () {
-                  editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.someday);
-                },
-              ),
-            );
-          },
-        ),
-        const SizedBox(width: 8),
-        BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-          builder: (context, state) {
-            Task task = state.updatedTask;
-
-            String? text;
-
-            if (task.duration != null && task.duration != 0) {
-              int seconds = task.duration!;
-
-              double hours = seconds / 3600;
-              double minutes = (hours - hours.floor()) * 60;
-
-              if (minutes.floor() == 0) {
-                text = '${hours.floor()}h';
-              } else if (hours.floor() == 0) {
-                text = '${minutes.floor()}m';
-              } else {
-                text = '${hours.floor()}h ${minutes.floor()}m';
-              }
-            }
-
-            return TagBox(
-              icon: "assets/images/icons/_common/hourglass.svg",
-              active: task.duration != null && task.duration != 0,
-              backgroundColor:
-                  task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-              isSquare: task.duration != null && task.duration != 0 ? false : true,
-              isBig: true,
-              text: text,
-              onPressed: () {
-                context.read<EditTaskCubit>().toggleDuration();
-              },
-            );
-          },
-        ),
-        const SizedBox(width: 8),
-        BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-          builder: (context, state) {
-            Color? background;
-
-            List<Label> labels = context.read<LabelsCubit>().state.labels;
-
-            Label? label;
-
-            try {
-              label = labels.firstWhere((label) => state.updatedTask.listId!.contains(label.id!));
-            } catch (_) {}
-
-            if (label?.color != null) {
-              background = ColorsExt.getFromName(label!.color!);
-            }
-
-            return TagBox(
-              icon: "assets/images/icons/_common/number.svg",
-              active: background != null,
-              iconColor: background ?? ColorsExt.grey2(context),
-              backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey7(context),
-              text: label?.title ?? t.addTask.label,
-              isBig: true,
-              onPressed: () {
-                context.read<EditTaskCubit>().toggleLabels();
-              },
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  TextField _description(BuildContext context) {
-    return TextField(
-      controller: descriptionController,
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.only(bottom: 16),
-        isDense: true,
-        hintText: t.addTask.descriptionHint,
-        border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 17,
-        ),
-      ),
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 17,
-      ),
-      onChanged: (value) {
-        context.read<EditTaskCubit>().updateDescription(value);
-      },
     );
   }
 
