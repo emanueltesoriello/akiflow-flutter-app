@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
-
 import 'package:mobile/features/create_task/ui/components/create_task_actions.dart';
 import 'package:mobile/features/create_task/ui/components/description_field.dart';
 import 'package:mobile/features/create_task/ui/components/label_widget.dart';
 import 'package:mobile/features/create_task/ui/components/send_task_button.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-
 import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/interactive_webview.dart';
@@ -250,7 +248,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     List<TextPartStyleDefinition> newDefinitions = [];
     for (var chrono in chronoParsed) {
       newDefinitions.add(TextPartStyleDefinition(
-        pattern: "(?:(${chrono.text!})+)",
+        pattern: "(?:(${chrono.text!})+)\\s",
         color: color,
         isFromAction: isFromAction,
       ));

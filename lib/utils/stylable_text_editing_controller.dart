@@ -156,8 +156,8 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
           onTap: () => parsedTextClick(textToBeStyled!, isFromAction),
           child: Container(
               height: 26,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              margin: const EdgeInsets.only(top: 2.5),
+              padding: const EdgeInsets.only(left: 5, right: 0),
+              margin: const EdgeInsets.only(top: 2.5, right: 5),
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(3),
