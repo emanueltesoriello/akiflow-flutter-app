@@ -28,7 +28,7 @@ class AuthPage extends StatelessWidget {
           }
         },
         listener: (context, state) {
-          if (state.user != null && (state.hasValidPlan == null || state.hasValidPlan == true)) {
+          if (state.user != null && state.hasValidPlan == true) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -48,7 +48,7 @@ class AuthPage extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: SvgPicture.asset(
-                     Assets.images.logo.logoFullSVG,
+                      Assets.images.logo.logoFullSVG,
                       height: 56,
                       width: 56,
                     ),

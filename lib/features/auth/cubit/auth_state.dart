@@ -2,12 +2,12 @@ part of 'auth_cubit.dart';
 
 class AuthCubitState extends Equatable {
   final bool loading;
-  final bool? hasValidPlan;
+  final bool hasValidPlan;
   final User? user;
 
   const AuthCubitState({
     this.loading = false,
-    this.hasValidPlan,
+    this.hasValidPlan = true,
     this.user,
   });
 

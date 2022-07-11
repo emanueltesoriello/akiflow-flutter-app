@@ -183,7 +183,6 @@ class Application extends StatelessWidget {
                       ));
                     }
                     if (state.user == null) {
-                      print('null');
                       Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
                         builder: (BuildContext context) => const AuthPage(),
                       ));
@@ -255,17 +254,27 @@ class _Home extends StatelessWidget {
       },
       child: Builder(
         builder: (context) {
-          AuthCubit bloc = context.watch<AuthCubit>();
-
-          if (bloc.state.user != null && bloc.state.hasValidPlan == null || bloc.state.hasValidPlan == true) {
+          if (userLogged) {
             return const MainPage();
-          } else if (bloc.state.user != null && bloc.state.hasValidPlan == false) {
-            return const TrialExpiredPage();
           } else {
             return const AuthPage();
           }
         },
       ),
+      // TODO fix expiry page after login and on app restart before
+      // child: Builder(
+      //   builder: (context) {
+      //     AuthCubit bloc = context.watch<AuthCubit>();
+
+      //     if (bloc.state.user != null && bloc.state.hasValidPlan) {
+      //       return const MainPage();
+      //     } else if (bloc.state.user != null && bloc.state.hasValidPlan == false) {
+      //       return const TrialExpiredPage();
+      //     } else {
+      //       return const AuthPage();
+      //     }
+      //   },
+      // ),
     );
   }
 }

@@ -19,6 +19,8 @@ class SyncCubit extends Cubit<SyncCubitState> {
   sync({List<Entity>? entities, bool loading = false}) async {
     print("start sync $entities");
 
+    // TODO check user plan if active before sync
+
     try {
       emit(state.copyWith(loading: loading));
 

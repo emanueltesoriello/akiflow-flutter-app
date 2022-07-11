@@ -36,7 +36,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
   AuthCubit(this._syncCubit, this._pushCubit) : super(const AuthCubitState()) {
     _init();
-    planExpired();
   }
 
   planExpired() async {
@@ -47,7 +46,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   _init() async {
     User? user = _preferencesRepository.user;
     bool? hasValidPlan = await _userApi.hasValidPlan();
-    print(hasValidPlan);
+
     if (hasValidPlan == true) {
       emit(AuthCubitState(user: user));
       print("logged in: ${user != null}");
@@ -101,6 +100,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
       if (user != null) {
         await _preferencesRepository.saveUser(user);
         bool hasValidPlan = await _userApi.hasValidPlan();
+
         if (hasValidPlan) {
           try {
             Map<String, dynamic>? settings = await _userApi.getSettings();
@@ -113,7 +113,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           _sentryService.authenticate(user!.id.toString(), user.email);
 
-          emit(state.copyWith(user: Nullable(user)));
+          emit(state.copyWith(user: Nullable(user), hasValidPlan: hasValidPlan));
 
           await _pushCubit.login(user);
 
@@ -129,8 +129,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
         } else {
           emit(state.copyWith(user: Nullable(user), hasValidPlan: false));
         }
-      }else{
-          emit(state.copyWith(user: Nullable(user)));
+      } else {
+        emit(state.copyWith(user: Nullable(user)));
       }
     } else {
       _dialogService.showGenericError();
