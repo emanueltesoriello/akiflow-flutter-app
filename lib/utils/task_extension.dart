@@ -534,13 +534,8 @@ extension TaskExt on Task {
   }
 
   static String? iconNetworkFromUrl(String? url) {
-    try {
-      url = !url!.startsWith('http://') && !url.startsWith('https://') ? 'http://$url' : url;
-      Uri origin = Uri.parse(url);
-      return "https://www.google.com/s2/favicons?sz=24&domain=$origin";
-    } catch (_) {}
-
-    return null;
+    url = !url!.startsWith('http://') && !url.startsWith('https://') ? 'http://$url' : url;
+    return "https://favicon.akiflow.com/?url=$url";
   }
 
   static String? iconAssetFromUrl(String? url) {
