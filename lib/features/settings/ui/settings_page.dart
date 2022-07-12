@@ -5,11 +5,14 @@ import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
 import 'package:mobile/components/base/notification_count_icon.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/integrations_page.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/about_page.dart';
 import 'package:mobile/features/settings/ui/my_account_page.dart';
 import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
+import 'package:mobile/style/colors.dart';
+import 'package:models/account/account.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -61,6 +64,27 @@ class SettingsPage extends StatelessWidget {
             title: t.settings.integrations.title,
             leading: "assets/images/icons/_common/puzzle.svg",
             position: ButtonListPosition.single,
+            preTrailing: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
+              builder: (context, state) {
+                List<Account> accounts = state.accounts;
+
+                if (accounts.every((account) => context.read<IntegrationsCubit>().isLocalActive(account))) {
+                  return const SizedBox();
+                }
+
+                int count =
+                    accounts.where((account) => !context.read<IntegrationsCubit>().isLocalActive(account)).length;
+
+                return CircleAvatar(
+                  backgroundColor: ColorsExt.orange(context),
+                  radius: 9,
+                  child: Text(
+                    count.toString(),
+                    style: TextStyle(color: ColorsExt.background(context), fontSize: 13, fontWeight: FontWeight.w500),
+                  ),
+                );
+              },
+            ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const IntegrationsPage()));
             },

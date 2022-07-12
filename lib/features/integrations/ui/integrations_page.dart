@@ -32,7 +32,8 @@ class IntegrationsPage extends StatelessWidget {
                 BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                   builder: (context, state) {
                     List<Account> accounts = state.accounts.toList();
-                    accounts.removeWhere((element) => element.connectorId == "akiflow");
+                    accounts.removeWhere((element) => element.connectorId == "akiflow" || element.deletedAt != null);
+
                     accounts.removeWhere((element) => !AccountExt.acceptedAccountsOrigin.contains(element.connectorId));
                     return Visibility(
                       visible: accounts.isNotEmpty,
@@ -46,12 +47,18 @@ class IntegrationsPage extends StatelessWidget {
                             style:
                                 TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                           ),
-                          IntegrationsList(accounts, onTap: (Account account) {
-                            if (account.connectorId == 'gmail') {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
-                            }
-                          }),
+                          IntegrationsList(
+                            accounts,
+                            onTap: (Account account) async {
+                              if (context.read<IntegrationsCubit>().isLocalActive(account) &&
+                                  account.connectorId == 'gmail') {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
+                              } else {
+                                context.read<IntegrationsCubit>().connectGmail(email: account.identifier);
+                              }
+                            },
+                          ),
                         ],
                       ),
                     );
@@ -81,8 +88,8 @@ class IntegrationsPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(radius),
                   active: true,
                   onPressed: () async {
-                    await Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => const GmailInstructionIntegrationsPage()));
+                    await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const GmailInstructionIntegrationsPage.newConnection()));
                   },
                 ),
                 const SizedBox(height: 16),

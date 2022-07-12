@@ -19,6 +19,7 @@ import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/extensions/account_ext.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -96,7 +97,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     _syncCubit.sync(loading: true);
   }
 
-  Future<void> connectGmail() async {
+  Future<void> connectGmail({String? email}) async {
     emit(state.copyWith(isAuthenticatingOAuth: true));
 
     FlutterAppAuth appAuth = const FlutterAppAuth();
@@ -115,6 +116,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
           'https://www.googleapis.com/auth/userinfo.profile',
           'https://www.googleapis.com/auth/gmail.modify',
         ],
+        loginHint: email,
       ),
     );
 
@@ -145,6 +147,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     print("set account token in preferences for account ${account.accountId}");
 
     await _preferencesRepository.setAccountToken(account.accountId!, accountToken);
+    await _preferencesRepository.setV2AccountActive(account.accountId!, true);
 
     try {
       Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);
@@ -190,5 +193,21 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     } catch (_) {
       launchUrl(Uri.parse("mailto:support@akiflow.com"), mode: LaunchMode.externalApplication);
     }
+  }
+
+  bool isLocalActive(Account account) {
+    if (AccountExt.v2Accounts.contains(account.connectorId)) {
+      return _preferencesRepository.getV2AccountActive(account.accountId!);
+    } else {
+      return true;
+    }
+  }
+
+  void reconnectPageVisible(bool value) {
+    emit(state.copyWith(reconnectPageVisible: value));
+  }
+
+  Future<void> refresh() async {
+    await _init();
   }
 }

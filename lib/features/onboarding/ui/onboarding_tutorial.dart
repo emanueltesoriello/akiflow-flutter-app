@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/task/slidable_sender.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/reconnect_integrations.dart';
 import 'package:mobile/features/onboarding/cubit/onboarding_cubit.dart';
 import 'package:mobile/features/onboarding/ui/box_with_info.dart';
 import 'package:mobile/features/onboarding/ui/task_row_fake.dart';
 import 'package:mobile/style/sizes.dart';
+import 'package:models/account/account.dart';
 import 'package:models/task/task.dart';
 
 class OnboardingTutorial extends StatefulWidget {
@@ -123,7 +125,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
             child: TextButton(
                 onPressed: () {
                   context.read<OnboardingCubit>().skipAll();
-                  _openOnboardingIntegrations(context);
+                  _tutorialCompleted(context);
                 },
                 style: ButtonStyle(
                   textStyle: MaterialStateProperty.all(TextStyle(
@@ -231,7 +233,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
         _animate();
         break;
       case OnboardingNextAction.close:
-        _openOnboardingIntegrations(context);
+        _tutorialCompleted(context);
         break;
     }
   }
@@ -252,9 +254,19 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
     }
   }
 
-  void _openOnboardingIntegrations(BuildContext context) {
+  void _tutorialCompleted(BuildContext context) {
     context.read<OnboardingCubit>().onboardingCompleted();
-    return;
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ReconnectIntegrations()));
+
+    List<Account> accounts = context.read<IntegrationsCubit>().state.accounts;
+
+    if (accounts.every((account) => context.read<IntegrationsCubit>().isLocalActive(account))) {
+      return;
+    } else {
+      context.read<IntegrationsCubit>().reconnectPageVisible(true);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const ReconnectIntegrations())).then((_) {
+        context.read<IntegrationsCubit>().reconnectPageVisible(false);
+      });
+    }
   }
 }

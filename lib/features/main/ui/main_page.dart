@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,6 +16,7 @@ import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
 import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
+import 'package:mobile/features/integrations/ui/reconnect_integrations.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
@@ -35,6 +37,7 @@ import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/sizes.dart';
 import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
@@ -93,6 +96,33 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     });
 
     context.read<MainCubit>().onLoggedAppStart();
+
+    context.read<SyncCubit>().syncCompletedStream.listen((_) {
+      _checkIfHasAccountsToReconnect();
+    });
+  }
+
+  Future<void> _checkIfHasAccountsToReconnect() async {
+    context.read<IntegrationsCubit>().refresh().then((_) {
+      bool reconnectPageVisible = context.read<IntegrationsCubit>().state.reconnectPageVisible;
+      bool tutorialVisible = context.read<OnboardingCubit>().state.show;
+
+      if (reconnectPageVisible || tutorialVisible) {
+        return;
+      }
+
+      List<Account> accounts = context.read<IntegrationsCubit>().state.accounts;
+
+      if (accounts.any((account) => !context.read<IntegrationsCubit>().isLocalActive(account))) {
+        context.read<IntegrationsCubit>().reconnectPageVisible(true);
+
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const ReconnectIntegrations())).then((_) {
+            context.read<IntegrationsCubit>().reconnectPageVisible(false);
+          });
+        });
+      }
+    });
   }
 
   @override

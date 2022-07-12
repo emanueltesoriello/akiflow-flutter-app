@@ -53,15 +53,22 @@ class ReconnectIntegrations extends StatelessWidget {
                           state.accounts
                               .where((account) => account.connectorId == "gmail" && account.deletedAt == null)
                               .toList(),
-                          trailing: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text(
-                              t.onboarding.reconnect.toUpperCase(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 15, color: ColorsExt.akiflow(context)),
-                            ),
-                          ),
-                          onTap: (Account account) {},
+                          isReconnectPage: true,
+                          onTap: (Account account) async {
+                            IntegrationsCubit bloc = context.read<IntegrationsCubit>();
+
+                            if (bloc.isLocalActive(account)) {
+                              return;
+                            }
+
+                            bloc.connectGmail(email: account.identifier).then((_) {
+                              List<Account> accounts = bloc.state.accounts;
+
+                              if (accounts.every((account) => bloc.isLocalActive(account))) {
+                                Navigator.pop(context);
+                              }
+                            });
+                          },
                         );
                       },
                     ),

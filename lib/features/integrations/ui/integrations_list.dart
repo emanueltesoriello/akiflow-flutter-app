@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/circle_account_picture.dart';
 import 'package:mobile/features/integrations/ui/integration_list_item.dart';
+import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -9,9 +13,10 @@ import 'package:models/account/account.dart';
 class IntegrationsList extends StatelessWidget {
   final List<Account> accounts;
   final Function(Account) onTap;
-  final Widget? trailing;
+  final bool isReconnectPage;
 
-  const IntegrationsList(this.accounts, {Key? key, required this.onTap, this.trailing}) : super(key: key);
+  const IntegrationsList(this.accounts, {Key? key, required this.onTap, this.isReconnectPage = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +30,26 @@ class IntegrationsList extends StatelessWidget {
         String? title = DocExt.titleFromConnectorId(account.connectorId);
         String? iconAsset = TaskExt.iconFromConnectorId(account.connectorId);
 
+        bool isLocalActive = context.read<IntegrationsCubit>().isLocalActive(account);
+
         return IntegrationListItem(
-          active: true,
+          active: context.read<IntegrationsCubit>().isLocalActive(account),
           leading: CircleAccountPicture(iconAsset: iconAsset, networkImageUrl: account.picture),
-          trailing: trailing,
+          trailing: () {
+            if (isReconnectPage && isLocalActive) {
+              return const SizedBox();
+            } else if (isReconnectPage && isLocalActive == true) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  t.onboarding.reconnect.toUpperCase(),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: ColorsExt.akiflow(context)),
+                ),
+              );
+            } else {
+              return null;
+            }
+          }(),
           title: title,
           identifier: account.identifier ?? '',
           insets: _getEdgeInsets(index, accounts.length),

@@ -18,6 +18,7 @@ class ButtonList extends StatefulWidget {
   final bool useSvgColor;
   final Widget? trailingWidget;
   final MainAxisAlignment? textMainAxisAlignment;
+  final Widget? preTrailing;
 
   const ButtonList({
     Key? key,
@@ -32,6 +33,7 @@ class ButtonList extends StatefulWidget {
     this.useSvgColor = false,
     this.trailingWidget,
     this.textMainAxisAlignment,
+    this.preTrailing,
   }) : super(key: key);
 
   @override
@@ -128,6 +130,20 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                                   ),
                                 ],
                               ),
+                            ),
+                            Builder(
+                              builder: (_) {
+                                if (widget.preTrailing != null) {
+                                  return Row(
+                                    children: [
+                                      widget.preTrailing!,
+                                      const SizedBox(width: 7),
+                                    ],
+                                  );
+                                }
+
+                                return const SizedBox();
+                              },
                             ),
                             Builder(builder: (context) {
                               if (widget.trailingWidget != null) {

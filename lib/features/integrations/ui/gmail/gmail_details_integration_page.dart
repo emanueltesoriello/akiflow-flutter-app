@@ -210,7 +210,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           trailing: const SizedBox(),
           onPressed: () {},
-          active: true,
+          active: context.read<IntegrationsCubit>().isLocalActive(gmailAccount),
         );
       },
     );

@@ -10,6 +10,8 @@ extension AccountExt on Account {
     "gmail",
   ];
 
+  static const List<String> v2Accounts = ["gmail"];
+
   GmailSyncMode get gmailSyncMode {
     try {
       return details?['syncMode'] == 1

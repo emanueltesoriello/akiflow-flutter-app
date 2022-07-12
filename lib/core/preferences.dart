@@ -52,6 +52,9 @@ abstract class PreferencesRepository {
 
   bool get onboardingCompleted;
   Future<void> setOnboardingCompleted(bool value);
+
+  bool getV2AccountActive(String accountId);
+  Future<void> setV2AccountActive(String accountId, bool active);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -241,5 +244,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setOnboardingCompleted(bool value) async {
     await _prefs.setBool("onboardingCompleted", value);
+  }
+
+  @override
+  bool getV2AccountActive(String accountId) {
+    return _prefs.getBool("localV2AccountActive_$accountId") ?? false;
+  }
+
+  @override
+  Future<void> setV2AccountActive(String accountId, bool active) async {
+    await _prefs.setBool("localV2AccountActive_$accountId", active);
   }
 }

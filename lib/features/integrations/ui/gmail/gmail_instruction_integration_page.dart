@@ -8,9 +8,16 @@ import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/integration_header.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
+import 'package:models/account/account.dart';
 
 class GmailInstructionIntegrationsPage extends StatelessWidget {
-  const GmailInstructionIntegrationsPage({Key? key}) : super(key: key);
+  final Account? account;
+
+  const GmailInstructionIntegrationsPage(this.account, {Key? key}) : super(key: key);
+
+  const GmailInstructionIntegrationsPage.newConnection({Key? key})
+      : account = null,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +45,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     children: [
                       IntegrationDetailsHeader(
-                        isActive: false,
+                        isActive: account != null && context.read<IntegrationsCubit>().isLocalActive(account!),
                         identifier: t.settings.integrations.gmail.communication,
                         connectorId: 'gmail',
                       ),
