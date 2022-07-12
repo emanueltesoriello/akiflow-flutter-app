@@ -26,7 +26,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
-part 'settings_state.dart';
+part 'integrations_state.dart';
 
 class SettingsCubit extends Cubit<SettingsCubitState> {
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();

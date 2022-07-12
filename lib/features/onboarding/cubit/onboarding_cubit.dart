@@ -2,8 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/repository/accounts_repository.dart';
-import 'package:models/account/account.dart';
 
 part 'onboarding_state.dart';
 
@@ -11,8 +9,6 @@ enum OnboardingNextAction { none, reset, next, close }
 
 class OnboardingCubit extends Cubit<OnboardingCubitState> {
   static const int onboardingSteps = 3;
-
-  static final AccountsRepository _accountsRepository = locator<AccountsRepository>();
 
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
@@ -22,17 +18,6 @@ class OnboardingCubit extends Cubit<OnboardingCubitState> {
     if (onboardingCompleted == false) {
       emit(state.copyWith(show: true));
     }
-
-    _getGmailAccounts();
-  }
-
-  void _getGmailAccounts() async {
-    List<Account> accounts = await _accountsRepository.get();
-
-    List<Account> gmailAccounts =
-        accounts.where((account) => account.connectorId == "gmail" && account.deletedAt == null).toList();
-
-    emit(state.copyWith(gmailAccounts: gmailAccounts));
   }
 
   void back() {

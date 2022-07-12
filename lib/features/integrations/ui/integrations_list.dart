@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:mobile/features/settings/ui/integrations/integration_list_item.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/features/integrations/ui/circle_account_picture.dart';
+import 'package:mobile/features/integrations/ui/integration_list_item.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:mobile/utils/doc_extension.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -27,34 +26,8 @@ class IntegrationsList extends StatelessWidget {
         String? iconAsset = TaskExt.iconFromConnectorId(account.connectorId);
 
         return IntegrationListItem(
-          leadingWidget: SizedBox(
-            height: 30,
-            width: 30,
-            child: Stack(
-              children: [
-                SvgPicture.asset(
-                  iconAsset,
-                  height: 30,
-                  width: 30,
-                ),
-                Builder(builder: (context) {
-                  if (account.picture == null || account.picture!.isEmpty) {
-                    return const SizedBox();
-                  }
-
-                  return Transform.translate(
-                    offset: const Offset(5, 5),
-                    child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: CircleAvatar(
-                            radius: 8,
-                            backgroundColor: ColorsExt.grey3(context),
-                            backgroundImage: NetworkImage(account.picture!))),
-                  );
-                })
-              ],
-            ),
-          ),
+          active: true,
+          leading: CircleAccountPicture(iconAsset: iconAsset, networkImageUrl: account.picture),
           trailing: trailing,
           title: title,
           identifier: account.identifier ?? '',
@@ -64,7 +37,6 @@ class IntegrationsList extends StatelessWidget {
           onPressed: () {
             onTap(account);
           },
-          active: true,
         );
       },
     );

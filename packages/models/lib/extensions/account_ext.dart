@@ -7,6 +7,7 @@ extension AccountExt on Account {
     "google",
     "slack",
     "todoist",
+    "gmail",
   ];
 
   GmailSyncMode get gmailSyncMode {

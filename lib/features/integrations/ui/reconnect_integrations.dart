@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/onboarding/cubit/onboarding_cubit.dart';
-import 'package:mobile/features/settings/ui/integrations/integrations_list.dart';
+import 'package:mobile/features/integrations/ui/integrations_list.dart';
+import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/account/account.dart';
 
-class OnboardingIntegrations extends StatelessWidget {
-  const OnboardingIntegrations({Key? key}) : super(key: key);
+class ReconnectIntegrations extends StatelessWidget {
+  const ReconnectIntegrations({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +47,12 @@ class OnboardingIntegrations extends StatelessWidget {
                       style: TextStyle(fontSize: 20, color: ColorsExt.grey1(context), fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 48),
-                    BlocBuilder<OnboardingCubit, OnboardingCubitState>(
+                    BlocBuilder<SettingsCubit, SettingsCubitState>(
                       builder: (context, state) {
                         return IntegrationsList(
-                          state.gmailAccounts,
+                          state.accounts
+                              .where((account) => account.connectorId == "gmail" && account.deletedAt == null)
+                              .toList(),
                           trailing: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Text(

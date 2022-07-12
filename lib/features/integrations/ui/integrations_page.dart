@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
+import 'package:mobile/features/integrations/ui/gmail/gmail_details_integration_page.dart';
+import 'package:mobile/features/integrations/ui/gmail/gmail_instruction_integration_page.dart';
+import 'package:mobile/features/integrations/ui/integration_list_item.dart';
+import 'package:mobile/features/integrations/ui/integrations_list.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/settings/ui/gmail/gmail_details_integration_page.dart';
-import 'package:mobile/features/settings/ui/gmail/gmail_instruction_integration_page.dart';
-import 'package:mobile/features/settings/ui/integrations/integration_list_item.dart';
-import 'package:mobile/features/settings/ui/integrations/integrations_list.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:models/account/account.dart';
@@ -64,7 +64,7 @@ class IntegrationsPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 IntegrationListItem(
-                  leadingWidget: Padding(
+                  leading: Padding(
                     padding: const EdgeInsets.all(2),
                     child: SizedBox(
                       height: 30,

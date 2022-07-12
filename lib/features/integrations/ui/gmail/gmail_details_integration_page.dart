@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/integrations/cubit/gmail_mark_as_done_type.dart';
+import 'package:mobile/features/integrations/ui/circle_account_picture.dart';
+import 'package:mobile/features/integrations/ui/gmail/gmail_import_task_modal.dart';
+import 'package:mobile/features/integrations/ui/gmail/gmail_mark_done_modal.dart';
+import 'package:mobile/features/integrations/ui/integration_list_item.dart';
+import 'package:mobile/features/integrations/ui/integration_setting.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/settings/ui/gmail/gmail_import_task_modal.dart';
-import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
-import 'package:mobile/features/settings/ui/integrations/integration_list_item.dart';
-import 'package:mobile/features/settings/ui/integrations/integration_setting.dart';
 import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
@@ -199,22 +200,9 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
         Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
         return IntegrationListItem(
-          leadingWidget: Stack(
-            fit: StackFit.expand,
-            children: [
-              SvgPicture.asset(TaskExt.iconFromConnectorId("gmail")),
-              Builder(builder: (context) {
-                if (gmailAccount.picture == null || gmailAccount.picture!.isEmpty) {
-                  return const SizedBox();
-                }
-                return Align(
-                    alignment: Alignment.bottomRight,
-                    child: CircleAvatar(
-                        radius: 8,
-                        backgroundColor: ColorsExt.grey3(context),
-                        backgroundImage: NetworkImage(gmailAccount.picture!)));
-              })
-            ],
+          leading: CircleAccountPicture(
+            iconAsset: TaskExt.iconFromConnectorId("gmail"),
+            networkImageUrl: gmailAccount.picture,
           ),
           title: DocExt.titleFromConnectorId("gmail"),
           identifier: gmailAccount.identifier ?? '',

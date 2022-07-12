@@ -1,4 +1,4 @@
-import 'package:mobile/features/settings/ui/gmail/gmail_mark_done_modal.dart';
+import 'package:mobile/features/integrations/cubit/gmail_mark_as_done_type.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';

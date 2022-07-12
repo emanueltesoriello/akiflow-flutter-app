@@ -6,7 +6,7 @@ import 'package:mobile/style/colors.dart';
 class IntegrationListItem extends StatefulWidget {
   final String title;
   final Function() onPressed;
-  final Widget leadingWidget;
+  final Widget leading;
   final EdgeInsets insets;
   final BorderRadius borderRadius;
   final bool enabled;
@@ -24,7 +24,7 @@ class IntegrationListItem extends StatefulWidget {
     this.useSvgColor = false,
     this.trailing,
     this.textMainAxisAlignment,
-    required this.leadingWidget,
+    required this.leading,
     this.identifier,
     this.insets = const EdgeInsets.symmetric(horizontal: 16),
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
@@ -193,7 +193,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
     return Row(
       children: [
         const SizedBox(width: 16),
-        widget.leadingWidget,
+        widget.leading,
         const SizedBox(width: 16),
       ],
     );
