@@ -14,6 +14,7 @@ import 'package:mobile/features/edit_task/cubit/doc_action.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
@@ -25,7 +26,6 @@ import 'package:mobile/features/main/ui/undo_button.dart';
 import 'package:mobile/features/main/ui/webview.dart';
 import 'package:mobile/features/onboarding/cubit/onboarding_cubit.dart';
 import 'package:mobile/features/onboarding/ui/onboarding_tutorial.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
@@ -98,7 +98,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    bool isAuthenticatingOAuth = context.read<SettingsCubit>().state.isAuthenticatingOAuth;
+    bool isAuthenticatingOAuth = context.read<IntegrationsCubit>().state.isAuthenticatingOAuth;
     if (state == AppLifecycleState.resumed && isAuthenticatingOAuth == false) {
       context.read<SyncCubit>().sync(loading: true);
     }

@@ -5,12 +5,12 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/integrations/cubit/gmail_mark_as_done_type.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/circle_account_picture.dart';
 import 'package:mobile/features/integrations/ui/gmail/gmail_import_task_modal.dart';
 import 'package:mobile/features/integrations/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/integrations/ui/integration_list_item.dart';
 import 'package:mobile/features/integrations/ui/integration_setting.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/view/settings_header_text.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
@@ -47,7 +47,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
                 _behaviour(),
                 const SizedBox(height: 20),
                 SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
-                BlocBuilder<SettingsCubit, SettingsCubitState>(
+                BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                   builder: (context, state) {
                     Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
@@ -67,7 +67,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
                         padding: 2,
                         onToggle: (value) {
                           context
-                              .read<SettingsCubit>()
+                              .read<IntegrationsCubit>()
                               .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
                         },
                       ),
@@ -85,7 +85,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
   }
 
   Widget _behaviour() {
-    return BlocBuilder<SettingsCubit, SettingsCubitState>(
+    return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
         Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
@@ -99,7 +99,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
               title: t.settings.integrations.gmail.onMarkAsDone.title,
               subtitle: subtitle,
               onPressed: () async {
-                var bloc = context.read<SettingsCubit>();
+                var bloc = context.read<IntegrationsCubit>();
 
                 User user = authState.user!;
 
@@ -136,8 +136,8 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
     );
   }
 
-  BlocBuilder<SettingsCubit, SettingsCubitState> _importOptions() {
-    return BlocBuilder<SettingsCubit, SettingsCubitState>(
+  BlocBuilder<IntegrationsCubit, IntegrationsCubitState> _importOptions() {
+    return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
         Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
         String subtitle;
@@ -161,7 +161,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
           title: t.settings.integrations.gmail.toImportTask.title,
           subtitle: subtitle,
           onPressed: () async {
-            var bloc = context.read<SettingsCubit>();
+            var bloc = context.read<IntegrationsCubit>();
 
             GmailSyncMode initialType;
 
@@ -194,8 +194,8 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
     );
   }
 
-  BlocBuilder<SettingsCubit, SettingsCubitState> _header() {
-    return BlocBuilder<SettingsCubit, SettingsCubitState>(
+  BlocBuilder<IntegrationsCubit, IntegrationsCubitState> _header() {
+    return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
         Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 

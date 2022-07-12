@@ -1,30 +1,26 @@
 part of 'integrations_cubit.dart';
 
-class SettingsCubitState extends Equatable {
+class IntegrationsCubitState extends Equatable {
   final bool loading;
-  final String? appVersion;
   final List<Account> accounts;
   final bool isAuthenticatingOAuth;
   final bool connected;
 
-  const SettingsCubitState({
+  const IntegrationsCubitState({
     this.loading = false,
-    this.appVersion,
     this.accounts = const [],
     this.isAuthenticatingOAuth = false,
     this.connected = false,
   });
 
-  SettingsCubitState copyWith({
+  IntegrationsCubitState copyWith({
     bool? loading,
-    String? appVersion,
     List<Account>? accounts,
     bool? isAuthenticatingOAuth,
     bool? connected,
   }) {
-    return SettingsCubitState(
+    return IntegrationsCubitState(
       loading: loading ?? this.loading,
-      appVersion: appVersion ?? this.appVersion,
       accounts: accounts ?? this.accounts,
       isAuthenticatingOAuth: isAuthenticatingOAuth ?? this.isAuthenticatingOAuth,
       connected: connected ?? this.connected,
@@ -32,5 +28,5 @@ class SettingsCubitState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [loading, appVersion, accounts, isAuthenticatingOAuth, connected];
+  List<Object?> get props => [loading, accounts, isAuthenticatingOAuth, connected];
 }

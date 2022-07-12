@@ -13,6 +13,7 @@ import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/auth/ui/auth_page.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
@@ -140,7 +141,11 @@ class Application extends StatelessWidget {
           ),
           BlocProvider<SettingsCubit>(
             lazy: false,
-            create: (BuildContext context) => SettingsCubit(locator<AuthCubit>(), locator<SyncCubit>()),
+            create: (BuildContext context) => SettingsCubit(),
+          ),
+          BlocProvider<IntegrationsCubit>(
+            lazy: false,
+            create: (BuildContext context) => IntegrationsCubit(locator<AuthCubit>(), locator<SyncCubit>()),
           ),
           BlocProvider<TodayCubit>(
             lazy: false,

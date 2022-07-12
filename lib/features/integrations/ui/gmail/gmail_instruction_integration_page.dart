@@ -4,8 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/components/base/app_bar.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/integration_header.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
@@ -14,7 +14,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SettingsCubit, SettingsCubitState>(
+    return BlocListener<IntegrationsCubit, IntegrationsCubitState>(
       listenWhen: (previous, current) {
         return previous.connected == false && current.connected == true;
       },
@@ -60,7 +60,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                         style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
                       ),
                       onPressed: () {
-                        context.read<SettingsCubit>().connectGmail();
+                        context.read<IntegrationsCubit>().connectGmail();
                       },
                     ),
                   )

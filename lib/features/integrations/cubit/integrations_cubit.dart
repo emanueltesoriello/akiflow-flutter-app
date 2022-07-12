@@ -21,14 +21,13 @@ import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 part 'integrations_state.dart';
 
-class SettingsCubit extends Cubit<SettingsCubitState> {
+class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
@@ -38,7 +37,7 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   final AuthCubit _authCubit;
   late final SyncCubit _syncCubit;
 
-  SettingsCubit(this._authCubit, this._syncCubit) : super(const SettingsCubitState()) {
+  IntegrationsCubit(this._authCubit, this._syncCubit) : super(const IntegrationsCubitState()) {
     _syncCubit.syncCompletedStream.listen((_) async {
       List<Account> accounts = await _accountsRepository.get();
       emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
@@ -48,13 +47,6 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
   }
 
   _init() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    String version = packageInfo.version;
-    String buildNumber = packageInfo.buildNumber;
-
-    emit(state.copyWith(appVersion: '$version ($buildNumber)'));
-
     List<Account> accounts = await _accountsRepository.get();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
   }

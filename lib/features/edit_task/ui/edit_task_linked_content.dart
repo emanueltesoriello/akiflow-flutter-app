@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/linked_content_modal.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
@@ -37,10 +37,10 @@ class EditTaskLinkedContent extends StatelessWidget {
 
         return InkWell(
           onTap: () {
-            SettingsCubit settingsCubit = context.read<SettingsCubit>();
+            IntegrationsCubit integrationsCubit = context.read<IntegrationsCubit>();
 
             Account? account =
-                settingsCubit.state.accounts.firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
+                integrationsCubit.state.accounts.firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
 
             showCupertinoModalBottomSheet(
               context: context,
@@ -74,9 +74,9 @@ class EditTaskLinkedContent extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 () {
-                                  SettingsCubit settingsCubit = context.read<SettingsCubit>();
+                                  IntegrationsCubit integrationsCubit = context.read<IntegrationsCubit>();
 
-                                  Account? account = settingsCubit.state.accounts
+                                  Account? account = integrationsCubit.state.accounts
                                       .firstWhereOrNull((element) => element.connectorId == doc!.connectorId);
 
                                   return doc!.getLinkedContentSummary(account);

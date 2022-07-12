@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/integrations_list.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/account/account.dart';
 
@@ -47,7 +47,7 @@ class ReconnectIntegrations extends StatelessWidget {
                       style: TextStyle(fontSize: 20, color: ColorsExt.grey1(context), fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 48),
-                    BlocBuilder<SettingsCubit, SettingsCubitState>(
+                    BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                       builder: (context, state) {
                         return IntegrationsList(
                           state.accounts
