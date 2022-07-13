@@ -191,8 +191,14 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                 titleController.text = value;
                 titleController.selection = _simpleTitleController.selection;
 
-                int currentSelection = _simpleTitleController.selection.baseOffset;
-                String lastCharInserted = value.substring(currentSelection - 1, currentSelection);
+                if (!_simpleTitleController.selection.isCollapsed ||
+                    _simpleTitleController.text.isEmpty ||
+                    _simpleTitleController.selection.end <= 0) {
+                  return;
+                }
+
+                String lastCharInserted =
+                    _simpleTitleController.text.characters.elementAt(_simpleTitleController.selection.end - 1);
 
                 if (lastCharInserted == " ") {
                   checkTitleChrono(value);
@@ -240,12 +246,13 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     }
 
     for (var textNonParsable in titleController.listPartNonParsable) {
-      chronoParsed.removeWhere((chrono) => chrono.text == textNonParsable);
+      chronoParsed.removeWhere((chrono) => chrono.text?.trim() == textNonParsable.trim());
     }
 
     Color color = ColorsExt.cyan25(context);
 
-    List<TextPartStyleDefinition> newDefinitions = [];
+    List<TextPartStyleDefinition> newDefinitions = titleController.styles.definitionList;
+
     for (var chrono in chronoParsed) {
       newDefinitions.add(TextPartStyleDefinition(
         pattern: "(?:(${chrono.text!})+)\\s",

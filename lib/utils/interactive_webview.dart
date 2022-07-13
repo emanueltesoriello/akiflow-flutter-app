@@ -81,8 +81,7 @@ class InteractiveWebView {
       }
 
       return objects.map((e) => ChronoModel.fromMap(e)).toList();
-    } catch (e, s) {
-      print(s);
+    } catch (_) {
       return null;
     }
   }

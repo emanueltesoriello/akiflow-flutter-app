@@ -81,10 +81,11 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   }) {
     final List<InlineSpan> textSpanChildren = <InlineSpan>[];
 
-    String? lastMatch;
+    String? dateMatch;
+    bool dateDetected = false;
 
     try {
-      lastMatch = combinedPatternToDetect.allMatches(text).last.group(0);
+      dateMatch = combinedPatternToDetect.allMatches(text).elementAt(listPartNonParsable.length).group(0);
     } catch (_) {}
 
     text.splitMapJoin(
@@ -100,6 +101,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
             textToBeStyled: textPart,
             foregroundColor: ColorsExt.grey2(context),
           );
+          dateDetected = false;
           return '';
         }
 
@@ -110,7 +112,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
 
         if (styleDefinition == null) return '';
 
-        if (lastMatch != null && lastMatch == textPart) {
+        if (dateMatch != null && dateMatch == textPart && dateDetected == false) {
           _addWidgetSpanWithBackground(
             textSpanChildren,
             textToBeStyled: textPart,
@@ -118,6 +120,8 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
             backgroundColor: ColorsExt.cyan25(context),
             foregroundColor: ColorsExt.grey2(context),
           );
+
+          dateDetected = true;
         } else {
           _addTextSpan(
             textSpanChildren,
@@ -171,6 +175,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
                       color: foregroundColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 17,
+                      height: 1.2,
                     ),
                   ),
                 ],

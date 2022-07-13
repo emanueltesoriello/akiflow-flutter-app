@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/extensions/date_extension.dart';
@@ -34,9 +34,9 @@ class CreateTaskActions extends StatelessWidget {
             task: context.watch<EditTaskCubit>().state.updatedTask,
             onTap: () {
               var editTaskCubit = context.read<EditTaskCubit>();
-    
+
               editTaskCubit.planTap();
-    
+
               showCupertinoModalBottomSheet(
                 context: context,
                 builder: (context) => PlanModal(
@@ -48,20 +48,26 @@ class CreateTaskActions extends StatelessWidget {
                       : null,
                   taskStatusType: editTaskCubit.state.updatedTask.statusType ?? TaskStatusType.inbox,
                   onSelectDate: (
-                      {required DateTime? date, required DateTime? datetime, required TaskStatusType statusType}) async {
+                      {required DateTime? date,
+                      required DateTime? datetime,
+                      required TaskStatusType statusType}) async {
                     editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
-    
+
                     if (date != null) {
                       String shortDate = date.shortDateFormatted;
                       String? shortTime = datetime?.timeFormatted;
-    
-                      titleController.text += shortDate;
-    
+
                       if (shortTime != null) {
-                        titleController.text += shortTime;
+                        titleController.text += '$shortDate$shortTime ';
+                      } else {
+                        titleController.text += '$shortDate ';
                       }
                     }
-                    titleFocus.requestFocus();
+
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      titleFocus.requestFocus();
+                    });
+
                     List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(titleController.text);
                     callback(chronoParsed);
                   },
@@ -79,15 +85,15 @@ class CreateTaskActions extends StatelessWidget {
           BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
               Task task = state.updatedTask;
-    
+
               String? text;
-    
+
               if (task.duration != null && task.duration != 0) {
                 int seconds = task.duration!;
-    
+
                 double hours = seconds / 3600;
                 double minutes = (hours - hours.floor()) * 60;
-    
+
                 if (minutes.floor() == 0) {
                   text = '${hours.floor()}h';
                 } else if (hours.floor() == 0) {
@@ -96,7 +102,7 @@ class CreateTaskActions extends StatelessWidget {
                   text = '${hours.floor()}h ${minutes.floor()}m';
                 }
               }
-    
+
               return TagBox(
                 icon: "assets/images/icons/_common/hourglass.svg",
                 active: task.duration != null && task.duration != 0,
@@ -115,19 +121,19 @@ class CreateTaskActions extends StatelessWidget {
           BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
               Color? background;
-    
+
               List<Label> labels = context.read<LabelsCubit>().state.labels;
-    
+
               Label? label;
-    
+
               try {
                 label = labels.firstWhere((label) => state.updatedTask.listId!.contains(label.id!));
               } catch (_) {}
-    
+
               if (label?.color != null) {
                 background = ColorsExt.getFromName(label!.color!);
               }
-    
+
               return TagBox(
                 icon: Assets.images.icons.common.numberSVG,
                 active: background != null,

@@ -99,7 +99,7 @@ class _PlanModalState extends State<PlanModal> {
                           try {
                             return context.watch<AuthCubit>().state.user!.defaultHour;
                           } catch (_) {
-                            return 0;
+                            return 8;
                           }
                         }(),
                       ),
