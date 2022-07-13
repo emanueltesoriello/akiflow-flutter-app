@@ -95,7 +95,13 @@ class _PlanModalState extends State<PlanModal> {
                             datetime?.minute ?? 0,
                           );
                         },
-                        defaultTimeHour: context.watch<AuthCubit>().state.user!.defaultHour,
+                        defaultTimeHour: () {
+                          try {
+                            return context.watch<AuthCubit>().state.user!.defaultHour;
+                          } catch (_) {
+                            return 0;
+                          }
+                        }(),
                       ),
                       const SizedBox(height: 16),
                     ],
