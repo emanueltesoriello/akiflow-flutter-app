@@ -40,43 +40,55 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: GestureDetector(
-        onPanUpdate: (details) {
-          swipeLeftToRight = details.delta.dx < 0 ? false : true;
-        },
-        onPanEnd: (details) {
-          if (swipeLeftToRight == null) {
-            return;
-          } else if (swipeLeftToRight!) {
-            back();
-          } else if (!swipeLeftToRight!) {
-            next();
-          }
-        },
-        child: Container(
-          color: Colors.black.withOpacity(0.5),
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: SafeArea(
-            child: BlocBuilder<OnboardingCubit, OnboardingCubitState>(
-              builder: (context, state) => Stack(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: toolbarHeight),
-                      child: Column(children: [
-                        _task(context, state.page),
-                        _boxInfoAndImage(context, state.page),
-                      ]),
-                    ),
+      child: Stack(
+        children: [
+          SafeArea(
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(top: toolbarHeight, bottom: bottomBarHeight),
+            ),
+          ),
+          GestureDetector(
+            onPanUpdate: (details) {
+              swipeLeftToRight = details.delta.dx < 0 ? false : true;
+            },
+            onPanEnd: (details) {
+              if (swipeLeftToRight == null) {
+                return;
+              } else if (swipeLeftToRight!) {
+                back();
+              } else if (!swipeLeftToRight!) {
+                next();
+              }
+            },
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: SafeArea(
+                child: BlocBuilder<OnboardingCubit, OnboardingCubitState>(
+                  builder: (context, state) => Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: toolbarHeight),
+                          child: Column(children: [
+                            _task(context, state.page),
+                            _boxInfoAndImage(context, state.page),
+                          ]),
+                        ),
+                      ),
+                      _controls(state.page, context),
+                    ],
                   ),
-                  _controls(state.page, context),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
