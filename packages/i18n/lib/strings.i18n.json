@@ -21,8 +21,8 @@
     "longTapMultipleSelection": "Long Tap to make multiple selection",
     "skipAll": "Skip all",
     "swipeLeftMoreOption": "Swipe left to show more options",
-    "swipeMorePlanTask": "Swipe more to directly plan your task or add a new task",
-    "swipeRightToMarkAsDone": "Swipe right to mark a task as done or delete it",
+    "swipeMorePlanTask": "Swipe more to directly plan your task",
+    "swipeRightToMarkAsDone": "Swipe right to mark a task as done",
     "gmail": {
       "skipForNow": "Skip for now",
       "reconnectGmailAccount": "Reconnect Gmail account"

@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 236 
  *
- * Built on 2022-07-08 at 13:00 UTC
+ * Built on 2022-07-14 at 08:21 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -346,8 +346,8 @@ class _StringsOnboardingEn {
 	String get longTapMultipleSelection => 'Long Tap to make multiple selection';
 	String get skipAll => 'Skip all';
 	String get swipeLeftMoreOption => 'Swipe left to show more options';
-	String get swipeMorePlanTask => 'Swipe more to directly plan your task or add a new task';
-	String get swipeRightToMarkAsDone => 'Swipe right to mark a task as done or delete it';
+	String get swipeMorePlanTask => 'Swipe more to directly plan your task';
+	String get swipeRightToMarkAsDone => 'Swipe right to mark a task as done';
 	late final _StringsOnboardingGmailEn gmail = _StringsOnboardingGmailEn._(_root);
 	String get reconnect => 'Reconnect';
 	String get allAccountsConnected => 'All accounts connected';
@@ -884,8 +884,8 @@ extension on _StringsEn {
 			'onboarding.longTapMultipleSelection': 'Long Tap to make multiple selection',
 			'onboarding.skipAll': 'Skip all',
 			'onboarding.swipeLeftMoreOption': 'Swipe left to show more options',
-			'onboarding.swipeMorePlanTask': 'Swipe more to directly plan your task or add a new task',
-			'onboarding.swipeRightToMarkAsDone': 'Swipe right to mark a task as done or delete it',
+			'onboarding.swipeMorePlanTask': 'Swipe more to directly plan your task',
+			'onboarding.swipeRightToMarkAsDone': 'Swipe right to mark a task as done',
 			'onboarding.gmail.skipForNow': 'Skip for now',
 			'onboarding.gmail.reconnectGmailAccount': 'Reconnect Gmail account',
 			'onboarding.reconnect': 'Reconnect',
