@@ -49,6 +49,8 @@ class _CreateLinkModalState extends State<CreateLinkModal> {
                               child: TextField(
                                 focusNode: titleFocus,
                                 keyboardType: TextInputType.url,
+                                enableSuggestions: false,
+                                textCapitalization: TextCapitalization.none,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.zero,
                                   isDense: true,
