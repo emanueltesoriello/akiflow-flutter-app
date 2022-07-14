@@ -198,7 +198,8 @@
       "goToGmail": "Go to Gmail",
       "doNothing": "Do nothing",
       "unlabelTheEmail": "Unlabel the email"
-    }
+    },
+    "onboardingTitle": "Hello I am a task 👋"
   },
   "errors": {
     "noAccountsFound": "No accounts found"

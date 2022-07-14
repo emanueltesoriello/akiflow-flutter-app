@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 236 
+ * Strings: 237 
  *
- * Built on 2022-07-14 at 08:21 UTC
+ * Built on 2022-07-14 at 10:09 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -482,6 +482,7 @@ class _StringsTaskEn {
 	String get yesterday => 'Yesterday';
 	String get awesomeInboxZero => 'Awesome! You reached Inbox Zero!';
 	late final _StringsTaskGmailEn gmail = _StringsTaskGmailEn._(_root);
+	String get onboardingTitle => 'Hello I am a task 👋';
 }
 
 // Path: errors
@@ -1020,6 +1021,7 @@ extension on _StringsEn {
 			'task.gmail.goToGmail': 'Go to Gmail',
 			'task.gmail.doNothing': 'Do nothing',
 			'task.gmail.unlabelTheEmail': 'Unlabel the email',
+			'task.onboardingTitle': 'Hello I am a task 👋',
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',

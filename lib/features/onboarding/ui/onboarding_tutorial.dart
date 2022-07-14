@@ -164,9 +164,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
           child: SlidablePlayer(
             animation: controller,
             leftToRight: page == onboardingSteps ? false : true,
-            child: IgnorePointer(
-                child:
-                    TaskRowFake(const Task(title: "Hello I am a task 👋", description: "And this is my description"))),
+            child: IgnorePointer(child: TaskRowFake(Task(title: t.task.onboardingTitle))),
           )),
     );
   }
