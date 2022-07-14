@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/features/create_task/ui/components/custom_text_span.dart';
 import 'package:mobile/style/colors.dart';
 
 class TextPartStyleDefinition {
@@ -85,7 +86,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     bool dateDetected = false;
 
     try {
-      dateMatch = combinedPatternToDetect.allMatches(text).elementAt(listPartNonParsable.length).group(0);
+      dateMatch = combinedPatternToDetect.allMatches(text).first.group(0);
     } catch (_) {}
 
     text.splitMapJoin(
@@ -113,7 +114,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
         if (styleDefinition == null) return '';
 
         if (dateMatch != null && dateMatch == textPart && dateDetected == false) {
-          _addWidgetSpanWithBackground(
+          _addTextSpanWithBackground(
             textSpanChildren,
             textToBeStyled: textPart,
             isFromAction: styleDefinition.isFromAction,
@@ -193,7 +194,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     required Color backgroundColor,
   }) {
     textSpanChildren.add(
-      TextSpan(
+      CustomTextSpan(
         text: textToBeStyled,
         style: TextStyle(
           background: Paint()..color = backgroundColor,

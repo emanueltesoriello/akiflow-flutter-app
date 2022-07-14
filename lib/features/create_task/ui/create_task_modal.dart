@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
@@ -5,11 +6,11 @@ import 'package:mobile/features/create_task/ui/components/create_task_actions.da
 import 'package:mobile/features/create_task/ui/components/description_field.dart';
 import 'package:mobile/features/create_task/ui/components/label_widget.dart';
 import 'package:mobile/features/create_task/ui/components/send_task_button.dart';
+import 'package:mobile/features/create_task/ui/components/stylable_text_editing_controller.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/interactive_webview.dart';
-import 'package:mobile/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/utils/task_extension.dart';
 
 import 'components/duration_widget.dart';
@@ -157,7 +158,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         valueListenable: _isTitleEditing,
         builder: (context, bool isTitleEditing, child) {
           return TextField(
-            controller: isTitleEditing ? _simpleTitleController : titleController,
+            controller: titleController,
+            // controller: isTitleEditing ? _simpleTitleController : titleController,
             focusNode: titleFocus,
             textCapitalization: TextCapitalization.sentences,
             maxLines: null,
@@ -178,35 +180,35 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
-            onTap: () {
-              if (!isTitleEditing) {
-                _simpleTitleController.text = titleController.text;
-                _simpleTitleController.selection = titleController.selection;
+            // onTap: () {
+            //   if (!isTitleEditing) {
+            //     _simpleTitleController.text = titleController.text;
+            //     _simpleTitleController.selection = titleController.selection;
 
-                _isTitleEditing.value = true;
-              }
-            },
+            //     _isTitleEditing.value = true;
+            //   }
+            // },
             onChanged: (value) async {
-              if (isTitleEditing) {
-                titleController.text = value;
-                titleController.selection = _simpleTitleController.selection;
+              // if (isTitleEditing) {
+              //   titleController.text = value;
+              //   titleController.selection = _simpleTitleController.selection;
 
-                if (!_simpleTitleController.selection.isCollapsed ||
-                    _simpleTitleController.text.isEmpty ||
-                    _simpleTitleController.selection.end <= 0) {
-                  return;
-                }
+              //   if (!_simpleTitleController.selection.isCollapsed ||
+              //       _simpleTitleController.text.isEmpty ||
+              //       _simpleTitleController.selection.end <= 0) {
+              //     return;
+              //   }
 
-                String lastCharInserted =
-                    _simpleTitleController.text.characters.elementAt(_simpleTitleController.selection.end - 1);
+              //   String lastCharInserted =
+              //       _simpleTitleController.text.characters.elementAt(_simpleTitleController.selection.end - 1);
 
-                if (lastCharInserted == " ") {
-                  checkTitleChrono(value);
-                }
-              } else {
-                _simpleTitleController.text = value;
-                _simpleTitleController.selection = titleController.selection;
-              }
+              //   if (lastCharInserted == " ") {
+              //     checkTitleChrono(value);
+              //   }
+              // } else {
+              //   _simpleTitleController.text = value;
+              //   _simpleTitleController.selection = titleController.selection;
+              // }
 
               context.read<EditTaskCubit>().updateTitle(value);
 
@@ -251,13 +253,19 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
     Color color = ColorsExt.cyan25(context);
 
-    List<TextPartStyleDefinition> newDefinitions = titleController.styles.definitionList;
+    List<TextPartStyleDefinition> newDefinitions = [];
 
     for (var chrono in chronoParsed) {
+      String pattern = "(?:(${chrono.text!})+)";
+
+      TextPartStyleDefinition? alreadyDefined = titleController.styles.definitionList.firstWhereOrNull((definition) {
+        return definition.pattern == pattern;
+      });
+
       newDefinitions.add(TextPartStyleDefinition(
-        pattern: "(?:(${chrono.text!})+)\\s",
+        pattern: pattern,
         color: color,
-        isFromAction: isFromAction,
+        isFromAction: alreadyDefined?.isFromAction ?? (isFromAction ?? false),
       ));
     }
 
