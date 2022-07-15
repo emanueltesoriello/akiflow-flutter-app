@@ -210,4 +210,10 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
   Future<void> refresh() async {
     await _init();
   }
+
+  void skipForNowTap() {
+    _preferencesRepository.setReconnectPageSkipped(true);
+  }
+
+  bool reconnectPageSkipped = locator<PreferencesRepository>().reconnectPageSkipped;
 }

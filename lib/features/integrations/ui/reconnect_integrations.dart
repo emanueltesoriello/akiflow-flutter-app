@@ -75,6 +75,7 @@ class ReconnectIntegrations extends StatelessWidget {
                     const Spacer(),
                     TextButton(
                         onPressed: () {
+                          context.read<IntegrationsCubit>().skipForNowTap();
                           Navigator.pop(context);
                         },
                         child: Text(

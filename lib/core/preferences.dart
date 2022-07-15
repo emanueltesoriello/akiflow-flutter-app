@@ -55,6 +55,9 @@ abstract class PreferencesRepository {
 
   bool getV2AccountActive(String accountId);
   Future<void> setV2AccountActive(String accountId, bool active);
+
+  bool get reconnectPageSkipped;
+  Future<void> setReconnectPageSkipped(bool value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -254,5 +257,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setV2AccountActive(String accountId, bool active) async {
     await _prefs.setBool("localV2AccountActive_$accountId", active);
+  }
+
+  @override
+  bool get reconnectPageSkipped {
+    return _prefs.getBool("reconnectPageSkipped") ?? false;
+  }
+
+  @override
+  Future<void> setReconnectPageSkipped(bool value) async {
+    await _prefs.setBool("reconnectPageSkipped", value);
   }
 }

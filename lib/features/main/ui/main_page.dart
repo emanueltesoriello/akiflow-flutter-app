@@ -98,7 +98,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     context.read<MainCubit>().onLoggedAppStart();
 
     context.read<SyncCubit>().syncCompletedStream.listen((_) {
-      _checkIfHasAccountsToReconnect();
+      bool reconnectPageSkipped = context.read<IntegrationsCubit>().reconnectPageSkipped;
+
+      if (reconnectPageSkipped == false) {
+        _checkIfHasAccountsToReconnect();
+      }
     });
   }
 
