@@ -256,7 +256,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     List<TextPartStyleDefinition> newDefinitions = [];
 
     for (var chrono in chronoParsed) {
-      String pattern = "(?:(${chrono.text!})+)";
+      String pattern = "(?:(${chrono.text!})+)\\s";
 
       TextPartStyleDefinition? alreadyDefined = titleController.styles.definitionList.firstWhereOrNull((definition) {
         return definition.pattern == pattern;

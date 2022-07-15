@@ -193,9 +193,12 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     required Color foregroundColor,
     required Color backgroundColor,
   }) {
+    // remove last char (blank space)
+    final String textToBeStyledWithoutBlankChar = textToBeStyled!.substring(0, textToBeStyled.length - 1);
+
     textSpanChildren.add(
       CustomTextSpan(
-        text: textToBeStyled,
+        text: textToBeStyledWithoutBlankChar,
         style: TextStyle(
           background: Paint()..color = backgroundColor,
           color: foregroundColor,
@@ -204,8 +207,20 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
         ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            parsedTextClick(textToBeStyled!, isFromAction);
+            parsedTextClick(textToBeStyled, isFromAction);
           },
+      ),
+    );
+
+    // add blank char without style
+    textSpanChildren.add(
+      TextSpan(
+        text: " ",
+        style: TextStyle(
+          color: foregroundColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
+        ),
       ),
     );
   }
