@@ -43,43 +43,43 @@ class Task extends Equatable implements Base {
   final String? akiflowAccountId;
   final Map<String, dynamic>? doc;
 
-  const Task({
-    this.id,
-    this.title,
-    this.date,
-    this.description,
-    this.duration,
-    this.status,
-    this.createdAt,
-    this.updatedAt,
-    this.deletedAt,
-    this.done,
-    this.doneAt,
-    this.datetime,
-    this.readAt,
-    this.globalUpdatedAt,
-    this.globalCreatedAt,
-    this.activationDatetime,
-    this.dueDate,
-    this.remoteUpdatedAt,
-    this.recurringId,
-    this.priority,
-    this.listId,
-    this.sectionId,
-    this.origin,
-    this.sorting,
-    this.sortingLabel,
-    this.selected,
-    this.dailyGoal,
-    this.links,
-    this.recurrence,
-    this.content,
-    this.connectorId,
-    this.originId,
-    this.originAccountId,
-    this.akiflowAccountId,
-    this.doc,
-  });
+  const Task(
+      {this.id,
+      this.title,
+      this.date,
+      this.description,
+      this.duration,
+      this.status,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.done,
+      this.doneAt,
+      this.datetime,
+      this.readAt,
+      this.globalUpdatedAt,
+      this.globalCreatedAt,
+      this.activationDatetime,
+      this.dueDate,
+      this.remoteUpdatedAt,
+      this.recurringId,
+      this.priority,
+      this.listId,
+      this.sectionId,
+      this.origin,
+      this.sorting,
+      this.sortingLabel,
+      this.selected,
+      this.dailyGoal,
+      this.links,
+      this.recurrence,
+      this.content,
+      this.connectorId,
+      this.originId,
+      this.originAccountId,
+      this.akiflowAccountId,
+      this.doc,
+      });
 
   Task copyWith({
     String? id,
@@ -147,9 +147,7 @@ class Task extends Equatable implements Base {
       links: links ?? this.links,
       recurrence: recurrence == null ? this.recurrence : recurrence.value,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null
-          ? this.remoteUpdatedAt
-          : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
       content: content ?? this.content,
       connectorId: connectorId ?? this.connectorId,
       originId: originId ?? this.originId,
@@ -164,9 +162,7 @@ class Task extends Equatable implements Base {
     return <String, dynamic>{
       'id': id,
       'title': title,
-      'date': date != null
-          ? DateFormat('yyyy-MM-dd').format(DateTime.parse(date!))
-          : null,
+      'date': date != null ? DateFormat('yyyy-MM-dd').format(DateTime.parse(date!)) : null,
       'description': description,
       'duration': duration,
       'status': status ?? 1,
@@ -180,9 +176,7 @@ class Task extends Equatable implements Base {
       'global_updated_at': globalUpdatedAt,
       'global_created_at': globalCreatedAt,
       'activation_datetime': activationDatetime,
-      'due_date': dueDate != null
-          ? DateFormat('yyyy-MM-dd').format(DateTime.parse(dueDate!))
-          : null,
+      'due_date': dueDate != null ? DateFormat('yyyy-MM-dd').format(DateTime.parse(dueDate!)) : null,
       'remote_updated_at': remoteUpdatedAt,
       'recurring_id': recurringId,
       'priority': priority,
@@ -193,12 +187,8 @@ class Task extends Equatable implements Base {
       'sorting_label': sortingLabel,
       'selected': selected,
       'dailyGoal': dailyGoal,
-      'links': (links == null || links!.isEmpty)
-          ? null
-          : List<dynamic>.from(links!.map((x) => x)),
-      'recurrence': (recurrence == null || recurrence!.isEmpty)
-          ? null
-          : List<dynamic>.from(recurrence!.map((x) => x)),
+      'links': (links == null || links!.isEmpty) ? null : List<dynamic>.from(links!.map((x) => x)),
+      'recurrence': (recurrence == null || recurrence!.isEmpty) ? null : List<dynamic>.from(recurrence!.map((x) => x)),
       'content': content,
       'connector_id': connectorId,
       'origin_id': originId,
@@ -213,8 +203,7 @@ class Task extends Equatable implements Base {
       id: map['id'] != null ? map['id'] as String : null,
       title: map['title'] != null ? map['title'] as String : null,
       date: map['date'] != null ? map['date'] as String : null,
-      description:
-          map['description'] != null ? map['description'] as String : null,
+      description: map['description'] != null ? map['description'] as String : null,
       duration: map['duration'] != null ? map['duration'] as int : null,
       status: map['status'] != null ? map['status'] as int : null,
       createdAt: map['created_at'] != null ? map['created_at'] as String : null,
@@ -224,46 +213,27 @@ class Task extends Equatable implements Base {
       doneAt: map['done_at'] != null ? map['done_at'] as String : null,
       datetime: map['datetime'] != null ? map['datetime'] as String : null,
       readAt: map['read_at'] != null ? map['read_at'] as String : null,
-      globalCreatedAt: map['global_created_at'] != null
-          ? map['global_created_at'] as String
-          : null,
-      globalUpdatedAt: map['global_updated_at'] != null
-          ? map['global_updated_at'] as String
-          : null,
-      activationDatetime: map['activation_datetime'] != null
-          ? map['activation_datetime'] as String
-          : null,
+      globalCreatedAt: map['global_created_at'] != null ? map['global_created_at'] as String : null,
+      globalUpdatedAt: map['global_updated_at'] != null ? map['global_updated_at'] as String : null,
+      activationDatetime: map['activation_datetime'] != null ? map['activation_datetime'] as String : null,
       dueDate: map['due_date'] != null ? map['due_date'] as String : null,
-      remoteUpdatedAt: map['remote_updated_at'] != null
-          ? map['remote_updated_at'] as String
-          : null,
-      recurringId:
-          map['recurring_id'] != null ? map['recurring_id'] as String : null,
+      remoteUpdatedAt: map['remote_updated_at'] != null ? map['remote_updated_at'] as String : null,
+      recurringId: map['recurring_id'] != null ? map['recurring_id'] as String : null,
       priority: map['priority'] != null ? map['priority'] as int : null,
       listId: map['listId'] != null ? map['listId'] as String : null,
       sectionId: map['section_id'] != null ? map['section_id'] as String : null,
       origin: map['origin'] != null ? map['origin'] as String : null,
       sorting: map['sorting'] != null ? map['sorting'] as int : null,
-      sortingLabel:
-          map['sorting_label'] != null ? map['sorting_label'] as int : null,
+      sortingLabel: map['sorting_label'] != null ? map['sorting_label'] as int : null,
       selected: map['selected'] != null ? map['selected'] as bool : null,
       dailyGoal: map['dailyGoal'] != null ? map['dailyGoal'] as int : null,
-      links: map['links'] != null
-          ? List<String>.from(map['links'] as List<dynamic>)
-          : null,
-      recurrence: map['recurrence'] != null
-          ? List<String>.from(map['recurrence'] as List<dynamic>)
-          : null,
+      links: map['links'] != null ? List<String>.from(map['links'] as List<dynamic>) : null,
+      recurrence: map['recurrence'] != null ? List<String>.from(map['recurrence'] as List<dynamic>) : null,
       content: map['content'] != null ? map['content'] as dynamic : null,
-      connectorId:
-          map['connector_id'] != null ? map['connector_id'] as String? : null,
+      connectorId: map['connector_id'] != null ? map['connector_id'] as String? : null,
       originId: map['origin_id'] != null ? map['origin_id'] as String? : null,
-      originAccountId: map['origin_account_id'] != null
-          ? map['origin_account_id'] as String?
-          : null,
-      akiflowAccountId: map['akiflow_account_id'] != null
-          ? map['akiflow_account_id'] as String?
-          : null,
+      originAccountId: map['origin_account_id'] != null ? map['origin_account_id'] as String? : null,
+      akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
       doc: map['doc'] != null ? map['doc'] as dynamic : null,
     );
   }
@@ -293,12 +263,9 @@ class Task extends Equatable implements Base {
       "remote_updated_at": remoteUpdatedAt,
       "sorting": sorting,
       "sorting_label": sortingLabel,
-      "links":
-          (links == null || links!.isEmpty) ? null : links?.toList().join(';'),
+      "links": (links == null || links!.isEmpty) ? null : links?.toList().join(';'),
       "daily_goal": dailyGoal,
-      "recurrence": (recurrence == null || recurrence!.isEmpty)
-          ? null
-          : recurrence?.toList().join(';'),
+      "recurrence": (recurrence == null || recurrence!.isEmpty) ? null : recurrence?.toList().join(';'),
       "content": content != null ? jsonEncode(content) : null,
       "connector_id": connectorId,
       "origin_id": originId,
