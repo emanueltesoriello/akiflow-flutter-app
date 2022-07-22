@@ -120,6 +120,44 @@ class CreateTaskActions extends StatelessWidget {
           const SizedBox(width: 8),
           BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
+              Task task = state.updatedTask;
+
+              String image;
+              switch (task.priority) {
+                case 1:
+                  image = Assets.images.icons.common.priorityHighSVG;
+                  break;
+                case 2:
+                  image = Assets.images.icons.common.priorityMidSVG;
+                  break;
+                case 3:
+                  image = Assets.images.icons.common.priorityLowSVG;
+                  break;
+                case null:
+                  image = Assets.images.icons.common.importanceGreySVG;
+                  break;
+                default:
+                  image = Assets.images.icons.common.importanceGreySVG;
+                  break;
+              }
+              String? text;
+
+              return TagBox(
+                icon: image,
+                active: task.priority != null,
+                backgroundColor: task.priority != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                isSquare: true,
+                isBig: true,
+                text: text,
+                onPressed: () {
+                  context.read<EditTaskCubit>().toggleImportance();
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+            builder: (context, state) {
               Color? background;
 
               List<Label> labels = context.read<LabelsCubit>().state.labels;

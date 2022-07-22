@@ -116,19 +116,25 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  void setDuration(int seconds) {
-    emit(state.copyWith(selectedDuration: seconds.toDouble(), showDuration: false));
+  void setDuration(int? seconds) {
+    if (seconds != null) {
+      emit(state.copyWith(selectedDuration: seconds.toDouble(), showDuration: false));
 
-    Task task = state.updatedTask;
+      Task task = state.updatedTask;
 
-    Task updated = task.copyWith(
-      duration: seconds != 0 ? Nullable(seconds) : Nullable(null),
-      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
-    );
+      Task updated = task.copyWith(
+        duration: seconds != 0 ? Nullable(seconds) : Nullable(null),
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+      );
 
-    emit(state.copyWith(updatedTask: updated));
+      emit(state.copyWith(updatedTask: updated));
 
-    AnalyticsService.track("Edit Task Duration");
+      AnalyticsService.track("Edit Task Duration");
+    }
+  }
+
+  void toggleImportance() {
+    emit(state.copyWith(showPriority: !state.showPriority));
   }
 
   void toggleDuration() {
@@ -231,13 +237,31 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated, showDuration: false, showLabelsList: false));
   }
 
-  void setPriority(PriorityEnum? priority) {
+  void setPriority(PriorityEnum? priority, {int? value}) {
     Task updated = state.updatedTask.copyWith(
-      priority: priority?.value,
+      priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-
     emit(state.copyWith(updatedTask: updated));
+  }
+
+  void removePriority() {
+    Task updated = state.updatedTask.copyWith(
+      priority: -1,
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+    emit(state.copyWith(updatedTask: updated));
+  }
+
+  Future<void> removeLabel() async {
+    Task updated = state.updatedTask.copyWith(
+      listId: Nullable(null),
+      sectionId: Nullable(null),
+    );
+
+    emit(state.copyWith(showLabelsList: false, updatedTask: updated));
+
+    _tasksCubit.refreshTasksUi(updated);
   }
 
   Future<void> setRecurrence(RecurrenceRule? rule) async {

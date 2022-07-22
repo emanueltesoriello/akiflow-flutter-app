@@ -9,6 +9,7 @@ class EditTaskCubitState extends Equatable {
   final DateTime? selectedDate;
   final double? selectedDuration;
   final bool showDuration;
+  final bool showPriority;
   final bool showLabelsList;
 
   const EditTaskCubitState({
@@ -19,6 +20,7 @@ class EditTaskCubitState extends Equatable {
     this.selectedDuration,
     this.showDuration = false,
     this.showLabelsList = false,
+    this.showPriority = false,
   });
 
   EditTaskCubitState copyWith({
@@ -29,6 +31,7 @@ class EditTaskCubitState extends Equatable {
     double? selectedDuration,
     bool? showDuration,
     bool? showLabelsList,
+    bool? showPriority
   }) {
     return EditTaskCubitState(
       loading: loading ?? this.loading,
@@ -38,6 +41,7 @@ class EditTaskCubitState extends Equatable {
       selectedDuration: selectedDuration ?? this.selectedDuration,
       showDuration: showDuration ?? this.showDuration,
       showLabelsList: showLabelsList ?? this.showLabelsList,
+      showPriority: showPriority ?? this.showPriority
     );
   }
 
@@ -50,5 +54,6 @@ class EditTaskCubitState extends Equatable {
         selectedDuration,
         showDuration,
         showLabelsList,
+        showPriority
       ];
 }

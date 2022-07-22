@@ -13,6 +13,8 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/task/task.dart';
 
+import '../../../assets.dart';
+
 enum EditTaskAdditionalAction {
   duplicate,
   snoozeTomorrow,
@@ -39,21 +41,22 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
       child: Row(
         children: [
           TagBox(
-            icon: "assets/images/icons/_common/exclamationmark.svg",
-            isBig: true,
-            isSquare: true,
-            iconColor: () {
+            icon: () {
               switch (task.priority) {
                 case 1:
-                  return ColorsExt.red(context);
+                  return Assets.images.icons.common.priorityHighSVG;
                 case 2:
-                  return ColorsExt.yellow(context);
+                  return Assets.images.icons.common.priorityMidSVG;
                 case 3:
-                  return ColorsExt.green(context);
+                  return Assets.images.icons.common.priorityLowSVG;
+                case null:
+                  return Assets.images.icons.common.importanceGreySVG;
                 default:
-                  return ColorsExt.grey3(context);
+                  return Assets.images.icons.common.importanceGreySVG;
               }
             }(),
+            isBig: true,
+            isSquare: true,
             backgroundColor:
                 task.priority != null && task.priority != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
             active: task.priority != null && task.priority != 0,

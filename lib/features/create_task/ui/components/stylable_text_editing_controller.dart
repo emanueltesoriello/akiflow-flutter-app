@@ -8,11 +8,19 @@ class TextPartStyleDefinition {
     required this.pattern,
     required this.color,
     required this.isFromAction,
+    required this.isLabel,
+    required this.isDate,
+    required this.isTime,
+    required this.isImportance,
   });
 
   final String pattern;
   final Color color;
   final bool? isFromAction;
+  final bool? isLabel;
+  final bool? isDate;
+  final bool? isTime;
+  final bool? isImportance;
 }
 
 class TextPartStyleDefinitions {
@@ -72,7 +80,8 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   TextPartStyleDefinitions styles;
   Pattern combinedPatternToDetect;
   List<String> listPartNonParsable;
-  Function(String parsedText, bool? isFromAction) parsedTextClick;
+  Function(String parsedText, bool? isFromAction, bool? isLabel, bool? isDate, bool? isTime, bool? isImportance)
+      parsedTextClick;
 
   @override
   TextSpan buildTextSpan({
@@ -94,42 +103,22 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
       onMatch: (Match match) {
         final String? textPart = match.group(0);
 
-        if (textPart == null) return '';
-
-        if (listPartNonParsable.contains(textPart)) {
-          _addTextSpan(
-            textSpanChildren,
-            textToBeStyled: textPart,
-            foregroundColor: ColorsExt.grey2(context),
-          );
-          dateDetected = false;
-          return '';
-        }
-
         final TextPartStyleDefinition? styleDefinition = styles.getStyleOfTextPart(
-          textPart,
+          textPart ?? '',
           text,
         );
 
-        if (styleDefinition == null) return '';
-
-        if (dateMatch != null && dateMatch == textPart && dateDetected == false) {
-          _addTextSpanWithBackground(
-            textSpanChildren,
-            textToBeStyled: textPart,
-            isFromAction: styleDefinition.isFromAction,
-            backgroundColor: ColorsExt.cyan25(context),
-            foregroundColor: ColorsExt.grey2(context),
-          );
-
-          dateDetected = true;
-        } else {
-          _addTextSpan(
-            textSpanChildren,
-            textToBeStyled: textPart,
-            foregroundColor: ColorsExt.grey2(context),
-          );
-        }
+        _addTextSpanWithBackground(
+          textSpanChildren,
+          textToBeStyled: textPart,
+          isFromAction: styleDefinition?.isFromAction,
+          isLabel: styleDefinition?.isLabel,
+          isDate: styleDefinition?.isDate,
+          isTime: styleDefinition?.isTime,
+          isImportance: styleDefinition?.isImportance,
+          backgroundColor: ColorsExt.cyan25(context),
+          foregroundColor: ColorsExt.grey2(context),
+        );
 
         return '';
       },
@@ -147,58 +136,20 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     return TextSpan(style: style, children: textSpanChildren);
   }
 
-  void _addWidgetSpanWithBackground(
-    List<InlineSpan> textSpanChildren, {
-    required String? textToBeStyled,
-    required bool? isFromAction,
-    required Color foregroundColor,
-    required Color backgroundColor,
-  }) {
-    textSpanChildren.add(
-      WidgetSpan(
-        alignment: PlaceholderAlignment.middle,
-        child: GestureDetector(
-          onTap: () => parsedTextClick(textToBeStyled!, isFromAction),
-          child: Container(
-              height: 26,
-              padding: const EdgeInsets.only(left: 5, right: 0),
-              margin: const EdgeInsets.only(top: 2.5, right: 5),
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    textToBeStyled!,
-                    style: TextStyle(
-                      color: foregroundColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
-                      height: 1.2,
-                    ),
-                  ),
-                ],
-              )),
-        ),
-      ),
-    );
-  }
-
   void _addTextSpanWithBackground(
     List<InlineSpan> textSpanChildren, {
     required String? textToBeStyled,
     required bool? isFromAction,
+    required bool? isLabel,
+    required bool? isImportance,
+    required bool? isDate,
+    required bool? isTime,
     required Color foregroundColor,
     required Color backgroundColor,
   }) {
-    // remove last char (blank space)
-    final String textToBeStyledWithoutBlankChar = textToBeStyled!.substring(0, textToBeStyled.length - 1);
-
     textSpanChildren.add(
       CustomTextSpan(
-        text: textToBeStyledWithoutBlankChar,
+        text: textToBeStyled,
         style: TextStyle(
           background: Paint()..color = backgroundColor,
           color: foregroundColor,
@@ -207,20 +158,8 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
         ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            parsedTextClick(textToBeStyled, isFromAction);
+            parsedTextClick(textToBeStyled!, isFromAction, isLabel, isDate, isTime, isImportance);
           },
-      ),
-    );
-
-    // add blank char without style
-    textSpanChildren.add(
-      TextSpan(
-        text: " ",
-        style: TextStyle(
-          color: foregroundColor,
-          fontWeight: FontWeight.w500,
-          fontSize: 20,
-        ),
       ),
     );
   }

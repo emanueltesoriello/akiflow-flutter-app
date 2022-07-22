@@ -138,6 +138,8 @@ class _AssetsImagesIconsCommon {
   final giftSVG = 'assets/images/icons/_common/gift.svg';
   final guidebookSVG = 'assets/images/icons/_common/guidebook.svg';
   final hourglassSVG = 'assets/images/icons/_common/hourglass.svg';
+  final importanceGreySVG = 'assets/images/icons/_common/importance-grey.svg';
+  final importanceSVG = 'assets/images/icons/_common/importance.svg';
   final infoSVG = 'assets/images/icons/_common/info.svg';
   final infoCircleSVG = 'assets/images/icons/_common/info_circle.svg';
   final largecircleFillCircleSVG = 'assets/images/icons/_common/largecircle_fill_circle.svg';
@@ -147,6 +149,7 @@ class _AssetsImagesIconsCommon {
   final linkSVG = 'assets/images/icons/_common/link.svg';
   final menuSVG = 'assets/images/icons/_common/menu.svg';
   final moneyDollarCircleSVG = 'assets/images/icons/_common/money_dollar_circle.svg';
+  final noPrioritySVG = 'assets/images/icons/_common/no-priority.svg';
   final numberSVG = 'assets/images/icons/_common/number.svg';
   final paperplaneSendSVG = 'assets/images/icons/_common/paperplane_send.svg';
   final pencilSVG = 'assets/images/icons/_common/pencil.svg';
@@ -155,6 +158,9 @@ class _AssetsImagesIconsCommon {
   final personCropCircleSVG = 'assets/images/icons/_common/person_crop_circle.svg';
   final plusSVG = 'assets/images/icons/_common/plus.svg';
   final plusSquareSVG = 'assets/images/icons/_common/plus_square.svg';
+  final priorityHighSVG = 'assets/images/icons/_common/priority-high.svg';
+  final priorityLowSVG = 'assets/images/icons/_common/priority-low.svg';
+  final priorityMidSVG = 'assets/images/icons/_common/priority-mid.svg';
   final puzzleSVG = 'assets/images/icons/_common/puzzle.svg';
   final rectangleGrid1X2SVG = 'assets/images/icons/_common/rectangle_grid_1x2.svg';
   final repeatSVG = 'assets/images/icons/_common/repeat.svg';
@@ -208,6 +214,7 @@ class _AssetsImagesIconsGoogle {
 
   final fingerSVG = 'assets/images/icons/google/finger.svg';
   final gmailSVG = 'assets/images/icons/google/gmail.svg';
+  final gmailShadowSVG = 'assets/images/icons/google/gmail_shadow.svg';
   final googleSVG = 'assets/images/icons/google/google.svg';
   final searchSVG = 'assets/images/icons/google/search.svg';
   final starSVG = 'assets/images/icons/google/star.svg';
@@ -317,6 +324,7 @@ class _AssetsImagesOnboarding {
   final fingerLongMoveSVG = 'assets/images/onboarding/finger_long_move.svg';
   final fingerMoveSVG = 'assets/images/onboarding/finger_move.svg';
   final fingerMoveInvertSVG = 'assets/images/onboarding/finger_move_invert.svg';
+  final gmailHeaderSVG = 'assets/images/onboarding/gmail_header.svg';
   final onboardingFingerSVG = 'assets/images/onboarding/onboarding_finger.svg';
 }
 
