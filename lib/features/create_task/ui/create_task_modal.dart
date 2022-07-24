@@ -203,7 +203,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
-
             onChanged: (value) async {
               context.read<EditTaskCubit>().updateTitle(value);
               List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(value);
@@ -246,7 +245,11 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
       int minutes = chars.indexWhere((element) => element.toLowerCase() == "m");
       try {
         int? h = hours != -1 ? int.tryParse(chars[hours - 1]) : null;
-        int? m = int.tryParse((chars[minutes - 2] + chars[minutes - 1]).trim());
+        int? m = minutes - 2 > -1
+            ? int.tryParse((chars[minutes - 2] + chars[minutes - 1]).trim())
+            : minutes - 1 > -1
+                ? int.tryParse((chars[minutes - 1]).trim())
+                : null;
 
         if (h != null || m != null) {
           context.read<EditTaskCubit>().setDuration(((h ?? 0) * 3600) + ((m ?? 0) * 60));
