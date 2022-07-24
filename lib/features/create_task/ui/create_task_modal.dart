@@ -48,7 +48,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         parsedTextClick: (parsedText, isFromAction, isLabel, isDate, isTime, isImportance) async {
           if (isImportance != null && isImportance) {
             context.read<EditTaskCubit>().removePriority();
-            String newText = titleController.text.replaceAll('!!!', '');
+            String newText = titleController.text.replaceAll('!', '');
             titleController.text = newText;
             titleController.selection = TextSelection.fromPosition(TextPosition(offset: newText.length));
           }
@@ -183,7 +183,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         builder: (context, bool isTitleEditing, child) {
           return TextField(
             controller: titleController,
-            // controller: isTitleEditing ? _simpleTitleController : titleController,
             focusNode: titleFocus,
             textCapitalization: TextCapitalization.sentences,
             maxLines: null,
@@ -244,14 +243,12 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
       String substring = text.split('=').last.split(' ').first;
       List<String> chars = substring.split('');
       int hours = chars.indexWhere((element) => element.toLowerCase() == "h");
-      print(hours);
       int minutes = chars.indexWhere((element) => element.toLowerCase() == "m");
       try {
         int? h = hours != -1 ? int.tryParse(chars[hours - 1]) : null;
         int? m = int.tryParse((chars[minutes - 2] + chars[minutes - 1]).trim());
 
         if (h != null || m != null) {
-          print(((h ?? 0) * 3600) + ((m ?? 0) * 60));
           context.read<EditTaskCubit>().setDuration(((h ?? 0) * 3600) + ((m ?? 0) * 60));
           checkForPrevious(HighlightType.time);
           newDefinitions.add(TextPartStyleDefinition(
@@ -264,7 +261,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               isFromAction: false));
         }
       } catch (e) {
-        print(e.toString());
         context.read<EditTaskCubit>().setDuration(0);
       }
     } else {
@@ -273,33 +269,33 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   }
 
   void _checkForImportance(String text) {
-    if (text.contains('!!!')) {
+    if (text.contains('!1')) {
       newDefinitions.add(TextPartStyleDefinition(
           isLabel: false,
           isTime: false,
           isDate: false,
           isImportance: true,
-          pattern: "(?:(!!!)+)",
+          pattern: "(?:(!1)+)",
           color: ColorsExt.cyan25(context),
           isFromAction: false));
       context.read<EditTaskCubit>().setPriority(null, value: 1);
-    } else if (text.contains('!!')) {
+    } else if (text.contains('!2')) {
       newDefinitions.add(TextPartStyleDefinition(
           isLabel: false,
           isTime: false,
           isImportance: true,
           isDate: false,
-          pattern: "(?:(!!)+)",
+          pattern: "(?:(!2)+)",
           color: ColorsExt.cyan25(context),
           isFromAction: false));
       context.read<EditTaskCubit>().setPriority(null, value: 2);
-    } else if (text.contains('!')) {
+    } else if (text.contains('!3')) {
       newDefinitions.add(TextPartStyleDefinition(
           isLabel: false,
           isTime: false,
           isDate: false,
           isImportance: true,
-          pattern: "(?:(!)+)",
+          pattern: "(?:(!3)+)",
           color: ColorsExt.cyan25(context),
           isFromAction: false));
       context.read<EditTaskCubit>().setPriority(null, value: 3);

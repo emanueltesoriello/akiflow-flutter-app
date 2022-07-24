@@ -31,6 +31,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.priorityHighSVG,
                                 title: "High",
+                                hint: "!1",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 1);
                                 },
@@ -38,6 +39,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.priorityMidSVG,
                                 title: "Medium",
+                                hint: "!2",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 2);
                                 },
@@ -45,6 +47,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.priorityLowSVG,
                                 title: "Low",
+                                hint: "!3",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 3);
                                 },
@@ -52,6 +55,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.noPrioritySVG,
                                 title: "No priority",
+                                hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().removePriority();
                                 },
