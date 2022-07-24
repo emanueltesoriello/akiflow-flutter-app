@@ -29,7 +29,7 @@ class PriorityWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               PriorityItem(
-                                asset: Assets.images.icons.common.priorityHighSVG,
+                                asset: Assets.images.icons.common.exclamationmark3SVG,
                                 title: "High",
                                 hint: "!1",
                                 onSelect: () {
@@ -37,7 +37,7 @@ class PriorityWidget extends StatelessWidget {
                                 },
                               ),
                               PriorityItem(
-                                asset: Assets.images.icons.common.priorityMidSVG,
+                                asset: Assets.images.icons.common.exclamationmark2SVG,
                                 title: "Medium",
                                 hint: "!2",
                                 onSelect: () {
@@ -45,7 +45,7 @@ class PriorityWidget extends StatelessWidget {
                                 },
                               ),
                               PriorityItem(
-                                asset: Assets.images.icons.common.priorityLowSVG,
+                                asset: Assets.images.icons.common.exclamationmark1SVG,
                                 title: "Low",
                                 hint: "!3",
                                 onSelect: () {
