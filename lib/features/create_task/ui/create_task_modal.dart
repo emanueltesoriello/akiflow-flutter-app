@@ -244,13 +244,15 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
       String substring = text.split('=').last.split(' ').first;
       List<String> chars = substring.split('');
       int hours = chars.indexWhere((element) => element.toLowerCase() == "h");
+      print(hours);
       int minutes = chars.indexWhere((element) => element.toLowerCase() == "m");
       try {
-        int? h = int.tryParse(chars[hours - 1]);
+        int? h = hours != -1 ? int.tryParse(chars[hours - 1]) : null;
         int? m = int.tryParse((chars[minutes - 2] + chars[minutes - 1]).trim());
 
-        if (h != null) {
-          context.read<EditTaskCubit>().setDuration((h * 3600) + ((m ?? 0) * 60));
+        if (h != null || m != null) {
+          print(((h ?? 0) * 3600) + ((m ?? 0) * 60));
+          context.read<EditTaskCubit>().setDuration(((h ?? 0) * 3600) + ((m ?? 0) * 60));
           checkForPrevious(HighlightType.time);
           newDefinitions.add(TextPartStyleDefinition(
               isLabel: false,
@@ -262,6 +264,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               isFromAction: false));
         }
       } catch (e) {
+        print(e.toString());
         context.read<EditTaskCubit>().setDuration(0);
       }
     } else {
