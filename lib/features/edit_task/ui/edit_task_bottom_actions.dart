@@ -37,125 +37,131 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
 
     return Container(
       constraints: const BoxConstraints(minHeight: 64),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      // padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TagBox(
-            icon: () {
-              switch (task.priority) {
-                case 1:
-                  return Assets.images.icons.common.priorityHighSVG;
-                case 2:
-                  return Assets.images.icons.common.priorityMidSVG;
-                case 3:
-                  return Assets.images.icons.common.priorityLowSVG;
-                case null:
-                  return Assets.images.icons.common.importanceGreySVG;
-                default:
-                  return Assets.images.icons.common.importanceGreySVG;
-              }
-            }(),
-            isBig: true,
-            isSquare: true,
-            backgroundColor:
-                task.priority != null && task.priority != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-            active: task.priority != null && task.priority != 0,
-            onPressed: () async {
-              PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
-              EditTaskCubit cubit = context.read<EditTaskCubit>();
-
-              cubit.priorityTap();
-
-              PriorityEnum? newPriority = await showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context) => PriorityModal(currentPriority),
-                closeProgressThreshold: 0,
-                expand: false,
-              );
-
-              cubit.setPriority(newPriority);
-            },
-          ),
-          const SizedBox(width: 11),
-          TagBox(
-            icon: "assets/images/icons/_common/target_active.svg",
-            isBig: true,
-            isSquare: true,
-            backgroundColor:
-                task.dailyGoal != null && task.dailyGoal == 1 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-            active: task.dailyGoal != null && task.dailyGoal == 1,
-            onPressed: () {
-              context.read<EditTaskCubit>().toggleDailyGoal();
-            },
-          ),
-          const SizedBox(width: 11),
-          TagBox(
-            icon: "assets/images/icons/_common/flags.svg",
-            isBig: true,
-            isSquare: true,
-            backgroundColor: task.dueDate != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-            active: task.dueDate != null,
-            text: task.dueDateFormatted,
-            onPressed: () {
-              var cubit = context.read<EditTaskCubit>();
-
-              cubit.deadlineTap();
-
-              showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context) => BlocProvider.value(
-                  value: cubit,
-                  child: DeadlineModal(
-                    initialDate: () {
-                      try {
-                        return DateTime.tryParse(context.watch<EditTaskCubit>().state.updatedTask.dueDate!);
-                      } catch (_) {
-                        return null;
-                      }
-                    }(),
-                    onSelectDate: (DateTime? date) {
-                      cubit.setDeadline(date);
-                    },
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 11),
-          Builder(builder: (context) {
-            bool active = false;
-
-            try {
-              if (task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty)) {
-                active = true;
-              }
-            } catch (_) {}
-
-            return TagBox(
-              icon: "assets/images/icons/_common/link.svg",
-              iconSize: 19.5,
+          Row(children: [
+            const SizedBox(width: 16),
+            TagBox(
+              icon: () {
+                switch (task.priority) {
+                  case 1:
+                    return Assets.images.icons.common.priorityHighSVG;
+                  case 2:
+                    return Assets.images.icons.common.priorityMidSVG;
+                  case 3:
+                    return Assets.images.icons.common.priorityLowSVG;
+                  case null:
+                    return Assets.images.icons.common.importanceGreySVG;
+                  default:
+                    return Assets.images.icons.common.importanceGreySVG;
+                }
+              }(),
               isBig: true,
               isSquare: true,
-              active: active,
-              backgroundColor: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              backgroundColor:
+                  task.priority != null && task.priority != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              active: task.priority != null && task.priority != 0,
               onPressed: () async {
-                var cubit = context.read<EditTaskCubit>();
+                PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
+                EditTaskCubit cubit = context.read<EditTaskCubit>();
 
-                cubit.linksTap();
+                cubit.priorityTap();
 
-                String? newLink = await showCupertinoModalBottomSheet(
+                PriorityEnum? newPriority = await showCupertinoModalBottomSheet(
                   context: context,
-                  builder: (context) => const CreateLinkModal(),
+                  builder: (context) => PriorityModal(currentPriority),
+                  closeProgressThreshold: 0,
+                  expand: false,
                 );
 
-                if (newLink != null) {
-                  cubit.addLink(newLink);
-                }
+                cubit.setPriority(newPriority);
               },
-            );
-          }),
-          const Spacer(),
-          _menu(context),
+            ),
+            const SizedBox(width: 11),
+            TagBox(
+              icon: "assets/images/icons/_common/target_active.svg",
+              isBig: true,
+              isSquare: true,
+              backgroundColor:
+                  task.dailyGoal != null && task.dailyGoal == 1 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              active: task.dailyGoal != null && task.dailyGoal == 1,
+              onPressed: () {
+                context.read<EditTaskCubit>().toggleDailyGoal();
+              },
+            ),
+            const SizedBox(width: 11),
+            TagBox(
+              icon: "assets/images/icons/_common/flags.svg",
+              isBig: true,
+              isSquare: true,
+              backgroundColor: task.dueDate != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              active: task.dueDate != null,
+              text: task.dueDateFormatted,
+              onPressed: () {
+                var cubit = context.read<EditTaskCubit>();
+
+                cubit.deadlineTap();
+
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) => BlocProvider.value(
+                    value: cubit,
+                    child: DeadlineModal(
+                      initialDate: () {
+                        try {
+                          return DateTime.tryParse(context.watch<EditTaskCubit>().state.updatedTask.dueDate!);
+                        } catch (_) {
+                          return null;
+                        }
+                      }(),
+                      onSelectDate: (DateTime? date) {
+                        cubit.setDeadline(date);
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(width: 11),
+            Builder(builder: (context) {
+              bool active = false;
+
+              try {
+                if (task.links!.toList().isNotEmpty && task.links!.toList().every((element) => element.isNotEmpty)) {
+                  active = true;
+                }
+              } catch (_) {}
+
+              return TagBox(
+                icon: "assets/images/icons/_common/link.svg",
+                iconSize: 19.5,
+                isBig: true,
+                isSquare: true,
+                active: active,
+                backgroundColor: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                onPressed: () async {
+                  var cubit = context.read<EditTaskCubit>();
+
+                  cubit.linksTap();
+
+                  String? newLink = await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => const CreateLinkModal(),
+                  );
+
+                  if (newLink != null) {
+                    cubit.addLink(newLink);
+                  }
+                },
+              );
+            }),
+          ]),
+          Padding(
+            padding: const EdgeInsets.only(right:4.0),
+            child: _menu(context),
+          ),
         ],
       ),
     );
@@ -168,6 +174,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
         icon: Container(
           height: 32,
           width: 32,
+
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(3),
             color: ColorsExt.grey6(context),
