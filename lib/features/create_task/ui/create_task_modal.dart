@@ -247,9 +247,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         int? h = hours != -1 ? int.tryParse(chars[hours - 1]) : null;
         int? m = minutes - 2 > -1
             ? int.tryParse((chars[minutes - 2] + chars[minutes - 1]).trim())
-            : minutes - 1 > -1
-                ? int.tryParse((chars[minutes - 1]).trim())
-                : null;
+            : ((minutes - 1) > -1 ? int.tryParse((chars[minutes - 1]).trim()) : null);
 
         if (h != null || m != null) {
           context.read<EditTaskCubit>().setDuration(((h ?? 0) * 3600) + ((m ?? 0) * 60));
