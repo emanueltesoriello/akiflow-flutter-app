@@ -29,22 +29,25 @@ class PriorityWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               PriorityItem(
-                                asset: Assets.images.icons.common.priorityHighSVG,
+                                asset: Assets.images.icons.common.exclamationmark3SVG,
                                 title: "High",
+                                hint: "!1",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 1);
                                 },
                               ),
                               PriorityItem(
-                                asset: Assets.images.icons.common.priorityMidSVG,
+                                asset: Assets.images.icons.common.exclamationmark2SVG,
                                 title: "Medium",
+                                hint: "!2",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 2);
                                 },
                               ),
                               PriorityItem(
-                                asset: Assets.images.icons.common.priorityLowSVG,
+                                asset: Assets.images.icons.common.exclamationmark1SVG,
                                 title: "Low",
+                                hint: "!3",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 3);
                                 },
@@ -52,6 +55,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.noPrioritySVG,
                                 title: "No priority",
+                                hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().removePriority();
                                 },

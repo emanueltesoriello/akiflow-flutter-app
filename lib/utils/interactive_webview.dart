@@ -15,7 +15,7 @@ class InteractiveWebView {
   }
 
   static Future<Document> htmlToDelta(String html) async {
-    html = html.replaceAll('\n', '');
+    html = html.replaceAll('\n', '</br>');
 
     if (html.isEmpty) {
       return Document();

@@ -85,7 +85,10 @@ class _EditTaskRowState extends State<EditTaskRow> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _checkbox(context),
+          Padding(
+            padding: const EdgeInsets.only(top:2.0),
+            child: _checkbox(context),
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -206,8 +209,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
         return SvgPicture.asset(
           completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
-          width: 20,
-          height: 20,
+          width: 22,
+          height: 22,
           color: completed ? ColorsExt.green(context) : ColorsExt.grey3(context),
         );
       }),
