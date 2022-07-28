@@ -777,11 +777,11 @@ extension TaskExt on Task {
 
     bool opened;
 
-    if (uri.host == "mail.google.com") {
-      opened = await launchUrl(Uri.parse("googlegmail://"), mode: LaunchMode.externalApplication);
-    } else {
+    // if (uri.host == "mail.google.com") {
+    //   opened = await launchUrl(Uri.parse("googlegmail://"), mode: LaunchMode.externalApplication);
+   // } else {
       opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
+   // }
 
     if (opened == false) {
       launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication);
