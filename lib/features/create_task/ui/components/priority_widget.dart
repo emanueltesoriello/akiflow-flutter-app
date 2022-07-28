@@ -31,7 +31,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.exclamationmark3SVG,
                                 title: "High",
-                                hint: "!1",
+                                hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 1);
                                 },
@@ -39,7 +39,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.exclamationmark2SVG,
                                 title: "Medium",
-                                hint: "!2",
+                                hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 2);
                                 },
@@ -47,7 +47,7 @@ class PriorityWidget extends StatelessWidget {
                               PriorityItem(
                                 asset: Assets.images.icons.common.exclamationmark1SVG,
                                 title: "Low",
-                                hint: "!3",
+                                hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 3);
                                 },
