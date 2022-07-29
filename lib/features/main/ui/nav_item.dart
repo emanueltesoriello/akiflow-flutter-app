@@ -41,8 +41,6 @@ class NavItem extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          HapticFeedback.mediumImpact();
-
           if (homeViewType != null) {
             context.read<MainCubit>().changeHomeView(homeViewType!);
 
