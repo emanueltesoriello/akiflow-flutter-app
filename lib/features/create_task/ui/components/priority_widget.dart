@@ -15,7 +15,7 @@ class PriorityWidget extends StatelessWidget {
       builder: (context, state) {
         if (state.showPriority) {
           return SizedBox(
-            height: 242,
+            height: 205,
             child: Column(
               children: [
                 Expanded(
