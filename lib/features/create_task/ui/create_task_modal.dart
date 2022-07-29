@@ -43,7 +43,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
   @override
   void dispose() {
-    titleFocus.removeListener(focusListener!);
     super.dispose();
   }
 
@@ -136,6 +135,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
+            onChanged: (String value) {
+              context.read<EditTaskCubit>().updateTitle(value);
+            },
           );
         });
   }

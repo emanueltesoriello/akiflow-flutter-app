@@ -53,23 +53,13 @@ class CreateTaskActions extends StatelessWidget {
                       required TaskStatusType statusType}) async {
                     editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
 
-                    if (date != null) {
-                      String shortDate = date.shortDateFormatted;
-                      String? shortTime = datetime?.timeFormatted;
-
-                      if (shortTime != null) {
-                        titleController.text += '$shortDate$shortTime ';
-                      } else {
-                        titleController.text += '$shortDate ';
-                      }
-                    }
+                
 
                     SchedulerBinding.instance.addPostFrameCallback((_) {
                       titleFocus.requestFocus();
                     });
 
-                    List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(titleController.text);
-                    callback(chronoParsed);
+                 
                   },
                   setForInbox: () {
                     editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
