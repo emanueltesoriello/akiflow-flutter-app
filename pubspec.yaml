@@ -13,7 +13,6 @@ dependencies:
   extended_text_library: ^9.1.1
   flutter:
     sdk: flutter
-  flutter_appauth: ^2.4.1
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter
@@ -33,6 +32,8 @@ dependencies:
   modal_bottom_sheet: ^2.1.0
   models:
     path: ./packages/models
+  akiflow_oauth:
+    path: ./packages/akiflow_oauth
   package_info_plus: ^1.4.2
   path: ^1.8.0
   path_provider: ^2.0.9
@@ -46,7 +47,8 @@ dependencies:
   url_launcher: ^6.0.20
   uuid: ^3.0.6
   visibility_detector: ^0.3.3
-  webview_flutter: ^3.0.4
+  webview_flutter: ^2.0.13
+  flutter_appauth: ^4.2.0
 
 dev_dependencies:
   flutter_launcher_icons_maker: ^0.10.1
