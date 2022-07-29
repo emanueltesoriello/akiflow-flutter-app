@@ -289,6 +289,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             topColor: ColorsExt.green(context),
             icon: 'assets/images/icons/_common/Check-done.svg',
             label: withLabel ? t.task.done.toUpperCase() : null,
+            size: 28,
             leftToRight: true,
             click: () {
               Slidable.of(context)?.close();

@@ -7,6 +7,7 @@ class SlidableButtonAction extends StatelessWidget {
   final String icon;
   final String? label;
   final String? bottomLabel;
+  final double? size;
   final Function() click;
   final bool leftToRight;
 
@@ -17,6 +18,7 @@ class SlidableButtonAction extends StatelessWidget {
     required this.icon,
     this.label,
     this.bottomLabel,
+    this.size,
     required this.click,
     required this.leftToRight,
   }) : super(key: key);
@@ -32,8 +34,8 @@ class SlidableButtonAction extends StatelessWidget {
             child: SvgPicture.asset(
               icon,
               color: topColor,
-              width: 24,
-              height: 24,
+              width: size ?? 24,
+              height: size ?? 24,
             ),
           ),
         ),
@@ -60,8 +62,8 @@ class SlidableButtonAction extends StatelessWidget {
           SvgPicture.asset(
             icon,
             color: topColor,
-            width: 24,
-            height: 24,
+            width: size ?? 24,
+            height: size ?? 24,
           ),
           const SizedBox(width: 4.5),
           Text(

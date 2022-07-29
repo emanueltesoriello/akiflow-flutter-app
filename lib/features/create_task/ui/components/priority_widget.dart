@@ -66,7 +66,7 @@ class PriorityWidget extends StatelessWidget {
                                         context.read<EditTaskCubit>().toggleImportance();
                                       },
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ],
                           )),
                     ),
