@@ -34,6 +34,7 @@ class PriorityWidget extends StatelessWidget {
                                 hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 1);
+                                  context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
                               PriorityItem(
@@ -42,6 +43,8 @@ class PriorityWidget extends StatelessWidget {
                                 hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 2);
+
+                                  context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
                               PriorityItem(
@@ -50,6 +53,7 @@ class PriorityWidget extends StatelessWidget {
                                 hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 3);
+                                  context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
                               PriorityItem(
@@ -58,6 +62,7 @@ class PriorityWidget extends StatelessWidget {
                                 hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().removePriority();
+                                  context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
                             ],
