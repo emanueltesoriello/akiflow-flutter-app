@@ -56,15 +56,17 @@ class PriorityWidget extends StatelessWidget {
                                   context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
-                              PriorityItem(
-                                asset: Assets.images.icons.common.noPrioritySVG,
-                                title: "No priority",
-                                hint: "",
-                                onSelect: () {
-                                  context.read<EditTaskCubit>().removePriority();
-                                  context.read<EditTaskCubit>().toggleImportance();
-                                },
-                              ),
+                              state.updatedTask.priority != null && state.updatedTask.priority! > -1
+                                  ? PriorityItem(
+                                      asset: Assets.images.icons.common.noPrioritySVG,
+                                      title: "No priority",
+                                      hint: "",
+                                      onSelect: () {
+                                        context.read<EditTaskCubit>().removePriority();
+                                        context.read<EditTaskCubit>().toggleImportance();
+                                      },
+                                    )
+                                  : SizedBox(),
                             ],
                           )),
                     ),
