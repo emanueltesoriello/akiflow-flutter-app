@@ -8,7 +8,10 @@ import 'package:mobile/components/base/action_button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:akiflow_oauth/oauth_webauth.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../core/config.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -94,7 +97,19 @@ class AuthPage extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      context.read<AuthCubit>().loginClick();
+                      OAuthWebScreen.start(
+                          context: context,
+                          authorizationEndpointUrl: "${Config.oauthEndpoint}/oauth/authorize",
+                          tokenEndpointUrl: "${Config.oauthEndpoint}/oauth/authorize",
+                          clientId: Config.oauthClientId,
+                          redirectUrl: Config.oauthRedirectUrl,
+                          refreshBtnVisible: false,
+                          clearCacheBtnVisible: false,
+                          onSuccess: (credentials) {
+                            context.read<AuthCubit>().loginClick(credentials.key, credentials.value);
+                          },
+                          onError: (error) {},
+                          onCancel: () {});
                     },
                   ),
                   const SizedBox(height: 32),
