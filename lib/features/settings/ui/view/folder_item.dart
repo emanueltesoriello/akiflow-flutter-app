@@ -32,7 +32,7 @@ class FolderItem extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                label.title!,
+                label.title??'(No title)',
                 style: TextStyle(
                   fontSize: 17,
                   color: ColorsExt.grey2(context),

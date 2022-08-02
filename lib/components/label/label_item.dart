@@ -65,15 +65,12 @@ class LabelItem extends StatelessWidget {
   }
 
   Widget _text(BuildContext context) {
-    if (label.title == null || label.title!.isEmpty) {
-      return const SizedBox();
-    }
 
     return Wrap(
       children: [
         const SizedBox(width: 8),
         Text(
-          label.title!,
+          label.title??'(No title)',
           style: TextStyle(
             fontSize: 17,
             color: label.id != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
