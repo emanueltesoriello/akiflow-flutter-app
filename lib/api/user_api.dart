@@ -21,7 +21,9 @@ class UserApi extends ApiClient {
     Response responseRaw = await _httpClient.get(url);
 
     var response = jsonDecode(responseRaw.body);
-
+    if (response["data"] == null) {
+      return null;
+    }
     if (response.containsKey("errors")) {
       throw ApiException(response);
     } else {
