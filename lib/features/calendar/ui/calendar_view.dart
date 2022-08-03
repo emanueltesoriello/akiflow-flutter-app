@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
 
+import '../../../components/base/app_bar.dart';
 import 'home_view_placeholder.dart';
 
 class CalendarView extends StatelessWidget {
@@ -16,6 +19,16 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const HomeViewPlaceholder();
+    return Scaffold(
+        appBar: AppBarComp(
+          title: t.bottomBar.calendar,
+          leading: SvgPicture.asset(
+            "assets/images/icons/_common/calendar.svg",
+            width: 26,
+            height: 26,
+          ),
+          showSyncButton: true,
+        ),
+        body: const HomeViewPlaceholder());
   }
 }

@@ -62,6 +62,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
+          
         ),
         elevation: 4,
         automaticallyImplyLeading: false,

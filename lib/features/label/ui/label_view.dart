@@ -21,6 +21,8 @@ import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
+import 'label_appbar.dart';
+
 class LabelView extends StatefulWidget {
   const LabelView({Key? key}) : super(key: key);
 
@@ -54,180 +56,185 @@ class _LabelViewState extends State<LabelView> {
   @override
   Widget build(BuildContext context) {
     List<Task> labelTasks = List.from(context.watch<TasksCubit>().state.labelTasks);
+    bool showDone = context.watch<LabelsCubit>().state.showDone;
+    Label? label = context.watch<LabelsCubit>().state.selectedLabel;
 
-    return BlocBuilder<LabelsCubit, LabelsCubitState>(
-      builder: (context, labelState) {
-        List<Task> filtered = labelTasks.toList();
+    return Scaffold(
+      appBar: LabelAppBar(label: label!, showDone: showDone),
+      body: BlocBuilder<LabelsCubit, LabelsCubitState>(
+        builder: (context, labelState) {
+          List<Task> filtered = labelTasks.toList();
 
-        if (!labelState.showDone) {
-          filtered = labelTasks.where((element) => !element.isCompletedComputed).toList();
-        }
-
-        filtered = filtered.where((element) => element.listId == labelState.selectedLabel?.id).toList();
-
-        // Remove `sectionId` when the section not exists anymore
-        for (Task task in filtered) {
-          if (labelState.sections.every((element) => element.id != task.sectionId)) {
-            int index = filtered.indexWhere((element) => element.id == task.id);
-            Task updated = task.copyWith(sectionId: Nullable(null));
-            filtered[index] = updated;
+          if (!labelState.showDone) {
+            filtered = labelTasks.where((element) => !element.isCompletedComputed).toList();
           }
-        }
 
-        return RefreshIndicator(
-          backgroundColor: ColorsExt.background(context),
-          onRefresh: () async {
-            return context.read<SyncCubit>().sync();
-          },
-          child: SlidableAutoCloseBehavior(
-            child: ListView(
-              controller: scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              children: labelState.sections.map((section) {
-                List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
+          filtered = filtered.where((element) => element.listId == labelState.selectedLabel?.id).toList();
 
-                List<Task> tasksWithoutSnoozedAndSomeday = List.from(tasks);
+          // Remove `sectionId` when the section not exists anymore
+          for (Task task in filtered) {
+            if (labelState.sections.every((element) => element.id != task.sectionId)) {
+              int index = filtered.indexWhere((element) => element.id == task.id);
+              Task updated = task.copyWith(sectionId: Nullable(null));
+              filtered[index] = updated;
+            }
+          }
 
-                if (!labelState.showSnoozed) {
-                  tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSnoozed);
-                }
+          return RefreshIndicator(
+            backgroundColor: ColorsExt.background(context),
+            onRefresh: () async {
+              return context.read<SyncCubit>().sync();
+            },
+            child: SlidableAutoCloseBehavior(
+              child: ListView(
+                controller: scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                children: labelState.sections.map((section) {
+                  List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
 
-                if (!labelState.showSomeday) {
-                  tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSomeday);
-                }
+                  List<Task> tasksWithoutSnoozedAndSomeday = List.from(tasks);
 
-                int count =
-                    tasksWithoutSnoozedAndSomeday.where((element) => element.sectionId == section.id).toList().length;
-
-                Widget? header = SectionHeaderItem(
-                  section.title ?? t.noTitle,
-                  taskCount: count,
-                  showActionsMenu: section.id != null,
-                  onClick: () {
-                    context.read<LabelsCubit>().toggleOpenSection(section.id);
-                  },
-                  listOpened: labelState.openedSections[section.id] ?? false,
-                  onCreateTask: () async {
-                    EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
-
-                    Task task = editTaskCubit.state.updatedTask.copyWith(
-                      sectionId: Nullable(section.id),
-                      status: Nullable(TaskStatusType.inbox.id),
-                      date: Nullable(null),
-                      datetime: Nullable(null),
-                      listId: Nullable(labelState.selectedLabel?.id),
-                    );
-
-                    editTaskCubit.attachTask(task);
-
-                    showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context) => const CreateTaskModal(),
-                    );
-                  },
-                  onDelete: () {
-                    context.read<LabelsCubit>().deleteSection(section);
-                  },
-                  onRename: () async {
-                    LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                    Label? sectionUpdated = await showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context) => CreateEditSectionModal(initialSection: section),
-                    );
-
-                    if (sectionUpdated != null) {
-                      labelsCubit.updateSection(sectionUpdated);
-                    }
-                  },
-                );
-
-                int snoozedCount = tasks.where((element) => element.isSnoozed).toList().length;
-                int somedayCount = tasks.where((element) => element.isSomeday).toList().length;
-
-                Widget? footer;
-
-                if (snoozedCount != 0 || somedayCount != 0) {
-                  List<Widget> wrapped = [];
-
-                  if (snoozedCount != 0) {
-                    wrapped.add(() {
-                      String text;
-                      String? iconAsset;
-
-                      if (!labelState.showSnoozed) {
-                        text = "$snoozedCount ${t.task.snoozed}";
-                        iconAsset = "assets/images/icons/_common/clock.svg";
-                      } else {
-                        text = t.label.hideSnoozed;
-                      }
-
-                      return CompactInfo(
-                        iconAsset: iconAsset,
-                        text: text,
-                        onPressed: () {
-                          SchedulerBinding.instance.addPostFrameCallback((_) {
-                            double position = scrollController.position.maxScrollExtent;
-                            scrollController.animateTo(position,
-                                duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                          });
-
-                          context.read<LabelsCubit>().toggleShowSnoozed();
-                        },
-                      );
-                    }());
+                  if (!labelState.showSnoozed) {
+                    tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSnoozed);
                   }
 
-                  if (somedayCount != 0) {
-                    wrapped.add(() {
-                      String text;
-                      String? iconAsset;
-
-                      if (!labelState.showSomeday) {
-                        text = "$somedayCount ${t.task.someday}";
-                        iconAsset = "assets/images/icons/_common/archivebox.svg";
-                      } else {
-                        text = t.label.hideSomeday;
-                      }
-
-                      return CompactInfo(
-                        iconAsset: iconAsset,
-                        text: text,
-                        onPressed: () async {
-                          SchedulerBinding.instance.addPostFrameCallback((_) {
-                            double position = scrollController.position.maxScrollExtent;
-                            scrollController.animateTo(position,
-                                duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                          });
-
-                          context.read<LabelsCubit>().toggleShowSomeday();
-                        },
-                      );
-                    }());
+                  if (!labelState.showSomeday) {
+                    tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSomeday);
                   }
-                  footer = Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
+
+                  int count =
+                      tasksWithoutSnoozedAndSomeday.where((element) => element.sectionId == section.id).toList().length;
+
+                  Widget? header = SectionHeaderItem(
+                    section.title ?? t.noTitle,
+                    taskCount: count,
+                    showActionsMenu: section.id != null,
+                    onClick: () {
+                      context.read<LabelsCubit>().toggleOpenSection(section.id);
+                    },
+                    listOpened: labelState.openedSections[section.id] ?? false,
+                    onCreateTask: () async {
+                      EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+
+                      Task task = editTaskCubit.state.updatedTask.copyWith(
+                        sectionId: Nullable(section.id),
+                        status: Nullable(TaskStatusType.inbox.id),
+                        date: Nullable(null),
+                        datetime: Nullable(null),
+                        listId: Nullable(labelState.selectedLabel?.id),
+                      );
+
+                      editTaskCubit.attachTask(task);
+
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) => const CreateTaskModal(),
+                      );
+                    },
+                    onDelete: () {
+                      context.read<LabelsCubit>().deleteSection(section);
+                    },
+                    onRename: () async {
+                      LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                      Label? sectionUpdated = await showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) => CreateEditSectionModal(initialSection: section),
+                      );
+
+                      if (sectionUpdated != null) {
+                        labelsCubit.updateSection(sectionUpdated);
+                      }
+                    },
                   );
-                }
 
-                return TaskList(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  tasks: tasksWithoutSnoozedAndSomeday,
-                  visible: labelState.openedSections[section.id] ?? false,
-                  showLabel: false,
-                  header: labelState.sections.length > 1 ? header : null,
-                  footer: footer,
-                  showPlanInfo: true,
-                  sorting: TaskListSorting.sortingLabelAscending,
-                );
-              }).toList(),
+                  int snoozedCount = tasks.where((element) => element.isSnoozed).toList().length;
+                  int somedayCount = tasks.where((element) => element.isSomeday).toList().length;
+
+                  Widget? footer;
+
+                  if (snoozedCount != 0 || somedayCount != 0) {
+                    List<Widget> wrapped = [];
+
+                    if (snoozedCount != 0) {
+                      wrapped.add(() {
+                        String text;
+                        String? iconAsset;
+
+                        if (!labelState.showSnoozed) {
+                          text = "$snoozedCount ${t.task.snoozed}";
+                          iconAsset = "assets/images/icons/_common/clock.svg";
+                        } else {
+                          text = t.label.hideSnoozed;
+                        }
+
+                        return CompactInfo(
+                          iconAsset: iconAsset,
+                          text: text,
+                          onPressed: () {
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              double position = scrollController.position.maxScrollExtent;
+                              scrollController.animateTo(position,
+                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                            });
+
+                            context.read<LabelsCubit>().toggleShowSnoozed();
+                          },
+                        );
+                      }());
+                    }
+
+                    if (somedayCount != 0) {
+                      wrapped.add(() {
+                        String text;
+                        String? iconAsset;
+
+                        if (!labelState.showSomeday) {
+                          text = "$somedayCount ${t.task.someday}";
+                          iconAsset = "assets/images/icons/_common/archivebox.svg";
+                        } else {
+                          text = t.label.hideSomeday;
+                        }
+
+                        return CompactInfo(
+                          iconAsset: iconAsset,
+                          text: text,
+                          onPressed: () async {
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              double position = scrollController.position.maxScrollExtent;
+                              scrollController.animateTo(position,
+                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                            });
+
+                            context.read<LabelsCubit>().toggleShowSomeday();
+                          },
+                        );
+                      }());
+                    }
+                    footer = Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
+                    );
+                  }
+
+                  return TaskList(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    tasks: tasksWithoutSnoozedAndSomeday,
+                    visible: labelState.openedSections[section.id] ?? false,
+                    showLabel: false,
+                    header: labelState.sections.length > 1 ? header : null,
+                    footer: footer,
+                    showPlanInfo: true,
+                    sorting: TaskListSorting.sortingLabelAscending,
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

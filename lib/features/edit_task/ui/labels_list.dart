@@ -46,6 +46,11 @@ class _LabelsListState extends State<LabelsList> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.showHeaders) {
       return ValueListenableBuilder<String>(

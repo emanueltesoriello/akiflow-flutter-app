@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/task/bottom_task_actions.dart';
 import 'package:mobile/components/task/task_list_menu.dart';
@@ -22,6 +23,7 @@ import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/features/label/ui/label_view.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/bottom_nav_bar.dart';
+import 'package:mobile/features/main/ui/components/floating_button.dart';
 import 'package:mobile/features/main/ui/gmail_actions_dialog.dart';
 import 'package:mobile/features/main/ui/just_created_task_button.dart';
 import 'package:mobile/features/main/ui/undo_button.dart';
@@ -52,7 +54,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
-  final PageController _pageController = PageController(initialPage: 1);
 
   @override
   void initState() {
@@ -158,7 +159,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           if (ModalRoute.of(context)?.settings.name != "/") {
             return false;
           }
-
           return true;
         }
       },
@@ -167,27 +167,32 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   Widget _body(BuildContext context) {
-    HomeViewType homeViewType = context.watch<MainCubit>().state.homeViewType;
-    Label? label = context.watch<LabelsCubit>().state.selectedLabel;
+    int homeViewType = context.watch<MainCubit>().state.homeViewType.index;
 
     return Stack(
       children: [
         const InternalWebView(),
         Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: _appBar(
-            context,
-            todayAppBarHeight: toolbarHeight,
-            calendarTopMargin: toolbarHeight,
-            homeViewType: homeViewType,
-            selectedLabel: label,
+          floatingActionButton: const FloatingButton(bottomBarHeight: bottomBarHeight),
+          bottomNavigationBar: CustomBottomNavigationBar(
+            labelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+            bottomBarIconSize: 30,
+            topPadding: MediaQuery.of(context).padding.top,
           ),
-          floatingActionButton: _floatingButton(),
-          bottomNavigationBar: _bottomBar(context),
-          body: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + toolbarHeight),
-            child: _content(),
-          ),
+          body: Builder(builder: (context) {
+            if (homeViewType < 4) {
+              return IndexedStack(
+                index: homeViewType,
+                children: const [
+                  InboxView(),
+                  TodayView(),
+                  CalendarView(),
+                ],
+              );
+            }
+            return const LabelView();
+          }),
         ),
         BlocBuilder<TasksCubit, TasksCubitState>(
           builder: (context, state) {
@@ -217,182 +222,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           },
         ),
       ],
-    );
-  }
-
-  PreferredSizeWidget _appBar(
-    BuildContext context, {
-    required double calendarTopMargin,
-    required double todayAppBarHeight,
-    required HomeViewType homeViewType,
-    required Label? selectedLabel,
-  }) {
-    switch (homeViewType) {
-      case HomeViewType.inbox:
-        return AppBarComp(
-          title: t.bottomBar.inbox,
-          leading: SvgPicture.asset(
-            "assets/images/icons/_common/tray.svg",
-            width: 26,
-            height: 26,
-          ),
-          actions: const [TaskListMenu()],
-          showSyncButton: true,
-        );
-      case HomeViewType.today:
-        return TodayAppBar(preferredSizeHeight: todayAppBarHeight, calendarTopMargin: calendarTopMargin);
-      case HomeViewType.calendar:
-        return AppBarComp(
-          title: t.bottomBar.calendar,
-          leading: SvgPicture.asset(
-            "assets/images/icons/_common/calendar.svg",
-            width: 26,
-            height: 26,
-          ),
-          showSyncButton: true,
-        );
-      case HomeViewType.label:
-        bool showDone = context.watch<LabelsCubit>().state.showDone;
-        return LabelAppBar(label: selectedLabel!, showDone: showDone);
-      default:
-        return const PreferredSize(preferredSize: Size.zero, child: SizedBox());
-    }
-  }
-
-  Widget _content() {
-    return BlocListener<MainCubit, MainCubitState>(
-      listener: (context, state) {
-        int? page;
-
-        switch (state.homeViewType) {
-          case HomeViewType.inbox:
-            page = 1;
-            break;
-          case HomeViewType.today:
-            page = 2;
-            break;
-          case HomeViewType.calendar:
-            page = 3;
-            break;
-          case HomeViewType.label:
-            page = 4;
-
-            break;
-          default:
-        }
-
-        if (page == null) return;
-
-        if (page == 4) {
-          _pageController.jumpToPage(page);
-        } else if ((state.lastHomeViewType == HomeViewType.label || state.homeViewType == HomeViewType.label)) {
-          _pageController.jumpToPage(page);
-        } else {
-          _pageController.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-        }
-      },
-      child: BlocBuilder<LabelsCubit, LabelsCubitState>(
-        builder: (context, labelsState) {
-          Label? selectedLabel = labelsState.selectedLabel;
-
-          return PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              const SizedBox(),
-              const InboxView(),
-              const TodayView(),
-              const CalendarView(),
-              if (selectedLabel != null) LabelView(key: ObjectKey(selectedLabel)) else const SizedBox()
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  static const double bottomBarIconSize = 30;
-
-  Widget _bottomBar(BuildContext context) {
-    double topPadding = MediaQuery.of(context).padding.top;
-
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, state) {
-        List<Task> inboxTasks = List.from(state.inboxTasks);
-
-        TextStyle labelStyle = TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context));
-
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomBottomNavigationBar(
-              labelStyle: labelStyle,
-              bottomBarIconSize: bottomBarIconSize,
-              inboxTasksCount: inboxTasks.length,
-              fixedTodoTodayTasksCount: state.todayCount,
-              topPadding: topPadding,
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  BlocBuilder<TasksCubit, TasksCubitState> _floatingButton() {
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, state) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: state.queue.isNotEmpty || state.justCreatedTask != null ? bottomBarHeight : 0),
-          child: SizedBox(
-            width: 52,
-            height: 52,
-            child: FloatingActionButton(
-              onPressed: () async {
-                HapticFeedback.mediumImpact();
-
-                HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-
-                TaskStatusType taskStatusType;
-
-                if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
-                  taskStatusType = TaskStatusType.inbox;
-                } else {
-                  taskStatusType = TaskStatusType.planned;
-                }
-
-                DateTime date = context.read<TodayCubit>().state.selectedDate;
-
-                Label? label = context.read<LabelsCubit>().state.selectedLabel;
-
-                EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
-
-                Task task = editTaskCubit.state.updatedTask.copyWith(
-                  status: Nullable(taskStatusType.id),
-                  date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
-                      ? Nullable(null)
-                      : Nullable(date.toIso8601String()),
-                  listId: Nullable(label?.id),
-                );
-
-                editTaskCubit.attachTask(task);
-
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => const CreateTaskModal(),
-                );
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: SvgPicture.asset(
-                "assets/images/icons/_common/plus.svg",
-                color: ColorsExt.background(context),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

@@ -97,6 +97,11 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     emit(state.copyWith(labels: labels));
   }
 
+  removeLabel() async {
+    emit(state.copyWith(selectedLabel: null));
+    _tasksCubit.attachLabelCubit(this);
+  }
+
   selectLabel(Label label) async {
     emit(state.copyWith(selectedLabel: label));
 
