@@ -23,8 +23,7 @@ class UserApi extends ApiClient {
     var response = jsonDecode(responseRaw.body);
     if (response["data"] == null) {
       return null;
-    }
-    if (response.containsKey("errors")) {
+    } else if (response.containsKey("errors")) {
       throw ApiException(response);
     } else {
       return User.fromMap(response["data"]).settings;
