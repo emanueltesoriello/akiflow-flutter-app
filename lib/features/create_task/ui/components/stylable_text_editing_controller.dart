@@ -91,12 +91,12 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
   }) {
     final List<InlineSpan> textSpanChildren = <InlineSpan>[];
 
-    String? dateMatch;
-    bool dateDetected = false;
+    // String? dateMatch;
+    // bool dateDetected = false;
 
-    try {
-      dateMatch = combinedPatternToDetect.allMatches(text).first.group(0);
-    } catch (_) {}
+    // try {
+    //   dateMatch = combinedPatternToDetect.allMatches(text).first.group(0);
+    // } catch (_) {}
 
     text.splitMapJoin(
       combinedPatternToDetect,

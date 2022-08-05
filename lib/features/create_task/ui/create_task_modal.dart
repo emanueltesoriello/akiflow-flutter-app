@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/create_task/ui/components/create_task_actions.dart';
 import 'package:mobile/features/create_task/ui/components/description_field.dart';
 import 'package:mobile/features/create_task/ui/components/label_widget.dart';
 import 'package:mobile/features/create_task/ui/components/send_task_button.dart';
-import 'package:mobile/features/create_task/ui/components/stylable_text_editing_controller.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:models/task/task.dart';
 import 'components/duration_widget.dart';
 import 'components/priority_widget.dart';
 
@@ -27,8 +27,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   final TextEditingController _simpleTitleController = TextEditingController();
 
   final ValueNotifier<bool> _isTitleEditing = ValueNotifier<bool>(false);
-  Function()? focusListener;
-  List<TextPartStyleDefinition> newDefinitions = [];
 
   final ScrollController _parentScrollController = ScrollController();
 
@@ -89,9 +87,15 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 CreateTaskActions(
                                   titleController: _simpleTitleController,
                                   titleFocus: titleFocus,
-                                  callback: (List<ChronoModel>? chronoParsed) {},
                                 ),
-                                const SendTaskButton(),
+                                SendTaskButton(onTap: () {
+                                  print(_simpleTitleController.text + descriptionController.text);
+                                  HapticFeedback.mediumImpact();
+                                  context.read<EditTaskCubit>().create(
+                                      title: _simpleTitleController.text, description: descriptionController.text);
+                                  Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
+                                  Navigator.pop(context, taskUpdated);
+                                }),
                               ],
                             ),
                             const SizedBox(height: 16),
@@ -135,9 +139,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
-            onChanged: (String value) {
-              context.read<EditTaskCubit>().updateTitle(value);
-            },
+            // onChanged: (String value) {
+            //   context.read<EditTaskCubit>().updateTitle(value);
+            // },
           );
         });
   }

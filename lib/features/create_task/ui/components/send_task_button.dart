@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
-import 'package:models/task/task.dart';
 
-import '../../../edit_task/cubit/edit_task_cubit.dart';
 
 class SendTaskButton extends StatelessWidget {
-  const SendTaskButton({Key? key}) : super(key: key);
+  const SendTaskButton({Key? key, required this.onTap}) : super(key: key);
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        HapticFeedback.mediumImpact();
-
-        context.read<EditTaskCubit>().create();
-
-        Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
-
-        Navigator.pop(context, taskUpdated);
+        onTap.call();
       },
       borderRadius: BorderRadius.circular(8),
       child: Material(

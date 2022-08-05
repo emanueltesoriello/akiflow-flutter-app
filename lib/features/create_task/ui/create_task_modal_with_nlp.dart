@@ -1,5 +1,6 @@
 //import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/create_task/ui/components/create_task_actions.dart';
@@ -8,8 +9,8 @@ import 'package:mobile/features/create_task/ui/components/label_widget.dart';
 import 'package:mobile/features/create_task/ui/components/send_task_button.dart';
 import 'package:mobile/features/create_task/ui/components/stylable_text_editing_controller.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/style/colors.dart';
+import 'package:models/task/task.dart';
 // import 'package:mobile/utils/interactive_webview.dart';
 // import 'package:mobile/utils/task_extension.dart';
 // import 'package:models/label/label_highlight_type.dart';
@@ -155,11 +156,18 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 CreateTaskActions(
                                   titleController: titleController,
                                   titleFocus: titleFocus,
-                                  callback: (List<ChronoModel>? chronoParsed) {
-                                   // _checkTitleWithChrono(chronoParsed, titleController.text, isFromAction: true);
-                                  },
+                                  // callback: (List<ChronoModel>? chronoParsed) {
+                                  // _checkTitleWithChrono(chronoParsed, titleController.text, isFromAction: true);
+                                  //  },
                                 ),
-                                const SendTaskButton(),
+                                SendTaskButton(onTap: () {
+                                  HapticFeedback.mediumImpact();
+                                  context
+                                      .read<EditTaskCubit>()
+                                      .create(title:_simpleTitleController.text, description:descriptionController.text);
+                                  Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
+                                  Navigator.pop(context, taskUpdated);
+                                }),
                               ],
                             ),
                             const SizedBox(height: 16),
@@ -204,17 +212,17 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               fontWeight: FontWeight.w500,
             ),
             //onChanged: (value) async {
-             // context.read<EditTaskCubit>().updateTitle(value);
-              // List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(value);
-              // _checkContainsNonParsableText();
-              // if (value.endsWith(" ")) {
-              //   _checkForLabel(value);
-              //   _checkTitleWithChrono(chronoParsed, value, isFromAction: false);
+            // context.read<EditTaskCubit>().updateTitle(value);
+            // List<ChronoModel>? chronoParsed = await InteractiveWebView.chronoParse(value);
+            // _checkContainsNonParsableText();
+            // if (value.endsWith(" ")) {
+            //   _checkForLabel(value);
+            //   _checkTitleWithChrono(chronoParsed, value, isFromAction: false);
 
-              //   _checkForDuration(value);
-              //   _checkForImportance(value);
-              // }
-           // },
+            //   _checkForDuration(value);
+            //   _checkForImportance(value);
+            // }
+            // },
           );
         });
   }

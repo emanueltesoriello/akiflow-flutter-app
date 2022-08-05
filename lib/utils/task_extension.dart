@@ -658,9 +658,9 @@ extension TaskExt on Task {
     return countTasksSelected(state) != 0;
   }
 
-  static bool hasData(Task updatedTask) {
-    return updatedTask.title != null ||
-        updatedTask.description != null ||
+  static bool hasData(Task updatedTask, String? title, String? description) {
+    return title != null ||
+        description != null ||
         updatedTask.date != null ||
         updatedTask.datetime != null ||
         updatedTask.status != 1 ||
@@ -779,9 +779,9 @@ extension TaskExt on Task {
 
     // if (uri.host == "mail.google.com") {
     //   opened = await launchUrl(Uri.parse("googlegmail://"), mode: LaunchMode.externalApplication);
-   // } else {
-      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-   // }
+    // } else {
+    opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    // }
 
     if (opened == false) {
       launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication);

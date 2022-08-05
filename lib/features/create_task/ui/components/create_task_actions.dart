@@ -14,14 +14,12 @@ import '../../../../utils/task_extension.dart';
 import '../../../edit_task/cubit/edit_task_cubit.dart';
 import '../../../edit_task/ui/actions/plan_modal.dart';
 import '../../../label/cubit/labels_cubit.dart';
-import '../../../main/ui/chrono_model.dart';
 
 class CreateTaskActions extends StatelessWidget {
-  const CreateTaskActions({Key? key, required this.titleController, required this.titleFocus, required this.callback})
+  const CreateTaskActions({Key? key, required this.titleController, required this.titleFocus})
       : super(key: key);
   final TextEditingController titleController;
   final FocusNode titleFocus;
-  final void Function(List<ChronoModel>?) callback;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -51,13 +49,9 @@ class CreateTaskActions extends StatelessWidget {
                       required TaskStatusType statusType}) async {
                     editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
 
-                
-
                     SchedulerBinding.instance.addPostFrameCallback((_) {
                       titleFocus.requestFocus();
                     });
-
-                 
                   },
                   setForInbox: () {
                     editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
@@ -162,7 +156,7 @@ class CreateTaskActions extends StatelessWidget {
 
               return TagBox(
                 icon: Assets.images.icons.common.numberSVG,
-                active: background != null,
+                active: state.updatedTask.listId != null,
                 iconColor: background ?? ColorsExt.grey2(context),
                 backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey7(context),
                 text: label?.title ?? t.addTask.label,

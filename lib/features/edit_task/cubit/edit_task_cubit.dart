@@ -48,35 +48,41 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  Future<void> create() async {
-    if (TaskExt.hasData(state.updatedTask) == false) {
-      return;
+  Future<void> create({required String? title, required String? description}) async {
+    try {
+      if (TaskExt.hasData(state.updatedTask,title,description) == false) {
+        return;
+      }
+
+      DateTime now = DateTime.now();
+
+      Task updated = state.updatedTask.copyWith(
+        id: const Uuid().v4(),
+        title: title,
+        description: description,
+        createdAt: TzUtils.toUtcStringIfNotNull(now),
+        readAt: TzUtils.toUtcStringIfNotNull(now),
+        sorting: now.toUtc().millisecondsSinceEpoch,
+      );
+
+      emit(state.copyWith(updatedTask: updated));
+
+      _tasksCubit.setJustCreatedTask(updated);
+
+      await _tasksRepository.add([updated]);
+
+      _tasksCubit.refreshTasksUi(updated);
+
+      _tasksCubit.refreshAllFromRepository();
+
+      AnalyticsService.track("New Task");
+
+      _syncCubit.sync(entities: [Entity.tasks]);
+
+      emit(const EditTaskCubitState());
+    } catch (e) {
+      print(e.toString());
     }
-
-    DateTime now = DateTime.now();
-
-    Task updated = state.updatedTask.copyWith(
-      id: const Uuid().v4(),
-      createdAt: TzUtils.toUtcStringIfNotNull(now),
-      readAt: TzUtils.toUtcStringIfNotNull(now),
-      sorting: now.toUtc().millisecondsSinceEpoch,
-    );
-
-    emit(state.copyWith(updatedTask: updated));
-
-    _tasksCubit.setJustCreatedTask(updated);
-
-    await _tasksRepository.add([updated]);
-
-    _tasksCubit.refreshTasksUi(updated);
-
-    _tasksCubit.refreshAllFromRepository();
-
-    AnalyticsService.track("New Task");
-
-    _syncCubit.sync(entities: [Entity.tasks]);
-
-    emit(const EditTaskCubitState());
   }
 
   Future<void> planFor(

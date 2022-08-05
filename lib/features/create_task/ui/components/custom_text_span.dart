@@ -486,18 +486,18 @@ class CustomTextSpan extends InlineSpan implements HitTestTarget, MouseTrackerAn
     assert(() {
       if (children != null) {
         for (final InlineSpan child in children!) {
-          if (child == null) {
-            throw FlutterError.fromParts(<DiagnosticsNode>[
-              ErrorSummary('CustomTextSpan contains a null child.'),
-              ErrorDescription(
-                'A CustomTextSpan object with a non-null child list should not have any nulls in its child list.',
-              ),
-              toDiagnosticsNode(
-                name: 'The full text in question was',
-                style: DiagnosticsTreeStyle.errorProperty,
-              ),
-            ]);
-          }
+          // if (child == null) {
+          //   throw FlutterError.fromParts(<DiagnosticsNode>[
+          //     ErrorSummary('CustomTextSpan contains a null child.'),
+          //     ErrorDescription(
+          //       'A CustomTextSpan object with a non-null child list should not have any nulls in its child list.',
+          //     ),
+          //     toDiagnosticsNode(
+          //       name: 'The full text in question was',
+          //       style: DiagnosticsTreeStyle.errorProperty,
+          //     ),
+          //   ]);
+          // }
           assert(child.debugAssertIsValid());
         }
       }
@@ -627,11 +627,11 @@ class CustomTextSpan extends InlineSpan implements HitTestTarget, MouseTrackerAn
       // `child` has a non-nullable return type, but might be null when running
       // with weak checking, so we need to null check it anyway (and ignore the
       // warning that the null-handling logic is dead code).
-      if (child != null) {
-        return child.toDiagnosticsNode();
-      } else {
+      // if (child != null) {
+      //   return child.toDiagnosticsNode();
+      // } else {
         return DiagnosticsNode.message('<null child>');
-      }
+      //}
     }).toList();
   }
 }
