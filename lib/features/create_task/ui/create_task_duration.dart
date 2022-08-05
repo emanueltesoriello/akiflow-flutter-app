@@ -170,15 +170,14 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
       }
     }
 
-    return IntrinsicHeight(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+    return  Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: marks,
         ),
-      ),
+      
     );
   }
 }
