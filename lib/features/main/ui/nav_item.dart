@@ -47,7 +47,6 @@ class NavItem extends StatelessWidget {
               context.read<TodayCubit>().onDateSelected(DateTime.now());
             }
           } else {
-            print('hi');
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => SettingsModal(topPadding: topPadding),
