@@ -78,66 +78,54 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
 
             return AnimatedBuilder(
               animation: _animation!,
-              builder: (_, child) => IntrinsicHeight(
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: ColorsExt.grey5(context),
-                        borderRadius: borderRadius(context),
-                      ),
-                    ),
-                    AnimatedBuilder(
-                      animation: _animation!,
-                      builder: (_, child) => Container(
-                        margin: margin(context),
-                        padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                        decoration: BoxDecoration(
-                          borderRadius: borderRadius(context),
-                          color: _animation!.value,
-                        ),
+              builder: (_, child) => AnimatedBuilder(
+                animation: _animation!,
+                builder: (_, child) => Container(
+                  margin: margin(context),
+                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                  decoration: BoxDecoration(
+                    borderRadius: borderRadius(context),
+                    color: _animation!.value,
+                  ),
+                  child: Row(
+                    children: [
+                      _buildLeading(),
+                      Expanded(
                         child: Row(
+                          mainAxisAlignment:
+                              widget.leading == null ? MainAxisAlignment.center : MainAxisAlignment.start,
                           children: [
-                            _buildLeading(),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    widget.leading == null ? MainAxisAlignment.center : MainAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      widget.title,
-                                      textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: ColorsExt.grey2(context),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            Flexible(
+                              child: Text(
+                                widget.title,
+                                textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: ColorsExt.grey2(context),
+                                ),
                               ),
                             ),
-                            Builder(builder: (context) {
-                              if (widget.leading == null) {
-                                return const SizedBox();
-                              }
-
-                              if (widget.showShevron == false) {
-                                return const SizedBox();
-                              }
-
-                              return SvgPicture.asset(
-                                "assets/images/icons/_common/chevron_right.svg",
-                                width: 20,
-                                height: 20,
-                                color: ColorsExt.grey3(context),
-                              );
-                            }),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      Builder(builder: (context) {
+                        if (widget.leading == null) {
+                          return const SizedBox();
+                        }
+
+                        if (widget.showShevron == false) {
+                          return const SizedBox();
+                        }
+
+                        return SvgPicture.asset(
+                          "assets/images/icons/_common/chevron_right.svg",
+                          width: 20,
+                          height: 20,
+                          color: ColorsExt.grey3(context),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
             );
