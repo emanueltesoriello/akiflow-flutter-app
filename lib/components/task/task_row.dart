@@ -1,20 +1,21 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/slidable_button_action.dart';
 import 'package:mobile/components/task/checkbox_animated.dart';
+import 'package:mobile/components/task/components/title_widget.dart';
 import 'package:mobile/components/task/slidable_motion.dart';
 import 'package:mobile/components/task/slidable_sender.dart';
 import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/task_extension.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
+
+import 'components/dot_prefix.dart';
+import 'components/selectable_radio_button.dart';
+import 'components/subtitle_widget.dart';
 
 class TaskRow extends StatefulWidget {
   static const int dailyGoalScaleDurationInMillis = 500;
@@ -130,12 +131,12 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                             height: 80,
                             child: Row(
                               children: [
-                                _DotPrefix(widget.task),
+                                DotPrefix(task: widget.task),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 12),
                                   child: Builder(builder: ((context) {
                                     if (widget.selectMode) {
-                                      return _SelectableRadioButton(widget.task);
+                                      return SelectableRadioButton(widget.task);
                                     } else {
                                       return CheckboxAnimated(
                                         onControllerReady: (controller) {
@@ -172,8 +173,8 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _Title(widget.task),
-                                _Subtitle(widget.task),
+                                TitleWidget(widget.task),
+                                Subtitle(widget.task),
                                 TaskInfo(
                                   widget.task,
                                   hideInboxLabel: widget.hideInboxLabel,
@@ -495,294 +496,3 @@ class _BackgroundDailyGoalState extends State<_BackgroundDailyGoal> {
   }
 }
 
-class _DotPrefix extends StatelessWidget {
-  final Task task;
-
-  const _DotPrefix(this.task, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 14,
-      child: Builder(
-        builder: (context) {
-          Color? color;
-
-          if (task.statusType == TaskStatusType.inbox && task.readAt == null) {
-            color = ColorsExt.cyan(context);
-          }
-
-          try {
-            if (task.content["expiredSnooze"] == true) {
-              color = ColorsExt.pink(context);
-            }
-          } catch (_) {}
-
-          if (color == null) {
-            return const SizedBox();
-          }
-
-          return Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: 6,
-              height: 6,
-              margin: const EdgeInsets.only(left: 5, right: 0, top: 22),
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _SelectableRadioButton extends StatelessWidget {
-  final Task task;
-
-  const _SelectableRadioButton(this.task, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    bool selected = task.selected ?? false;
-
-    Color color = selected ? ColorsExt.akiflow(context) : ColorsExt.grey3(context);
-
-    return Container(
-      height: double.infinity,
-      padding: const EdgeInsets.all(2.17),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: SizedBox(
-          width: 21.67,
-          height: 21.67,
-          child: SvgPicture.asset(
-            selected
-                ? "assets/images/icons/_common/largecircle_fill_circle_2.svg"
-                : "assets/images/icons/_common/circle.svg",
-            color: color,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Title extends StatelessWidget {
-  final Task task;
-
-  const _Title(this.task, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    String? text = task.title;
-
-    if (text == null || text.isEmpty) {
-      text = t.noTitle;
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 2),
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 22),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Text(
-                text,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  height: 1.3,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                      ? ColorsExt.grey3(context)
-                      : ColorsExt.grey1(context),
-                ),
-              ),
-            ),
-            _overdue(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _overdue(BuildContext context) {
-    if (task.isOverdue) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 2),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              "assets/images/icons/_common/Clock_alert.svg",
-              width: 20,
-              height: 20,
-              color: ColorsExt.red(context),
-            ),
-            const SizedBox(width: 4),
-          ],
-        ),
-      );
-    }
-
-    return const SizedBox();
-  }
-}
-
-class _Subtitle extends StatelessWidget {
-  final Task task;
-
-  const _Subtitle(this.task, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    List<Doc> docs = context.watch<TasksCubit>().state.docs;
-
-    Doc? doc = docs.firstWhereOrNull(
-      (doc) => doc.taskId == task.id,
-    );
-
-    doc = task.computedDoc(doc);
-
-    List<String> links = task.links ?? [];
-
-    if (doc == null && task.descriptionParsed.isEmpty && links.isEmpty) {
-      return const SizedBox();
-    }
-
-    return SizedBox(
-      height: 24,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Builder(builder: (context) {
-            if (doc != null) {
-              return Row(
-                children: [
-                  SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        return Text(
-                          doc?.getSummary ?? "",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: ColorsExt.grey3(context),
-                            height: 1,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            } else if (task.descriptionParsed.isNotEmpty) {
-              return Row(
-                children: [
-                  SvgPicture.asset(
-                    "assets/images/icons/_common/arrow_turn_down_right.svg",
-                    color: ColorsExt.grey3(context),
-                    width: 16,
-                    height: 16,
-                  ),
-                  const SizedBox(width: 4.5),
-                  Expanded(
-                      child: Text(
-                    task.descriptionParsed,
-                    maxLines: 1,
-                    style: TextStyle(
-                      height: 1,
-                      fontSize: 15,
-                      color: ColorsExt.grey3(context),
-                    ),
-                  )),
-                ],
-              );
-            } else if (links.isNotEmpty) {
-              String text;
-
-              if (links.length > 1) {
-                text = "${links.length} ${t.task.links.links}";
-              } else {
-                text = links.first;
-              }
-
-              String? iconAsset = TaskExt.iconAssetFromUrl(links.first);
-              String? networkIcon = TaskExt.iconNetworkFromUrl(links.first);
-
-              return Row(children: [
-                SvgPicture.asset(
-                  "assets/images/icons/_common/arrow_turn_down_right.svg",
-                  color: ColorsExt.grey3(context),
-                  width: 16,
-                  height: 16,
-                ),
-                const SizedBox(width: 4.5),
-                Expanded(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Builder(builder: (context) {
-                        if (iconAsset != null) {
-                          return SvgPicture.asset(
-                            iconAsset,
-                            width: 16,
-                            height: 16,
-                          );
-                        } else if (networkIcon != null) {
-                          return SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: Center(
-                              child: Image.network(
-                                networkIcon,
-                                width: 16,
-                                height: 16,
-                                errorBuilder: (context, error, stacktrace) => Image.asset(
-                                  "assets/images/icons/web/faviconV2.png",
-                                  width: 16,
-                                  height: 16,
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return const SizedBox();
-                        }
-                      }),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          text,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            height: 1,
-                            fontSize: 15,
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ]);
-            } else {
-              return const SizedBox();
-            }
-          }),
-        ],
-      ),
-    );
-  }
-}
