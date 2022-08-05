@@ -49,9 +49,7 @@ class CreateTaskActions extends StatelessWidget {
                       required TaskStatusType statusType}) async {
                     editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
 
-                    SchedulerBinding.instance.addPostFrameCallback((_) {
-                      titleFocus.requestFocus();
-                    });
+                    
                   },
                   setForInbox: () {
                     editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
