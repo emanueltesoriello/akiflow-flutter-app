@@ -75,76 +75,71 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
 
               return AnimatedBuilder(
                 animation: _animation!,
-                builder: (_, child) => IntrinsicHeight(
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
+                builder: (_, child) => AnimatedBuilder(
+                  animation: _animation!,
+                  builder: (_, child) => Container(
+                    margin: const EdgeInsets.all(1),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(radius),
+                      boxShadow: [
+                        BoxShadow(
                           color: ColorsExt.grey5(context),
-                          borderRadius: BorderRadius.circular(radius),
+                          offset: const Offset(0, 2),
+                          blurRadius: 1,
                         ),
-                      ),
-                      AnimatedBuilder(
-                        animation: _animation!,
-                        builder: (_, child) => Container(
-                          margin: const EdgeInsets.all(1),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(radius),
-                            color: _animation!.value,
-                          ),
-                          child: Row(
+                      ],
+                      color: _animation!.value,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Flexible(
-                                            child: Text(
-                                          widget.title,
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
-                                        )),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: Text(
-                                          widget.subtitle,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: ColorsExt.grey3(context),
-                                            fontSize: 13,
-                                          ),
-                                        )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Flexible(
+                                      child: Text(
+                                    widget.title,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+                                  )),
+                                ],
                               ),
-                              const SizedBox(width: 16),
-                              Builder(builder: (context) {
-                                if (widget.trailingWidget != null) {
-                                  return widget.trailingWidget!;
-                                }
-
-                                return SvgPicture.asset(
-                                  "assets/images/icons/_common/chevron_right.svg",
-                                  width: 20,
-                                  height: 20,
-                                  color: ColorsExt.grey3(context),
-                                );
-                              }),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: Text(
+                                    widget.subtitle,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorsExt.grey3(context),
+                                      fontSize: 13,
+                                    ),
+                                  )),
+                                ],
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 16),
+                        Builder(builder: (context) {
+                          if (widget.trailingWidget != null) {
+                            return widget.trailingWidget!;
+                          }
+
+                          return SvgPicture.asset(
+                            "assets/images/icons/_common/chevron_right.svg",
+                            width: 20,
+                            height: 20,
+                            color: ColorsExt.grey3(context),
+                          );
+                        }),
+                      ],
+                    ),
                   ),
                 ),
               );

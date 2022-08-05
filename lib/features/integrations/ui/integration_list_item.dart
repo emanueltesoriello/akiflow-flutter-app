@@ -88,99 +88,91 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
 
               return AnimatedBuilder(
                 animation: _animation!,
-                builder: (_, child) => IntrinsicHeight(
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
+                builder: (_, child) => AnimatedBuilder(
+                  animation: _animation!,
+                  builder: (_, child) => Container(
+                    margin: widget.insets,
+                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                    decoration: BoxDecoration(
+                      borderRadius: widget.borderRadius,
+                      color: _animation!.value,
+                      boxShadow: [
+                        BoxShadow(
                           color: ColorsExt.grey5(context),
-                          borderRadius: widget.borderRadius,
+                          offset: const Offset(0, 2),
+                          blurRadius: 1,
                         ),
-                      ),
-                      AnimatedBuilder(
-                        animation: _animation!,
-                        builder: (_, child) => Container(
-                          margin: widget.insets,
-                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                          decoration: BoxDecoration(
-                            borderRadius: widget.borderRadius,
-                            color: _animation!.value,
-                          ),
-                          child: Row(
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        _buildLeadingIcon(),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              _buildLeadingIcon(),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Flexible(
-                                          child: Text(
-                                            widget.title,
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontSize: 17,
-                                              color: (widget.enabled
-                                                  ? ColorsExt.grey2(context)
-                                                  : ColorsExt.grey3(context)),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      widget.title,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+                                      ),
                                     ),
-                                    Builder(builder: (context) {
-                                      if (widget.identifier == null || widget.identifier!.isEmpty) {
-                                        return const SizedBox();
-                                      }
-
-                                      return Column(
-                                        children: [
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 5,
-                                                backgroundColor: widget.active
-                                                    ? ColorsExt.green(context)
-                                                    : ColorsExt.orange(context),
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Flexible(
-                                                  child: Text(
-                                                widget.identifier!,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: ColorsExt.grey3(context),
-                                                  fontSize: 13,
-                                                ),
-                                              )),
-                                            ],
-                                          )
-                                        ],
-                                      );
-                                    })
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                               Builder(builder: (context) {
-                                if (widget.trailing != null) {
-                                  return widget.trailing!;
+                                if (widget.identifier == null || widget.identifier!.isEmpty) {
+                                  return const SizedBox();
                                 }
 
-                                return SvgPicture.asset(
-                                  "assets/images/icons/_common/chevron_right.svg",
-                                  width: 20,
-                                  height: 20,
-                                  color: ColorsExt.grey3(context),
+                                return Column(
+                                  children: [
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 5,
+                                          backgroundColor:
+                                              widget.active ? ColorsExt.green(context) : ColorsExt.orange(context),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Flexible(
+                                            child: Text(
+                                          widget.identifier!,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: ColorsExt.grey3(context),
+                                            fontSize: 13,
+                                          ),
+                                        )),
+                                      ],
+                                    )
+                                  ],
                                 );
-                              }),
+                              })
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        Builder(builder: (context) {
+                          if (widget.trailing != null) {
+                            return widget.trailing!;
+                          }
+
+                          return SvgPicture.asset(
+                            "assets/images/icons/_common/chevron_right.svg",
+                            width: 20,
+                            height: 20,
+                            color: ColorsExt.grey3(context),
+                          );
+                        }),
+                      ],
+                    ),
                   ),
                 ),
               );

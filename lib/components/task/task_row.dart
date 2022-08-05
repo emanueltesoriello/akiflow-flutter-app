@@ -102,7 +102,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             onTap: () async {
               TaskExt.editTask(context, widget.task);
             },
-            child: IntrinsicHeight(
+            child: SizedBox(
               child: Stack(
                 children: [
                   _BackgroundDailyGoal(
@@ -127,10 +127,11 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                           child: Container(
                             color: Colors.transparent,
                             width: 48,
+                            height: 80,
                             child: Row(
                               children: [
                                 _DotPrefix(widget.task),
-                                Container(
+                                Padding(
                                   padding: const EdgeInsets.only(top: 12),
                                   child: Builder(builder: ((context) {
                                     if (widget.selectMode) {

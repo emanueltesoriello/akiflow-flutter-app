@@ -163,57 +163,54 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.infinity,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.all(2.17),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                width: 21.67,
-                height: 21.67,
-                child: AnimatedBuilder(
-                  animation: _animationCircleScale,
-                  builder: (BuildContext context, Widget? child) {
-                    return Transform.scale(
-                      scale: _animationCircleScale.value,
-                      child: AnimatedBuilder(
-                        animation: _controllerBackgroundOpacity,
-                        builder: (BuildContext context, Widget? child) => Container(
-                          decoration: BoxDecoration(
-                            color: ColorsExt.grey5(context).withOpacity(_animationBackgroundOpacity.value),
-                            borderRadius: BorderRadius.circular(32),
-                          ),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.all(2.17),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              width: 21.67,
+              height: 21.67,
+              child: AnimatedBuilder(
+                animation: _animationCircleScale,
+                builder: (BuildContext context, Widget? child) {
+                  return Transform.scale(
+                    scale: _animationCircleScale.value,
+                    child: AnimatedBuilder(
+                      animation: _controllerBackgroundOpacity,
+                      builder: (BuildContext context, Widget? child) => Container(
+                        decoration: BoxDecoration(
+                          color: ColorsExt.grey5(context).withOpacity(_animationBackgroundOpacity.value),
+                          borderRadius: BorderRadius.circular(32),
                         ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              width: 21.67,
+              height: 21.67,
+              child: Center(
+                child: AnimatedBuilder(
+                  animation: _animationRotation,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: _animationRotation.value * pi / 180,
+                      child: AnimatedBuilder(
+                        animation: _animationTopScale,
+                        builder: (context, child) =>
+                            Transform.scale(scale: _animationTopScale.value, child: checkmark()),
                       ),
                     );
                   },
                 ),
               ),
-              SizedBox(
-                width: 21.67,
-                height: 21.67,
-                child: Center(
-                  child: AnimatedBuilder(
-                    animation: _animationRotation,
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: _animationRotation.value * pi / 180,
-                        child: AnimatedBuilder(
-                          animation: _animationTopScale,
-                          builder: (context, child) =>
-                              Transform.scale(scale: _animationTopScale.value, child: checkmark()),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
