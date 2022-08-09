@@ -52,6 +52,7 @@ class _AssetsImagesAkiflow {
   _AssetsImagesAkiflow._();
 
 
+  final thatsItnothingSVG = 'assets/images/akiflow/Thats-itnothing.svg';
   final calendarPlaceholderSVG = 'assets/images/akiflow/calendar-placeholder.svg';
   final inboxNiceSVG = 'assets/images/akiflow/inbox-nice.svg';
   final plannerEmptyEngageSVG = 'assets/images/akiflow/planner-empty-engage.svg';

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 // import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/gmail/gmail_details_integration_page.dart';
@@ -24,6 +26,7 @@ class IntegrationsPage extends StatelessWidget {
         showBack: true,
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: ListView(
@@ -37,7 +40,33 @@ class IntegrationsPage extends StatelessWidget {
                     accounts.removeWhere((element) => !AccountExt.acceptedAccountsOrigin.contains(element.connectorId));
                     return Visibility(
                       visible: accounts.isNotEmpty,
-                      replacement: const SizedBox(),
+                      replacement: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 200),
+                            SvgPicture.asset(Assets.images.akiflow.thatsItnothingSVG),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Nothing to reconnect',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: ColorsExt.grey2(context),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'You have no active integrations, check your desktop app to add more',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: ColorsExt.grey3(context),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
