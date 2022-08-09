@@ -38,8 +38,6 @@ class LicencesPage extends StatelessWidget {
                 _LicenseItem(name: "intl", type: "MIT"),
                 _LicenseItem(name: "modal_bottom_sheet", type: "MIT"),
                 _LicenseItem(name: "package_info_plus", type: "MIT"),
-                _LicenseItem(name: "path", type: "MIT"),
-                _LicenseItem(name: "path_provider", type: "MIT"),
                 _LicenseItem(name: "pusher_beams", type: "MIT"),
                 _LicenseItem(name: "rrule", type: "MIT"),
                 _LicenseItem(name: "sentry_flutter", type: "MIT"),

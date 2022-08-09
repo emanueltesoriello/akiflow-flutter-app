@@ -239,13 +239,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
-  extended_text_library:
-    dependency: "direct main"
-    description:
-      name: extended_text_library
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "9.1.1"
   ffi:
     dependency: transitive
     description:
@@ -710,7 +703,7 @@ packages:
     source: hosted
     version: "1.0.5"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       url: "https://pub.dartlang.org"
@@ -731,7 +724,7 @@ packages:
     source: hosted
     version: "1.0.0"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"

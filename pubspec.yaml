@@ -10,7 +10,6 @@ environment:
 dependencies:
   async: ^2.9.0
   equatable: ^2.0.3
-  extended_text_library: ^9.1.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
@@ -35,8 +34,6 @@ dependencies:
   akiflow_oauth:
     path: ./packages/akiflow_oauth
   package_info_plus: ^1.4.2
-  path: ^1.8.0
-  path_provider: ^2.0.9
   rrule: ^0.2.8
   sentry_flutter: ^6.5.1
   shared_preferences: ^2.0.13
