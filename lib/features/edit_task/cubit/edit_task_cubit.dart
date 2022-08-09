@@ -50,7 +50,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   Future<void> create({required String? title, required String? description}) async {
     try {
-      if (TaskExt.hasData(state.updatedTask,title,description) == false) {
+      if (TaskExt.hasData(state.updatedTask, title, description) == false) {
         return;
       }
 
@@ -140,15 +140,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void toggleImportance() {
-    emit(state.copyWith(showPriority: !state.showPriority));
+    emit(state.copyWith(showPriority: !state.showPriority, showDuration: false, showLabelsList: false));
   }
 
   void toggleDuration() {
-    emit(state.copyWith(showDuration: !state.showDuration));
+    emit(state.copyWith(showDuration: !state.showDuration, showPriority: false, showLabelsList: false));
   }
 
   void toggleLabels() {
-    emit(state.copyWith(showLabelsList: !state.showLabelsList, showDuration: false));
+    emit(state.copyWith(showLabelsList: !state.showLabelsList, showDuration: false, showPriority: false));
   }
 
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
