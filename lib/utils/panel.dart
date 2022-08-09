@@ -275,11 +275,11 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                   child: widget.body,
                 ),
               )
-            :const SizedBox(),
+            : Container(),
 
         //the backdrop to overlay on the body
         !widget.backdropEnabled
-            ?const SizedBox()
+            ? Container()
             : GestureDetector(
                 onVerticalDragEnd: widget.backdropTapClosesPanel
                     ? (DragEndDetails dets) {
@@ -308,7 +308,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 
         //the actual sliding part
         !_isPanelVisible
-            ? const SizedBox()
+            ? Container()
             : _gestureHandler(
                 child: AnimatedBuilder(
                   animation: _ac,
@@ -349,7 +349,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                               bottom: widget.slideDirection == SlideDirection.down ? 0.0 : null,
                               child: widget.header ?? const SizedBox(),
                             )
-                          : const SizedBox(),
+                          : Container(),
 
                       // footer
                       widget.footer != null
@@ -357,7 +357,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                               top: widget.slideDirection == SlideDirection.up ? null : 0.0,
                               bottom: widget.slideDirection == SlideDirection.down ? null : 0.0,
                               child: widget.footer ?? const SizedBox())
-                          : const SizedBox(),
+                          : Container(),
 
                       // collapsed panel
                       Positioned(
@@ -369,7 +369,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                         child: SizedBox(
                           height: widget.minHeight,
                           child: widget.collapsed == null
-                              ? const SizedBox()
+                              ? Container()
                               : FadeTransition(
                                   opacity: Tween(begin: 1.0, end: 0.0)
                                       .chain(CurveTween(curve: Curves.fastLinearToSlowEaseIn))
