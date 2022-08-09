@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';

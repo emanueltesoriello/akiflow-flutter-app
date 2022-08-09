@@ -9,7 +9,7 @@ import 'package:mobile/common/components/task/components/title_widget.dart';
 import 'package:mobile/common/components/task/slidable_motion.dart';
 import 'package:mobile/common/components/task/slidable_sender.dart';
 import 'package:mobile/common/components/task/task_info.dart';
-import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
