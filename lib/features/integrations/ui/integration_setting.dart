@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/theme.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/theme.dart';
 
 class IntegrationSetting extends StatefulWidget {
   final String title;

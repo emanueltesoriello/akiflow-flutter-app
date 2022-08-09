@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/components/base/tagbox.dart';
-import 'package:mobile/components/task/plan_for_action.dart';
+import 'package:mobile/common/components/base/tagbox.dart';
+import 'package:mobile/common/components/task/plan_for_action.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/edit_task/ui/actions/plan_modal.dart';
 import 'package:mobile/features/edit_task/ui/actions/recurrence_modal.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/task/task.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/features/create_task/ui/components/custom_text_span.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class TextPartStyleDefinition {
   TextPartStyleDefinition({

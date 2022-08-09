@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/separator.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/components/base/separator.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class RecurringEditDialog extends StatelessWidget {
   final Function() onlyThisTap;

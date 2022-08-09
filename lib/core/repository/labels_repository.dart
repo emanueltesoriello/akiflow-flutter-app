@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
-import 'package:mobile/services/database_service.dart';
-import 'package:mobile/utils/converters_isolate.dart';
+import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:models/label/label.dart';
 
 class LabelsRepository extends DatabaseRepository {

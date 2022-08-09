@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/components/base/scroll_chip.dart';
+import 'package:mobile/common/style/colors.dart';
 
 enum PriorityEnum {
   high(1),

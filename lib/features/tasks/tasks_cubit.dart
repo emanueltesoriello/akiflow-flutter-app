@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
-import 'package:mobile/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
@@ -20,11 +19,11 @@ import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/docs_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
-import 'package:mobile/services/analytics_service.dart';
-import 'package:mobile/services/sentry_service.dart';
-import 'package:mobile/services/sync_controller_service.dart';
+import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/utils/tz_utils.dart';
+import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/doc/doc.dart';
@@ -34,6 +33,8 @@ import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../common/components/task/task_list.dart';
 
 part 'tasks_state.dart';
 

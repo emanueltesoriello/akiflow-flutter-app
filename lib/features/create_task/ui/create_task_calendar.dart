@@ -3,12 +3,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
-import 'package:mobile/components/base/date_display.dart';
-import 'package:mobile/components/base/separator.dart';
-import 'package:mobile/components/calendar/calendar_selected_day.dart';
-import 'package:mobile/components/calendar/calendar_today.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/time_picker_utils.dart';
+import 'package:mobile/common/components/base/date_display.dart';
+import 'package:mobile/common/components/base/separator.dart';
+import 'package:mobile/common/components/calendar/calendar_selected_day.dart';
+import 'package:mobile/common/components/calendar/calendar_today.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CreateTaskCalendar extends StatefulWidget {

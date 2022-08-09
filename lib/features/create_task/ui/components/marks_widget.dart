@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../style/colors.dart';
+import '../../../../common/style/colors.dart';
 
 class MarksWidget extends StatelessWidget {
   const MarksWidget({Key? key, required this.selectedDuration}) : super(key: key);

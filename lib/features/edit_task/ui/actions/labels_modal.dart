@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/components/base/scroll_chip.dart';
+import 'package:mobile/common/components/base/scroll_chip.dart';
 import 'package:mobile/features/edit_task/ui/labels_list.dart';
 import 'package:models/label/label.dart';
 

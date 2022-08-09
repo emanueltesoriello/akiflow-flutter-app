@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/app_bar.dart';
-import 'package:mobile/components/base/button_list.dart';
-import 'package:mobile/components/base/separator.dart';
+import 'package:mobile/common/components/base/app_bar.dart';
+import 'package:mobile/common/components/base/button_list.dart';
+import 'package:mobile/common/components/base/separator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/licences_page.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {

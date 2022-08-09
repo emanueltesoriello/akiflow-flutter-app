@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/app_bar.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/components/base/app_bar.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LicencesPage extends StatelessWidget {

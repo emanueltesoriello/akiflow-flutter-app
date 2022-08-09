@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/services/push_notification_service.dart';
+import 'package:mobile/core/services/push_notification_service.dart';
 import 'package:models/user.dart';
 
 part 'push_state.dart';

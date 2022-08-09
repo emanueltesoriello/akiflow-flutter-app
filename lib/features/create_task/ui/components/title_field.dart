@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 
-import '../../../../style/colors.dart';
+import '../../../../common/style/colors.dart';
 
 class TitleField extends StatelessWidget {
   const TitleField(

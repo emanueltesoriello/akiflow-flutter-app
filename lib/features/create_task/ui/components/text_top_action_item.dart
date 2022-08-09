@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../style/colors.dart';
+import '../../../../common/style/colors.dart';
 
 class TextTopActionItem extends StatelessWidget {
   const TextTopActionItem({Key? key, required this.text, required this.active}) : super(key: key);

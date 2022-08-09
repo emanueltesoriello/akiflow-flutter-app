@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/utils/interactive_webview.dart';
+import 'package:mobile/common/components/base/interactive_webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class InternalWebView extends StatefulWidget {

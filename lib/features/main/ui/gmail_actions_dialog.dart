@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/components/base/scroll_chip.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/integrations/gmail.dart';
 
 class GmailActionDialog extends StatelessWidget {

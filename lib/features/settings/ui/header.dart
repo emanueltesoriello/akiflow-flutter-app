@@ -7,9 +7,9 @@ import 'package:mobile/features/settings/ui/search_modal.dart';
 import 'package:mobile/features/settings/ui/settings_page.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import '../../../components/base/badged_icon.dart';
-import '../../../components/base/icon_badge.dart';
-import '../../../style/colors.dart';
+import '../../../common/components/base/badged_icon.dart';
+import '../../../common/components/base/icon_badge.dart';
+import '../../../common/style/colors.dart';
 import '../../auth/cubit/auth_cubit.dart';
 
 class Header extends StatelessWidget {

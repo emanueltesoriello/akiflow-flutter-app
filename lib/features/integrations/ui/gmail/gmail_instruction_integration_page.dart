@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/action_button.dart';
-import 'package:mobile/components/base/app_bar.dart';
+import 'package:mobile/common/components/base/action_button.dart';
+import 'package:mobile/common/components/base/app_bar.dart';
 import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/integration_header.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/theme.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/theme.dart';
 import 'package:models/account/account.dart';
 
 class GmailInstructionIntegrationsPage extends StatelessWidget {

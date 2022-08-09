@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/scroll_chip.dart';
+import 'package:mobile/common/components/base/scroll_chip.dart';
 import 'package:mobile/features/integrations/cubit/gmail_mark_as_done_type.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class GmailMarkDoneModal extends StatefulWidget {
   final GmailMarkAsDoneType initialType;

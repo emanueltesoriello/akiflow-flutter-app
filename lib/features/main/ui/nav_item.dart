@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/settings/ui/settings_modal.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class NavItem extends StatelessWidget {

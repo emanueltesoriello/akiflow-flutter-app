@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 
-import '../../../components/base/app_bar.dart';
+import '../../../common/components/base/app_bar.dart';
 import 'home_view_placeholder.dart';
 
 class CalendarView extends StatelessWidget {

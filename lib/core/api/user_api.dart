@@ -5,7 +5,7 @@ import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/exceptions/api_exception.dart';
+import 'package:mobile/core/exceptions/api_exception.dart';
 import 'package:models/user.dart';
 
 class UserApi extends ApiClient {

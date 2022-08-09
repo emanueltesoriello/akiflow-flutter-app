@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../style/colors.dart';
+import '../../../../common/style/colors.dart';
 
 class PriorityItem extends StatelessWidget {
   const PriorityItem({Key? key, required this.asset, required this.title, required this.onSelect, required this.hint}) : super(key: key);

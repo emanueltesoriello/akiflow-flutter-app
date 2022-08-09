@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile/components/base/button_list.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/theme.dart';
+import 'package:mobile/common/components/base/button_list.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/theme.dart';
 
 class ButtonListLabel extends StatefulWidget {
   final String title;

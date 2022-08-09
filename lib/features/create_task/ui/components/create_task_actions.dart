@@ -6,9 +6,9 @@ import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
 import '../../../../assets.dart';
-import '../../../../components/base/tagbox.dart';
-import '../../../../components/task/plan_for_action.dart';
-import '../../../../style/colors.dart';
+import '../../../../common/components/base/tagbox.dart';
+import '../../../../common/components/task/plan_for_action.dart';
+import '../../../../common/style/colors.dart';
 import '../../../../extensions/task_extension.dart';
 import '../../../edit_task/cubit/edit_task_cubit.dart';
 import '../../../edit_task/ui/actions/plan_modal.dart';

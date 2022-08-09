@@ -4,8 +4,8 @@ import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../components/base/icon_badge.dart';
-import '../../../../style/colors.dart';
+import '../../../../common/components/base/icon_badge.dart';
+import '../../../../common/style/colors.dart';
 import '../../cubit/main_cubit.dart';
 import 'nav_item.dart';
 

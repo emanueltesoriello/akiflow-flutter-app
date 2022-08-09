@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-import 'package:mobile/components/base/action_button.dart';
+import 'package:mobile/common/components/base/action_button.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:akiflow_oauth/oauth_webauth.dart';
 import 'package:url_launcher/url_launcher.dart';
 

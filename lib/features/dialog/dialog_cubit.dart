@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/services/dialog_service.dart';
+import 'package:mobile/core/services/dialog_service.dart';
 
 part 'dialog_state.dart';
 

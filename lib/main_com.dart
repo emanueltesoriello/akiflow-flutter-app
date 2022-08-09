@@ -23,18 +23,18 @@ import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/services/analytics_service.dart';
-import 'package:mobile/services/database_service.dart';
-import 'package:mobile/services/sentry_service.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/theme.dart';
+import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/theme.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'features/auth/ui/trial_expired_page.dart';
-import 'services/focus_detector_service.dart';
+import 'core/services/focus_detector_service.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 

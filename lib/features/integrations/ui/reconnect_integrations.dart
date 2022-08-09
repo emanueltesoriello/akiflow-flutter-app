@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/integrations/ui/integrations_list.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/account/account.dart';
 
 class ReconnectIntegrations extends StatelessWidget {

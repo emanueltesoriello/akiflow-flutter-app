@@ -9,7 +9,7 @@ import 'package:mobile/features/create_task/ui/components/label_widget.dart';
 import 'package:mobile/features/create_task/ui/components/send_task_button.dart';
 import 'package:mobile/features/create_task/ui/components/stylable_text_editing_controller.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/task/task.dart';
 // import 'package:mobile/utils/interactive_webview.dart';
 // import 'package:mobile/utils/task_extension.dart';

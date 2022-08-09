@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/services/sentry_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';

@@ -6,8 +6,8 @@ import 'package:http/http.dart';
 import 'package:mobile/core/api/base_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/exceptions/api_exception.dart';
-import 'package:mobile/utils/converters_isolate.dart';
+import 'package:mobile/core/exceptions/api_exception.dart';
+import 'package:mobile/common/utils/converters_isolate.dart';
 
 class ApiClient implements IBaseApi {
   final HttpClient _httpClient = locator<HttpClient>();

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:models/task/task.dart';
 
-import '../../../style/colors.dart';
+import '../../../common/style/colors.dart';
 
 class TodayHeader extends StatelessWidget {
   const TodayHeader(

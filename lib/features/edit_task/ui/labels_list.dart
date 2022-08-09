@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/bordered_input_view.dart';
-import 'package:mobile/components/label/label_item.dart';
+import 'package:mobile/common/components/base/bordered_input_view.dart';
+import 'package:mobile/common/components/label/label_item.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/settings/ui/view/folder_item.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/label/label.dart';
 
 class LabelsList extends StatefulWidget {

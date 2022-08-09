@@ -4,9 +4,9 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
-import 'package:mobile/services/analytics_service.dart';
-import 'package:mobile/services/intercom_service.dart';
-import 'package:mobile/services/sentry_service.dart';
+import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/intercom_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:models/user.dart';
 
 import '../../../core/api/user_api.dart';

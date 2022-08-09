@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 
-import '../../../../style/colors.dart';
+import '../../../../common/style/colors.dart';
 
 class DescriptionField extends StatelessWidget {
   const DescriptionField({Key? key, required this.descriptionController}) : super(key: key);

@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/exceptions/api_exception.dart';
+import 'package:mobile/core/exceptions/api_exception.dart';
 
 class CoreApi {
   final HttpClient _httpClient = locator<HttpClient>();
