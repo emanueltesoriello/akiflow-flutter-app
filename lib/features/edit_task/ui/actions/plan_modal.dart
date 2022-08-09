@@ -172,7 +172,7 @@ class _PlanModalState extends State<PlanModal> {
             String text;
 
             if (useDateTime) {
-              int defaultTimeHour = context.watch<AuthCubit>().state.user!.defaultHour;
+              int defaultTimeHour = context.watch<AuthCubit>().state.user?.defaultHour??0;
 
               datetime ??= DateTime(
                   _selectedDate.value.year, _selectedDate.value.month, _selectedDate.value.day, defaultTimeHour, 0);
