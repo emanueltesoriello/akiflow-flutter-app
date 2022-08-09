@@ -76,9 +76,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         emit(state.copyWith(loading: false));
       }
 
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
-      });
+      _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
     });
   }
 

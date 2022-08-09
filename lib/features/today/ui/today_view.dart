@@ -141,9 +141,9 @@ class _ViewState extends State<_View> {
           onPanelOpened: () {
             context.read<TodayCubit>().panelOpened();
           },
-          collapsed: Container(
+          collapsed: const Material(
             color: Colors.white,
-            child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+            child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
           ),
           body: Container(
             margin: const EdgeInsets.only(top: todayViewTopMargin),

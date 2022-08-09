@@ -42,7 +42,7 @@ class _BackgroundDailyGoalState extends State<BackgroundDailyGoal> {
           scaleX: _dailyGoalAnimataion.value,
           alignment: Alignment.centerRight,
           child: Container(
-            constraints: const BoxConstraints(minHeight: 50),
+            constraints: const BoxConstraints(minHeight: 80),
             decoration: BoxDecoration(
               color: () {
                 if (widget._task.isDailyGoal) {

@@ -106,7 +106,7 @@ class _TaskListState extends State<TaskList> {
                 final double animValue = Curves.easeInOut.transform(animation.value);
                 final double elevation = lerpDouble(0, 1, animValue)!;
                 return Theme(
-                  data: Theme.of(context).copyWith(useMaterial3: false),
+                  data: Theme.of(context).copyWith(useMaterial3: true),
                   child: Material(
                     elevation: elevation,
                     color: ColorsExt.grey6(context),
