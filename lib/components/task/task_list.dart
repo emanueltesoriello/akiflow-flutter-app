@@ -123,7 +123,7 @@ class _TaskListState extends State<TaskList> {
             replacement: const SizedBox(key: ObjectKey(0), height: 0),
             child: SizedBox(
               key: ObjectKey(widget.header),
-              child: widget.header!,
+              child: widget.header,
             ),
           ),
           footer: Visibility(

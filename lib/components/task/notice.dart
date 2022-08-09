@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 
+import '../../assets.dart';
+
 class Notice extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -21,11 +23,11 @@ class Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Material(
-        color: background ?? ColorsExt.green20(context),
-        borderRadius: BorderRadius.circular(noticeRadius),
+    return Material(
+      color: background ?? ColorsExt.green20(context),
+      borderRadius: BorderRadius.circular(noticeRadius),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -54,7 +56,7 @@ class Notice extends StatelessWidget {
               alignment: Alignment.topRight,
               children: [
                 SvgPicture.asset(
-                  "assets/images/icons/_common/xmark.svg",
+                  Assets.images.icons.common.xmarkSVG,
                   width: 20,
                   height: 20,
                   color: ColorsExt.grey1(context),

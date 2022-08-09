@@ -4,13 +4,9 @@ import 'package:i18n/strings.g.dart';
 
 import '../../../../style/colors.dart';
 
-
 class TitleField extends StatelessWidget {
   const TitleField(
-      {Key? key,
-      required this.simpleTitleController,
-      required this.isTitleEditing,
-      required this.titleFocus})
+      {Key? key, required this.simpleTitleController, required this.isTitleEditing, required this.titleFocus})
       : super(key: key);
   final TextEditingController simpleTitleController;
   final ValueListenable<bool> isTitleEditing;
@@ -42,9 +38,6 @@ class TitleField extends StatelessWidget {
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
-            // onChanged: (String value) {
-            //   context.read<EditTaskCubit>().updateTitle(value);
-            // },
           );
         });
   }
