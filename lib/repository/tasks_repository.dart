@@ -3,7 +3,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/repository/database_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:mobile/utils/converters_isolate.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 

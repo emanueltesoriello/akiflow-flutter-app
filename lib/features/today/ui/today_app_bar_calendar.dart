@@ -8,7 +8,7 @@ import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/sizes.dart';
-import 'package:mobile/utils/datetime_ext.dart';
+import 'package:mobile/extensions/date_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../components/base/date_display.dart';

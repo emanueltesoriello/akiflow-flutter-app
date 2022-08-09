@@ -15,7 +15,7 @@ import 'package:mobile/features/settings/ui/view/button_selectable.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/utils/no_scroll_behav.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';

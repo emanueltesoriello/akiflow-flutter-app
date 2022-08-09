@@ -8,7 +8,7 @@ import 'package:mobile/components/task/task_list_menu.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {

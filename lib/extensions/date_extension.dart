@@ -8,4 +8,12 @@ extension DateExtension on DateTime {
   String get timeFormatted {
     return DateFormat("HH:mm").format(this);
   }
+
+  DateTime next(int day) {
+    return add(
+      Duration(
+        days: (day - weekday) % DateTime.daysPerWeek,
+      ),
+    );
+  }
 }

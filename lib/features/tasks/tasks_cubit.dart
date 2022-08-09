@@ -23,7 +23,7 @@ import 'package:mobile/repository/tasks_repository.dart';
 import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';

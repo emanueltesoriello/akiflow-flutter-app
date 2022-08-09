@@ -7,8 +7,8 @@ import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/string_ext.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/string_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 

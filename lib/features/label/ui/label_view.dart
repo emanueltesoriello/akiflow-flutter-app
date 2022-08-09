@@ -15,7 +15,7 @@ import 'package:mobile/features/label/ui/section_header.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';

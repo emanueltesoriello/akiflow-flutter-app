@@ -9,7 +9,7 @@ import '../../../../assets.dart';
 import '../../../../components/base/tagbox.dart';
 import '../../../../components/task/plan_for_action.dart';
 import '../../../../style/colors.dart';
-import '../../../../utils/task_extension.dart';
+import '../../../../extensions/task_extension.dart';
 import '../../../edit_task/cubit/edit_task_cubit.dart';
 import '../../../edit_task/ui/actions/plan_modal.dart';
 import '../../../label/cubit/labels_cubit.dart';

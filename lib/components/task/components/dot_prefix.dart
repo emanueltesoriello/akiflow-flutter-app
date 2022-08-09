@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:models/task/task.dart';
 
 import '../../../style/colors.dart';
-import '../../../utils/task_extension.dart';
+import '../../../extensions/task_extension.dart';
 
 class DotPrefix extends StatelessWidget {
   const DotPrefix({Key? key,required this.task}) : super(key: key);

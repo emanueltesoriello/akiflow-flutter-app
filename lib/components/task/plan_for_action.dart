@@ -3,8 +3,8 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/tagbox.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/string_ext.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/string_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
 
 class PlanForAction extends StatelessWidget {

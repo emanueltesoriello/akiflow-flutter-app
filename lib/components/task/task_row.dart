@@ -11,7 +11,7 @@ import 'package:mobile/components/task/slidable_sender.dart';
 import 'package:mobile/components/task/task_info.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
 
 import 'components/background_daily_goal.dart';

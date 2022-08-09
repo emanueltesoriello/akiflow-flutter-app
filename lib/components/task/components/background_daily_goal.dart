@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
 
 import '../../../style/colors.dart';

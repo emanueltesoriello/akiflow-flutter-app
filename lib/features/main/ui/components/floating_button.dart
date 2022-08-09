@@ -7,7 +7,7 @@ import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
 import '../../../../style/colors.dart';
-import '../../../../utils/task_extension.dart';
+import '../../../../extensions/task_extension.dart';
 import '../../../create_task/ui/create_task_modal.dart';
 import '../../../edit_task/cubit/edit_task_cubit.dart';
 import '../../../label/cubit/labels_cubit.dart';

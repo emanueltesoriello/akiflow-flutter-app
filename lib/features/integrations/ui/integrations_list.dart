@@ -6,8 +6,8 @@ import 'package:mobile/features/integrations/ui/circle_account_picture.dart';
 import 'package:mobile/features/integrations/ui/integration_list_item.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
-import 'package:mobile/utils/doc_extension.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/doc_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/account/account.dart';
 
 class IntegrationsList extends StatelessWidget {

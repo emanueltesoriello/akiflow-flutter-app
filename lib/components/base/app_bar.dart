@@ -7,7 +7,7 @@ import 'package:mobile/components/base/sync_progress.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/style/colors.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 
 class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;

@@ -15,7 +15,7 @@ import 'package:mobile/features/today/ui/today_appbar.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/sizes.dart';
 import 'package:mobile/utils/panel.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
 
 import 'today_header.dart';

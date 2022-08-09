@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/utils/doc_extension.dart';
+import 'package:mobile/extensions/doc_extension.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/doc/slack_doc.dart';
