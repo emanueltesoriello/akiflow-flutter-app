@@ -266,20 +266,6 @@ class _Home extends StatelessWidget {
           }
         },
       ),
-      // TODO fix expiry page after login and on app restart before
-      // child: Builder(
-      //   builder: (context) {
-      //     AuthCubit bloc = context.watch<AuthCubit>();
-
-      //     if (bloc.state.user != null && bloc.state.hasValidPlan) {
-      //       return const MainPage();
-      //     } else if (bloc.state.user != null && bloc.state.hasValidPlan == false) {
-      //       return const TrialExpiredPage();
-      //     } else {
-      //       return const AuthPage();
-      //     }
-      //   },
-      // ),
     );
   }
 }
