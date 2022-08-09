@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/components/base/date_display.dart';
+import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/components/calendar/calendar_selected_day.dart';
 import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/style/colors.dart';
@@ -186,11 +187,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
 
             return Column(
               children: [
-                Container(
-                  color: Theme.of(context).dividerColor,
-                  width: double.infinity,
-                  height: 1,
-                ),
+                const Separator(),
                 SizedBox(
                   height: 60,
                   child: Padding(
@@ -266,11 +263,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                     ),
                   ),
                 ),
-                Container(
-                  color: Theme.of(context).dividerColor,
-                  width: double.infinity,
-                  height: 1,
-                ),
+               const Separator(),
               ],
             );
           }),

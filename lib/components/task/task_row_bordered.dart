@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:mobile/style/theme.dart';
 import 'package:models/task/task.dart';
@@ -35,7 +36,7 @@ class TaskBorderedRow extends StatelessWidget {
               completed();
             },
             child: SvgPicture.asset(
-              "assets/images/icons/_common/square.svg",
+              Assets.images.icons.common.squareSVG,
               width: 20,
               height: 20,
               color: ColorsExt.grey3(context),
@@ -47,31 +48,23 @@ class TaskBorderedRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  task.title ?? "",
+                  task.title ?? '',
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Builder(builder: (context) {
-                  String text;
-
-                  if (task.createdAt != null) {
-                    text = DateFormat("dd MMM 'at' HH:mm").format(DateTime.parse(task.createdAt!).toLocal());
-                  } else {
-                    text = '';
-                  }
-
-                  return Column(
-                    children: [
-                      const SizedBox(height: 5),
-                      Text(
-                        text,
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  );
-                }),
+                Column(
+                  children: [
+                    const SizedBox(height: 5),
+                    Text(
+                      task.createdAt != null
+                          ? DateFormat("dd MMM 'at' HH:mm").format(DateTime.parse(task.createdAt!).toLocal())
+                          : '',
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

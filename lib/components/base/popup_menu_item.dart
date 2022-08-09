@@ -18,10 +18,8 @@ class PopupMenuCustomItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-            width: 22,
-            height: 22,
-            child: SvgPicture.asset(iconAsset, color: enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
+        SvgPicture.asset(
+            width: 22, height: 22, iconAsset, color: enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
         const SizedBox(width: 8),
         Expanded(
             child: Text(

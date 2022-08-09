@@ -69,18 +69,10 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _dailyGoalAnimationController = AnimationController(
-        duration: const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis),
-        vsync: this,
-        lowerBound: 0,
-        upperBound: 1,
-        value: 0);
+        duration: const Duration(milliseconds: 100), vsync: this, lowerBound: 0, upperBound: 1, value: 0);
 
     _fadeOutAnimationController = AnimationController(
-        duration: const Duration(milliseconds: TaskRow.fadeOutDurationInMillis),
-        vsync: this,
-        lowerBound: 0,
-        upperBound: 1,
-        value: 0);
+        duration: const Duration(milliseconds: 100), vsync: this, lowerBound: 0, upperBound: 1, value: 0);
     _fadeOutAnimation = Tween<double>(begin: 0, end: 1).animate(_fadeOutAnimationController);
   }
 
@@ -167,115 +159,115 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             }),
           ],
         ),
-        endActionPane:ActionPane(
-      motion: const DrawerMotion(),
-      extentRatio: 0.6,
-      dismissible: DismissiblePane(
-        closeOnCancel: true,
-        dismissThreshold: 0.75,
-        confirmDismiss: () async {
-          widget.swipeActionPlanClick();
-          return false;
-        },
-        onDismissed: () {},
-        motion: SlidableMotion(
-          dismissThreshold: 0.75,
-          motionChild: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Container(
-                  color: ColorsExt.cyan25(context),
-                  padding: const EdgeInsets.symmetric(horizontal: 27),
-                  child: PlanWithLabel(
-                    click: () {
-                      Slidable.of(context)?.close();
-                      widget.swipeActionPlanClick();
-                    },
+        endActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          extentRatio: 0.6,
+          dismissible: DismissiblePane(
+            closeOnCancel: true,
+            dismissThreshold: 0.75,
+            confirmDismiss: () async {
+              widget.swipeActionPlanClick();
+              return false;
+            },
+            onDismissed: () {},
+            motion: SlidableMotion(
+              dismissThreshold: 0.75,
+              motionChild: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Container(
+                      color: ColorsExt.cyan25(context),
+                      padding: const EdgeInsets.symmetric(horizontal: 27),
+                      child: PlanWithLabel(
+                        click: () {
+                          Slidable.of(context)?.close();
+                          widget.swipeActionPlanClick();
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+              staticChild: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    color: ColorsExt.cyan25(context),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    padding: const EdgeInsets.symmetric(horizontal: 27),
+                    child: PlanWithLabel(
+                      click: () {
+                        Slidable.of(context)?.close();
+                        widget.swipeActionPlanClick();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              leftToRight: false,
+            ),
           ),
-          staticChild: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                color: ColorsExt.cyan25(context),
-                width: MediaQuery.of(context).size.width * 0.6,
-                padding: const EdgeInsets.symmetric(horizontal: 27),
-                child: PlanWithLabel(
+          children: [
+            Builder(builder: (context) {
+              // builder is used to get the context of the slidable, not remove!
+              return CustomSlidableAction(
+                backgroundColor: ColorsExt.grey5(context),
+                foregroundColor: ColorsExt.grey3(context),
+                onPressed: (context) {},
+                padding: EdgeInsets.zero,
+                child: SlidableButtonAction(
+                  backColor: ColorsExt.grey5(context),
+                  topColor: ColorsExt.grey3(context),
+                  icon: 'assets/images/icons/_common/number.svg',
+                  leftToRight: false,
+                  click: () {
+                    Slidable.of(context)?.close();
+                    widget.swipeActionSelectLabelClick();
+                  },
+                ),
+              );
+            }),
+            Builder(builder: (context) {
+              // builder is used to get the context of the slidable, not remove!
+              return CustomSlidableAction(
+                backgroundColor: ColorsExt.pink30(context),
+                foregroundColor: ColorsExt.pink(context),
+                onPressed: (context) {},
+                padding: EdgeInsets.zero,
+                child: SlidableButtonAction(
+                  backColor: ColorsExt.pink30(context),
+                  topColor: ColorsExt.pink(context),
+                  icon: 'assets/images/icons/_common/clock.svg',
+                  leftToRight: false,
+                  click: () {
+                    Slidable.of(context)?.close();
+                    widget.swipeActionSnoozeClick();
+                  },
+                ),
+              );
+            }),
+            Builder(builder: (context) {
+              // builder is used to get the context of the slidable, not remove!
+              return CustomSlidableAction(
+                backgroundColor: ColorsExt.cyan25(context),
+                foregroundColor: ColorsExt.cyan(context),
+                onPressed: (context) {},
+                padding: EdgeInsets.zero,
+                child: SlidableButtonAction(
+                  backColor: ColorsExt.cyan25(context),
+                  topColor: ColorsExt.cyan(context),
+                  icon: 'assets/images/icons/_common/calendar.svg',
+                  leftToRight: false,
                   click: () {
                     Slidable.of(context)?.close();
                     widget.swipeActionPlanClick();
                   },
                 ),
-              ),
-            ],
-          ),
-          leftToRight: false,
+              );
+            }),
+          ],
         ),
-      ),
-      children: [
-        Builder(builder: (context) {
-          // builder is used to get the context of the slidable, not remove!
-          return CustomSlidableAction(
-            backgroundColor: ColorsExt.grey5(context),
-            foregroundColor: ColorsExt.grey3(context),
-            onPressed: (context) {},
-            padding: EdgeInsets.zero,
-            child: SlidableButtonAction(
-              backColor: ColorsExt.grey5(context),
-              topColor: ColorsExt.grey3(context),
-              icon: 'assets/images/icons/_common/number.svg',
-              leftToRight: false,
-              click: () {
-                Slidable.of(context)?.close();
-                widget.swipeActionSelectLabelClick();
-              },
-            ),
-          );
-        }),
-        Builder(builder: (context) {
-          // builder is used to get the context of the slidable, not remove!
-          return CustomSlidableAction(
-            backgroundColor: ColorsExt.pink30(context),
-            foregroundColor: ColorsExt.pink(context),
-            onPressed: (context) {},
-            padding: EdgeInsets.zero,
-            child: SlidableButtonAction(
-              backColor: ColorsExt.pink30(context),
-              topColor: ColorsExt.pink(context),
-              icon: 'assets/images/icons/_common/clock.svg',
-              leftToRight: false,
-              click: () {
-                Slidable.of(context)?.close();
-                widget.swipeActionSnoozeClick();
-              },
-            ),
-          );
-        }),
-        Builder(builder: (context) {
-          // builder is used to get the context of the slidable, not remove!
-          return CustomSlidableAction(
-            backgroundColor: ColorsExt.cyan25(context),
-            foregroundColor: ColorsExt.cyan(context),
-            onPressed: (context) {},
-            padding: EdgeInsets.zero,
-            child: SlidableButtonAction(
-              backColor: ColorsExt.cyan25(context),
-              topColor: ColorsExt.cyan(context),
-              icon: 'assets/images/icons/_common/calendar.svg',
-              leftToRight: false,
-              click: () {
-                Slidable.of(context)?.close();
-                widget.swipeActionPlanClick();
-              },
-            ),
-          );
-        }),
-      ],
-    ),
         child: Builder(builder: (context) {
           Widget child = GestureDetector(
             onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
@@ -289,84 +281,84 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                     task: widget.task,
                     dailyGoalAnimationController: _dailyGoalAnimationController,
                   ),
-                  Container(
-                    constraints: const BoxConstraints(minHeight: 50),
+                  Padding(
                     padding: const EdgeInsets.only(right: 14),
-                    color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (widget.selectMode) {
-                              widget.selectTask();
-                            } else {
-                              _checkboxController!.completedClick();
-                            }
-                          },
-                          child: Container(
-                            color: Colors.transparent,
-                            width: 48,
-                            height: 80,
-                            child: Row(
-                              children: [
-                                DotPrefix(task: widget.task),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12),
-                                  child: Builder(builder: ((context) {
-                                    if (widget.selectMode) {
-                                      return SelectableRadioButton(widget.task);
-                                    } else {
-                                      return CheckboxAnimated(
-                                        onControllerReady: (controller) {
-                                          _checkboxController = controller;
-                                        },
-                                        task: widget.task,
-                                        key: ObjectKey(widget.task),
-                                        onCompleted: () async {
-                                          if (widget.task.isDailyGoal) {
-                                            _dailyGoalAnimationController.value = 1;
-                                            await Future.delayed(
-                                                const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
-                                            _dailyGoalAnimationController.reverse(from: 1);
-                                            await Future.delayed(
-                                                const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
-                                          }
+                    child: Material(
+                      color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (widget.selectMode) {
+                                widget.selectTask();
+                              } else {
+                                _checkboxController!.completedClick();
+                              }
+                            },
+                            child: SizedBox(
+                              width: 48,
+                              height: 80,
+                              child: Row(
+                                children: [
+                                  DotPrefix(task: widget.task),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: Builder(builder: ((context) {
+                                      if (widget.selectMode) {
+                                        return SelectableRadioButton(widget.task);
+                                      } else {
+                                        return CheckboxAnimated(
+                                          onControllerReady: (controller) {
+                                            _checkboxController = controller;
+                                          },
+                                          task: widget.task,
+                                          key: ObjectKey(widget.task),
+                                          onCompleted: () async {
+                                            if (widget.task.isDailyGoal) {
+                                              _dailyGoalAnimationController.value = 1;
+                                              await Future.delayed(
+                                                  const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
+                                              _dailyGoalAnimationController.reverse(from: 1);
+                                              await Future.delayed(
+                                                  const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
+                                            }
 
-                                          _fadeOutAnimationController.forward(from: 0);
-                                          await Future.delayed(
-                                              const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
-                                          widget.completedClick();
-                                        },
-                                      );
-                                    }
-                                  })),
-                                ),
-                              ],
+                                            _fadeOutAnimationController.forward(from: 0);
+                                            await Future.delayed(
+                                                const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
+                                            widget.completedClick();
+                                          },
+                                        );
+                                      }
+                                    })),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TitleWidget(widget.task),
-                                Subtitle(widget.task),
-                                TaskInfo(
-                                  widget.task,
-                                  hideInboxLabel: widget.hideInboxLabel,
-                                  showLabel: widget.showLabel,
-                                  selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                                  showPlanInfo: widget.showPlanInfo,
-                                ),
-                                const SizedBox(height: 12),
-                              ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TitleWidget(widget.task),
+                                  Subtitle(widget.task),
+                                  TaskInfo(
+                                    widget.task,
+                                    hideInboxLabel: widget.hideInboxLabel,
+                                    showLabel: widget.showLabel,
+                                    selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                                    showPlanInfo: widget.showPlanInfo,
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   IgnorePointer(
@@ -376,7 +368,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                         return Opacity(
                           opacity: _fadeOutAnimation.value,
                           child: Container(
-                              constraints: const BoxConstraints(minHeight: 50),
+                              constraints: const BoxConstraints(minHeight: 80),
                               color: Theme.of(context).scaffoldBackgroundColor),
                         );
                       },
@@ -396,6 +388,4 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
       ),
     );
   }
-
-
 }

@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/components/base/app_bar.dart';
 import 'package:mobile/components/base/button_list.dart';
-import 'package:mobile/components/base/button_list_divider.dart';
+import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/settings/ui/licences_page.dart';
@@ -96,7 +96,7 @@ class AboutPage extends StatelessWidget {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LicencesPage()));
                     },
                   ),
-                  const ButtonListDivider(),
+                  const Separator(),
                   ButtonList(
                     title: t.settings.about.security,
                     position: ButtonListPosition.bottom,

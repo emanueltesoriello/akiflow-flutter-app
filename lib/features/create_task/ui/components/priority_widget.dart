@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 
 import '../../../../utils/no_scroll_behav.dart';
@@ -72,11 +73,7 @@ class PriorityWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  color: Theme.of(context).dividerColor,
-                  width: double.infinity,
-                  height: 1,
-                ),
+              const Separator(),
               ],
             ),
           );

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/features/create_task/ui/create_task_top_action_item.dart';
@@ -150,11 +151,7 @@ class _PlanModalState extends State<PlanModal> {
                 ],
               ),
             ),
-            Container(
-              color: Theme.of(context).dividerColor,
-              width: double.infinity,
-              height: 1,
-            ),
+            const Separator(),
           ],
         ),
       ),
@@ -172,7 +169,7 @@ class _PlanModalState extends State<PlanModal> {
             String text;
 
             if (useDateTime) {
-              int defaultTimeHour = context.watch<AuthCubit>().state.user?.defaultHour??0;
+              int defaultTimeHour = context.watch<AuthCubit>().state.user?.defaultHour ?? 0;
 
               datetime ??= DateTime(
                   _selectedDate.value.year, _selectedDate.value.month, _selectedDate.value.day, defaultTimeHour, 0);
@@ -330,11 +327,7 @@ class _PlanModalState extends State<PlanModal> {
                     ),
                   ]),
                 ),
-                Container(
-                  color: Theme.of(context).dividerColor,
-                  width: double.infinity,
-                  height: 1,
-                )
+                const Separator(),
               ],
             );
           }),

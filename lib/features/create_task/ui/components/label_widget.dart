@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:models/label/label.dart';
 
@@ -36,11 +37,7 @@ class LabelWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  color: Theme.of(context).dividerColor,
-                  width: double.infinity,
-                  height: 1,
-                ),
+                const Separator(),
               ],
             ),
           );

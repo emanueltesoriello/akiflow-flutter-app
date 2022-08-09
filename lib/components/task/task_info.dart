@@ -12,6 +12,8 @@ import 'package:mobile/utils/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
+import '../../assets.dart';
+
 class TaskInfo extends StatelessWidget {
   final Task task;
   final bool hideInboxLabel;
@@ -72,14 +74,14 @@ class TaskInfo extends StatelessWidget {
 
     if (task.statusType == TaskStatusType.inbox) {
       return TagBox(
-        icon: "assets/images/icons/_common/tray.svg",
+        icon: Assets.images.icons.common.traySVG,
         backgroundColor: ColorsExt.cyan25(context),
         text: t.bottomBar.inbox,
         active: true,
       );
     } else if (task.statusType == TaskStatusType.someday) {
       return TagBox(
-        icon: "assets/images/icons/_common/archivebox.svg",
+        icon: Assets.images.icons.common.archiveboxSVG,
         backgroundColor: ColorsExt.akiflow10(context),
         text: task.statusType!.name.capitalizeFirstCharacter(),
         active: true,
@@ -177,7 +179,7 @@ class TaskInfo extends StatelessWidget {
     bool active = label.color != null;
 
     return TagBox(
-      icon: "assets/images/icons/_common/number.svg",
+      icon: Assets.images.icons.common.numberSVG,
       text: label.title,
       backgroundColor: active ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
       iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),

@@ -118,26 +118,22 @@ class _TaskListState extends State<TaskList> {
               child: child,
             );
           },
-          header: Builder(builder: (context) {
-            if (widget.header == null) {
-              return const SizedBox(key: ObjectKey(0), height: 0);
-            }
-
-            return Container(
+          header: Visibility(
+            visible: widget.header != null,
+            replacement: const SizedBox(key: ObjectKey(0), height: 0),
+            child: SizedBox(
               key: ObjectKey(widget.header),
               child: widget.header!,
-            );
-          }),
-          footer: Builder(builder: (context) {
-            if (widget.footer == null) {
-              return const SizedBox(key: ObjectKey(0), height: 0);
-            }
-
-            return Container(
+            ),
+          ),
+          footer: Visibility(
+            visible: widget.footer != null,
+            replacement: const SizedBox(key: ObjectKey(0), height: 0),
+            child: SizedBox(
               key: ObjectKey(widget.footer),
-              child: widget.footer!,
-            );
-          }),
+              child: widget.footer,
+            ),
+          ),
           itemBuilder: (context, index) {
             Task task = tasks[index];
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/components/base/popup_menu_item.dart';
 import 'package:mobile/style/colors.dart';
 
@@ -16,7 +17,7 @@ class TaskListMenu extends StatelessWidget {
       child: PopupMenuButton<TaskListMenuAction>(
         padding: EdgeInsets.zero,
         icon: SvgPicture.asset(
-          "assets/images/icons/_common/ellipsis.svg",
+          Assets.images.icons.common.ellipsisSVG,
           width: 24,
           height: 24,
           color: ColorsExt.grey3(context),

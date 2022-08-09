@@ -21,52 +21,52 @@ class Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
+      child: Material(
         color: background ?? ColorsExt.green20(context),
         borderRadius: BorderRadius.circular(noticeRadius),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 20, color: ColorsExt.green(context)),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 20, color: ColorsExt.green(context)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
+                  const SizedBox(height: 5),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+            ),
+            Stack(
+              alignment: Alignment.topRight,
+              children: [
+                SvgPicture.asset(
+                  "assets/images/icons/_common/xmark.svg",
+                  width: 20,
+                  height: 20,
+                  color: ColorsExt.grey1(context),
                 ),
-                const SizedBox(height: 5),
-                Text(
-                  subtitle,
-                  style: const TextStyle(fontSize: 15),
+                InkWell(
+                  onTap: onClose,
+                  child: const SizedBox(width: 36, height: 36),
                 ),
               ],
             ),
-          ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              SvgPicture.asset(
-                "assets/images/icons/_common/xmark.svg",
-                width: 20,
-                height: 20,
-                color: ColorsExt.grey1(context),
-              ),
-              InkWell(
-                onTap: onClose,
-                child: const SizedBox(width: 36, height: 36),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

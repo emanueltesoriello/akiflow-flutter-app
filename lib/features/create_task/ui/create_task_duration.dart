@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
@@ -94,11 +95,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
           },
         ),
         MarksWidget(selectedDuration: _selectedDuration),
-        Container(
-          color: Theme.of(context).dividerColor,
-          width: double.infinity,
-          height: 1,
-        ),
+        const Separator(),
       ],
     );
   }
