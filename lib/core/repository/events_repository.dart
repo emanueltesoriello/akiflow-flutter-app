@@ -1,4 +1,4 @@
-import 'package:mobile/repository/database_repository.dart';
+import 'package:mobile/core/repository/database_repository.dart';
 
 class EventsRepository extends DatabaseRepository {
   static const table = 'events';

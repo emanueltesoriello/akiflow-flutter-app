@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:http/http.dart';
-import 'package:mobile/api/integrations/gmail_client.dart';
-import 'package:mobile/api/integrations/integration_base_api.dart';
+import 'package:mobile/core/api/integrations/gmail_client.dart';
+import 'package:mobile/core/api/integrations/integration_base_api.dart';
 import 'package:mobile/exceptions/integrations/gmail.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';

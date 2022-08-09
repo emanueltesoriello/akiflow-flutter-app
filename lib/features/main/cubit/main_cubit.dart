@@ -9,7 +9,7 @@ import 'package:mobile/services/intercom_service.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:models/user.dart';
 
-import '../../../api/user_api.dart';
+import '../../../core/api/user_api.dart';
 
 part 'main_state.dart';
 

@@ -1,6 +1,6 @@
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/database_exception.dart';
-import 'package:mobile/repository/database_repository.dart';
+import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/services/database_service.dart';
 import 'package:models/account/account.dart';
 

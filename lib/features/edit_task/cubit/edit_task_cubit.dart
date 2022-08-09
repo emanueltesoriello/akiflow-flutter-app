@@ -7,7 +7,7 @@ import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/features/main/ui/chrono_model.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/repository/tasks_repository.dart';
+import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/services/analytics_service.dart';
 import 'package:mobile/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';

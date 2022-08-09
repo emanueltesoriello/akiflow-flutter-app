@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:mobile/api/api.dart';
+import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/post_unsynced_exception.dart';
 import 'package:mobile/exceptions/upsert_database_exception.dart';
-import 'package:mobile/repository/database_repository.dart';
+import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/utils/converters_isolate.dart';
 import 'package:models/extensions/account_ext.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:mobile/api/api.dart';
+import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';

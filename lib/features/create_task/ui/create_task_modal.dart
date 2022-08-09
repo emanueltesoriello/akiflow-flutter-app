@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/create_task/ui/components/create_task_actions.dart';
 import 'package:mobile/features/create_task/ui/components/description_field.dart';
 import 'package:mobile/features/create_task/ui/components/label_widget.dart';

@@ -1,4 +1,4 @@
-import 'package:mobile/api/api.dart';
+import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:models/label/label.dart';
 

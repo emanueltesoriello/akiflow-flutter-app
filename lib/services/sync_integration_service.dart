@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:mobile/api/docs_api.dart';
-import 'package:mobile/api/integrations/integration_base_api.dart';
+import 'package:mobile/core/api/docs_api.dart';
+import 'package:mobile/core/api/integrations/integration_base_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/post_unsynced_exception.dart';
-import 'package:mobile/repository/docs_repository.dart';
+import 'package:mobile/core/repository/docs_repository.dart';
 import 'package:mobile/services/sentry_service.dart';
 import 'package:mobile/utils/converters_isolate.dart';
 import 'package:models/doc/doc.dart';

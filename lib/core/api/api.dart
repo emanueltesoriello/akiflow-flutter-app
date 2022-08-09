@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-import 'package:mobile/api/base_api.dart';
+import 'package:mobile/core/api/base_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/exceptions/api_exception.dart';
