@@ -40,7 +40,7 @@ class LabelItem extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.all(8),
         child: Center(
           child: Row(

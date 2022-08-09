@@ -180,11 +180,9 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
                     scale: _animationCircleScale.value,
                     child: AnimatedBuilder(
                       animation: _controllerBackgroundOpacity,
-                      builder: (BuildContext context, Widget? child) => Container(
-                        decoration: BoxDecoration(
-                          color: ColorsExt.grey5(context).withOpacity(_animationBackgroundOpacity.value),
-                          borderRadius: BorderRadius.circular(32),
-                        ),
+                      builder: (BuildContext context, Widget? child) => Material(
+                        color: ColorsExt.grey5(context).withOpacity(_animationBackgroundOpacity.value),
+                        borderRadius: BorderRadius.circular(32),
                       ),
                     ),
                   );

@@ -73,7 +73,7 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
           valueListenable: _colorContextReady,
           builder: (context, bool ready, child) {
             if (!ready) {
-              return Container();
+              return const SizedBox();
             }
 
             return AnimatedBuilder(

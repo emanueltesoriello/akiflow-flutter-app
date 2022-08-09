@@ -49,7 +49,7 @@ class NavItem extends StatelessWidget {
             );
           }
         },
-        child: Container(
+        child: Material(
           color: ColorsExt.background(context),
           child: Stack(
             alignment: Alignment.center,

@@ -17,7 +17,7 @@ class FolderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.all(8),
         child: Center(
           child: Row(

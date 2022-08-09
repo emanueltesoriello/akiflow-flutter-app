@@ -242,7 +242,7 @@ class _Home extends StatelessWidget {
                           state.action.dismiss!();
                         },
                       )
-                    : Container(),
+                    : const SizedBox(),
                 TextButton(
                   child: Text(state.action.confirmTitle ?? t.ok),
                   onPressed: () {

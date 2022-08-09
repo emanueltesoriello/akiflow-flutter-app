@@ -184,7 +184,7 @@ class _PlanModalState extends State<PlanModal> {
 
             return Column(
               children: [
-                Container(
+                Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: Column(children: [
                     Builder(

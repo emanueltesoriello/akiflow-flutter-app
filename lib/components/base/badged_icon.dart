@@ -17,7 +17,7 @@ class BadgedIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Material(
       color: ColorsExt.background(context),
       child: Stack(
         alignment: Alignment.center,

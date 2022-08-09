@@ -68,7 +68,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
           valueListenable: _colorContextReady,
           builder: (context, bool ready, child) {
             if (!ready) {
-              return Container();
+              return const SizedBox();
             }
 
             return Container(
@@ -79,11 +79,11 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
               ),
               child: AnimatedBuilder(
                 animation: _animation!,
-                builder: (_, child) => Container(
+                builder: (_, child) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Container(
+                  child: Material(
                     color: _animation!.value,
-                    child: Container(
+                    child: Material(
                       color: widget.selected ? ColorsExt.grey5(context) : Colors.transparent,
                       child: Row(
                         children: [

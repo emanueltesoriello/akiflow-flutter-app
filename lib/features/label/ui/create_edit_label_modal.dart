@@ -45,10 +45,8 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
       color: Colors.transparent,
       child: Wrap(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
+          Material(
+            color: Colors.transparent,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16.0),

@@ -71,15 +71,12 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
                 child: BlocBuilder<OnboardingCubit, OnboardingCubitState>(
                   builder: (context, state) => Stack(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: toolbarHeight),
-                          child: Column(children: [
-                            _task(context, state.page),
-                            _boxInfoAndImage(context, state.page),
-                          ]),
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: toolbarHeight + 10),
+                        child: Column(children: [
+                          _task(context, state.page),
+                          _boxInfoAndImage(context, state.page),
+                        ]),
                       ),
                       _controls(state.page, context),
                     ],

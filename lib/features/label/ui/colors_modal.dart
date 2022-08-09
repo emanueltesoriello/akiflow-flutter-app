@@ -30,7 +30,7 @@ class ColorsModal extends StatelessWidget {
                 const SizedBox(height: 12),
                 const ScrollChip(),
                 const SizedBox(height: 12),
-                Container(
+                Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text(
                     t.label.color,

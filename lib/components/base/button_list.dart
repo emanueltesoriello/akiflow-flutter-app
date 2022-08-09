@@ -86,7 +86,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
           valueListenable: _colorContextReady,
           builder: (context, bool ready, child) {
             if (!ready) {
-              return Container();
+              return const SizedBox();
             }
 
             return AnimatedBuilder(

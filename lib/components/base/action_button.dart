@@ -62,7 +62,7 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
         valueListenable: _colorContextReady,
         builder: (context, bool ready, child) {
           if (!ready) {
-            return Container();
+            return const SizedBox();
           }
 
           return AnimatedBuilder(

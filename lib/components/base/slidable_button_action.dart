@@ -28,7 +28,7 @@ class SlidableButtonAction extends StatelessWidget {
     if (label == null || label!.isEmpty) {
       return GestureDetector(
         onTap: click,
-        child: Container(
+        child: Material(
           color: Colors.transparent,
           child: Center(
             child: SvgPicture.asset(
@@ -43,7 +43,7 @@ class SlidableButtonAction extends StatelessWidget {
     } else {
       return GestureDetector(
         onTap: click,
-        child: Container(
+        child: Material(
           color: Colors.transparent,
           child: Align(
             alignment: Alignment.centerRight,

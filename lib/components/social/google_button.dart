@@ -64,7 +64,7 @@ class _GoogleButtonState extends State<GoogleButton> with SingleTickerProviderSt
         valueListenable: _colorContextReady,
         builder: (context, bool ready, child) {
           if (!ready) {
-            return Container();
+            return const SizedBox();
           }
 
           return AnimatedBuilder(

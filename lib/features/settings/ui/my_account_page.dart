@@ -22,7 +22,7 @@ class MyAccountPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: Container(
+            child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
