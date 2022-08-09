@@ -44,21 +44,21 @@ class _ViewState extends State<_View> {
 
   @override
   void initState() {
-    TasksCubit tasksCubit = context.read<TasksCubit>();
+    ///TasksCubit tasksCubit = context.read<TasksCubit>();
     TodayCubit todayCubit = context.read<TodayCubit>();
 
     if (streamSubscription != null) {
       streamSubscription!.cancel();
     }
 
-    streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        try {
-          scrollController.animateTo(scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-        } catch (_) {}
-      });
-    });
+  //  streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
+    //  SchedulerBinding.instance.addPostFrameCallback((_) {
+      //  try {
+          // scrollController.animateTo(scrollController.position.maxScrollExtent,
+          //     duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        //} catch (_) {}
+     // });
+   // });
 
     todayCubit.panelStateStream.listen((PanelState panelState) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
