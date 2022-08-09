@@ -20,23 +20,14 @@ import 'package:models/task/task.dart';
 
 import 'today_header.dart';
 
-class TodayView extends StatelessWidget {
+class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const _View();
-  }
+  State<TodayView> createState() => _TodayViewState();
 }
 
-class _View extends StatefulWidget {
-  const _View({Key? key}) : super(key: key);
-
-  @override
-  State<_View> createState() => _ViewState();
-}
-
-class _ViewState extends State<_View> {
+class _TodayViewState extends State<TodayView> {
   StreamSubscription? streamSubscription;
   ScrollController scrollController = ScrollController();
   ValueNotifier<double> calendarOffsetNotifier = ValueNotifier<double>(200);
@@ -44,22 +35,11 @@ class _ViewState extends State<_View> {
 
   @override
   void initState() {
-    ///TasksCubit tasksCubit = context.read<TasksCubit>();
     TodayCubit todayCubit = context.read<TodayCubit>();
 
     if (streamSubscription != null) {
       streamSubscription!.cancel();
     }
-
-  //  streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
-    //  SchedulerBinding.instance.addPostFrameCallback((_) {
-      //  try {
-          // scrollController.animateTo(scrollController.position.maxScrollExtent,
-          //     duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-        //} catch (_) {}
-     // });
-   // });
-
     todayCubit.panelStateStream.listen((PanelState panelState) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         switch (panelState) {

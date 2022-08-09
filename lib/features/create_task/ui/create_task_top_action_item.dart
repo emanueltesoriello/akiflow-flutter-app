@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/features/create_task/ui/components/text_top_action_item.dart';
 import 'package:mobile/style/colors.dart';
 
 class CreateTaskTopActionItem extends StatelessWidget {
@@ -39,31 +40,11 @@ class CreateTaskTopActionItem extends StatelessWidget {
                 height: 22,
                 color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
               ),
-              _text(context),
+              TextTopActionItem(text: text, active: active)
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _text(BuildContext context) {
-    if (text == null || text!.isEmpty) {
-      return const SizedBox();
-    }
-
-    return Row(
-      children: [
-        const SizedBox(width: 6),
-        Text(
-          text!,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-            color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-          ),
-        ),
-      ],
     );
   }
 }

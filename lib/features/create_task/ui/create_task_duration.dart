@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/features/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
@@ -69,7 +70,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: SvgPicture.asset(
-                    'assets/images/icons/_common/checkmark.svg',
+                    Assets.images.icons.common.checkmarkSVG,
                     width: 24,
                     height: 24,
                     color: ColorsExt.akiflow(context),
@@ -99,6 +100,4 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
       ],
     );
   }
-
-  
 }

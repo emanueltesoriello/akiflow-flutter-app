@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/components/calendar/calendar_selected_day.dart';
 import 'package:mobile/components/calendar/calendar_today.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
@@ -136,7 +137,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                               child: RotatedBox(
                                 quarterTurns: 2,
                                 child: SvgPicture.asset(
-                                  "assets/images/icons/_common/chevron_right.svg",
+                                  Assets.images.icons.common.chevronRightSVG,
                                   width: 20,
                                   height: 20,
                                   color: ColorsExt.grey2(context),
@@ -151,7 +152,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                                 _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
                               },
                               child: SvgPicture.asset(
-                                "assets/images/icons/_common/chevron_right.svg",
+                                Assets.images.icons.common.chevronRightSVG,
                                 width: 20,
                                 height: 20,
                                 color: ColorsExt.grey2(context),

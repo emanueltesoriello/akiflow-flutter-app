@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/components/base/date_display.dart';
 import 'package:mobile/components/base/separator.dart';
 import 'package:mobile/components/calendar/calendar_selected_day.dart';
@@ -180,12 +181,10 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
             ),
           ),
           const SizedBox(height: 16),
-          Builder(builder: (context) {
-            if (!widget.showTime) {
-              return const SizedBox();
-            }
-
-            return Column(
+          Visibility(
+            visible: widget.showTime,
+            replacement: const SizedBox(),
+            child: Column(
               children: [
                 const Separator(),
                 SizedBox(
@@ -256,17 +255,17 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
 
                             Navigator.pop(context);
                           },
-                          child: SvgPicture.asset("assets/images/icons/_common/checkmark.svg",
+                          child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
                               width: 24, height: 24, color: ColorsExt.akiflow(context)),
                         ),
                       ],
                     ),
                   ),
                 ),
-               const Separator(),
+                const Separator(),
               ],
-            );
-          }),
+            ),
+          ),
         ],
       ),
     );

@@ -6,6 +6,7 @@ import 'package:mobile/features/create_task/ui/components/create_task_actions.da
 import 'package:mobile/features/create_task/ui/components/description_field.dart';
 import 'package:mobile/features/create_task/ui/components/label_widget.dart';
 import 'package:mobile/features/create_task/ui/components/send_task_button.dart';
+import 'package:mobile/features/create_task/ui/components/title_field.dart';
 import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/style/colors.dart';
 import 'package:models/task/task.dart';
@@ -77,7 +78,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _title(context),
+                            TitleField(simpleTitleController: _simpleTitleController, isTitleEditing: _isTitleEditing, titleFocus: titleFocus),
                             const SizedBox(height: 8),
                             DescriptionField(descriptionController: descriptionController),
                             const SizedBox(height: 8),
@@ -111,38 +112,5 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         ],
       ),
     );
-  }
-
-  Widget _title(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: _isTitleEditing,
-        builder: (context, bool isTitleEditing, child) {
-          return TextField(
-            controller: _simpleTitleController,
-            focusNode: titleFocus,
-            textCapitalization: TextCapitalization.sentences,
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.zero,
-              isDense: true,
-              hintText: t.addTask.titleHint,
-              border: InputBorder.none,
-              hintStyle: TextStyle(
-                color: ColorsExt.grey3(context),
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            style: TextStyle(
-              color: ColorsExt.grey2(context),
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
-            // onChanged: (String value) {
-            //   context.read<EditTaskCubit>().updateTitle(value);
-            // },
-          );
-        });
   }
 }
