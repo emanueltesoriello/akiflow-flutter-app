@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -42,6 +39,13 @@ class Subtitle extends StatelessWidget {
             if (doc != null) {
               return Row(
                 children: [
+                  SvgPicture.asset(
+                    "assets/images/icons/_common/arrow_turn_down_right.svg",
+                    color: ColorsExt.grey3(context),
+                    width: 16,
+                    height: 16,
+                  ),
+                  const SizedBox(width: 4.5),
                   SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
                   const SizedBox(width: 6),
                   Expanded(
