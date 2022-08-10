@@ -162,9 +162,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 ),
                                 SendTaskButton(onTap: () {
                                   HapticFeedback.mediumImpact();
-                                  context
-                                      .read<EditTaskCubit>()
-                                      .create(title:_simpleTitleController.text, description:descriptionController.text);
+                                  context.read<EditTaskCubit>().create();
                                   Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
                                   Navigator.pop(context, taskUpdated);
                                 }),

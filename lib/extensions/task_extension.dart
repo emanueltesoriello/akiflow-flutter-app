@@ -658,9 +658,9 @@ extension TaskExt on Task {
     return countTasksSelected(state) != 0;
   }
 
-  static bool hasData(Task updatedTask, String? title, String? description) {
-    return title != null ||
-        description != null ||
+  static bool hasData(Task updatedTask) {
+    return updatedTask.title != null ||
+        updatedTask.description != null ||
         updatedTask.date != null ||
         updatedTask.datetime != null ||
         updatedTask.status != 1 ||

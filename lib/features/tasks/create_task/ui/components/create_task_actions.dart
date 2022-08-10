@@ -15,8 +15,7 @@ import '../../../edit_task/ui/actions/plan_modal.dart';
 import '../../../../label/cubit/labels_cubit.dart';
 
 class CreateTaskActions extends StatelessWidget {
-  const CreateTaskActions({Key? key, required this.titleController, required this.titleFocus})
-      : super(key: key);
+  const CreateTaskActions({Key? key, required this.titleController, required this.titleFocus}) : super(key: key);
   final TextEditingController titleController;
   final FocusNode titleFocus;
   @override
@@ -47,8 +46,6 @@ class CreateTaskActions extends StatelessWidget {
                       required DateTime? datetime,
                       required TaskStatusType statusType}) async {
                     editTaskCubit.planFor(date, dateTime: datetime, statusType: statusType);
-
-                    
                   },
                   setForInbox: () {
                     editTaskCubit.planFor(null, dateTime: null, statusType: TaskStatusType.inbox);

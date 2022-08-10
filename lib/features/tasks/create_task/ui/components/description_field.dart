@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 
 import '../../../../../common/style/colors.dart';
+import '../../../edit_task/cubit/edit_task_cubit.dart';
 
 class DescriptionField extends StatelessWidget {
   const DescriptionField({Key? key, required this.descriptionController}) : super(key: key);
@@ -23,6 +25,9 @@ class DescriptionField extends StatelessWidget {
           fontSize: 17,
         ),
       ),
+      onChanged: (String text) {
+        context.read<EditTaskCubit>().updateDescription(text);
+      },
       style: TextStyle(
         color: ColorsExt.grey2(context),
         fontSize: 17,

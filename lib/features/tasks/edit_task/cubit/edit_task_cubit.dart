@@ -48,9 +48,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  Future<void> create({required String? title, required String? description}) async {
+  Future<void> create() async {
     try {
-      if (TaskExt.hasData(state.updatedTask, title, description) == false) {
+      if (TaskExt.hasData(state.updatedTask) == false) {
         return;
       }
 
@@ -58,8 +58,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       Task updated = state.updatedTask.copyWith(
         id: const Uuid().v4(),
-        title: title,
-        description: description,
+        title: state.updatedTask.title,
+        description: state.updatedTask.description,
         createdAt: TzUtils.toUtcStringIfNotNull(now),
         readAt: TzUtils.toUtcStringIfNotNull(now),
         sorting: now.toUtc().millisecondsSinceEpoch,

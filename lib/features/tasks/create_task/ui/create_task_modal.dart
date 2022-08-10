@@ -11,20 +11,36 @@ import 'package:models/task/task.dart';
 import 'components/duration_widget.dart';
 import 'components/priority_widget.dart';
 
-class CreateTaskModal extends StatelessWidget {
+class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key}) : super(key: key);
 
   @override
+  State<CreateTaskModal> createState() => _CreateTaskModalState();
+}
+
+class _CreateTaskModalState extends State<CreateTaskModal> {
+  final TextEditingController descriptionController = TextEditingController();
+
+  final FocusNode titleFocus = FocusNode();
+
+  final TextEditingController simpleTitleController = TextEditingController();
+
+  final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
+
+  final ScrollController parentScrollController = ScrollController();
+  @override
+  void initState() {
+    titleFocus.requestFocus();
+    EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+    simpleTitleController.text = editTaskCubit.state.originalTask.title ?? '';
+
+    String descriptionHtml = editTaskCubit.state.originalTask.description ?? '';
+    descriptionController.text = descriptionHtml;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController descriptionController = TextEditingController();
-
-    final FocusNode titleFocus = FocusNode();
-
-    final TextEditingController simpleTitleController = TextEditingController();
-
-    final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
-
-    final ScrollController parentScrollController = ScrollController();
     return Material(
       color: Theme.of(context).backgroundColor,
       child: ListView(
@@ -70,7 +86,7 @@ class CreateTaskModal extends StatelessWidget {
                                 HapticFeedback.mediumImpact();
                                 context
                                     .read<EditTaskCubit>()
-                                    .create(title: simpleTitleController.text, description: descriptionController.text);
+                                    .create();
                                 Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
                                 Navigator.pop(context, taskUpdated);
                               }),

@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 
 import '../../../../../common/style/colors.dart';
+import '../../../edit_task/cubit/edit_task_cubit.dart';
 
 class TitleField extends StatelessWidget {
   const TitleField(
@@ -33,6 +35,9 @@ class TitleField extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            onChanged: (String text) {
+              context.read<EditTaskCubit>().updateTitle(text);
+            },
             style: TextStyle(
               color: ColorsExt.grey2(context),
               fontSize: 20,
