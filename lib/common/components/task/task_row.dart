@@ -298,7 +298,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                             },
                             child: SizedBox(
                               width: 48,
-                              height: 80,
+                              height: (widget.task.title?.length ?? 0) > 40 ? 80 : 40,
                               child: Row(
                                 children: [
                                   DotPrefix(task: widget.task),
@@ -368,7 +368,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                         return Opacity(
                           opacity: _fadeOutAnimation.value,
                           child: Container(
-                              constraints: const BoxConstraints(minHeight: 80),
+                              constraints: BoxConstraints(
+                                minHeight: (widget.task.title?.length ?? 0) > 40 ? 80 : 40,
+                              ),
                               color: Theme.of(context).scaffoldBackgroundColor),
                         );
                       },
