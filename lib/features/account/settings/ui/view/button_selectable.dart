@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/features/account/settings/ui/view/leading_icon.dart';
 
 class ButtonSelectable extends StatefulWidget {
   final String title;
@@ -31,7 +32,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
   @override
   void initState() {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 100),
       upperBound: 0.5,
       vsync: this,
     );
@@ -87,7 +88,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                       color: widget.selected ? ColorsExt.grey5(context) : ColorsExt.grey7(context),
                       child: Row(
                         children: [
-                          _buildLeadingIcon(),
+                          LeadingIcon(leading: widget.leading),
                           Expanded(
                             child: Text(
                               widget.title,
@@ -97,17 +98,15 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                               ),
                             ),
                           ),
-                          Builder(builder: (context) {
-                            if (widget.trailing == null) {
-                              return const SizedBox();
-                            }
-
-                            return Row(
+                          Visibility(
+                            visible: widget.trailing != null,
+                            replacement: const SizedBox(),
+                            child: Row(
                               children: [
                                 widget.trailing!,
                               ],
-                            );
-                          }),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -116,19 +115,6 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
               ),
             );
           }),
-    );
-  }
-
-  Widget _buildLeadingIcon() {
-    if (widget.leading == null) {
-      return const SizedBox();
-    }
-
-    return Row(
-      children: [
-        SizedBox(width: 26, child: widget.leading!),
-        const SizedBox(width: 10.5),
-      ],
     );
   }
 }
