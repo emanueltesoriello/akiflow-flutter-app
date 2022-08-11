@@ -477,11 +477,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(updatedTask: updated));
 
-    if (chrono != null && chrono.isNotEmpty) {
-      _planWithChrono(chrono.first);
-    } else {
-      planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
-    }
+    // if (chrono != null && chrono.isNotEmpty) {
+    //   _planWithChrono(chrono.first);
+    // } else {
+    //   planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
+    // }
   }
 
   void _planWithChrono(ChronoModel chrono) {
