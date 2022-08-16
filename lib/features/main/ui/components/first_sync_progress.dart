@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class FirstSyncProgress extends StatelessWidget {
   const FirstSyncProgress({

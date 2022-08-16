@@ -4,8 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:models/label/label.dart';
 
-import '../../../../components/base/app_bar.dart';
-import '../../../../components/task/task_list_menu.dart';
+import '../../../../common/components/base/app_bar.dart';
+import '../../../../common/components/task/task_list_menu.dart';
 import '../../../label/cubit/labels_cubit.dart';
 import '../../../label/ui/label_appbar.dart';
 import '../../../today/ui/today_appbar.dart';

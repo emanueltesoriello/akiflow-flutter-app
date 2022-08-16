@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/components/task/task_row.dart';
+import 'package:mobile/common/components/task/task_row.dart';
 import 'package:models/task/task.dart';
 
 class TaskRowFake extends TaskRow {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/components/base/scroll_chip.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/integrations/gmail.dart';
 
 class GmailActionDialog extends StatelessWidget {
@@ -20,16 +20,14 @@ class GmailActionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-        ),
+      child: Material(
+        color: Colors.transparent,
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Container(
+          child: Material(
             color: Theme.of(context).backgroundColor,
             child: ListView(
               shrinkWrap: true,

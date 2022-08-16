@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/bordered_input_view.dart';
-import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/components/base/bordered_input_view.dart';
+import 'package:mobile/common/components/base/scroll_chip.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/label/label.dart';
 
 /// Return new [Label] as the folder created
@@ -33,10 +33,8 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
       color: Colors.transparent,
       child: Wrap(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
+          Material(
+            color: Colors.transparent,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16.0),

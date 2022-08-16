@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/base/scroll_chip.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/components/base/scroll_chip.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/label/label.dart';
 
 /// Return new [Label] as the folder selected
@@ -28,7 +28,7 @@ class FolderModal extends StatelessWidget {
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Container(
+          child: Material(
             color: Theme.of(context).backgroundColor,
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -43,7 +43,7 @@ class FolderModal extends StatelessWidget {
                   itemCount: folders.length + 1,
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      return Container(
+                      return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
                           t.label.folder,

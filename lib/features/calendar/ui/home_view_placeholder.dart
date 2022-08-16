@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/style/sizes.dart';
+import 'package:mobile/common/style/sizes.dart';
 
-import '../../../style/colors.dart';
+import '../../../common/style/colors.dart';
 import '../../main/cubit/main_cubit.dart';
 
 class HomeViewPlaceholder extends StatelessWidget {

@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import '../../../../style/colors.dart';
-import '../../../settings/ui/settings_modal.dart';
+import '../../../../common/style/colors.dart';
+import '../../../account/settings/ui/settings_modal.dart';
 import '../../cubit/main_cubit.dart';
 
 class NavItem extends StatelessWidget {
@@ -49,7 +49,7 @@ class NavItem extends StatelessWidget {
             );
           }
         },
-        child: Container(
+        child: Material(
           color: ColorsExt.background(context),
           child: Stack(
             alignment: Alignment.center,

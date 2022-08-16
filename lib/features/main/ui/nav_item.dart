@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/settings/ui/settings_modal.dart';
+import 'package:mobile/features/account/settings/ui/settings_modal.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class NavItem extends StatelessWidget {
@@ -47,14 +47,13 @@ class NavItem extends StatelessWidget {
               context.read<TodayCubit>().onDateSelected(DateTime.now());
             }
           } else {
-            print('hi');
             showCupertinoModalBottomSheet(
               context: context,
               builder: (context) => SettingsModal(topPadding: topPadding),
             );
           }
         },
-        child: Container(
+        child: Material(
           color: ColorsExt.background(context),
           child: Stack(
             alignment: Alignment.center,

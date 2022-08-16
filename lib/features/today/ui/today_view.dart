@@ -5,38 +5,29 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/components/task/task_list.dart';
+import 'package:mobile/common/components/task/task_list.dart';
 import 'package:mobile/features/main/ui/first_sync_progress.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/features/today/ui/today_app_bar_calendar.dart';
 import 'package:mobile/features/today/ui/today_appbar.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/sizes.dart';
-import 'package:mobile/utils/panel.dart';
-import 'package:mobile/utils/task_extension.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/components/task/panel.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
 
 import 'today_header.dart';
 
-class TodayView extends StatelessWidget {
+class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const _View();
-  }
+  State<TodayView> createState() => _TodayViewState();
 }
 
-class _View extends StatefulWidget {
-  const _View({Key? key}) : super(key: key);
-
-  @override
-  State<_View> createState() => _ViewState();
-}
-
-class _ViewState extends State<_View> {
+class _TodayViewState extends State<TodayView> {
   StreamSubscription? streamSubscription;
   ScrollController scrollController = ScrollController();
   ValueNotifier<double> calendarOffsetNotifier = ValueNotifier<double>(200);
@@ -44,22 +35,11 @@ class _ViewState extends State<_View> {
 
   @override
   void initState() {
-    TasksCubit tasksCubit = context.read<TasksCubit>();
     TodayCubit todayCubit = context.read<TodayCubit>();
 
     if (streamSubscription != null) {
       streamSubscription!.cancel();
     }
-
-    streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        try {
-          scrollController.animateTo(scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-        } catch (_) {}
-      });
-    });
-
     todayCubit.panelStateStream.listen((PanelState panelState) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         switch (panelState) {
@@ -141,9 +121,9 @@ class _ViewState extends State<_View> {
           onPanelOpened: () {
             context.read<TodayCubit>().panelOpened();
           },
-          collapsed: Container(
+          collapsed: const Material(
             color: Colors.white,
-            child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+            child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
           ),
           body: Container(
             margin: const EdgeInsets.only(top: todayViewTopMargin),

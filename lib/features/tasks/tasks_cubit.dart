@@ -5,26 +5,25 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/api/integrations/gmail_api.dart';
-import 'package:mobile/components/task/task_list.dart';
+import 'package:mobile/core/api/integrations/gmail_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/edit_task/cubit/doc_action.dart';
-import 'package:mobile/features/edit_task/ui/change_priority_modal.dart';
-import 'package:mobile/features/integrations/cubit/gmail_mark_as_done_type.dart';
+import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/tasks/edit_task/cubit/doc_action.dart';
+import 'package:mobile/features/tasks/edit_task/ui/change_priority_modal.dart';
+import 'package:mobile/features/account/integrations/cubit/gmail_mark_as_done_type.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/repository/accounts_repository.dart';
-import 'package:mobile/repository/docs_repository.dart';
-import 'package:mobile/repository/tasks_repository.dart';
-import 'package:mobile/services/analytics_service.dart';
-import 'package:mobile/services/sentry_service.dart';
-import 'package:mobile/services/sync_controller_service.dart';
-import 'package:mobile/utils/task_extension.dart';
-import 'package:mobile/utils/tz_utils.dart';
+import 'package:mobile/core/repository/accounts_repository.dart';
+import 'package:mobile/core/repository/docs_repository.dart';
+import 'package:mobile/core/repository/tasks_repository.dart';
+import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/doc/doc.dart';
@@ -34,6 +33,8 @@ import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../common/components/task/task_list.dart';
 
 part 'tasks_state.dart';
 
@@ -76,9 +77,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         emit(state.copyWith(loading: false));
       }
 
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
-      });
+      _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
     });
   }
 

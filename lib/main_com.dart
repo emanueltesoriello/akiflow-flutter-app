@@ -9,32 +9,32 @@ import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/auth/ui/auth_page.dart';
+import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/features/account/auth/ui/auth_page.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';
-import 'package:mobile/features/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/integrations/cubit/integrations_cubit.dart';
+import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
+import 'package:mobile/features/account/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/features/onboarding/cubit/onboarding_cubit.dart';
 import 'package:mobile/features/push/cubit/push_cubit.dart';
-import 'package:mobile/features/settings/cubit/settings_cubit.dart';
+import 'package:mobile/features/account/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/services/analytics_service.dart';
-import 'package:mobile/services/database_service.dart';
-import 'package:mobile/services/sentry_service.dart';
-import 'package:mobile/style/colors.dart';
-import 'package:mobile/style/theme.dart';
+import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/theme.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'features/auth/ui/trial_expired_page.dart';
-import 'services/focus_detector_service.dart';
+import 'features/account/auth/ui/trial_expired_page.dart';
+import 'core/services/focus_detector_service.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -242,7 +242,7 @@ class _Home extends StatelessWidget {
                           state.action.dismiss!();
                         },
                       )
-                    : Container(),
+                    : const SizedBox(),
                 TextButton(
                   child: Text(state.action.confirmTitle ?? t.ok),
                   onPressed: () {
@@ -266,20 +266,6 @@ class _Home extends StatelessWidget {
           }
         },
       ),
-      // TODO fix expiry page after login and on app restart before
-      // child: Builder(
-      //   builder: (context) {
-      //     AuthCubit bloc = context.watch<AuthCubit>();
-
-      //     if (bloc.state.user != null && bloc.state.hasValidPlan) {
-      //       return const MainPage();
-      //     } else if (bloc.state.user != null && bloc.state.hasValidPlan == false) {
-      //       return const TrialExpiredPage();
-      //     } else {
-      //       return const AuthPage();
-      //     }
-      //   },
-      // ),
     );
   }
 }
