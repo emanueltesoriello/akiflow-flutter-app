@@ -11,6 +11,7 @@ import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/updates/ui/navigator/updates_page_navigator.dart';
 import 'package:models/task/task.dart';
 
 import '../../../common/components/base/app_bar.dart';
@@ -60,7 +61,6 @@ class _ViewState extends State<_View> {
       builder: (context, tasksState) {
         return Scaffold(
           appBar: AppBarComp(
-            
             title: t.bottomBar.inbox,
             leading: SvgPicture.asset(
               "assets/images/icons/_common/tray.svg",
@@ -112,7 +112,30 @@ class _ViewState extends State<_View> {
                         showLabel: true,
                         showPlanInfo: false,
                         header: () {
-                          if (!state.showInboxNotice) {
+                          return InkWell(
+                            onTap: () {
+                              print('Frankstain test navigation to a new feature');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) => UpdatesPageNavigator(
+                                    onMainPop: () => Navigator.pop(context),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                              height: 50,
+                              color: Colors.blue,
+                              child: const Center(
+                                  child: Text(
+                                'Press me to see a magic.',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                            ),
+                          );
+                          /*if (!state.showInboxNotice) {
                             return null;
                           }
 
@@ -129,7 +152,7 @@ class _ViewState extends State<_View> {
                                 },
                               ),
                             ),
-                          );
+                          );*/
                         }(),
                       );
                     },

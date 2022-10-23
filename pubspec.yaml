@@ -16,7 +16,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_quill: ^5.0.3
-  flutter_rounded_date_picker: ^3.0.1
+  flutter_rounded_date_picker: ^3.0.2
   flutter_segment: ^3.9.0
   flutter_slidable: ^1.2.1
   flutter_svg: ^1.1.1+1
@@ -35,7 +35,7 @@ dependencies:
     path: ./packages/akiflow_oauth
   package_info_plus: ^1.4.2
   rrule: ^0.2.8
-  sentry_flutter: ^6.5.1
+  sentry_flutter: ^6.13.1
   shared_preferences: ^2.0.13
   sqflite: ^2.0.2
   table_calendar: ^3.0.5
@@ -46,6 +46,8 @@ dependencies:
   visibility_detector: ^0.3.3
   webview_flutter: ^2.0.13
   flutter_appauth: ^4.2.0
+  dio: ^4.0.6
+  provider: ^6.0.3
 
 dev_dependencies:
   flutter_launcher_icons_maker: ^0.10.1
