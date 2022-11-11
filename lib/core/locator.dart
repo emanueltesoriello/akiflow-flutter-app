@@ -28,6 +28,7 @@ import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/push_notification_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/src/base/ui/cubit/base_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/doc/doc.dart';
@@ -86,6 +87,7 @@ void setupLocator({
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   PushCubit pushCubit = PushCubit();
   AuthCubit authCubit = AuthCubit(syncCubit, pushCubit);
+  BaseCubit exampleCubit = BaseCubit();
 
   tasksCubit.attachAuthCubit(authCubit);
   tasksCubit.attachTodayCubit(todayCubit);
@@ -96,4 +98,5 @@ void setupLocator({
   locator.registerSingleton<SyncCubit>(syncCubit);
   locator.registerSingleton<PushCubit>(pushCubit);
   locator.registerSingleton<AuthCubit>(authCubit);
+  locator.registerSingleton<BaseCubit>(exampleCubit);
 }
