@@ -4,11 +4,13 @@ class AuthCubitState extends Equatable {
   final bool loading;
   final bool hasValidPlan;
   final User? user;
+  final bool authenticated;
 
   const AuthCubitState({
     this.loading = false,
     this.hasValidPlan = true,
     this.user,
+    this.authenticated = false,
   });
 
   AuthCubitState copyWith({
@@ -18,12 +20,12 @@ class AuthCubitState extends Equatable {
     Nullable<User?>? user,
   }) {
     return AuthCubitState(
-      loading: loading ?? this.loading,
-      hasValidPlan: hasValidPlan ?? this.hasValidPlan,
-      user: user != null ? user.value : this.user,
-    );
+        loading: loading ?? this.loading,
+        hasValidPlan: hasValidPlan ?? this.hasValidPlan,
+        user: user != null ? user.value : this.user,
+        authenticated: authenticated ?? this.authenticated);
   }
 
   @override
-  List<Object?> get props => [loading, hasValidPlan, user];
+  List<Object?> get props => [loading, hasValidPlan, user, authenticated];
 }

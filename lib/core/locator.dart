@@ -87,7 +87,7 @@ void setupLocator({
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   PushCubit pushCubit = PushCubit();
   AuthCubit authCubit = AuthCubit(syncCubit, pushCubit);
-  BaseCubit exampleCubit = BaseCubit();
+  //BaseCubit exampleCubit = BaseCubit();
 
   tasksCubit.attachAuthCubit(authCubit);
   tasksCubit.attachTodayCubit(todayCubit);
@@ -98,5 +98,5 @@ void setupLocator({
   locator.registerSingleton<SyncCubit>(syncCubit);
   locator.registerSingleton<PushCubit>(pushCubit);
   locator.registerSingleton<AuthCubit>(authCubit);
-  locator.registerSingleton<BaseCubit>(exampleCubit);
+  //locator.registerSingleton<BaseCubit>(exampleCubit);
 }

@@ -10,6 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 part 'base_state.dart';
 
+// NOT USED
 class BaseCubit extends Cubit<BaseCubitState> {
   /*ExampleCubit(super.initialState) : super() {
     initFunc();
@@ -22,6 +23,7 @@ class BaseCubit extends Cubit<BaseCubitState> {
   // ************ INIT FUNCTIONS ************
   // ****************************************
   init() async {
+    AuthCubit auth = locator<AuthCubit>();
     /* bool userLogged = false;
     bool dialogShown = false;
 
@@ -32,15 +34,19 @@ class BaseCubit extends Cubit<BaseCubitState> {
     if (userLogged) {
       _identifyAnalytics(locator<PreferencesRepository>().user!);
     }*/
-    emit(state.copyWith(hasValidPlan: true));
+    //emit(state.copyWith(hasValidPlan: true));
 
     /*Timer(Duration(seconds: 1), () {
       emit(state.copyWith(hasValidPlan: false));
     });*/
     // notifyListeners();
     // hasValidPlan =
-    locator<AuthCubit>().stream.listen((authState) => emit(state.copyWith(hasValidPlan: authState.hasValidPlan)));
-    locator<AuthCubit>().stream.listen((authState) => emit(state.copyWith(userLogged: authState.user != null)));
+    emit(state.copyWith(hasValidPlan: auth.state.hasValidPlan));
+
+    /* auth.stream.listen((authState) {
+      emit(state.copyWith(hasValidPlan: authState.hasValidPlan));
+    });
+    auth.stream.listen((authState) => emit(state.copyWith(userLogged: authState.user != null)));*/
     //locator<DialogCubit>().stream.listen((state) => dialogShown = state is DialogShowMessage);
   }
 

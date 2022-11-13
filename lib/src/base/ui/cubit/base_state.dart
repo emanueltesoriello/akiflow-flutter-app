@@ -1,5 +1,6 @@
 part of 'base_cubit.dart';
 
+// NOT USED
 class BaseCubitState extends Equatable {
   final bool dialogShown;
   final bool userLogged;

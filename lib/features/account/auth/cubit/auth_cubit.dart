@@ -80,7 +80,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
   void loginClick(String? authorizationCode, String? codeVerifier) async {
     AnalyticsService.track("Login started");
 
-
     if (authorizationCode != null) {
       User? user = await _authApi.auth(code: authorizationCode, codeVerifier: codeVerifier!);
       if (user != null) {
@@ -130,7 +129,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     _databaseService.delete();
 
-    emit(state.copyWith(user: Nullable(null)));
+    emit(state.copyWith(user: Nullable(null), authenticated: false));
 
     await _pushCubit.logout();
 

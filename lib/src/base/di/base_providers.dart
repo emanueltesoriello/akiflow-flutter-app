@@ -66,6 +66,6 @@ List<BlocProvider> baseProviders = [
   ),
   BlocProvider<BaseCubit>(
     lazy: false,
-    create: (BuildContext context) => locator<BaseCubit>(),
+    create: (BuildContext context) => BaseCubit(),
   ),
 ];

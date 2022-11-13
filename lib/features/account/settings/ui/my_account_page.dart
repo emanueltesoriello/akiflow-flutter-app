@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/components/base/app_bar.dart';
 import 'package:mobile/common/components/base/button_list.dart';
+import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/account/auth/ui/auth_page.dart';
 import 'package:mobile/common/style/colors.dart';
@@ -124,9 +125,19 @@ class MyAccountPage extends StatelessWidget {
                     position: ButtonListPosition.single,
                     onPressed: () {
                       context.read<AuthCubit>().logout();
-
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => const AuthPage()), (Route<dynamic> route) => false);
+                      try {
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(builder: (context) => const AuthPage()));
+                      } catch (e) {
+                        print(e);
+                      }
+                      /*context.read<AuthCubit>().logout();
+                      try {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const AuthPage()), (Route<dynamic> route) => false);
+                      } catch (e) {
+                        print(e); 
+                      }*/
                     },
                   ),
                   const SizedBox(height: 32),
