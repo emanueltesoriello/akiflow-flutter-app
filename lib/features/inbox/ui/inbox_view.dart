@@ -11,7 +11,6 @@ import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/updates/ui/navigator/updates_page_navigator.dart';
 import 'package:models/task/task.dart';
 
 import '../../../common/components/base/app_bar.dart';
