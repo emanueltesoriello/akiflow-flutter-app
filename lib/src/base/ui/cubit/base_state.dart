@@ -1,4 +1,4 @@
-part of 'base_cubit.dart';
+/*part of 'base_cubit.dart';
 
 // NOT USED
 class BaseCubitState extends Equatable {
@@ -31,3 +31,4 @@ class BaseCubitState extends Equatable {
   @override
   List<Object?> get props => [dialogShown, userLogged, hasValidPlan, isLoading];
 }
+*/

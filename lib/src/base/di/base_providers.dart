@@ -13,7 +13,6 @@ import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/base_cubit.dart';
 
 List<BlocProvider> baseProviders = [
   BlocProvider<DialogCubit>(
@@ -63,9 +62,5 @@ List<BlocProvider> baseProviders = [
   BlocProvider<OnboardingCubit>(
     lazy: false,
     create: (BuildContext context) => OnboardingCubit(),
-  ),
-  BlocProvider<BaseCubit>(
-    lazy: false,
-    create: (BuildContext context) => BaseCubit(),
   ),
 ];

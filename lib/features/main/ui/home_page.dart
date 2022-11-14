@@ -31,14 +31,14 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
 
   @override
