@@ -7,11 +7,11 @@ import 'package:mobile/common/components/base/button_list.dart';
 import 'package:mobile/common/components/base/notification_count_icon.dart';
 import 'package:mobile/features/account/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/account/integrations/ui/integrations_page.dart';
-import 'package:mobile/features/account/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/account/settings/ui/about_page.dart';
-import 'package:mobile/features/account/settings/ui/my_account_page.dart';
-import 'package:mobile/features/account/settings/ui/view/settings_header_text.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
+import 'package:mobile/src/settings/ui/pages/about_page.dart';
+import 'package:mobile/src/settings/ui/pages/my_account_page.dart';
+import 'package:mobile/src/settings/ui/widgets/settings_header_text.dart';
 import 'package:models/account/account.dart';
 import 'package:url_launcher/url_launcher.dart';
 

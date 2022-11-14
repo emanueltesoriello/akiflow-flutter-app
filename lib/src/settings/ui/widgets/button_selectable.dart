@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/features/account/settings/ui/view/leading_icon.dart';
+import 'package:mobile/src/settings/ui/widgets/leading_icon.dart';
 
 class ButtonSelectable extends StatefulWidget {
   final String title;

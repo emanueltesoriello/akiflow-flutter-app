@@ -6,9 +6,9 @@ import 'package:mobile/common/components/base/app_bar.dart';
 import 'package:mobile/common/components/base/button_list.dart';
 import 'package:mobile/common/components/base/separator.dart';
 import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
-import 'package:mobile/features/account/settings/cubit/settings_cubit.dart';
-import 'package:mobile/features/account/settings/ui/licences_page.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
+import 'package:mobile/src/settings/ui/pages/licences_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {

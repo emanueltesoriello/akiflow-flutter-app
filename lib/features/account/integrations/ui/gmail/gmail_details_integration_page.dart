@@ -11,11 +11,11 @@ import 'package:mobile/features/account/integrations/ui/gmail/gmail_import_task_
 import 'package:mobile/features/account/integrations/ui/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/features/account/integrations/ui/integration_list_item.dart';
 import 'package:mobile/features/account/integrations/ui/integration_setting.dart';
-import 'package:mobile/features/account/settings/ui/view/settings_header_text.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/settings/ui/widgets/settings_header_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/user_ext.dart';

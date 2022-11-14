@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/features/onboarding/ui/triangle_painter.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/onboarding/ui/widgets/triangle_painter.dart';
 
 class BoxWithInfo extends StatelessWidget {
   final String info;

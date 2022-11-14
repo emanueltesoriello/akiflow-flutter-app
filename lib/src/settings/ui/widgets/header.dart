@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
-import 'package:mobile/features/account/settings/ui/search_modal.dart';
-import 'package:mobile/features/account/settings/ui/settings_page.dart';
+import 'package:mobile/src/settings/ui/pages/settings_page.dart';
+import 'package:mobile/src/settings/ui/widgets/search_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 

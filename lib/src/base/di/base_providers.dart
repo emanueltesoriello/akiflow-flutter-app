@@ -3,16 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/account/integrations/cubit/integrations_cubit.dart';
-import 'package:mobile/features/account/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/onboarding/cubit/onboarding_cubit.dart';
 import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/features/today/cubit/today_cubit.dart';
+import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
+import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
 
 List<BlocProvider> baseProviders = [
   BlocProvider<DialogCubit>(
