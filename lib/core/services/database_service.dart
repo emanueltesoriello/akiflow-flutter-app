@@ -24,7 +24,7 @@ class DatabaseService {
 
     database = await sql.openDatabase(
       _databaseName,
-      version: 2,
+      version: 3,
       onCreate: (db, version) {
         print('Creating database version $version');
 
@@ -48,6 +48,9 @@ class DatabaseService {
         print('onUpgrade: $oldVersion -> $newVersion');
 
         var batch = db.batch();
+        if (oldVersion < 3) {
+          batch.execute('ALTER TABLE tasks ADD COLUMN trashed_at TEXT');
+        }
 
         if (oldVersion < 2) {
           addTasksDocField(batch);
@@ -382,6 +385,7 @@ CREATE TABLE IF NOT EXISTS tasks(
     print('processing migration_1_addTasksDocField...');
 
     batch.execute('ALTER TABLE tasks ADD COLUMN connector_id VARCHAR(255)');
+
     batch.execute('ALTER TABLE tasks ADD COLUMN origin_account_id VARCHAR(255)');
     batch.execute('ALTER TABLE tasks ADD COLUMN akiflow_account_id VARCHAR(255)');
     batch.execute('ALTER TABLE tasks ADD COLUMN doc TEXT');

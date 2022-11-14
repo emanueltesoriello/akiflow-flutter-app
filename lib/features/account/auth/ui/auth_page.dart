@@ -8,10 +8,7 @@ import 'package:mobile/common/components/base/action_button.dart';
 import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
 import 'package:mobile/features/main/ui/main_page.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:akiflow_oauth/oauth_webauth.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../core/config.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -31,7 +28,7 @@ class AuthPage extends StatelessWidget {
           }
         },
         listener: (context, state) {
-          if (state.user != null && state.hasValidPlan == true) {
+          if (state.user != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -81,7 +78,7 @@ class AuthPage extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: SvgPicture.asset(
-                        "assets/images/akiflow/planner-empty-engage.svg",
+                        Assets.images.akiflow.plannerEmptyEngageSVG,
                         height: 128,
                         width: 128,
                       ),
@@ -97,19 +94,7 @@ class AuthPage extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      OAuthWebScreen.start(
-                          context: context,
-                          authorizationEndpointUrl: "${Config.oauthEndpoint}/oauth/authorize",
-                          tokenEndpointUrl: "${Config.oauthEndpoint}/oauth/authorize",
-                          clientId: Config.oauthClientId,
-                          redirectUrl: Config.oauthRedirectUrl,
-                          refreshBtnVisible: false,
-                          clearCacheBtnVisible: false,
-                          onSuccess: (credentials) {
-                            context.read<AuthCubit>().loginClick(credentials.key, credentials.value);
-                          },
-                          onError: (error) {},
-                          onCancel: () {});
+                      context.read<AuthCubit>().loginClick();
                     },
                   ),
                   const SizedBox(height: 32),

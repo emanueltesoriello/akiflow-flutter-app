@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/components/base/app_bar.dart';
 import 'package:mobile/common/components/base/button_list.dart';
 import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
@@ -44,7 +45,7 @@ class MyAccountPage extends StatelessWidget {
                     child: Row(
                       children: [
                         SvgPicture.asset(
-                          "assets/images/logo/logo_outline.svg",
+                          Assets.images.logo.logoOutlineSVG,
                           width: 42,
                           height: 42,
                         ),
@@ -87,9 +88,9 @@ class MyAccountPage extends StatelessWidget {
                   ButtonList(
                     title: t.settings.myAccount.manageAccount,
                     position: ButtonListPosition.single,
-                    leading: "assets/images/icons/_common/person_crop_circle.svg",
+                    leading: Assets.images.icons.common.personCropCircleSVG,
                     trailingWidget: SvgPicture.asset(
-                      "assets/images/icons/_common/arrow_up_right_square.svg",
+                      Assets.images.icons.common.arrowUpRightSquareSVG,
                       width: 22,
                       height: 22,
                     ),
@@ -99,25 +100,25 @@ class MyAccountPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    t.settings.myAccount.manageSubscriptionAndBillingPreferences.toUpperCase(),
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                  ),
-                  const SizedBox(height: 4),
-                  ButtonList(
-                    title: t.settings.myAccount.manageAccount,
-                    position: ButtonListPosition.single,
-                    leading: "assets/images/icons/_common/money_dollar_circle.svg",
-                    trailingWidget: SvgPicture.asset(
-                      "assets/images/icons/_common/arrow_up_right_square.svg",
-                      width: 22,
-                      height: 22,
-                    ),
-                    onPressed: () {
-                      launchUrl(Uri.parse("https://app.akiflow.com/en/checkout/billing"),
-                          mode: LaunchMode.externalApplication);
-                    },
-                  ),
+                  // Text(
+                  //   t.settings.myAccount.manageSubscriptionAndBillingPreferences.toUpperCase(),
+                  //   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                  // ),
+                  // const SizedBox(height: 4),
+                  // ButtonList(
+                  //   title: t.settings.myAccount.manageAccount,
+                  //   position: ButtonListPosition.single,
+                  //   leading: "assets/images/icons/_common/money_dollar_circle.svg",
+                  //   trailingWidget: SvgPicture.asset(
+                  //     "assets/images/icons/_common/arrow_up_right_square.svg",
+                  //     width: 22,
+                  //     height: 22,
+                  //   ),
+                  //   onPressed: () {
+                  //     launchUrl(Uri.parse("https://app.akiflow.com/en/checkout/billing"),
+                  //         mode: LaunchMode.externalApplication);
+                  //   },
+                  // ),
                   const Spacer(),
                   ButtonList(
                     title: t.settings.myAccount.logout,

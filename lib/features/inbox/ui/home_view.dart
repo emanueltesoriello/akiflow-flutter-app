@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/features/main/cubit/main_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 
@@ -12,12 +13,12 @@ class HomeViewPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
+    return  Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SvgPicture.asset(
-            "assets/images/akiflow/inbox-nice.svg",
+            Assets.images.akiflow.inboxNiceSVG,
             width: 80.81,
             height: 97.72,
           ),
@@ -65,7 +66,7 @@ class HomeViewPlaceholder extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      
     );
   }
 }

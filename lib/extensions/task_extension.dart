@@ -36,7 +36,7 @@ enum TaskStatusType {
   deleted, // deletedAt !== null
   someday, // has NOT `date` or `dateTime` and user has set it as `someday`
   hidden, // the user has set it as `hidden` (all other fields dont' matter)
-  permanentlyDeleted, // same as above
+  trashed, // same as above
 }
 
 extension TaskStatusTypeExt on TaskStatusType {
@@ -58,7 +58,7 @@ extension TaskStatusTypeExt on TaskStatusType {
         return 7;
       case TaskStatusType.hidden:
         return 8;
-      case TaskStatusType.permanentlyDeleted:
+      case TaskStatusType.trashed:
         return 9;
     }
   }
@@ -82,7 +82,7 @@ extension TaskStatusTypeExt on TaskStatusType {
       case 8:
         return TaskStatusType.hidden;
       case 9:
-        return TaskStatusType.permanentlyDeleted;
+        return TaskStatusType.trashed;
       default:
         return null;
     }
@@ -342,7 +342,7 @@ extension TaskExt on Task {
       case 8:
         return TaskStatusType.hidden;
       case 9:
-        return TaskStatusType.permanentlyDeleted;
+        return TaskStatusType.trashed;
       default:
         return null;
     }

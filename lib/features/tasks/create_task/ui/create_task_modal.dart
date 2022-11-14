@@ -44,17 +44,18 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     return Material(
       color: Theme.of(context).backgroundColor,
       child: ListView(
-        controller: parentScrollController,
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
-            ),
-            child: Container(
+          controller: parentScrollController,
+          physics: const ClampingScrollPhysics(),
+          shrinkWrap: true,
+          children: [
+            Container(
               color: Theme.of(context).backgroundColor,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+              ),
               margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: SafeArea(
                 child: Column(
@@ -84,9 +85,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               ),
                               SendTaskButton(onTap: () {
                                 HapticFeedback.mediumImpact();
-                                context
-                                    .read<EditTaskCubit>()
-                                    .create();
+                                context.read<EditTaskCubit>().create();
                                 Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
                                 Navigator.pop(context, taskUpdated);
                               }),
@@ -100,9 +99,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ]),
     );
   }
 }

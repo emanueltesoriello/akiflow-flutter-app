@@ -182,11 +182,11 @@ class Application extends StatelessWidget {
                 theme: lightTheme,
                 home: BlocListener<AuthCubit, AuthCubitState>(
                   listener: (context, state) {
-                    if (state.hasValidPlan == false) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const TrialExpiredPage(),
-                      ));
-                    }
+                    // if (state.hasValidPlan == false) {
+                    //   Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
+                    //     builder: (BuildContext context) => const TrialExpiredPage(),
+                    //   ));
+                    // }
                     if (state.user == null) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
                         builder: (BuildContext context) => const AuthPage(),

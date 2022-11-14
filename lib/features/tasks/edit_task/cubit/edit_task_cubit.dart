@@ -211,8 +211,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     DateTime now = DateTime.now();
 
     Task updated = task.copyWith(
-      status: Nullable(TaskStatusType.deleted.id),
-      deletedAt: TzUtils.toUtcStringIfNotNull(now),
+      status: Nullable(TaskStatusType.trashed.id),
+      trashedAt: TzUtils.toUtcStringIfNotNull(now),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
     );
 
@@ -365,7 +365,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       recurrenceTasksToUpdate.add(task.copyWith(
         recurrence: Nullable(null),
-        deletedAt: TzUtils.toUtcStringIfNotNull(now),
+        trashedAt: TzUtils.toUtcStringIfNotNull(now),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       ));
     }
@@ -434,7 +434,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           datetime: Nullable(task.datetime),
           status: Nullable(task.status),
           createdAt: (task.createdAt),
-          deletedAt: (task.deletedAt),
+          trashedAt: (task.trashedAt),
           globalCreatedAt: (task.globalCreatedAt),
           globalUpdatedAt: (task.globalUpdatedAt),
           readAt: (task.readAt),
