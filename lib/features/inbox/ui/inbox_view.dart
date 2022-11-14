@@ -112,33 +112,9 @@ class _ViewState extends State<_View> {
                         showLabel: true,
                         showPlanInfo: false,
                         header: () {
-                          return InkWell(
-                            onTap: () {
-                              print('Frankstain test navigation to a new feature');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) => UpdatesPageNavigator(
-                                    onMainPop: () => Navigator.pop(context),
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                              height: 50,
-                              color: Colors.blue,
-                              child: const Center(
-                                  child: Text(
-                                'Press me to see a magic.',
-                                style: TextStyle(color: Colors.white),
-                              )),
-                            ),
-                          );
-                          /*if (!state.showInboxNotice) {
+                          if (!state.showInboxNotice) {
                             return null;
                           }
-
                           return GestureDetector(
                             onLongPress: () {},
                             child: Padding(
@@ -152,7 +128,7 @@ class _ViewState extends State<_View> {
                                 },
                               ),
                             ),
-                          );*/
+                          );
                         }(),
                       );
                     },
