@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/components/base/app_bar.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/account/integrations/cubit/gmail_mark_as_done_type.dart';
 import 'package:mobile/features/account/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/account/integrations/ui/circle_account_picture.dart';

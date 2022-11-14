@@ -9,7 +9,7 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/exceptions/database_exception.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/account/integrations/cubit/gmail_mark_as_done_type.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';

@@ -5,7 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/components/base/app_bar.dart';
 import 'package:mobile/common/components/base/button_list.dart';
 import 'package:mobile/common/components/base/separator.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/account/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/account/settings/ui/licences_page.dart';
 import 'package:mobile/common/style/colors.dart';

@@ -8,7 +8,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/doc_action.dart';
 import 'package:mobile/features/tasks/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/features/account/integrations/cubit/gmail_mark_as_done_type.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/account/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/account/settings/cubit/settings_cubit.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';

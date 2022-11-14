@@ -5,7 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/components/base/scroll_chip.dart';
 import 'package:mobile/common/components/base/separator.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/tasks/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/extensions/user_ext.dart';

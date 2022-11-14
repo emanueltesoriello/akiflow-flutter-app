@@ -12,7 +12,7 @@ import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/intercom_service.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/components/base/action_button.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
+import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/account/auth/ui/auth_page.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -26,8 +26,8 @@ class TrialExpiredPage extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.center,
-                child:  SvgPicture.asset(
-                Assets.images.logo.logoOutlineSVG,
+                child: SvgPicture.asset(
+                  Assets.images.logo.logoOutlineSVG,
                   height: 56,
                   width: 56,
                 ),
