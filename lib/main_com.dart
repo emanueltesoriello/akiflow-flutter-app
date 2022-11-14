@@ -29,32 +29,36 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
   if (Config.development || SentryService.ignoreException(event.throwable)) {
     return null;
   }
-
   return event;
 }
 
-Future<void> mainCom() async {
+Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-
   DatabaseService databaseService = DatabaseService();
-
   await databaseService.open();
-
   setupLocator(preferences: preferences, databaseService: databaseService);
-
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
-
   print("environment: ${Config.development ? "dev" : "prod"}");
-
   await AnalyticsService.config();
-
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
   await Intercom.instance.initialize(Config.intercomCredential.appId,
       iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
+}
 
+_identifyAnalytics(User user) async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  String version = packageInfo.version;
+  String buildNumber = packageInfo.buildNumber;
+  await AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
+}
+
+Future<void> mainCom() async {
+  await initFunctions();
+  bool userLogged =
+      locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   await SentryFlutter.init(
     (options) {
       options.beforeSend = beforeSend;
@@ -63,15 +67,6 @@ Future<void> mainCom() async {
     },
     appRunner: () => runApp(Application(userLogged: userLogged)),
   );
-}
-
-_identifyAnalytics(User user) async {
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-  String version = packageInfo.version;
-  String buildNumber = packageInfo.buildNumber;
-
-  await AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
 }
 
 class Application extends StatelessWidget {

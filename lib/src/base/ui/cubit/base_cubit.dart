@@ -10,7 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 part 'base_state.dart';
 
-// NOT USED
+// NOT USED but useful example
 class BaseCubit extends Cubit<BaseCubitState> {
   /*ExampleCubit(super.initialState) : super() {
     initFunc();
