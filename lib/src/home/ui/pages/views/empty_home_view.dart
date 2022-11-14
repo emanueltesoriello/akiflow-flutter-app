@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 
-class HomeViewPlaceholder extends StatelessWidget {
-  const HomeViewPlaceholder({
+class EmptyHomeViewPlaceholder extends StatelessWidget {
+  const EmptyHomeViewPlaceholder({
     Key? key,
   }) : super(key: key);
 

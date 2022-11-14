@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 
-class FirstSyncProgress extends StatelessWidget {
-  const FirstSyncProgress({
+class FirstSyncProgressToday extends StatelessWidget {
+  const FirstSyncProgressToday({
     Key? key,
   }) : super(key: key);
 

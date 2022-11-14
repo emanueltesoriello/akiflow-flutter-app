@@ -4,12 +4,11 @@ import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/components/base/icon_badge.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
-import 'package:mobile/features/main/ui/nav_item.dart';
+import 'package:mobile/features/tasks/tasks_cubit.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-
-import '../../tasks/tasks_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/navbar/nav_item.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({

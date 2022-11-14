@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/task/task.dart';
-
-import '../../../common/style/colors.dart';
 
 class TodayHeader extends StatelessWidget {
   const TodayHeader(

@@ -6,6 +6,7 @@ import 'package:models/user.dart';
 
 part 'push_state.dart';
 
+//TODO evaluete if it's useful or not
 class PushCubit extends Cubit<PushCubitState> {
   // ignore: unused_field
   final PushNotificationService _pushNotificationService = locator<PushNotificationService>();

@@ -5,7 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/components/base/tagbox.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';

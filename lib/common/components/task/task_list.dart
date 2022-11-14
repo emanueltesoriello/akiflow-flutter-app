@@ -9,7 +9,7 @@ import 'package:mobile/common/components/task/task_row_drag_mode.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/tasks/edit_task/ui/actions/plan_modal.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';

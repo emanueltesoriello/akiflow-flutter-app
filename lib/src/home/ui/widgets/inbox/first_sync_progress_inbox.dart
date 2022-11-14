@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 
-class FirstSyncProgress extends StatelessWidget {
-  const FirstSyncProgress({
+class FirstSyncProgressInbox extends StatelessWidget {
+  const FirstSyncProgressInbox({
     Key? key,
   }) : super(key: key);
 

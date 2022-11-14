@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/features/account/auth/ui/auth_page.dart';
 import 'package:mobile/features/dialog/dialog_cubit.dart';
-import 'package:mobile/features/main/ui/home_page.dart';
+import 'package:mobile/src/home/ui/pages/home_page.dart';
 import 'package:mobile/src/base/ui/widgets/custom_alert_dialog.dart';
 
 class MainPage extends StatelessWidget {

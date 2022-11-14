@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/features/label/cubit/labels_cubit.dart';
+import 'package:mobile/features/label/ui/label_appbar.dart';
+import 'package:mobile/src/home/ui/widgets/today/today_appbar.dart';
 import 'package:models/label/label.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 
 import '../../../../common/components/base/app_bar.dart';
 import '../../../../common/components/task/task_list_menu.dart';
-import '../../../label/cubit/labels_cubit.dart';
-import '../../../label/ui/label_appbar.dart';
-import '../../../today/ui/today_appbar.dart';
-import '../../cubit/main_cubit.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppBar(

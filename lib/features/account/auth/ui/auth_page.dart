@@ -6,7 +6,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/components/base/action_button.dart';
 import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
-import 'package:mobile/features/main/ui/home_page.dart';
+import 'package:mobile/src/home/ui/pages/home_page.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:akiflow_oauth/oauth_webauth.dart';
 import 'package:url_launcher/url_launcher.dart';

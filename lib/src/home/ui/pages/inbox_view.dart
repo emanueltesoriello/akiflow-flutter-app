@@ -5,18 +5,18 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/common/components/base/app_bar.dart';
 import 'package:mobile/common/components/task/notice.dart';
 import 'package:mobile/common/components/task/task_list.dart';
-import 'package:mobile/features/inbox/cubit/inbox_view_cubit.dart';
+import 'package:mobile/common/components/task/task_list_menu.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/home/ui/cubit/inbox/inbox_view_cubit.dart';
+import 'package:mobile/src/home/ui/widgets/inbox/first_sync_progress_inbox.dart';
 import 'package:models/task/task.dart';
 
-import '../../../common/components/base/app_bar.dart';
-import '../../../common/components/task/task_list_menu.dart';
-import '../../main/ui/first_sync_progress.dart';
-import 'home_view.dart';
+import 'views/empty_home_view.dart';
 
 class InboxView extends StatelessWidget {
   const InboxView({Key? key}) : super(key: key);
@@ -93,7 +93,7 @@ class _ViewState extends State<_View> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.max,
                                     children: const [
-                                      HomeViewPlaceholder(),
+                                      EmptyHomeViewPlaceholder(),
                                     ],
                                   ),
                                 )
@@ -137,7 +137,7 @@ class _ViewState extends State<_View> {
               Builder(
                 builder: (context) {
                   if (tasksState.loading) {
-                    return const FirstSyncProgress();
+                    return const FirstSyncProgressInbox();
                   } else {
                     return const SizedBox();
                   }

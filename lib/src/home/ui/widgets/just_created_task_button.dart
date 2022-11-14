@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:models/task/task.dart';
 
 class JustCreatedTaskView extends StatelessWidget {

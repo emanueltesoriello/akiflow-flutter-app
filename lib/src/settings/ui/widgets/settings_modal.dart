@@ -10,7 +10,7 @@ import 'package:mobile/features/tasks/edit_task/ui/labels_list.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/create_edit_label_modal.dart';
 import 'package:mobile/features/label/ui/create_folder_modal.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';

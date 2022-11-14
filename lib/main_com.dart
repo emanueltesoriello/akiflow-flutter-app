@@ -9,7 +9,7 @@ import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/main/cubit/main_cubit.dart';
+import 'package:mobile/src/base/cubit/main/main_cubit.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
