@@ -22,6 +22,7 @@ import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/floating_button.dart';
 import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
+import 'package:mobile/src/home/ui/navigator/home_navigator.dart';
 import 'package:mobile/src/home/ui/pages/inbox_view.dart';
 import 'package:mobile/src/home/ui/pages/views/today_view.dart';
 import 'package:mobile/src/home/ui/widgets/just_created_task_button.dart';
@@ -153,8 +154,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _body(BuildContext context) {
-    int homeViewType = context.watch<MainCubit>().state.homeViewType.index;
-
     return Stack(
       children: [
         const InternalWebView(),
@@ -167,17 +166,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             topPadding: MediaQuery.of(context).padding.top,
           ),
           body: Builder(builder: (context) {
-            if (homeViewType < 4) {
-              return IndexedStack(
-                index: homeViewType,
-                children: const [
-                  InboxView(),
-                  TodayView(),
-                  CalendarView(),
-                ],
-              );
-            }
-            return const LabelView();
+            return const HomePageNavigator();
           }),
         ),
         BlocBuilder<TasksCubit, TasksCubitState>(
