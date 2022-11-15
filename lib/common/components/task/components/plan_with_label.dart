@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 
 import '../../../style/colors.dart';
-import '../../base/slidable_button_action.dart';
 
 class PlanWithLabel extends StatelessWidget {
   const PlanWithLabel({Key? key, required this.click}) : super(key: key);

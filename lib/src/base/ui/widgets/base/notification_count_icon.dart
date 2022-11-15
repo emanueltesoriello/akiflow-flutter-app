@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
-
-import '../../style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class NotifcationCountIcon extends StatelessWidget {
   final int count;

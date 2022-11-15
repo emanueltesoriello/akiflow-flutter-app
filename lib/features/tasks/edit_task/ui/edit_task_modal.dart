@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/common/components/base/scroll_chip.dart';
-import 'package:mobile/common/components/base/separator.dart';
 import 'package:mobile/features/tasks/create_task/ui/create_task_duration.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/ui/edit_task_bottom_actions.dart';
@@ -10,6 +8,8 @@ import 'package:mobile/features/tasks/edit_task/ui/edit_task_links.dart';
 import 'package:mobile/features/tasks/edit_task/ui/edit_task_row.dart';
 import 'package:mobile/features/tasks/edit_task/ui/edit_task_top_actions.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
+import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
+import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 
 class EditTaskModal extends StatefulWidget {
   const EditTaskModal({Key? key}) : super(key: key);

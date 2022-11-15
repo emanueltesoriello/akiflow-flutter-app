@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
-
-import '../../base/slidable_button_action.dart';
+import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 
 class DoneWithLabel extends StatelessWidget {
   const DoneWithLabel({Key? key, required this.click, required this.withLabel}) : super(key: key);
@@ -23,7 +22,6 @@ class DoneWithLabel extends StatelessWidget {
             size: 28,
             leftToRight: true,
             click: () {
-      
               click.call();
             },
           ),

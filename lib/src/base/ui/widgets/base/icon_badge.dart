@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import '../../style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class IconBadge extends StatelessWidget {
   final int count;

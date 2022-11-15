@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class DateDisplay extends StatelessWidget {
   const DateDisplay({

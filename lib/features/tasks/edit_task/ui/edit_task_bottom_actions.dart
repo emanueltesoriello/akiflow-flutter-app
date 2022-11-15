@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/common/components/base/popup_menu_item.dart';
-import 'package:mobile/common/components/base/tagbox.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/ui/actions/create_link_modal.dart';
 import 'package:mobile/features/tasks/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/tasks/edit_task/ui/change_priority_modal.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
+import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/task/task.dart';
 
@@ -159,7 +159,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             }),
           ]),
           Padding(
-            padding: const EdgeInsets.only(right:4.0),
+            padding: const EdgeInsets.only(right: 4.0),
             child: _menu(context),
           ),
         ],
@@ -174,7 +174,6 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
         icon: Container(
           height: 32,
           width: 32,
-
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(3),
             color: ColorsExt.grey6(context),

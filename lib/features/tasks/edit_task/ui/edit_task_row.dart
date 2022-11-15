@@ -7,12 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/common/components/base/tagbox.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/ui/actions/labels_modal.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/components/base/interactive_webview.dart';
+import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
+import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -86,7 +86,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:2.0),
+            padding: const EdgeInsets.only(top: 2.0),
             child: _checkbox(context),
           ),
           const SizedBox(width: 10),

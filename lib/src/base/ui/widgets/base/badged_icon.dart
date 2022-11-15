@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import '../../style/colors.dart';
+import 'package:mobile/common/style/colors.dart';
 
 class BadgedIcon extends StatelessWidget {
   final String icon;

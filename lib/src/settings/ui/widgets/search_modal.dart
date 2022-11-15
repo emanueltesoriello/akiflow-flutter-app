@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/common/components/base/bordered_input_view.dart';
-import 'package:mobile/common/components/base/scroll_chip.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
+import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 class SearchModal extends StatefulWidget {
   const SearchModal({Key? key}) : super(key: key);

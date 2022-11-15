@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
-import 'package:mobile/common/components/base/date_display.dart';
-import 'package:mobile/common/components/calendar/calendar_selected_day.dart';
-import 'package:mobile/common/components/calendar/calendar_today.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/date_extension.dart';
+import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:table_calendar/table_calendar.dart';
 

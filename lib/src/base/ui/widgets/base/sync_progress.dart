@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
 class SyncProgress extends StatefulWidget {
   const SyncProgress({Key? key}) : super(key: key);

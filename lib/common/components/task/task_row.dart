@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:mobile/common/components/base/slidable_button_action.dart';
 import 'package:mobile/common/components/task/checkbox_animated.dart';
 import 'package:mobile/common/components/task/components/done_with_label.dart';
 import 'package:mobile/common/components/task/components/plan_with_label.dart';
@@ -12,6 +11,7 @@ import 'package:mobile/common/components/task/task_info.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 import 'package:models/task/task.dart';
 
 import 'components/background_daily_goal.dart';

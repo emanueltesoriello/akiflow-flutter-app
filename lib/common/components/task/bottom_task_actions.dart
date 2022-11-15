@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/common/components/base/button_action.dart';
-import 'package:mobile/common/components/base/popup_menu_item.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
 import 'package:mobile/features/tasks/edit_task/ui/actions/deadline_modal.dart';
 import 'package:mobile/features/tasks/edit_task/ui/actions/labels_modal.dart';
@@ -15,6 +13,8 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/widgets/base/button_action.dart';
+import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 

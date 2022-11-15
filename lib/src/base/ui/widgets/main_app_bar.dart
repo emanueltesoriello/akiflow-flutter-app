@@ -5,10 +5,10 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/features/label/cubit/labels_cubit.dart';
 import 'package:mobile/features/label/ui/label_appbar.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/home/ui/widgets/today/today_appbar.dart';
 import 'package:models/label/label.dart';
 
-import '../../../../common/components/base/app_bar.dart';
 import '../../../../common/components/task/task_list_menu.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {

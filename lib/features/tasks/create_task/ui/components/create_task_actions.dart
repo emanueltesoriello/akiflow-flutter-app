@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
 import '../../../../../assets.dart';
-import '../../../../../common/components/base/tagbox.dart';
 import '../../../../../common/components/task/plan_for_action.dart';
 import '../../../../../common/style/colors.dart';
 import '../../../../../extensions/task_extension.dart';

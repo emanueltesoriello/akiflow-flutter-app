@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/common/components/base/scroll_chip.dart';
 import 'package:mobile/features/tasks/edit_task/ui/labels_list.dart';
+import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/label/label.dart';
 
 class LabelsModal extends StatefulWidget {

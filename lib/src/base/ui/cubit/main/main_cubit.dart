@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/user.dart';
 
 part 'main_state.dart';

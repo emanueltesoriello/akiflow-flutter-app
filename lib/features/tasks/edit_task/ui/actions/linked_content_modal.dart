@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/common/components/base/button_list.dart';
-import 'package:mobile/common/components/base/scroll_chip.dart';
 import 'package:mobile/features/tasks/edit_task/ui/integrations/asana.dart';
 import 'package:mobile/features/tasks/edit_task/ui/integrations/clickup.dart';
 import 'package:mobile/features/tasks/edit_task/ui/integrations/gmail.dart';
@@ -12,6 +10,8 @@ import 'package:mobile/features/tasks/edit_task/ui/integrations/todoist.dart';
 import 'package:mobile/features/tasks/edit_task/ui/integrations/trello.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
+import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
