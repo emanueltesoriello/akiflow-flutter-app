@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/features/account/auth/ui/trial_expired_page.dart';
-import 'package:mobile/features/account/auth/ui/auth_page.dart';
+import 'package:mobile/src/base/ui/pages/trial_expired_page.dart';
+import 'package:mobile/src/base/ui/pages/auth_page.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/pages/main_page.dart';
 
