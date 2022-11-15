@@ -769,19 +769,15 @@ extension TaskExt on Task {
   Future<void> openLinkedContentUrl([Doc? doc]) async {
     String? localUrl = doc?.localUrl ?? doc?.content?["local_url"] ?? content?["local_url"];
 
-    if (localUrl == null || localUrl.isEmpty) {
-      localUrl = doc?.url ?? '';
-    }
-
-    Uri uri = Uri.parse(localUrl);
+    Uri uri = Uri.parse(localUrl ?? '');
 
     bool opened;
 
-    // if (uri.host == "mail.google.com") {
-    //   opened = await launchUrl(Uri.parse("googlegmail://"), mode: LaunchMode.externalApplication);
-    // } else {
-    opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    // }
+    if (doc is SlackDoc && doc.localUrl != null) {
+      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
 
     if (opened == false) {
       launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication);

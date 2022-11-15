@@ -106,9 +106,7 @@ class Label extends Equatable implements Base {
       system: system ?? this.system,
       type: type ?? this.type,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null
-          ? this.remoteUpdatedAt
-          : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
     );
   }
 
@@ -161,5 +159,12 @@ class Label extends Equatable implements Base {
       type,
       remoteUpdatedAt,
     ];
+  }
+
+  bool get isFolder {
+    return type == "folder";
+  }
+   bool get isSection {
+    return type == "section";
   }
 }

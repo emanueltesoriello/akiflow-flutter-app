@@ -29,6 +29,7 @@ class UndoBottomView extends StatelessWidget {
                   height: 51,
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                   width: double.infinity,
+                  padding: const EdgeInsets.only(left: 16),
                   decoration: BoxDecoration(
                     color: ColorsExt.grey6(context),
                     border: Border.all(
@@ -37,26 +38,22 @@ class UndoBottomView extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            state.queue.first.type.text,
-                            style:
-                                TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
-                          ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          state.queue.first.type.text,
+                          style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
                         ),
-                        TextButton(
-                            onPressed: () {
-                              context.read<TasksCubit>().undo();
-                            },
-                            child: Text(t.task.undo.toUpperCase(),
-                                style: TextStyle(
-                                    color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15))),
-                      ],
-                    ),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            context.read<TasksCubit>().undo();
+                          },
+                          child: Text(t.task.undo.toUpperCase(),
+                              style: TextStyle(
+                                  color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15))),
+                    ],
                   ),
                 ),
               ),

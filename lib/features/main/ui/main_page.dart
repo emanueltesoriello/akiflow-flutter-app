@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/components/task/bottom_task_actions.dart';
 import 'package:mobile/features/calendar/ui/calendar_view.dart';
+import 'package:mobile/features/main/ui/main_body.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/doc_action.dart';
 import 'package:mobile/features/tasks/edit_task/ui/recurring_edit_dialog.dart';
 import 'package:mobile/features/inbox/ui/inbox_view.dart';
@@ -134,80 +135,21 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        if (TaskExt.isSelectMode(context.read<TasksCubit>().state)) {
-          context.read<TasksCubit>().clearSelected();
-          return false;
-        } else if (context.read<LabelsCubit>().state.selectedLabel != null) {
-          context.read<MainCubit>().changeHomeView(context.read<MainCubit>().state.lastHomeViewType);
-          return false;
-        } else {
-          if (ModalRoute.of(context)?.settings.name != "/") {
+        onWillPop: () async {
+          if (TaskExt.isSelectMode(context.read<TasksCubit>().state)) {
+            context.read<TasksCubit>().clearSelected();
             return false;
+          } else if (context.read<LabelsCubit>().state.selectedLabel != null) {
+            context.read<MainCubit>().changeHomeView(context.read<MainCubit>().state.lastHomeViewType);
+            return false;
+          } else {
+            if (ModalRoute.of(context)?.settings.name != "/") {
+              return false;
+            }
+            return true;
           }
-          return true;
-        }
-      },
-      child: _body(context),
-    );
-  }
-
-  Widget _body(BuildContext context) {
-    int homeViewType = context.watch<MainCubit>().state.homeViewType.index;
-
-    return Stack(
-      children: [
-        const InternalWebView(),
-        Scaffold(
-          extendBodyBehindAppBar: true,
-          floatingActionButton: const FloatingButton(bottomBarHeight: bottomBarHeight),
-          bottomNavigationBar: CustomBottomNavigationBar(
-            labelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-            bottomBarIconSize: 30,
-            topPadding: MediaQuery.of(context).padding.top,
-          ),
-          body: Builder(builder: (context) {
-            if (homeViewType < 4) {
-              return IndexedStack(
-                index: homeViewType,
-                children: const [
-                  InboxView(),
-                  TodayView(),
-                  CalendarView(),
-                ],
-              );
-            }
-            return const LabelView();
-          }),
-        ),
-        BlocBuilder<TasksCubit, TasksCubitState>(
-          builder: (context, state) {
-            bool anyInboxSelected = state.inboxTasks.any((t) => t.selected ?? false);
-            bool anyTodaySelected = state.selectedDayTasks.any((t) => t.selected ?? false);
-            bool anyLabelsSelected = state.labelTasks.any((t) => t.selected ?? false);
-
-            if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
-              return const Align(
-                alignment: Alignment.bottomCenter,
-                child: BottomTaskActions(),
-              );
-            } else {
-              return const SizedBox();
-            }
-          },
-        ),
-        const UndoBottomView(),
-        const JustCreatedTaskView(),
-        BlocBuilder<OnboardingCubit, OnboardingCubitState>(
-          builder: (context, state) {
-            if (state.show) {
-              return const OnboardingTutorial();
-            } else {
-              return const SizedBox();
-            }
-          },
-        ),
-      ],
-    );
+        },
+        child: MainBody(
+            bottomBarHeight: bottomBarHeight, homeViewType: context.watch<MainCubit>().state.homeViewType.index));
   }
 }

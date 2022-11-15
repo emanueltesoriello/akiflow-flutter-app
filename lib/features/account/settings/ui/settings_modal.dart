@@ -222,7 +222,7 @@ class SettingsModal extends StatelessWidget {
                                   Label newLabel = Label(id: const Uuid().v4(), color: "palette-red");
 
                                   List<Label> folders = labelsCubit.state.labels
-                                      .where((label) => label.type == "folder" && label.deletedAt == null)
+                                      .where((label) => label.isFolder && label.deletedAt == null)
                                       .toList();
 
                                   Label? newLabelUpdated = await showCupertinoModalBottomSheet(

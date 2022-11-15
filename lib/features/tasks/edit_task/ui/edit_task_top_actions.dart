@@ -25,6 +25,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
 
     return Container(
       constraints: const BoxConstraints(minHeight: 44),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
           PlanForAction(

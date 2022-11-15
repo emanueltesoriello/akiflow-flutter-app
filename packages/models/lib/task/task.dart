@@ -365,4 +365,11 @@ class Task extends Equatable implements Base {
       doc,
     ];
   }
+
+  bool get isLinksEmpty {
+    if (links == null) {
+      return true;
+    }
+    return links!.isEmpty || links!.every((element) => element.isEmpty);
+  }
 }

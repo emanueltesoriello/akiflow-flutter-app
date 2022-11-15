@@ -78,7 +78,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                   LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
                   List<Label> folders = labelsCubit.state.labels
-                      .where((label) => label.type == "folder" && label.deletedAt == null)
+                      .where((label) => label.isFolder && label.deletedAt == null)
                       .toList();
 
                   Label? updated = await showCupertinoModalBottomSheet(
