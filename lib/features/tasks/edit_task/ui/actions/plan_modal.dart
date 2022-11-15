@@ -4,11 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/components/base/separator.dart';
-import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/tasks/create_task/ui/create_task_calendar.dart';
 import 'package:mobile/features/tasks/create_task/ui/create_task_top_action_item.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:models/extensions/user_ext.dart';
 
 class PlanModal extends StatefulWidget {

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/components/base/app_bar.dart';
-import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 import 'package:mobile/features/account/integrations/cubit/gmail_mark_as_done_type.dart';
 import 'package:mobile/features/account/integrations/cubit/integrations_cubit.dart';
 import 'package:mobile/features/account/integrations/ui/circle_account_picture.dart';
@@ -15,12 +14,13 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/settings/ui/widgets/settings_header_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
-import 'package:models/extensions/user_ext.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/user.dart';
+import 'package:models/extensions/user_ext.dart';
 
 class GmailDetailsIntegrationsPage extends StatelessWidget {
   const GmailDetailsIntegrationsPage({Key? key}) : super(key: key);

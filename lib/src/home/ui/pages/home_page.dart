@@ -19,7 +19,7 @@ import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/base/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/floating_button.dart';
 import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
 import 'package:mobile/src/home/ui/pages/inbox_view.dart';

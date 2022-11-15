@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/settings/ui/pages/settings_page.dart';
 import 'package:mobile/src/settings/ui/widgets/search_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:mobile/src/base/cubit/auth/auth_cubit.dart';
 
 import '../../../../common/components/base/badged_icon.dart';
 import '../../../../common/components/base/icon_badge.dart';

@@ -5,7 +5,7 @@ import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/components/base/icon_badge.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/src/base/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 
 import 'nav_item.dart';
 
