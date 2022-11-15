@@ -19,10 +19,6 @@ List<BlocProvider> baseProviders = [
     lazy: false,
     create: (BuildContext context) => DialogCubit(),
   ),
-  BlocProvider<PushCubit>(
-    lazy: false,
-    create: (BuildContext context) => locator<PushCubit>(),
-  ),
   BlocProvider<SyncCubit>(
     lazy: false,
     create: (BuildContext context) => locator<SyncCubit>(),

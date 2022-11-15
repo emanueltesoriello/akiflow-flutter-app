@@ -7,7 +7,6 @@ import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/push/cubit/push_cubit.dart';
 import 'package:mobile/features/sync/sync_cubit.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/database_service.dart';
@@ -31,9 +30,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final UserApi _userApi = locator<UserApi>();
 
   final SyncCubit _syncCubit;
-  final PushCubit _pushCubit;
 
-  AuthCubit(this._syncCubit, this._pushCubit) : super(const AuthCubitState()) {
+  AuthCubit(this._syncCubit) : super(const AuthCubitState()) {
     _init();
   }
 
@@ -70,7 +68,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
         _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
         _intercomService.authenticate(
             email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
-        await _pushCubit.login(user);
       }
     } else {
       emit(AuthCubitState(hasValidPlan: false, user: user));
@@ -100,8 +97,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           emit(state.copyWith(user: Nullable(user), hasValidPlan: hasValidPlan));
 
-          await _pushCubit.login(user);
-
           _syncCubit.sync();
 
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -130,8 +125,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
     _databaseService.delete();
 
     emit(state.copyWith(user: Nullable(null), authenticated: false));
-
-    await _pushCubit.logout();
 
     AnalyticsService.logout();
   }
