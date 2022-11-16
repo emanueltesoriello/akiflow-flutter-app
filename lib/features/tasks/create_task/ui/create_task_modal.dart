@@ -49,9 +49,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           shrinkWrap: true,
           children: [
             Container(
-              color: Theme.of(context).backgroundColor,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+              decoration:  BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                borderRadius:const BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
                 ),

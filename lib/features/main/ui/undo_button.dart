@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
@@ -17,7 +19,7 @@ class UndoBottomView extends StatelessWidget {
         if (state.queue.isEmpty) {
           return const SizedBox();
         }
-
+        UndoTask? task = state.queue.first;
         return Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -31,18 +33,20 @@ class UndoBottomView extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 16),
                   decoration: BoxDecoration(
-                    color: ColorsExt.grey6(context),
+                    color: color(context, task.type),
                     border: Border.all(
-                      color: ColorsExt.grey5(context),
+                      color: ColorsExt.grey4(context),
                       width: 1,
                     ),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   child: Row(
                     children: [
+                      icon(context, task.type),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          state.queue.first.type.text,
+                          text(task.type),
                           style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
                         ),
                       ),
@@ -62,6 +66,105 @@ class UndoBottomView extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  Color color(BuildContext context, UndoType type) {
+    switch (type) {
+      case UndoType.delete:
+        return ColorsExt.cyan25(context);
+      case UndoType.markDone:
+        return ColorsExt.green20(context);
+      case UndoType.markUndone:
+        // TODO: Handle this case.
+        break;
+      case UndoType.restore:
+        // TODO: Handle this case.
+        break;
+      case UndoType.plan:
+        return ColorsExt.cyan25(context);
+      case UndoType.snooze:
+        return ColorsExt.akiflow20(context);
+      case UndoType.moveToInbox:
+        // TODO: Handle this case.
+        break;
+      case UndoType.updated:
+        // TODO: Handle this case.
+        break;
+    }
+    return ColorsExt.akiflow(context);
+  }
+
+  String text(UndoType type) {
+    switch (type) {
+      case UndoType.delete:
+        return 'Task Deleted';
+      case UndoType.markDone:
+        return 'Marked as done';
+      case UndoType.plan:
+        return 'Task Planned';
+      case UndoType.snooze:
+        return 'Task Snoozed';
+      case UndoType.moveToInbox:
+        // TODO: Handle this case.
+        break;
+      case UndoType.updated:
+        // TODO: Handle this case.
+        break;
+      case UndoType.markUndone:
+        // TODO: Handle this case.
+        break;
+      case UndoType.restore:
+        // TODO: Handle this case.
+        break;
+    }
+    return '';
+  }
+
+  SvgPicture icon(BuildContext context, UndoType type) {
+    switch (type) {
+      case UndoType.delete:
+        return SvgPicture.asset(
+          Assets.images.icons.common.trashSVG,
+          height: 20,
+        );
+
+      case UndoType.markDone:
+        return SvgPicture.asset(
+          Assets.images.icons.common.checkDoneSVG,
+          color: ColorsExt.green(context),
+          height: 25,
+        );
+
+      case UndoType.plan:
+        return SvgPicture.asset(
+          Assets.images.icons.common.calendarSVG,
+          color: ColorsExt.cyan(context),
+          height: 25,
+        );
+      case UndoType.snooze:
+        return SvgPicture.asset(
+          Assets.images.icons.common.clockSVG,
+          color: ColorsExt.akiflow(context),
+          height: 25,
+        );
+      case UndoType.markUndone:
+        // TODO: Handle this case.
+        break;
+      case UndoType.restore:
+        // TODO: Handle this case.
+        break;
+      case UndoType.moveToInbox:
+        // TODO: Handle this case.
+        break;
+      case UndoType.updated:
+        // TODO: Handle this case.
+        break;
+    }
+    return SvgPicture.asset(
+      Assets.images.icons.common.calendarSVG,
+      color: ColorsExt.akiflow10(context),
+      height: 30,
     );
   }
 }

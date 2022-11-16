@@ -593,6 +593,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
 
+    addToUndoQueue(allSelected, statusType == TaskStatusType.planned ? UndoType.plan : UndoType.snooze);
+
     DateTime now = DateTime.now();
 
     for (Task task in allSelected) {
