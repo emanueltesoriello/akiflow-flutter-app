@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/common/components/task/task_list.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';

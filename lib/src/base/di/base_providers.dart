@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/dialog/dialog_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
@@ -12,6 +10,8 @@ import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
+import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 List<BlocProvider> baseProviders = [
   BlocProvider<DialogCubit>(

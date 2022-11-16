@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/common/components/task/panel.dart';
+import 'package:mobile/src/base/ui/widgets/task/panel.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 part 'today_state.dart';
 

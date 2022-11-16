@@ -5,18 +5,18 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/common/components/task/task_list.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/task/panel.dart';
+import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/common/components/task/panel.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/home/ui/widgets/today/today_app_bar_calendar.dart';
 import 'package:mobile/src/home/ui/widgets/today/today_appbar.dart';
 import 'package:mobile/src/home/ui/widgets/today/today_header.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 
 class TodayView extends StatefulWidget {

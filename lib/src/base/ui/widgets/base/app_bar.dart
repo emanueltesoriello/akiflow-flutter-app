@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/sync_progress.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;

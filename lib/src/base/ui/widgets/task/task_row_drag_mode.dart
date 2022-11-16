@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_row.dart';
 import 'package:models/task/task.dart';
 
-class TaskRowFake extends TaskRow {
-  TaskRowFake(Task task, {Key? key})
+class TaskRowDragMode extends TaskRow {
+  TaskRowDragMode(Task task, {Key? key})
       : super(
           key: key,
           completedClick: () {},
           selectTask: () {},
-          task: task.copyWith(selected: false),
+          task: task.copyWith(selected: true),
           showLabel: false,
           showPlanInfo: false,
           hideInboxLabel: true,
           swipeActionPlanClick: () {},
           swipeActionSelectLabelClick: () {},
           swipeActionSnoozeClick: () {},
-          selectMode: false,
-          isOnboarding: true,
+          selectMode: true,
         );
 }
