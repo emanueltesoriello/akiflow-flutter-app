@@ -9,19 +9,18 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/components/task/task_list.dart';
 import 'package:mobile/features/tasks/create_task/ui/create_task_modal.dart';
 import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/label/cubit/labels_cubit.dart';
-import 'package:mobile/features/label/ui/create_edit_section_modal.dart';
-import 'package:mobile/features/label/ui/section_header.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
+import 'package:mobile/src/label/ui/widgets/create_edit_section_modal.dart';
+import 'package:mobile/src/label/ui/widgets/label_appbar.dart';
+import 'package:mobile/src/label/ui/widgets/section_header.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
-
-import 'label_appbar.dart';
 
 class LabelView extends StatefulWidget {
   const LabelView({Key? key}) : super(key: key);

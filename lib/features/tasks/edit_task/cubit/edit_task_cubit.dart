@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/features/tasks/edit_task/ui/change_priority_modal.dart';
-import 'package:mobile/features/main/ui/chrono_model.dart';
+import 'package:mobile/src/base/models/chrono_model.dart';
 import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';

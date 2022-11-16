@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
+import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
@@ -12,7 +13,6 @@ import '../../../../../common/style/colors.dart';
 import '../../../../../extensions/task_extension.dart';
 import '../../../edit_task/cubit/edit_task_cubit.dart';
 import '../../../edit_task/ui/actions/plan_modal.dart';
-import '../../../../label/cubit/labels_cubit.dart';
 
 class CreateTaskActions extends StatelessWidget {
   const CreateTaskActions({Key? key, required this.titleController, required this.titleFocus}) : super(key: key);

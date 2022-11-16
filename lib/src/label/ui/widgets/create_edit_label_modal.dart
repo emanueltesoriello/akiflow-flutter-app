@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/features/label/ui/button_list_label.dart';
-import 'package:mobile/features/label/ui/colors_modal.dart';
-import 'package:mobile/features/label/ui/folder_modal.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
+import 'package:mobile/src/label/ui/widgets/button_list_label.dart';
+import 'package:mobile/src/label/ui/widgets/colors_modal.dart';
+import 'package:mobile/src/label/ui/widgets/folder_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';

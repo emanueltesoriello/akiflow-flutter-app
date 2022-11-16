@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/features/main/ui/chrono_model.dart';
+import 'package:mobile/src/base/models/chrono_model.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

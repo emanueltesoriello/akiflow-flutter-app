@@ -5,7 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 
-import '../../../common/style/colors.dart';
+import '../../../../common/style/colors.dart';
 
 class HomeViewPlaceholder extends StatelessWidget {
   const HomeViewPlaceholder({
