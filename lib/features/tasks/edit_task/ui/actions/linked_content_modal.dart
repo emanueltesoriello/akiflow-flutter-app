@@ -23,6 +23,8 @@ import 'package:models/doc/todoist_doc.dart';
 import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
+import '../../../../../assets.dart';
+
 class LinkedContentModal extends StatelessWidget {
   final Task task;
   final Doc doc;
@@ -64,7 +66,7 @@ class LinkedContentModal extends StatelessWidget {
                     Column(
                       children: [
                         SizedBox(
-                          height: 58,
+                          height: 58, //81391
                           child: Row(
                             children: [
                               SvgPicture.asset(
@@ -94,18 +96,18 @@ class LinkedContentModal extends StatelessWidget {
                             } else if (doc is SlackDoc) {
                               return SlackLinkedContent(
                                 task: task,
-                                doc: doc,
+                                doc: doc as SlackDoc,
                                 itemBuilder: _item,
                                 account: account,
                               );
                             } else if (doc is TodoistDoc) {
-                              return TodoistLinkedContent(task: task, doc: doc, itemBuilder: _item);
+                              return TodoistLinkedContent(task: task, doc: doc as TodoistDoc, itemBuilder: _item);
                             } else if (doc is TrelloDoc) {
                               return TrelloLinkedContent(doc: doc, task: task, itemBuilder: _item);
                             } else if (doc is ClickupDoc) {
-                              return ClickupLinkedContent(doc: doc, task: task, itemBuilder: _item);
+                              return ClickupLinkedContent(doc: doc as ClickupDoc, task: task, itemBuilder: _item);
                             } else if (doc is NotionDoc) {
-                              return NotionLinkedContent(task: task, doc: doc, itemBuilder: _item);
+                              return NotionLinkedContent(task: task, doc: doc as NotionDoc, itemBuilder: _item);
                             }
                             return const SizedBox();
                           },
@@ -118,7 +120,7 @@ class LinkedContentModal extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: ButtonList(
-                      leadingTextIconAsset: "assets/images/icons/_common/arrow_up_right_square.svg",
+                      leadingTextIconAsset: Assets.images.icons.common.arrowUpRightSquareSVG,
                       title: t.linkedContent.open,
                       onPressed: () {
                         task.openLinkedContentUrl(doc);
@@ -137,6 +139,7 @@ class LinkedContentModal extends StatelessWidget {
     BuildContext context, {
     required String title,
     required String value,
+    bool syncing = false,
   }) {
     if (value.isEmpty) {
       return const SizedBox();
@@ -156,6 +159,14 @@ class LinkedContentModal extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context))),
             ),
+            syncing
+                ? SvgPicture.asset(
+                    Assets.images.icons.common.syncingSVG,
+                    color: ColorsExt.grey2(context),
+                    width: 18,
+                    height: 18,
+                  )
+                : const SizedBox(),
           ],
         ),
       ),

@@ -324,6 +324,19 @@ class Task extends Equatable implements Base {
     return task;
   }
 
+  String get priorityName {
+    switch (priority) {
+      case 1:
+        return "High";
+      case 2:
+        return "Medium";
+      case 3:
+        return "Low";
+      default:
+        return "None";
+    }
+  }
+
   @override
   List<Object?> get props {
     return [

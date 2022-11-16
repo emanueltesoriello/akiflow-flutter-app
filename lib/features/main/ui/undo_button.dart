@@ -76,15 +76,14 @@ class UndoBottomView extends StatelessWidget {
       case UndoType.markDone:
         return ColorsExt.green20(context);
       case UndoType.markUndone:
-        // TODO: Handle this case.
-        break;
-      case UndoType.restore:
-        // TODO: Handle this case.
-        break;
+        return ColorsExt.cyan25(context);
       case UndoType.plan:
         return ColorsExt.cyan25(context);
       case UndoType.snooze:
         return ColorsExt.akiflow20(context);
+      case UndoType.restore:
+        // TODO: Handle this case.
+        break;
       case UndoType.moveToInbox:
         // TODO: Handle this case.
         break;
@@ -105,15 +104,15 @@ class UndoBottomView extends StatelessWidget {
         return 'Task Planned';
       case UndoType.snooze:
         return 'Task Snoozed';
+      case UndoType.markUndone:
+        return 'Task Undone';
       case UndoType.moveToInbox:
         // TODO: Handle this case.
         break;
       case UndoType.updated:
         // TODO: Handle this case.
         break;
-      case UndoType.markUndone:
-        // TODO: Handle this case.
-        break;
+
       case UndoType.restore:
         // TODO: Handle this case.
         break;
@@ -135,7 +134,6 @@ class UndoBottomView extends StatelessWidget {
           color: ColorsExt.green(context),
           height: 25,
         );
-
       case UndoType.plan:
         return SvgPicture.asset(
           Assets.images.icons.common.calendarSVG,
@@ -149,8 +147,11 @@ class UndoBottomView extends StatelessWidget {
           height: 25,
         );
       case UndoType.markUndone:
-        // TODO: Handle this case.
-        break;
+        return SvgPicture.asset(
+          Assets.images.icons.common.checkDoneSVG,
+          color: ColorsExt.cyan25(context),
+          height: 25,
+        );
       case UndoType.restore:
         // TODO: Handle this case.
         break;

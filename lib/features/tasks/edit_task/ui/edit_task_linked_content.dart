@@ -74,6 +74,12 @@ class EditTaskLinkedContent extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SvgPicture.asset(
+                        Assets.images.icons.common.syncingSVG,
+                        color: ColorsExt.grey2(context),
+                        width: 17,
+                        height: 17,
+                      ),
                       const SizedBox(width: 10),
                       SvgPicture.asset(
                         Assets.images.icons.common.infoCircleSVG,
