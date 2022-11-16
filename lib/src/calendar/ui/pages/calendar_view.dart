@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 
-import '../widgets/home_view_placeholder.dart';
+import '../widgets/calendar_view_placeholder.dart';
 
 class CalendarView extends StatelessWidget {
   const CalendarView({Key? key}) : super(key: key);
@@ -29,6 +29,6 @@ class _View extends StatelessWidget {
           ),
           showSyncButton: true,
         ),
-        body: const HomeViewPlaceholder());
+        body: const CalendarViewPlaceholder());
   }
 }

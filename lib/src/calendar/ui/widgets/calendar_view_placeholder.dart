@@ -7,8 +7,8 @@ import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 
 import '../../../../common/style/colors.dart';
 
-class HomeViewPlaceholder extends StatelessWidget {
-  const HomeViewPlaceholder({
+class CalendarViewPlaceholder extends StatelessWidget {
+  const CalendarViewPlaceholder({
     Key? key,
   }) : super(key: key);
 

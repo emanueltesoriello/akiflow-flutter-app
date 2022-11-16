@@ -1,20 +1,20 @@
 part of 'calendar_cubit.dart';
 
 class CalendarCubitState extends Equatable {
-  final bool loading;
+  final CalendarNavigationState navigationState;
 
   const CalendarCubitState({
-    this.loading = false,
+    this.navigationState = CalendarNavigationState.loading,
   });
 
   CalendarCubitState copyWith({
-    bool? loading,
+    CalendarNavigationState? navigationState,
   }) {
     return CalendarCubitState(
-      loading: loading ?? this.loading,
+      navigationState: navigationState ?? this.navigationState,
     );
   }
 
   @override
-  List<Object?> get props => [loading];
+  List<Object?> get props => [navigationState];
 }

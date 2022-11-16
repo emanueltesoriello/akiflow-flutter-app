@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
-import 'package:mobile/src/calendar/ui/pages/calendar_view.dart';
+import 'package:mobile/src/calendar/ui/navigator/navigator.dart';
 import 'package:mobile/src/home/ui/pages/inbox_view.dart';
 import 'package:mobile/src/home/ui/pages/views/today_view.dart';
 import 'package:mobile/src/label/ui/pages/label_view.dart';
@@ -21,7 +21,7 @@ class HomePageNavigator extends StatelessWidget {
         children: const [
           InboxView(),
           TodayView(),
-          CalendarView(),
+          CalendarNavigatorPage(),
         ],
       );
     }
