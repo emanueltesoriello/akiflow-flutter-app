@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -12,11 +13,10 @@ import 'package:mobile/src/base/ui/widgets/task/notice.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list_menu.dart';
 import 'package:mobile/src/home/ui/cubit/inbox/inbox_view_cubit.dart';
-import 'package:mobile/src/home/ui/widgets/inbox/first_sync_progress_inbox.dart';
+import 'package:mobile/src/home/ui/pages/views/empty_home_view.dart';
+import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
-
-import 'views/empty_home_view.dart';
 
 class InboxView extends StatelessWidget {
   const InboxView({Key? key}) : super(key: key);
@@ -62,7 +62,7 @@ class _ViewState extends State<_View> {
           appBar: AppBarComp(
             title: t.bottomBar.inbox,
             leading: SvgPicture.asset(
-              "assets/images/icons/_common/tray.svg",
+              Assets.images.icons.common.traySVG,
               width: 26,
               height: 26,
             ),
@@ -71,78 +71,51 @@ class _ViewState extends State<_View> {
           ),
           body: Stack(
             children: [
-              Builder(
-                builder: (context) {
+              BlocBuilder<InboxCubit, InboxCubitState>(
+                builder: (context, state) {
                   List<Task> tasks = List.from(tasksState.inboxTasks);
 
                   tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
+                  if (tasksState.tasksLoaded && tasks.isEmpty) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        return context.read<SyncCubit>().sync();
+                      },
+                      child: const EmptyHomeViewPlaceholder(),
+                    );
+                  }
 
-                  return BlocBuilder<InboxCubit, InboxCubitState>(
-                    builder: (context, state) {
-                      if (tasksState.tasksLoaded && tasks.isEmpty) {
-                        return RefreshIndicator(
-                          onRefresh: () async {
-                            return context.read<SyncCubit>().sync();
-                          },
-                          child: Center(
-                            child: CustomScrollView(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              slivers: [
-                                SliverFillRemaining(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: const [
-                                      EmptyHomeViewPlaceholder(),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
+                  return TaskList(
+                    tasks: tasks,
+                    hideInboxLabel: true,
+                    scrollController: scrollController,
+                    sorting: TaskListSorting.sortingDescending,
+                    showLabel: true,
+                    showPlanInfo: false,
+                    header: () {
+                      if (!state.showInboxNotice) {
+                        return null;
                       }
 
-                      return TaskList(
-                        tasks: tasks,
-                        hideInboxLabel: true,
-                        scrollController: scrollController,
-                        sorting: TaskListSorting.sortingDescending,
-                        showLabel: true,
-                        showPlanInfo: false,
-                        header: () {
-                          if (!state.showInboxNotice) {
-                            return null;
-                          }
-                          return GestureDetector(
-                            onLongPress: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Notice(
-                                title: t.notice.inboxTitle,
-                                subtitle: t.notice.inboxSubtitle,
-                                icon: Icons.info_outline,
-                                onClose: () {
-                                  context.read<InboxCubit>().inboxNoticeClosed();
-                                },
-                              ),
-                            ),
-                          );
-                        }(),
+                      return GestureDetector(
+                        onLongPress: () {},
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Notice(
+                            title: t.notice.inboxTitle,
+                            subtitle: t.notice.inboxSubtitle,
+                            icon: Icons.info_outline,
+                            onClose: () {
+                              context.read<InboxCubit>().inboxNoticeClosed();
+                            },
+                          ),
+                        ),
                       );
-                    },
+                    }(),
                   );
                 },
               ),
-              Builder(
-                builder: (context) {
-                  if (tasksState.loading) {
-                    return const FirstSyncProgressInbox();
-                  } else {
-                    return const SizedBox();
-                  }
-                },
-              ),
+              tasksState.loading ? const FirstSyncProgressToday() : const SizedBox()
             ],
           ),
         );

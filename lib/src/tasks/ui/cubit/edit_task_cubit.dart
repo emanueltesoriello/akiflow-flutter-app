@@ -92,7 +92,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     bool forceUpdate = false,
   }) async {
     emit(state.copyWith(selectedDate: date, showDuration: false));
-
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
@@ -102,12 +101,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
+    _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+
     emit(state.copyWith(updatedTask: updated));
 
     _tasksCubit.refreshTasksUi(updated);
 
     if (forceUpdate) {
-      _tasksCubit.addToUndoQueue([task], updated.status == TaskStatusType.planned.id ? UndoType.plan : UndoType.snooze);
+      _tasksCubit
+          .addToUndoQueue([task], updated.statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync(entities: [Entity.tasks]);
@@ -209,10 +211,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     DateTime now = DateTime.now();
+    _tasksCubit.addToUndoQueue([task], UndoType.delete);
 
     Task updated = task.copyWith(
-      status: Nullable(TaskStatusType.deleted.id),
-      deletedAt: TzUtils.toUtcStringIfNotNull(now),
+      status: Nullable(TaskStatusType.trashed.id),
+      trashedAt: TzUtils.toUtcStringIfNotNull(now),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
     );
 
@@ -365,7 +368,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       recurrenceTasksToUpdate.add(task.copyWith(
         recurrence: Nullable(null),
-        deletedAt: TzUtils.toUtcStringIfNotNull(now),
+        trashedAt: TzUtils.toUtcStringIfNotNull(now),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       ));
     }
@@ -434,7 +437,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           datetime: Nullable(task.datetime),
           status: Nullable(task.status),
           createdAt: (task.createdAt),
-          deletedAt: (task.deletedAt),
+          trashedAt: (task.trashedAt),
           globalCreatedAt: (task.globalCreatedAt),
           globalUpdatedAt: (task.globalUpdatedAt),
           readAt: (task.readAt),

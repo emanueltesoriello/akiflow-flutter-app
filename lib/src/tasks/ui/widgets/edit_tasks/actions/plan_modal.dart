@@ -57,57 +57,52 @@ class _PlanModalState extends State<PlanModal> {
       child: Wrap(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
-            child: ClipRRect(
+            decoration: BoxDecoration(
+              color: Theme.of(context).backgroundColor,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16.0),
                 topRight: Radius.circular(16.0),
               ),
-              child: Container(
-                color: Theme.of(context).backgroundColor,
-                margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: SafeArea(
-                  child: Column(
-                    children: [
-                      _planType(),
-                      _predefinedDate(context),
-                      CreateTaskCalendar(
-                        initialDate: _selectedDate.value,
-                        initialDateTime: _selectedDatetime.value,
-                        onConfirm: (DateTime date, DateTime? datetime) {
-                          if (_selectedStatus.value == TaskStatusType.snoozed && _selectedDatetime.value == null) {
-                            int defaultHour = context.read<AuthCubit>().state.user!.defaultHour;
+            ),
+            margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _planType(),
+                  _predefinedDate(context),
+                  CreateTaskCalendar(
+                    initialDate: _selectedDate.value,
+                    initialDateTime: _selectedDatetime.value,
+                    onConfirm: (DateTime date, DateTime? datetime) {
+                      if (_selectedStatus.value == TaskStatusType.snoozed && _selectedDatetime.value == null) {
+                        int defaultHour = context.read<AuthCubit>().state.user!.defaultHour;
 
-                            datetime = DateTime(date.year, date.month, date.day, defaultHour, 0);
-                          }
+                        datetime = DateTime(date.year, date.month, date.day, defaultHour, 0);
+                      }
 
-                          _selectedDate.value = date;
-                          _selectedDatetime.value = datetime;
-                          widget.onSelectDate(date: date, datetime: datetime, statusType: _selectedStatus.value);
-                        },
-                        onSelectTime: (TimeOfDay? datetime) {
-                          _selectedDatetime.value = DateTime(
-                            _selectedDate.value.year,
-                            _selectedDate.value.month,
-                            _selectedDate.value.day,
-                            datetime?.hour ?? 10,
-                            datetime?.minute ?? 0,
-                          );
-                        },
-                        defaultTimeHour: () {
-                          try {
-                            return context.watch<AuthCubit>().state.user!.defaultHour;
-                          } catch (_) {
-                            return 8;
-                          }
-                        }(),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                      _selectedDate.value = date;
+                      _selectedDatetime.value = datetime;
+                      widget.onSelectDate(date: date, datetime: datetime, statusType: _selectedStatus.value);
+                    },
+                    onSelectTime: (TimeOfDay? datetime) {
+                      _selectedDatetime.value = DateTime(
+                        _selectedDate.value.year,
+                        _selectedDate.value.month,
+                        _selectedDate.value.day,
+                        datetime?.hour ?? 10,
+                        datetime?.minute ?? 0,
+                      );
+                    },
+                    defaultTimeHour: () {
+                      try {
+                        return context.watch<AuthCubit>().state.user!.defaultHour;
+                      } catch (_) {
+                        return 8;
+                      }
+                    }(),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                ],
               ),
             ),
           ),

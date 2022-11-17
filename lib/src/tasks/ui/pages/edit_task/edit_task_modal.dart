@@ -28,56 +28,48 @@ class _EditTaskModalState extends State<EditTaskModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: Theme.of(context).backgroundColor,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
-        ),
-        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Container(
-            color: Theme.of(context).backgroundColor,
-            child: ScrollConfiguration(
-              behavior: NoScrollBehav(),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  const SizedBox(height: 12),
-                  const ScrollChip(),
-                  const SizedBox(height: 12),
-                  BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                    builder: (context, state) {
-                      return Visibility(
-                        visible: state.showDuration,
-                        replacement: const SizedBox(),
-                        child: Column(
-                          children: const [
-                            Separator(),
-                            CreateTaskDurationItem(),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: EditTaskTopActions(),
-                  ),
-                  const SizedBox(height: 12),
-                  const EditTaskRow(),
-                  const SizedBox(height: 12),
-                  const Separator(),
-                  const EditTaskLinkedContent(),
-                  const EditTaskLinks(),
-                  const EditTaskBottomActions(),
-                  const Separator(),
-                ],
+        ),
+        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: ScrollConfiguration(
+          behavior: NoScrollBehav(),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              const SizedBox(height: 12),
+              const ScrollChip(),
+              const SizedBox(height: 12),
+              BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                builder: (context, state) {
+                  return Visibility(
+                    visible: state.showDuration,
+                    replacement: const SizedBox(),
+                    child: Column(
+                      children: const [
+                        Separator(),
+                        CreateTaskDurationItem(),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ),
+              const EditTaskTopActions(),
+              const SizedBox(height: 12),
+              const EditTaskRow(),
+              const SizedBox(height: 12),
+              const Separator(),
+              const EditTaskLinkedContent(),
+              const EditTaskLinks(),
+              const EditTaskBottomActions(),
+              const Separator(),
+            ],
           ),
         ),
       ),

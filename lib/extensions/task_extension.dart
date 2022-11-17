@@ -36,7 +36,7 @@ enum TaskStatusType {
   deleted, // deletedAt !== null
   someday, // has NOT `date` or `dateTime` and user has set it as `someday`
   hidden, // the user has set it as `hidden` (all other fields dont' matter)
-  permanentlyDeleted, // same as above
+  trashed, // same as above
 }
 
 extension TaskStatusTypeExt on TaskStatusType {
@@ -58,7 +58,7 @@ extension TaskStatusTypeExt on TaskStatusType {
         return 7;
       case TaskStatusType.hidden:
         return 8;
-      case TaskStatusType.permanentlyDeleted:
+      case TaskStatusType.trashed:
         return 9;
     }
   }
@@ -82,7 +82,7 @@ extension TaskStatusTypeExt on TaskStatusType {
       case 8:
         return TaskStatusType.hidden;
       case 9:
-        return TaskStatusType.permanentlyDeleted;
+        return TaskStatusType.trashed;
       default:
         return null;
     }
@@ -342,7 +342,7 @@ extension TaskExt on Task {
       case 8:
         return TaskStatusType.hidden;
       case 9:
-        return TaskStatusType.permanentlyDeleted;
+        return TaskStatusType.trashed;
       default:
         return null;
     }
@@ -769,19 +769,15 @@ extension TaskExt on Task {
   Future<void> openLinkedContentUrl([Doc? doc]) async {
     String? localUrl = doc?.localUrl ?? doc?.content?["local_url"] ?? content?["local_url"];
 
-    if (localUrl == null || localUrl.isEmpty) {
-      localUrl = doc?.url ?? '';
-    }
-
-    Uri uri = Uri.parse(localUrl);
+    Uri uri = Uri.parse(localUrl ?? '');
 
     bool opened;
 
-    // if (uri.host == "mail.google.com") {
-    //   opened = await launchUrl(Uri.parse("googlegmail://"), mode: LaunchMode.externalApplication);
-    // } else {
-    opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    // }
+    if (doc is SlackDoc && doc.localUrl != null) {
+      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
 
     if (opened == false) {
       launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication);

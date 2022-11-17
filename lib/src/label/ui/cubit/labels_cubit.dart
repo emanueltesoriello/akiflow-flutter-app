@@ -109,7 +109,7 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
     _tasksCubit.fetchLabelTasks(state.selectedLabel!);
 
     List<Label> allLabels = await _labelsRepository.get();
-    List<Label> sections = allLabels.where((label) => label.type == "section" && label.deletedAt == null).toList();
+    List<Label> sections = allLabels.where((label) => label.isSection && label.deletedAt == null).toList();
     List<Label> labelSections = [];
 
     Label noSection = const Label(title: "No Section", type: "section");

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/auth_api.dart';
 import 'package:mobile/core/api/user_api.dart';
@@ -74,11 +75,25 @@ class AuthCubit extends Cubit<AuthCubitState> {
     }
   }
 
-  void loginClick(String? authorizationCode, String? codeVerifier) async {
+  void loginClick() async {
     AnalyticsService.track("Login started");
 
-    if (authorizationCode != null) {
-      User? user = await _authApi.auth(code: authorizationCode, codeVerifier: codeVerifier!);
+    FlutterAppAuth appAuth = const FlutterAppAuth();
+
+    final AuthorizationResponse? result = await appAuth.authorize(
+      AuthorizationRequest(
+        Config.oauthClientId,
+        Config.oauthRedirectUrl,
+        preferEphemeralSession: true,
+        serviceConfiguration: AuthorizationServiceConfiguration(
+          authorizationEndpoint: '${Config.oauthEndpoint}/oauth/authorize',
+          tokenEndpoint: '${Config.oauthEndpoint}/oauth/authorize',
+        ),
+      ),
+    );
+
+    if (result != null && result.authorizationCode != null && result.codeVerifier != null) {
+      User? user = await _authApi.auth(code: result.authorizationCode!, codeVerifier: result.codeVerifier!);
       if (user != null) {
         await _preferencesRepository.saveUser(user);
         bool hasValidPlan = await _userApi.hasValidPlan();
@@ -124,7 +139,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     _databaseService.delete();
 
-    emit(state.copyWith(user: Nullable(null), authenticated: false));
+    emit(state.copyWith(user: Nullable(null)));
 
     AnalyticsService.logout();
   }

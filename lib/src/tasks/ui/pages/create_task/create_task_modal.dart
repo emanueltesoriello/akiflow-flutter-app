@@ -12,8 +12,8 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
 import 'package:models/task/task.dart';
 
 class CreateTaskModal extends StatefulWidget {
-  const CreateTaskModal({Key? key}) : super(key: key);
-
+  const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
+  final String? sharedText;
   @override
   State<CreateTaskModal> createState() => _CreateTaskModalState();
 }
@@ -34,7 +34,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
     simpleTitleController.text = editTaskCubit.state.originalTask.title ?? '';
 
-    String descriptionHtml = editTaskCubit.state.originalTask.description ?? '';
+    String descriptionHtml = widget.sharedText ?? editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
     super.initState();
   }
@@ -44,17 +44,18 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     return Material(
       color: Theme.of(context).backgroundColor,
       child: ListView(
-        controller: parentScrollController,
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
-            ),
-            child: Container(
-              color: Theme.of(context).backgroundColor,
+          controller: parentScrollController,
+          physics: const ClampingScrollPhysics(),
+          shrinkWrap: true,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+              ),
               margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: SafeArea(
                 child: Column(
@@ -98,9 +99,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ]),
     );
   }
 }

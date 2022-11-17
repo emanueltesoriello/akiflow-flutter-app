@@ -307,7 +307,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       Task updatedTask = task.copyWith(
         selected: false,
         status: Nullable(TaskStatusType.deleted.id),
-        deletedAt: now,
+        trashedAt: now,
         updatedAt: Nullable(now),
       );
 
@@ -423,7 +423,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
           updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
           priority: allSelectedAndWithRecurrenceId.first.priority,
           duration: Nullable(allSelectedAndWithRecurrenceId.first.duration),
-          deletedAt: TzUtils.toUtcStringIfNotNull(now),
+          trashedAt: TzUtils.toUtcStringIfNotNull(now),
         );
 
         updatedRecurringTasks.add(updatedRecurringTask);
@@ -591,6 +591,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+
+    addToUndoQueue(allSelected, statusType == TaskStatusType.planned ? UndoType.plan : UndoType.snooze);
 
     DateTime now = DateTime.now();
 

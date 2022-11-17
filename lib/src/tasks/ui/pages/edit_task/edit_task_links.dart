@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -16,7 +17,7 @@ class EditTaskLinks extends StatelessWidget {
       builder: (context, state) {
         List<String> links = state.updatedTask.links?.toList() ?? [];
 
-        if (links.isEmpty || links.every((element) => element.isEmpty)) {
+        if (state.updatedTask.isLinksEmpty) {
           return const SizedBox();
         }
 
@@ -99,7 +100,7 @@ class EditTaskLinks extends StatelessWidget {
                     InkWell(
                       onTap: () => context.read<EditTaskCubit>().removeLink(link),
                       child: SvgPicture.asset(
-                        'assets/images/icons/_common/xmark.svg',
+                        Assets.images.icons.common.xmarkSVG,
                         width: 22,
                         height: 22,
                         color: ColorsExt.grey3(context),

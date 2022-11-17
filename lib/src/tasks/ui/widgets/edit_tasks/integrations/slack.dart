@@ -8,7 +8,7 @@ import 'package:models/task/task.dart';
 
 class SlackLinkedContent extends StatelessWidget {
   final Task task;
-  final Doc doc;
+  final SlackDoc doc;
   final Account? account;
   final Function itemBuilder;
 
@@ -27,7 +27,7 @@ class SlackLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.workspace,
-          value: (doc as SlackDoc).getWorkspace(account),
+          value: doc.getWorkspace(account),
         ),
         itemBuilder(
           context,
@@ -43,6 +43,12 @@ class SlackLinkedContent extends StatelessWidget {
           context,
           title: t.linkedContent.savedOn,
           value: doc.starredAtFormatted,
+        ),
+        itemBuilder(
+          context,
+          title: "Status",
+          value: (task.done ?? false) ? "Done" : "Not Done",
+          syncing: true,
         ),
       ],
     );

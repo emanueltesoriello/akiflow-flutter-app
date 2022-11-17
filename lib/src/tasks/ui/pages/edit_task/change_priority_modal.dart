@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
@@ -35,84 +36,77 @@ class PriorityModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: Theme.of(context).backgroundColor,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Container(
-            color: Theme.of(context).backgroundColor,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                const SizedBox(height: 12),
-                const ScrollChip(),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Text(
-                        t.task.priority.title,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: ColorsExt.grey2(context),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Builder(builder: (context) {
-                  return Visibility(
-                    visible: selectedPriority != null && selectedPriority == PriorityEnum.none,
-                    replacement: const SizedBox(),
-                    child: _item(
-                      context,
-                      active: selectedPriority == PriorityEnum.none,
-                      text: t.task.priority.noPriority,
-                      click: () {
-                        Navigator.pop(context, PriorityEnum.none);
-                      },
-                      icon: "assets/images/icons/_common/slash_circle.svg",
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            const SizedBox(height: 12),
+            const ScrollChip(),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Text(
+                    t.task.priority.title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey2(context),
                     ),
-                  );
-                }),
-                _item(
-                  context,
-                  active: selectedPriority == PriorityEnum.low,
-                  text: t.task.priority.low,
-                  click: () {
-                    Navigator.pop(context, PriorityEnum.low);
-                  },
-                  icon: "assets/images/icons/_common/exclamationmark_1.svg",
-                ),
-                _item(
-                  context,
-                  active: selectedPriority == PriorityEnum.medium,
-                  text: t.task.priority.medium,
-                  click: () {
-                    Navigator.pop(context, PriorityEnum.medium);
-                  },
-                  icon: "assets/images/icons/_common/exclamationmark_2.svg",
-                ),
-                _item(
-                  context,
-                  active: selectedPriority == PriorityEnum.high,
-                  text: t.task.priority.high,
-                  click: () {
-                    Navigator.pop(context, PriorityEnum.high);
-                  },
-                  icon: "assets/images/icons/_common/exclamationmark_3.svg",
-                ),
-                const SizedBox(height: 50),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
+            Visibility(
+              visible: selectedPriority != null && selectedPriority == PriorityEnum.none,
+              replacement: const SizedBox(),
+              child: _item(
+                context,
+                active: selectedPriority == PriorityEnum.none,
+                text: t.task.priority.noPriority,
+                click: () {
+                  Navigator.pop(context, PriorityEnum.none);
+                },
+                icon: Assets.images.icons.common.slashCircleSVG,
+              ),
+            ),
+            _item(
+              context,
+              active: selectedPriority == PriorityEnum.low,
+              text: t.task.priority.low,
+              click: () {
+                Navigator.pop(context, PriorityEnum.low);
+              },
+              icon: Assets.images.icons.common.exclamationmark1SVG,
+            ),
+            _item(
+              context,
+              active: selectedPriority == PriorityEnum.medium,
+              text: t.task.priority.medium,
+              click: () {
+                Navigator.pop(context, PriorityEnum.medium);
+              },
+              icon: Assets.images.icons.common.exclamationmark2SVG,
+            ),
+            _item(
+              context,
+              active: selectedPriority == PriorityEnum.high,
+              text: t.task.priority.high,
+              click: () {
+                Navigator.pop(context, PriorityEnum.high);
+              },
+              icon: Assets.images.icons.common.exclamationmark3SVG,
+            ),
+            const SizedBox(height: 50),
+          ],
         ),
       ),
     );

@@ -3,30 +3,24 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/src/base/ui/widgets/task/bottom_task_actions.dart';
-import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
-import 'package:mobile/src/home/ui/widgets/undo_button.dart';
-import 'package:mobile/src/home/ui/widgets/webview.dart';
-import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/floating_button.dart';
-import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
-import 'package:mobile/src/home/ui/navigator/home_navigator.dart';
-import 'package:mobile/src/home/ui/widgets/just_created_task_button.dart';
+import 'package:mobile/src/home/ui/pages/main_body.dart';
+import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/reconnect_integrations.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
-import 'package:mobile/src/onboarding/ui/pages/onboarding_tutorial.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
+import 'package:mobile/src/tasks/ui/pages/create_task/create_task_modal.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -37,6 +31,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
+  late StreamSubscription intentDataStreamSubscription;
 
   @override
   void initState() {
@@ -44,6 +39,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     TasksCubit tasksCubit = context.read<TasksCubit>();
+    intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen((String value) {
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => CreateTaskModal(
+          sharedText: value,
+        ),
+      );
+    }, onError: (err) {
+      print("getLinkStream error: $err");
+    });
 
     if (streamSubscription != null) {
       streamSubscription!.cancel();
@@ -131,68 +136,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        if (TaskExt.isSelectMode(context.read<TasksCubit>().state)) {
-          context.read<TasksCubit>().clearSelected();
-          return false;
-        } else if (context.read<LabelsCubit>().state.selectedLabel != null) {
-          context.read<MainCubit>().changeHomeView(context.read<MainCubit>().state.lastHomeViewType);
-          return false;
-        } else {
-          if (ModalRoute.of(context)?.settings.name != "/") {
+        onWillPop: () async {
+          if (TaskExt.isSelectMode(context.read<TasksCubit>().state)) {
+            context.read<TasksCubit>().clearSelected();
             return false;
+          } else if (context.read<LabelsCubit>().state.selectedLabel != null) {
+            context.read<MainCubit>().changeHomeView(context.read<MainCubit>().state.lastHomeViewType);
+            return false;
+          } else {
+            if (ModalRoute.of(context)?.settings.name != "/") {
+              return false;
+            }
+            return true;
           }
-          return true;
-        }
-      },
-      child: _body(context),
-    );
-  }
-
-  Widget _body(BuildContext context) {
-    return Stack(
-      children: [
-        const InternalWebView(),
-        Scaffold(
-          extendBodyBehindAppBar: true,
-          floatingActionButton: const FloatingButton(bottomBarHeight: bottomBarHeight),
-          bottomNavigationBar: CustomBottomNavigationBar(
-            labelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-            bottomBarIconSize: 30,
-            topPadding: MediaQuery.of(context).padding.top,
-          ),
-          body: Builder(builder: (context) {
-            return const HomePageNavigator();
-          }),
-        ),
-        BlocBuilder<TasksCubit, TasksCubitState>(
-          builder: (context, state) {
-            bool anyInboxSelected = state.inboxTasks.any((t) => t.selected ?? false);
-            bool anyTodaySelected = state.selectedDayTasks.any((t) => t.selected ?? false);
-            bool anyLabelsSelected = state.labelTasks.any((t) => t.selected ?? false);
-
-            if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
-              return const Align(
-                alignment: Alignment.bottomCenter,
-                child: BottomTaskActions(),
-              );
-            } else {
-              return const SizedBox();
-            }
-          },
-        ),
-        const UndoBottomView(),
-        const JustCreatedTaskView(),
-        BlocBuilder<OnboardingCubit, OnboardingCubitState>(
-          builder: (context, state) {
-            if (state.show) {
-              return const OnboardingTutorial();
-            } else {
-              return const SizedBox();
-            }
-          },
-        ),
-      ],
-    );
+        },
+        child: MainBody(
+            bottomBarHeight: bottomBarHeight, homeViewType: context.watch<MainCubit>().state.homeViewType.index));
   }
 }

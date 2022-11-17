@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
@@ -107,7 +108,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                                       height: 20,
                                       width: 20,
                                       child: SvgPicture.asset(
-                                        "assets/images/icons/_common/folder.svg",
+                                        Assets.images.icons.common.folderSVG,
                                         color: ColorsExt.grey2(context),
                                       )),
                                 ),
@@ -151,7 +152,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                                   SizedBox(
                                     width: 22,
                                     height: 22,
-                                    child: SvgPicture.asset("assets/images/icons/_common/checkmark.svg",
+                                    child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
                                         color: ColorsExt.grey1(context)),
                                   ),
                                   const SizedBox(width: 11),
@@ -237,7 +238,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                 width: 26,
                 child: Center(
                   child: SvgPicture.asset(
-                    "assets/images/icons/_common/number.svg",
+                    Assets.images.icons.common.numberSVG,
                     color: iconForeground,
                     height: 20,
                     width: 20,

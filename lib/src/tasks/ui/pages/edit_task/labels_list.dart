@@ -32,7 +32,7 @@ class _LabelsListState extends State<LabelsList> {
   @override
   void initState() {
     List<Label> allItems = context.read<LabelsCubit>().state.labels;
-    List<Label> folders = allItems.where((element) => element.type == "folder").toList();
+    List<Label> folders = allItems.where((element) => element.isFolder).toList();
 
     Map<Label, bool> folderOpen = {};
 
@@ -74,7 +74,7 @@ class _LabelsListState extends State<LabelsList> {
     List<Label> searchFiltered = all.where((label) {
       if (value.isEmpty) return true;
 
-      if (label.type == "folder") {
+      if (label.isFolder) {
         return true;
       }
 
@@ -87,13 +87,13 @@ class _LabelsListState extends State<LabelsList> {
 
     List<Label> foldersAndLabels = searchFiltered;
     foldersAndLabels = foldersAndLabels.where((element) => element.deletedAt == null).toList();
-    foldersAndLabels.removeWhere((element) => element.type != null && element.type == "section");
+    foldersAndLabels.removeWhere((element) => element.type != null && element.isSection);
 
     List<dynamic> list = [];
 
     // add only if is folder or if parentId == null
     for (var label in foldersAndLabels) {
-      if (label.type == "folder") {
+      if (label.isFolder) {
         list.add(label);
       } else if (label.parentId == null) {
         list.add(label);
@@ -160,7 +160,7 @@ class _LabelsListState extends State<LabelsList> {
 
         Label label = list[index];
 
-        if (label.type == "folder") {
+        if (label.isFolder) {
           Label folder = label;
           List<Label>? labels = state.labels.where((element) => element.parentId == label.id).toList();
 
@@ -229,7 +229,7 @@ class _LabelsListState extends State<LabelsList> {
             List<Label> searchFiltered = labels.where((label) {
               if (searchValue.isEmpty) return true;
 
-              if (label.type == "folder") {
+              if (label.isFolder) {
                 return true;
               }
 

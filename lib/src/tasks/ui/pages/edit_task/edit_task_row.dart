@@ -222,7 +222,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
     if (task.deletedAt != null ||
         task.statusType == TaskStatusType.deleted ||
-        task.statusType == TaskStatusType.permanentlyDeleted) {
+        task.statusType == TaskStatusType.trashed) {
       return TagBox(
         icon: "assets/images/icons/_common/trash.svg",
         backgroundColor: ColorsExt.grey6(context),

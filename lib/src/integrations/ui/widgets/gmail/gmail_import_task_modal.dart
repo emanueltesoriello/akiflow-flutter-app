@@ -27,80 +27,75 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
     return Material(
       color: Colors.transparent,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-        ),
-        child: ClipRRect(
+        decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Container(
-            color: Theme.of(context).backgroundColor,
-            child: ValueListenableBuilder(
-              valueListenable: _selectedType,
-              builder: (context, GmailSyncMode type, child) => ListView(
-                shrinkWrap: true,
-                children: [
-                  const SizedBox(height: 12),
-                  const ScrollChip(),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            t.settings.integrations.gmail.toImportTask.title,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
-                          ),
+        ),
+        child: ValueListenableBuilder(
+          valueListenable: _selectedType,
+          builder: (context, GmailSyncMode type, child) => ListView(
+            shrinkWrap: true,
+            children: [
+              const SizedBox(height: 12),
+              const ScrollChip(),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        t.settings.integrations.gmail.toImportTask.title,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey2(context),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  _predefinedDateItem(
-                    context,
-                    text: t.settings.integrations.gmail.toImportTask.useAkiflowLabel,
-                    selected: type == GmailSyncMode.useAkiflowLabel,
-                    onPressed: () {
-                      Navigator.pop(context, GmailSyncMode.useAkiflowLabel);
-                    },
-                  ),
-                  const SizedBox(height: 2),
-                  _predefinedDateItem(
-                    context,
-                    text: t.settings.integrations.gmail.toImportTask.useStarToImport,
-                    selected: type == GmailSyncMode.useStarToImport,
-                    onPressed: () {
-                      Navigator.pop(context, GmailSyncMode.useStarToImport);
-                    },
-                  ),
-                  const SizedBox(height: 2),
-                  _predefinedDateItem(
-                    context,
-                    text: t.settings.integrations.gmail.toImportTask.doNothing,
-                    selected: type == GmailSyncMode.doNothing,
-                    onPressed: () {
-                      Navigator.pop(context, GmailSyncMode.doNothing);
-                    },
-                  ),
-                  const SizedBox(height: 2),
-                  _predefinedDateItem(
-                    context,
-                    text: t.settings.integrations.gmail.toImportTask.askMeEveryTime,
-                    selected: type == GmailSyncMode.askMeEveryTime,
-                    onPressed: () {
-                      Navigator.pop(context, GmailSyncMode.askMeEveryTime);
-                    },
-                  ),
-                  const SizedBox(height: 50),
-                ],
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(height: 2),
+              _predefinedDateItem(
+                context,
+                text: t.settings.integrations.gmail.toImportTask.useAkiflowLabel,
+                selected: type == GmailSyncMode.useAkiflowLabel,
+                onPressed: () {
+                  Navigator.pop(context, GmailSyncMode.useAkiflowLabel);
+                },
+              ),
+              const SizedBox(height: 2),
+              _predefinedDateItem(
+                context,
+                text: t.settings.integrations.gmail.toImportTask.useStarToImport,
+                selected: type == GmailSyncMode.useStarToImport,
+                onPressed: () {
+                  Navigator.pop(context, GmailSyncMode.useStarToImport);
+                },
+              ),
+              const SizedBox(height: 2),
+              _predefinedDateItem(
+                context,
+                text: t.settings.integrations.gmail.toImportTask.doNothing,
+                selected: type == GmailSyncMode.doNothing,
+                onPressed: () {
+                  Navigator.pop(context, GmailSyncMode.doNothing);
+                },
+              ),
+              const SizedBox(height: 2),
+              _predefinedDateItem(
+                context,
+                text: t.settings.integrations.gmail.toImportTask.askMeEveryTime,
+                selected: type == GmailSyncMode.askMeEveryTime,
+                onPressed: () {
+                  Navigator.pop(context, GmailSyncMode.askMeEveryTime);
+                },
+              ),
+              const SizedBox(height: 50),
+            ],
           ),
         ),
       ),

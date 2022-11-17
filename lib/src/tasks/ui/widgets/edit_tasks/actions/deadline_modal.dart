@@ -28,61 +28,56 @@ class _DeadlineModalState extends State<DeadlineModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: Theme.of(context).backgroundColor,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.transparent,
-        ),
-        child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Container(
-            color: Theme.of(context).backgroundColor,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                const SizedBox(height: 12),
-                const ScrollChip(),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        "assets/images/icons/_common/flags.svg",
-                        width: 28,
-                        height: 28,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        t.editTask.deadline,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: ColorsExt.grey2(context),
-                        ),
-                      ),
-                    ],
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            const SizedBox(height: 12),
+            const ScrollChip(),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    "assets/images/icons/_common/flags.svg",
+                    width: 28,
+                    height: 28,
                   ),
-                ),
-                const Separator(),
-                _predefinedDate(context, widget.onSelectDate),
-                const Separator(),
-                CreateTaskCalendar(
-                  initialDate: widget.initialDate ?? DateTime.now(),
-                  initialDateTime: null,
-                  onConfirm: (DateTime date, DateTime? datetime) {
-                    widget.onSelectDate(datetime ?? date);
-                  },
-                  showTime: false,
-                  defaultTimeHour: context.watch<AuthCubit>().state.user!.defaultHour,
-                ),
-                const Separator(),
-                const SizedBox(height: 50),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    t.editTask.deadline,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey2(context),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+            const Separator(),
+            _predefinedDate(context, widget.onSelectDate),
+            const Separator(),
+            CreateTaskCalendar(
+              initialDate: widget.initialDate ?? DateTime.now(),
+              initialDateTime: null,
+              onConfirm: (DateTime date, DateTime? datetime) {
+                widget.onSelectDate(datetime ?? date);
+              },
+              showTime: false,
+              defaultTimeHour: context.watch<AuthCubit>().state.user!.defaultHour,
+            ),
+            const Separator(),
+            const SizedBox(height: 50),
+          ],
         ),
       ),
     );
