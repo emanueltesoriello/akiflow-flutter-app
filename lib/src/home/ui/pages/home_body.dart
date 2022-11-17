@@ -5,6 +5,7 @@ import 'package:mobile/src/base/ui/widgets/floating_button.dart';
 import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/bottom_task_actions.dart';
 import 'package:mobile/src/calendar/ui/pages/calendar_view.dart';
+import 'package:mobile/src/home/ui/navigator/home_navigator.dart';
 import 'package:mobile/src/home/ui/pages/inbox_view.dart';
 import 'package:mobile/src/home/ui/pages/views/today_view.dart';
 import 'package:mobile/src/home/ui/widgets/just_created_task_button.dart';
@@ -15,8 +16,8 @@ import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/onboarding/ui/pages/onboarding_tutorial.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
-class MainBody extends StatelessWidget {
-  const MainBody({super.key, required this.bottomBarHeight, required this.homeViewType});
+class HomeBody extends StatelessWidget {
+  const HomeBody({super.key, required this.bottomBarHeight, required this.homeViewType});
   final double bottomBarHeight;
   final int homeViewType;
   @override
@@ -33,17 +34,7 @@ class MainBody extends StatelessWidget {
             topPadding: MediaQuery.of(context).padding.top,
           ),
           body: Builder(builder: (context) {
-            if (homeViewType < 4) {
-              return IndexedStack(
-                index: homeViewType,
-                children: const [
-                  InboxView(),
-                  TodayView(),
-                  CalendarView(),
-                ],
-              );
-            }
-            return const LabelView();
+            return const HomePageNavigator();
           }),
         ),
         BlocBuilder<TasksCubit, TasksCubitState>(

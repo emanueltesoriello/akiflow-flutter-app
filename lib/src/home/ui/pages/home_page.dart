@@ -7,7 +7,6 @@ import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
-import 'package:mobile/src/home/ui/pages/main_body.dart';
 import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/reconnect_integrations.dart';
@@ -21,6 +20,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+
+import 'home_body.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -150,7 +151,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             return true;
           }
         },
-        child: MainBody(
+        child: HomeBody(
             bottomBarHeight: bottomBarHeight, homeViewType: context.watch<MainCubit>().state.homeViewType.index));
   }
 }

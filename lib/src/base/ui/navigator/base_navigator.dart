@@ -19,11 +19,11 @@ class _BaseNavigatorState extends State<BaseNavigator> {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthCubitState>(
       listener: (context, state) {
-        if (state.hasValidPlan == false) {
+        /*if (state.hasValidPlan == false) {
           Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
             builder: (BuildContext context) => const TrialExpiredPage(),
           ));
-        }
+        }*/
         if (state.user == null) {
           Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
             builder: (BuildContext context) => const AuthPage(),
