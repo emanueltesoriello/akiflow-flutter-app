@@ -5,7 +5,7 @@ import Photos
 
 class ShareViewController: SLComposeServiceViewController {
     // TODO: IMPORTANT: This should be your host app bundle identifier
-    let hostAppBundleIdentifier = "com.kasem.sharing"
+    let hostAppBundleIdentifier = "com.akiflow.mobile"
     let sharedKey = "ShareKey"
     var sharedMedia: [SharedMediaFile] = []
     var sharedText: [String] = []
@@ -24,6 +24,7 @@ class ShareViewController: SLComposeServiceViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        print("wgeglihuilh");
         super.viewDidAppear(animated)
 
         // This is called after the user selects Post. Do the upload of contentText and/or NSExtensionContext attachments.
@@ -56,6 +57,7 @@ class ShareViewController: SLComposeServiceViewController {
     }
 
     private func handleText (content: NSExtensionItem, attachment: NSItemProvider, index: Int) {
+        print("hi");
         attachment.loadItem(forTypeIdentifier: textContentType, options: nil) { [weak self] data, error in
 
             if error == nil, let item = data as? String, let this = self {
@@ -64,13 +66,14 @@ class ShareViewController: SLComposeServiceViewController {
 
                 // If this is the last item, save imagesData in userDefaults and redirect to host app
                 if index == (content.attachments?.count)! - 1 {
-                    let userDefaults = UserDefaults(suiteName: "group.\(this.hostAppBundleIdentifier)")
+                    let userDefaults = UserDefaults(suiteName: "com.akiflow.mobile.group")
                     userDefaults?.set(this.sharedText, forKey: this.sharedKey)
                     userDefaults?.synchronize()
                     this.redirectToHostApp(type: .text)
                 }
 
             } else {
+                print("Error: \(error?.localizedDescription ?? "Unknown error")")
                 self?.dismissWithError()
             }
         }
@@ -85,7 +88,7 @@ class ShareViewController: SLComposeServiceViewController {
 
                 // If this is the last item, save imagesData in userDefaults and redirect to host app
                 if index == (content.attachments?.count)! - 1 {
-                    let userDefaults = UserDefaults(suiteName: "group.\(this.hostAppBundleIdentifier)")
+                    let userDefaults = UserDefaults(suiteName: "com.akiflow.mobile.group")
                     userDefaults?.set(this.sharedText, forKey: this.sharedKey)
                     userDefaults?.synchronize()
                     this.redirectToHostApp(type: .text)
@@ -105,7 +108,7 @@ class ShareViewController: SLComposeServiceViewController {
                 // Always copy
                 let fileName = this.getFileName(from: url, type: .image)
                 let newPath = FileManager.default
-                    .containerURL(forSecurityApplicationGroupIdentifier: "group.\(this.hostAppBundleIdentifier)")!
+                    .containerURL(forSecurityApplicationGroupIdentifier: "com.akiflow.mobile.group")!
                     .appendingPathComponent(fileName)
                 let copied = this.copyFile(at: url, to: newPath)
                 if(copied) {
@@ -114,7 +117,7 @@ class ShareViewController: SLComposeServiceViewController {
 
                 // If this is the last item, save imagesData in userDefaults and redirect to host app
                 if index == (content.attachments?.count)! - 1 {
-                    let userDefaults = UserDefaults(suiteName: "group.\(this.hostAppBundleIdentifier)")
+                    let userDefaults = UserDefaults(suiteName: "com.akiflow.mobile.group")
                     userDefaults?.set(this.toData(data: this.sharedMedia), forKey: this.sharedKey)
                     userDefaults?.synchronize()
                     this.redirectToHostApp(type: .media)
@@ -134,7 +137,7 @@ class ShareViewController: SLComposeServiceViewController {
                 // Always copy
                 let fileName = this.getFileName(from: url, type: .video)
                 let newPath = FileManager.default
-                    .containerURL(forSecurityApplicationGroupIdentifier: "group.\(this.hostAppBundleIdentifier)")!
+                    .containerURL(forSecurityApplicationGroupIdentifier: "com.akiflow.mobile.group")!
                     .appendingPathComponent(fileName)
                 let copied = this.copyFile(at: url, to: newPath)
                 if(copied) {
@@ -146,7 +149,7 @@ class ShareViewController: SLComposeServiceViewController {
 
                 // If this is the last item, save imagesData in userDefaults and redirect to host app
                 if index == (content.attachments?.count)! - 1 {
-                    let userDefaults = UserDefaults(suiteName: "group.\(this.hostAppBundleIdentifier)")
+                    let userDefaults = UserDefaults(suiteName: "com.akiflow.mobile.group")
                     userDefaults?.set(this.toData(data: this.sharedMedia), forKey: this.sharedKey)
                     userDefaults?.synchronize()
                     this.redirectToHostApp(type: .media)
@@ -166,7 +169,7 @@ class ShareViewController: SLComposeServiceViewController {
                 // Always copy
                 let fileName = this.getFileName(from :url, type: .file)
                 let newPath = FileManager.default
-                    .containerURL(forSecurityApplicationGroupIdentifier: "group.\(this.hostAppBundleIdentifier)")!
+                    .containerURL(forSecurityApplicationGroupIdentifier: "com.akiflow.mobile.group")!
                     .appendingPathComponent(fileName)
                 let copied = this.copyFile(at: url, to: newPath)
                 if (copied) {
@@ -174,7 +177,7 @@ class ShareViewController: SLComposeServiceViewController {
                 }
 
                 if index == (content.attachments?.count)! - 1 {
-                    let userDefaults = UserDefaults(suiteName: "group.\(this.hostAppBundleIdentifier)")
+                    let userDefaults = UserDefaults(suiteName: "com.akiflow.mobile.group")
                     userDefaults?.set(this.toData(data: this.sharedMedia), forKey: this.sharedKey)
                     userDefaults?.synchronize()
                     this.redirectToHostApp(type: .file)
@@ -291,7 +294,7 @@ class ShareViewController: SLComposeServiceViewController {
     private func getThumbnailPath(for url: URL) -> URL {
         let fileName = Data(url.lastPathComponent.utf8).base64EncodedString().replacingOccurrences(of: "==", with: "")
         let path = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.\(hostAppBundleIdentifier)")!
+            .containerURL(forSecurityApplicationGroupIdentifier: "com.akiflow.mobile.group")!
             .appendingPathComponent("\(fileName).jpg")
         return path
     }

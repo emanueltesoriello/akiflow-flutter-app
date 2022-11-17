@@ -41,12 +41,27 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     TasksCubit tasksCubit = context.read<TasksCubit>();
     intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen((String value) {
+      print(value);
       showCupertinoModalBottomSheet(
         context: context,
         builder: (context) => CreateTaskModal(
           sharedText: value,
         ),
       );
+    }, onError: (err) {
+      print("getLinkStream error: $err");
+    });
+    ReceiveSharingIntent.getInitialText().then((String? value) {
+      if (value != null) {
+              print(value);
+
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => CreateTaskModal(
+            sharedText: value,
+          ),
+        );
+      }
     }, onError: (err) {
       print("getLinkStream error: $err");
     });
@@ -96,6 +111,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    streamSubscription?.cancel();
+    intentDataStreamSubscription.cancel();
+    super.dispose();
+  }
+
   Future<void> _checkIfHasAccountsToReconnect() async {
     context.read<IntegrationsCubit>().refresh().then((_) {
       bool reconnectPageVisible = context.read<IntegrationsCubit>().state.reconnectPageVisible;
@@ -128,11 +151,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
