@@ -12,8 +12,8 @@ import 'components/duration_widget.dart';
 import 'components/priority_widget.dart';
 
 class CreateTaskModal extends StatefulWidget {
-  const CreateTaskModal({Key? key}) : super(key: key);
-
+  const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
+  final String? sharedText;
   @override
   State<CreateTaskModal> createState() => _CreateTaskModalState();
 }
@@ -34,7 +34,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
     simpleTitleController.text = editTaskCubit.state.originalTask.title ?? '';
 
-    String descriptionHtml = editTaskCubit.state.originalTask.description ?? '';
+    String descriptionHtml = widget.sharedText ?? editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
     super.initState();
   }
@@ -49,9 +49,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           shrinkWrap: true,
           children: [
             Container(
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 color: Theme.of(context).backgroundColor,
-                borderRadius:const BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
                 ),

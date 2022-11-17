@@ -50,6 +50,8 @@ PODS:
     - Flutter
   - path_provider_ios (0.0.1):
     - Flutter
+  - receive_sharing_intent (0.0.1):
+    - Flutter
   - Segment-Amplitude (3.3.2):
     - Amplitude (~> 8.3)
     - Analytics
@@ -91,6 +93,7 @@ DEPENDENCIES:
   - intercom_flutter (from `.symlinks/plugins/intercom_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - receive_sharing_intent (from `.symlinks/plugins/receive_sharing_intent/ios`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -137,6 +140,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
+  receive_sharing_intent:
+    :path: ".symlinks/plugins/receive_sharing_intent/ios"
   sentry_flutter:
     :path: ".symlinks/plugins/sentry_flutter/ios"
   shared_preferences_ios:
@@ -171,6 +176,7 @@ SPEC CHECKSUMS:
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  receive_sharing_intent: c0d87310754e74c0f9542947e7cbdf3a0335a3b1
   Segment-Amplitude: 6c1e59c8c278a21029ba7a6a788fcb31b9233a2c
   segment-appsflyer-ios: 78c65acfd78dd17ed347623f01919c44b0226174
   Sentry: 2c6053e4cfe6dea6608135dea1928ffbb4ecfba5

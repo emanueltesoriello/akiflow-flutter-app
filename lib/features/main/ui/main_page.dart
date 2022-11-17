@@ -31,6 +31,9 @@ import 'package:mobile/extensions/task_extension.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+
+import '../../tasks/create_task/ui/create_task_modal.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -41,6 +44,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
+  late StreamSubscription intentDataStreamSubscription;
 
   @override
   void initState() {
@@ -48,6 +52,16 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     TasksCubit tasksCubit = context.read<TasksCubit>();
+    intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen((String value) {
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => CreateTaskModal(
+          sharedText: value,
+        ),
+      );
+    }, onError: (err) {
+      print("getLinkStream error: $err");
+    });
 
     if (streamSubscription != null) {
       streamSubscription!.cancel();
