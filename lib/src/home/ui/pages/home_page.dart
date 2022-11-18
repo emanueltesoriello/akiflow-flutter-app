@@ -33,11 +33,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
   SharedMedia? media;
+  final handler = ShareHandlerPlatform.instance;
 
   Future<void> initPlatformState() async {
-    final handler = ShareHandlerPlatform.instance;
-    media = await handler.getInitialSharedMedia();
-
     handler.sharedMediaStream.listen((SharedMedia? media) {
       if (!mounted) return;
       if (media != null) {
