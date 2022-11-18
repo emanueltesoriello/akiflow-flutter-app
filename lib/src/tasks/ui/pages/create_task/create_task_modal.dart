@@ -36,6 +36,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
     String descriptionHtml = widget.sharedText ?? editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
+    context.read<EditTaskCubit>().updateDescription(descriptionHtml);
+
     super.initState();
   }
 
