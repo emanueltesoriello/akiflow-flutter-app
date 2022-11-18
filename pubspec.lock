@@ -105,7 +105,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   charcode:
     dependency: transitive
     description:
@@ -126,7 +126,7 @@ packages:
       name: clock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   code_builder:
     dependency: transitive
     description:
@@ -610,14 +610,14 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4"
+    version: "0.1.5"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.8.0"
   mime:
     dependency: transitive
     description:
@@ -701,7 +701,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.2"
   path_drawing:
     dependency: transitive
     description:
@@ -842,13 +842,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
-  receive_sharing_intent:
-    dependency: "direct main"
-    description:
-      name: receive_sharing_intent
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.5"
   rrule:
     dependency: "direct main"
     description:
@@ -870,6 +863,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.13.1"
+  share_handler:
+    dependency: "direct main"
+    description:
+      name: share_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.16"
+  share_handler_android:
+    dependency: transitive
+    description:
+      name: share_handler_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
+  share_handler_ios:
+    dependency: transitive
+    description:
+      name: share_handler_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  share_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: share_handler_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   shared_preferences:
     dependency: "direct main"
     description:

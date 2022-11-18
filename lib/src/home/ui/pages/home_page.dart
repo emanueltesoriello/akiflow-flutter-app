@@ -19,7 +19,7 @@ import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:share_handler/share_handler.dart';
 
 import 'home_body.dart';
 
@@ -32,39 +32,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
-  late StreamSubscription intentDataStreamSubscription;
+  SharedMedia? media;
+
+  Future<void> initPlatformState() async {
+    final handler = ShareHandlerPlatform.instance;
+    media = await handler.getInitialSharedMedia();
+
+    handler.sharedMediaStream.listen((SharedMedia? media) {
+      if (!mounted) return;
+      if (media != null) {
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => CreateTaskModal(
+            sharedText: media.content,
+          ),
+        );
+      }
+    });
+    if (!mounted) return;
+  }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    initPlatformState();
 
     TasksCubit tasksCubit = context.read<TasksCubit>();
-    intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen((String value) {
-      print(value);
-      showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context) => CreateTaskModal(
-          sharedText: value,
-        ),
-      );
-    }, onError: (err) {
-      print("getLinkStream error: $err");
-    });
-    ReceiveSharingIntent.getInitialText().then((String? value) {
-      if (value != null) {
-              print(value);
-
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => CreateTaskModal(
-            sharedText: value,
-          ),
-        );
-      }
-    }, onError: (err) {
-      print("getLinkStream error: $err");
-    });
 
     if (streamSubscription != null) {
       streamSubscription!.cancel();
@@ -115,7 +109,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     streamSubscription?.cancel();
-    intentDataStreamSubscription.cancel();
     super.dispose();
   }
 
@@ -150,7 +143,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       context.read<SyncCubit>().sync(loading: true);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
