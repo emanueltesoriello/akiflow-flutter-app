@@ -569,7 +569,7 @@ class _StringsTodayEn {
   // Translations
   String get title => 'Today';
   String get toDos => 'To-dos';
-  String get pinnedInCalendar => 'Scheduled in calendar';
+  String get pinnedInCalendar => 'Scheduled on calendar';
   String get done => 'Done';
 }
 
@@ -1070,7 +1070,7 @@ extension on _StringsEn {
       'editTask.repeatingEditDialog.thisAndAllFuture': 'This and all future tasks',
       'today.title': 'Today',
       'today.toDos': 'To-dos',
-      'today.pinnedInCalendar': 'Scheduled in calendar',
+      'today.pinnedInCalendar': 'Scheduled on calendar',
       'today.done': 'Done',
       'comingSoon': 'Coming soon',
       'allTasks': 'All tasks',

@@ -370,6 +370,7 @@ CREATE TABLE IF NOT EXISTS tasks(
   `created_at` TEXT,
   `updated_at` TEXT,
   `deleted_at` TEXT,
+  `trashed_at` TEXT,
   `daily_goal` INTEGER,
   `origin` TEXT,
   `remote_updated_at` TEXT,

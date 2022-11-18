@@ -60,7 +60,9 @@ class TasksRepository extends DatabaseRepository {
           DateTime.now().toUtc().toIso8601String(),
           DateTime.now().toUtc().toIso8601String(),
         ],
-      );
+      ).catchError((e) {
+        print(e);
+      });
     } else {
       items = await _databaseService.database!.rawQuery(
         """
@@ -85,7 +87,9 @@ class TasksRepository extends DatabaseRepository {
           DateTime.now().toUtc().toIso8601String(),
           DateTime.now().toUtc().toIso8601String(),
         ],
-      );
+      ).catchError((e) {
+        print(e);
+      });
     }
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));

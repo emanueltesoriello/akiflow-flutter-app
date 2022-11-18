@@ -189,6 +189,7 @@ class Task extends Equatable implements Base {
       'origin': origin,
       'sorting': sorting,
       'sorting_label': sortingLabel,
+      'trashed_at': trashedAt,
       'selected': selected,
       'dailyGoal': dailyGoal,
       'links': (links == null || links!.isEmpty) ? null : List<dynamic>.from(links!.map((x) => x)),
@@ -239,6 +240,7 @@ class Task extends Equatable implements Base {
       originAccountId: map['origin_account_id'] != null ? map['origin_account_id'] as String? : null,
       akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
       doc: map['doc'] != null ? map['doc'] as dynamic : null,
+      trashedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
     );
   }
 
