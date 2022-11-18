@@ -83,7 +83,7 @@ class IntegrationsPage extends StatelessWidget {
                                   account.connectorId == 'gmail') {
                                 Navigator.of(context).push(
                                     MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
-                              } else {
+                              } else if (account.connectorId == 'gmail' || account.connectorId == 'google') {
                                 context.read<IntegrationsCubit>().connectGmail(email: account.identifier);
                               }
                             },

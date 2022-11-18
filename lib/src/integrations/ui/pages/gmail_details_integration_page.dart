@@ -29,7 +29,7 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComp(
-        title: t.settings.integrations.gmail.title + "cciao",
+        title: t.settings.integrations.gmail.title,
         showBack: true,
       ),
       body: Column(
