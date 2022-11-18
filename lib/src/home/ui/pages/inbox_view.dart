@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -66,7 +67,7 @@ class _ViewState extends State<_View> {
               width: 26,
               height: 26,
             ),
-            actions: const [TaskListMenu()],
+            //actions: const [TaskListMenu()],
             showSyncButton: true,
           ),
           body: Stack(
@@ -78,6 +79,7 @@ class _ViewState extends State<_View> {
                   tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
                   if (tasksState.tasksLoaded && tasks.isEmpty) {
                     return RefreshIndicator(
+                      backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         return context.read<SyncCubit>().sync();
                       },

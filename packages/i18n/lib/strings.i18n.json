@@ -256,7 +256,7 @@
   "today": {
     "title": "Today",
     "toDos": "To-dos",
-    "pinnedInCalendar": "Pinned in calendar",
+    "pinnedInCalendar": "Scheduled in calendar",
     "done": "Done"
   },
   "comingSoon": "Coming soon",
