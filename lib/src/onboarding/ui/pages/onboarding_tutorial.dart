@@ -5,7 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/task/slidable_sender.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
-import 'package:mobile/src/integrations/ui/widgets/reconnect_integrations.dart';
+import 'package:mobile/src/integrations/ui/pages/reconnect_integrations.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/onboarding/ui/widgets/box_with_info.dart';
 import 'package:mobile/src/onboarding/ui/widgets/task_row_fake.dart';

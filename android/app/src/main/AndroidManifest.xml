@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" package="com.akiflow.mobile">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application android:label="Akiflow" android:name="${applicationName}" android:icon="@mipmap/ic_launcher" tools:replace="android:fullBackupContent" android:fullBackupContent="false">
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">

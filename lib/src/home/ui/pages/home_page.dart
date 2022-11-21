@@ -11,7 +11,7 @@ import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
-import 'package:mobile/src/integrations/ui/widgets/reconnect_integrations.dart';
+import 'package:mobile/src/integrations/ui/pages/reconnect_integrations.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
