@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -121,7 +123,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
       List<Account> accounts = context.read<IntegrationsCubit>().state.accounts;
 
-      if (accounts.any((account) => !context.read<IntegrationsCubit>().isLocalActive(account))) {
+      if (accounts.any((account) => !context.read<IntegrationsCubit>().isLocalActive(account)) &&
+          !locator<PreferencesRepository>().reconnectPageSkipped) {
         context.read<IntegrationsCubit>().reconnectPageVisible(true);
 
         SchedulerBinding.instance.addPostFrameCallback((_) {
