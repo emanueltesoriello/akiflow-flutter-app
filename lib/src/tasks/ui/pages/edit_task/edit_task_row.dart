@@ -203,6 +203,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       onTap: () {
         HapticFeedback.heavyImpact();
         context.read<EditTaskCubit>().markAsDone();
+        Navigator.of(context).pop();
       },
       child: Builder(builder: (context) {
         bool completed = task.isCompletedComputed;
