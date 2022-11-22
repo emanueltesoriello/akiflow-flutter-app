@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 
 import '../../../../common/style/colors.dart';
@@ -28,11 +27,11 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
           const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:  [
+            children: [
               Expanded(
                 child: Column(
-                  children:  [
-                   const Text(
+                  children: [
+                    const Text(
                       "No active links to show",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -41,7 +40,7 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 15),
-                     Text(
+                    Text(
                       "To create a link use the desktop app",
                       textAlign: TextAlign.center,
                       style: TextStyle(

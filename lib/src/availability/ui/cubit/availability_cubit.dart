@@ -38,10 +38,10 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
     switch (type) {
       case AvailabililtyConfigSlotsType.manual:
         emit(state.copyWith(isManualOpen: !state.isManualOpen));
-        break;
+        return;
       case AvailabililtyConfigSlotsType.recurrent:
         emit(state.copyWith(isRecurrentOpen: !state.isRecurrentOpen));
-        break;
+        return;
     }
   }
 

@@ -49,10 +49,10 @@ class AvailabilitiesView extends StatelessWidget {
               type: AvailabililtyConfigSlotsType.manual,
               asset: Assets.images.icons.common.handDrawSVG,
               text: 'Active manual slots',
-              isOpen: state.isManualOpen),
+              isOpen: context.watch<AvailabilityCubit>().state.isManualOpen),
           const Separator(),
           SlotList(
-              isOpen: state.isManualOpen,
+              isOpen: context.watch<AvailabilityCubit>().state.isManualOpen,
               configs: state.availabilities
                       ?.where((element) => element.type == AvailabililtyConfigSlotsType.manual)
                       .toList() ??
@@ -61,14 +61,15 @@ class AvailabilitiesView extends StatelessWidget {
               type: AvailabililtyConfigSlotsType.recurrent,
               asset: Assets.images.icons.common.recurrentSVG,
               text: 'Active recurrent slots',
-              isOpen: state.isRecurrentOpen),
+              isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen),
+          const Separator(),
           SlotList(
-              isOpen: state.isRecurrentOpen,
+              isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
               configs: state.availabilities
                       ?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent)
                       .toList() ??
                   []),
-          const Separator()
+          const SizedBox(height: 72)
         ],
       );
     });

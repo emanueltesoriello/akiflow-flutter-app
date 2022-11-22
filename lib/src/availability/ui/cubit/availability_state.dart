@@ -32,5 +32,5 @@ class AvailabilityCubitState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [navigationState, isNoticeDismissed, availabilities];
+  List<Object?> get props => [navigationState, isNoticeDismissed, availabilities, isManualOpen, isRecurrentOpen];
 }

@@ -32,9 +32,8 @@ class SlotsHeader extends StatelessWidget {
               print(isOpen);
               context.read<AvailabilityCubit>().toggleHeader(type);
             },
-            child: SvgPicture.asset(context.watch<AvailabilityCubit>().state.isManualOpen
-                ? Assets.images.icons.common.chevronUpSVG
-                : Assets.images.icons.common.chevronDownSVG),
+            child: SvgPicture.asset(
+                isOpen ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG),
           ),
         ],
       ),
