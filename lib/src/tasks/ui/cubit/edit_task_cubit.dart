@@ -153,6 +153,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(showLabelsList: !state.showLabelsList, showDuration: false, showPriority: false));
   }
 
+  Future<void> setEmptyLabel() async {
+    Task updated = state.updatedTask.copyWith(
+      listId: Nullable(null),
+    );
+
+    emit(state.copyWith(showLabelsList: false, updatedTask: updated));
+  }
+
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
       listId: Nullable(label.id),
