@@ -34,7 +34,7 @@ class SlotTile extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
-                  width: 210,
+                  width: 170,
                   child: Text(
                     config.title ?? '',
                     style: const TextStyle(
