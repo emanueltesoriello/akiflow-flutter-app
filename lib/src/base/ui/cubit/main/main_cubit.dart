@@ -9,6 +9,7 @@ import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/user.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 part 'main_state.dart';
 
@@ -28,6 +29,9 @@ class MainCubit extends Cubit<MainCubitState> {
 
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
+
+  // *********************************
+  // *********************************
 
   MainCubit(this._syncCubit, this._authCubit) : super(const MainCubitState()) {
     AnalyticsService.track("Launch");

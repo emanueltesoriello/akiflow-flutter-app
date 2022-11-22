@@ -68,6 +68,18 @@ android {
         }
     }
 
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            dimension "default"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+        prod {
+            dimension "default"
+        }
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.release
@@ -84,8 +96,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // implementation 'com.google.firebase:firebase-core:17.4.4'
-    // implementation 'com.google.firebase:firebase-messaging:20.2.3'
+    implementation 'com.google.firebase:firebase-core:17.4.4'
+    implementation 'com.google.firebase:firebase-messaging:20.2.3'
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 }
 
 apply plugin: 'com.google.gms.google-services'
