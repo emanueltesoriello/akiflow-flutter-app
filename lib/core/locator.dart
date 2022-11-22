@@ -11,6 +11,7 @@ import 'package:mobile/core/api/task_api.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/repository/availabilities_repository.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
@@ -23,6 +24,7 @@ import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/push_notification_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
@@ -32,8 +34,11 @@ import 'package:models/calendar/calendar.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/event/event.dart';
 import 'package:models/label/label.dart';
+import 'package:models/task/availability_config.dart';
 import 'package:models/task/task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'api/availability_api.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -54,6 +59,7 @@ void setupLocator({
   locator.registerSingleton<AccountApi>(AccountApi());
   locator.registerSingleton<AccountV2Api>(AccountV2Api());
   locator.registerSingleton<TaskApi>(TaskApi());
+  locator.registerSingleton<AvailabilityApi>(AvailabilityApi());
   locator.registerSingleton<CalendarApi>(CalendarApi());
   locator.registerSingleton<LabelApi>(LabelApi());
   locator.registerSingleton<EventApi>(EventApi());
@@ -67,6 +73,8 @@ void setupLocator({
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);
   locator.registerSingleton<TasksRepository>(TasksRepository(fromSql: Task.fromSql));
   locator.registerSingleton<AccountsRepository>(AccountsRepository(fromSql: Account.fromSql));
+  locator.registerSingleton<AvailabilitiesRepository>(AvailabilitiesRepository(fromSql: AvailabilityConfig.fromSql));
+
   locator.registerSingleton<CalendarsRepository>(CalendarsRepository(fromSql: Calendar.fromSql));
   locator.registerSingleton<LabelsRepository>(LabelsRepository(fromSql: Label.fromSql));
   locator.registerSingleton<EventsRepository>(EventsRepository(fromSql: Event.fromSql));
@@ -84,6 +92,8 @@ void setupLocator({
   SyncCubit syncCubit = SyncCubit();
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   AuthCubit authCubit = AuthCubit(syncCubit);
+  AvailabilityCubit availabilityCubit = AvailabilityCubit();
+
   //BaseCubit exampleCubit = BaseCubit();
 
   tasksCubit.attachAuthCubit(authCubit);
@@ -94,5 +104,7 @@ void setupLocator({
   locator.registerSingleton<TodayCubit>(todayCubit);
   locator.registerSingleton<SyncCubit>(syncCubit);
   locator.registerSingleton<AuthCubit>(authCubit);
+  locator.registerSingleton<AvailabilityCubit>(availabilityCubit);
+
   //locator.registerSingleton<BaseCubit>(exampleCubit);
 }

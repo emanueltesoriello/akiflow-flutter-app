@@ -24,13 +24,13 @@ class DatabaseService {
 
     database = await sql.openDatabase(
       _databaseName,
-      version: 3,
-      onCreate: (db, version) {
+      version: 4,
+      onCreate: (db, version) async {
         print('Creating database version $version');
 
         var batch = db.batch();
 
-        _setup(batch);
+        await _setup(batch);
 
         List<Function(sql.Batch)> migrations = [
           addTasksDocField,
@@ -83,6 +83,7 @@ class DatabaseService {
 
   Future<void> _setup(Batch batch) async {
     _setupAccounts(batch);
+    _setupAvailabilities(batch);
     _setupCalendars(batch);
     _setupContacts(batch);
     _setupDocs(batch);
@@ -120,6 +121,46 @@ CREATE TABLE IF NOT EXISTS accounts(
     ''');
     batch.execute('''
       CREATE INDEX IF NOT EXISTS accounts_identifier ON accounts(`identifier`)
+    ''');
+  }
+
+//  String? reserve_calendar_id,
+//     List<dynamic>? freebusy_calendar_ids,
+
+//     List<dynamic>? slots_configuration,
+//     Map<String, dynamic>? reserved_slots,
+//     String? min_start_time,
+//     String? max_end_time,
+//     String? timezone,
+//     String? reserved_at,
+//     bool? multiuse,
+//     String? url_path,
+//     Map<String, dynamic>? conference_settings,
+//     Map<String, dynamic>? notification_settings,
+//     Map<String, dynamic>? settings,
+//     String? global_created_at,
+//     String? global_updated_at,
+
+  void _setupAvailabilities(Batch batch) {
+    batch.execute('''
+CREATE TABLE IF NOT EXISTS availabilities(
+  `id` UUID PRIMARY KEY,
+  `duration` INTEGER,
+  `reserve_calendar_id` VARCHAR(255),
+  `slots_type` INTEGER,
+  `title` VARCHAR(255),
+  `description` TEXT,
+  `min_start_time` TEXT,
+  `max_end_time` TEXT,
+  `timezone` VARCHAR(255),
+  `reserved_at` TEXT,
+  `url_path` VARCHAR(255),
+  `global_created_at` TEXT,
+  `global_updated_at` TEXT,
+  `created_at` TEXT,
+  `updated_at` TEXT,
+  `deleted_at` TEXT,
+)
     ''');
   }
 

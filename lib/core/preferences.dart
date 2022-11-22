@@ -12,8 +12,12 @@ abstract class PreferencesRepository {
   User? get user;
 
   bool get inboxNoticeHidden;
+  
+  bool get availabilitiesNoticeHidden;
 
   Future<void> setInboxNoticeHidden(bool value);
+
+  Future<void> setAvailabilitiesNoticeHidden(bool value);
 
   DateTime? get lastAccountsV2SyncAt;
   Future<void> setLastAccountsV2SyncAt(DateTime? value);
@@ -92,8 +96,18 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
+  bool get availabilitiesNoticeHidden {
+    return _prefs.getBool("availabilitiesNoticeHidden") ?? false;
+  }
+
+  @override
   Future<void> setInboxNoticeHidden(bool value) async {
     await _prefs.setBool("inboxNoticeHidden", value);
+  }
+
+  @override
+  Future<void> setAvailabilitiesNoticeHidden(bool value) async {
+    await _prefs.setBool("availabilitiesNoticeHidden", value);
   }
 
   @override
