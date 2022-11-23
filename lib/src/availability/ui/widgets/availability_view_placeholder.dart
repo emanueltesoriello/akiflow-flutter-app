@@ -41,7 +41,7 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      "To create a link use the desktop app",
+                      "To create a link use  the desktop app",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 17,

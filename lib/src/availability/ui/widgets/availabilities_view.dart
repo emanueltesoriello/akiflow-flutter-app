@@ -10,8 +10,6 @@ import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:models/task/availability_config.dart';
-
-import '../../../../common/style/colors.dart';
 import '../../../base/ui/widgets/task/notice.dart';
 import 'slot_list.dart';
 
@@ -26,51 +24,54 @@ class AvailabilitiesView extends StatelessWidget {
       if (state.availabilities?.isEmpty ?? true) {
         return const AvailabilityViewPlaceholder();
       }
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          state.isNoticeDismissed
-              ? const SizedBox.shrink()
-              : GestureDetector(
-                  onLongPress: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Notice(
-                      title: "Coming Soon",
-                      subtitle: "The full calendar experience is coming in the near future",
-                      icon: Icons.info_outline,
-                      onClose: () {
-                        context.read<AvailabilityCubit>().noticeClosed();
-                      },
+      return RefreshIndicator(
+        onRefresh: ()=>context.read<AvailabilityCubit>().getAvailabilities(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            state.isNoticeDismissed
+                ? const SizedBox.shrink()
+                : GestureDetector(
+                    onLongPress: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Notice(
+                        title: "Coming Soon",
+                        subtitle: "The full calendar experience is coming in the near future",
+                        icon: Icons.info_outline,
+                        onClose: () {
+                          context.read<AvailabilityCubit>().noticeClosed();
+                        },
+                      ),
                     ),
                   ),
-                ),
-          SlotsHeader(
-              type: AvailabililtyConfigSlotsType.manual,
-              asset: Assets.images.icons.common.handDrawSVG,
-              text: 'Active manual slots',
-              isOpen: context.watch<AvailabilityCubit>().state.isManualOpen),
-          const Separator(),
-          SlotList(
-              isOpen: context.watch<AvailabilityCubit>().state.isManualOpen,
-              configs: state.availabilities
-                      ?.where((element) => element.type == AvailabililtyConfigSlotsType.manual)
-                      .toList() ??
-                  []),
-          SlotsHeader(
-              type: AvailabililtyConfigSlotsType.recurrent,
-              asset: Assets.images.icons.common.recurrentSVG,
-              text: 'Active recurrent slots',
-              isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen),
-          const Separator(),
-          SlotList(
-              isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
-              configs: state.availabilities
-                      ?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent)
-                      .toList() ??
-                  []),
-          const SizedBox(height: 72)
-        ],
+            SlotsHeader(
+                type: AvailabililtyConfigSlotsType.manual,
+                asset: Assets.images.icons.common.handDrawSVG,
+                text: 'Active manual slots',
+                isOpen: context.watch<AvailabilityCubit>().state.isManualOpen),
+            const Separator(),
+            SlotList(
+                isOpen: context.watch<AvailabilityCubit>().state.isManualOpen,
+                configs: state.availabilities
+                        ?.where((element) => element.type == AvailabililtyConfigSlotsType.manual)
+                        .toList() ??
+                    []),
+            SlotsHeader(
+                type: AvailabililtyConfigSlotsType.recurrent,
+                asset: Assets.images.icons.common.recurrentSVG,
+                text: 'Active recurrent slots',
+                isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen),
+            const Separator(),
+            SlotList(
+                isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
+                configs: state.availabilities
+                        ?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent)
+                        .toList() ??
+                    []),
+            const SizedBox(height: 72)
+          ],
+        ),
       );
     });
   }

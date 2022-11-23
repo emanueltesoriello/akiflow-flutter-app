@@ -237,6 +237,7 @@ class AvailabilityConfig extends Equatable implements Base {
       'id': id,
       'duration': duration,
       'reserve_calendar_id': reserve_calendar_id,
+      'slots_type':slots_type,
       'title': title,
       'description': description,
       'min_start_time': min_start_time,
