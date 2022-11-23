@@ -24,8 +24,13 @@ class AvailabilitiesView extends StatelessWidget {
       if (state.availabilities?.isEmpty ?? true) {
         return const AvailabilityViewPlaceholder();
       }
+      List<AvailabilityConfig> manual =
+          state.availabilities?.where((element) => element.type == AvailabililtyConfigSlotsType.manual).toList() ?? [];
+      List<AvailabilityConfig> recurrent =
+          state.availabilities?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent).toList() ??
+              [];
       return RefreshIndicator(
-        onRefresh: ()=>context.read<AvailabilityCubit>().getAvailabilities(),
+        onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -45,30 +50,22 @@ class AvailabilitiesView extends StatelessWidget {
                       ),
                     ),
                   ),
-            SlotsHeader(
-                type: AvailabililtyConfigSlotsType.manual,
-                asset: Assets.images.icons.common.handDrawSVG,
-                text: 'Active manual slots',
-                isOpen: context.watch<AvailabilityCubit>().state.isManualOpen),
-            const Separator(),
-            SlotList(
-                isOpen: context.watch<AvailabilityCubit>().state.isManualOpen,
-                configs: state.availabilities
-                        ?.where((element) => element.type == AvailabililtyConfigSlotsType.manual)
-                        .toList() ??
-                    []),
-            SlotsHeader(
-                type: AvailabililtyConfigSlotsType.recurrent,
-                asset: Assets.images.icons.common.recurrentSVG,
-                text: 'Active recurrent slots',
-                isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen),
-            const Separator(),
-            SlotList(
-                isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
-                configs: state.availabilities
-                        ?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent)
-                        .toList() ??
-                    []),
+            manual.isNotEmpty
+                ? SlotsHeader(
+                    type: AvailabililtyConfigSlotsType.manual,
+                    asset: Assets.images.icons.common.handDrawSVG,
+                    text: 'Active manual slots',
+                    isOpen: context.watch<AvailabilityCubit>().state.isManualOpen)
+                : const SizedBox.shrink(),
+            SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),
+            recurrent.isNotEmpty
+                ? SlotsHeader(
+                    type: AvailabililtyConfigSlotsType.recurrent,
+                    asset: Assets.images.icons.common.recurrentSVG,
+                    text: 'Active recurrent slots',
+                    isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen)
+                : const SizedBox.shrink(),
+            SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent),
             const SizedBox(height: 72)
           ],
         ),
