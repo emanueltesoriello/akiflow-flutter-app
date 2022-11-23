@@ -47,16 +47,18 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
 
   Future<void> getAvailabilities() async {
     try {
-      List<AvailabilityConfig> availabilities = await _client.getItems(
+      List<AvailabilityConfig> availabilities = await _availabilitiesRepository.getAvailabilities();
+      print(availabilities);
+      emit(state.copyWith(availabilities: availabilities, navigationState: AvailabilityNavigationState.mainPage));
+      List<AvailabilityConfig> availabilities2 = await _client.getItems(
           perPage: 2500, withDeleted: false, nextPageUrl: Uri.parse("${Config.endpoint}/v3/availability-configs"));
       emit(state.copyWith(
         navigationState: AvailabilityNavigationState.mainPage,
-        availabilities: availabilities,
+        availabilities: availabilities2,
       ));
-      await _availabilitiesRepository.add(availabilities);
+      await _availabilitiesRepository.add(availabilities2);
     } catch (e) {
-      List<AvailabilityConfig> availabilities = await _availabilitiesRepository.getAvailabilities();
-      emit(state.copyWith(availabilities: availabilities, navigationState: AvailabilityNavigationState.mainPage));
+      print(e.toString());
     }
   }
 }

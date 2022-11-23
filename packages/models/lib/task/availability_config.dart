@@ -11,7 +11,7 @@ class AvailabilityConfig extends Equatable implements Base {
   final int? duration;
   final String reserve_calendar_id;
   final List<dynamic>? freebusy_calendar_ids;
-  final int slots_type;
+  final int? slots_type;
   final String? title;
   final String? description;
   final List<dynamic>? slots_configuration;
@@ -20,7 +20,7 @@ class AvailabilityConfig extends Equatable implements Base {
   final String? max_end_time;
   final String? timezone;
   final String? reserved_at;
-  final bool multiuse;
+  final bool? multiuse;
   final String? url_path;
   final Map<String, dynamic>? conference_settings;
   final Map<String, dynamic>? notification_settings;

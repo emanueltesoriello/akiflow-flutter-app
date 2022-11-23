@@ -29,9 +29,13 @@ class SlotTile extends StatelessWidget {
             ),
             child: Row(
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(config.settings?['hostPicture']),
-                ),
+                config.settings != null
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(config.settings?['hostPicture']),
+                      )
+                    : CircleAvatar(
+                        child: Text(config.title?.characters.first ?? ''),
+                      ),
                 const SizedBox(width: 10),
                 SizedBox(
                   width: 170,

@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS availabilities(
   `global_updated_at` TEXT,
   `created_at` TEXT,
   `updated_at` TEXT,
-  `deleted_at` TEXT,
+  `deleted_at` TEXT
 )
     ''');
   }

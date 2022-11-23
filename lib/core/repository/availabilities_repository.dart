@@ -20,8 +20,6 @@ class AvailabilitiesRepository extends DatabaseRepository {
           SELECT *
           FROM availabilities
           WHERE deleted_at IS NULL
-          ORDER BY
-            sorting DESC
 """);
 
     List<AvailabilityConfig> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
