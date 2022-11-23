@@ -780,9 +780,9 @@ extension TaskExt on Task {
     try {
       if (doc is SlackDoc && doc.localUrl != null) {
         opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
+      } /*else {
         opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
+      }*/
     } catch (e) {
       print(e);
     }
