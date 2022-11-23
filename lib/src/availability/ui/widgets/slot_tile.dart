@@ -37,15 +37,20 @@ class SlotTile extends StatelessWidget {
                         child: Text(config.title?.characters.first ?? ''),
                       ),
                 const SizedBox(width: 10),
-               Text(
-                    config.title ?? '',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  
-                ),
+               SizedBox(
+                 width: MediaQuery.of(context).size.width/2.1,
+                 child: Text(
+                      config.title ?? '',
+                      softWrap: true,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    
+                  ),
+               ),
                 const SizedBox(width: 10),
                 Text(config.durationString,
                     style: TextStyle(
