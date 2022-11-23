@@ -21,12 +21,12 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
   }
 
   _init() async {
-    bool inboxNoticeHidden = _preferencesRepository.inboxNoticeHidden;
-
-    if (inboxNoticeHidden == false) {
+    if (_preferencesRepository.inboxNoticeHidden == false) {
       emit(state.copyWith(isNoticeDismissed: false));
     }
-    await getAvailabilities();
+    if (_preferencesRepository.user != null) {
+      await getAvailabilities();
+    }
   }
 
   Future<void> noticeClosed() async {

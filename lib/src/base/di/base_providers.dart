@@ -23,10 +23,6 @@ List<BlocProvider> baseProviders = [
     lazy: false,
     create: (BuildContext context) => locator<SyncCubit>(),
   ),
-  BlocProvider<AvailabilityCubit>(
-    lazy: false,
-    create: (BuildContext context) => locator<AvailabilityCubit>(),
-  ),
   BlocProvider<TasksCubit>(
     lazy: false,
     create: (BuildContext context) => locator<TasksCubit>(),
