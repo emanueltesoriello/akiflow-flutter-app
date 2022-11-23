@@ -48,6 +48,9 @@ class DatabaseService {
         print('onUpgrade: $oldVersion -> $newVersion');
 
         var batch = db.batch();
+        if (oldVersion < 4) {
+          _setupAvailabilities(batch);
+        }
         if (oldVersion < 3) {
           batch.execute('ALTER TABLE tasks ADD COLUMN trashed_at TEXT');
         }
