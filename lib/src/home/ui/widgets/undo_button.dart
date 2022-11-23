@@ -88,8 +88,7 @@ class UndoBottomView extends StatelessWidget {
         // TODO: Handle this case.
         break;
       case UndoType.updated:
-        // TODO: Handle this case.
-        break;
+        return ColorsExt.green20(context);
     }
     return ColorsExt.akiflow(context);
   }
@@ -110,9 +109,7 @@ class UndoBottomView extends StatelessWidget {
         // TODO: Handle this case.
         break;
       case UndoType.updated:
-        // TODO: Handle this case.
-        break;
-
+        return 'Task Updated';
       case UndoType.restore:
         // TODO: Handle this case.
         break;
@@ -159,8 +156,11 @@ class UndoBottomView extends StatelessWidget {
         // TODO: Handle this case.
         break;
       case UndoType.updated:
-        // TODO: Handle this case.
-        break;
+        return SvgPicture.asset(
+          Assets.images.icons.common.checkDoneOutlineSVG,
+          color: ColorsExt.grey2_5(context),
+          height: 20,
+        );
     }
     return SvgPicture.asset(
       Assets.images.icons.common.calendarSVG,
