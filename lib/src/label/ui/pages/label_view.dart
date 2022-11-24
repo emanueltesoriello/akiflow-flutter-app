@@ -69,7 +69,7 @@ class _LabelViewState extends State<LabelView> {
             filtered = labelTasks.where((element) => !element.isCompletedComputed).toList();
           }
 
-          filtered = filtered.where((element) => element.listId == labelState.selectedLabel?.id).toList();
+          filtered = filtered.where((element) => element.listId == labelState.selectedLabel?.id && element.status!=10).toList();
 
           // Remove `sectionId` when the section not exists anymore
           for (Task task in filtered) {
