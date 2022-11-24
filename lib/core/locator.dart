@@ -20,7 +20,6 @@ import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
-import 'package:mobile/core/services/push_notification_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
@@ -77,7 +76,6 @@ void setupLocator({
   locator.registerSingleton<IntercomService>(IntercomService());
 
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
-  locator.registerSingleton<PushNotificationService>(PushNotificationService());
 
   /// Blocs
   TodayCubit todayCubit = TodayCubit();
