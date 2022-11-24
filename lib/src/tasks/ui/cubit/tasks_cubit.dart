@@ -313,7 +313,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
         selected: false,
-        status: Nullable(TaskStatusType.deleted.id),
+        status: Nullable(TaskStatusType.trashed.id),
         trashedAt: now,
         updatedAt: Nullable(now),
       );
