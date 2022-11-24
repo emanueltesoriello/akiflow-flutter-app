@@ -225,13 +225,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     DateTime now = DateTime.now();
-    _tasksCubit.addToUndoQueue([task], UndoType.delete);
+    await _tasksCubit.addToUndoQueue([task], UndoType.delete);
 
     Task updated = task.copyWith(
       status: Nullable(TaskStatusType.trashed.id),
       trashedAt: TzUtils.toUtcStringIfNotNull(now),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
     );
+
+    await _tasksRepository.updateById(task.id, data: updated);
 
     emit(state.copyWith(updatedTask: updated));
   }

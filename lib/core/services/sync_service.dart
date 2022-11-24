@@ -9,6 +9,7 @@ import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:models/extensions/account_ext.dart';
+import 'package:models/task/task.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -111,6 +112,10 @@ class SyncService {
       throw PostUnsyncedExcepotion(
         "${api.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
       );
+    }
+    var up = updated[0];
+    if (up is Task) {
+      addBreadcrumb(up.toSql().toString());
     }
 
     addBreadcrumb("${api.runtimeType} posted to api ${updated.length} items");

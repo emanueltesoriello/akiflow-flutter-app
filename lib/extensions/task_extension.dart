@@ -59,7 +59,7 @@ extension TaskStatusTypeExt on TaskStatusType {
       case TaskStatusType.hidden:
         return 8;
       case TaskStatusType.trashed:
-        return 9;
+        return 10;
     }
   }
 
@@ -81,7 +81,7 @@ extension TaskStatusTypeExt on TaskStatusType {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
+      case 10:
         return TaskStatusType.trashed;
       default:
         return null;
@@ -345,7 +345,7 @@ extension TaskExt on Task {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
+      case 10:
         return TaskStatusType.trashed;
       default:
         return null;
