@@ -96,6 +96,7 @@ class _TodayViewState extends State<TodayView> {
     });
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: const TodayAppBar(preferredSizeHeight: toolbarHeight, calendarTopMargin: toolbarHeight),
       body: LayoutBuilder(builder: (context, constraints) {
         return SlidingUpPanel(
@@ -155,7 +156,6 @@ class _TodayViewState extends State<TodayView> {
                               context.read<TodayCubit>().openTodoList();
                             },
                             listOpened: context.watch<TodayCubit>().state.todosListOpen,
-                            usePrimaryColor: true,
                           ),
                         ),
                         TaskList(
@@ -174,7 +174,6 @@ class _TodayViewState extends State<TodayView> {
                               context.read<TodayCubit>().openPinnedList();
                             },
                             listOpened: context.watch<TodayCubit>().state.pinnedListOpen,
-                            usePrimaryColor: false,
                           ),
                         ),
                         TaskList(
@@ -193,7 +192,6 @@ class _TodayViewState extends State<TodayView> {
                               context.read<TodayCubit>().openCompletedList();
                             },
                             listOpened: context.watch<TodayCubit>().state.completedListOpen,
-                            usePrimaryColor: false,
                           ),
                         ),
                       ],
