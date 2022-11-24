@@ -6,7 +6,6 @@ import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:models/task/availability_config.dart';
 
 import '../../../../common/style/colors.dart';
-import '../../../base/ui/widgets/base/separator.dart';
 
 class SlotsHeader extends StatelessWidget {
   const SlotsHeader({super.key, required this.asset, required this.text, required this.isOpen, required this.type});
@@ -16,33 +15,23 @@ class SlotsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 12.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SvgPicture.asset(asset),
-              const SizedBox(width: 16),
-              Text(
-                text,
-                style: TextStyle(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500),
-              ),
-              const Spacer(),
-              InkWell(
-                onTap: () {
-                  print(isOpen);
-                  context.read<AvailabilityCubit>().toggleHeader(type);
-                },
-                child: SvgPicture.asset(
-                    isOpen ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG),
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        context.read<AvailabilityCubit>().toggleHeader(type);
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          const SizedBox(width: 16),
+          SvgPicture.asset(asset),
+          const SizedBox(width: 16),
+          Text(
+            text,
+            style: TextStyle(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500),
           ),
-        ),
-        const Separator(),
-      ],
+        ],
+      ),
+      //const Separator(),
     );
   }
 }

@@ -201,6 +201,8 @@ class AvailabilityConfig extends Equatable implements Base {
     return '';
   }
 
+  
+
   @override
   Map<String, dynamic> toMap() {
     return {
