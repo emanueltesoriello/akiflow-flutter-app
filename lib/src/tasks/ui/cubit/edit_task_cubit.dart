@@ -101,7 +101,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+    if (statusType == TaskStatusType.snoozed) {
+      _tasksCubit.addToUndoQueue([updated], UndoType.snooze);
+    } else {
+      _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+    }
 
     emit(state.copyWith(updatedTask: updated));
 
@@ -120,6 +124,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         AnalyticsService.track("Task moved to Inbox");
       } else if (statusType == TaskStatusType.planned) {
         AnalyticsService.track("Task planned");
+      } else if (statusType == TaskStatusType.snoozed) {
+        AnalyticsService.track("Task snoozed");
       }
     }
   }
