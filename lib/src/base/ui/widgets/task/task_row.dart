@@ -369,7 +369,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                           opacity: _fadeOutAnimation.value,
                           child: Container(
                               constraints: BoxConstraints(
-                                minHeight: (widget.task.title?.length ?? 0) > 40 ? 80 : 40,
+                                minHeight: ((widget.task.title?.length ?? 0) > 40 ? 80 : 40) + (20),
                               ),
                               color: Theme.of(context).scaffoldBackgroundColor),
                         );
