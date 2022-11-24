@@ -65,7 +65,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   //doc.getLinkedContentSummary(account), DEPRECATED
-                                  doc.getSummary ?? '',
+                                  doc.getSummary,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
