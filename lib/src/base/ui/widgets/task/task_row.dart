@@ -22,7 +22,7 @@ import 'components/subtitle_widget.dart';
 class TaskRow extends StatefulWidget {
   static const int dailyGoalScaleDurationInMillis = 500;
   static const int dailyGoalBackgroundAppearDelay = 250;
-  static const int fadeOutDurationInMillis = 500;
+  static const int fadeOutDurationInMillis = 200;
 
   final Task task;
   final Function() completedClick;

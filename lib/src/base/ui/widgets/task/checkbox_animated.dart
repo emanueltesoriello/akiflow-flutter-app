@@ -63,7 +63,7 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
     _controller = CheckboxAnimatedController(completedClick: () {
       HapticFeedback.heavyImpact();
 
-      Future.delayed(const Duration(milliseconds: stepDuration * 2 + 400), () {
+      Future.delayed(const Duration(milliseconds: stepDuration * 3 ), () {
         widget.onCompleted();
       });
 
