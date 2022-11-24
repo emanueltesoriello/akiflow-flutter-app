@@ -255,6 +255,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> newInboxTasks = [];
     List<Task> newTodayTasks = [];
     List<Task> newLabelTasks = [];
+    bool controlVar = true;
 
     for (Task task in all) {
       Task newTaskDuplicated = task.copyWith(
@@ -264,18 +265,24 @@ class TasksCubit extends Cubit<TasksCubitState> {
         selected: false,
       );
 
-      duplicates.add(newTaskDuplicated);
+      if (controlVar) {
+        duplicates.add(newTaskDuplicated);
+        controlVar = false;
+      }
 
       if (inboxSelected.contains(task)) {
         newInboxTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
 
       if (todayTasksSelected.contains(task)) {
         newTodayTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
 
       if (labelTasksSelected.contains(task)) {
         newLabelTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
     }
 
