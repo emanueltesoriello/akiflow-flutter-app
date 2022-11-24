@@ -151,7 +151,11 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                   );
 
                   if (newLink != null) {
-                    cubit.addLink(newLink);
+                    if (newLink.contains('//')) {
+                      cubit.addLink(newLink);
+                    } else {
+                      cubit.addLink('http://$newLink');
+                    }
                   }
                 },
               );
