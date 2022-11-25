@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/label/label.dart';
 
+import 'label_title.dart';
+
 class LabelItem extends StatelessWidget {
   final Label label;
   final Label? folder;
@@ -55,47 +57,10 @@ class LabelItem extends StatelessWidget {
                 child: SvgPicture.asset(iconAsset, width: 16, height: 16, color: iconForeground),
               ),
             ),
-            Expanded(child: _text(context)),
+            Expanded(child: LabelTitle(label: label, folder: folder)),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _text(BuildContext context) {
-    return Wrap(
-      children: [
-        const SizedBox(width: 8),
-        Text(
-          label.title ?? '(No title)',
-          style: TextStyle(
-            fontSize: 17,
-            overflow: TextOverflow.ellipsis,
-            color: label.id != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-          ),
-        ),
-        Builder(builder: (context) {
-          if (folder == null) {
-            return const SizedBox();
-          }
-
-          return Row(
-            children: [
-              const SizedBox(width: 12),
-              SvgPicture.asset("assets/images/icons/_common/folder.svg",
-                  width: 16, height: 16, color: ColorsExt.grey3(context)),
-              const SizedBox(width: 4),
-              Text(
-                folder?.title ?? "",
-                style: TextStyle(
-                  fontSize: 15,
-                  color: ColorsExt.grey3(context),
-                ),
-              ),
-            ],
-          );
-        }),
-      ],
     );
   }
 }
