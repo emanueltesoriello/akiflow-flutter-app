@@ -110,11 +110,21 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     const withoutRemoteUpdatedAt = 'remote_updated_at IS NULL';
     const deletedAtGreaterThanRemoteUpdatedAt = 'deleted_at > remote_updated_at';
     const updatedAtGreaterThanRemoteUpdatedAt = 'updated_at > remote_updated_at';
-
-    var items = await _databaseService.database!.query(
-      tableName,
-      where: '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
-    );
+    const trashedAtGreaterThanRemoteUpdatedAt = 'trashed_at > remote_updated_at';
+    List<Map<String, Object?>> items;
+    if (tableName == "tasks") {
+      items = await _databaseService.database!.query(
+        tableName,
+        where:
+            '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $trashedAtGreaterThanRemoteUpdatedAt',
+      );
+    } else {
+      items = await _databaseService.database!.query(
+        tableName,
+        where:
+            '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
+      );
+    }
 
     List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 

@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/common/components/task/task_list.dart';
-import 'package:mobile/features/tasks/edit_task/cubit/edit_task_cubit.dart';
-import 'package:mobile/features/tasks/edit_task/ui/actions/recurrence_modal.dart';
-import 'package:mobile/features/tasks/edit_task/ui/edit_task_modal.dart';
-import 'package:mobile/features/tasks/edit_task/ui/recurring_edit_dialog.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
+import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_modal.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
+import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
@@ -36,7 +36,7 @@ enum TaskStatusType {
   deleted, // deletedAt !== null
   someday, // has NOT `date` or `dateTime` and user has set it as `someday`
   hidden, // the user has set it as `hidden` (all other fields dont' matter)
-  permanentlyDeleted, // same as above
+  trashed, // same as above
 }
 
 extension TaskStatusTypeExt on TaskStatusType {
@@ -58,8 +58,8 @@ extension TaskStatusTypeExt on TaskStatusType {
         return 7;
       case TaskStatusType.hidden:
         return 8;
-      case TaskStatusType.permanentlyDeleted:
-        return 9;
+      case TaskStatusType.trashed:
+        return 10;
     }
   }
 
@@ -81,8 +81,8 @@ extension TaskStatusTypeExt on TaskStatusType {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
-        return TaskStatusType.permanentlyDeleted;
+      case 10:
+        return TaskStatusType.trashed;
       default:
         return null;
     }
@@ -289,7 +289,11 @@ extension TaskExt on Task {
     } else if (isTomorrow) {
       prefix = t.addTask.tmw;
     } else {
-      prefix = DateFormat("dd MMM").format(DateTime.parse(datetime!).toLocal());
+      if (datetime != null) {
+        prefix = DateFormat("dd MMM").format(DateTime.tryParse(datetime!)!.toLocal());
+      } else {
+        prefix = '';
+      }
     }
 
     if (formatted != null) {
@@ -341,8 +345,8 @@ extension TaskExt on Task {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
-        return TaskStatusType.permanentlyDeleted;
+      case 10:
+        return TaskStatusType.trashed;
       default:
         return null;
     }
@@ -769,22 +773,24 @@ extension TaskExt on Task {
   Future<void> openLinkedContentUrl([Doc? doc]) async {
     String? localUrl = doc?.localUrl ?? doc?.content?["local_url"] ?? content?["local_url"];
 
-    if (localUrl == null || localUrl.isEmpty) {
-      localUrl = doc?.url ?? '';
+    Uri uri = Uri.parse(localUrl ?? '');
+
+    bool opened = false;
+
+    try {
+      if (doc is SlackDoc && doc.localUrl != null) {
+        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } /*else {
+        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }*/
+    } catch (e) {
+      print(e);
     }
 
-    Uri uri = Uri.parse(localUrl);
-
-    bool opened;
-
-    // if (uri.host == "mail.google.com") {
-    //   opened = await launchUrl(Uri.parse("googlegmail://"), mode: LaunchMode.externalApplication);
-    // } else {
-    opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    // }
-
     if (opened == false) {
-      launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication);
+      launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication).catchError((e) {
+        print(e);
+      });
     }
   }
 }

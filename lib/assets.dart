@@ -169,6 +169,7 @@ class _AssetsImagesIconsCommon {
   final slashCircleSVG = 'assets/images/icons/_common/slash_circle.svg';
   final squareSVG = 'assets/images/icons/_common/square.svg';
   final squareOnSquareSVG = 'assets/images/icons/_common/square_on_square.svg';
+  final syncingSVG = 'assets/images/icons/_common/syncing.svg';
   final targetSVG = 'assets/images/icons/_common/target.svg';
   final targetActiveSVG = 'assets/images/icons/_common/target_active.svg';
   final trashSVG = 'assets/images/icons/_common/trash.svg';

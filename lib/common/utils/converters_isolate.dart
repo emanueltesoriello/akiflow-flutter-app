@@ -3,6 +3,7 @@ import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
+import 'package:models/task/task.dart';
 import 'package:sqflite/sqflite.dart';
 
 class RawListConvert {
@@ -87,11 +88,11 @@ List<dynamic> prepareItemsForRemote<T>(List<dynamic> localItems) {
     var localItem = localItems[i];
 
     String? updatedAt = localItem.updatedAt;
-    String? deletedAt = localItem.deletedAt;
+    String? deletedAt = localItem is Task? localItem.trashedAt:localItem.deletedAt;
 
     DateTime? maxDate;
 
-    if (updatedAt != null && deletedAt != null) {
+    if (updatedAt != null && deletedAt != null ) {
       DateTime updatedAtDate = DateTime.parse(updatedAt);
       DateTime deletedAtDate = DateTime.parse(deletedAt);
 

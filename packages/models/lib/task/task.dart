@@ -16,6 +16,7 @@ class Task extends Equatable implements Base {
   final String? createdAt;
   final String? updatedAt;
   final String? deletedAt;
+  final String? trashedAt;
   final bool? done;
   final String? doneAt;
   final String? datetime;
@@ -43,43 +44,44 @@ class Task extends Equatable implements Base {
   final String? akiflowAccountId;
   final Map<String, dynamic>? doc;
 
-  const Task(
-      {this.id,
-      this.title,
-      this.date,
-      this.description,
-      this.duration,
-      this.status,
-      this.createdAt,
-      this.updatedAt,
-      this.deletedAt,
-      this.done,
-      this.doneAt,
-      this.datetime,
-      this.readAt,
-      this.globalUpdatedAt,
-      this.globalCreatedAt,
-      this.activationDatetime,
-      this.dueDate,
-      this.remoteUpdatedAt,
-      this.recurringId,
-      this.priority,
-      this.listId,
-      this.sectionId,
-      this.origin,
-      this.sorting,
-      this.sortingLabel,
-      this.selected,
-      this.dailyGoal,
-      this.links,
-      this.recurrence,
-      this.content,
-      this.connectorId,
-      this.originId,
-      this.originAccountId,
-      this.akiflowAccountId,
-      this.doc,
-      });
+  const Task({
+    this.id,
+    this.title,
+    this.date,
+    this.description,
+    this.duration,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.trashedAt,
+    this.done,
+    this.doneAt,
+    this.datetime,
+    this.readAt,
+    this.globalUpdatedAt,
+    this.globalCreatedAt,
+    this.activationDatetime,
+    this.dueDate,
+    this.remoteUpdatedAt,
+    this.recurringId,
+    this.priority,
+    this.listId,
+    this.sectionId,
+    this.origin,
+    this.sorting,
+    this.sortingLabel,
+    this.selected,
+    this.dailyGoal,
+    this.links,
+    this.recurrence,
+    this.content,
+    this.connectorId,
+    this.originId,
+    this.originAccountId,
+    this.akiflowAccountId,
+    this.doc,
+  });
 
   Task copyWith({
     String? id,
@@ -90,6 +92,7 @@ class Task extends Equatable implements Base {
     Nullable<int?>? status,
     String? createdAt,
     String? deletedAt,
+    String? trashedAt,
     bool? done,
     Nullable<String?>? doneAt,
     Nullable<String?>? datetime,
@@ -127,6 +130,7 @@ class Task extends Equatable implements Base {
       status: status == null ? this.status : status.value,
       createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      trashedAt: trashedAt ?? this.trashedAt,
       done: done ?? this.done,
       doneAt: doneAt == null ? this.doneAt : doneAt.value,
       datetime: datetime == null ? this.datetime : datetime.value,
@@ -185,6 +189,7 @@ class Task extends Equatable implements Base {
       'origin': origin,
       'sorting': sorting,
       'sorting_label': sortingLabel,
+      'trashed_at': trashedAt,
       'selected': selected,
       'dailyGoal': dailyGoal,
       'links': (links == null || links!.isEmpty) ? null : List<dynamic>.from(links!.map((x) => x)),
@@ -235,6 +240,7 @@ class Task extends Equatable implements Base {
       originAccountId: map['origin_account_id'] != null ? map['origin_account_id'] as String? : null,
       akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
       doc: map['doc'] != null ? map['doc'] as dynamic : null,
+      trashedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
     );
   }
 
@@ -259,6 +265,7 @@ class Task extends Equatable implements Base {
       "updated_at": updatedAt,
       "created_at": createdAt,
       "deleted_at": deletedAt,
+      "trashed_at": trashedAt,
       "origin": origin,
       "remote_updated_at": remoteUpdatedAt,
       "sorting": sorting,
@@ -319,6 +326,19 @@ class Task extends Equatable implements Base {
     return task;
   }
 
+  String get priorityName {
+    switch (priority) {
+      case 1:
+        return "High";
+      case 2:
+        return "Medium";
+      case 3:
+        return "Low";
+      default:
+        return "None";
+    }
+  }
+
   @override
   List<Object?> get props {
     return [
@@ -331,6 +351,7 @@ class Task extends Equatable implements Base {
       createdAt,
       updatedAt,
       deletedAt,
+      trashedAt,
       done,
       doneAt,
       datetime,
@@ -358,5 +379,12 @@ class Task extends Equatable implements Base {
       akiflowAccountId,
       doc,
     ];
+  }
+
+  bool get isLinksEmpty {
+    if (links == null) {
+      return true;
+    }
+    return links!.isEmpty || links!.every((element) => element.isEmpty);
   }
 }

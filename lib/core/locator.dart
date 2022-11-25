@@ -12,11 +12,6 @@ import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/intercom_service.dart';
-import 'package:mobile/features/account/auth/cubit/auth_cubit.dart';
-import 'package:mobile/features/push/cubit/push_cubit.dart';
-import 'package:mobile/features/sync/sync_cubit.dart';
-import 'package:mobile/features/tasks/tasks_cubit.dart';
-import 'package:mobile/features/today/cubit/today_cubit.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
 import 'package:mobile/core/repository/docs_repository.dart';
@@ -25,9 +20,12 @@ import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
-import 'package:mobile/core/services/push_notification_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/doc/doc.dart';
@@ -78,14 +76,13 @@ void setupLocator({
   locator.registerSingleton<IntercomService>(IntercomService());
 
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
-  locator.registerSingleton<PushNotificationService>(PushNotificationService());
 
   /// Blocs
   TodayCubit todayCubit = TodayCubit();
   SyncCubit syncCubit = SyncCubit();
   TasksCubit tasksCubit = TasksCubit(syncCubit);
-  PushCubit pushCubit = PushCubit();
-  AuthCubit authCubit = AuthCubit(syncCubit, pushCubit);
+  AuthCubit authCubit = AuthCubit(syncCubit);
+  //BaseCubit exampleCubit = BaseCubit();
 
   tasksCubit.attachAuthCubit(authCubit);
   tasksCubit.attachTodayCubit(todayCubit);
@@ -94,6 +91,6 @@ void setupLocator({
   locator.registerSingleton<TasksCubit>(tasksCubit);
   locator.registerSingleton<TodayCubit>(todayCubit);
   locator.registerSingleton<SyncCubit>(syncCubit);
-  locator.registerSingleton<PushCubit>(pushCubit);
   locator.registerSingleton<AuthCubit>(authCubit);
+  //locator.registerSingleton<BaseCubit>(exampleCubit);
 }

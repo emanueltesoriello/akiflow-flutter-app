@@ -23,6 +23,7 @@ class TasksRepository extends DatabaseRepository {
           WHERE status = ?
             AND done = 0
             AND deleted_at IS NULL
+            AND trashed_at IS NULL
           ORDER BY
             sorting DESC
 """, [TaskStatusType.inbox.id]);
@@ -42,6 +43,7 @@ class TasksRepository extends DatabaseRepository {
         """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL
+        AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
         AND (date <= ? OR datetime < ?)
         ORDER BY
@@ -58,12 +60,15 @@ class TasksRepository extends DatabaseRepository {
           DateTime.now().toUtc().toIso8601String(),
           DateTime.now().toUtc().toIso8601String(),
         ],
-      );
+      ).catchError((e) {
+        print(e);
+      });
     } else {
       items = await _databaseService.database!.rawQuery(
         """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL
+        AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
         AND ((date > ? AND date < ?) OR (datetime > ? AND datetime < ?))
         ORDER BY
@@ -82,7 +87,9 @@ class TasksRepository extends DatabaseRepository {
           DateTime.now().toUtc().toIso8601String(),
           DateTime.now().toUtc().toIso8601String(),
         ],
-      );
+      ).catchError((e) {
+        print(e);
+      });
     }
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
@@ -95,7 +102,8 @@ class TasksRepository extends DatabaseRepository {
       FROM tasks
       WHERE status = ${TaskStatusType.someday.id}
         AND done = 0
-        AND deletedAt IS NULL
+        AND deleted_at IS NULL
+        AND trashed_at IS NULL
 """);
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
@@ -108,6 +116,7 @@ class TasksRepository extends DatabaseRepository {
       FROM tasks
       WHERE recurring_id = ?
         AND deleted_at IS NULL
+        AND trashed_at IS NULL
 """, [recurringId]);
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
@@ -120,6 +129,7 @@ class TasksRepository extends DatabaseRepository {
       FROM tasks
       WHERE list_id = ?
       AND deleted_at IS NULL
+      AND trashed_at IS NULL
       GROUP BY IFNULL(`recurring_id`, `id`)
       ORDER BY
           sorting_label is null, sorting_label,

@@ -8,13 +8,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "38.0.0"
-  akiflow_oauth:
-    dependency: "direct main"
-    description:
-      path: "packages/akiflow_oauth"
-      relative: true
-    source: path
-    version: "1.0.0"
   analyzer:
     dependency: transitive
     description:
@@ -112,7 +105,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -133,7 +126,7 @@ packages:
       name: clock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.0"
   code_builder:
     dependency: transitive
     description:
@@ -617,14 +610,14 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.4"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0"
+    version: "1.7.0"
   mime:
     dependency: transitive
     description:
@@ -653,13 +646,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  oauth2:
-    dependency: transitive
-    description:
-      name: oauth2
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   package_config:
     dependency: transitive
     description:
@@ -715,7 +701,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.8.1"
   path_drawing:
     dependency: transitive
     description:
@@ -814,13 +800,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
-  pointer_interceptor:
-    dependency: transitive
-    description:
-      name: pointer_interceptor
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.3+2"
   pool:
     dependency: transitive
     description:
@@ -836,7 +815,7 @@ packages:
     source: hosted
     version: "4.2.4"
   provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: provider
       url: "https://pub.dartlang.org"
@@ -884,6 +863,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.13.1"
+  share_handler:
+    dependency: "direct main"
+    description:
+      name: share_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.16"
+  share_handler_android:
+    dependency: transitive
+    description:
+      name: share_handler_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
+  share_handler_ios:
+    dependency: transitive
+    description:
+      name: share_handler_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  share_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: share_handler_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1246,13 +1253,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.1"
-  webviewx:
-    dependency: transitive
-    description:
-      name: webviewx
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
   win32:
     dependency: transitive
     description:
