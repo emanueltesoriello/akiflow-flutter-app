@@ -42,23 +42,21 @@ class LabelItem extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Center(
-          child: Row(
-            children: [
-              Container(
-                height: 26,
-                width: 26,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: iconBackground,
-                ),
-                child: Center(
-                  child: SvgPicture.asset(iconAsset, width: 16, height: 16, color: iconForeground),
-                ),
+        child: Row(
+          children: [
+            Container(
+              height: 26,
+              width: 26,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: iconBackground,
               ),
-              SizedBox(width: MediaQuery.of(context).size.width - 100, child: _text(context)),
-            ],
-          ),
+              child: Center(
+                child: SvgPicture.asset(iconAsset, width: 16, height: 16, color: iconForeground),
+              ),
+            ),
+            Expanded(child: _text(context)),
+          ],
         ),
       ),
     );
