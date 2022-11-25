@@ -6,8 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
+import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list_menu.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
+import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -22,6 +24,7 @@ class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget? child;
   final double preferredSizeHeight;
   final double calendarTopMargin;
+  final PanelController? panelController;
 
   const TodayAppBar({
     Key? key,
@@ -33,6 +36,7 @@ class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.leading,
     this.customTitle,
     this.child,
+    this.panelController,
     required this.preferredSizeHeight,
     required this.calendarTopMargin,
   }) : super(key: key);
@@ -62,27 +66,36 @@ class _TodayAppBarState extends State<TodayAppBar> {
       onTap: () => context.read<TodayCubit>().tapAppBarTextDate(),
       child: Row(
         children: [
-          BlocBuilder<TodayCubit, TodayCubitState>(
-            builder: (context, state) {
-              bool isToday = isSameDay(state.selectedDate, DateTime.now());
+          BlocBuilder<ViewedMonthCubit, ViewedMonthState>(
+            builder: (context, viewedMonthState) {
+              return BlocBuilder<TodayCubit, TodayCubitState>(
+                builder: (context, state) {
+                  bool isToday = isSameDay(state.selectedDate, DateTime.now());
 
-              String text;
-              Color color;
+                  String text;
+                  Color color;
+                  int? monthNum = viewedMonthState.viewedMonth;
 
-              if (isToday) {
-                text = t.today.title;
-                color = ColorsExt.akiflow(context);
-              } else {
-                text = DateFormat('EEE, dd').format(state.selectedDate);
-                color = ColorsExt.grey2(context);
-              }
+                  if (!widget.panelController!.isPanelClosed && monthNum != null) {
+                    String monthName = DateFormat('MMMM').format(DateTime(0, viewedMonthState.viewedMonth!));
+                    text = monthName;
+                    color = ColorsExt.akiflow(context);
+                  } else if (isToday) {
+                    text = t.today.title;
+                    color = ColorsExt.akiflow(context);
+                  } else {
+                    text = DateFormat('EEE, dd').format(state.selectedDate);
+                    color = ColorsExt.grey2(context);
+                  }
 
-              return Text(
-                text,
-                textAlign: TextAlign.start,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: color),
+                  return Text(
+                    text,
+                    textAlign: TextAlign.start,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: color),
+                  );
+                },
               );
             },
           ),

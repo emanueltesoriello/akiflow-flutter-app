@@ -10,6 +10,7 @@ import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
+import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TodayAppBarCalendar extends StatefulWidget {
@@ -51,6 +52,9 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                   ],
                 ),
                 TableCalendar(
+                  onPageChanged: (page) {
+                    BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
+                  },
                   rowHeight: todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   daysOfWeekVisible: false,
@@ -144,7 +148,6 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            DateDisplay(date: day),
                             const SizedBox(width: 12),
                             InkWell(
                               onTap: () {
