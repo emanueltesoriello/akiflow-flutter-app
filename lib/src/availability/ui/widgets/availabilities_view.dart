@@ -73,7 +73,6 @@ class AvailabilitiesView extends StatelessWidget {
                         ? SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual)
                         : const SizedBox.shrink(),
                   ),
-
                   ExpandablePanel(
                     isExpanded: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
                     headerBuilder: (context, isExpanded) {
@@ -90,11 +89,9 @@ class AvailabilitiesView extends StatelessWidget {
                           : const SizedBox.shrink();
                     },
                     body: recurrent.isNotEmpty
-                        ? SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: manual)
+                        ? SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)
                         : const SizedBox.shrink(),
                   ),
-
-           
                 ],
               ),
             ],
