@@ -56,7 +56,7 @@ class LabelItem extends StatelessWidget {
                   child: SvgPicture.asset(iconAsset, width: 16, height: 16, color: iconForeground),
                 ),
               ),
-              _text(context),
+              SizedBox(width: MediaQuery.of(context).size.width - 100, child: _text(context)),
             ],
           ),
         ),
@@ -65,14 +65,14 @@ class LabelItem extends StatelessWidget {
   }
 
   Widget _text(BuildContext context) {
-
     return Wrap(
       children: [
         const SizedBox(width: 8),
         Text(
-          label.title??'(No title)',
+          label.title ?? '(No title)',
           style: TextStyle(
             fontSize: 17,
+            overflow: TextOverflow.ellipsis,
             color: label.id != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
           ),
         ),

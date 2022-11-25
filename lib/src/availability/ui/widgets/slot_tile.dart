@@ -14,70 +14,53 @@ class SlotTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 70,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: ColorsExt.grey7(context),
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(
-                  color: ColorsExt.grey5(context),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  config.settings != null
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(config.settings?['hostPicture']),
-                        )
-                      : CircleAvatar(
-                          child: Text(config.title?.characters.first ?? ''),
-                        ),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2.1,
-                    child: Text(
-                      config.title ?? '',
-                      softWrap: true,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+      child: ListTile(
+        title: Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+              color: ColorsExt.grey7(context),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: ColorsExt.grey5(context),
+                width: 1,
+              )),
+          child: Row(
+            children: [
+              config.settings != null
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(config.settings?['hostPicture']),
+                    )
+                  : CircleAvatar(
+                      child: Text(config.title?.characters.first ?? ''),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(config.durationString,
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: ColorsExt.grey3(context),
-                        fontWeight: FontWeight.w600,
-                      )),
-                  const SizedBox(width: 10),
-                  InkWell(
-                      onTap: () {
-                        launchUrlString("https://booking.akiflow.com/${config.url_path}");
-                      },
-                      child: SvgPicture.asset(Assets.images.icons.common.arrowUpRightSquareSVG))
-                ],
-              ),
-            ),
-            InkWell(
-                onTap: () async {
-                  Clipboard.setData(ClipboardData(text: "https://booking.akiflow.com/${config.url_path}")).then((_) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('Link copied to clipboard!')));
-                  });
-                },
-                child: SvgPicture.asset(Assets.images.icons.common.linkSVG))
-          ],
+              const SizedBox(width: 8),
+              Expanded(
+                  child: Text(
+                config.title ?? '',
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: ColorsExt.grey1(context),
+                  fontWeight: FontWeight.w600,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+              InkWell(
+                  onTap: () {
+                    launchUrlString("https://booking.akiflow.com/${config.url_path}");
+                  },
+                  child: SvgPicture.asset(Assets.images.icons.common.arrowUpRightSquareSVG)),
+              const SizedBox(width: 10),
+            ],
+          ),
         ),
+        trailing: InkWell(
+            onTap: () async {
+              Clipboard.setData(ClipboardData(text: "https://booking.akiflow.com/${config.url_path}")).then((_) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Link copied to clipboard!')));
+              });
+            },
+            child: SvgPicture.asset(Assets.images.icons.common.linkSVG)),
       ),
     );
   }

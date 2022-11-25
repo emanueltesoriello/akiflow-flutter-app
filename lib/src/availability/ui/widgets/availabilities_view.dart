@@ -11,6 +11,7 @@ import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:models/task/availability_config.dart';
 import '../../../base/ui/widgets/task/notice.dart';
+import 'expandable_panel.dart';
 import 'slot_list.dart';
 
 class AvailabilitiesView extends StatelessWidget {
@@ -50,15 +51,14 @@ class AvailabilitiesView extends StatelessWidget {
                         ),
                       ),
                     ),
-              ExpansionPanelList(
+              ExpandablePanelList(
                 elevation: 0,
-                expandedHeaderPadding: EdgeInsets.symmetric(horizontal: 8),
                 expansionCallback: (panelIndex, isExpanded) {
                   context.read<AvailabilityCubit>().toggleHeader(
                       panelIndex == 0 ? AvailabililtyConfigSlotsType.manual : AvailabililtyConfigSlotsType.recurrent);
                 },
                 children: [
-                  ExpansionPanel(
+                  ExpandablePanel(
                     isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
                     headerBuilder: (context, isExpanded) {
                       return manual.isNotEmpty
@@ -74,7 +74,7 @@ class AvailabilitiesView extends StatelessWidget {
                         : const SizedBox.shrink(),
                   ),
 
-                  ExpansionPanel(
+                  ExpandablePanel(
                     isExpanded: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
                     headerBuilder: (context, isExpanded) {
                       return recurrent.isNotEmpty
@@ -94,23 +94,7 @@ class AvailabilitiesView extends StatelessWidget {
                         : const SizedBox.shrink(),
                   ),
 
-                  // manual.isNotEmpty
-                  //     ? SlotsHeader(
-                  //         type: AvailabililtyConfigSlotsType.manual,
-                  //         asset: Assets.images.icons.common.handDrawSVG,
-                  //         text: 'Active manual slots',
-                  //         isOpen: context.watch<AvailabilityCubit>().state.isManualOpen)
-                  //     : const SizedBox.shrink(),
-                  // SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),
-                  // recurrent.isNotEmpty
-                  //     ? SlotsHeader(
-                  //         type: AvailabililtyConfigSlotsType.recurrent,
-                  //         asset: Assets.images.icons.common.recurrentSVG,
-                  //         text: 'Active recurrent slots',
-                  //         isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen)
-                  //     : const SizedBox.shrink(),
-                  // SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent),
-                  // const SizedBox(height: 72)
+           
                 ],
               ),
             ],
