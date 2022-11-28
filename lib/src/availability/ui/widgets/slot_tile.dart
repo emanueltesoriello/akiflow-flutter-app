@@ -5,6 +5,7 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/task/availability_config.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:mobile/extensions/date_extension.dart';
 
 class SlotTile extends StatelessWidget {
   const SlotTile({super.key, required this.config});
@@ -56,7 +57,13 @@ class SlotTile extends StatelessWidget {
         ),
         trailing: InkWell(
             onTap: () async {
-              Clipboard.setData(ClipboardData(text: "https://booking.akiflow.com/${config.url_path}")).then((_) {
+              String text = ''' Would any of these times work for you for a ${config.durationString} meeting?
+${DateTime.parse(config.min_start_time ?? '').shortDateFormatted}
+• ${DateTime.parse(config.min_start_time ?? '').timeFormatted} - ${DateTime.parse(config.max_end_time ?? '').timeFormatted}
+Let me know or confirm here:
+https://booking.akiflow.com/${config.url_path}''';
+              print(text);
+              Clipboard.setData(ClipboardData(text: text)).then((_) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Link copied to clipboard!')));
               });
             },
