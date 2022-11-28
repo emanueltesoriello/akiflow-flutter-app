@@ -63,14 +63,35 @@ ${DateTime.parse(config.min_start_time ?? '').shortDateFormatted}
 • ${DateTime.parse(config.min_start_time ?? '').timeFormatted} - ${DateTime.parse(config.max_end_time ?? '').timeFormatted}
 Let me know or confirm here:
 https://booking.akiflow.com/${config.url_path}''';
-
-              print(text);
               Clipboard.setData(ClipboardData(
                       text: config.type == AvailabililtyConfigSlotsType.manual
                           ? text
                           : " https://booking.akiflow.com/${config.url_path}"))
                   .then((_) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Link copied to clipboard!')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.transparent,
+                    content: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: ColorsExt.green20(context),
+                        border: Border.all(
+                          color: ColorsExt.grey5(context),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Link copied to clipboard!',
+                            style:
+                                TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    )));
               });
             },
             child: SvgPicture.asset(Assets.images.icons.common.linkSVG)),
