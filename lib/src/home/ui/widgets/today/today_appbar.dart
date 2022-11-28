@@ -76,14 +76,22 @@ class _TodayAppBarState extends State<TodayAppBar> {
                   Color color;
                   int? monthNum = viewedMonthState.viewedMonth;
 
-                  if (!widget.panelController!.isPanelClosed && monthNum != null) {
-                    String monthName = DateFormat('MMMM').format(DateTime(0, viewedMonthState.viewedMonth!));
-                    text = monthName;
-                    color = ColorsExt.akiflow(context);
-                  } else if (isToday) {
-                    text = t.today.title;
-                    color = ColorsExt.akiflow(context);
-                  } else {
+                  try {
+                    if (!widget.panelController!.isPanelClosed && monthNum != null) {
+                      String monthName = DateFormat('MMMM').format(DateTime(0, viewedMonthState.viewedMonth!));
+                      text = monthName;
+                      color = ColorsExt.grey2(context);
+                    } else if (isToday) {
+                      text = t.today.title;
+                      color = ColorsExt.akiflow(context);
+                    } else if (state.selectedDate.month != DateTime.now().month) {
+                      text = DateFormat('MMMM dd').format(state.selectedDate);
+                      color = ColorsExt.grey2(context);
+                    } else {
+                      text = DateFormat('EEE, dd').format(state.selectedDate);
+                      color = ColorsExt.grey2(context);
+                    }
+                  } catch (e) {
                     text = DateFormat('EEE, dd').format(state.selectedDate);
                     color = ColorsExt.grey2(context);
                   }
