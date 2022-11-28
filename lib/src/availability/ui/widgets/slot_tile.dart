@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/core/config.dart';
 import 'package:models/task/availability_config.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:mobile/extensions/date_extension.dart';
@@ -62,8 +63,13 @@ ${DateTime.parse(config.min_start_time ?? '').shortDateFormatted}
 • ${DateTime.parse(config.min_start_time ?? '').timeFormatted} - ${DateTime.parse(config.max_end_time ?? '').timeFormatted}
 Let me know or confirm here:
 https://booking.akiflow.com/${config.url_path}''';
+
               print(text);
-              Clipboard.setData(ClipboardData(text: text)).then((_) {
+              Clipboard.setData(ClipboardData(
+                      text: config.type == AvailabililtyConfigSlotsType.manual
+                          ? text
+                          : " https://booking.akiflow.com/${config.url_path}"))
+                  .then((_) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Link copied to clipboard!')));
               });
             },
