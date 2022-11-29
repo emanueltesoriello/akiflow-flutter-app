@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -24,7 +25,6 @@ class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget? child;
   final double preferredSizeHeight;
   final double calendarTopMargin;
-  final PanelController? panelController;
 
   const TodayAppBar({
     Key? key,
@@ -36,7 +36,6 @@ class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.leading,
     this.customTitle,
     this.child,
-    this.panelController,
     required this.preferredSizeHeight,
     required this.calendarTopMargin,
   }) : super(key: key);
@@ -49,6 +48,26 @@ class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _TodayAppBarState extends State<TodayAppBar> {
+  bool isPanelOpen = false;
+  @override
+  void initState() {
+    TodayCubit todayCubit = context.read<TodayCubit>();
+
+    todayCubit.panelStateStream.listen((PanelState panelState) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        switch (panelState) {
+          case PanelState.opened:
+            isPanelOpen = true;
+            break;
+          case PanelState.closed:
+            isPanelOpen = false;
+            break;
+        }
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBarComp(
@@ -75,23 +94,27 @@ class _TodayAppBarState extends State<TodayAppBar> {
                   String text;
                   Color color;
                   int? monthNum = viewedMonthState.viewedMonth;
-
                   try {
-                    if (!widget.panelController!.isPanelClosed && monthNum != null) {
+                    if (isPanelOpen && monthNum != null) {
+                      print('case 0');
                       String monthName = DateFormat('MMMM').format(DateTime(0, viewedMonthState.viewedMonth!));
                       text = monthName;
                       color = ColorsExt.grey2(context);
                     } else if (isToday) {
+                      print('case 1');
                       text = t.today.title;
                       color = ColorsExt.akiflow(context);
                     } else if (state.selectedDate.month != DateTime.now().month) {
+                      print('case 2');
                       text = DateFormat('MMMM dd').format(state.selectedDate);
                       color = ColorsExt.grey2(context);
                     } else {
+                      print('case 3');
                       text = DateFormat('EEE, dd').format(state.selectedDate);
                       color = ColorsExt.grey2(context);
                     }
                   } catch (e) {
+                    print('case 4 - exception handling');
                     text = DateFormat('EEE, dd').format(state.selectedDate);
                     color = ColorsExt.grey2(context);
                   }

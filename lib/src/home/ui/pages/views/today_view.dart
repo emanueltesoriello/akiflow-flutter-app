@@ -101,8 +101,7 @@ class _TodayViewState extends State<TodayView> {
         create: (BuildContext context) => ViewedMonthCubit(),
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: TodayAppBar(
-              preferredSizeHeight: toolbarHeight, calendarTopMargin: toolbarHeight, panelController: panelController),
+          appBar: const TodayAppBar(preferredSizeHeight: toolbarHeight, calendarTopMargin: toolbarHeight),
           body: LayoutBuilder(builder: (context, constraints) {
             return SlidingUpPanel(
               bodyHeight: constraints.maxHeight,
