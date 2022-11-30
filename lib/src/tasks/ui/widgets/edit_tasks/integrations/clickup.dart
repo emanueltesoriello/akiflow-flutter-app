@@ -54,7 +54,7 @@ class ClickupLinkedContent extends StatelessWidget {
           value: doc.dueDateTimeFormatted ?? '',
           syncing: true,
         ),
-         itemBuilder(
+        itemBuilder(
           context,
           title: "Scheduled Date",
           value: task.datetimeFormatted,
@@ -69,7 +69,7 @@ class ClickupLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: "Duration",
-          value: task.endTime,
+          value: task.endTime ?? '-',
           syncing: true,
         ),
         itemBuilder(

@@ -36,7 +36,7 @@ class NotionLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.created,
-          value: doc.createdAtFormatted,
+          value: doc.createdAtFormatted ?? '',
         ),
         itemBuilder(
           context,
@@ -53,7 +53,7 @@ class NotionLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.lastEdit,
-          value: doc.modifiedAtFormatted,
+          value: doc.modifiedAtFormatted ?? '',
         ),
         itemBuilder(
           context,

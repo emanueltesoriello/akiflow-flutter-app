@@ -76,7 +76,8 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
                   Navigator.pop(context, GmailSyncMode.useStarToImport);
                 },
               ),
-              const SizedBox(height: 2),
+              // DEPRECATED
+              /*const SizedBox(height: 2),
               _predefinedDateItem(
                 context,
                 text: t.settings.integrations.gmail.toImportTask.doNothing,
@@ -93,7 +94,7 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
                 onPressed: () {
                   Navigator.pop(context, GmailSyncMode.askMeEveryTime);
                 },
-              ),
+              ),*/
               const SizedBox(height: 50),
             ],
           ),

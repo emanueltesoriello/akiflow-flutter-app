@@ -255,6 +255,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> newInboxTasks = [];
     List<Task> newTodayTasks = [];
     List<Task> newLabelTasks = [];
+    bool controlVar = true;
 
     for (Task task in all) {
       Task newTaskDuplicated = task.copyWith(
@@ -264,18 +265,24 @@ class TasksCubit extends Cubit<TasksCubitState> {
         selected: false,
       );
 
-      duplicates.add(newTaskDuplicated);
+      if (controlVar) {
+        duplicates.add(newTaskDuplicated);
+        controlVar = false;
+      }
 
       if (inboxSelected.contains(task)) {
         newInboxTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
 
       if (todayTasksSelected.contains(task)) {
         newTodayTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
 
       if (labelTasksSelected.contains(task)) {
         newLabelTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
     }
 
@@ -306,7 +313,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
         selected: false,
-        status: Nullable(TaskStatusType.deleted.id),
+        status: Nullable(TaskStatusType.trashed.id),
         trashedAt: now,
         updatedAt: Nullable(now),
       );
@@ -572,7 +579,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], UndoType.moveToInbox);
-    planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.inbox);
+    planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.planned);
   }
 
   void editPlanOrSnooze(DateTime? date, {required DateTime? dateTime, required TaskStatusType statusType}) {

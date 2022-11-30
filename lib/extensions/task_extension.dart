@@ -59,7 +59,7 @@ extension TaskStatusTypeExt on TaskStatusType {
       case TaskStatusType.hidden:
         return 8;
       case TaskStatusType.trashed:
-        return 9;
+        return 10;
     }
   }
 
@@ -81,7 +81,7 @@ extension TaskStatusTypeExt on TaskStatusType {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
+      case 10:
         return TaskStatusType.trashed;
       default:
         return null;
@@ -289,7 +289,11 @@ extension TaskExt on Task {
     } else if (isTomorrow) {
       prefix = t.addTask.tmw;
     } else {
-      prefix = DateFormat("dd MMM").format(DateTime.parse(datetime!).toLocal());
+      if (datetime != null) {
+        prefix = DateFormat("dd MMM").format(DateTime.tryParse(datetime!)!.toLocal());
+      } else {
+        prefix = '';
+      }
     }
 
     if (formatted != null) {
@@ -341,7 +345,7 @@ extension TaskExt on Task {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
+      case 10:
         return TaskStatusType.trashed;
       default:
         return null;
@@ -771,16 +775,22 @@ extension TaskExt on Task {
 
     Uri uri = Uri.parse(localUrl ?? '');
 
-    bool opened;
+    bool opened = false;
 
-    if (doc is SlackDoc && doc.localUrl != null) {
-      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    try {
+      if (doc is SlackDoc && doc.localUrl != null) {
+        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } /*else {
+        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }*/
+    } catch (e) {
+      print(e);
     }
 
     if (opened == false) {
-      launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication);
+      launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication).catchError((e) {
+        print(e);
+      });
     }
   }
 }

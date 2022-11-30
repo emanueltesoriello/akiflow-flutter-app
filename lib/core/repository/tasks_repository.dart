@@ -102,7 +102,7 @@ class TasksRepository extends DatabaseRepository {
       FROM tasks
       WHERE status = ${TaskStatusType.someday.id}
         AND done = 0
-        AND deletedAt IS NULL
+        AND deleted_at IS NULL
         AND trashed_at IS NULL
 """);
 

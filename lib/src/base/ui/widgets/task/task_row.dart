@@ -22,7 +22,7 @@ import 'components/subtitle_widget.dart';
 class TaskRow extends StatefulWidget {
   static const int dailyGoalScaleDurationInMillis = 500;
   static const int dailyGoalBackgroundAppearDelay = 250;
-  static const int fadeOutDurationInMillis = 500;
+  static const int fadeOutDurationInMillis = 200;
 
   final Task task;
   final Function() completedClick;
@@ -369,7 +369,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                           opacity: _fadeOutAnimation.value,
                           child: Container(
                               constraints: BoxConstraints(
-                                minHeight: (widget.task.title?.length ?? 0) > 40 ? 80 : 40,
+                                minHeight: ((widget.task.title?.length ?? 0) > 40 ? 80 : 40) + (20),
                               ),
                               color: Theme.of(context).scaffoldBackgroundColor),
                         );

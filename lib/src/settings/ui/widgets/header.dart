@@ -61,6 +61,7 @@ class Header extends StatelessWidget {
         InkWell(
           child: SvgPicture.asset(
             "assets/images/icons/_common/search.svg",
+            height: 25,
             color: ColorsExt.grey3(context),
           ),
           onTap: () {
@@ -74,6 +75,7 @@ class Header extends StatelessWidget {
         InkWell(
           child: BadgedIcon(
             icon: "assets/images/icons/_common/gear_alt.svg",
+            color: Colors.transparent,
             badge: FutureBuilder<dynamic>(
                 future: Intercom.instance.unreadConversationCount(),
                 builder: (context, snapshot) {

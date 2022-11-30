@@ -101,7 +101,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+    if (statusType == TaskStatusType.snoozed) {
+      _tasksCubit.addToUndoQueue([updated], UndoType.snooze);
+    } else {
+      _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+    }
 
     emit(state.copyWith(updatedTask: updated));
 
@@ -120,6 +124,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         AnalyticsService.track("Task moved to Inbox");
       } else if (statusType == TaskStatusType.planned) {
         AnalyticsService.track("Task planned");
+      } else if (statusType == TaskStatusType.snoozed) {
+        AnalyticsService.track("Task snoozed");
       }
     }
   }
@@ -151,6 +157,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   void toggleLabels() {
     emit(state.copyWith(showLabelsList: !state.showLabelsList, showDuration: false, showPriority: false));
+  }
+
+  Future<void> setEmptyLabel() async {
+    Task updated = state.updatedTask.copyWith(
+      listId: Nullable(null),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
   }
 
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
@@ -211,13 +225,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     DateTime now = DateTime.now();
-    _tasksCubit.addToUndoQueue([task], UndoType.delete);
+    await _tasksCubit.addToUndoQueue([task], UndoType.delete);
 
     Task updated = task.copyWith(
       status: Nullable(TaskStatusType.trashed.id),
       trashedAt: TzUtils.toUtcStringIfNotNull(now),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
     );
+
+    await _tasksRepository.updateById(task.id, data: updated);
 
     emit(state.copyWith(updatedTask: updated));
   }
