@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:mobile/src/availability/ui/widgets/availability_view_placeholder.dart';
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
-import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+
 import 'package:models/task/availability_config.dart';
 import '../../../base/ui/widgets/task/notice.dart';
 import 'expandable_panel.dart';

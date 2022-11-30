@@ -6,6 +6,39 @@ import '../base.dart';
 
 enum AvailabililtyConfigSlotsType { manual, recurrent }
 
+class AvailabilityConfigSlot extends Equatable implements Base {
+  final String id;
+  final int startTime;
+  final int endTime;
+
+  const AvailabilityConfigSlot({required this.id, required this.startTime, required this.endTime});
+
+  @override
+  List<Object?> get props => [id, startTime, endTime];
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'startTime': startTime,
+      'endTime': endTime,
+    };
+  }
+
+  factory AvailabilityConfigSlot.fromMap(Map<String, dynamic> map) {
+    return AvailabilityConfigSlot(id: map['id'], startTime: map['startTime'], endTime: map['endTime']);
+  }
+
+  @override
+  Map<String, dynamic> toSql() {
+    return {
+      'id': id,
+      'start_time': startTime,
+      'end_time': endTime,
+    };
+  }
+}
+
 class AvailabilityConfig extends Equatable implements Base {
   final String id;
   final int? duration;
@@ -14,7 +47,7 @@ class AvailabilityConfig extends Equatable implements Base {
   final int? slots_type;
   final String? title;
   final String? description;
-  final List<dynamic>? slots_configuration;
+  final List<AvailabilityConfigSlot>? slots_configuration;
   final Map<String, dynamic>? reserved_slots;
   final String? min_start_time;
   final String? max_end_time;
@@ -94,7 +127,7 @@ class AvailabilityConfig extends Equatable implements Base {
     int? slots_type,
     String? title,
     String? description,
-    List<dynamic>? slots_configuration,
+    List<AvailabilityConfigSlot>? slots_configuration,
     Map<String, dynamic>? reserved_slots,
     String? min_start_time,
     String? max_end_time,
@@ -149,7 +182,9 @@ class AvailabilityConfig extends Equatable implements Base {
         slots_type: map['slots_type'],
         title: map['title'],
         description: map['description'],
-        slots_configuration: map['slots_configuration'],
+        slots_configuration: List<dynamic>.of((map['slots_configuration'] ?? []) as List<dynamic>)
+            .map((e) => AvailabilityConfigSlot.fromMap(e))
+            .toList(),
         reserved_slots: map['reserved_slots'],
         min_start_time: map['min_start_time'],
         max_end_time: map['max_end_time'],
@@ -201,8 +236,6 @@ class AvailabilityConfig extends Equatable implements Base {
     return '';
   }
 
-  
-
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -239,7 +272,7 @@ class AvailabilityConfig extends Equatable implements Base {
       'id': id,
       'duration': duration,
       'reserve_calendar_id': reserve_calendar_id,
-      'slots_type':slots_type,
+      'slots_type': slots_type,
       'title': title,
       'description': description,
       'min_start_time': min_start_time,

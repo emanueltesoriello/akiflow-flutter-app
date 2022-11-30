@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/config.dart';
+import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:models/task/availability_config.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:mobile/extensions/date_extension.dart';
@@ -58,41 +60,31 @@ class SlotTile extends StatelessWidget {
         ),
         trailing: InkWell(
             onTap: () async {
-              String text = ''' Would any of these times work for you for a ${config.durationString} meeting?
-${DateTime.parse(config.min_start_time ?? '').shortDateFormatted}
-• ${DateTime.parse(config.min_start_time ?? '').timeFormatted} - ${DateTime.parse(config.max_end_time ?? '').timeFormatted}
-Let me know or confirm here:
-https://booking.akiflow.com/${config.url_path}''';
-              Clipboard.setData(ClipboardData(
-                      text: config.type == AvailabililtyConfigSlotsType.manual
-                          ? text
-                          : " https://booking.akiflow.com/${config.url_path}"))
-                  .then((_) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: Colors.transparent,
-                    content: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: ColorsExt.green20(context),
-                        border: Border.all(
-                          color: ColorsExt.grey5(context),
-                          width: 1,
+              Clipboard.setData(ClipboardData(text: context.read<AvailabilityCubit>().getAvailabilityText(config)));
+
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: Colors.transparent,
+                  content: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: ColorsExt.green20(context),
+                      border: Border.all(
+                        color: ColorsExt.grey5(context),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Link copied to clipboard!',
+                          style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
                         ),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Link copied to clipboard!',
-                            style:
-                                TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                    )));
-              });
+                      ],
+                    ),
+                  )));
             },
             child: SvgPicture.asset(Assets.images.icons.common.linkSVG)),
       ),
