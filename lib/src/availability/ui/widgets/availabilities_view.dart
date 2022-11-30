@@ -29,8 +29,7 @@ class AvailabilitiesView extends StatelessWidget {
           state.availabilities?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent).toList() ??
               [];
       return RefreshIndicator(
-          onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
-      
+        onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -50,49 +49,55 @@ class AvailabilitiesView extends StatelessWidget {
                         ),
                       ),
                     ),
-              ExpandablePanelList(
-                elevation: 0,
-                expansionCallback: (panelIndex, isExpanded) {
-                  context.read<AvailabilityCubit>().toggleHeader(
-                      panelIndex == 0 ? AvailabililtyConfigSlotsType.manual : AvailabililtyConfigSlotsType.recurrent);
-                },
-                children: [
-                  ExpandablePanel(
-                    isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
-                    headerBuilder: (context, isExpanded) {
-                      return manual.isNotEmpty
-                          ? SlotsHeader(
-                              type: AvailabililtyConfigSlotsType.manual,
-                              asset: Assets.images.icons.common.handDrawSVG,
-                              text: 'Active manual slots',
-                              isOpen: isExpanded)
-                          : const SizedBox.shrink();
-                    },
-                    body: manual.isNotEmpty
-                        ? SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual)
-                        : const SizedBox.shrink(),
-                  ),
-                  if (recurrent.isNotEmpty)
+              RefreshIndicator(
+                onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
+                child: ExpandablePanelList(
+                  elevation: 0,
+                  expansionCallback: (panelIndex, isExpanded) {
+                    context.read<AvailabilityCubit>().toggleHeader(
+                        panelIndex == 0 ? AvailabililtyConfigSlotsType.manual : AvailabililtyConfigSlotsType.recurrent);
+                  },
+                  children: [
                     ExpandablePanel(
-                      isExpanded: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
+                      isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
                       headerBuilder: (context, isExpanded) {
-                        return recurrent.isNotEmpty
-                            ? GestureDetector(
-                                onTap: () {
-                                  context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.recurrent);
-                                },
-                                child: SlotsHeader(
-                                    type: AvailabililtyConfigSlotsType.recurrent,
-                                    asset: Assets.images.icons.common.recurrentSVG,
-                                    text: 'Active recurrent slots',
-                                    isOpen: isExpanded))
+                        return manual.isNotEmpty
+                            ? SlotsHeader(
+                                type: AvailabililtyConfigSlotsType.manual,
+                                asset: Assets.images.icons.common.handDrawSVG,
+                                text: 'Active manual slots',
+                                isOpen: isExpanded)
                             : const SizedBox.shrink();
                       },
-                      body: recurrent.isNotEmpty
-                          ? SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)
+                      body: manual.isNotEmpty
+                          ? SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual)
                           : const SizedBox.shrink(),
                     ),
-                ],
+                    if (recurrent.isNotEmpty)
+                      ExpandablePanel(
+                        isExpanded: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
+                        headerBuilder: (context, isExpanded) {
+                          return recurrent.isNotEmpty
+                              ? GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<AvailabilityCubit>()
+                                        .toggleHeader(AvailabililtyConfigSlotsType.recurrent);
+                                  },
+                                  child: SlotsHeader(
+                                      type: AvailabililtyConfigSlotsType.recurrent,
+                                      asset: Assets.images.icons.common.recurrentSVG,
+                                      text: 'Active recurrent slots',
+                                      isOpen: isExpanded))
+                              : const SizedBox.shrink();
+                        },
+                        body: recurrent.isNotEmpty
+                            ? SlotList(
+                                isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)
+                            : const SizedBox.shrink(),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),

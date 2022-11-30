@@ -70,15 +70,23 @@ https://booking.akiflow.com/${config.url_path}'''
 
   Future<void> getAvailabilities() async {
     List<AvailabilityConfig> availabilities = await _availabilitiesRepository.getAvailabilities();
-    emit(state.copyWith(availabilities: availabilities, navigationState: AvailabilityNavigationState.mainPage));
+    emit(state.copyWith(
+        availabilities: availabilities
+            .where((element) =>
+                element.max_end_time == null || DateTime.parse(element.max_end_time ?? '').isAfter(DateTime.now()))
+            .toList(),
+        navigationState: AvailabilityNavigationState.mainPage));
 
     List<AvailabilityConfig> networkAvailabilities = await _client.getItems(
-        perPage: 2500, withDeleted: false, nextPageUrl: Uri.parse("${Config.endpoint}/v3/availability-configs"));
-
+        perPage: 2500,
+        withDeleted: false,
+        nextPageUrl: Uri.parse("${Config.endpoint}/v3/availability-configs?with_deleted=false"));
+    List<AvailabilityConfig> filteredNetworkAvailabilities = networkAvailabilities
+        .where((element) =>
+            element.max_end_time == null || DateTime.parse(element.max_end_time ?? '').isAfter(DateTime.now()))
+        .toList();
     emit(state.copyWith(
-      navigationState: AvailabilityNavigationState.mainPage,
-      availabilities: networkAvailabilities,
-    ));
-    await _availabilitiesRepository.add(networkAvailabilities);
+        navigationState: AvailabilityNavigationState.mainPage, availabilities: filteredNetworkAvailabilities));
+    await _availabilitiesRepository.add(filteredNetworkAvailabilities);
   }
 }
