@@ -30,9 +30,10 @@ class AvailabilitiesView extends StatelessWidget {
       List<AvailabilityConfig> recurrent =
           state.availabilities?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent).toList() ??
               [];
-      return SingleChildScrollView(
-        child: RefreshIndicator(
+      return RefreshIndicator(
           onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
+      
+        child: SingleChildScrollView(
           child: Column(
             children: [
               state.isNoticeDismissed
@@ -80,9 +81,7 @@ class AvailabilitiesView extends StatelessWidget {
                         return recurrent.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
-                                  context
-                                      .read<AvailabilityCubit>()
-                                      .toggleHeader(AvailabililtyConfigSlotsType.recurrent);
+                                  context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.recurrent);
                                 },
                                 child: SlotsHeader(
                                     type: AvailabililtyConfigSlotsType.recurrent,
@@ -92,8 +91,7 @@ class AvailabilitiesView extends StatelessWidget {
                             : const SizedBox.shrink();
                       },
                       body: recurrent.isNotEmpty
-                          ? SlotList(
-                              isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)
+                          ? SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)
                           : const SizedBox.shrink(),
                     ),
                 ],
