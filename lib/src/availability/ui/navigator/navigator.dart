@@ -19,20 +19,21 @@ class AvailabilityNavigatorPage extends StatelessWidget {
       providers: availabilityProviders,
       child: Builder(
         builder: ((context) {
-          var state = context.watch<AvailabilityCubit>().state;
+          //var state = context.watch<AvailabilityCubit>().state;
           return CustomNavigatorPopScope(
             navigatorStateKey: _availabilityNavigationKey,
-            pages: [
-              if (state.navigationState == AvailabilityNavigationState.loading)
+            pages: const [
+              /* if (state.navigationState == AvailabilityNavigationState.loading ||
+                  state.navigationState == AvailabilityNavigationState.mainPage)
                 const MaterialPage(
-                  key: ValueKey('AvailabilityPage'),
+                  key: ValueKey('LoadingAvailabilityPage'),
                   child: Scaffold(body: Center(child: Text('Loading'))),
                 ),
-              if (state.navigationState == AvailabilityNavigationState.mainPage)
-                const MaterialPage(
-                  key: ValueKey('AvailabilityView'),
-                  child: AvailabilityView(),
-                ),
+              if (state.navigationState == AvailabilityNavigationState.mainPage)*/
+              MaterialPage(
+                key: ValueKey('AvailabilityView'),
+                child: AvailabilityView(),
+              ),
             ],
             onPopPage: (route, result) {
               //Handle the Main onPop here

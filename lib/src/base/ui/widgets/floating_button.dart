@@ -22,52 +22,56 @@ class FloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, state) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: (state.queue.isNotEmpty || state.justCreatedTask != null) ? bottomBarHeight : 0),
-          child: SizedBox(
-            width: 52,
-            height: 52,
-            child: FloatingActionButton(
-              onPressed: () async {
-                HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-                TaskStatusType taskStatusType;
-                if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
-                  taskStatusType = TaskStatusType.inbox;
-                } else {
-                  taskStatusType = TaskStatusType.planned;
-                }
-                DateTime date = context.read<TodayCubit>().state.selectedDate;
+        HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
+        if (homeViewType == HomeViewType.availability) {
+          return Container();
+        } else {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: (state.queue.isNotEmpty || state.justCreatedTask != null) ? bottomBarHeight : 0),
+            child: SizedBox(
+              width: 52,
+              height: 52,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  TaskStatusType taskStatusType;
+                  if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
+                    taskStatusType = TaskStatusType.inbox;
+                  } else {
+                    taskStatusType = TaskStatusType.planned;
+                  }
+                  DateTime date = context.read<TodayCubit>().state.selectedDate;
 
-                Label? label = context.read<LabelsCubit>().state.selectedLabel;
+                  Label? label = context.read<LabelsCubit>().state.selectedLabel;
 
-                EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+                  EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
 
-                Task task = editTaskCubit.state.updatedTask.copyWith(
-                  status: Nullable(taskStatusType.id),
-                  date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
-                      ? Nullable(null)
-                      : Nullable(date.toIso8601String()),
-                  listId: Nullable(label?.id),
-                );
+                  Task task = editTaskCubit.state.updatedTask.copyWith(
+                    status: Nullable(taskStatusType.id),
+                    date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
+                        ? Nullable(null)
+                        : Nullable(date.toIso8601String()),
+                    listId: Nullable(label?.id),
+                  );
 
-                editTaskCubit.attachTask(task);
+                  editTaskCubit.attachTask(task);
 
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => const CreateTaskModal(),
-                );
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: SvgPicture.asset(
-                "assets/images/icons/_common/plus.svg",
-                color: ColorsExt.background(context),
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => const CreateTaskModal(),
+                  );
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: SvgPicture.asset(
+                  "assets/images/icons/_common/plus.svg",
+                  color: ColorsExt.background(context),
+                ),
               ),
             ),
-          ),
-        );
+          );
+        }
       },
     );
   }
