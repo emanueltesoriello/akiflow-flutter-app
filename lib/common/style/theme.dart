@@ -29,9 +29,9 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     foregroundColor: ColorsLight.grey2,
     titleTextStyle: TextStyle(color: ColorsLight.grey2, fontSize: 24, fontWeight: FontWeight.w500),
   ),
-  textSelectionTheme:  TextSelectionThemeData(
+  textSelectionTheme: const TextSelectionThemeData(
     cursorColor: ColorsLight.akiflow,
-    selectionColor: ColorsLight.akiflow.withOpacity(0.4),
+    selectionColor: ColorsLight.highlightColor,
     selectionHandleColor: ColorsLight.akiflow,
   ),
   textTheme: const TextTheme(
