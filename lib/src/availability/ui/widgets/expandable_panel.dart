@@ -67,9 +67,11 @@ class ExpandablePanel {
     required this.body,
     this.isExpanded = false,
     this.canTapOnHeader = false,
+    this.isHeaderVisible = true,
     this.backgroundColor,
   })  : assert(headerBuilder != null),
         assert(body != null),
+        assert(isHeaderVisible != null),
         assert(isExpanded != null),
         assert(canTapOnHeader != null);
 
@@ -80,6 +82,8 @@ class ExpandablePanel {
   ///
   /// This widget is visible only when the panel is expanded.
   final Widget body;
+
+  final bool isHeaderVisible;
 
   /// Whether the panel is expanded.
   ///
@@ -150,12 +154,14 @@ class ExpandablePanelList extends StatefulWidget {
     super.key,
     this.children = const <ExpandablePanel>[],
     this.expansionCallback,
+    this.isHeaderVisible = true,
     this.animationDuration = kThemeAnimationDuration,
     this.expandedHeaderPadding = _kPanelHeaderExpandedDefaultPadding,
     this.dividerColor,
     this.elevation = 2,
   })  : assert(children != null),
         assert(animationDuration != null),
+        assert(isHeaderVisible != null),
         _allowOnlyOnePanelOpen = false,
         initialOpenPanelValue = null;
 
@@ -181,6 +187,7 @@ class ExpandablePanelList extends StatefulWidget {
     this.expandedHeaderPadding = _kPanelHeaderExpandedDefaultPadding,
     this.dividerColor,
     this.elevation = 2,
+    required this.isHeaderVisible,
   })  : assert(children != null),
         assert(animationDuration != null),
         _allowOnlyOnePanelOpen = true;
@@ -212,6 +219,8 @@ class ExpandablePanelList extends StatefulWidget {
 
   // Whether multiple panels can be open simultaneously
   final bool _allowOnlyOnePanelOpen;
+
+  final bool isHeaderVisible;
 
   /// The value of the panel that initially begins open. (This value is
   /// only used when initializing with the [ExpandablePanelList.radio]
@@ -379,22 +388,26 @@ class _ExpandablePanelListState extends State<ExpandablePanelList> {
         );
       }
       items.add(
+        
         MaterialSlice(
           key: _SaltedKey<BuildContext, int>(context, index * 2),
           color: child.backgroundColor,
-          child: Column(
-            children: <Widget>[
-              header,
-              AnimatedCrossFade(
-                firstChild: Container(height: 0.0),
-                secondChild: child.body,
-                firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
-                secondCurve: const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
-                sizeCurve: Curves.fastOutSlowIn,
-                crossFadeState: _isChildExpanded(index) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                duration: widget.animationDuration,
-              ),
-            ],
+          child: Visibility(
+            visible: child.isHeaderVisible,
+            child: Column(
+              children: <Widget>[
+                header,
+                AnimatedCrossFade(
+                  firstChild: Container(height: 0.0),
+                  secondChild: child.body,
+                  firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
+                  secondCurve: const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
+                  sizeCurve: Curves.fastOutSlowIn,
+                  crossFadeState: _isChildExpanded(index) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                  duration: widget.animationDuration,
+                ),
+              ],
+            ),
           ),
         ),
       );
