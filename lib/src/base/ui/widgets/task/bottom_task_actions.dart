@@ -112,7 +112,7 @@ class BottomTaskActions extends StatelessWidget {
                     backColor: ColorsExt.grey5(context),
                     topColor: ColorsExt.grey3(context),
                     icon: 'assets/images/icons/_common/number.svg',
-                    bottomLabel: t.task.assign,
+                    bottomLabel: 'Label',
                     click: () {
                       var cubit = context.read<TasksCubit>();
 
