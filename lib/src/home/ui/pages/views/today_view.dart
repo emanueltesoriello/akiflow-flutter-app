@@ -198,6 +198,7 @@ class _TodayViewState extends State<TodayView> {
                                 listOpened: context.watch<TodayCubit>().state.completedListOpen,
                               ),
                             ),
+                            const SizedBox(height: 100)
                           ],
                         ),
                       ),
