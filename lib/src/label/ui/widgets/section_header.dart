@@ -36,32 +36,13 @@ class SectionHeaderItem extends StatelessWidget {
         height: 42,
         width: double.infinity,
         padding: const EdgeInsets.only(left: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: ColorsExt.grey5(context),
-              width: 1,
-            ),
-          ),
-          boxShadow: [
-            const BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.06), // shadow color
-            ),
-            BoxShadow(
-              offset: const Offset(0, 4),
-              blurRadius: 6,
-              color: ColorsExt.grey7(context),
-              // background color
-            ),
-          ],
-        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context))),
+            Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
             const SizedBox(width: 4),
             Text("($taskCount)",
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.grey2_5(context))),
             const Spacer(),
             SvgPicture.asset(
               listOpened

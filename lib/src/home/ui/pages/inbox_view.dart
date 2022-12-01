@@ -94,6 +94,7 @@ class _ViewState extends State<_View> {
                     sorting: TaskListSorting.sortingDescending,
                     showLabel: true,
                     showPlanInfo: false,
+                    addBottomPadding: true,
                     header: () {
                       if (!state.showInboxNotice) {
                         return null;
