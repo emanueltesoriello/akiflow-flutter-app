@@ -9,7 +9,7 @@ class AvailabilityCubitState extends Equatable {
 
   const AvailabilityCubitState({
     this.navigationState = AvailabilityNavigationState.loading,
-    this.isNoticeDismissed = false,
+    this.isNoticeDismissed = true,
     this.availabilities,
     this.isManualOpen = true,
     this.isRecurrentOpen = true,

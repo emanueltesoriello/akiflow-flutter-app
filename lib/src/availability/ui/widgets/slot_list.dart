@@ -23,8 +23,9 @@ class _SlotListState extends State<SlotList> {
       children: [
         const Separator(),
         SizedBox(
-          height: (70 * widget.configs.length).toDouble(),
+          height: (76 * widget.configs.length).toDouble(),
           child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: widget.configs.length,
               itemBuilder: (BuildContext context, index) => SlotTile(config: widget.configs[index])),
         ),

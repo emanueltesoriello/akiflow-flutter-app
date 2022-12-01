@@ -12,6 +12,7 @@ class AvailabilityView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBarComp(
           title: "Availabilities",
           leading: SvgPicture.asset(

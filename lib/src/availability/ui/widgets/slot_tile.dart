@@ -51,7 +51,8 @@ class SlotTile extends StatelessWidget {
               )),
               InkWell(
                   onTap: () {
-                    launchUrlString("https://booking.akiflow.com/${config.url_path}");
+                    launchUrlString("https://booking.akiflow.com/${config.url_path}",
+                        mode: LaunchMode.externalApplication);
                   },
                   child: SvgPicture.asset(Assets.images.icons.common.arrowUpRightSquareSVG)),
               const SizedBox(width: 10),
