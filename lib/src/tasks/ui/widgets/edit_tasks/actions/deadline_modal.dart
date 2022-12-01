@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -30,9 +31,9 @@ class _DeadlineModalState extends State<DeadlineModal> {
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.transparent,
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
@@ -47,7 +48,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
               child: Row(
                 children: [
                   SvgPicture.asset(
-                    "assets/images/icons/_common/flags.svg",
+                    Assets.images.icons.common.flagSVG,
                     width: 28,
                     height: 28,
                   ),

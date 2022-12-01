@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -229,7 +230,7 @@ class BottomTaskActions extends StatelessWidget {
                             PopupMenuItem<BottomTaskAdditionalActions>(
                               value: BottomTaskAdditionalActions.setDeadline,
                               child: PopupMenuCustomItem(
-                                iconAsset: "assets/images/icons/_common/flags.svg",
+                                iconAsset: Assets.images.icons.common.flagSVG,
                                 text: t.task.setDeadline,
                               ),
                             ),

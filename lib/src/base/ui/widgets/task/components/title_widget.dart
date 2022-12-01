@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:models/task/task.dart';
 
 class TitleWidget extends StatelessWidget {
@@ -40,29 +41,21 @@ class TitleWidget extends StatelessWidget {
                 ),
               ),
             ),
-            _overdue(context),
+            isGoal(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _overdue(BuildContext context) {
-    if (task.isOverdue) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 2),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              "assets/images/icons/_common/Clock_alert.svg",
-              width: 20,
-              height: 20,
-              color: ColorsExt.red(context),
-            ),
-            const SizedBox(width: 4),
-          ],
-        ),
+  Widget isGoal(BuildContext context) {
+    if (task.isDailyGoal) {
+      return TagBox(
+        icon: "assets/images/icons/_common/target_active.svg",
+        isBig: true,
+        isSquare: true,
+        backgroundColor: Colors.transparent,
+        active: task.dailyGoal != null && task.dailyGoal == 1,
       );
     }
 
