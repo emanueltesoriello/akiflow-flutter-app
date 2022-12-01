@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
+import 'package:mobile/src/availability/ui/models/navigation_state.dart';
 import 'package:mobile/src/availability/ui/widgets/availability_view_placeholder.dart';
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
 
@@ -20,6 +19,9 @@ class AvailabilitiesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AvailabilityCubit, AvailabilityCubitState>(builder: (context, state) {
+      if (state.navigationState == AvailabilityNavigationState.loading) {
+        return const Center(child: Text('Loading..'));
+      }
       if (state.availabilities?.isEmpty ?? true) {
         return const AvailabilityViewPlaceholder();
       }
@@ -30,28 +32,29 @@ class AvailabilitiesView extends StatelessWidget {
               [];
       return RefreshIndicator(
         onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              state.isNoticeDismissed
-                  ? const SizedBox.shrink()
-                  : GestureDetector(
-                      onLongPress: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Notice(
-                          title: "Coming Soon",
-                          subtitle: "The full calendar experience is coming in the near future",
-                          icon: Icons.info_outline,
-                          onClose: () {
-                            context.read<AvailabilityCubit>().noticeClosed();
-                          },
+        child: Stack(
+          children: <Widget>[
+            ListView(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                state.isNoticeDismissed
+                    ? const SizedBox.shrink()
+                    : GestureDetector(
+                        onLongPress: () {},
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Notice(
+                            title: "Coming Soon",
+                            subtitle: "The full calendar experience is coming in the near future",
+                            icon: Icons.info_outline,
+                            onClose: () {
+                              context.read<AvailabilityCubit>().noticeClosed();
+                            },
+                          ),
                         ),
                       ),
-                    ),
-              RefreshIndicator(
-                onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
-                child: ExpandablePanelList(
+                ExpandablePanelList(
                   elevation: 0,
                   expansionCallback: (panelIndex, isExpanded) {
                     context.read<AvailabilityCubit>().toggleHeader(
@@ -88,9 +91,9 @@ class AvailabilitiesView extends StatelessWidget {
                             isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)),
                   ],
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       );
     });

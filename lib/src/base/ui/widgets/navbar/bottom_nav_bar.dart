@@ -83,10 +83,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
                         topPadding: topPadding,
                       ),
                       NavItem(
-                        active: active(HomeViewType.calendar, state.homeViewType),
+                        active: active(HomeViewType.availability, state.homeViewType),
                         activeIconAsset: Assets.images.icons.common.availabilitySVG,
                         title: "Availability",
-                        homeViewType: HomeViewType.calendar,
+                        homeViewType: HomeViewType.availability,
                         topPadding: topPadding,
                       ),
                     ],

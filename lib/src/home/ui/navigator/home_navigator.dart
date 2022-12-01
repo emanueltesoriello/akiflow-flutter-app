@@ -6,7 +6,6 @@ import 'package:mobile/src/home/ui/pages/inbox_view.dart';
 import 'package:mobile/src/home/ui/pages/views/today_view.dart';
 import 'package:mobile/src/label/ui/pages/label_view.dart';
 
-
 class HomePageNavigator extends StatelessWidget {
   const HomePageNavigator({
     Key? key,
@@ -14,18 +13,20 @@ class HomePageNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int homeViewType = context.watch<MainCubit>().state.homeViewType.index;
-
-    if (homeViewType < 4) {
-      return IndexedStack(
-        index: homeViewType,
-        children: const [
-          InboxView(),
-          TodayView(),
-          AvailabilityNavigatorPage(),
-        ],
-      );
+    HomeViewType homeViewType = context.watch<MainCubit>().state.homeViewType;
+    if (homeViewType == HomeViewType.inbox) {
+      return const InboxView();
     }
-    return const LabelView();
+    if (homeViewType == HomeViewType.today) {
+      return const TodayView();
+    }
+    if (homeViewType == HomeViewType.availability) {
+      return const AvailabilityNavigatorPage();
+    }
+    if (homeViewType == HomeViewType.label) {
+      return const LabelView();
+    } else {
+      return Container();
+    }
   }
 }
