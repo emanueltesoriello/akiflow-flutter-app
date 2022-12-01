@@ -89,150 +89,154 @@ class _LabelViewState extends State<LabelView> {
             },
             child: SlidableAutoCloseBehavior(
               child: ListView(
-                controller: scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                children: labelState.sections.map((section) {
-                  List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
+                  controller: scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  children: [
+                    ...labelState.sections.map((section) {
+                      List<Task> tasks = filtered.where((element) => element.sectionId == section.id).toList();
 
-                  List<Task> tasksWithoutSnoozedAndSomeday = List.from(tasks);
+                      List<Task> tasksWithoutSnoozedAndSomeday = List.from(tasks);
 
-                  if (!labelState.showSnoozed) {
-                    tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSnoozed);
-                  }
-
-                  if (!labelState.showSomeday) {
-                    tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSomeday);
-                  }
-
-                  int count =
-                      tasksWithoutSnoozedAndSomeday.where((element) => element.sectionId == section.id).toList().length;
-
-                  Widget? header = SectionHeaderItem(
-                    section.title ?? t.noTitle,
-                    taskCount: count,
-                    showActionsMenu: section.id != null,
-                    onClick: () {
-                      context.read<LabelsCubit>().toggleOpenSection(section.id);
-                    },
-                    listOpened: labelState.openedSections[section.id] ?? false,
-                    onCreateTask: () async {
-                      EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
-
-                      Task task = editTaskCubit.state.updatedTask.copyWith(
-                        sectionId: Nullable(section.id),
-                        status: Nullable(TaskStatusType.inbox.id),
-                        date: Nullable(null),
-                        datetime: Nullable(null),
-                        listId: Nullable(labelState.selectedLabel?.id),
-                      );
-
-                      editTaskCubit.attachTask(task);
-
-                      showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) => const CreateTaskModal(),
-                      );
-                    },
-                    onDelete: () {
-                      context.read<LabelsCubit>().deleteSection(section);
-                    },
-                    onRename: () async {
-                      LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                      Label? sectionUpdated = await showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) => CreateEditSectionModal(initialSection: section),
-                      );
-
-                      if (sectionUpdated != null) {
-                        labelsCubit.updateSection(sectionUpdated);
+                      if (!labelState.showSnoozed) {
+                        tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSnoozed);
                       }
-                    },
-                  );
 
-                  int snoozedCount = tasks.where((element) => element.isSnoozed).toList().length;
-                  int somedayCount = tasks.where((element) => element.isSomeday).toList().length;
+                      if (!labelState.showSomeday) {
+                        tasksWithoutSnoozedAndSomeday.removeWhere((element) => element.isSomeday);
+                      }
 
-                  Widget? footer;
+                      int count = tasksWithoutSnoozedAndSomeday
+                          .where((element) => element.sectionId == section.id)
+                          .toList()
+                          .length;
 
-                  if (snoozedCount != 0 || somedayCount != 0) {
-                    List<Widget> wrapped = [];
+                      Widget? header = SectionHeaderItem(
+                        section.title ?? t.noTitle,
+                        taskCount: count,
+                        showActionsMenu: section.id != null,
+                        onClick: () {
+                          context.read<LabelsCubit>().toggleOpenSection(section.id);
+                        },
+                        listOpened: labelState.openedSections[section.id] ?? false,
+                        onCreateTask: () async {
+                          EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
 
-                    if (snoozedCount != 0) {
-                      wrapped.add(() {
-                        String text;
-                        String? iconAsset;
+                          Task task = editTaskCubit.state.updatedTask.copyWith(
+                            sectionId: Nullable(section.id),
+                            status: Nullable(TaskStatusType.inbox.id),
+                            date: Nullable(null),
+                            datetime: Nullable(null),
+                            listId: Nullable(labelState.selectedLabel?.id),
+                          );
 
-                        if (!labelState.showSnoozed) {
-                          text = "$snoozedCount ${t.task.snoozed}";
-                          iconAsset = "assets/images/icons/_common/clock.svg";
-                        } else {
-                          text = t.label.hideSnoozed;
+                          editTaskCubit.attachTask(task);
+
+                          showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context) => const CreateTaskModal(),
+                          );
+                        },
+                        onDelete: () {
+                          context.read<LabelsCubit>().deleteSection(section);
+                        },
+                        onRename: () async {
+                          LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                          Label? sectionUpdated = await showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context) => CreateEditSectionModal(initialSection: section),
+                          );
+
+                          if (sectionUpdated != null) {
+                            labelsCubit.updateSection(sectionUpdated);
+                          }
+                        },
+                      );
+
+                      int snoozedCount = tasks.where((element) => element.isSnoozed).toList().length;
+                      int somedayCount = tasks.where((element) => element.isSomeday).toList().length;
+
+                      Widget? footer;
+
+                      if (snoozedCount != 0 || somedayCount != 0) {
+                        List<Widget> wrapped = [];
+
+                        if (snoozedCount != 0) {
+                          wrapped.add(() {
+                            String text;
+                            String? iconAsset;
+
+                            if (!labelState.showSnoozed) {
+                              text = "$snoozedCount ${t.task.snoozed}";
+                              iconAsset = "assets/images/icons/_common/clock.svg";
+                            } else {
+                              text = t.label.hideSnoozed;
+                            }
+
+                            return CompactInfo(
+                              iconAsset: iconAsset,
+                              text: text,
+                              onPressed: () {
+                                SchedulerBinding.instance.addPostFrameCallback((_) {
+                                  double position = scrollController.position.maxScrollExtent;
+                                  scrollController.animateTo(position,
+                                      duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                });
+
+                                context.read<LabelsCubit>().toggleShowSnoozed();
+                              },
+                            );
+                          }());
                         }
 
-                        return CompactInfo(
-                          iconAsset: iconAsset,
-                          text: text,
-                          onPressed: () {
-                            SchedulerBinding.instance.addPostFrameCallback((_) {
-                              double position = scrollController.position.maxScrollExtent;
-                              scrollController.animateTo(position,
-                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                            });
+                        if (somedayCount != 0) {
+                          wrapped.add(() {
+                            String text;
+                            String? iconAsset;
 
-                            context.read<LabelsCubit>().toggleShowSnoozed();
-                          },
-                        );
-                      }());
-                    }
+                            if (!labelState.showSomeday) {
+                              text = "$somedayCount ${t.task.someday}";
+                              iconAsset = "assets/images/icons/_common/archivebox.svg";
+                            } else {
+                              text = t.label.hideSomeday;
+                            }
 
-                    if (somedayCount != 0) {
-                      wrapped.add(() {
-                        String text;
-                        String? iconAsset;
+                            return CompactInfo(
+                              iconAsset: iconAsset,
+                              text: text,
+                              onPressed: () async {
+                                SchedulerBinding.instance.addPostFrameCallback((_) {
+                                  double position = scrollController.position.maxScrollExtent;
+                                  scrollController.animateTo(position,
+                                      duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                });
 
-                        if (!labelState.showSomeday) {
-                          text = "$somedayCount ${t.task.someday}";
-                          iconAsset = "assets/images/icons/_common/archivebox.svg";
-                        } else {
-                          text = t.label.hideSomeday;
+                                context.read<LabelsCubit>().toggleShowSomeday();
+                              },
+                            );
+                          }());
                         }
-
-                        return CompactInfo(
-                          iconAsset: iconAsset,
-                          text: text,
-                          onPressed: () async {
-                            SchedulerBinding.instance.addPostFrameCallback((_) {
-                              double position = scrollController.position.maxScrollExtent;
-                              scrollController.animateTo(position,
-                                  duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                            });
-
-                            context.read<LabelsCubit>().toggleShowSomeday();
-                          },
+                        footer = Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
                         );
-                      }());
-                    }
-                    footer = Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
-                    );
-                  }
+                      }
 
-                  return TaskList(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    tasks: tasksWithoutSnoozedAndSomeday,
-                    visible: labelState.openedSections[section.id] ?? false,
-                    showLabel: false,
-                    header: labelState.sections.length > 1 ? header : null,
-                    footer: footer,
-                    showPlanInfo: true,
-                    sorting: TaskListSorting.sortingLabelAscending,
-                  );
-                }).toList(),
-              ),
+                      return TaskList(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        tasks: tasksWithoutSnoozedAndSomeday,
+                        visible: labelState.openedSections[section.id] ?? false,
+                        showLabel: false,
+                        header: labelState.sections.length > 1 ? header : null,
+                        footer: footer,
+                        showPlanInfo: true,
+                        sorting: TaskListSorting.sortingLabelAscending,
+                      );
+                    }).toList(),
+                    const SizedBox(height: 100)
+                  ]),
             ),
           );
         },
