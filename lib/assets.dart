@@ -114,6 +114,7 @@ class _AssetsImagesIconsCommon {
   final arrowUpSVG = 'assets/images/icons/_common/arrow_up.svg';
   final arrowUpArrowDownSVG = 'assets/images/icons/_common/arrow_up_arrow_down.svg';
   final arrowUpRightSquareSVG = 'assets/images/icons/_common/arrow_up_right_square.svg';
+  final availabilitySVG = 'assets/images/icons/_common/availability.svg';
   final bellSVG = 'assets/images/icons/_common/bell.svg';
   final calendarSVG = 'assets/images/icons/_common/calendar.svg';
   final chatBubbleSVG = 'assets/images/icons/_common/chat_bubble.svg';
@@ -138,6 +139,7 @@ class _AssetsImagesIconsCommon {
   final gearAltSVG = 'assets/images/icons/_common/gear_alt.svg';
   final giftSVG = 'assets/images/icons/_common/gift.svg';
   final guidebookSVG = 'assets/images/icons/_common/guidebook.svg';
+  final handDrawSVG = 'assets/images/icons/_common/hand_draw.svg';
   final hourglassSVG = 'assets/images/icons/_common/hourglass.svg';
   final importanceGreySVG = 'assets/images/icons/_common/importance-grey.svg';
   final importanceSVG = 'assets/images/icons/_common/importance.svg';
@@ -151,6 +153,7 @@ class _AssetsImagesIconsCommon {
   final menuSVG = 'assets/images/icons/_common/menu.svg';
   final moneyDollarCircleSVG = 'assets/images/icons/_common/money_dollar_circle.svg';
   final noPrioritySVG = 'assets/images/icons/_common/no-priority.svg';
+  final noActiveLinksSVG = 'assets/images/icons/_common/no_active_links.svg';
   final numberSVG = 'assets/images/icons/_common/number.svg';
   final paperplaneSendSVG = 'assets/images/icons/_common/paperplane_send.svg';
   final pencilSVG = 'assets/images/icons/_common/pencil.svg';
@@ -164,6 +167,8 @@ class _AssetsImagesIconsCommon {
   final priorityMidSVG = 'assets/images/icons/_common/priority-mid.svg';
   final puzzleSVG = 'assets/images/icons/_common/puzzle.svg';
   final rectangleGrid1X2SVG = 'assets/images/icons/_common/rectangle_grid_1x2.svg';
+  final recurrentJPG = 'assets/images/icons/_common/recurrent.jpg';
+  final recurrentSVG = 'assets/images/icons/_common/recurrent.svg';
   final repeatSVG = 'assets/images/icons/_common/repeat.svg';
   final searchSVG = 'assets/images/icons/_common/search.svg';
   final slashCircleSVG = 'assets/images/icons/_common/slash_circle.svg';

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,18 +56,18 @@ _identifyAnalytics(User user) async {
   await AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
 }
 
-Future<void> mainCom() async {
+Future<void> mainCom({kDebugMode = false}) async {
   await initFunctions();
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
-  await SentryFlutter.init(
-    (options) {
-      options.beforeSend = beforeSend;
-      options.dsn = Config.sentryDsn;
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(Application(userLogged: userLogged)),
-  );
+  await SentryFlutter.init((options) {
+    options.beforeSend = beforeSend;
+    options.dsn = Config.sentryDsn;
+    options.tracesSampleRate = 1.0;
+  },
+      appRunner: () => runApp(
+            DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
+          ));
 }
 
 class Application extends StatelessWidget {

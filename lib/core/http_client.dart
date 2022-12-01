@@ -14,6 +14,7 @@ class HttpClient extends BaseClient {
     User? user = _preferences.user;
 
     if (user != null) {
+      print(user.accessToken);
       request.headers['Authorization'] = "Bearer ${user.accessToken ?? ''}";
     }
 
