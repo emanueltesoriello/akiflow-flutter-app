@@ -22,17 +22,22 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
   }
 
   _init() async {
-    if (_preferencesRepository.inboxNoticeHidden == false) {
-      emit(state.copyWith(isNoticeDismissed: false));
+    if (_preferencesRepository.availabilitiesNoticeHidden == true) {
+      print(_preferencesRepository.availabilitiesNoticeHidden);
+      emit(state.copyWith(isNoticeDismissed: true));
     }
     if (_preferencesRepository.user != null) {
       await getAvailabilities();
     }
   }
 
+  Future<bool> getNoticeStatus() async {
+    return _preferencesRepository.availabilitiesNoticeHidden;
+  }
+
   Future<void> noticeClosed() async {
-    emit(state.copyWith(isNoticeDismissed: true));
     await _preferencesRepository.setAvailabilitiesNoticeHidden(true);
+    emit(state.copyWith(isNoticeDismissed: true));
   }
 
   String getAvailabilityText(AvailabilityConfig config) {

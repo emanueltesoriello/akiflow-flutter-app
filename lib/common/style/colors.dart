@@ -149,6 +149,8 @@ extension ColorsLight on Colors {
   static const Color akiflow20 = Color(0xFFEFD7FE);
   static const Color akiflow10 = Color(0xFFF7EBFE);
 
+  static const Color highlightColor = Color(0xFFF2DDFF);
+
   static const Color green = Color(0xFF6FCF97);
   static const Color green20 = Color(0xFFE2F5EA);
 
