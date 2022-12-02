@@ -36,6 +36,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(originalTask: task, updatedTask: task));
   }
 
+  setHasFocusOnTitleOrDescription(bool newVal) {
+    emit(state.copyWith(hasFocusOnTitleOrDescription: newVal));
+  }
+
   void setRead() {
     Task task = state.updatedTask;
 

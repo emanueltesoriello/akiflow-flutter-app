@@ -40,6 +40,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
   StreamSubscription? streamSubscription;
 
   final FocusNode _descriptionFocusNode = FocusNode();
+  final FocusNode _titleFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -56,8 +57,22 @@ class _EditTaskRowState extends State<EditTaskRow> {
         cubit.updateDescription(html);
       });
     });
-
+    initFocusNodeListener();
     super.initState();
+  }
+
+  initFocusNodeListener() {
+    EditTaskCubit cubit = context.read<EditTaskCubit>();
+    _descriptionFocusNode.addListener(() {
+      print('Focus on description');
+      cubit.setHasFocusOnTitleOrDescription(true);
+      _descriptionFocusNode.requestFocus();
+    });
+    _titleFocusNode.addListener(() {
+      print('Focus on title');
+      cubit.setHasFocusOnTitleOrDescription(true);
+      _titleFocusNode.requestFocus();
+    });
   }
 
   Future initDescription() async {
@@ -80,30 +95,34 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 2.0),
-            child: _checkbox(context),
+    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 2.0),
+                child: _checkbox(context),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _firstLine(context),
+                    const SizedBox(height: 8),
+                    _description(context),
+                    const SizedBox(height: 32),
+                    if (!state.hasFocusOnTitleOrDescription) _thirdLine(context),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _firstLine(context),
-                const SizedBox(height: 8),
-                _description(context),
-                const SizedBox(height: 32),
-                _thirdLine(context),
-              ],
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -173,6 +192,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     return TextField(
       controller: _titleController,
       maxLines: null,
+      focusNode: _titleFocusNode,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.zero,
