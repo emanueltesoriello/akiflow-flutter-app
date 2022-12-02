@@ -155,8 +155,8 @@ class ExpandablePanelList extends StatefulWidget {
     this.children = const <ExpandablePanel>[],
     this.expansionCallback,
     this.isHeaderVisible = true,
-    this.animationDuration = kThemeAnimationDuration,
-    this.expandedHeaderPadding = _kPanelHeaderExpandedDefaultPadding,
+    this.animationDuration = const Duration(milliseconds: 10),
+    this.expandedHeaderPadding = const EdgeInsets.all(0.0),
     this.dividerColor,
     this.elevation = 2,
   })  : assert(children != null),
@@ -348,10 +348,10 @@ class _ExpandablePanelListState extends State<ExpandablePanelList> {
       );
 
       Widget expandIconContainer = Container(
-        margin: const EdgeInsetsDirectional.only(end: 8.0),
+        margin: const EdgeInsetsDirectional.only(end: 0.0),
         child: ChevronIcon(
           isExpanded: _isChildExpanded(index),
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(0.0),
           onPressed: !child.canTapOnHeader ? (bool isExpanded) => _handlePressed(isExpanded, index) : null,
         ),
       );
@@ -366,9 +366,10 @@ class _ExpandablePanelListState extends State<ExpandablePanelList> {
       Widget header = Row(
         children: <Widget>[
           Expanded(
-            child: AnimatedContainer(
-              duration: widget.animationDuration,
-              curve: Curves.fastOutSlowIn,
+            child: Container(
+           // AnimatedContainer(
+            //  duration: widget.animationDuration,
+            //  curve: Curves.fastOutSlowIn,
               margin: _isChildExpanded(index) ? widget.expandedHeaderPadding : EdgeInsets.zero,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: _kPanelHeaderCollapsedHeight),
@@ -400,8 +401,8 @@ class _ExpandablePanelListState extends State<ExpandablePanelList> {
                 AnimatedCrossFade(
                   firstChild: Container(height: 0.0),
                   secondChild: child.body,
-                  firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
-                  secondCurve: const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
+                //  firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
+                 // secondCurve: const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
                   sizeCurve: Curves.fastOutSlowIn,
                   crossFadeState: _isChildExpanded(index) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                   duration: widget.animationDuration,

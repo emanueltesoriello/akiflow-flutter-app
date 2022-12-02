@@ -32,7 +32,7 @@ class ChevronIcon extends StatefulWidget {
     this.isExpanded = false,
     this.size = 24.0,
     required this.onPressed,
-    this.padding = const EdgeInsets.all(8.0),
+    this.padding = const EdgeInsets.all(0.0),
     this.color,
     this.disabledColor,
     this.expandedColor,
