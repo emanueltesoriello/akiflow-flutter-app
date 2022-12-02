@@ -17,13 +17,14 @@ class SlotTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 70,
+      height: 52,
       child: ListTile(
+        contentPadding:EdgeInsets.symmetric(horizontal:9.0),
         title: Container(
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
               color: ColorsExt.grey7(context),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(6),
               border: Border.all(
                 color: ColorsExt.grey5(context),
                 width: 1,
@@ -43,51 +44,65 @@ class SlotTile extends StatelessWidget {
                 config.title ?? '',
                 maxLines: 1,
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 15,
                   color: ColorsExt.grey1(context),
                   fontWeight: FontWeight.w600,
                   overflow: TextOverflow.ellipsis,
+
                 ),
               )),
+              const SizedBox(width: 5),
+              Text(config.durationString,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: ColorsExt.grey3(context),
+                    fontWeight: FontWeight.w600,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+              const SizedBox(width: 6),
               InkWell(
                   onTap: () {
                     launchUrlString("https://booking.akiflow.com/${config.url_path}",
                         mode: LaunchMode.externalApplication);
                   },
-                  child: SvgPicture.asset(Assets.images.icons.common.arrowUpRightSquareSVG)),
-              const SizedBox(width: 10),
+                  child: SvgPicture.asset(Assets.images.icons.common.arrowUpRightSquareSVG,height: 18,)),
             ],
           ),
         ),
-        trailing: InkWell(
-            onTap: () async {
-              Clipboard.setData(ClipboardData(text: context.read<AvailabilityCubit>().getAvailabilityText(config)));
+        trailing: Container(
+          margin: const EdgeInsets.only(right:5.0),
+          child: InkWell(
+              onTap: () async {
+                Clipboard.setData(ClipboardData(text: context.read<AvailabilityCubit>().getAvailabilityText(config)));
 
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  backgroundColor: Colors.transparent,
-                  content: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: ColorsExt.green20(context),
-                      border: Border.all(
-                        color: ColorsExt.grey5(context),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Link copied to clipboard!',
-                          style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.transparent,
+                    content: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: ColorsExt.green20(context),
+                        border: Border.all(
+                          color: ColorsExt.grey5(context),
+                          width: 1,
                         ),
-                      ],
-                    ),
-                  )));
-            },
-            child: SvgPicture.asset(Assets.images.icons.common.linkSVG)),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Link copied to clipboard!',
+                            style: TextStyle(
+                              color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    )));
+              },
+              child: SvgPicture.asset(Assets.images.icons.common.linkSVG,height: 17.79,)),
+        ),
       ),
     );
   }

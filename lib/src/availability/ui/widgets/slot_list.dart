@@ -18,18 +18,15 @@ class _SlotListState extends State<SlotList> {
     if (widget.configs.isEmpty || widget.isOpen == false) {
       return const SizedBox();
     }
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Separator(),
-        SizedBox(
-          height: (76 * widget.configs.length).toDouble(),
-          child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.configs.length,
-              itemBuilder: (BuildContext context, index) => SlotTile(config: widget.configs[index])),
-        ),
-      ],
+    return SizedBox(
+      height: (58 * widget.configs.length).toDouble(),
+      child: ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.configs.length,
+          itemBuilder: (BuildContext context, index) => Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: SlotTile(config: widget.configs[index]),
+              )),
     );
   }
 }
