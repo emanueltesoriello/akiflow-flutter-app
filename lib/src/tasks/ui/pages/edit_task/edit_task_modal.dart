@@ -174,30 +174,12 @@ class _EditTaskModalState extends State<EditTaskModal> {
                     const SizedBox(width: 10),
                     TextButton(
                       onPressed: () async {
-                        Task original = state.originalTask;
                         streamSubscription?.cancel();
                         quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
                             document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
                         _init();
                         cubit.undoChanges();
-                        /*if (original.title != null) {
-                          _titleController.text = original.title!;
-                          context.read<EditTaskCubit>().onTitleChanged(original.title!);
-                        }*/
-                        /* if (original.description != null) {
-                          await initDescription();
-
-                          streamSubscription = quillController.value.changes.listen((change) async {
-                            List<dynamic> delta = quillController.value.document.toDelta().toJson();
-                            String html = await InteractiveWebView.deltaToHtml(delta);
-                            cubit.updateDescription(html);
-                          });
-                        }*/
-
                         cubit.setHasFocusOnTitleOrDescription(false);
-
-                        //_titleFocusNode = FocusNode();
-                        //_descriptionFocusNode = FocusNode();
                         FocusScope.of(context).unfocus();
                         Navigator.of(context).pop();
                       },
