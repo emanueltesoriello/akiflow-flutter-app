@@ -232,6 +232,10 @@ class SettingsModal extends StatelessWidget {
 
                                   if (newLabelUpdated != null) {
                                     labelsCubit.addLabel(newLabelUpdated, labelType: LabelType.label);
+
+                                    context.read<LabelsCubit>().selectLabel(newLabelUpdated);
+                                    context.read<MainCubit>().changeHomeView(HomeViewType.label);
+                                    Navigator.pop(context);
                                   }
                                   break;
                                 case AddListType.addFolder:
