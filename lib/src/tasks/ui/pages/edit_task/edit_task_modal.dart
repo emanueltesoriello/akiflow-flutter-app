@@ -13,7 +13,6 @@ import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_linked_content.dar
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_links.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_row.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_top_actions.dart';
-import 'package:models/task/task.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter/material.dart';
@@ -139,20 +138,20 @@ class _EditTaskModalState extends State<EditTaskModal> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text('Discard changes?',
-                    style: Theme.of(context).textTheme.button?.copyWith(color: ColorsExt.grey1(context))),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
                 const SizedBox(height: 10),
                 Text('The changes you’ve made won’t be saved',
                     style: Theme.of(context)
                         .textTheme
-                        .button
+                        .subtitle1
                         ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: 30,
-                      width: 80,
+                      height: 40,
+                      width: 85,
                       child: Center(
                         child: ElevatedButton(
                           onPressed: () {
@@ -167,11 +166,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             ),
                           ),
                           child: Text('Cancel',
-                              style: Theme.of(context).textTheme.caption?.copyWith(color: ColorsExt.grey1(context))),
+                              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 20),
                     TextButton(
                       onPressed: () async {
                         streamSubscription?.cancel();
@@ -184,7 +183,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                         Navigator.of(context).pop();
                       },
                       child: Text('Discard',
-                          style: Theme.of(context).textTheme.caption?.copyWith(color: ColorsExt.grey1(context))),
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
                     )
                   ],
                 )
@@ -205,63 +204,67 @@ class _EditTaskModalState extends State<EditTaskModal> {
           onWillPop: () => onBack(state),
           child: Material(
               color: Theme.of(context).backgroundColor,
-              child: Container(
-                height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height / 2 : null,
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16.0),
-                    topRight: Radius.circular(16.0),
+              child: AnimatedSize(
+                curve: Curves.fastOutSlowIn,
+                duration: const Duration(milliseconds: 200),
+                child: Container(
+                  height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height / 2 : null,
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16.0),
+                      topRight: Radius.circular(16.0),
+                    ),
                   ),
-                ),
-                margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: ScrollConfiguration(
-                  behavior: NoScrollBehav(),
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      const SizedBox(height: 12),
-                      if (!state.hasFocusOnTitleOrDescription) const ScrollChip(),
-                      if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
-                      if (!state.hasFocusOnTitleOrDescription)
-                        BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                          builder: (context, state) {
-                            return Visibility(
-                              visible: state.showDuration,
-                              replacement: const SizedBox(),
-                              child: Column(
-                                children: const [
-                                  Separator(),
-                                  CreateTaskDurationItem(),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      Column(
-                        children: [
-                          if (!state.hasFocusOnTitleOrDescription) const EditTaskTopActions(),
-                          if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
-                          if (state.hasFocusOnTitleOrDescription) _actionsForFocusNodes(state),
-                          if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 10),
-                          if (state.hasFocusOnTitleOrDescription) const Separator(),
-                          if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 15),
-                          EditTaskRow(
-                            key: const GlobalObjectKey('EditTaskRow'),
-                            quillController: quillController,
-                            titleController: _titleController,
-                            descriptionFocusNode: _descriptionFocusNode,
-                            titleFocusNode: _titleFocusNode,
+                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: ScrollConfiguration(
+                    behavior: NoScrollBehav(),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        const SizedBox(height: 12),
+                        if (!state.hasFocusOnTitleOrDescription) const ScrollChip(),
+                        if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
+                        if (!state.hasFocusOnTitleOrDescription)
+                          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                            builder: (context, state) {
+                              return Visibility(
+                                visible: state.showDuration,
+                                replacement: const SizedBox(),
+                                child: Column(
+                                  children: const [
+                                    Separator(),
+                                    CreateTaskDurationItem(),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                          if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
-                          if (!state.hasFocusOnTitleOrDescription) const Separator(),
-                          if (!state.hasFocusOnTitleOrDescription) const EditTaskLinkedContent(),
-                          if (!state.hasFocusOnTitleOrDescription) const EditTaskLinks(),
-                          if (!state.hasFocusOnTitleOrDescription) const EditTaskBottomActions(),
-                          if (!state.hasFocusOnTitleOrDescription) const Separator(),
-                        ],
-                      )
-                    ],
+                        Column(
+                          children: [
+                            if (!state.hasFocusOnTitleOrDescription) const EditTaskTopActions(),
+                            if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
+                            if (state.hasFocusOnTitleOrDescription) _actionsForFocusNodes(state),
+                            if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 10),
+                            if (state.hasFocusOnTitleOrDescription) const Separator(),
+                            if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 15),
+                            EditTaskRow(
+                              key: const GlobalObjectKey('EditTaskRow'),
+                              quillController: quillController,
+                              titleController: _titleController,
+                              descriptionFocusNode: _descriptionFocusNode,
+                              titleFocusNode: _titleFocusNode,
+                            ),
+                            if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
+                            if (!state.hasFocusOnTitleOrDescription) const Separator(),
+                            if (!state.hasFocusOnTitleOrDescription) const EditTaskLinkedContent(),
+                            if (!state.hasFocusOnTitleOrDescription) const EditTaskLinks(),
+                            if (!state.hasFocusOnTitleOrDescription) const EditTaskBottomActions(),
+                            if (!state.hasFocusOnTitleOrDescription) const Separator(),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )),
