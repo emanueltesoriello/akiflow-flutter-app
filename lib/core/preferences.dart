@@ -12,7 +12,7 @@ abstract class PreferencesRepository {
   User? get user;
 
   bool get inboxNoticeHidden;
-  
+
   bool get availabilitiesNoticeHidden;
 
   Future<void> setInboxNoticeHidden(bool value);
@@ -50,6 +50,7 @@ abstract class PreferencesRepository {
 
   AccountToken? getAccountToken(String accountId);
   Future<void> setAccountToken(String accountId, AccountToken token);
+  Future<void> removeAccountToken(String accountId);
 
   bool get firstTimeLoaded;
   Future<void> setFirstTimeLoaded(bool value);
@@ -228,6 +229,11 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setAccountToken(String accountId, AccountToken token) async {
     await _prefs.setString("integration_$accountId", jsonEncode(token.toMap()));
+  }
+
+  @override
+  Future<void> removeAccountToken(String accountId) async {
+    await _prefs.remove("integration_$accountId");
   }
 
   @override

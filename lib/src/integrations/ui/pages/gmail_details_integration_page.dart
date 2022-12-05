@@ -22,9 +22,16 @@ import 'package:models/integrations/gmail.dart';
 import 'package:models/user.dart';
 import 'package:models/extensions/user_ext.dart';
 
-class GmailDetailsIntegrationsPage extends StatelessWidget {
-  const GmailDetailsIntegrationsPage({Key? key}) : super(key: key);
+class GmailDetailsIntegrationsPage extends StatefulWidget {
+  final Account? account;
+  final Function? onDisconnect;
+  const GmailDetailsIntegrationsPage({Key? key, this.account, this.onDisconnect}) : super(key: key);
 
+  @override
+  State<GmailDetailsIntegrationsPage> createState() => _GmailDetailsIntegrationsPageState();
+}
+
+class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,53 +39,89 @@ class GmailDetailsIntegrationsPage extends StatelessWidget {
         title: t.settings.integrations.gmail.title,
         showBack: true,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                _header(),
-                const SizedBox(height: 32),
-                SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
-                _importOptions(),
-                const SizedBox(height: 20),
-                SettingHeaderText(text: t.settings.integrations.gmail.behavior),
-                _behaviour(),
-                const SizedBox(height: 20),
-                SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
-                BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
-                  builder: (context, state) {
-                    Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+          Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    _header(),
+                    const SizedBox(height: 32),
+                    SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
+                    _importOptions(),
+                    const SizedBox(height: 20),
+                    SettingHeaderText(text: t.settings.integrations.gmail.behavior),
+                    _behaviour(),
+                    const SizedBox(height: 20),
+                    SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
+                    BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
+                      builder: (context, state) {
+                        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
 
-                    bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
+                        bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
 
-                    return IntegrationSetting(
-                      title: t.settings.integrations.gmail.useSuperhuman,
-                      subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
-                      trailingWidget: FlutterSwitch(
-                        width: 48,
-                        height: 24,
-                        toggleSize: 20,
-                        activeColor: ColorsExt.akiflow(context),
-                        inactiveColor: ColorsExt.grey5(context),
-                        value: isSuperhumanEnabled ?? false,
-                        borderRadius: 24,
-                        padding: 2,
-                        onToggle: (value) {
-                          context
-                              .read<IntegrationsCubit>()
-                              .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
-                        },
-                      ),
-                      onPressed: () {},
-                    );
-                  },
+                        return IntegrationSetting(
+                          title: t.settings.integrations.gmail.useSuperhuman,
+                          subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
+                          trailingWidget: FlutterSwitch(
+                            width: 48,
+                            height: 24,
+                            toggleSize: 20,
+                            activeColor: ColorsExt.akiflow(context),
+                            inactiveColor: ColorsExt.grey5(context),
+                            value: isSuperhumanEnabled ?? false,
+                            borderRadius: 24,
+                            padding: 2,
+                            onToggle: (value) {
+                              context
+                                  .read<IntegrationsCubit>()
+                                  .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
+                            },
+                          ),
+                          onPressed: () {},
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 32),
+              ),
+            ],
+          ),
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    width: MediaQuery.of(context).size.width,
+                    child: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, state) {
+                      Account user =
+                          state.accounts.firstWhere((account) => account.accountId == widget.account?.accountId);
+                      return (user != null &&
+                              context.read<IntegrationsCubit>().isLocalActive(user) &&
+                              user.connectorId == 'gmail')
+                          ? ElevatedButton(
+                              onPressed: () async {
+                                await context.read<IntegrationsCubit>().disconnectGmail(user);
+                                if (widget.onDisconnect != null) widget.onDisconnect!;
+                              },
+                              child: const Text('Disconnect'))
+                          : ElevatedButton(
+                              onPressed: () async {
+                                context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
+                              },
+                              child: const Text('Reconnect'));
+                    }),
+                  ),
+                ),
+                const SizedBox(height: 32)
               ],
             ),
-          ),
+          )
         ],
       ),
     );
