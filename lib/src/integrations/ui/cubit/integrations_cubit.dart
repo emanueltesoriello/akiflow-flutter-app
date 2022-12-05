@@ -174,8 +174,9 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     emit(state.copyWith(isAuthenticatingOAuth: false));
 
     Account account = oldAccount.copyWith(
-      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
-    );
+        status: "DELETED",
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+        deletedAt: TzUtils.toUtcStringIfNotNull(DateTime.now()));
 
     print("removing account token in preferences for account ${account.accountId}");
 

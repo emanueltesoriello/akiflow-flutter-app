@@ -103,7 +103,13 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                                         })));
                                 super.dispose();
                               } else if (account.connectorId == 'gmail') {
-                                context.read<IntegrationsCubit>().connectGmail(email: account.identifier);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => GmailDetailsIntegrationsPage(
+                                        account: account,
+                                        onDisconnect: () {
+                                          rebuildAllChildren(context);
+                                        })));
+                                //context.read<IntegrationsCubit>().connectGmail(email: account.identifier);
                               }
                             },
                           ),

@@ -8,6 +8,7 @@ import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/ui/widgets/base/action_button.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/circle_account_picture.dart';
@@ -32,6 +33,8 @@ class GmailDetailsIntegrationsPage extends StatefulWidget {
 }
 
 class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsPage> {
+  bool isConnected = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,91 +42,117 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
         title: t.settings.integrations.gmail.title,
         showBack: true,
       ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    _header(),
-                    const SizedBox(height: 32),
-                    SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
-                    _importOptions(),
-                    const SizedBox(height: 20),
-                    SettingHeaderText(text: t.settings.integrations.gmail.behavior),
-                    _behaviour(),
-                    const SizedBox(height: 20),
-                    SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
-                    BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
-                      builder: (context, state) {
-                        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
-
-                        bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
-
-                        return IntegrationSetting(
-                          title: t.settings.integrations.gmail.useSuperhuman,
-                          subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
-                          trailingWidget: FlutterSwitch(
-                            width: 48,
-                            height: 24,
-                            toggleSize: 20,
-                            activeColor: ColorsExt.akiflow(context),
-                            inactiveColor: ColorsExt.grey5(context),
-                            value: isSuperhumanEnabled ?? false,
-                            borderRadius: 24,
-                            padding: 2,
-                            onToggle: (value) {
-                              context
-                                  .read<IntegrationsCubit>()
-                                  .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
-                            },
-                          ),
-                          onPressed: () {},
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+      body: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, state) {
+        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+        bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
+        Account user = state.accounts.firstWhere((account) => account.accountId == widget.account?.accountId);
+        isConnected =
+            user != null && context.read<IntegrationsCubit>().isLocalActive(user) && user.connectorId == 'gmail';
+        return Stack(
+          children: [
+            Column(
               children: [
-                const Spacer(),
-                Center(
-                  child: Container(
+                Expanded(
+                  child: ListView(
                     padding: const EdgeInsets.all(16),
-                    width: MediaQuery.of(context).size.width,
-                    child: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, state) {
-                      Account user =
-                          state.accounts.firstWhere((account) => account.accountId == widget.account?.accountId);
-                      return (user != null &&
-                              context.read<IntegrationsCubit>().isLocalActive(user) &&
-                              user.connectorId == 'gmail')
-                          ? ElevatedButton(
-                              onPressed: () async {
-                                await context.read<IntegrationsCubit>().disconnectGmail(user);
-                                if (widget.onDisconnect != null) widget.onDisconnect!;
-                              },
-                              child: const Text('Disconnect'))
-                          : ElevatedButton(
-                              onPressed: () async {
-                                context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
-                              },
-                              child: const Text('Reconnect'));
-                    }),
+                    children: [
+                      _header(),
+                      IgnorePointer(
+                        ignoring: !isConnected,
+                        child: Opacity(
+                          opacity: isConnected ? 1 : 0.5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 32),
+                              SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
+                              _importOptions(),
+                              const SizedBox(height: 20),
+                              SettingHeaderText(text: t.settings.integrations.gmail.behavior),
+                              _behaviour(),
+                              const SizedBox(height: 20),
+                              SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
+                              IntegrationSetting(
+                                title: t.settings.integrations.gmail.useSuperhuman,
+                                subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
+                                trailingWidget: FlutterSwitch(
+                                  width: 48,
+                                  height: 24,
+                                  toggleSize: 20,
+                                  activeColor: ColorsExt.akiflow(context),
+                                  inactiveColor: ColorsExt.grey5(context),
+                                  value: isSuperhumanEnabled ?? false,
+                                  borderRadius: 24,
+                                  padding: 2,
+                                  onToggle: (value) {
+                                    context
+                                        .read<IntegrationsCubit>()
+                                        .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
+                                  },
+                                ),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                const SizedBox(height: 32)
               ],
             ),
-          )
-        ],
-      ),
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      width: MediaQuery.of(context).size.width,
+                      child: Builder(builder: (context) {
+                        return (isConnected)
+                            ? ActionButton(
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await context.read<IntegrationsCubit>().disconnectGmail(user);
+                                  if (widget.onDisconnect != null) widget.onDisconnect!;
+                                },
+                                color: Colors.transparent,
+                                splashColor: ColorsExt.grey3(context),
+                                borderColor: ColorsExt.grey2_5(context),
+                                child: Text(
+                                  'Disconnect',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorsExt.grey2_5(context),
+                                  ),
+                                ))
+                            : ActionButton(
+                                onPressed: () async {
+                                  context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
+                                },
+                                color: ColorsExt.orange20(context),
+                                splashColor: ColorsExt.orange(context),
+                                borderColor: ColorsExt.orange(context),
+                                child: const Text(
+                                  'Reconnect',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ));
+                      }),
+                    ),
+                  ),
+                  const SizedBox(height: 32)
+                ],
+              ),
+            )
+          ],
+        );
+      }),
     );
   }
 
