@@ -10,13 +10,11 @@ extension AccountExt on Account {
     "gmail",
   ];
 
-  static const List<String> v2Accounts = ["gmail"];
+  static const List<String> v3Accounts = ["gmail"];
 
   GmailSyncMode get gmailSyncMode {
     try {
-      return details?['syncMode'] == 1
-          ? GmailSyncMode.useAkiflowLabel
-          : GmailSyncMode.useStarToImport;
+      return details?['syncMode'] == 1 ? GmailSyncMode.useAkiflowLabel : GmailSyncMode.useStarToImport;
     } catch (e) {
       return GmailSyncMode.doNothing;
     }
