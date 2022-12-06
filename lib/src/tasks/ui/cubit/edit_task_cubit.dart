@@ -32,8 +32,16 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState());
 
+  undoChanges() {
+    emit(state.copyWith(updatedTask: state.originalTask));
+  }
+
   void attachTask(Task task) {
     emit(state.copyWith(originalTask: task, updatedTask: task));
+  }
+
+  setHasFocusOnTitleOrDescription(bool newVal) {
+    emit(state.copyWith(hasFocusOnTitleOrDescription: newVal));
   }
 
   void setRead() {

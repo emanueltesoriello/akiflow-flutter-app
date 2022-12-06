@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
@@ -82,10 +83,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
                         topPadding: topPadding,
                       ),
                       NavItem(
-                        active: active(HomeViewType.calendar, state.homeViewType),
-                        activeIconAsset: "assets/images/icons/_common/calendar.svg",
-                        title: t.bottomBar.calendar,
-                        homeViewType: HomeViewType.calendar,
+                        active: active(HomeViewType.availability, state.homeViewType),
+                        activeIconAsset: Assets.images.icons.common.availabilitySVG,
+                        title: "Availability",
+                        homeViewType: HomeViewType.availability,
                         topPadding: topPadding,
                       ),
                     ],

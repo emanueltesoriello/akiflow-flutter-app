@@ -12,5 +12,5 @@ Future<void> main() async {
     production: false,
   );
 
-  await mainCom();
+  await mainCom(kDebugMode: true);
 }

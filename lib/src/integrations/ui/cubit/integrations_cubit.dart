@@ -170,6 +170,40 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     _syncCubit.syncIntegration([IntegrationEntity.gmail]);
   }
 
+  Future<void> disconnectGmail(Account oldAccount) async {
+    emit(state.copyWith(isAuthenticatingOAuth: false));
+
+    Account account = oldAccount.copyWith(
+        status: "DELETED",
+        updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+        deletedAt: TzUtils.toUtcStringIfNotNull(DateTime.now()));
+
+    print("removing account token in preferences for account ${account.accountId}");
+
+    await _preferencesRepository.removeAccountToken(account.accountId!);
+    await _preferencesRepository.setV2AccountActive(account.accountId!, false);
+
+    try {
+      Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);
+
+      await _accountsRepository.updateById(existingAccount!.id, data: account);
+    } on DatabaseItemNotFoundException {
+      await _accountsRepository.add([account]);
+    }
+
+    emit(state.copyWith(isAuthenticatingOAuth: false));
+
+    List<Account> accounts = await _accountsRepository.get();
+    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+
+    emit(state.copyWith(connected: false));
+    emit(state.copyWith(connected: false));
+
+    AnalyticsService.track("Connector disconnected");
+
+    await _syncCubit.syncIntegration([IntegrationEntity.gmail]);
+  }
+
   void syncGmail() {
     _syncCubit.syncIntegration([IntegrationEntity.gmail]);
   }

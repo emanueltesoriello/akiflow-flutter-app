@@ -5,12 +5,12 @@ import 'package:mobile/common/style/theme.dart';
 class ActionButton extends StatefulWidget {
   final Widget child;
   final Function()? onPressed;
+  final Color? color;
+  final Color? splashColor;
+  final Color? borderColor;
 
-  const ActionButton({
-    Key? key,
-    required this.child,
-    this.onPressed,
-  }) : super(key: key);
+  const ActionButton({Key? key, required this.child, this.onPressed, this.color, this.splashColor, this.borderColor})
+      : super(key: key);
 
   @override
   State<ActionButton> createState() => _ActionButtonState();
@@ -31,10 +31,16 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
     );
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _animation = ColorTween(
-        begin: Theme.of(context).primaryColorLight,
-        end: Theme.of(context).primaryColor,
-      ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+      _animation = ((widget.color != null && widget.splashColor != null)
+              ? ColorTween(
+                  begin: widget.color,
+                  end: widget.splashColor,
+                )
+              : ColorTween(
+                  begin: Theme.of(context).primaryColorLight,
+                  end: Theme.of(context).primaryColor,
+                ))
+          .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
     super.initState();
@@ -72,7 +78,7 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(radius),
                 border: Border.all(
-                  color: Theme.of(context).primaryColor,
+                  color: widget.borderColor ?? Theme.of(context).primaryColor,
                   width: border,
                 ),
                 color: _animation!.value,

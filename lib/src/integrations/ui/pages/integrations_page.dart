@@ -15,8 +15,22 @@ import 'package:mobile/src/integrations/ui/widgets/integrations_list.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
 
-class IntegrationsPage extends StatelessWidget {
+class IntegrationsPage extends StatefulWidget {
   const IntegrationsPage({Key? key}) : super(key: key);
+
+  @override
+  State<IntegrationsPage> createState() => _IntegrationsPageState();
+}
+
+class _IntegrationsPageState extends State<IntegrationsPage> {
+  void rebuildAllChildren(BuildContext context) {
+    void rebuild(Element el) {
+      el.markNeedsBuild();
+      el.visitChildren(rebuild);
+    }
+
+    (context as Element).visitChildren(rebuild);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,10 +95,21 @@ class IntegrationsPage extends StatelessWidget {
                             onTap: (Account account) async {
                               if (context.read<IntegrationsCubit>().isLocalActive(account) &&
                                   account.connectorId == 'gmail') {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => const GmailDetailsIntegrationsPage()));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => GmailDetailsIntegrationsPage(
+                                        account: account,
+                                        onDisconnect: () {
+                                          rebuildAllChildren(context);
+                                        })));
+                                super.dispose();
                               } else if (account.connectorId == 'gmail') {
-                                context.read<IntegrationsCubit>().connectGmail(email: account.identifier);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => GmailDetailsIntegrationsPage(
+                                        account: account,
+                                        onDisconnect: () {
+                                          rebuildAllChildren(context);
+                                        })));
+                                //context.read<IntegrationsCubit>().connectGmail(email: account.identifier);
                               }
                             },
                           ),

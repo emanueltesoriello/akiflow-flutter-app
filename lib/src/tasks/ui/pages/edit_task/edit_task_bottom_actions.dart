@@ -92,7 +92,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             ),
             const SizedBox(width: 11),
             TagBox(
-              icon: "assets/images/icons/_common/flags.svg",
+              icon: Assets.images.icons.common.flagSVG,
               isBig: true,
               isSquare: true,
               backgroundColor: task.dueDate != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),

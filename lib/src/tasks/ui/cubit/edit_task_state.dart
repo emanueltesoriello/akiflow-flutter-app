@@ -11,6 +11,7 @@ class EditTaskCubitState extends Equatable {
   final bool showDuration;
   final bool showPriority;
   final bool showLabelsList;
+  final bool hasFocusOnTitleOrDescription;
 
   const EditTaskCubitState({
     this.loading = false,
@@ -21,28 +22,29 @@ class EditTaskCubitState extends Equatable {
     this.showDuration = false,
     this.showLabelsList = false,
     this.showPriority = false,
+    this.hasFocusOnTitleOrDescription = false,
   });
 
-  EditTaskCubitState copyWith({
-    bool? loading,
-    Task? originalTask,
-    Task? updatedTask,
-    DateTime? selectedDate,
-    double? selectedDuration,
-    bool? showDuration,
-    bool? showLabelsList,
-    bool? showPriority
-  }) {
+  EditTaskCubitState copyWith(
+      {bool? loading,
+      Task? originalTask,
+      Task? updatedTask,
+      DateTime? selectedDate,
+      double? selectedDuration,
+      bool? showDuration,
+      bool? showLabelsList,
+      bool? showPriority,
+      bool? hasFocusOnTitleOrDescription}) {
     return EditTaskCubitState(
-      loading: loading ?? this.loading,
-      originalTask: originalTask ?? this.originalTask,
-      updatedTask: updatedTask ?? this.updatedTask,
-      selectedDate: selectedDate ?? this.selectedDate,
-      selectedDuration: selectedDuration ?? this.selectedDuration,
-      showDuration: showDuration ?? this.showDuration,
-      showLabelsList: showLabelsList ?? this.showLabelsList,
-      showPriority: showPriority ?? this.showPriority
-    );
+        loading: loading ?? this.loading,
+        originalTask: originalTask ?? this.originalTask,
+        updatedTask: updatedTask ?? this.updatedTask,
+        selectedDate: selectedDate ?? this.selectedDate,
+        selectedDuration: selectedDuration ?? this.selectedDuration,
+        showDuration: showDuration ?? this.showDuration,
+        showLabelsList: showLabelsList ?? this.showLabelsList,
+        showPriority: showPriority ?? this.showPriority,
+        hasFocusOnTitleOrDescription: hasFocusOnTitleOrDescription ?? this.hasFocusOnTitleOrDescription);
   }
 
   @override
@@ -54,6 +56,7 @@ class EditTaskCubitState extends Equatable {
         selectedDuration,
         showDuration,
         showLabelsList,
-        showPriority
+        showPriority,
+        hasFocusOnTitleOrDescription
       ];
 }

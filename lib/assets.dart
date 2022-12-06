@@ -1,4 +1,3 @@
-
 class Assets {
   Assets._();
 
@@ -6,12 +5,10 @@ class Assets {
   static final fonts = _AssetsFonts._();
   static final html = _AssetsHtml._();
   static final images = _AssetsImages._();
-
 }
 
 class _AssetsConfig {
   _AssetsConfig._();
-
 
   final devJSON = 'assets/config/dev.json';
   final prodJSON = 'assets/config/prod.json';
@@ -19,7 +16,6 @@ class _AssetsConfig {
 
 class _AssetsFonts {
   _AssetsFonts._();
-
 
   final interMediumTTF = 'assets/fonts/Inter-Medium.ttf';
   final interRegularTTF = 'assets/fonts/Inter-Regular.ttf';
@@ -30,7 +26,6 @@ class _AssetsFonts {
 
 class _AssetsHtml {
   _AssetsHtml._();
-
 
   final indexHTML = 'assets/html/index.html';
 }
@@ -51,7 +46,6 @@ class _AssetsImages {
 class _AssetsImagesAkiflow {
   _AssetsImagesAkiflow._();
 
-
   final thatsItnothingSVG = 'assets/images/akiflow/Thats-itnothing.svg';
   final calendarPlaceholderSVG = 'assets/images/akiflow/calendar-placeholder.svg';
   final inboxNiceSVG = 'assets/images/akiflow/inbox-nice.svg';
@@ -62,13 +56,11 @@ class _AssetsImagesAkiflow {
 class _AssetsImagesAppIcon {
   _AssetsImagesAppIcon._();
 
-
   final topPNG = 'assets/images/app_icon/top.png';
 }
 
 class _AssetsImagesFavicons {
   _AssetsImagesFavicons._();
-
 
   final googleDocumentPNG = 'assets/images/favicons/google-document.png';
   final googleFormsPNG = 'assets/images/favicons/google-forms.png';
@@ -95,12 +87,10 @@ class _AssetsImagesIcons {
   final web = _AssetsImagesIconsWeb._();
   final zapier = _AssetsImagesIconsZapier._();
   final zoom = _AssetsImagesIconsZoom._();
-
 }
 
 class _AssetsImagesIconsCommon {
   _AssetsImagesIconsCommon._();
-
 
   final checkDoneOutlineSVG = 'assets/images/icons/_common/Check-done-outline.svg';
   final checkDoneSVG = 'assets/images/icons/_common/Check-done.svg';
@@ -114,6 +104,7 @@ class _AssetsImagesIconsCommon {
   final arrowUpSVG = 'assets/images/icons/_common/arrow_up.svg';
   final arrowUpArrowDownSVG = 'assets/images/icons/_common/arrow_up_arrow_down.svg';
   final arrowUpRightSquareSVG = 'assets/images/icons/_common/arrow_up_right_square.svg';
+  final availabilitySVG = 'assets/images/icons/_common/availability.svg';
   final bellSVG = 'assets/images/icons/_common/bell.svg';
   final calendarSVG = 'assets/images/icons/_common/calendar.svg';
   final chatBubbleSVG = 'assets/images/icons/_common/chat_bubble.svg';
@@ -134,10 +125,12 @@ class _AssetsImagesIconsCommon {
   final exclamationmark3SVG = 'assets/images/icons/_common/exclamationmark_3.svg';
   final exclamationmarkTriangleFillSVG = 'assets/images/icons/_common/exclamationmark_triangle_fill.svg';
   final flagsSVG = 'assets/images/icons/_common/flags.svg';
+  final flagSVG = 'assets/images/icons/_common/flag.svg';
   final folderSVG = 'assets/images/icons/_common/folder.svg';
   final gearAltSVG = 'assets/images/icons/_common/gear_alt.svg';
   final giftSVG = 'assets/images/icons/_common/gift.svg';
   final guidebookSVG = 'assets/images/icons/_common/guidebook.svg';
+  final handDrawSVG = 'assets/images/icons/_common/hand_draw.svg';
   final hourglassSVG = 'assets/images/icons/_common/hourglass.svg';
   final importanceGreySVG = 'assets/images/icons/_common/importance-grey.svg';
   final importanceSVG = 'assets/images/icons/_common/importance.svg';
@@ -151,6 +144,7 @@ class _AssetsImagesIconsCommon {
   final menuSVG = 'assets/images/icons/_common/menu.svg';
   final moneyDollarCircleSVG = 'assets/images/icons/_common/money_dollar_circle.svg';
   final noPrioritySVG = 'assets/images/icons/_common/no-priority.svg';
+  final noActiveLinksSVG = 'assets/images/icons/_common/no_active_links.svg';
   final numberSVG = 'assets/images/icons/_common/number.svg';
   final paperplaneSendSVG = 'assets/images/icons/_common/paperplane_send.svg';
   final pencilSVG = 'assets/images/icons/_common/pencil.svg';
@@ -164,6 +158,8 @@ class _AssetsImagesIconsCommon {
   final priorityMidSVG = 'assets/images/icons/_common/priority-mid.svg';
   final puzzleSVG = 'assets/images/icons/_common/puzzle.svg';
   final rectangleGrid1X2SVG = 'assets/images/icons/_common/rectangle_grid_1x2.svg';
+  final recurrentJPG = 'assets/images/icons/_common/recurrent.jpg';
+  final recurrentSVG = 'assets/images/icons/_common/recurrent.svg';
   final repeatSVG = 'assets/images/icons/_common/repeat.svg';
   final searchSVG = 'assets/images/icons/_common/search.svg';
   final slashCircleSVG = 'assets/images/icons/_common/slash_circle.svg';
@@ -181,7 +177,6 @@ class _AssetsImagesIconsCommon {
 class _AssetsImagesIconsAkiflow {
   _AssetsImagesIconsAkiflow._();
 
-
   final akiflowGreyDarkSVG = 'assets/images/icons/akiflow/akiflow-grey-dark.svg';
   final akiflowWhiteSVG = 'assets/images/icons/akiflow/akiflow-white.svg';
   final akiflowSVG = 'assets/images/icons/akiflow/akiflow.svg';
@@ -192,13 +187,11 @@ class _AssetsImagesIconsAkiflow {
 class _AssetsImagesIconsAsana {
   _AssetsImagesIconsAsana._();
 
-
   final asanaSVG = 'assets/images/icons/asana/asana.svg';
 }
 
 class _AssetsImagesIconsClickup {
   _AssetsImagesIconsClickup._();
-
 
   final clickupSVG = 'assets/images/icons/clickup/clickup.svg';
 }
@@ -206,13 +199,11 @@ class _AssetsImagesIconsClickup {
 class _AssetsImagesIconsDropbox {
   _AssetsImagesIconsDropbox._();
 
-
   final dropboxSVG = 'assets/images/icons/dropbox/dropbox.svg';
 }
 
 class _AssetsImagesIconsGoogle {
   _AssetsImagesIconsGoogle._();
-
 
   final fingerSVG = 'assets/images/icons/google/finger.svg';
   final gmailSVG = 'assets/images/icons/google/gmail.svg';
@@ -225,13 +216,11 @@ class _AssetsImagesIconsGoogle {
 class _AssetsImagesIconsJira {
   _AssetsImagesIconsJira._();
 
-
   final jiraSVG = 'assets/images/icons/jira/jira.svg';
 }
 
 class _AssetsImagesIconsNotion {
   _AssetsImagesIconsNotion._();
-
 
   final notionSVG = 'assets/images/icons/notion/notion.svg';
 }
@@ -239,14 +228,12 @@ class _AssetsImagesIconsNotion {
 class _AssetsImagesIconsSlack {
   _AssetsImagesIconsSlack._();
 
-
   final slackChannelSVG = 'assets/images/icons/slack/slack-channel.svg';
   final slackSVG = 'assets/images/icons/slack/slack.svg';
 }
 
 class _AssetsImagesIconsSuperhuman {
   _AssetsImagesIconsSuperhuman._();
-
 
   final superhumanGreyDarkSVG = 'assets/images/icons/superhuman/superhuman-grey-dark.svg';
   final superhumanWhiteSVG = 'assets/images/icons/superhuman/superhuman-white.svg';
@@ -256,13 +243,11 @@ class _AssetsImagesIconsSuperhuman {
 class _AssetsImagesIconsTodoist {
   _AssetsImagesIconsTodoist._();
 
-
   final todoistSVG = 'assets/images/icons/todoist/todoist.svg';
 }
 
 class _AssetsImagesIconsTrello {
   _AssetsImagesIconsTrello._();
-
 
   final trelloSVG = 'assets/images/icons/trello/trello.svg';
   final trelloBoardSVG = 'assets/images/icons/trello/trello_board.svg';
@@ -272,7 +257,6 @@ class _AssetsImagesIconsTrello {
 class _AssetsImagesIconsTwitter {
   _AssetsImagesIconsTwitter._();
 
-
   final logoTwitterSVG = 'assets/images/icons/twitter/logo_twitter.svg';
   final twitterSVG = 'assets/images/icons/twitter/twitter.svg';
 }
@@ -280,13 +264,11 @@ class _AssetsImagesIconsTwitter {
 class _AssetsImagesIconsWeb {
   _AssetsImagesIconsWeb._();
 
-
   final faviconV2PNG = 'assets/images/icons/web/faviconV2.png';
 }
 
 class _AssetsImagesIconsZapier {
   _AssetsImagesIconsZapier._();
-
 
   final githubSVG = 'assets/images/icons/zapier/github.svg';
   final gitlabSVG = 'assets/images/icons/zapier/gitlab.svg';
@@ -304,7 +286,6 @@ class _AssetsImagesIconsZapier {
 class _AssetsImagesIconsZoom {
   _AssetsImagesIconsZoom._();
 
-
   final zoomOldSVG = 'assets/images/icons/zoom/zoom-old.svg';
   final zoomSVG = 'assets/images/icons/zoom/zoom.svg';
 }
@@ -312,14 +293,12 @@ class _AssetsImagesIconsZoom {
 class _AssetsImagesLogo {
   _AssetsImagesLogo._();
 
-
   final logoFullSVG = 'assets/images/logo/logo_full.svg';
   final logoOutlineSVG = 'assets/images/logo/logo_outline.svg';
 }
 
 class _AssetsImagesOnboarding {
   _AssetsImagesOnboarding._();
-
 
   final arrowLeftSVG = 'assets/images/onboarding/arrow_left.svg';
   final arrowRightSVG = 'assets/images/onboarding/arrow_right.svg';

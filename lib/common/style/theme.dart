@@ -31,8 +31,8 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   ),
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: ColorsLight.akiflow,
-    selectionColor: ColorsLight.akiflow10,
-    selectionHandleColor: ColorsLight.akiflow10,
+    selectionColor: ColorsLight.highlightColor,
+    selectionHandleColor: ColorsLight.akiflow,
   ),
   textTheme: const TextTheme(
     bodyText1: TextStyle(),

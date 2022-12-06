@@ -579,7 +579,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], UndoType.moveToInbox);
-    planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.inbox);
+    planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.planned);
   }
 
   void editPlanOrSnooze(DateTime? date, {required DateTime? dateTime, required TaskStatusType statusType}) {
