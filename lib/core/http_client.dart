@@ -35,14 +35,15 @@ class HttpClient extends BaseClient {
     return response;
   }
 
-    Future<bool> refreshToken(User? user) async {
+  Future<bool> refreshToken(User? user) async {
     if (user != null) {
       Response response = await _inner.post(refreshTokenUrl, body: {
         "client_id": Config.oauthClientId,
         "refresh_token": user.refreshToken,
       });
       Map<String, dynamic> map = jsonDecode(response.body);
-      if (map["access_token"] == null && response.statusCode.toString().startsWith('4')) {
+      String statusCode = response.statusCode.toString();
+      if (map["access_token"] == null && statusCode.startsWith('4')) {
         return clear();
       } else if (map["access_token"] != null) {
         return updateTokens(user, map);
@@ -52,7 +53,6 @@ class HttpClient extends BaseClient {
     }
     return clear();
   }
-
 
   Future<bool> clear() async {
     await _preferences.clear();
