@@ -11,6 +11,8 @@ import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
 
+import '../exceptions/api_exception.dart';
+
 class SyncIntegrationService {
   final SentryService _sentryService = locator<SentryService>();
   final DocsApi _docsApi = locator<DocsApi>();
@@ -48,18 +50,21 @@ class SyncIntegrationService {
         await compute(prepareDocsForRemote, PrepareDocForRemoteModel(remoteItems: docs, existingItems: localDocs));
 
     addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${unsynced.length} items");
+    try {
+      List<dynamic> updated = await _docsApi.postUnsynced(unsynced: unsynced);
 
-    List<dynamic> updated = await _docsApi.postUnsynced(unsynced: unsynced);
+      if (unsynced.length != updated.length) {
+        throw PostUnsyncedExcepotion(
+          "${integrationApi.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
+        );
+      }
 
-    if (unsynced.length != updated.length) {
-      throw PostUnsyncedExcepotion(
-        "${integrationApi.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
-      );
+      addBreadcrumb("${integrationApi.runtimeType} posted to unsynced ${updated.length} items done");
+
+      return DateTime.now();
+    } catch (e) {
+      throw ApiException({"message": "Server Error", "errors": []});
     }
-
-    addBreadcrumb("${integrationApi.runtimeType} posted to unsynced ${updated.length} items done");
-
-    return DateTime.now();
   }
 
   Future<List<Doc>> getExistingDocs(List<Doc> remoteItems) async {

@@ -241,6 +241,8 @@ class SyncControllerService {
 
       await _setLastSyncPreferences[entity]!(lastSyncUpdated);
     } catch (e, s) {
+      print(e);
+
       _sentryService.captureException(e, stackTrace: s);
     }
   }
@@ -271,6 +273,7 @@ class SyncControllerService {
         return true;
       }
     } catch (e, s) {
+      print(e);
       _sentryService.captureException(e, stackTrace: s);
     }
 
