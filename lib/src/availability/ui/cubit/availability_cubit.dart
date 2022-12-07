@@ -52,7 +52,7 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
     }
 
     String text = (config.type == AvailabililtyConfigSlotsType.manual && start != null && end != null)
-        ? ''' Would any of these times work for you for a ${config.durationString} meeting?
+        ? ''' Would any of these times work for you for a ${config.durationString} meeting? ${"*(${config.timezone ?? ''})*"}
 ${start.shortDateFormatted}
 • ${start.timeFormatted} - ${end.timeFormatted}
 Let me know or confirm here:
