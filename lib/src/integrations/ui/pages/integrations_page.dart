@@ -44,7 +44,8 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
       body: RefreshIndicator(
         backgroundColor: ColorsExt.background(context),
         onRefresh: () async {
-          return context.read<SyncCubit>().sync(entities: [Entity.accounts]);
+          await context.read<SyncCubit>().sync(entities: [Entity.accounts]);
+          rebuildAllChildren(context);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
