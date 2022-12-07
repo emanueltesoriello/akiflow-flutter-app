@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
 import 'package:models/nullable.dart';
 
-class AccountV2 extends Equatable implements Base {
+class AccountV2DEPRECATED extends Equatable implements Base {
   final int? id;
   final int? userId;
   final String? connectorId;
@@ -23,7 +23,7 @@ class AccountV2 extends Equatable implements Base {
   final String? remoteUpdatedAt;
   final bool? updated;
 
-  const AccountV2({
+  const AccountV2DEPRECATED({
     this.id,
     this.userId,
     this.connectorId,
@@ -43,7 +43,7 @@ class AccountV2 extends Equatable implements Base {
     this.updated,
   });
 
-  AccountV2 copyWith({
+  AccountV2DEPRECATED copyWith({
     int? id,
     int? userId,
     String? connectorId,
@@ -62,7 +62,7 @@ class AccountV2 extends Equatable implements Base {
     Nullable<String?>? remoteUpdatedAt,
     bool? updated,
   }) {
-    return AccountV2(
+    return AccountV2DEPRECATED(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       connectorId: connectorId ?? this.connectorId,
@@ -78,9 +78,7 @@ class AccountV2 extends Equatable implements Base {
       deletedAt: deletedAt ?? this.deletedAt,
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
-      remoteUpdatedAt: remoteUpdatedAt == null
-          ? this.remoteUpdatedAt
-          : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
       updated: updated ?? this.updated,
     );
   }
@@ -108,8 +106,8 @@ class AccountV2 extends Equatable implements Base {
     };
   }
 
-  factory AccountV2.fromMap(Map<String, dynamic> map) {
-    return AccountV2(
+  factory AccountV2DEPRECATED.fromMap(Map<String, dynamic> map) {
+    return AccountV2DEPRECATED(
       id: map['id'].toInt() as int?,
       userId: map['user_id'].toInt() as int?,
       connectorId: map['connector_id'] as String?,
@@ -155,12 +153,12 @@ class AccountV2 extends Equatable implements Base {
     };
   }
 
-  static AccountV2 fromSql(Map<String?, dynamic> json) {
+  static AccountV2DEPRECATED fromSql(Map<String?, dynamic> json) {
     Map<String, Object?> data = Map<String, Object?>.from(json);
 
     data['details'] = jsonDecode(data['details'] as String? ?? '{}');
 
-    return AccountV2.fromMap(data);
+    return AccountV2DEPRECATED.fromMap(data);
   }
 
   @override

@@ -147,7 +147,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     print("set account token in preferences for account ${account.accountId}");
 
     await _preferencesRepository.setAccountToken(account.accountId!, accountToken);
-    await _preferencesRepository.setV2AccountActive(account.accountId!, true);
+    await _preferencesRepository.setV3AccountActive(account.accountId!, true);
 
     try {
       Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);
@@ -181,7 +181,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     print("removing account token in preferences for account ${account.accountId}");
 
     await _preferencesRepository.removeAccountToken(account.accountId!);
-    await _preferencesRepository.setV2AccountActive(account.accountId!, false);
+    await _preferencesRepository.setV3AccountActive(account.accountId!, false);
 
     try {
       Account? existingAccount = await _accountsRepository.getByAccountId(account.accountId);
@@ -230,8 +230,8 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
   }
 
   bool isLocalActive(Account account) {
-    if (AccountExt.v2Accounts.contains(account.connectorId)) {
-      return _preferencesRepository.getV2AccountActive(account.accountId!);
+    if (AccountExt.v3Accounts.contains(account.connectorId)) {
+      return _preferencesRepository.getV3AccountActive(account.accountId!);
     } else {
       return true;
     }
