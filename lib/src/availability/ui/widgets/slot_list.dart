@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/availability/ui/widgets/slot_tile.dart';
-import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:models/task/availability_config.dart';
 
 class SlotList extends StatefulWidget {

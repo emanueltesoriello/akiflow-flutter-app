@@ -80,8 +80,8 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
 
     if (textActionButton != null) {
       final Widget leftButton = TextButton(
-        child: Text(textActionButton!, style: textStyleButtonAction),
         onPressed: onTapButtonAction,
+        child: Text(textActionButton!, style: textStyleButtonAction),
       );
       return [
         leftButton,

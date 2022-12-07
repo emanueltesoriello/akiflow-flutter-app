@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/custom_time_picker.dart';
 
@@ -12,7 +11,6 @@ class TimePickerUtils {
     required TimeOfDay initialTime,
     required Function(TimeOfDay?) onTimeSelected,
   }) async {
-    final ThemeData theme = Theme.of(context);
 
     // switch (theme.platform) {
     // case TargetPlatform.iOS:
