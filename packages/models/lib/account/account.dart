@@ -142,9 +142,7 @@ class Account extends Equatable implements Base {
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null
-          ? this.remoteUpdatedAt
-          : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
       deletedAt: deletedAt ?? this.deletedAt,
       updated: updated ?? this.updated,
     );
