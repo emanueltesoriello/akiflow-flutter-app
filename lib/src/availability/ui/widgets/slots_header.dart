@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile/assets.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:models/task/availability_config.dart';
 

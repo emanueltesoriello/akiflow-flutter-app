@@ -69,11 +69,7 @@ class ExpandablePanel {
     this.canTapOnHeader = false,
     this.isHeaderVisible = true,
     this.backgroundColor,
-  })  : assert(headerBuilder != null),
-        assert(body != null),
-        assert(isHeaderVisible != null),
-        assert(isExpanded != null),
-        assert(canTapOnHeader != null);
+  });
 
   /// The widget builder that builds the expansion panels' header.
   final ExpandablePanelHeaderBuilder headerBuilder;
@@ -121,7 +117,7 @@ class ExpandablePanelRadio extends ExpandablePanel {
     required super.body,
     super.canTapOnHeader,
     super.backgroundColor,
-  }) : assert(value != null);
+  });
 
   /// The value that uniquely identifies a radio panel so that the currently
   /// selected radio panel can be identified.
@@ -159,10 +155,7 @@ class ExpandablePanelList extends StatefulWidget {
     this.expandedHeaderPadding = const EdgeInsets.all(0.0),
     this.dividerColor,
     this.elevation = 2,
-  })  : assert(children != null),
-        assert(animationDuration != null),
-        assert(isHeaderVisible != null),
-        _allowOnlyOnePanelOpen = false,
+  })  : _allowOnlyOnePanelOpen = false,
         initialOpenPanelValue = null;
 
   /// Creates a radio expansion panel list widget.
@@ -188,9 +181,7 @@ class ExpandablePanelList extends StatefulWidget {
     this.dividerColor,
     this.elevation = 2,
     required this.isHeaderVisible,
-  })  : assert(children != null),
-        assert(animationDuration != null),
-        _allowOnlyOnePanelOpen = true;
+  })  : _allowOnlyOnePanelOpen = true;
 
   /// The children of the expansion panel list. They are laid out in a similar
   /// fashion to [ListBody].
