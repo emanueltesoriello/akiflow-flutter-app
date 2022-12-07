@@ -15,7 +15,7 @@ extension AccountExt on Account {
     "zoom"
   ];
 
-  static const List<String> v2Accounts = ["gmail"];
+  static const List<String> v3Accounts = ["gmail"];
 
   GmailSyncMode get gmailSyncMode {
     try {
