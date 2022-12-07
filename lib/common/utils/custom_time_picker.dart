@@ -8,9 +8,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rounded_date_picker/src/flutter_rounded_button_action.dart';
-import 'package:flutter_rounded_date_picker/src/material_rounded_date_picker_style.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/custom_rounded_button_action.dart';
 
@@ -613,9 +611,11 @@ class _TimePickerHeaderLayout extends MultiChildLayoutDelegate {
         fragmentsFlattened.add(fragment);
       }
 
-      if (pieceIndex == format.centerpieceIndex)
+      if (pieceIndex == format.centerpieceIndex) {
         pivotIndex += format.pieces[format.centerpieceIndex].pivotIndex;
-      else if (pieceIndex < format.centerpieceIndex) pivotIndex += piece.fragments.length;
+      } else if (pieceIndex < format.centerpieceIndex) {
+        pivotIndex += piece.fragments.length;
+      }
     }
 
     _positionPivoted(size.width, size.height / 2.0, childSizes, fragmentsFlattened, pivotIndex);
@@ -643,10 +643,11 @@ class _TimePickerHeaderLayout extends MultiChildLayoutDelegate {
     double y = (size.height - height) / 2.0;
     for (int pieceIndex = 0; pieceIndex < format.pieces.length; pieceIndex += 1) {
       final double pieceVerticalCenter = y + pieceHeights[pieceIndex] / 2.0;
-      if (pieceIndex != format.centerpieceIndex)
+      if (pieceIndex != format.centerpieceIndex) {
         _positionPiece(size.width, pieceVerticalCenter, childSizes, format.pieces[pieceIndex].fragments);
-      else
+      } else {
         _positionPivoted(size.width, pieceVerticalCenter, childSizes, centerpiece.fragments, centerpiece.pivotIndex);
+      }
 
       y += pieceHeights[pieceIndex] + format.pieces[pieceIndex].bottomMargin;
     }
@@ -1163,10 +1164,11 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
       final RenderBox box = context.findRenderObject() as RenderBox;
       final double radius = box.size.shortestSide / 2.0;
       if (widget.mode == _TimePickerMode.hour && widget.use24HourDials) {
-        if (offset.distance * 1.5 < radius)
+        if (offset.distance * 1.5 < radius) {
           _activeRing = _DialRing.inner;
-        else
+        } else {
           _activeRing = _DialRing.outer;
+        }
       }
     });
   }

@@ -49,7 +49,10 @@ class ApiClient implements IBaseApi {
     print(urlWithQueryParameters);
 
     Response responseRaw = await _httpClient.get(urlWithQueryParameters);
-
+    print(responseRaw);
+    if (responseRaw.statusCode == 401) {
+      throw ApiException({"errors": [], "message": "Server error"});
+    }
     response = jsonDecode(responseRaw.body);
     if (response.containsKey("errors")) {
       throw ApiException(response);
@@ -81,12 +84,13 @@ class ApiClient implements IBaseApi {
     String json = jsonEncode(jsonList);
 
     Response responseRaw = await _httpClient.post(url, body: json);
-
+    if (responseRaw.statusCode == 401) {
+      throw ApiException({"errors": [], "message": "Server error"});
+    }
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
     if (response.containsKey("errors")) {
       log(json);
-      print(response);
       throw ApiException(response);
     }
 

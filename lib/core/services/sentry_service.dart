@@ -51,7 +51,7 @@ class SentryService {
     print("auth sentry $uid");
 
     Sentry.configureScope(
-      (scope) => scope.user = SentryUser(id: uid, email: email),
+      (scope) => scope.setUser(SentryUser(id: uid, email: email)),
     );
   }
 
