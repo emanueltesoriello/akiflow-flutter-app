@@ -3,7 +3,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/doc/click_up_doc.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 
 class ClickupLinkedContent extends StatelessWidget {

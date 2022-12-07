@@ -4,11 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/config.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:models/task/availability_config.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:mobile/extensions/date_extension.dart';
 
 class SlotTile extends StatelessWidget {
   const SlotTile({super.key, required this.config});
@@ -19,7 +17,7 @@ class SlotTile extends StatelessWidget {
     return SizedBox(
       height: 52,
       child: ListTile(
-        contentPadding:EdgeInsets.symmetric(horizontal:9.0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 9.0),
         title: Container(
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
@@ -48,7 +46,6 @@ class SlotTile extends StatelessWidget {
                   color: ColorsExt.grey1(context),
                   fontWeight: FontWeight.w600,
                   overflow: TextOverflow.ellipsis,
-
                 ),
               )),
               const SizedBox(width: 5),
@@ -66,12 +63,15 @@ class SlotTile extends StatelessWidget {
                     launchUrlString("https://booking.akiflow.com/${config.url_path}",
                         mode: LaunchMode.externalApplication);
                   },
-                  child: SvgPicture.asset(Assets.images.icons.common.arrowUpRightSquareSVG,height: 18,)),
+                  child: SvgPicture.asset(
+                    Assets.images.icons.common.arrowUpRightSquareSVG,
+                    height: 18,
+                  )),
             ],
           ),
         ),
         trailing: Container(
-          margin: const EdgeInsets.only(right:5.0),
+          margin: const EdgeInsets.only(right: 5.0),
           child: InkWell(
               onTap: () async {
                 Clipboard.setData(ClipboardData(text: context.read<AvailabilityCubit>().getAvailabilityText(config)));
@@ -94,14 +94,17 @@ class SlotTile extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             'Link copied to clipboard!',
-                            style: TextStyle(
-                              color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                            style:
+                                TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
                           ),
                         ],
                       ),
                     )));
               },
-              child: SvgPicture.asset(Assets.images.icons.common.linkSVG,height: 17.79,)),
+              child: SvgPicture.asset(
+                Assets.images.icons.common.linkSVG,
+                height: 17.79,
+              )),
         ),
       ),
     );

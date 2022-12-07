@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/common/style/colors.dart';
@@ -24,7 +22,7 @@ class BadgedIcon extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Transform.translate(
-            offset: Offset(0, 0), //Platform.isAndroid ? -3 : 0),
+            offset: const Offset(0, 0), //Platform.isAndroid ? -3 : 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

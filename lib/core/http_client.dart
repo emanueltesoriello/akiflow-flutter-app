@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/preferences.dart';

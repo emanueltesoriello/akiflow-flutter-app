@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/task/task.dart';
 

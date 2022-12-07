@@ -5,7 +5,7 @@ class CustomNavigatorPopScope extends StatelessWidget {
   final List<Page> pages;
   final PopPageCallback onPopPage;
 
-  CustomNavigatorPopScope({
+  const CustomNavigatorPopScope({super.key, 
     required this.navigatorStateKey,
     this.pages = const <Page<dynamic>>[],
     required this.onPopPage,
@@ -15,7 +15,7 @@ class CustomNavigatorPopScope extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Navigator(
-        transitionDelegate: DefaultTransitionDelegate(),
+        transitionDelegate: const DefaultTransitionDelegate(),
         key: navigatorStateKey,
         pages: pages,
         onPopPage: onPopPage,

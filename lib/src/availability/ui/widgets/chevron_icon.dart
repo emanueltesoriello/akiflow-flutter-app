@@ -36,9 +36,7 @@ class ChevronIcon extends StatefulWidget {
     this.color,
     this.disabledColor,
     this.expandedColor,
-  })  : assert(isExpanded != null),
-        assert(size != null),
-        assert(padding != null);
+  });
 
   /// Whether the icon is in an expanded state.
   ///

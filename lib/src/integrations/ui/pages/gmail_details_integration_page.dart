@@ -47,7 +47,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
         bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
         Account user = state.accounts.firstWhere((account) => account.accountId == widget.account?.accountId);
         isConnected =
-            user != null && context.read<IntegrationsCubit>().isLocalActive(user) && user.connectorId == 'gmail';
+            context.read<IntegrationsCubit>().isLocalActive(user) && user.connectorId == 'gmail';
         return Stack(
           children: [
             Column(
