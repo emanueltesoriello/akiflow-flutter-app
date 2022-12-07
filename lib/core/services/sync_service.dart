@@ -84,24 +84,6 @@ class SyncService {
 
     addBreadcrumb("${api.runtimeType} local to remote, sync ${unsynced.length} items");
 
-    //TODO: Implement account API v3 to implement the server sync
-    // No post old v2 accounts
-    /*try {
-      if (api.runtimeType.toString() == "AccountV2Api") {
-        unsynced = [];
-      }
-    } catch (_) {}*/
-
-    try {
-      // TODO remove when migrate to gmail v3
-      //if (api.runtimeType.toString() == "AccountApi") {
-      unsynced = unsynced
-          .where((element) =>
-              element.connectorId == "akiflow" || element.connectorId == "google" || element.connectorId == "gmail")
-          .toList();
-      //}
-    } catch (_) {}
-
     if (unsynced.isEmpty) {
       return;
     }

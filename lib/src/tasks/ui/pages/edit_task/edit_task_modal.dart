@@ -158,8 +158,8 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorsExt.grey6(context),
-                            foregroundColor: ColorsExt.grey5(context),
+                            primary: ColorsExt.grey6(context),
+                            onPrimary: ColorsExt.grey5(context),
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),

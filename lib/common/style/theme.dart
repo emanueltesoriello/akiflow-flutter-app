@@ -59,7 +59,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       ),
-      foregroundColor: ColorsLight.akiflow,
+      primary: ColorsLight.akiflow,
       textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.akiflow),
     ),
   ),
