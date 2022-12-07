@@ -30,6 +30,13 @@ class AvailabilitiesView extends StatelessWidget {
       List<AvailabilityConfig> recurrent =
           state.availabilities?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent).toList() ??
               [];
+
+      manual.sort((a, b) {
+        return b.updated_at.toString().toLowerCase().compareTo(a.updated_at.toString().toLowerCase());
+      });
+      recurrent.sort((a, b) {
+        return b.updated_at.toString().toLowerCase().compareTo(a.updated_at.toString().toLowerCase());
+      });
       return RefreshIndicator(
         onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
         child: ListView(
