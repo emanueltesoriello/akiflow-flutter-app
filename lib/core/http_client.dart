@@ -28,6 +28,40 @@ class HttpClient extends BaseClient {
   @override
   Future<StreamedResponse> send(BaseRequest request) async {
     User? user = _preferences.user;
+    if (headers != null) {
+      headers.putIfAbsent(HttpHeaders.authorizationHeader, () => "Bearer ${user?.accessToken!}");
+    } else {
+      headers = {HttpHeaders.authorizationHeader: "Bearer ${user?.accessToken!}"};
+    }
+    Response response = await _inner.get(url, headers: headers);
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      await refreshToken(user);
+      return _inner.get(url, headers: headers);
+    }
+    return response;
+  }
+
+  @override
+  Future<Response> post(Uri url, {Map<String, String>? headers, body, Encoding? encoding}) async {
+    User? user = _preferences.user;
+
+    if (headers != null) {
+      headers.putIfAbsent(HttpHeaders.authorizationHeader, () => "Bearer ${user?.accessToken!}");
+    } else {
+      headers = {HttpHeaders.authorizationHeader: "Bearer ${user?.accessToken!}"};
+    }
+    Response response = await _inner.post(url, headers: headers, body: body, encoding: encoding);
+
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      await refreshToken(user);
+      return _inner.post(url, headers: headers, body: body, encoding: encoding);
+    }
+    return _inner.post(url, headers: headers, body: body, encoding: encoding);
+  }
+
+  @override
+  Future<StreamedResponse> send(BaseRequest request) async {
+    User? user = _preferences.user;
 
     if (user != null) {
       request.headers['Authorization'] = "Bearer ${user.accessToken ?? ''}";
