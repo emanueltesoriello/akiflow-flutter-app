@@ -8,15 +8,18 @@ extension AccountExt on Account {
     "slack",
     "todoist",
     "gmail",
+    "clickup",
+    "notion",
+    "asana",
+    "trello",
+    "zoom"
   ];
 
   static const List<String> v2Accounts = ["gmail"];
 
   GmailSyncMode get gmailSyncMode {
     try {
-      return details?['syncMode'] == 1
-          ? GmailSyncMode.useAkiflowLabel
-          : GmailSyncMode.useStarToImport;
+      return details?['syncMode'] == 1 ? GmailSyncMode.useAkiflowLabel : GmailSyncMode.useStarToImport;
     } catch (e) {
       return GmailSyncMode.doNothing;
     }
