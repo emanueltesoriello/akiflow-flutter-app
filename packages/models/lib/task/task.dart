@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:models/base.dart';
 import 'package:models/nullable.dart';
 
+import '../doc/doc.dart';
+
 class Task extends Equatable implements Base {
   final String? id;
   final String? title;
@@ -42,7 +44,7 @@ class Task extends Equatable implements Base {
   final String? originId;
   final String? originAccountId;
   final String? akiflowAccountId;
-  final Map<String, dynamic>? doc;
+  final Doc? doc;
 
   const Task({
     this.id,
@@ -199,7 +201,7 @@ class Task extends Equatable implements Base {
       'origin_id': originId,
       'origin_account_id': originAccountId,
       'akiflow_account_id': akiflowAccountId,
-      'doc': doc,
+      'doc': doc?.toMap(),
     };
   }
 
@@ -239,7 +241,7 @@ class Task extends Equatable implements Base {
       originId: map['origin_id'] != null ? map['origin_id'] as String? : null,
       originAccountId: map['origin_account_id'] != null ? map['origin_account_id'] as String? : null,
       akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
-      doc: map['doc'] != null ? map['doc'] as dynamic : null,
+      doc: map['doc'] != null ? Doc.fromMap(map['doc']) as dynamic : null,
       trashedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
     );
   }
@@ -278,7 +280,7 @@ class Task extends Equatable implements Base {
       "origin_id": originId,
       "origin_account_id": originAccountId,
       "akiflow_account_id": akiflowAccountId,
-      "doc": doc != null ? jsonEncode(doc) : null,
+      "doc": doc != null ? jsonEncode(doc?.toSql()) : null,
     };
   }
 
@@ -316,7 +318,8 @@ class Task extends Equatable implements Base {
     }
 
     if (data.containsKey("doc") && data["doc"] != null) {
-      data["doc"] = jsonDecode(data["doc"] as String);
+      String doc = data["doc"] as String;
+      data["doc"] = jsonDecode(doc);
     }
 
     Task task = Task.fromMap(data);

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
-import 'package:collection/collection.dart';
 
 class Subtitle extends StatelessWidget {
   final Task task;
@@ -16,19 +13,9 @@ class Subtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Doc> docs = context.watch<TasksCubit>().state.docs;
-
-    Doc? doc = docs.firstWhereOrNull(
-      (doc) => doc.taskId == task.id,
-    );
-
-    doc = task.computedDoc(doc);
+    Doc? doc = task.doc;
 
     List<String> links = task.links ?? [];
-
-    if (doc == null && task.descriptionParsed.isEmpty && links.isEmpty) {
-      return const SizedBox();
-    }
 
     return SizedBox(
       height: 24,
@@ -52,7 +39,7 @@ class Subtitle extends StatelessWidget {
                     child: Builder(
                       builder: (context) {
                         return Text(
-                          doc?.getSummary ?? "",
+                          doc.getSummary,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

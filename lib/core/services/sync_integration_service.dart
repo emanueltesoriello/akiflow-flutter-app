@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/core/api/docs_api.dart';
 import 'package:mobile/core/api/integrations/integration_base_api.dart';
+import 'package:mobile/core/api/task_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/exceptions/post_unsynced_exception.dart';
 import 'package:mobile/core/repository/docs_repository.dart';
@@ -15,7 +16,7 @@ import '../exceptions/api_exception.dart';
 
 class SyncIntegrationService {
   final SentryService _sentryService = locator<SentryService>();
-  final DocsApi _docsApi = locator<DocsApi>();
+  final TaskApi _taskApi = locator<TaskApi>();
   final DocsRepository _docsRepository = locator<DocsRepository>();
 
   final IIntegrationBaseApi integrationApi;
@@ -51,7 +52,7 @@ class SyncIntegrationService {
 
     addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${unsynced.length} items");
     try {
-      List<dynamic> updated = await _docsApi.postUnsynced(unsynced: unsynced);
+      List<dynamic> updated = await _taskApi.postUnsynced(unsynced: unsynced);
 
       if (unsynced.length != updated.length) {
         throw PostUnsyncedExcepotion(

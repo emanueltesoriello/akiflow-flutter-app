@@ -38,7 +38,6 @@ class SyncControllerService {
   static final CalendarApi _calendarApi = locator<CalendarApi>();
   static final LabelApi _labelApi = locator<LabelApi>();
   static final EventApi _eventApi = locator<EventApi>();
-  static final DocsApi _docsApi = locator<DocsApi>();
 
   static final AccountsRepository _accountsRepository = locator<AccountsRepository>();
   static final TasksRepository _tasksRepository = locator<TasksRepository>();
@@ -75,10 +74,7 @@ class SyncControllerService {
       api: _eventApi,
       databaseRepository: _eventsRepository,
     ),
-    Entity.docs: SyncService(
-      api: _docsApi,
-      databaseRepository: _docsRepository,
-    ),
+    
   };
 
   final Map<Entity, Function()> _getLastSyncFromPreferences = {
@@ -87,7 +83,7 @@ class SyncControllerService {
     Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
     Entity.labels: () => _preferencesRepository.lastLabelsSyncAt,
     Entity.events: () => _preferencesRepository.lastEventsSyncAt,
-    Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
+    // Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
   };
 
   final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
@@ -96,7 +92,7 @@ class SyncControllerService {
     Entity.tasks: _preferencesRepository.setLastTasksSyncAt,
     Entity.labels: _preferencesRepository.setLastLabelsSyncAt,
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
-    Entity.docs: _preferencesRepository.setLastDocsSyncAt,
+    // Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
   final StreamController syncCompletedController = StreamController.broadcast();
@@ -119,7 +115,6 @@ class SyncControllerService {
         await _syncEntity(Entity.accounts);
         await _syncEntity(Entity.tasks);
         await _syncEntity(Entity.labels);
-        await _syncEntity(Entity.docs);
       } else {
         for (Entity entity in entities) {
           await _syncEntity(entity);
@@ -133,7 +128,6 @@ class SyncControllerService {
         bool hasNewDocs = await _syncIntegration();
 
         if (hasNewDocs) {
-          await _syncEntity(Entity.docs);
           await _syncEntity(Entity.tasks);
         }
       } catch (e, s) {
@@ -160,7 +154,6 @@ class SyncControllerService {
       bool hasNewDocs = await _syncIntegration();
 
       if (hasNewDocs) {
-        await _syncEntity(Entity.docs);
         await _syncEntity(Entity.tasks);
       }
     }
@@ -257,7 +250,7 @@ class SyncControllerService {
 
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
 
-      await _syncEntity(Entity.docs);
+      // await _syncEntity(Entity.docs);
 
       if (lastSyncUpdated != null) {
         await _preferencesRepository.setLastSyncForAccountId(account.id!, lastSyncUpdated);

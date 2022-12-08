@@ -680,15 +680,15 @@ extension TaskExt on Task {
       connectorId: task.connectorId,
       originId: task.originId,
       accountId: task.originAccountId,
-      url: task.doc?['url'],
-      localUrl: task.doc?['local_url'],
+      url: task.doc?.url,
+      localUrl: task.doc?.localUrl,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
       deletedAt: task.deletedAt,
       globalUpdatedAt: task.globalUpdatedAt,
       globalCreatedAt: task.globalCreatedAt,
       remoteUpdatedAt: task.remoteUpdatedAt,
-      content: task.doc,
+      content: task.doc?.content,
     );
   }
 

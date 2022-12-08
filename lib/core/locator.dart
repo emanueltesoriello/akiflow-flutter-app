@@ -59,7 +59,6 @@ void setupLocator({
   locator.registerSingleton<CalendarApi>(CalendarApi());
   locator.registerSingleton<LabelApi>(LabelApi());
   locator.registerSingleton<EventApi>(EventApi());
-  locator.registerSingleton<DocsApi>(DocsApi());
   locator.registerSingleton<UserApi>(UserApi());
 
   /// Integrations
