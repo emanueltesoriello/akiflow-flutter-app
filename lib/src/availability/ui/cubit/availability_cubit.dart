@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -40,6 +41,23 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
     emit(state.copyWith(isNoticeDismissed: true));
   }
 
+  // TODO add handling to DST
+  String getAbbreviatedTimezone(String? timezone) {
+    if (timezone != null && timezone.isEmpty) {
+      return "-";
+    } else {
+      if (LocalizationAbbreviations.abbreviations[timezone] != null) {
+        if (LocalizationAbbreviations.abbreviations[timezone]!["default"] != null) {
+          return LocalizationAbbreviations.abbreviations[timezone]!["default"]!.toUpperCase();
+        } else {
+          return "-";
+        }
+      } else {
+        return "-";
+      }
+    }
+  }
+
   String getAvailabilityText(AvailabilityConfig config) {
     DateTime? start;
     DateTime? end;
@@ -50,9 +68,8 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
       start = DateTime.fromMillisecondsSinceEpoch(startTime, isUtc: true).toLocal();
       end = DateTime.fromMillisecondsSinceEpoch(endTime, isUtc: true).toLocal();
     }
-
     String text = (config.type == AvailabililtyConfigSlotsType.manual && start != null && end != null)
-        ? ''' Would any of these times work for you for a ${config.durationString} meeting? ${"*(${config.timezone ?? ''})*"}
+        ? ''' Would any of these times work for you for a ${config.durationString} meeting? ${"(${getAbbreviatedTimezone(config.timezone)})"}
 ${start.shortDateFormatted}
 • ${start.timeFormatted} - ${end.timeFormatted}
 Let me know or confirm here:
