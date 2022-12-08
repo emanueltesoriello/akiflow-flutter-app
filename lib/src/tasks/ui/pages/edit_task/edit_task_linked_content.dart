@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
@@ -26,7 +27,6 @@ class EditTaskLinkedContent extends StatelessWidget {
         Doc? doc = task.computedDoc(context.watch<TasksCubit>().state.docs.firstWhereOrNull(
               (doc) => doc.taskId == task.id,
             ));
-
         if (doc == null) {
           return const SizedBox();
         }
@@ -34,6 +34,7 @@ class EditTaskLinkedContent extends StatelessWidget {
         return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, integrations) {
           Account? account =
               integrations.accounts.firstWhereOrNull((element) => element.connectorId == doc.connectorId);
+          print(doc.url ?? '');
 
           return InkWell(
             onTap: () {
@@ -64,8 +65,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  //doc.getLinkedContentSummary(account), DEPRECATED
-                                  doc.getSummary,
+                                  doc.getSummary.parseHtmlString ?? doc.url ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),

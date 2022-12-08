@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
-import 'package:mobile/core/api/docs_api.dart';
 import 'package:mobile/core/api/event_api.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
 import 'package:mobile/core/api/integrations/integration_base_api.dart';
@@ -12,7 +11,6 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
-import 'package:mobile/core/repository/docs_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
@@ -44,7 +42,6 @@ class SyncControllerService {
   static final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
-  static final DocsRepository _docsRepository = locator<DocsRepository>();
 
   final SentryService _sentryService = locator<SentryService>();
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
@@ -33,13 +34,15 @@ class Subtitle extends StatelessWidget {
                     height: 16,
                   ),
                   const SizedBox(width: 4.5),
-                  SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16),
+                  ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 16, maxHeight: 16),
+                      child: SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16)),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Builder(
                       builder: (context) {
                         return Text(
-                          doc.getSummary,
+                          doc.getSummary.parseHtmlString ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

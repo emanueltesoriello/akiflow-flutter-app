@@ -14,6 +14,8 @@ class InteractiveWebView {
     _wController = controller;
   }
 
+  
+
   static Future<Document> htmlToDelta(String html) async {
     html = html.replaceAll('\n', '</br>');
 

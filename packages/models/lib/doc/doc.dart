@@ -242,7 +242,7 @@ class Doc extends DocBase implements Base {
   @override
   String get getSummary {
     if (description != null && description!.isNotEmpty) {
-      return description!.toString().replaceAll('<p>', '').replaceAll('</p>', '');
+      return description!;
     }
 
     return url ?? '';
