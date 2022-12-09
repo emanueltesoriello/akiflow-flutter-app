@@ -64,11 +64,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     _titleFocusNode.addListener(() {
       print('Focus on title');
-      cubit.setHasFocusOnTitleOrDescription(true);
+      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
     });
     _descriptionFocusNode.addListener(() {
       print('Focus on description');
-      cubit.setHasFocusOnTitleOrDescription(true);
+      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
     });
   }
 
@@ -196,6 +196,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
     return Future.value(true);
   }
 
+  Widget animatedChild(bool showWidget, Widget child) {
+    Widget animatedChild = Container();
+    return AnimatedSwitcher(duration: const Duration(milliseconds: 2000), child: showWidget ? child : animatedChild);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
@@ -205,8 +210,8 @@ class _EditTaskModalState extends State<EditTaskModal> {
           child: Material(
               color: Theme.of(context).backgroundColor,
               child: AnimatedSize(
-                curve: Curves.fastOutSlowIn,
-                duration: const Duration(milliseconds: 200),
+                curve: Curves.elasticOut,
+                duration: const Duration(milliseconds: 400),
                 child: Container(
                   height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height / 2 : null,
                   decoration: const BoxDecoration(
@@ -223,28 +228,28 @@ class _EditTaskModalState extends State<EditTaskModal> {
                       shrinkWrap: true,
                       children: [
                         const SizedBox(height: 12),
-                        if (!state.hasFocusOnTitleOrDescription) const ScrollChip(),
-                        if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
-                        if (!state.hasFocusOnTitleOrDescription)
-                          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                            builder: (context, state) {
-                              return Visibility(
-                                visible: state.showDuration,
-                                replacement: const SizedBox(),
-                                child: Column(
-                                  children: const [
-                                    Separator(),
-                                    CreateTaskDurationItem(),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                        animatedChild(!state.hasFocusOnTitleOrDescription, const ScrollChip()),
+                        animatedChild(!state.hasFocusOnTitleOrDescription, const SizedBox(height: 12)),
+                        animatedChild(!state.hasFocusOnTitleOrDescription,
+                            BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                          builder: (context, state) {
+                            return Visibility(
+                              visible: state.showDuration,
+                              replacement: const SizedBox(),
+                              child: Column(
+                                children: const [
+                                  Separator(),
+                                  CreateTaskDurationItem(),
+                                ],
+                              ),
+                            );
+                          },
+                        )),
                         Column(
                           children: [
-                            if (!state.hasFocusOnTitleOrDescription) const EditTaskTopActions(),
-                            if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
-                            if (state.hasFocusOnTitleOrDescription) _actionsForFocusNodes(state),
+                            animatedChild(!state.hasFocusOnTitleOrDescription, const EditTaskTopActions()),
+                            animatedChild(!state.hasFocusOnTitleOrDescription, const SizedBox(height: 12)),
+                            animatedChild(state.hasFocusOnTitleOrDescription, _actionsForFocusNodes(state)),
                             if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 10),
                             if (state.hasFocusOnTitleOrDescription) const Separator(),
                             if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 15),
