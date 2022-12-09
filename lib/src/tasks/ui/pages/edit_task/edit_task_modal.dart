@@ -126,7 +126,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
     );
   }
 
-  onBack(EditTaskCubitState state) async {
+  Future<bool> onBack(EditTaskCubitState state) async {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     if (state.hasFocusOnTitleOrDescription) {
       await showDialog(
@@ -193,7 +193,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
     } else {
       Navigator.of(context).pop();
     }
-    return Future.value(true);
+    return Future.value(false);
   }
 
   Widget animatedChild(bool showWidget, Widget child) {
