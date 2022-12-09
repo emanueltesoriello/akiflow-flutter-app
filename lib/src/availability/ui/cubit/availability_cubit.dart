@@ -9,6 +9,8 @@ import 'package:mobile/extensions/date_extension.dart';
 import '../../../../core/api/availability_api.dart';
 import '../models/navigation_state.dart';
 import 'package:models/task/availability_config.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 part 'availability_state.dart';
 
@@ -41,21 +43,25 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
     emit(state.copyWith(isNoticeDismissed: true));
   }
 
-  // TODO add handling to DST
-  String getAbbreviatedTimezone(String? timezone) {
-    if (timezone != null && timezone.isEmpty) {
-      return "-";
-    } else {
-      if (LocalizationAbbreviations.abbreviations[timezone] != null) {
-        if (LocalizationAbbreviations.abbreviations[timezone]!["default"] != null) {
-          return LocalizationAbbreviations.abbreviations[timezone]!["default"]!.toUpperCase();
+  String getAbbreviatedTimezone(String? timezone, String? minTime) {
+    tz.initializeTimeZones();
+    try {
+      if (timezone != null && timezone.isNotEmpty && minTime != null && minTime.isNotEmpty) {
+        final locationTz = tz.getLocation(timezone);
+        var timeInUtc = DateTime.parse(minTime).toUtc();
+        var isDst = locationTz.timeZone(timeInUtc.millisecondsSinceEpoch).isDst;
+        if (isDst &&
+            LocalizationAbbreviations.abbreviations[timezone] != null &&
+            LocalizationAbbreviations.abbreviations[timezone]?["dst"] != null) {
+          return LocalizationAbbreviations.abbreviations[timezone]?["dst"] ?? '-';
         } else {
-          return "-";
+          return LocalizationAbbreviations.abbreviations[timezone]?["default"] ?? '-';
         }
-      } else {
-        return "-";
       }
+    } catch (e) {
+      print(e);
     }
+    return '-';
   }
 
   String getAvailabilityText(AvailabilityConfig config) {
@@ -69,7 +75,7 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
       end = DateTime.fromMillisecondsSinceEpoch(endTime, isUtc: true).toLocal();
     }
     String text = (config.type == AvailabililtyConfigSlotsType.manual && start != null && end != null)
-        ? ''' Would any of these times work for you for a ${config.durationString} meeting? ${"(${getAbbreviatedTimezone(config.timezone)})"}
+        ? ''' Would any of these times work for you for a ${config.durationString} meeting? ${"(${getAbbreviatedTimezone(config.timezone, config.min_start_time)})"}
 ${start.shortDateFormatted}
 • ${start.timeFormatted} - ${end.timeFormatted}
 Let me know or confirm here:
