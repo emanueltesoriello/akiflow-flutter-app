@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
@@ -5,6 +7,8 @@ import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:crypto/crypto.dart' as crypto;
+import 'package:convert/convert.dart';
 
 class RawListConvert {
   final List<dynamic> items;
@@ -88,11 +92,11 @@ List<dynamic> prepareItemsForRemote<T>(List<dynamic> localItems) {
     var localItem = localItems[i];
 
     String? updatedAt = localItem.updatedAt;
-    String? deletedAt = localItem is Task? localItem.trashedAt:localItem.deletedAt;
+    String? deletedAt = localItem is Task ? localItem.trashedAt : localItem.deletedAt;
 
     DateTime? maxDate;
 
-    if (updatedAt != null && deletedAt != null ) {
+    if (updatedAt != null && deletedAt != null) {
       DateTime updatedAtDate = DateTime.parse(updatedAt);
       DateTime deletedAtDate = DateTime.parse(deletedAt);
 
@@ -173,13 +177,15 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
 
 class PrepareDocForRemoteModel {
   final List<Doc> remoteItems;
-  final List<Doc> existingItems;
+  final List<Doc?> existingItems;
 
   PrepareDocForRemoteModel({
     required this.remoteItems,
     required this.existingItems,
   });
 }
+
+class GmailTask {}
 
 class DocsFromGmailDataModel {
   final List<GmailMessage> messages;
@@ -199,29 +205,42 @@ class DocsFromGmailDataModel {
   });
 }
 
+generateMd5(String data) {
+  var content = const Utf8Encoder().convert(data);
+  var md5 = crypto.md5;
+  var digest = md5.convert(content);
+  return hex.encode(digest.bytes);
+}
+
 List<Doc> docsFromGmailData(DocsFromGmailDataModel data) {
   List<Doc> result = [];
 
   for (GmailMessage messageContent in data.messages) {
+    String doc = const JsonEncoder().convert({
+      "url": "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
+      "from": messageContent.from,
+      "internalDate": messageContent.internalDate,
+      "message_id": messageContent.id,
+      "thread_id": messageContent.threadId,
+    });
+    var json = jsonEncode(doc);
+
     result.add(Doc(
-      title: messageContent.subject,
+      connectorId: data.connectorId,
       originId: messageContent.messageId,
+      originAccountId: data.originAccountId,
+      title: messageContent.subject,
       searchText: "${messageContent.subject?.toLowerCase()} ${messageContent.from?.toLowerCase()}",
-      description: null,
-      icon: null,
-      type: 'email',
-      content: {
+      doc: {
+        "url": "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
         "from": messageContent.from,
         "internalDate": messageContent.internalDate,
+        "message_id": messageContent.id,
+        "thread_id": messageContent.threadId,
+        "hash": generateMd5(json),
         "initialSyncMode": data.syncMode
       },
-      url: "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
-      localUrl: null,
-      priority: 2,
-      sorting: messageContent.internalDate != null ? int.parse(messageContent.internalDate ?? '0') : null,
-      connectorId: data.connectorId,
       accountId: data.accountId,
-      originAccountId: data.originAccountId,
     ));
   }
 
@@ -253,7 +272,7 @@ List<Doc> prepareDocsForRemote<T>(PrepareDocForRemoteModel prepareDocForRemoteMo
     }
 
     Doc? localDoc = prepareDocForRemoteModel.existingItems.firstWhereOrNull(
-        (element) => element.connectorId == remoteDoc.connectorId && element.originId == remoteDoc.originId);
+        (element) => element?.connectorId == remoteDoc.connectorId && element?.originId == remoteDoc.originId);
 
     remoteDoc = remoteDoc.copyWith(
         id: remoteDoc.id ?? localDoc?.id,

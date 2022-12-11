@@ -71,7 +71,6 @@ class SyncControllerService {
       api: _eventApi,
       databaseRepository: _eventsRepository,
     ),
-    
   };
 
   final Map<Entity, Function()> _getLastSyncFromPreferences = {
@@ -199,6 +198,7 @@ class SyncControllerService {
       print("sync integration for account ${account.accountId}");
 
       bool hasNewDocsCheck = await _syncEntityIntegration(gmailApi, lastSync, account);
+      print(hasNewDocsCheck);
 
       if (hasNewDocsCheck == true) {
         hasNewDocs = true;
@@ -246,7 +246,6 @@ class SyncControllerService {
       }
 
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
-
       // await _syncEntity(Entity.docs);
 
       if (lastSyncUpdated != null) {

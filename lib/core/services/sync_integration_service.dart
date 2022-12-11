@@ -5,16 +5,20 @@ import 'package:mobile/core/api/integrations/integration_base_api.dart';
 import 'package:mobile/core/api/task_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/exceptions/post_unsynced_exception.dart';
+import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
+import 'package:models/task/task.dart';
 
 import '../exceptions/api_exception.dart';
 
 class SyncIntegrationService {
   final SentryService _sentryService = locator<SentryService>();
   final TaskApi _taskApi = locator<TaskApi>();
+  final TasksRepository _taskRpository = locator<TasksRepository>();
+
   final IIntegrationBaseApi integrationApi;
 
   SyncIntegrationService({required this.integrationApi});
@@ -35,12 +39,21 @@ class SyncIntegrationService {
 
     List<Doc> docs = await compute(docsFromGmailData, docsFromGmailDataModel);
 
+    List<Task> tasks = await _taskRpository.getAllDocs();
+
+    List<Task> localGmailTasks = tasks.where((element) => element.doc?.messageId != null).toList();
+
+    List<String?> localMessageIds =
+        localGmailTasks.where((element) => element.doc?.messageId != null).map((e) => e.doc?.messageId).toList();
+
+    List<Doc> newDocs = docs.where((element) => localMessageIds.contains(element.doc?["message_id"]) == false).toList();
+
     if (docs.isEmpty) {
       return null;
     }
 
-    List<Doc> unsynced =
-        await compute(prepareDocsForRemote, PrepareDocForRemoteModel(remoteItems: docs, existingItems: []));
+    List<Doc> unsynced = await compute(prepareDocsForRemote,
+        PrepareDocForRemoteModel(remoteItems: newDocs, existingItems: localGmailTasks.map((e) => e.doc).toList()));
 
     addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${unsynced.length} items");
     try {
