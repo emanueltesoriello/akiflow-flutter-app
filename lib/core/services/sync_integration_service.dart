@@ -56,20 +56,22 @@ class SyncIntegrationService {
         PrepareDocForRemoteModel(remoteItems: newDocs, existingItems: localGmailTasks.map((e) => e.doc).toList()));
 
     addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${unsynced.length} items");
-    try {
-      List<dynamic> updated = await _taskApi.postUnsynced(unsynced: unsynced);
+    if (unsynced.isNotEmpty) {
+      try {
+        List<dynamic> updated = await _taskApi.postUnsynced(unsynced: unsynced);
 
-      if (unsynced.length != updated.length) {
-        throw PostUnsyncedExcepotion(
-          "${integrationApi.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
-        );
+        if (unsynced.length != updated.length) {
+          throw PostUnsyncedExcepotion(
+            "${integrationApi.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
+          );
+        }
+
+        addBreadcrumb("${integrationApi.runtimeType} posted to unsynced ${updated.length} items done");
+
+        return DateTime.now();
+      } catch (e) {
+        throw ApiException({"message": "Server Error", "errors": []});
       }
-
-      addBreadcrumb("${integrationApi.runtimeType} posted to unsynced ${updated.length} items done");
-
-      return DateTime.now();
-    } catch (e) {
-      throw ApiException({"message": "Server Error", "errors": []});
     }
   }
 
