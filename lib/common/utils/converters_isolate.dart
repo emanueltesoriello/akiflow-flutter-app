@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
@@ -52,11 +51,14 @@ Future<List<T>> convertToObjList<T>(RawListConvert rawListConvert) async {
   return result;
 }
 
+Map<String, dynamic> removeNullsFromMap(Map<String, dynamic> json) =>
+    json..removeWhere((String key, dynamic value) => value == null);
+
 List<dynamic> fromObjToMapList<T>(List<T> items) {
   List<dynamic> result = [];
 
   for (T item in items) {
-    result.add((item as Base).toMap());
+    result.add(removeNullsFromMap((item as Base).toMap()));
   }
 
   return result;
@@ -212,79 +214,31 @@ generateMd5(String data) {
   return hex.encode(digest.bytes);
 }
 
-List<Doc> docsFromGmailData(DocsFromGmailDataModel data) {
+List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
   List<Doc> result = [];
 
   for (GmailMessage messageContent in data.messages) {
-    String doc = const JsonEncoder().convert({
+    var doc = {
       "url": "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
       "from": messageContent.from,
-      "internalDate": messageContent.internalDate,
+      "subject": messageContent.subject,
+      "internal_date": messageContent.internalDate,
       "message_id": messageContent.id,
       "thread_id": messageContent.threadId,
-    });
-    var json = jsonEncode(doc);
+    };
+    String stringified = const JsonEncoder().convert(doc);
+    String hash = generateMd5(stringified);
+
+    doc.addAll({"hash": hash});
 
     result.add(Doc(
+      //TODO: change to partial task
       connectorId: data.connectorId,
       originId: messageContent.messageId,
       originAccountId: data.originAccountId,
       title: messageContent.subject,
-      searchText: "${messageContent.subject?.toLowerCase()} ${messageContent.from?.toLowerCase()}",
-      doc: {
-        "url": "https://mail.google.com/mail/u/${data.email}/#all/${messageContent.threadId}",
-        "from": messageContent.from,
-        "internalDate": messageContent.internalDate,
-        "message_id": messageContent.id,
-        "thread_id": messageContent.threadId,
-        "hash": generateMd5(json),
-        "initialSyncMode": data.syncMode
-      },
-      accountId: data.accountId,
+      doc: doc,
     ));
   }
-
   return result;
-}
-
-List<Doc> prepareDocsForRemote<T>(PrepareDocForRemoteModel prepareDocForRemoteModel) {
-  List<Doc> remoteDocs = prepareDocForRemoteModel.remoteItems.toList();
-
-  for (int i = 0; i < remoteDocs.length; i++) {
-    Doc remoteDoc = remoteDocs[i];
-
-    String? updatedAt = remoteDoc.updatedAt;
-    String? deletedAt = remoteDoc.deletedAt;
-
-    DateTime? maxDate;
-
-    if (updatedAt != null && deletedAt != null) {
-      DateTime updatedAtDate = DateTime.parse(updatedAt);
-      DateTime deletedAtDate = DateTime.parse(deletedAt);
-
-      maxDate = updatedAtDate.isAfter(deletedAtDate) ? updatedAtDate : deletedAtDate;
-    } else if (updatedAt != null) {
-      DateTime updatedAtDate = DateTime.parse(updatedAt);
-      maxDate = updatedAtDate;
-    } else if (deletedAt != null) {
-      DateTime deletedAtDate = DateTime.parse(deletedAt);
-      maxDate = deletedAtDate;
-    }
-
-    Doc? localDoc = prepareDocForRemoteModel.existingItems.firstWhereOrNull(
-        (element) => element?.connectorId == remoteDoc.connectorId && element?.originId == remoteDoc.originId);
-
-    remoteDoc = remoteDoc.copyWith(
-        id: remoteDoc.id ?? localDoc?.id,
-        taskId: remoteDoc.taskId ?? localDoc?.taskId,
-        globalUpdatedAt: maxDate?.toIso8601String(),
-        globalCreatedAt: remoteDoc.createdAt,
-        taskData: {
-          "title": remoteDoc.title ?? '',
-        });
-
-    remoteDocs[i] = remoteDoc;
-  }
-
-  return remoteDocs;
 }

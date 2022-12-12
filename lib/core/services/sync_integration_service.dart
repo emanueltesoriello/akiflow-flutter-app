@@ -37,7 +37,7 @@ class SyncIntegrationService {
       email: params?['email'],
     );
 
-    List<Doc> docs = await compute(docsFromGmailData, docsFromGmailDataModel);
+    List<Doc> docs = await compute(payloadFromGmailData, docsFromGmailDataModel);
 
     List<Task> tasks = await _taskRpository.getAllDocs();
 
@@ -52,17 +52,14 @@ class SyncIntegrationService {
       return null;
     }
 
-    List<Doc> unsynced = await compute(prepareDocsForRemote,
-        PrepareDocForRemoteModel(remoteItems: newDocs, existingItems: localGmailTasks.map((e) => e.doc).toList()));
-
-    addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${unsynced.length} items");
-    if (unsynced.isNotEmpty) {
+    addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${docs.length} items");
+    if (newDocs.isNotEmpty) {
       try {
-        List<dynamic> updated = await _taskApi.postUnsynced(unsynced: unsynced);
+        List<dynamic> updated = await _taskApi.postUnsynced(unsynced: newDocs);
 
-        if (unsynced.length != updated.length) {
+        if (newDocs.length != updated.length) {
           throw PostUnsyncedExcepotion(
-            "${integrationApi.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
+            "${integrationApi.runtimeType} upserted ${newDocs.length} items, but ${updated.length} items were updated",
           );
         }
 

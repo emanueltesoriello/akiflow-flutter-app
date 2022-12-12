@@ -44,7 +44,7 @@ class Task extends Equatable implements Base {
   final String? originId;
   final String? originAccountId;
   final String? akiflowAccountId;
-  final Doc? doc;
+  final Doc? doc; // TODO: change to built_in_doc interface
 
   const Task({
     this.id,
