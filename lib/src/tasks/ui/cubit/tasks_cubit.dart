@@ -155,7 +155,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-
   Future<void> fetchLabelTasks(Label selectedLabel) async {
     try {
       List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
@@ -252,6 +251,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
         updatedAt: Nullable(now),
         createdAt: now,
         selected: false,
+        doc: Nullable(null),
+        connectorId: Nullable(null),
+        originId: Nullable(null),
+        originAccountId: Nullable(null),
       );
 
       if (controlVar) {

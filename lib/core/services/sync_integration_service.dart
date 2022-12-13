@@ -41,10 +41,12 @@ class SyncIntegrationService {
 
     List<Task> tasks = await _taskRpository.getAllDocs();
 
-    List<Task> localGmailTasks = tasks.where((element) => element.doc?.messageId != null).toList();
+    List<Task> localGmailTasks = tasks.where((element) => element.doc?.value?.messageId != null).toList();
 
-    List<String?> localMessageIds =
-        localGmailTasks.where((element) => element.doc?.messageId != null).map((e) => e.doc?.messageId).toList();
+    List<String?> localMessageIds = localGmailTasks
+        .where((element) => element.doc?.value?.messageId != null)
+        .map((e) => e.doc?.value?.messageId)
+        .toList();
 
     List<Doc> newDocs = docs.where((element) => localMessageIds.contains(element.doc?["message_id"]) == false).toList();
 

@@ -27,6 +27,7 @@ class EditTaskLinkedContent extends StatelessWidget {
         Doc? doc = task.computedDoc(context.watch<TasksCubit>().state.docs.firstWhereOrNull(
               (doc) => doc.taskId == task.id,
             ));
+        print(task.toSql());
         if (doc == null) {
           return const SizedBox();
         }

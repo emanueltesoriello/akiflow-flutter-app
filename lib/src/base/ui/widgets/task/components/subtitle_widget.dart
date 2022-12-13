@@ -14,7 +14,7 @@ class Subtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Doc? doc = task.doc;
+    Doc? doc = task.doc?.value;
 
     List<String> links = task.links ?? [];
 

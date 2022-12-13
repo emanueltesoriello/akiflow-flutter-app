@@ -407,9 +407,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       id: const Uuid().v4(),
       updatedAt: Nullable(now),
       createdAt: now,
+      doc: Nullable(null),
+      connectorId: Nullable(null),
+      originId: Nullable(null),
+      originAccountId: Nullable(null),
       selected: false,
     );
 
+    print(newTaskDuplicated.doc);
+    print('===============================');
     await _tasksRepository.add([newTaskDuplicated]);
 
     _tasksCubit.refreshAllFromRepository();
