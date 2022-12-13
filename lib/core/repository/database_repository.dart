@@ -66,12 +66,20 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   }
 
   Future<List<T>> _getByIds<T>(List<dynamic> ids) async {
-    String ins = ids.map((el) => '?').join(',');
-    List<Map<String, Object?>> items =
-        await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
-
-    List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
-    return objects;
+    try {
+      String ins = ids.map((el) => '?').join(',');
+      List<Map<String, Object?>> items =
+          await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
+      if (ids.length != items.length && tableName == "accounts") {
+        //TODO check by connectorId && originAccountId
+        print("checking if connectorId & originAccountId matches");
+      }
+      List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+      return objects;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 
   @override
