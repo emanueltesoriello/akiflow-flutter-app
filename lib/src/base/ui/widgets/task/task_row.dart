@@ -82,6 +82,24 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  double getMinHeight() {
+    double minHeight = 0;
+    if ((widget.task.title?.length ?? 0) > 40) {
+      minHeight += 65;
+    } else {
+      minHeight += 45;
+    }
+    if ((widget.task.description != null && widget.task.description!.isNotEmpty) ||
+        (widget.task.links != null && widget.task.links!.isNotEmpty) ||
+        (widget.task.doc != null && widget.task.doc!.isNotEmpty)) {
+      // minHeight += 25;
+    }
+    if (widget.showLabel) {
+      // minHeight += 25;
+    }
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -338,42 +356,35 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                             ),
                           ),
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TitleWidget(widget.task),
-                                  Subtitle(widget.task),
-                                  TaskInfo(
-                                    widget.task,
-                                    hideInboxLabel: widget.hideInboxLabel,
-                                    showLabel: widget.showLabel,
-                                    selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                                    showPlanInfo: widget.showPlanInfo,
-                                  ),
-                                  const SizedBox(height: 12),
-                                ],
-                              ),
-                            ),
-                          ),
+                              child: IgnorePointer(
+                                  ignoring: _fadeOutAnimation.value == 0 ? false : true,
+                                  child: AnimatedBuilder(
+                                      animation: _fadeOutAnimation,
+                                      builder: (context, child) {
+                                        return Opacity(
+                                          opacity: _fadeOutAnimation.value == 0 ? 1.0 : 0.0,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 12),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                TitleWidget(widget.task),
+                                                Subtitle(widget.task),
+                                                TaskInfo(
+                                                  widget.task,
+                                                  hideInboxLabel: widget.hideInboxLabel,
+                                                  showLabel: widget.showLabel,
+                                                  selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                                                  showPlanInfo: widget.showPlanInfo,
+                                                ),
+                                                const SizedBox(height: 12),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }))),
                         ],
                       ),
-                    ),
-                  ),
-                  IgnorePointer(
-                    child: AnimatedBuilder(
-                      animation: _fadeOutAnimation,
-                      builder: (context, child) {
-                        return Opacity(
-                          opacity: _fadeOutAnimation.value,
-                          child: Container(
-                              constraints: BoxConstraints(
-                                minHeight: ((widget.task.title?.length ?? 0) > 40 ? 80 : 40) + (20),
-                              ),
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                        );
-                      },
                     ),
                   ),
                 ],
