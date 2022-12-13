@@ -57,7 +57,8 @@ class SyncIntegrationService {
     addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${docs.length} items");
     if (newDocs.isNotEmpty) {
       try {
-        List<dynamic> updated = await _taskApi.postUnsynced(unsynced: newDocs);
+        List<dynamic> updated = await _taskApi
+            .postUnsynced(unsynced: newDocs, customHeader: {"Akiflow-Connector-Sync": "gmail-sync v0.1.0"});
 
         if (newDocs.length != updated.length) {
           throw PostUnsyncedExcepotion(
