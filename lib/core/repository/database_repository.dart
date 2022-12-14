@@ -70,9 +70,54 @@ class DatabaseRepository implements IBaseDatabaseRepository {
       String ins = ids.map((el) => '?').join(',');
       List<Map<String, Object?>> items =
           await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
-      if (ids.length != items.length && tableName == "accounts") {
-        //TODO check by connectorId && originAccountId
+      List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+      return objects;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<T>> getByItems<T>(List<dynamic> ids) async {
+    List<T> items = [];
+
+    if (ids.length > DatabaseRepository.sqlMaxVariableNumber) {
+      List<List<dynamic>> chunks = [];
+
+      for (var i = 0; i < ids.length; i += DatabaseRepository.sqlMaxVariableNumber) {
+        List<dynamic> sublistWithMaxVariables = ids.sublist(
+            i,
+            i + DatabaseRepository.sqlMaxVariableNumber > ids.length
+                ? ids.length
+                : i + DatabaseRepository.sqlMaxVariableNumber);
+        chunks.add(sublistWithMaxVariables);
+      }
+
+      for (var chunk in chunks) {
+        List<T> existingModelsChunk = await _getByItems(chunk);
+        items.addAll(existingModelsChunk);
+      }
+    } else {
+      items = await _getByItems(ids);
+    }
+
+    return items;
+  }
+
+  Future<List<T>> _getByItems<T>(List<dynamic> elements) async {
+    try {
+      List<dynamic> ids = elements.map((remoteItem) => remoteItem.id).toList();
+      String ins = ids.map((el) => '?').join(',');
+      List<Map<String, Object?>> items =
+          await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
+      if (elements.length != items.length) {
         print("checking if connectorId & originAccountId matches");
+        List<dynamic> originAccountIds = elements.map((remoteItem) => remoteItem.originAccountId).toList();
+        List<dynamic> connectorIds = elements.map((remoteItem) => remoteItem.connectorId).toList();
+
+        items = await _databaseService.database!
+            .rawQuery("SELECT * FROM $tableName WHERE origin_account_id in ($ins) ", originAccountIds);
       }
       List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
       return objects;
@@ -91,6 +136,15 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     batch = await compute(prepareBatchInsert, BatchInsertModel(items: result, batch: batch, tableName: tableName));
 
     return await batch.commit();
+  }
+
+  @override
+  Future<void> removeById<T>(String? id, {required T data}) async {
+    await _databaseService.database!.delete(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   @override
