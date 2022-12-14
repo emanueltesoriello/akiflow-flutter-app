@@ -10,10 +10,16 @@ class Doc extends DocBase implements Base {
     this.id,
     this.taskId,
     this.connectorId,
+    this.from,
+    this.subject,
+    this.internalDate,
     this.originId,
     this.accountId,
+    this.hash,
     this.originAccountId,
     this.title,
+    this.messageId,
+    this.threadId,
     this.description,
     this.searchText,
     this.icon,
@@ -32,11 +38,18 @@ class Doc extends DocBase implements Base {
     this.remoteUpdatedAt,
     this.updated,
     this.taskData,
+    this.doc,
   });
 
   final String? id;
   final String? taskId;
+  final String? hash;
+  final String? from;
+  final String? subject;
+  final String? internalDate;
   final String? connectorId;
+  final String? messageId;
+  final String? threadId;
   final String? originId;
   final String? accountId;
   final String? originAccountId;
@@ -59,15 +72,22 @@ class Doc extends DocBase implements Base {
   final String? remoteUpdatedAt;
   final bool? updated;
   final Map<String, dynamic>? taskData;
+  final Map<String, dynamic>? doc;
 
   factory Doc.fromMap(Map<String, dynamic> json) => Doc(
         id: json['id'] as String?,
         taskId: json['task_id'] as String?,
+        hash: json['hash'] as String?,
         connectorId: json['connector_id'] as String?,
         originId: json['origin_id'] as String?,
         accountId: json['account_id'] as String?,
         originAccountId: json['origin_account_id'] as String?,
         title: json['title'] as String?,
+        messageId: json['message_id'] as String?,
+        threadId: json['thread_id'] as String?,
+        from: json['from'] as String?,
+        subject: json['subject'] as String?,
+        internalDate: json['internal_date'] as String?,
         description: json['description'] as dynamic,
         searchText: json['search_text'] as String?,
         icon: json['icon'] as dynamic,
@@ -86,6 +106,7 @@ class Doc extends DocBase implements Base {
         remoteUpdatedAt: json['remote_updated_at'] as String?,
         updated: json['updated'] as bool?,
         taskData: json['taskData'] as Map<String, dynamic>?,
+        doc: json['doc'] as Map<String, dynamic>?,
       );
 
   @override
@@ -95,12 +116,18 @@ class Doc extends DocBase implements Base {
         'connector_id': connectorId,
         'origin_id': originId,
         'account_id': accountId,
+        'hash': hash,
         'origin_account_id': originAccountId,
         'title': title,
+        'message_id': messageId,
+        'thread_id': threadId,
         'description': description,
         'search_text': searchText,
         'icon': icon,
         'url': url,
+        "from": from,
+        "subject": subject,
+        "internal_date": internalDate,
         'local_url': localUrl,
         'type': type,
         'content': content,
@@ -115,7 +142,8 @@ class Doc extends DocBase implements Base {
         'remote_updated_at': remoteUpdatedAt,
         'updated': updated,
         'taskData': taskData,
-      }..removeWhere((key, value) => key == "id" && value == null);
+        'doc': doc,
+      }..removeWhere((key, value) => value == null);
 
   Doc copyWith({
     String? id,
@@ -126,7 +154,13 @@ class Doc extends DocBase implements Base {
     String? originAccountId,
     String? title,
     dynamic description,
+    String? hash,
     String? searchText,
+    String? from,
+    String? subject,
+    String? internalDate,
+    String? messageId,
+    String? threadId,
     dynamic icon,
     String? url,
     String? localUrl,
@@ -143,6 +177,7 @@ class Doc extends DocBase implements Base {
     String? globalCreatedAt,
     bool? updated,
     Map<String, dynamic>? taskData,
+    Map<String, dynamic>? doc,
   }) {
     return Doc(
       id: id ?? this.id,
@@ -150,8 +185,14 @@ class Doc extends DocBase implements Base {
       connectorId: connectorId ?? this.connectorId,
       originId: originId ?? this.originId,
       accountId: accountId ?? this.accountId,
+      from: from ?? this.from,
+      subject: subject ?? this.subject,
+      internalDate: internalDate ?? this.internalDate,
       originAccountId: originAccountId ?? this.originAccountId,
       title: title ?? this.title,
+      messageId: messageId ?? this.messageId,
+      hash: hash ?? this.hash,
+      threadId: threadId ?? this.threadId,
       description: description ?? this.description,
       searchText: searchText ?? this.searchText,
       icon: icon ?? this.icon,
@@ -164,14 +205,13 @@ class Doc extends DocBase implements Base {
       originUpdatedAt: originUpdatedAt ?? this.originUpdatedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null
-          ? this.remoteUpdatedAt
-          : remoteUpdatedAt.value,
+      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
       deletedAt: deletedAt ?? this.deletedAt,
       globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
       globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
       updated: updated ?? this.updated,
       taskData: taskData ?? this.taskData,
+      doc: doc ?? this.doc,
     );
   }
 
@@ -183,7 +223,13 @@ class Doc extends DocBase implements Base {
       "connector_id": connectorId,
       "title": title,
       "description": description,
+      "hash": hash,
+      "from": from,
+      "subject": subject,
+      "internal_date": internalDate,
       "origin_id": originId,
+      "message_id": messageId,
+      "thread_id": threadId,
       "account_id": accountId,
       "icon": icon,
       "url": url,
@@ -201,8 +247,7 @@ class Doc extends DocBase implements Base {
     Map<String, dynamic>? copy = Map<String, dynamic>.from(json);
 
     try {
-      copy['content'] =
-          jsonDecode(json['content'] as String) as Map<String, dynamic>?;
+      copy['content'] = jsonDecode(json['content'] as String) as Map<String, dynamic>?;
     } catch (_) {}
 
     return Doc.fromMap(copy);
@@ -217,12 +262,19 @@ class Doc extends DocBase implements Base {
       originId,
       accountId,
       originAccountId,
+      hash,
+      messageId,
+      threadId,
       title,
       description,
       searchText,
       icon,
       url,
       localUrl,
+      subject,
+      from,
+      internalDate,
+      hash,
       type,
       content,
       priority,

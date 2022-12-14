@@ -32,6 +32,19 @@ class TasksRepository extends DatabaseRepository {
     return objects;
   }
 
+  Future<List<Task>> getAllDocs<Task>() async {
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
+          SELECT *
+          FROM tasks
+          WHERE doc IS NOT NULL
+           ORDER BY
+            sorting DESC
+""");
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
   Future<List<Task>> getTodayTasks<Task>({required DateTime date}) async {
     DateTime startTime = DateTime(date.year, date.month, date.day, 0, 0, 0);
     DateTime endTime = startTime.add(const Duration(days: 1));

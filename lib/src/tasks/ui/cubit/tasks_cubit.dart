@@ -9,7 +9,6 @@ import 'package:mobile/core/api/integrations/gmail_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
-import 'package:mobile/core/repository/docs_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
@@ -40,7 +39,6 @@ part 'tasks_state.dart';
 class TasksCubit extends Cubit<TasksCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
-  final DocsRepository _docsRepository = locator<DocsRepository>();
   final SentryService _sentryService = locator<SentryService>();
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
 
@@ -111,7 +109,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   refreshAllFromRepository() async {
     await Future.wait([
-      fetchDocs(),
       fetchInbox(),
       fetchTodayTasks(),
       _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
@@ -153,15 +150,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     try {
       List<Task> todayTasks = await fromCancelable(_tasksRepository.getTodayTasks(date: date));
       emit(state.copyWith(selectedDayTasks: todayTasks));
-    } catch (e, s) {
-      _sentryService.captureException(e, stackTrace: s);
-    }
-  }
-
-  Future fetchDocs() async {
-    try {
-      List<Doc> docs = await _docsRepository.get();
-      emit(state.copyWith(docs: docs));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -263,6 +251,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
         updatedAt: Nullable(now),
         createdAt: now,
         selected: false,
+        doc: Nullable(null),
+        connectorId: Nullable(null),
+        originId: Nullable(null),
+        originAccountId: Nullable(null),
       );
 
       if (controlVar) {

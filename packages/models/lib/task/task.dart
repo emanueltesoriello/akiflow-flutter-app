@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:models/base.dart';
 import 'package:models/nullable.dart';
 
+import '../doc/doc.dart';
+
 class Task extends Equatable implements Base {
   final String? id;
   final String? title;
@@ -38,11 +40,11 @@ class Task extends Equatable implements Base {
   final List<String>? links;
   final List<String>? recurrence;
   final dynamic content;
-  final String? connectorId;
-  final String? originId;
-  final String? originAccountId;
+  final Nullable<String?>? connectorId;
+  final Nullable<String?>? originId;
+  final Nullable<String?>? originAccountId;
   final String? akiflowAccountId;
-  final Map<String, dynamic>? doc;
+  final Nullable<Doc?>? doc; // TODO: change to built_in_doc interface
 
   const Task({
     this.id,
@@ -115,11 +117,11 @@ class Task extends Equatable implements Base {
     Nullable<String?>? updatedAt,
     Nullable<String?>? remoteUpdatedAt,
     dynamic content,
-    String? connectorId,
-    String? originId,
-    String? originAccountId,
+    Nullable<String?>? connectorId,
+    Nullable<String?>? originId,
+    Nullable<String?>? originAccountId,
     String? akiflowAccountId,
-    dynamic doc,
+    Nullable<Doc?>? doc,
   }) {
     return Task(
       id: id ?? this.id,
@@ -195,11 +197,11 @@ class Task extends Equatable implements Base {
       'links': (links == null || links!.isEmpty) ? null : List<dynamic>.from(links!.map((x) => x)),
       'recurrence': (recurrence == null || recurrence!.isEmpty) ? null : List<dynamic>.from(recurrence!.map((x) => x)),
       'content': content,
-      'connector_id': connectorId,
-      'origin_id': originId,
-      'origin_account_id': originAccountId,
+      'connector_id': connectorId?.value,
+      'origin_id': originId?.value,
+      'origin_account_id': originAccountId?.value,
       'akiflow_account_id': akiflowAccountId,
-      'doc': doc,
+      'doc': doc?.value?.toMap(),
     };
   }
 
@@ -235,11 +237,11 @@ class Task extends Equatable implements Base {
       links: map['links'] != null ? List<String>.from(map['links'] as List<dynamic>) : null,
       recurrence: map['recurrence'] != null ? List<String>.from(map['recurrence'] as List<dynamic>) : null,
       content: map['content'] != null ? map['content'] as dynamic : null,
-      connectorId: map['connector_id'] != null ? map['connector_id'] as String? : null,
-      originId: map['origin_id'] != null ? map['origin_id'] as String? : null,
-      originAccountId: map['origin_account_id'] != null ? map['origin_account_id'] as String? : null,
+      connectorId: map['connector_id'] != null ? Nullable(map['connector_id'] as String?) : null,
+      originId: map['origin_id'] != null ? Nullable(map['origin_id'] as String?) : null,
+      originAccountId: map['origin_account_id'] != null ? Nullable(map['origin_account_id'] as String?) : null,
       akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
-      doc: map['doc'] != null ? map['doc'] as dynamic : null,
+      doc: map['doc'] != null ? Nullable(Doc.fromMap(map['doc'])) as dynamic : null,
       trashedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
     );
   }
@@ -274,11 +276,11 @@ class Task extends Equatable implements Base {
       "daily_goal": dailyGoal,
       "recurrence": (recurrence == null || recurrence!.isEmpty) ? null : recurrence?.toList().join(';'),
       "content": content != null ? jsonEncode(content) : null,
-      "connector_id": connectorId,
-      "origin_id": originId,
-      "origin_account_id": originAccountId,
+      "connector_id": connectorId?.value,
+      "origin_id": originId?.value,
+      "origin_account_id": originAccountId?.value,
       "akiflow_account_id": akiflowAccountId,
-      "doc": doc != null ? jsonEncode(doc) : null,
+      "doc": doc != null ? jsonEncode(doc?.value?.toSql()) : null,
     };
   }
 
@@ -316,7 +318,8 @@ class Task extends Equatable implements Base {
     }
 
     if (data.containsKey("doc") && data["doc"] != null) {
-      data["doc"] = jsonDecode(data["doc"] as String);
+      String doc = data["doc"] as String;
+      data["doc"] = jsonDecode(doc);
     }
 
     Task task = Task.fromMap(data);

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
-import 'package:mobile/core/api/docs_api.dart';
 import 'package:mobile/core/api/event_api.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
 import 'package:mobile/core/api/integrations/integration_base_api.dart';
@@ -12,7 +11,6 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
-import 'package:mobile/core/repository/docs_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
@@ -38,14 +36,12 @@ class SyncControllerService {
   static final CalendarApi _calendarApi = locator<CalendarApi>();
   static final LabelApi _labelApi = locator<LabelApi>();
   static final EventApi _eventApi = locator<EventApi>();
-  static final DocsApi _docsApi = locator<DocsApi>();
 
   static final AccountsRepository _accountsRepository = locator<AccountsRepository>();
   static final TasksRepository _tasksRepository = locator<TasksRepository>();
   static final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
-  static final DocsRepository _docsRepository = locator<DocsRepository>();
 
   final SentryService _sentryService = locator<SentryService>();
 
@@ -75,10 +71,6 @@ class SyncControllerService {
       api: _eventApi,
       databaseRepository: _eventsRepository,
     ),
-    Entity.docs: SyncService(
-      api: _docsApi,
-      databaseRepository: _docsRepository,
-    ),
   };
 
   final Map<Entity, Function()> _getLastSyncFromPreferences = {
@@ -87,7 +79,7 @@ class SyncControllerService {
     Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
     Entity.labels: () => _preferencesRepository.lastLabelsSyncAt,
     Entity.events: () => _preferencesRepository.lastEventsSyncAt,
-    Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
+    // Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
   };
 
   final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
@@ -96,7 +88,7 @@ class SyncControllerService {
     Entity.tasks: _preferencesRepository.setLastTasksSyncAt,
     Entity.labels: _preferencesRepository.setLastLabelsSyncAt,
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
-    Entity.docs: _preferencesRepository.setLastDocsSyncAt,
+    // Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
   final StreamController syncCompletedController = StreamController.broadcast();
@@ -119,7 +111,6 @@ class SyncControllerService {
         await _syncEntity(Entity.accounts);
         await _syncEntity(Entity.tasks);
         await _syncEntity(Entity.labels);
-        await _syncEntity(Entity.docs);
       } else {
         for (Entity entity in entities) {
           await _syncEntity(entity);
@@ -133,7 +124,6 @@ class SyncControllerService {
         bool hasNewDocs = await _syncIntegration();
 
         if (hasNewDocs) {
-          await _syncEntity(Entity.docs);
           await _syncEntity(Entity.tasks);
         }
       } catch (e, s) {
@@ -160,7 +150,6 @@ class SyncControllerService {
       bool hasNewDocs = await _syncIntegration();
 
       if (hasNewDocs) {
-        await _syncEntity(Entity.docs);
         await _syncEntity(Entity.tasks);
       }
     }
@@ -209,6 +198,7 @@ class SyncControllerService {
       print("sync integration for account ${account.accountId}");
 
       bool hasNewDocsCheck = await _syncEntityIntegration(gmailApi, lastSync, account);
+      print(hasNewDocsCheck);
 
       if (hasNewDocsCheck == true) {
         hasNewDocs = true;
@@ -256,8 +246,7 @@ class SyncControllerService {
       }
 
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
-
-      await _syncEntity(Entity.docs);
+      // await _syncEntity(Entity.docs);
 
       if (lastSyncUpdated != null) {
         await _preferencesRepository.setLastSyncForAccountId(account.id!, lastSyncUpdated);

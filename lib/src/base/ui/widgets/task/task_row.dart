@@ -82,24 +82,6 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  double getMinHeight() {
-    double minHeight = 0;
-    if ((widget.task.title?.length ?? 0) > 40) {
-      minHeight += 65;
-    } else {
-      minHeight += 45;
-    }
-    if ((widget.task.description != null && widget.task.description!.isNotEmpty) ||
-        (widget.task.links != null && widget.task.links!.isNotEmpty) ||
-        (widget.task.doc != null && widget.task.doc!.isNotEmpty)) {
-      // minHeight += 25;
-    }
-    if (widget.showLabel) {
-      // minHeight += 25;
-    }
-    return 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
