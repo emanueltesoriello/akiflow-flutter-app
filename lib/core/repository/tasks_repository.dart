@@ -3,9 +3,10 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
-import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+
+import '../../extensions/task_extension.dart';
 
 class TasksRepository extends DatabaseRepository {
   final DatabaseService _databaseService = locator<DatabaseService>();
