@@ -43,11 +43,11 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
         showBack: true,
       ),
       body: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, state) {
-        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+        Account gmailAccount = state.accounts.firstWhere(
+            (element) => element.connectorId == "gmail" && element.originAccountId == widget.account!.originAccountId);
         bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
         Account user = state.accounts.firstWhere((account) => account.accountId == widget.account?.accountId);
-        isConnected =
-            context.read<IntegrationsCubit>().isLocalActive(user) && user.connectorId == 'gmail';
+        isConnected = context.read<IntegrationsCubit>().isLocalActive(user) && user.connectorId == 'gmail';
         return Stack(
           children: [
             Column(
@@ -159,7 +159,8 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
   Widget _behaviour() {
     return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
-        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+        Account gmailAccount = state.accounts.firstWhere(
+            (element) => element.connectorId == "gmail" && element.originAccountId == widget.account!.originAccountId);
 
         return BlocBuilder<AuthCubit, AuthCubitState>(
           builder: (context, authState) {
@@ -211,7 +212,8 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
   BlocBuilder<IntegrationsCubit, IntegrationsCubitState> _importOptions() {
     return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
-        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+        Account gmailAccount = state.accounts.firstWhere(
+            (element) => element.connectorId == "gmail" && element.originAccountId == widget.account!.originAccountId);
         String subtitle;
 
         switch (gmailAccount.details?['syncMode']) {
@@ -269,7 +271,8 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
   BlocBuilder<IntegrationsCubit, IntegrationsCubitState> _header() {
     return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
-        Account gmailAccount = state.accounts.firstWhere((element) => element.connectorId == "gmail");
+        Account gmailAccount = state.accounts.firstWhere(
+            (element) => element.connectorId == "gmail" && element.originAccountId == widget.account!.originAccountId);
 
         return IntegrationListItem(
           leading: CircleAccountPicture(

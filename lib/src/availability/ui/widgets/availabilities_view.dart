@@ -50,18 +50,6 @@ class AvailabilitiesView extends StatelessWidget {
               },
               children: [
                 ExpandablePanel(
-                  isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
-                  isHeaderVisible: manual.isNotEmpty ? true : false,
-                  headerBuilder: (context, isExpanded) {
-                    return SlotsHeader(
-                        type: AvailabililtyConfigSlotsType.manual,
-                        asset: Assets.images.icons.common.handDrawSVG,
-                        text: 'Active manual slots',
-                        isOpen: isExpanded);
-                  },
-                  body: SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),
-                ),
-                ExpandablePanel(
                     isExpanded: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
                     isHeaderVisible: recurrent.isNotEmpty ? true : false,
                     headerBuilder: (context, isExpanded) {
@@ -77,6 +65,18 @@ class AvailabilitiesView extends StatelessWidget {
                     },
                     body:
                         SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)),
+                ExpandablePanel(
+                  isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
+                  isHeaderVisible: manual.isNotEmpty ? true : false,
+                  headerBuilder: (context, isExpanded) {
+                    return SlotsHeader(
+                        type: AvailabililtyConfigSlotsType.manual,
+                        asset: Assets.images.icons.common.handDrawSVG,
+                        text: 'Active manual slots',
+                        isOpen: isExpanded);
+                  },
+                  body: SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),
+                ),
               ],
             ),
           ],
