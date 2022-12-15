@@ -23,6 +23,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/services/focus_detector_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -36,6 +37,7 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
 Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   DatabaseService databaseService = DatabaseService();
+  tz.initializeTimeZones();
   await databaseService.open();
   setupLocator(preferences: preferences, databaseService: databaseService);
   bool userLogged =

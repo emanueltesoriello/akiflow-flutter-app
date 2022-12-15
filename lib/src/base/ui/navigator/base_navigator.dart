@@ -17,7 +17,8 @@ class BaseNavigator extends StatefulWidget {
 class _BaseNavigatorState extends State<BaseNavigator> {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SyncCubit, SyncCubitState>(
+    // TODO handle corretly the different errors of the SyncCubit - ask for the UX
+    return /*BlocListener<SyncCubit, SyncCubitState>(
         listener: (context, state) {
           if (state.error == true) {
             Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
@@ -25,15 +26,17 @@ class _BaseNavigatorState extends State<BaseNavigator> {
             ));
           }
         },
-        child: BlocListener<AuthCubit, AuthCubitState>(
-          listener: (context, state) {
-            if (state.user == null) {
-              Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
-                builder: (BuildContext context) => const AuthPage(),
-              ));
-            }
-          },
-          child: MainPage(userLogged: widget.userLogged),
-        ));
+        child:*/
+        BlocListener<AuthCubit, AuthCubitState>(
+      listener: (context, state) {
+        if (state.user == null) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
+            builder: (BuildContext context) => const AuthPage(),
+          ));
+        }
+      },
+      child: MainPage(userLogged: widget.userLogged),
+      // )
+    );
   }
 }
