@@ -207,6 +207,11 @@ class DocsFromGmailDataModel {
   });
 }
 
+getTitleString(String? title) {
+  final codeUnits = title?.codeUnits;
+  return const Utf8Decoder().convert(codeUnits ?? []);
+}
+
 generateMd5(String data) {
   var content = const Utf8Encoder().convert(data);
   var md5 = crypto.md5;
@@ -236,7 +241,7 @@ List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
       connectorId: data.connectorId,
       originId: messageContent.messageId,
       originAccountId: data.originAccountId,
-      title: messageContent.subject,
+      title: getTitleString(messageContent.subject),
       doc: doc,
     ));
   }
