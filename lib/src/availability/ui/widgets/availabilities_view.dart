@@ -30,6 +30,13 @@ class AvailabilitiesView extends StatelessWidget {
       List<AvailabilityConfig> recurrent =
           state.availabilities?.where((element) => element.type == AvailabililtyConfigSlotsType.recurrent).toList() ??
               [];
+
+      manual.sort((a, b) {
+        return b.updated_at.toString().toLowerCase().compareTo(a.updated_at.toString().toLowerCase());
+      });
+      recurrent.sort((a, b) {
+        return b.updated_at.toString().toLowerCase().compareTo(a.updated_at.toString().toLowerCase());
+      });
       return RefreshIndicator(
         onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
         child: ListView(
@@ -42,18 +49,6 @@ class AvailabilitiesView extends StatelessWidget {
                     panelIndex == 0 ? AvailabililtyConfigSlotsType.manual : AvailabililtyConfigSlotsType.recurrent);
               },
               children: [
-                ExpandablePanel(
-                  isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
-                  isHeaderVisible: manual.isNotEmpty ? true : false,
-                  headerBuilder: (context, isExpanded) {
-                    return SlotsHeader(
-                        type: AvailabililtyConfigSlotsType.manual,
-                        asset: Assets.images.icons.common.handDrawSVG,
-                        text: 'Active manual slots',
-                        isOpen: isExpanded);
-                  },
-                  body: SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),
-                ),
                 ExpandablePanel(
                     isExpanded: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
                     isHeaderVisible: recurrent.isNotEmpty ? true : false,
@@ -70,6 +65,18 @@ class AvailabilitiesView extends StatelessWidget {
                     },
                     body:
                         SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)),
+                ExpandablePanel(
+                  isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
+                  isHeaderVisible: manual.isNotEmpty ? true : false,
+                  headerBuilder: (context, isExpanded) {
+                    return SlotsHeader(
+                        type: AvailabililtyConfigSlotsType.manual,
+                        asset: Assets.images.icons.common.handDrawSVG,
+                        text: 'Active manual slots',
+                        isOpen: isExpanded);
+                  },
+                  body: SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),
+                ),
               ],
             ),
           ],

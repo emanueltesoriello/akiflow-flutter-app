@@ -390,7 +390,7 @@ extension TaskExt on Task {
 
   String computedIcon(Doc? doc) {
     if (connectorId != null) {
-      return iconFromConnectorId(connectorId);
+      return iconFromConnectorId(connectorId?.value);
     } else {
       return iconFromConnectorId(doc?.connectorId);
     }
@@ -677,23 +677,23 @@ extension TaskExt on Task {
       taskId: task.id,
       title: task.title,
       description: task.description,
-      connectorId: task.connectorId,
-      originId: task.originId,
-      accountId: task.originAccountId,
-      url: task.doc?['url'],
-      localUrl: task.doc?['local_url'],
+      connectorId: task.connectorId?.value,
+      originId: task.originId?.value,
+      accountId: task.originAccountId?.value,
+      url: task.doc?.value?.url,
+      localUrl: task.doc?.value?.localUrl,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
       deletedAt: task.deletedAt,
       globalUpdatedAt: task.globalUpdatedAt,
       globalCreatedAt: task.globalCreatedAt,
       remoteUpdatedAt: task.remoteUpdatedAt,
-      content: task.doc,
+      content: task.doc?.value?.content,
     );
   }
 
   Doc? computedDoc(Doc? doc) {
-    String? connectorId = doc?.connectorId ?? this.connectorId;
+    String? connectorId = doc?.connectorId ?? this.connectorId?.value;
 
     if (connectorId == null) {
       return null;

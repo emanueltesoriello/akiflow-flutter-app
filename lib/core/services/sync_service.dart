@@ -9,6 +9,7 @@ import 'package:mobile/core/exceptions/upsert_database_exception.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
+import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
 import 'package:models/task/task.dart';
 
@@ -125,17 +126,24 @@ class SyncService {
     var result = [];
 
     List<dynamic> localIds = remoteItems.map((remoteItem) => remoteItem.id).toList();
+
     addBreadcrumb("${api.runtimeType} localIds length: ${localIds.length}");
 
-    List<T> existingModels = await databaseRepository.getByIds(localIds);
+    List<T> existingModels;
+    if (api.runtimeType.toString() == "AccountApi") {
+      existingModels = await databaseRepository.getByItems(remoteItems);
+    } else {
+      existingModels = await databaseRepository.getByIds(localIds);
+    }
     addBreadcrumb("${api.runtimeType} existingModels length: ${existingModels.length}");
 
     result = await compute(
         partitionItemsToUpsert, PartitioneItemModel(remoteItems: remoteItems, existingItems: existingModels));
 
-    var changedModels = result[0];
+    List changedModels = result[0];
     // var unchangedModels = result[1];
-    var nonExistingModels = result[2];
+    List nonExistingModels = result[2];
+    List valToBeDeleted = [];
 
     addBreadcrumb("${api.runtimeType} changedModels length: ${changedModels.length}");
     addBreadcrumb("${api.runtimeType} nonExistingModels length: ${nonExistingModels.length}");
@@ -144,9 +152,36 @@ class SyncService {
       addBreadcrumb("${api.runtimeType} no items to upsert");
       return false;
     }
-
+    //TODO optimize and refactor the code
+    List val = [];
     if (nonExistingModels.isNotEmpty) {
-      anyInsertErrors = await _addRemoteTaskToLocalDb(nonExistingModels);
+      if (api.runtimeType.toString() == "AccountApi") {
+        var nonExistingModelsCopy = [];
+        nonExistingModelsCopy.addAll(nonExistingModels);
+        for (var model in nonExistingModelsCopy) {
+          try {
+            var list = existingModels.cast<Account>().toList();
+            val.addAll(list
+                .where((element) =>
+                    element.originAccountId == model.originAccountId && element.connectorId == model.connectorId)
+                .toList());
+          } catch (e) {
+            print(e);
+          }
+
+          if (val.isNotEmpty) {
+            valToBeDeleted.add(model);
+          }
+          if (valToBeDeleted.isNotEmpty) {
+            for (var v in val) {
+              await databaseRepository.removeById(v.id, data: val);
+            }
+          }
+        }
+      }
+      if (nonExistingModels.isNotEmpty) {
+        anyInsertErrors = await _addRemoteTaskToLocalDb(nonExistingModels);
+      }
     }
 
     if (changedModels.isNotEmpty) {

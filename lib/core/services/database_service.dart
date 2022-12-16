@@ -32,9 +32,7 @@ class DatabaseService {
 
         await _setup(batch);
 
-        List<Function(sql.Batch)> migrations = [
-          addTasksDocField,
-        ];
+        List<Function(sql.Batch)> migrations = [addTasksDocField, deleteDocsTable];
 
         for (var migration in migrations) {
           migration(batch);
@@ -46,8 +44,8 @@ class DatabaseService {
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         print('onUpgrade: $oldVersion -> $newVersion');
-
         var batch = db.batch();
+
         if (oldVersion < 4) {
           _setupAvailabilities(batch);
         }
@@ -89,7 +87,6 @@ class DatabaseService {
     _setupAvailabilities(batch);
     _setupCalendars(batch);
     _setupContacts(batch);
-    _setupDocs(batch);
     _setupEventModifiers(batch);
     _setupEvents(batch);
     _setupList(batch);
@@ -126,23 +123,6 @@ CREATE TABLE IF NOT EXISTS accounts(
       CREATE INDEX IF NOT EXISTS accounts_identifier ON accounts(`identifier`)
     ''');
   }
-
-//  String? reserve_calendar_id,
-//     List<dynamic>? freebusy_calendar_ids,
-
-//     List<dynamic>? slots_configuration,
-//     Map<String, dynamic>? reserved_slots,
-//     String? min_start_time,
-//     String? max_end_time,
-//     String? timezone,
-//     String? reserved_at,
-//     bool? multiuse,
-//     String? url_path,
-//     Map<String, dynamic>? conference_settings,
-//     Map<String, dynamic>? notification_settings,
-//     Map<String, dynamic>? settings,
-//     String? global_created_at,
-//     String? global_updated_at,
 
   void _setupAvailabilities(Batch batch) {
     batch.execute('''
@@ -227,53 +207,6 @@ CREATE TABLE IF NOT EXISTS contacts(
     batch.execute('''
       CREATE INDEX IF NOT EXISTS contacts_search_text ON contacts(`search_text`)
     ''');
-  }
-
-  void _setupDocs(Batch batch) {
-    batch.execute('''
-CREATE TABLE IF NOT EXISTS docs(
-  `id` UUID PRIMARY KEY,
-  `connector_id` VARCHAR(50),
-  `origin_id` VARCHAR(255),
-  `account_id` VARCHAR(100),
-  `origin_account_id` VARCHAR(50),
-  `origin_updated_at` TEXT,
-  `task_id` UUID,
-  `search_text` VARCHAR(255),
-  `title` VARCHAR(255),
-  `description` VARCHAR(255),
-  `content` TEXT,
-  `icon` VARCHAR(255),
-  `url` VARCHAR(255),
-  `local_url` VARCHAR(255),
-  `type` VARCHAR(50),
-  `custom_type` VARCHAR(50),
-  `important` INTEGER,
-  `priority` INT,
-  `sorting` INTEGER,
-  `usages` INT,
-  `last_usage_at` TEXT,
-  `pinned` INTEGER,
-  `hidden` INTEGER,
-  `custom_index1` INT,
-  `custom_index2` INT,
-  `created_at` TEXT,
-  `updated_at` TEXT,
-  `deleted_at` TEXT,
-  `remote_updated_at` TEXT,
-  `from` TEXT,
-  `internalDate` TEXT,
-  `initialSyncMode` INTEGER
-)
-    ''');
-    batch.execute('CREATE UNIQUE INDEX IF NOT EXISTS docs_connector_id_origin_id ON docs(`connector_id`,`origin_id`)');
-    batch.execute('CREATE INDEX IF NOT EXISTS docs_custom_index1 ON docs(`custom_index1`)');
-    batch.execute('CREATE INDEX IF NOT EXISTS docs_important ON docs(`important`)');
-    batch.execute('CREATE INDEX IF NOT EXISTS docs_priority ON docs(`priority`)');
-    batch.execute('CREATE INDEX IF NOT EXISTS docs_search_text ON docs(`search_text`)');
-    batch.execute('CREATE INDEX IF NOT EXISTS docs_sorting ON docs(`sorting`)');
-    batch.execute('CREATE INDEX IF NOT EXISTS docs_task_id ON docs(`task_id`)');
-    batch.execute('CREATE INDEX IF NOT EXISTS docs_usages ON docs(`usages`)');
   }
 
   void _setupEventModifiers(Batch batch) {
@@ -434,5 +367,9 @@ CREATE TABLE IF NOT EXISTS tasks(
     batch.execute('ALTER TABLE tasks ADD COLUMN origin_account_id VARCHAR(255)');
     batch.execute('ALTER TABLE tasks ADD COLUMN akiflow_account_id VARCHAR(255)');
     batch.execute('ALTER TABLE tasks ADD COLUMN doc TEXT');
+  }
+
+  void deleteDocsTable(Batch batch) {
+    batch.execute('DROP TABLE IF EXISTS docs');
   }
 }

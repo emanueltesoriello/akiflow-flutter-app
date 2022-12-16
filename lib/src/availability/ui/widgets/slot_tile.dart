@@ -17,7 +17,8 @@ class SlotTile extends StatelessWidget {
     return SizedBox(
       height: 52,
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 9.0),
+        horizontalTitleGap: 10,
+        contentPadding: const EdgeInsets.only(left: 10),
         title: Container(
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
@@ -70,41 +71,50 @@ class SlotTile extends StatelessWidget {
             ],
           ),
         ),
-        trailing: Container(
-          margin: const EdgeInsets.only(right: 5.0),
-          child: InkWell(
-              onTap: () async {
-                Clipboard.setData(ClipboardData(text: context.read<AvailabilityCubit>().getAvailabilityText(config)));
+        visualDensity: VisualDensity.compact,
+        trailing: InkWell(
+          onTap: () async {
+            Clipboard.setData(ClipboardData(text: context.read<AvailabilityCubit>().getAvailabilityText(config)));
 
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: Colors.transparent,
-                    content: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: ColorsExt.green20(context),
-                        border: Border.all(
-                          color: ColorsExt.grey5(context),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(4),
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.transparent,
+                content: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: ColorsExt.green20(context),
+                    border: Border.all(
+                      color: ColorsExt.grey5(context),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Link copied to clipboard!',
+                        style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
                       ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Link copied to clipboard!',
-                            style:
-                                TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                    )));
-              },
-              child: SvgPicture.asset(
-                Assets.images.icons.common.linkSVG,
-                height: 17.79,
-              )),
+                    ],
+                  ),
+                )));
+          },
+          child: Container(
+            margin: const EdgeInsets.only(right: 5.0),
+            child: SizedBox(
+              height: 30,
+              width: 30,
+              child: Center(
+                child: SizedBox(
+                  child: SvgPicture.asset(
+                    Assets.images.icons.common.linkSVG,
+                    height: 17.79,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

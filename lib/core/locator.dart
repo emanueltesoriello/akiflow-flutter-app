@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/auth_api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
-import 'package:mobile/core/api/docs_api.dart';
 import 'package:mobile/core/api/event_api.dart';
 import 'package:mobile/core/api/integrations/google_api.dart';
 import 'package:mobile/core/api/label_api.dart';
@@ -14,7 +13,6 @@ import 'package:mobile/core/repository/availabilities_repository.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
-import 'package:mobile/core/repository/docs_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
@@ -28,7 +26,6 @@ import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/calendar/calendar.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/event/event.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/availability_config.dart';
@@ -59,7 +56,6 @@ void setupLocator({
   locator.registerSingleton<CalendarApi>(CalendarApi());
   locator.registerSingleton<LabelApi>(LabelApi());
   locator.registerSingleton<EventApi>(EventApi());
-  locator.registerSingleton<DocsApi>(DocsApi());
   locator.registerSingleton<UserApi>(UserApi());
 
   /// Integrations
@@ -74,12 +70,10 @@ void setupLocator({
   locator.registerSingleton<CalendarsRepository>(CalendarsRepository(fromSql: Calendar.fromSql));
   locator.registerSingleton<LabelsRepository>(LabelsRepository(fromSql: Label.fromSql));
   locator.registerSingleton<EventsRepository>(EventsRepository(fromSql: Event.fromSql));
-  locator.registerSingleton<DocsRepository>(DocsRepository(fromSql: Doc.fromSql));
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
   locator.registerSingleton<IntercomService>(IntercomService());
-
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
 
   /// Blocs
