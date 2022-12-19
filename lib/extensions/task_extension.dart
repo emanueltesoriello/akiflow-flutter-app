@@ -214,6 +214,15 @@ extension TaskExt on Task {
     return '';
   }
 
+    String get internalDateFormatted {
+    if (doc?.value?.internalDate != null) {
+      DateTime dateParsed = DateTime.parse(createdAt!).toLocal();
+      return DateFormat('dd MMM yyyy').format(dateParsed);
+    }
+
+    return '';
+  }
+
   String get dueDateFormatted {
     if (dueDate != null) {
       DateTime dateParsed = DateTime.parse(dueDate!).toLocal();
