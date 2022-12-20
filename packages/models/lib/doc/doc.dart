@@ -26,6 +26,9 @@ class Doc extends DocBase implements Base {
     this.url,
     this.localUrl,
     this.type,
+    this.userName,
+    this.starredAt,
+    this.channelName,
     this.content,
     this.priority,
     this.sorting,
@@ -60,6 +63,9 @@ class Doc extends DocBase implements Base {
   final String? url;
   final String? localUrl;
   final String? type;
+  final String? userName;
+  final int? starredAt;
+  final String? channelName;
   final Map<String, dynamic>? content;
   final dynamic priority;
   final int? sorting;
@@ -94,6 +100,9 @@ class Doc extends DocBase implements Base {
         url: json['url'] as String?,
         localUrl: json['local_url'] as String?,
         type: json['type'] as String?,
+        userName: json['user_name'] as String?,
+        starredAt: json['starred_at'] as int?,
+        channelName: json['channel_name'] as String?,
         content: json['content'] as Map<String, dynamic>?,
         priority: json['priority'] as dynamic,
         sorting: json['sorting'] as int?,
@@ -130,6 +139,9 @@ class Doc extends DocBase implements Base {
         "internal_date": internalDate,
         'local_url': localUrl,
         'type': type,
+        'user_name':userName,
+        'starred_at':starredAt,
+        'channel_name':channelName,
         'content': content,
         'priority': priority,
         'sorting': sorting,
@@ -165,6 +177,9 @@ class Doc extends DocBase implements Base {
     String? url,
     String? localUrl,
     String? type,
+    String? userName,
+    int? starredAt,
+    String? channelName,
     Map<String, dynamic>? content,
     dynamic priority,
     int? sorting,
@@ -199,6 +214,9 @@ class Doc extends DocBase implements Base {
       url: url ?? this.url,
       localUrl: localUrl ?? this.localUrl,
       type: type ?? this.type,
+      userName: userName ?? this.userName,
+      starredAt: starredAt ?? this.starredAt,
+      channelName: channelName ?? this.channelName,
       content: content ?? this.content,
       priority: priority ?? this.priority,
       sorting: sorting ?? this.sorting,
@@ -235,6 +253,9 @@ class Doc extends DocBase implements Base {
       "url": url,
       "local_url": localUrl,
       "type": type,
+      "user_name":userName,
+      "starred_at":starredAt,
+      "channel_name":channelName,
       "updated_at": globalUpdatedAt,
       "created_at": globalCreatedAt,
       "deleted_at": deletedAt,
@@ -275,6 +296,9 @@ class Doc extends DocBase implements Base {
       from,
       internalDate,
       hash,
+      userName,
+      starredAt,
+      channelName,
       type,
       content,
       priority,

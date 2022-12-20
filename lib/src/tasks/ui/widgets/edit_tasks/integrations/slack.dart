@@ -31,22 +31,22 @@ class SlackLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.channel,
-          value: doc.content?["channelName"] ?? doc.content?["channel_name"] ?? '',
+          value: task.doc?.value?.channelName ?? ''
         ),
         itemBuilder(
           context,
           title: t.linkedContent.user,
-          value: doc.content?["userName"] ?? doc.content?["user_name"] ?? '',
+          value: task.doc?.value?.userName ?? ''
         ),
         itemBuilder(
           context,
           title: t.linkedContent.savedOn,
-          value: doc.starredAtFormatted,
+          value: task.doc?.value?.starredAtFormatted ?? '',
         ),
         itemBuilder(
           context,
-          title: "Status",
-          value: (task.done ?? false) ? "Done" : "Not Done",
+          title: t.linkedContent.status,
+          value: (task.done ?? false) ? t.linkedContent.done : t.linkedContent.toDo,
           syncing: true,
         ),
       ],
