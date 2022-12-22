@@ -28,7 +28,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     ndkVersion "21.3.6528147"
 
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33//flutter.compileSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -53,6 +53,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.akiflow.mobile"
         minSdkVersion localProperties.getProperty('flutter.minSdkVersion')
         targetSdkVersion flutter.targetSdkVersion

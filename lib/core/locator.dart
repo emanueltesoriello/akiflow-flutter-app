@@ -21,6 +21,7 @@ import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
@@ -60,6 +61,7 @@ void setupLocator({
 
   /// Integrations
   locator.registerSingleton<GoogleApi>(GoogleApi());
+  locator.registerSingleton<NotificationsCubit>(NotificationsCubit());
 
   /// Repositories
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);
@@ -81,8 +83,7 @@ void setupLocator({
   SyncCubit syncCubit = SyncCubit();
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   AuthCubit authCubit = AuthCubit(syncCubit);
-
-  //BaseCubit exampleCubit = BaseCubit();
+  //NotificationsCubit notificationsCubit = NotificationsCubit();
 
   tasksCubit.attachAuthCubit(authCubit);
   tasksCubit.attachTodayCubit(todayCubit);
@@ -92,6 +93,4 @@ void setupLocator({
   locator.registerSingleton<TodayCubit>(todayCubit);
   locator.registerSingleton<SyncCubit>(syncCubit);
   locator.registerSingleton<AuthCubit>(authCubit);
-
-  //locator.registerSingleton<BaseCubit>(exampleCubit);
 }
