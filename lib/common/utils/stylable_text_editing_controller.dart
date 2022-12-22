@@ -32,6 +32,10 @@ class StylableTextEditingController extends TextEditingController {
     return mapping.keys.any((element) => mapping[element]?.type == 0);
   }
 
+  bool hasParsedLabel() {
+    return mapping.keys.any((element) => mapping[element]?.type == 1);
+  }
+
   Map<String, MapType> removeMapping(int type) {
     var map = mapping;
     mapping.removeWhere((key, value) => value.type == type);
@@ -40,15 +44,16 @@ class StylableTextEditingController extends TextEditingController {
     return map;
   }
 
-  Map<String, MapType> removeMappingByValue(String? value) {
+  MapType removeMappingByValue(String? value) {
     var map = mapping;
+    var removed = map.entries.where((element) => element.key == value).first.value;
     if (value != null) {
       recognizedButRemoved = {...recognizedButRemoved, value};
       mapping.removeWhere((k, v) => k == value);
       mapping = map;
       pattern = RegExp(map.keys.map((key) => RegExp.escape(key)).join('|'));
     }
-    return map;
+    return removed;
   }
 
   @override

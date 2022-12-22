@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
+import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:models/label/label.dart';
 
 import '../../../../../common/style/colors.dart';
 
@@ -17,12 +19,16 @@ class TitleField extends StatelessWidget {
       required this.isTitleEditing,
       required this.entityExtractor,
       required this.onDateDetected,
+      required this.onLabelDetected,
+      required this.labels,
       required this.titleFocus})
       : super(key: key);
   final StylableTextEditingController stylableController;
   final ValueListenable<bool> isTitleEditing;
+  final List<Label> labels;
   final EntityExtractor entityExtractor;
-  final Function(DateTimeEntity, String, int) onDateDetected;
+  final Function(DateTimeEntity, String, int, int) onDateDetected;
+  final Function(Label, String) onLabelDetected;
   final FocusNode titleFocus;
   @override
   Widget build(BuildContext context) {
@@ -48,13 +54,21 @@ class TitleField extends StatelessWidget {
             ),
             onChanged: (String value) async {
               context.read<EditTaskCubit>().updateTitle(value);
-
-              stylableController.selection = TextSelection.fromPosition(TextPosition(offset: value.length) );
+              if (value.contains('#')) {
+                final i = value.lastIndexOf('#');
+                String text = value.substring(i+1).split(' ')[0].toLowerCase();
+                List<Label> labelList = labels.where((element) => element.title?.toLowerCase() == text).toList();
+                if (labelList.isNotEmpty) {
+                  onLabelDetected(labelList.first, text);
+                }
+              }
+              stylableController.selection = TextSelection.fromPosition(TextPosition(offset: value.length));
 
               if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
                 if (result.isNotEmpty) {
-                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.end);
+                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
+                      result.last.end);
                 }
               } else {
                 stylableController.removeMapping(0);
@@ -62,7 +76,8 @@ class TitleField extends StatelessWidget {
               if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
                 if (result.isNotEmpty) {
-                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.end);
+                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
+                      result.last.end);
                 }
               } else {
                 stylableController.removeMapping(0);

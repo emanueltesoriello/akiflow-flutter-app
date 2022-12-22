@@ -12,9 +12,11 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/label_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
+import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
 import '../../../../../common/style/colors.dart';
+import '../../../../label/ui/cubit/labels_cubit.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
@@ -39,8 +41,16 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   void initState() {
     titleFocus.requestFocus();
     simpleTitleController = StylableTextEditingController({}, (String? value) {
-      simpleTitleController.removeMappingByValue(value);
-      context.read<EditTaskCubit>().planFor(null, statusType: TaskStatusType.inbox);
+      MapType type = simpleTitleController.removeMappingByValue(value);
+      switch (type.type) {
+        case 0:
+          context.read<EditTaskCubit>().planFor(null, statusType: TaskStatusType.inbox);
+          break;
+        case 1:
+          context.read<EditTaskCubit>().setEmptyLabel();
+          break;
+        default:
+      }
       setState(() {});
     }, {});
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
@@ -85,10 +95,14 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                         children: [
                           TitleField(
                               entityExtractor: extractor,
+                              labels: context.read<LabelsCubit>().state.labels,
                               stylableController: simpleTitleController,
                               isTitleEditing: isTitleEditing,
-                              onDateDetected: (DateTimeEntity detected, String value, int end) {
-                                onDateDetected(detected, value, end);
+                              onLabelDetected: (Label label, String value) {
+                                onLabelDetected(label, value);
+                              },
+                              onDateDetected: (DateTimeEntity detected, String value, int start, int end) {
+                                onDateDetected(detected, value, start, end);
                               },
                               titleFocus: titleFocus),
                           const SizedBox(height: 8),
@@ -121,7 +135,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     );
   }
 
-  onDateDetected(DateTimeEntity detected, String value, int end) {
+  onDateDetected(DateTimeEntity detected, String value, int start, int end) {
     if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
       simpleTitleController.removeMapping(0);
       simpleTitleController.addMapping({
@@ -131,7 +145,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               backgroundColor: ColorsExt.akiflow20(context),
             )),
       });
-      print(detected.timestamp);
+
       context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
     } else if (!simpleTitleController.isRemoved(value)) {
       simpleTitleController.addMapping({
@@ -142,6 +156,30 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             )),
       });
       context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
+    }
+  }
+
+  onLabelDetected(Label label, String value) {
+    if (simpleTitleController.hasParsedLabel() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(1);
+      simpleTitleController.addMapping({
+        "#$value": MapType(
+            1,
+            TextStyle(
+              backgroundColor: ColorsExt.akiflow20(context),
+            )),
+      });
+
+      context.read<EditTaskCubit>().setLabel(label);
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "#$value": MapType(
+            1,
+            TextStyle(
+              backgroundColor: ColorsExt.akiflow20(context),
+            )),
+      });
+      context.read<EditTaskCubit>().setLabel(label);
     }
   }
 }
