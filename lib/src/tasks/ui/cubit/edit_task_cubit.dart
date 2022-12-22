@@ -517,24 +517,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     // }
   }
 
-  void _planWithChrono(ChronoModel chrono) {
-    DateTime? date = chrono.impliedDate;
-
-    if (date == null) return;
-
-    DateTime? datetime;
-
-    if (chrono.start?.knownValues?.hour != null && chrono.start?.knownValues?.minute != null) {
-      datetime = date;
-    }
-
-    Task updated = state.updatedTask;
-
-    TaskStatusType type = updated.statusType == TaskStatusType.planned || updated.statusType == TaskStatusType.snoozed
-        ? updated.statusType!
-        : TaskStatusType.planned;
-
-    planFor(date, dateTime: datetime, statusType: type);
+  void planWithNLP(int dateToBeParsed) async {
+    DateTime? date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
+    await planFor(date, statusType: TaskStatusType.planned);
   }
 
   void updateDescription(String html) {

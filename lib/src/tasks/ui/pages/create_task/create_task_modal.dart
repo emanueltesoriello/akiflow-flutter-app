@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
+import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
@@ -11,6 +14,8 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
 import 'package:models/task/task.dart';
 
+import '../../../../../common/style/colors.dart';
+
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
   final String? sharedText;
@@ -20,17 +25,24 @@ class CreateTaskModal extends StatefulWidget {
 
 class _CreateTaskModalState extends State<CreateTaskModal> {
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController controller = TextEditingController();
 
   final FocusNode titleFocus = FocusNode();
 
-  final TextEditingController simpleTitleController = TextEditingController();
+  late final StylableTextEditingController simpleTitleController;
 
   final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
-
+  final EntityExtractor extractor = EntityExtractor(language: EntityExtractorLanguage.english);
   final ScrollController parentScrollController = ScrollController();
+
   @override
   void initState() {
     titleFocus.requestFocus();
+    simpleTitleController = StylableTextEditingController({}, (String? value) {
+      simpleTitleController.removeMappingByValue(value);
+      context.read<EditTaskCubit>().planFor(null, statusType: TaskStatusType.inbox);
+      setState(() {});
+    }, {});
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
     simpleTitleController.text = editTaskCubit.state.originalTask.title ?? '';
 
@@ -72,8 +84,32 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TitleField(
-                              simpleTitleController: simpleTitleController,
+                              entityExtractor: extractor,
+                              stylableController: simpleTitleController,
                               isTitleEditing: isTitleEditing,
+                              onDateDetected: (DateTimeEntity detected, String value, int end) {
+                                if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
+                                  simpleTitleController.removeMapping(0);
+                                  simpleTitleController.addMapping({
+                                    value: MapType(
+                                        0,
+                                        TextStyle(
+                                          backgroundColor: ColorsExt.akiflow20(context),
+                                        )),
+                                  });
+                                  print(detected.timestamp);
+                                  context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
+                                } else if (!simpleTitleController.isRemoved(value)) {
+                                  simpleTitleController.addMapping({
+                                    value: MapType(
+                                        0,
+                                        TextStyle(
+                                          backgroundColor: ColorsExt.akiflow20(context),
+                                        )),
+                                  });
+                                  context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
+                                }
+                              },
                               titleFocus: titleFocus),
                           const SizedBox(height: 8),
                           DescriptionField(descriptionController: descriptionController),
