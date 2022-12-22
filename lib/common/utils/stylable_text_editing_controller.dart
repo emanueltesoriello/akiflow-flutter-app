@@ -1,8 +1,6 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 
 import 'custom_text_span.dart';
 
@@ -31,7 +29,7 @@ class StylableTextEditingController extends TextEditingController {
   }
 
   bool hasParsedDate() {
-    return mapping.keys.any((element) => mapping[element]!.type == 0);
+    return mapping.keys.any((element) => mapping[element]?.type == 0);
   }
 
   Map<String, MapType> removeMapping(int type) {
@@ -77,10 +75,10 @@ class StylableTextEditingController extends TextEditingController {
     text.splitMapJoin(
       pattern,
       onMatch: (Match match) {
-        if (match.input.isNotEmpty) {
-          print(match.input);
-          print(recognizedButRemoved);
-          children.add(addTextSpanWithBackground(textToBeStyled: match[0]!));
+        if (match.input.isNotEmpty && mapping.isNotEmpty) {
+          children.add(
+            addTextSpanWithBackground(textToBeStyled: match[0]),
+          );
         }
         return '';
       },
@@ -99,10 +97,19 @@ class StylableTextEditingController extends TextEditingController {
     return CustomTextSpan(
       text: textToBeStyled,
       style: TextStyle(
-        background: Paint()..color = ColorsLight.akiflow20,
+        height: 0.75,
+        leadingDistribution: TextLeadingDistribution.even,
+        wordSpacing: 0.5,
+        background: Paint()
+          ..strokeWidth = 12.5
+          ..strokeJoin = StrokeJoin.bevel
+          ..color = ColorsLight.akiflow20
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.square
+          ..strokeJoin = StrokeJoin.round,
+        fontSize: 17,
         // color: foregroundColor,
         fontWeight: FontWeight.w500,
-        fontSize: 20,
       ),
       recognizer: TapGestureRecognizer()
         ..onTap = () {

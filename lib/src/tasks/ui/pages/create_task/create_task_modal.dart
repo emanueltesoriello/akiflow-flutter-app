@@ -88,27 +88,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               stylableController: simpleTitleController,
                               isTitleEditing: isTitleEditing,
                               onDateDetected: (DateTimeEntity detected, String value, int end) {
-                                if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
-                                  simpleTitleController.removeMapping(0);
-                                  simpleTitleController.addMapping({
-                                    value: MapType(
-                                        0,
-                                        TextStyle(
-                                          backgroundColor: ColorsExt.akiflow20(context),
-                                        )),
-                                  });
-                                  print(detected.timestamp);
-                                  context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
-                                } else if (!simpleTitleController.isRemoved(value)) {
-                                  simpleTitleController.addMapping({
-                                    value: MapType(
-                                        0,
-                                        TextStyle(
-                                          backgroundColor: ColorsExt.akiflow20(context),
-                                        )),
-                                  });
-                                  context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
-                                }
+                                onDateDetected(detected, value, end);
                               },
                               titleFocus: titleFocus),
                           const SizedBox(height: 8),
@@ -139,5 +119,29 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             ),
           ]),
     );
+  }
+
+  onDateDetected(DateTimeEntity detected, String value, int end) {
+    if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(0);
+      simpleTitleController.addMapping({
+        value: MapType(
+            0,
+            TextStyle(
+              backgroundColor: ColorsExt.akiflow20(context),
+            )),
+      });
+      print(detected.timestamp);
+      context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        value: MapType(
+            0,
+            TextStyle(
+              backgroundColor: ColorsExt.akiflow20(context),
+            )),
+      });
+      context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
+    }
   }
 }
