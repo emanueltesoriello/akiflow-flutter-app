@@ -6,6 +6,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/user.dart';
@@ -28,6 +29,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
+  final SyncControllerService _syncControllerService = locator<SyncControllerService>();
 
   MainCubit(this._syncCubit, this._authCubit) : super(const MainCubitState()) {
     AnalyticsService.track("Launch");
@@ -85,5 +87,6 @@ class MainCubit extends Cubit<MainCubitState> {
 
   void onFocusLost() async {
     _preferencesRepository.setLastAppUseAt(DateTime.now());
+    _syncControllerService.sync([Entity.tasks]);
   }
 }

@@ -98,7 +98,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  void refreshTasksUi(Task task) async {
+  void refreshTasksUi(Task task) {
     emit(state.copyWith(
       inboxTasks: state.inboxTasks.map((task) => task.id == task.id ? task : task).toList(),
       selectedDayTasks: state.selectedDayTasks.map((task) => task.id == task.id ? task : task).toList(),
@@ -107,7 +107,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }
 
-  refreshAllFromRepository() async {
+  Future refreshAllFromRepository() async {
     await Future.wait([
       fetchInbox(),
       fetchTodayTasks(),
@@ -619,7 +619,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     });
   }
 
-  Future<void> setJustCreatedTask(Task task) async {
+  setJustCreatedTask(Task task) {
     _scrollListStreamController.add(null);
 
     emit(state.copyWith(justCreatedTask: Nullable(task)));
