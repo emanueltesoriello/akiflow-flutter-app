@@ -1,20 +1,23 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:mobile/core/api/docs_api.dart';
 import 'package:mobile/core/api/integrations/integration_base_api.dart';
+import 'package:mobile/core/api/task_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/exceptions/post_unsynced_exception.dart';
-import 'package:mobile/core/repository/docs_repository.dart';
+import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
+import 'package:models/task/task.dart';
+
+import '../exceptions/api_exception.dart';
 
 class SyncIntegrationService {
   final SentryService _sentryService = locator<SentryService>();
-  final DocsApi _docsApi = locator<DocsApi>();
-  final DocsRepository _docsRepository = locator<DocsRepository>();
+  final TaskApi _taskApi = locator<TaskApi>();
+  final TasksRepository _taskRpository = locator<TasksRepository>();
 
   final IIntegrationBaseApi integrationApi;
 
@@ -34,51 +37,42 @@ class SyncIntegrationService {
       email: params?['email'],
     );
 
-    List<Doc> docs = await compute(docsFromGmailData, docsFromGmailDataModel);
+    List<Doc> docs = await compute(payloadFromGmailData, docsFromGmailDataModel);
+
+    List<Task> tasks = await _taskRpository.getAllDocs();
+
+    List<Task> localGmailTasks = tasks.where((element) => element.doc?.value?.messageId != null).toList();
+
+    List<String?> localMessageIds = localGmailTasks
+        .where((element) => element.doc?.value?.messageId != null)
+        .map((e) => e.doc?.value?.messageId)
+        .toList();
+
+    List<Doc> newDocs = docs.where((element) => localMessageIds.contains(element.doc?["message_id"]) == false).toList();
 
     if (docs.isEmpty) {
       return null;
     }
 
-    List<Doc> localDocs = await getExistingDocs(docs);
+    addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${docs.length} items");
+    if (newDocs.isNotEmpty) {
+      try {
+        List<dynamic> updated = await _taskApi
+            .postUnsynced(unsynced: newDocs, customHeader: {"Akiflow-Connector-Sync": "gmail-sync v0.1.0"});
 
-    addBreadcrumb("${integrationApi.runtimeType} localDocs length: ${localDocs.length}");
+        if (newDocs.length != updated.length) {
+          throw PostUnsyncedExcepotion(
+            "${integrationApi.runtimeType} upserted ${newDocs.length} items, but ${updated.length} items were updated",
+          );
+        }
 
-    List<Doc> unsynced =
-        await compute(prepareDocsForRemote, PrepareDocForRemoteModel(remoteItems: docs, existingItems: localDocs));
+        addBreadcrumb("${integrationApi.runtimeType} posted to unsynced ${updated.length} items done");
 
-    addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${unsynced.length} items");
-
-    List<dynamic> updated = await _docsApi.postUnsynced(unsynced: unsynced);
-
-    if (unsynced.length != updated.length) {
-      throw PostUnsyncedExcepotion(
-        "${integrationApi.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
-      );
-    }
-
-    addBreadcrumb("${integrationApi.runtimeType} posted to unsynced ${updated.length} items done");
-
-    return DateTime.now();
-  }
-
-  Future<List<Doc>> getExistingDocs(List<Doc> remoteItems) async {
-    addBreadcrumb("${integrationApi.runtimeType} remoteItems length: ${remoteItems.length}");
-
-    List<Doc> existingModels = [];
-
-    for (Doc remoteItem in remoteItems) {
-      Doc? localItem = await _docsRepository.getDocByConnectorIdAndOriginId(
-        connectorId: remoteItem.connectorId ?? '',
-        originId: remoteItem.originId ?? '',
-      );
-
-      if (localItem != null) {
-        existingModels.add(localItem);
+        return DateTime.now();
+      } catch (e) {
+        throw ApiException({"message": "Server Error", "errors": []});
       }
     }
-
-    return existingModels;
   }
 
   void addBreadcrumb(String message) {

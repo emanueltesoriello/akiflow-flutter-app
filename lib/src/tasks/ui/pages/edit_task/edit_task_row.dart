@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
-import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -20,96 +17,61 @@ import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:tuple/tuple.dart' as tuple;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class EditTaskRow extends StatefulWidget {
-  const EditTaskRow({
-    Key? key,
-  }) : super(key: key);
+  final TextEditingController titleController;
+  final ValueNotifier<QuillController> quillController;
+  final FocusNode descriptionFocusNode;
+  final FocusNode titleFocusNode;
+  const EditTaskRow(
+      {Key? key,
+      required this.titleController,
+      required this.quillController,
+      required this.descriptionFocusNode,
+      required this.titleFocusNode})
+      : super(key: key);
 
   @override
   State<EditTaskRow> createState() => _EditTaskRowState();
 }
 
 class _EditTaskRowState extends State<EditTaskRow> {
-  final TextEditingController _titleController = TextEditingController();
-  final ValueNotifier<QuillController> quillController = ValueNotifier<QuillController>(
-      QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0)));
-
-  WebViewController? wController;
-  StreamSubscription? streamSubscription;
-
-  final FocusNode _descriptionFocusNode = FocusNode();
-
-  @override
-  void initState() {
-    EditTaskCubit cubit = context.read<EditTaskCubit>();
-
-    _titleController.text = cubit.state.updatedTask.title ?? '';
-
-    initDescription().whenComplete(() {
-      streamSubscription = quillController.value.changes.listen((change) async {
-        List<dynamic> delta = quillController.value.document.toDelta().toJson();
-
-        String html = await InteractiveWebView.deltaToHtml(delta);
-
-        cubit.updateDescription(html);
-      });
-    });
-
-    super.initState();
-  }
-
-  Future initDescription() async {
-    EditTaskCubit cubit = context.read<EditTaskCubit>();
-
-    String html = cubit.state.updatedTask.description ?? '';
-
-    Document document = await InteractiveWebView.htmlToDelta(html);
-
-    quillController.value = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
-
-    quillController.value.moveCursorToEnd();
-  }
-
-  @override
-  void dispose() {
-    streamSubscription?.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 2.0),
-            child: _checkbox(context),
+    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 2.0),
+                child: _checkbox(context),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _firstLine(context),
+                    const SizedBox(height: 8),
+                    _description(context),
+                    const SizedBox(height: 32),
+                    if (!state.hasFocusOnTitleOrDescription) _thirdLine(context),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _firstLine(context),
-                const SizedBox(height: 8),
-                _description(context),
-                const SizedBox(height: 32),
-                _thirdLine(context),
-              ],
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _description(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: quillController,
+      valueListenable: widget.quillController,
       builder: (context, QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
@@ -121,7 +83,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           readOnly: false,
           scrollController: ScrollController(),
           scrollable: true,
-          focusNode: _descriptionFocusNode,
+          focusNode: widget.descriptionFocusNode,
           autoFocus: false,
           expands: false,
           padding: EdgeInsets.zero,
@@ -171,8 +133,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   Widget _firstLine(BuildContext context) {
     return TextField(
-      controller: _titleController,
+      controller: widget.titleController,
       maxLines: null,
+      focusNode: widget.titleFocusNode,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.zero,
@@ -198,13 +161,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   InkWell _checkbox(BuildContext context) {
     Task task = context.watch<EditTaskCubit>().state.updatedTask;
-
+    bool hasFocusOnTitleOrDescription = context.watch<EditTaskCubit>().state.hasFocusOnTitleOrDescription;
     return InkWell(
-      onTap: () {
-        HapticFeedback.heavyImpact();
-        context.read<EditTaskCubit>().markAsDone();
-        Navigator.of(context).pop();
-      },
+      onTap: hasFocusOnTitleOrDescription
+          ? null
+          : () {
+              HapticFeedback.heavyImpact();
+              context.read<EditTaskCubit>().markAsDone();
+              Navigator.of(context).pop();
+            },
       child: Builder(builder: (context) {
         bool completed = task.isCompletedComputed;
 

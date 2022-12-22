@@ -32,8 +32,16 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState());
 
+  undoChanges() {
+    emit(state.copyWith(updatedTask: state.originalTask));
+  }
+
   void attachTask(Task task) {
     emit(state.copyWith(originalTask: task, updatedTask: task));
+  }
+
+  setHasFocusOnTitleOrDescription(bool newVal) {
+    emit(state.copyWith(hasFocusOnTitleOrDescription: newVal));
   }
 
   void setRead() {
@@ -53,9 +61,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       if (TaskExt.hasData(state.updatedTask) == false) {
         return;
       }
-
       DateTime now = DateTime.now();
-
       Task updated = state.updatedTask.copyWith(
         id: const Uuid().v4(),
         title: state.updatedTask.title,
@@ -66,20 +72,16 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       );
 
       emit(state.copyWith(updatedTask: updated));
+      emit(const EditTaskCubitState());
 
       _tasksCubit.setJustCreatedTask(updated);
-
       await _tasksRepository.add([updated]);
-
       _tasksCubit.refreshTasksUi(updated);
-
-      _tasksCubit.refreshAllFromRepository();
+      await _tasksCubit.refreshAllFromRepository();
 
       AnalyticsService.track("New Task");
 
-      _syncCubit.sync(entities: [Entity.tasks]);
-
-      emit(const EditTaskCubitState());
+      await _syncCubit.sync(entities: [Entity.tasks]);
     } catch (e) {
       print(e.toString());
     }
@@ -101,7 +103,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+    if (statusType == TaskStatusType.snoozed) {
+      _tasksCubit.addToUndoQueue([updated], UndoType.snooze);
+    } else {
+      _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+    }
 
     emit(state.copyWith(updatedTask: updated));
 
@@ -120,6 +126,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         AnalyticsService.track("Task moved to Inbox");
       } else if (statusType == TaskStatusType.planned) {
         AnalyticsService.track("Task planned");
+      } else if (statusType == TaskStatusType.snoozed) {
+        AnalyticsService.track("Task snoozed");
       }
     }
   }
@@ -158,7 +166,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       listId: Nullable(null),
     );
 
-    emit(state.copyWith(showLabelsList: false, updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated));
   }
 
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
@@ -219,13 +227,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     Task task = state.updatedTask;
 
     DateTime now = DateTime.now();
-    _tasksCubit.addToUndoQueue([task], UndoType.delete);
+    await _tasksCubit.addToUndoQueue([task], UndoType.delete);
 
     Task updated = task.copyWith(
       status: Nullable(TaskStatusType.trashed.id),
       trashedAt: TzUtils.toUtcStringIfNotNull(now),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
     );
+
+    await _tasksRepository.updateById(task.id, data: updated);
 
     emit(state.copyWith(updatedTask: updated));
   }
@@ -391,9 +401,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       id: const Uuid().v4(),
       updatedAt: Nullable(now),
       createdAt: now,
+      doc: Nullable(null),
+      connectorId: Nullable(null),
+      originId: Nullable(null),
+      originAccountId: Nullable(null),
       selected: false,
     );
 
+    print(newTaskDuplicated.doc);
+    print('===============================');
     await _tasksRepository.add([newTaskDuplicated]);
 
     _tasksCubit.refreshAllFromRepository();

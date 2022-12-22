@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:mobile/core/api/base_api.dart';
@@ -45,11 +44,10 @@ class ApiClient implements IBaseApi {
 
       urlWithQueryParameters = url.replace(queryParameters: params);
     }
-
-    print(urlWithQueryParameters);
-
     Response responseRaw = await _httpClient.get(urlWithQueryParameters);
-
+    if (responseRaw.statusCode == 401) {
+      throw ApiException({"errors": [], "message": "Server error"});
+    }
     response = jsonDecode(responseRaw.body);
     if (response.containsKey("errors")) {
       throw ApiException(response);
@@ -73,20 +71,19 @@ class ApiClient implements IBaseApi {
   }
 
   @override
-  Future<List<T>> postUnsynced<T>({
-    required List<T> unsynced,
-  }) async {
+  Future<List<T>> postUnsynced<T>({required List<T> unsynced, Map<String, String>? customHeader}) async {
     List<dynamic> jsonList = await compute(fromObjToMapList, unsynced);
 
     String json = jsonEncode(jsonList);
 
-    Response responseRaw = await _httpClient.post(url, body: json);
-
+    Response responseRaw = await _httpClient.post(url, body: json, headers: customHeader);
+    if (responseRaw.statusCode == 401) {
+      throw ApiException({"errors": [], "message": "Server error"});
+    }
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
     if (response.containsKey("errors")) {
       log(json);
-      print(response);
       throw ApiException(response);
     }
 

@@ -9,17 +9,23 @@ import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
-import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
 import '../../../../../assets.dart';
 import '../../../../../common/style/colors.dart';
 import '../../../../../extensions/task_extension.dart';
 
-class CreateTaskActions extends StatelessWidget {
+class CreateTaskActions extends StatefulWidget {
   const CreateTaskActions({Key? key, required this.titleController, required this.titleFocus}) : super(key: key);
   final TextEditingController titleController;
   final FocusNode titleFocus;
+
+  @override
+  State<CreateTaskActions> createState() => _CreateTaskActionsState();
+}
+
+class _CreateTaskActionsState extends State<CreateTaskActions> {
+  var isFirstSet = true;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -136,7 +142,8 @@ class CreateTaskActions extends StatelessWidget {
           const SizedBox(width: 8),
           Builder(builder: (context) {
             HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-            if (homeViewType != HomeViewType.label) {
+            if (homeViewType != HomeViewType.label && isFirstSet) {
+              isFirstSet = false;
               context.read<EditTaskCubit>().setEmptyLabel();
             }
             return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
@@ -147,7 +154,7 @@ class CreateTaskActions extends StatelessWidget {
 
                 Label? label;
                 HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-                if (homeViewType == HomeViewType.label) {
+                if (homeViewType == HomeViewType.label || !isFirstSet) {
                   try {
                     label = labels.firstWhere((label) => state.updatedTask.listId!.contains(label.id!));
                   } catch (e) {

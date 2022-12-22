@@ -3,9 +3,10 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
-import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+
+import '../../extensions/task_extension.dart';
 
 class TasksRepository extends DatabaseRepository {
   final DatabaseService _databaseService = locator<DatabaseService>();
@@ -27,6 +28,19 @@ class TasksRepository extends DatabaseRepository {
           ORDER BY
             sorting DESC
 """, [TaskStatusType.inbox.id]);
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
+  Future<List<Task>> getAllDocs<Task>() async {
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
+          SELECT *
+          FROM tasks
+          WHERE doc IS NOT NULL
+           ORDER BY
+            sorting DESC
+""");
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
@@ -102,7 +116,7 @@ class TasksRepository extends DatabaseRepository {
       FROM tasks
       WHERE status = ${TaskStatusType.someday.id}
         AND done = 0
-        AND deletedAt IS NULL
+        AND deleted_at IS NULL
         AND trashed_at IS NULL
 """);
 

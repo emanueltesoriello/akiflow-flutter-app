@@ -29,40 +29,66 @@ class TaskInfo extends StatelessWidget {
     required this.showPlanInfo,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    if (task.statusType == null && !task.isOverdue && task.listId == null && !hideInboxLabel) {
-      return const SizedBox();
+  Widget _overdue(BuildContext context) {
+    if (task.isOverdue && task.datetime != null && task.datetime!.isNotEmpty) {
+      var formattedDate = DateTime.tryParse(task.datetime!);
+      if (formattedDate == null) {
+        return const SizedBox();
+      }
+      var stringDate = DateFormat("dd MMM").add_Hm().format(formattedDate);
+      return Padding(
+        padding: const EdgeInsets.only(right: 5),
+        child: SizedBox(
+          height: 22 + 10,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TagBox(
+                text: stringDate,
+                backgroundColor: ColorsExt.pink30(context),
+                active: true,
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
-    List<Widget> children = [];
+    return const SizedBox();
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = [];
     Widget status = _status(context);
+    Widget label = _label(context);
     if (status is! SizedBox) {
       children.add(status);
     }
-
-    Widget label = _label(context);
     if (label is! SizedBox) {
       children.add(label);
     }
 
-    if (children.isEmpty) {
-      return const SizedBox();
-    }
-
-    return SizedBox(
-      height: 22 + 10,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Wrap(
-            spacing: 4,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: children,
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        _overdue(context),
+        if (task.statusType == null && !task.isOverdue && task.listId == null && !hideInboxLabel) const SizedBox(),
+        children.isEmpty
+            ? const SizedBox()
+            : SizedBox(
+                height: 22 + 10,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Wrap(
+                      spacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: children,
+                    ),
+                  ],
+                ),
+              ),
+      ],
     );
   }
 

@@ -9,7 +9,6 @@ import 'package:mobile/core/api/integrations/gmail_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
-import 'package:mobile/core/repository/docs_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
@@ -40,7 +39,6 @@ part 'tasks_state.dart';
 class TasksCubit extends Cubit<TasksCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final TasksRepository _tasksRepository = locator<TasksRepository>();
-  final DocsRepository _docsRepository = locator<DocsRepository>();
   final SentryService _sentryService = locator<SentryService>();
   final AccountsRepository _accountsRepository = locator<AccountsRepository>();
 
@@ -100,7 +98,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  void refreshTasksUi(Task task) async {
+  void refreshTasksUi(Task task) {
     emit(state.copyWith(
       inboxTasks: state.inboxTasks.map((task) => task.id == task.id ? task : task).toList(),
       selectedDayTasks: state.selectedDayTasks.map((task) => task.id == task.id ? task : task).toList(),
@@ -109,9 +107,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }
 
-  refreshAllFromRepository() async {
+  Future refreshAllFromRepository() async {
     await Future.wait([
-      fetchDocs(),
       fetchInbox(),
       fetchTodayTasks(),
       _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
@@ -153,15 +150,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     try {
       List<Task> todayTasks = await fromCancelable(_tasksRepository.getTodayTasks(date: date));
       emit(state.copyWith(selectedDayTasks: todayTasks));
-    } catch (e, s) {
-      _sentryService.captureException(e, stackTrace: s);
-    }
-  }
-
-  Future fetchDocs() async {
-    try {
-      List<Doc> docs = await _docsRepository.get();
-      emit(state.copyWith(docs: docs));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -255,6 +243,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> newInboxTasks = [];
     List<Task> newTodayTasks = [];
     List<Task> newLabelTasks = [];
+    bool controlVar = true;
 
     for (Task task in all) {
       Task newTaskDuplicated = task.copyWith(
@@ -262,20 +251,30 @@ class TasksCubit extends Cubit<TasksCubitState> {
         updatedAt: Nullable(now),
         createdAt: now,
         selected: false,
+        doc: Nullable(null),
+        connectorId: Nullable(null),
+        originId: Nullable(null),
+        originAccountId: Nullable(null),
       );
 
-      duplicates.add(newTaskDuplicated);
+      if (controlVar) {
+        duplicates.add(newTaskDuplicated);
+        controlVar = false;
+      }
 
       if (inboxSelected.contains(task)) {
         newInboxTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
 
       if (todayTasksSelected.contains(task)) {
         newTodayTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
 
       if (labelTasksSelected.contains(task)) {
         newLabelTasks.add(newTaskDuplicated);
+        controlVar = false;
       }
     }
 
@@ -306,7 +305,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in allSelected) {
       Task updatedTask = task.copyWith(
         selected: false,
-        status: Nullable(TaskStatusType.deleted.id),
+        status: Nullable(TaskStatusType.trashed.id),
         trashedAt: now,
         updatedAt: Nullable(now),
       );
@@ -572,7 +571,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], UndoType.moveToInbox);
-    planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.inbox);
+    planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.planned);
   }
 
   void editPlanOrSnooze(DateTime? date, {required DateTime? dateTime, required TaskStatusType statusType}) {
@@ -645,7 +644,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     });
   }
 
-  Future<void> setJustCreatedTask(Task task) async {
+  setJustCreatedTask(Task task) {
     _scrollListStreamController.add(null);
 
     emit(state.copyWith(justCreatedTask: Nullable(task)));

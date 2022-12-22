@@ -66,7 +66,7 @@ class PriorityModal extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: selectedPriority != null && selectedPriority == PriorityEnum.none,
+              visible: selectedPriority != PriorityEnum.none,
               replacement: const SizedBox(),
               child: _item(
                 context,

@@ -63,7 +63,7 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
     _controller = CheckboxAnimatedController(completedClick: () {
       HapticFeedback.heavyImpact();
 
-      Future.delayed(const Duration(milliseconds: stepDuration * 2 + 400), () {
+      Future.delayed(const Duration(milliseconds: stepDuration * 3), () {
         widget.onCompleted();
       });
 
@@ -243,6 +243,11 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
       if (widget.task.isDailyGoal) {
         firstChildIconAsset = "assets/images/icons/_common/check_done_goal.svg";
         secondChildIconAsset = "assets/images/icons/_common/Check-empty-goal.svg";
+      } else if (widget.task.recurrence != null && widget.task.recurrence!.isNotEmpty) {
+        firstChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+        secondChildIconAsset = "assets/images/icons/_common/check-empty-repeat.svg";
+        firstChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
+        secondChildColor = color.withOpacity(_animationTopOpacity.value);
       } else {
         firstChildIconAsset = "assets/images/icons/_common/Check-done.svg";
         secondChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
@@ -253,6 +258,11 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
       if (widget.task.isDailyGoal) {
         firstChildIconAsset = "assets/images/icons/_common/Check-empty-goal.svg";
         secondChildIconAsset = "assets/images/icons/_common/check_done_goal.svg";
+      } else if (widget.task.recurrence != null && widget.task.recurrence!.isNotEmpty) {
+        firstChildIconAsset = "assets/images/icons/_common/check-empty-repeat.svg";
+        secondChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+        firstChildColor = color.withOpacity(_animationTopOpacity.value);
+        secondChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
       } else {
         firstChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
         secondChildIconAsset = "assets/images/icons/_common/Check-done.svg";

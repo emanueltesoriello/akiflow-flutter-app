@@ -59,7 +59,7 @@ extension TaskStatusTypeExt on TaskStatusType {
       case TaskStatusType.hidden:
         return 8;
       case TaskStatusType.trashed:
-        return 9;
+        return 10;
     }
   }
 
@@ -81,7 +81,7 @@ extension TaskStatusTypeExt on TaskStatusType {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
+      case 10:
         return TaskStatusType.trashed;
       default:
         return null;
@@ -207,6 +207,15 @@ extension TaskExt on Task {
 
   String get createdAtFormatted {
     if (createdAt != null) {
+      DateTime dateParsed = DateTime.parse(createdAt!).toLocal();
+      return DateFormat('dd MMM yyyy').format(dateParsed);
+    }
+
+    return '';
+  }
+
+    String get internalDateFormatted {
+    if (doc?.value?.internalDate != null) {
       DateTime dateParsed = DateTime.parse(createdAt!).toLocal();
       return DateFormat('dd MMM yyyy').format(dateParsed);
     }
@@ -345,7 +354,7 @@ extension TaskExt on Task {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
-      case 9:
+      case 10:
         return TaskStatusType.trashed;
       default:
         return null;
@@ -390,7 +399,7 @@ extension TaskExt on Task {
 
   String computedIcon(Doc? doc) {
     if (connectorId != null) {
-      return iconFromConnectorId(connectorId);
+      return iconFromConnectorId(connectorId?.value);
     } else {
       return iconFromConnectorId(doc?.connectorId);
     }
@@ -677,23 +686,23 @@ extension TaskExt on Task {
       taskId: task.id,
       title: task.title,
       description: task.description,
-      connectorId: task.connectorId,
-      originId: task.originId,
-      accountId: task.originAccountId,
-      url: task.doc?['url'],
-      localUrl: task.doc?['local_url'],
+      connectorId: task.connectorId?.value,
+      originId: task.originId?.value,
+      accountId: task.originAccountId?.value,
+      url: task.doc?.value?.url,
+      localUrl: task.doc?.value?.localUrl,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
       deletedAt: task.deletedAt,
       globalUpdatedAt: task.globalUpdatedAt,
       globalCreatedAt: task.globalCreatedAt,
       remoteUpdatedAt: task.remoteUpdatedAt,
-      content: task.doc,
+      content: task.doc?.value?.content,
     );
   }
 
   Doc? computedDoc(Doc? doc) {
-    String? connectorId = doc?.connectorId ?? this.connectorId;
+    String? connectorId = doc?.connectorId ?? this.connectorId?.value;
 
     if (connectorId == null) {
       return null;
@@ -734,7 +743,6 @@ extension TaskExt on Task {
     SyncCubit syncCubit = context.read<SyncCubit>();
 
     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-
     await showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => BlocProvider(
@@ -780,9 +788,9 @@ extension TaskExt on Task {
     try {
       if (doc is SlackDoc && doc.localUrl != null) {
         opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
+      } /*else {
         opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
+      }*/
     } catch (e) {
       print(e);
     }

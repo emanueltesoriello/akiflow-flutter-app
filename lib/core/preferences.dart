@@ -13,10 +13,11 @@ abstract class PreferencesRepository {
 
   bool get inboxNoticeHidden;
 
+  bool get availabilitiesNoticeHidden;
+
   Future<void> setInboxNoticeHidden(bool value);
 
-  DateTime? get lastAccountsV2SyncAt;
-  Future<void> setLastAccountsV2SyncAt(DateTime? value);
+  Future<void> setAvailabilitiesNoticeHidden(bool value);
 
   DateTime? get lastAccountsSyncAt;
   Future<void> setLastAccountsSyncAt(DateTime? value);
@@ -46,6 +47,7 @@ abstract class PreferencesRepository {
 
   AccountToken? getAccountToken(String accountId);
   Future<void> setAccountToken(String accountId, AccountToken token);
+  Future<void> removeAccountToken(String accountId);
 
   bool get firstTimeLoaded;
   Future<void> setFirstTimeLoaded(bool value);
@@ -53,8 +55,8 @@ abstract class PreferencesRepository {
   bool get onboardingCompleted;
   Future<void> setOnboardingCompleted(bool value);
 
-  bool getV2AccountActive(String accountId);
-  Future<void> setV2AccountActive(String accountId, bool active);
+  bool getV3AccountActive(String accountId);
+  Future<void> setV3AccountActive(String accountId, bool active);
 
   bool get reconnectPageSkipped;
   Future<void> setReconnectPageSkipped(bool value);
@@ -92,20 +94,30 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
+  bool get availabilitiesNoticeHidden {
+    return _prefs.getBool("availabilitiesNoticeHidden") ?? false;
+  }
+
+  @override
   Future<void> setInboxNoticeHidden(bool value) async {
     await _prefs.setBool("inboxNoticeHidden", value);
   }
 
   @override
-  DateTime? get lastAccountsV2SyncAt {
-    String? value = _prefs.getString("lastAccountsV2SyncAt");
+  Future<void> setAvailabilitiesNoticeHidden(bool value) async {
+    await _prefs.setBool("availabilitiesNoticeHidden", value);
+  }
+
+  @override
+  DateTime? get lastAccountsV3SyncAt {
+    String? value = _prefs.getString("lastAccountsV3SyncAt");
     return value == null ? null : DateTime.parse(value);
   }
 
   @override
-  Future<void> setLastAccountsV2SyncAt(DateTime? value) async {
+  Future<void> setLastAccountsV3SyncAt(DateTime? value) async {
     if (value != null) {
-      await _prefs.setString("lastAccountsV2SyncAt", value.toIso8601String());
+      await _prefs.setString("lastAccountsV3SyncAt", value.toIso8601String());
     }
   }
 
@@ -217,6 +229,11 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
+  Future<void> removeAccountToken(String accountId) async {
+    await _prefs.remove("integration_$accountId");
+  }
+
+  @override
   DateTime? lastSyncForAccountId(String accountId) {
     String? value = _prefs.getString("lastSyncForAccountId_$accountId");
     return value == null ? null : DateTime.parse(value);
@@ -250,13 +267,13 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
-  bool getV2AccountActive(String accountId) {
-    return _prefs.getBool("localV2AccountActive_$accountId") ?? false;
+  bool getV3AccountActive(String accountId) {
+    return _prefs.getBool("localV3AccountActive_$accountId") ?? false;
   }
 
   @override
-  Future<void> setV2AccountActive(String accountId, bool active) async {
-    await _prefs.setBool("localV2AccountActive_$accountId", active);
+  Future<void> setV3AccountActive(String accountId, bool active) async {
+    await _prefs.setBool("localV3AccountActive_$accountId", active);
   }
 
   @override

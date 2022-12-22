@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/services/focus_detector_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -36,6 +38,7 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
 Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   DatabaseService databaseService = DatabaseService();
+  tz.initializeTimeZones();
   await databaseService.open();
   setupLocator(preferences: preferences, databaseService: databaseService);
   bool userLogged =
@@ -70,18 +73,18 @@ _identifyAnalytics(User user) async {
   await AnalyticsService.identify(user: user, version: version, buildNumber: buildNumber);
 }
 
-Future<void> mainCom() async {
+Future<void> mainCom({kDebugMode = false}) async {
   await initFunctions();
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
-  await SentryFlutter.init(
-    (options) {
-      options.beforeSend = beforeSend;
-      options.dsn = Config.sentryDsn;
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(Application(userLogged: userLogged)),
-  );
+  await SentryFlutter.init((options) {
+    options.beforeSend = beforeSend;
+    options.dsn = Config.sentryDsn;
+    options.tracesSampleRate = 1.0;
+  },
+      appRunner: () => runApp(
+            DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
+          ));
 }
 
 class Application extends StatelessWidget {

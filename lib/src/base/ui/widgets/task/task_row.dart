@@ -22,7 +22,7 @@ import 'components/subtitle_widget.dart';
 class TaskRow extends StatefulWidget {
   static const int dailyGoalScaleDurationInMillis = 500;
   static const int dailyGoalBackgroundAppearDelay = 250;
-  static const int fadeOutDurationInMillis = 500;
+  static const int fadeOutDurationInMillis = 200;
 
   final Task task;
   final Function() completedClick;
@@ -338,42 +338,35 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                             ),
                           ),
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TitleWidget(widget.task),
-                                  Subtitle(widget.task),
-                                  TaskInfo(
-                                    widget.task,
-                                    hideInboxLabel: widget.hideInboxLabel,
-                                    showLabel: widget.showLabel,
-                                    selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                                    showPlanInfo: widget.showPlanInfo,
-                                  ),
-                                  const SizedBox(height: 12),
-                                ],
-                              ),
-                            ),
-                          ),
+                              child: IgnorePointer(
+                                  ignoring: _fadeOutAnimation.value == 0 ? false : true,
+                                  child: AnimatedBuilder(
+                                      animation: _fadeOutAnimation,
+                                      builder: (context, child) {
+                                        return Opacity(
+                                          opacity: _fadeOutAnimation.value == 0 ? 1.0 : 0.0,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 12),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                TitleWidget(widget.task),
+                                                Subtitle(widget.task),
+                                                TaskInfo(
+                                                  widget.task,
+                                                  hideInboxLabel: widget.hideInboxLabel,
+                                                  showLabel: widget.showLabel,
+                                                  selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                                                  showPlanInfo: widget.showPlanInfo,
+                                                ),
+                                                const SizedBox(height: 12),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }))),
                         ],
                       ),
-                    ),
-                  ),
-                  IgnorePointer(
-                    child: AnimatedBuilder(
-                      animation: _fadeOutAnimation,
-                      builder: (context, child) {
-                        return Opacity(
-                          opacity: _fadeOutAnimation.value,
-                          child: Container(
-                              constraints: BoxConstraints(
-                                minHeight: (widget.task.title?.length ?? 0) > 40 ? 80 : 40,
-                              ),
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                        );
-                      },
                     ),
                   ),
                 ],

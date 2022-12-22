@@ -227,7 +227,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 
     _ac = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 200),
         value: widget.defaultPanelState == PanelState.closed
             ? 0.0
             : 1.0 //set the default panel state (i.e. set initial value of _ac)

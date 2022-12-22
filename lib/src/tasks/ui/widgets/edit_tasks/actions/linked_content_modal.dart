@@ -41,18 +41,14 @@ class LinkedContentModal extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-        ),
+        color: Theme.of(context).backgroundColor,
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Container(
-            color: Theme.of(context).backgroundColor,
-            child: Wrap(
+          child:  Wrap(
               children: [
                 ListView(
                   shrinkWrap: true,
@@ -91,7 +87,7 @@ class LinkedContentModal extends StatelessWidget {
                             if (doc is AsanaDoc) {
                               return AsanaLinkedContent(doc: doc, itemBuilder: _item, task: task);
                             } else if (doc is GmailDoc) {
-                              return GmailLinkedContent(doc: doc, itemBuilder: _item);
+                              return GmailLinkedContent(doc: doc, itemBuilder: _item, task: task,);
                             } else if (doc is SlackDoc) {
                               return SlackLinkedContent(
                                 task: task,
@@ -129,7 +125,7 @@ class LinkedContentModal extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        
       ),
     );
   }
@@ -137,10 +133,10 @@ class LinkedContentModal extends StatelessWidget {
   SizedBox _item(
     BuildContext context, {
     required String title,
-    required String value,
+    required String? value,
     bool syncing = false,
   }) {
-    if (value.isEmpty) {
+    if (value == null || value.isEmpty) {
       return const SizedBox();
     }
 

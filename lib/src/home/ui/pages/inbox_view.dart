@@ -12,7 +12,6 @@ import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/notice.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
-import 'package:mobile/src/base/ui/widgets/task/task_list_menu.dart';
 import 'package:mobile/src/home/ui/cubit/inbox/inbox_view_cubit.dart';
 import 'package:mobile/src/home/ui/pages/views/empty_home_view.dart';
 import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
@@ -94,6 +93,7 @@ class _ViewState extends State<_View> {
                     sorting: TaskListSorting.sortingDescending,
                     showLabel: true,
                     showPlanInfo: false,
+                    addBottomPadding: true,
                     header: () {
                       if (!state.showInboxNotice) {
                         return null;

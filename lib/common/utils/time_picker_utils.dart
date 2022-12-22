@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/utils/custom_time_picker.dart';
 
 class TimePickerUtils {
   static Future<void> pick(
@@ -11,20 +11,54 @@ class TimePickerUtils {
     required TimeOfDay initialTime,
     required Function(TimeOfDay?) onTimeSelected,
   }) async {
-    final ThemeData theme = Theme.of(context);
 
-    switch (theme.platform) {
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-        _buildCupertinoDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
-        onTimeSelected(selected);
-        break;
-      default:
-        _buildMaterialDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
-        onTimeSelected(selected);
-        break;
-    }
+    // switch (theme.platform) {
+    // case TargetPlatform.iOS:
+    // case TargetPlatform.macOS:
+    // _buildCupertinoDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
+    // onTimeSelected(selected);
+    //    break;
+    //   default:
+    _buildMaterialDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
+    onTimeSelected(selected);
+    //   break;
+    // }
   }
+
+  final _timePickerTheme = TimePickerThemeData(
+    backgroundColor: Colors.blueGrey,
+    hourMinuteShape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      side: BorderSide(color: Colors.orange, width: 4),
+    ),
+    dayPeriodBorderSide: const BorderSide(color: Colors.orange, width: 4),
+    dayPeriodColor: Colors.blueGrey.shade600,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      side: BorderSide(color: Colors.orange, width: 4),
+    ),
+    dayPeriodTextColor: Colors.white,
+    dayPeriodShape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      side: BorderSide(color: Colors.orange, width: 4),
+    ),
+    hourMinuteColor: MaterialStateColor.resolveWith(
+        (states) => states.contains(MaterialState.selected) ? Colors.orange : Colors.blueGrey.shade800),
+    hourMinuteTextColor: MaterialStateColor.resolveWith(
+        (states) => states.contains(MaterialState.selected) ? Colors.white : Colors.orange),
+    dialHandColor: Colors.blueGrey.shade700,
+    dialBackgroundColor: Colors.blueGrey.shade800,
+    hourMinuteTextStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    dayPeriodTextStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+    helpTextStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+    inputDecorationTheme: const InputDecorationTheme(
+      border: InputBorder.none,
+      contentPadding: EdgeInsets.all(0),
+    ),
+    dialTextColor: MaterialStateColor.resolveWith(
+        (states) => states.contains(MaterialState.selected) ? Colors.orange : Colors.white),
+    entryModeIconColor: Colors.orange,
+  );
 
   /// create android date picker
   static _buildMaterialDatePicker(
@@ -32,30 +66,37 @@ class TimePickerUtils {
     TimeOfDay initialTime, {
     required Function(TimeOfDay?) onTimeSelected,
   }) async {
-    TimeOfDay? selected = await showRoundedTimePicker(
+    TimeOfDay? selected = await customShowRoundedTimePicker(
+      positiveBtn: 'Confirm',
+      negativeBtn: 'No time',
       context: context,
-      initialTime: initialTime,
+      background: Colors.white,
+      initialTime: initialTime, //leftBtn: 'Ciao', onLeftBtn: () {},
       borderRadius: 8,
       locale: const Locale("it", "IT"),
       theme: ThemeData(
         fontFamily: "Inter",
-        primaryColor: ColorsExt.akiflow(context),
+        primaryColor: Colors.white,
         colorScheme: ColorScheme.light(
           primary: ColorsExt.akiflow(context),
           secondary: ColorsExt.akiflow(context),
         ),
-        primarySwatch: MaterialColor(ColorsExt.akiflow(context).value, {
-          50: ColorsExt.akiflow(context),
-          100: ColorsExt.akiflow(context),
-          200: ColorsExt.akiflow(context),
-          300: ColorsExt.akiflow(context),
-          400: ColorsExt.akiflow(context),
-          500: ColorsExt.akiflow(context),
-          600: ColorsExt.akiflow(context),
-          700: ColorsExt.akiflow(context),
-          800: ColorsExt.akiflow(context),
-          900: ColorsExt.akiflow(context),
-        }),
+        dialogBackgroundColor: Colors.white,
+        primarySwatch: MaterialColor(
+          ColorsExt.akiflow(context).value,
+          {
+            50: ColorsExt.akiflow(context),
+            100: ColorsExt.akiflow(context),
+            200: ColorsExt.akiflow(context),
+            300: ColorsExt.akiflow(context),
+            400: ColorsExt.akiflow(context),
+            500: ColorsExt.akiflow(context),
+            600: ColorsExt.akiflow(context),
+            700: ColorsExt.akiflow(context),
+            800: ColorsExt.akiflow(context),
+            900: ColorsExt.akiflow(context),
+          },
+        ),
       ),
     );
 
