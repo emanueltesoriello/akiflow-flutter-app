@@ -95,6 +95,8 @@ class SyncControllerService {
   Stream get syncCompletedStream => syncCompletedController.stream;
 
   sync([List<Entity>? entities]) async {
+    print("started sync");
+
     if (_isSyncing) {
       print("sync already in progress");
       return;

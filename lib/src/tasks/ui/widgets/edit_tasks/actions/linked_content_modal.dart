@@ -87,7 +87,7 @@ class LinkedContentModal extends StatelessWidget {
                             if (doc is AsanaDoc) {
                               return AsanaLinkedContent(doc: doc, itemBuilder: _item, task: task);
                             } else if (doc is GmailDoc) {
-                              return GmailLinkedContent(doc: doc, itemBuilder: _item);
+                              return GmailLinkedContent(doc: doc, itemBuilder: _item, task: task,);
                             } else if (doc is SlackDoc) {
                               return SlackLinkedContent(
                                 task: task,
