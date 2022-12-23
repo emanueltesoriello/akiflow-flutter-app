@@ -23,7 +23,7 @@ Future<void> onStart(ServiceInstance service) async {
   // bring to foreground
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  Timer.periodic(const Duration(seconds: 1), (timer) async {
+  Timer.periodic(const Duration(seconds: 10), (timer) async {
     _localNotificationsPlugin.show(
         22,
         "title",
