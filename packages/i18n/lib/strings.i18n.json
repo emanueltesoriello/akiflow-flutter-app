@@ -228,7 +228,10 @@
     "starredAt": "Starred at",
     "dueDate": "Due date",
     "board": "Board",
-    "savedOn": "Saved on"
+    "savedOn": "Saved on",
+    "status":"Status",
+    "done":"Done",
+    "toDo":"To do"
   },
   "editTask": {
     "add": "Add",

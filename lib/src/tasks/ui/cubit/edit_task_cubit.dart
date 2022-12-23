@@ -238,6 +238,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     await _tasksRepository.updateById(task.id, data: updated);
 
     emit(state.copyWith(updatedTask: updated));
+
+    await _tasksCubit.refreshAllFromRepository();
+
+    _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   void setDeadline(DateTime? date) {
