@@ -102,17 +102,17 @@ class StylableTextEditingController extends TextEditingController {
     return CustomTextSpan(
       text: textToBeStyled,
       style: TextStyle(
-        height: 0.55,
+        height: 0.58,
         leadingDistribution: TextLeadingDistribution.even,
         wordSpacing: 0.5,
         background: Paint()
-          ..strokeWidth = 9.5
+          ..strokeWidth = 9.9
           ..strokeJoin = StrokeJoin.round
           ..color = ColorsLight.akiflow20
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.square
           ..strokeJoin = StrokeJoin.round,
-        fontSize: 16.5,
+        fontSize: 16.3,
         // color: foregroundColor,
         fontWeight: FontWeight.w500,
       ),
