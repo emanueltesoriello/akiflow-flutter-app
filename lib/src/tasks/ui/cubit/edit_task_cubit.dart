@@ -550,7 +550,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   void planWithNLP(int dateToBeParsed) async {
     DateTime? date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
-    if (date.hour > 0) {
+    if (date.hour > 0 || date.minute>0) {
       await planFor(date, dateTime: date, statusType: TaskStatusType.planned);
     } else {
       await planFor(date, statusType: TaskStatusType.planned);
