@@ -1,11 +1,18 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:workmanager/src/options.dart' as constraints;
 
 part 'notifications_state.dart';
 
@@ -17,15 +24,22 @@ void callbackDispatcher() {
     //Timer.periodic(const Duration(seconds: 2), (timer) async {
     int? totalExecutions;
     final _sharedPreference = await SharedPreferences.getInstance(); //Initialize dependency
+    //Future.delayed((Duration(seconds: 10)), () {
+    //GetIt.instance;
+    //final SyncCubit _syncCubit = SyncCubit();
 
+    //_syncCubit.sync();
+    //  print('sync by background task');
+    // });
+    await test();
     try {
       //add code execution
       totalExecutions = _sharedPreference.getInt("totalExecutions");
       _sharedPreference.setInt("totalExecutions", totalExecutions == null ? 1 : totalExecutions + 1);
       _localNotificationsPlugin.show(
           22,
-          "title",
-          "body",
+          "Periodic task!",
+          "Synched successfully",
           const NotificationDetails(
             android: AndroidNotificationDetails(
               "channel.id",
@@ -50,10 +64,30 @@ void initWorkmanager() {
           true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
       );
   Workmanager().registerPeriodicTask(
-    "task-identifier",
-    "simpleTask",
+    "task-identifier-preiodic-task5",
+    "periodicTask5",
+    //initialDelay: Duration(seconds: 20),
+    constraints: constraints.Constraints(
+      // connected or metered mark the task as requiring internet
+      networkType: NetworkType.connected,
+      // require external power
+      // requiresCharging: true,
+    ),
     frequency: const Duration(minutes: 15),
   );
+}
+
+test() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  DatabaseService databaseService = DatabaseService();
+  // await databaseService.open();
+  setupLocator(preferences: preferences, databaseService: databaseService);
+  SyncControllerService syncControllerService = locator<SyncControllerService>();
+
+  //Future.delayed((const Duration(seconds: 20)), () {
+  await syncControllerService.sync();
+  print('synched from background Test');
+  //});
 }
 
 class NotificationsCubit extends Cubit<NotificationsCubitState> {
@@ -62,6 +96,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   NotificationsCubit() : super(const NotificationsCubitState()) {
     setupLocalNotificationsPlugin();
     init();
+
     initWorkmanager();
   }
 
