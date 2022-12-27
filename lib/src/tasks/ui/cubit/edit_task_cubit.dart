@@ -265,6 +265,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setPriority(PriorityEnum? priority, {int? value}) {
+    print(priority);
     Task updated = state.updatedTask.copyWith(
       priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),

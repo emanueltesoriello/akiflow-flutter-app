@@ -36,6 +36,18 @@ class StylableTextEditingController extends TextEditingController {
     return mapping.keys.any((element) => mapping[element]?.type == 1);
   }
 
+  bool hasParsedPriority() {
+    return mapping.keys.any((element) => mapping[element]?.type == 2);
+  }
+
+  bool hasParsedDuration() {
+    return mapping.keys.any((element) => mapping[element]?.type == 3);
+  }
+
+  Color? getColorFromValue(String? match) {
+    return mapping.entries.where((element) => element.key == match).first.value.style.color;
+  }
+
   Map<String, MapType> removeMapping(int type) {
     var map = mapping;
     mapping.removeWhere((key, value) => value.type == type);
@@ -82,7 +94,7 @@ class StylableTextEditingController extends TextEditingController {
       onMatch: (Match match) {
         if (match.input.isNotEmpty && mapping.isNotEmpty) {
           children.add(
-            addTextSpanWithBackground(textToBeStyled: match[0]),
+            addTextSpanWithBackground(textToBeStyled: match[0], color: getColorFromValue(match[0])),
           );
         }
         return '';
@@ -98,6 +110,7 @@ class StylableTextEditingController extends TextEditingController {
 
   CustomTextSpan addTextSpanWithBackground({
     required String? textToBeStyled,
+    required Color? color,
   }) {
     return CustomTextSpan(
       text: textToBeStyled,
@@ -108,7 +121,7 @@ class StylableTextEditingController extends TextEditingController {
         background: Paint()
           ..strokeWidth = 9.9
           ..strokeJoin = StrokeJoin.round
-          ..color = ColorsLight.akiflow20
+          ..color = color ?? ColorsLight.akiflow20
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.square
           ..strokeJoin = StrokeJoin.round,

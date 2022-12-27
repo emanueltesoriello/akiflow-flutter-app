@@ -5,6 +5,7 @@ import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.da
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_widget.dart';
@@ -48,6 +49,12 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           break;
         case 1:
           context.read<EditTaskCubit>().setEmptyLabel();
+          break;
+        case 2:
+          context.read<EditTaskCubit>().setPriority(PriorityEnum.none);
+          break;
+        case 3:
+          context.read<EditTaskCubit>().setDuration(0);
           break;
         default:
       }
@@ -98,6 +105,12 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               labels: context.read<LabelsCubit>().state.labels,
                               stylableController: simpleTitleController,
                               isTitleEditing: isTitleEditing,
+                              onDurationDetected: (Duration duration, String value) {
+                                onDurationDetected(duration, value);
+                              },
+                              onPriorityDetected: (int priority, String value) {
+                                onPriorityDetected(priority, value);
+                              },
                               onLabelDetected: (Label label, String value) {
                                 onLabelDetected(label, value);
                               },
@@ -180,6 +193,54 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             )),
       });
       context.read<EditTaskCubit>().setLabel(label);
+    }
+  }
+
+  onPriorityDetected(int priority, String value) {
+    if (simpleTitleController.hasParsedPriority() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(2);
+      simpleTitleController.addMapping({
+        "!$value": MapType(
+            2,
+            TextStyle(
+              backgroundColor: ColorsExt.akiflow20(context),
+            )),
+      });
+
+      context.read<EditTaskCubit>().setPriority(null, value: priority);
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "!$value": MapType(
+            2,
+            TextStyle(
+              backgroundColor: ColorsExt.akiflow20(context),
+            )),
+      });
+      context.read<EditTaskCubit>().setPriority(null, value: priority);
+    }
+  }
+
+  onDurationDetected(Duration duration, String value) {
+    if (simpleTitleController.hasParsedDuration() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(3);
+      simpleTitleController.addMapping({
+        "=$value": MapType(
+            3,
+            TextStyle(
+              backgroundColor: ColorsExt.cyan25(context),
+            )),
+      });
+
+      context.read<EditTaskCubit>().setDuration(duration.inSeconds);
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "=$value": MapType(
+            3,
+            TextStyle(
+              backgroundColor: ColorsExt.cyan25(context),
+            )),
+      });
+      context.read<EditTaskCubit>().setDuration(duration.inSeconds);
     }
   }
 }
