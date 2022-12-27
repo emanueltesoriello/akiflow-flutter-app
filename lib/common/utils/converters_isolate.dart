@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
@@ -241,6 +242,7 @@ List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
       connectorId: data.connectorId,
       originId: messageContent.messageId,
       originAccountId: data.originAccountId,
+      updatedAt: TzUtils.toUtcStringIfNotNull(DateTime.now()),
       title: getTitleString(messageContent.subject),
       doc: doc,
     ));
