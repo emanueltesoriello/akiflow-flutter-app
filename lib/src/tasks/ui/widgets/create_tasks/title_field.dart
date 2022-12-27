@@ -58,7 +58,6 @@ class TitleField extends StatelessWidget {
             ),
             onChanged: (String value) async {
               onChanged(value);
-              context.read<EditTaskCubit>().updateTitle(value, mapping: stylableController.mapping);
               if (value.contains('#')) {
                 final i = value.lastIndexOf('#');
                 String text = value.substring(i + 1).split(' ')[0].toLowerCase();

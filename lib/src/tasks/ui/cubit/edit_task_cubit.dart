@@ -136,7 +136,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   void setDuration(int? seconds) {
     if (seconds != null) {
-      emit(state.copyWith(selectedDuration: seconds.toDouble(), showDuration: false));
+      emit(state.copyWith(selectedDuration: seconds.toDouble()));
 
       Task task = state.updatedTask;
 
@@ -145,7 +145,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
       );
 
-      emit(state.copyWith(updatedTask: updated, showDuration: false));
+      emit(state.copyWith(updatedTask: updated));
 
       AnalyticsService.track("Edit Task Duration");
     }
@@ -280,7 +280,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       priority: -1,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated, showPriority: false));
   }
 
   Future<void> removeLabel() async {
@@ -499,17 +499,24 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task");
   }
 
-  void updateTitle(String value, {Map<String, MapType>? mapping}) {
+  void updateTitle(String value, {Map<String, MapType>? mapping, Set<String>? recognized}) {
     Task updated = state.updatedTask.copyWith(
       title: value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
     emit(state.copyWith(
-        updatedTask: updated,
-        showDuration: value.contains("="),
-        showLabelsList: value.contains("#"),
-        showPriority: value.contains("!")));
+      updatedTask: updated,
+      showDuration: value.contains("=") &&
+          (recognized?.where((element) => element.contains("=")).isEmpty ?? true) &&
+          (mapping?.keys.where((element) => element.contains("=")).isEmpty ?? true),
+      showLabelsList: value.contains("#") &&
+          (recognized?.where((element) => element.contains("#")).isEmpty ?? true) &&
+          (mapping?.keys.where((element) => element.contains("#")).isEmpty ?? true),
+      showPriority: value.contains("!") &&
+          (recognized?.where((element) => element.contains("!")).isEmpty ?? true) &&
+          (mapping?.keys.where((element) => element.contains("!")).isEmpty ?? true),
+    ));
     if (mapping != null) {
       List<MapEntry<String, MapType>> mappings = mapping.entries.toList();
 
@@ -543,7 +550,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   void planWithNLP(int dateToBeParsed) async {
     DateTime? date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
-    await planFor(date, statusType: TaskStatusType.planned);
+    if (date.hour > 0) {
+      await planFor(date, dateTime: date, statusType: TaskStatusType.planned);
+    } else {
+      await planFor(date, statusType: TaskStatusType.planned);
+    }
   }
 
   void updateDescription(String html) {

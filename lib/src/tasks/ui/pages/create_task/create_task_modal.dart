@@ -106,7 +106,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               stylableController: simpleTitleController,
                               isTitleEditing: isTitleEditing,
                               onChanged: (String value) async {
-                                
+                                context.read<EditTaskCubit>().updateTitle(value,
+                                    recognized: simpleTitleController.recognizedButRemoved,
+                                    mapping: simpleTitleController.mapping);
                               },
                               onDurationDetected: (Duration duration, String value) {
                                 onDurationDetected(duration, value);
