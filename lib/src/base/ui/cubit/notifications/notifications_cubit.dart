@@ -1,43 +1,59 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 part 'notifications_state.dart';
 
-final service = FlutterBackgroundService();
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-testBackgroundService() {
-  service.configure(
-      iosConfiguration: IosConfiguration(),
-      androidConfiguration: AndroidConfiguration(onStart: onStart, isForegroundMode: false, autoStart: true));
+    //Timer.periodic(const Duration(seconds: 2), (timer) async {
+    int? totalExecutions;
+    final _sharedPreference = await SharedPreferences.getInstance(); //Initialize dependency
+
+    try {
+      //add code execution
+      totalExecutions = _sharedPreference.getInt("totalExecutions");
+      _sharedPreference.setInt("totalExecutions", totalExecutions == null ? 1 : totalExecutions + 1);
+      _localNotificationsPlugin.show(
+          22,
+          "title",
+          "body",
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              "channel.id",
+              "channel.name",
+              channelDescription: "channel.description",
+              // other properties...
+            ),
+          ));
+    } catch (err) {
+      print(err.toString()); // Logger flutter package, prints error on the debug console
+      throw Exception(err);
+    }
+    //});
+
+    return Future.value(true);
+  });
 }
 
-Future<void> onStart(ServiceInstance service) async {
-  // Only available for flutter 3.0.0 and later
-  DartPluginRegistrant.ensureInitialized();
-  // bring to foreground
-  final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
-    _localNotificationsPlugin.show(
-        22,
-        "title",
-        "body",
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            "channel.id",
-            "channel.name",
-            channelDescription: "channel.description",
-            // other properties...
-          ),
-        ));
-    print('background service executed');
-  });
+void initWorkmanager() {
+  Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
+      isInDebugMode:
+          true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      );
+  Workmanager().registerPeriodicTask(
+    "task-identifier",
+    "simpleTask",
+    frequency: const Duration(minutes: 15),
+  );
 }
 
 class NotificationsCubit extends Cubit<NotificationsCubitState> {
@@ -46,7 +62,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   NotificationsCubit() : super(const NotificationsCubitState()) {
     setupLocalNotificationsPlugin();
     init();
-    testBackgroundService();
+    initWorkmanager();
   }
 
   // ************ INIT FUNCTIONS ************
