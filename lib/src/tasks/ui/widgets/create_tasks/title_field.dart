@@ -20,7 +20,8 @@ class TitleField extends StatelessWidget {
       required this.onDurationDetected,
       required this.onPriorityDetected,
       required this.labels,
-      required this.titleFocus})
+      required this.titleFocus,
+      required this.onChanged})
       : super(key: key);
   final StylableTextEditingController stylableController;
   final ValueListenable<bool> isTitleEditing;
@@ -30,6 +31,7 @@ class TitleField extends StatelessWidget {
   final Function(Label, String) onLabelDetected;
   final Function(Duration, String) onDurationDetected;
   final Function(int, String) onPriorityDetected;
+  final Function(String) onChanged;
 
   final FocusNode titleFocus;
   @override
@@ -55,7 +57,8 @@ class TitleField extends StatelessWidget {
               ),
             ),
             onChanged: (String value) async {
-              context.read<EditTaskCubit>().updateTitle(value);
+              onChanged(value);
+              context.read<EditTaskCubit>().updateTitle(value, mapping: stylableController.mapping);
               if (value.contains('#')) {
                 final i = value.lastIndexOf('#');
                 String text = value.substring(i + 1).split(' ')[0].toLowerCase();
@@ -74,6 +77,7 @@ class TitleField extends StatelessWidget {
                 }
               }
               if (value.contains('=')) {
+
                 final i = value.lastIndexOf('=');
                 String text = value.substring(i + 1).split(' ')[0];
 

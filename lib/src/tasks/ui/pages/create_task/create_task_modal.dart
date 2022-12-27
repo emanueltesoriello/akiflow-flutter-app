@@ -105,6 +105,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               labels: context.read<LabelsCubit>().state.labels,
                               stylableController: simpleTitleController,
                               isTitleEditing: isTitleEditing,
+                              onChanged: (String value) async {
+                                
+                              },
                               onDurationDetected: (Duration duration, String value) {
                                 onDurationDetected(duration, value);
                               },

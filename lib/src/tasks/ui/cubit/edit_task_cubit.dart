@@ -19,6 +19,8 @@ import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../common/utils/stylable_text_editing_controller.dart';
+
 part 'edit_task_state.dart';
 
 class EditTaskCubit extends Cubit<EditTaskCubitState> {
@@ -143,7 +145,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
       );
 
-      emit(state.copyWith(updatedTask: updated));
+      emit(state.copyWith(updatedTask: updated, showDuration: false));
 
       AnalyticsService.track("Edit Task Duration");
     }
@@ -270,7 +272,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated, showPriority: false));
   }
 
   void removePriority() {
@@ -497,13 +499,40 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task");
   }
 
-  void updateTitle(String value, {List<ChronoModel>? chrono}) {
+  void updateTitle(String value, {Map<String, MapType>? mapping}) {
     Task updated = state.updatedTask.copyWith(
       title: value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(
+        updatedTask: updated,
+        showDuration: value.contains("="),
+        showLabelsList: value.contains("#"),
+        showPriority: value.contains("!")));
+    if (mapping != null) {
+      List<MapEntry<String, MapType>> mappings = mapping.entries.toList();
+
+      for (var map in mappings) {
+        if (map.value.type == 0) {
+          if (value.contains(map.key) == false) {
+            planFor(null, statusType: TaskStatusType.inbox);
+          }
+        } else if (map.value.type == 1) {
+          if (value.contains("#") == false) {
+            removeLabel();
+          }
+        } else if (map.value.type == 2) {
+          if (value.contains("!") == false) {
+            removePriority();
+          }
+        } else if (map.value.type == 3) {
+          if (value.contains("=") == false) {
+            setDuration(0);
+          }
+        }
+      }
+    }
 
     // if (chrono != null && chrono.isNotEmpty) {
     //   _planWithChrono(chrono.first);
