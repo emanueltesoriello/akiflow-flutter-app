@@ -94,21 +94,19 @@ extension DocExt on Doc {
   }
 
   String? get starredAtFormatted {
-    DateTime? starredAt;
-
-    if (content?["starredAt"] != null) {
-      starredAt = DateTime.fromMillisecondsSinceEpoch(content!["starredAt"]! * 1000).toLocal();
-    } else if (content?["starred_at"] != null) {
-      starredAt = DateTime.fromMillisecondsSinceEpoch(content!["starred_at"]! * 1000).toLocal();
-    }
+    DateTime? starredAtDate;
 
     if (starredAt != null) {
-      if (starredAt.toLocal().day == DateTime.now().day &&
-          starredAt.toLocal().month == DateTime.now().month &&
-          starredAt.toLocal().year == DateTime.now().year) {
+      starredAtDate = DateTime.fromMillisecondsSinceEpoch(starredAt! * 1000).toLocal();
+    }
+
+    if (starredAtDate != null) {
+      if (starredAtDate.toLocal().day == DateTime.now().day &&
+          starredAtDate.toLocal().month == DateTime.now().month &&
+          starredAtDate.toLocal().year == DateTime.now().year) {
         return t.task.today;
       } else {
-        return DateFormat("dd MMM yyyy").format(starredAt.toLocal());
+        return DateFormat("dd MMM yyyy").format(starredAtDate.toLocal());
       }
     } else {
       return null;
