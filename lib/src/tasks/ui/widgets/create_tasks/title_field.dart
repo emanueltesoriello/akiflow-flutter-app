@@ -76,7 +76,6 @@ class TitleField extends StatelessWidget {
                 }
               }
               if (value.contains('=')) {
-
                 final i = value.lastIndexOf('=');
                 String text = value.substring(i + 1).split(' ')[0];
 
@@ -89,8 +88,10 @@ class TitleField extends StatelessWidget {
               if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
                 if (result.isNotEmpty) {
-                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
-                      result.last.end);
+                  if (value[result.last.start - 1]!="=") {
+                    onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
+                        result.last.end);
+                  }
                 }
               } else {
                 stylableController.removeMapping(0);
