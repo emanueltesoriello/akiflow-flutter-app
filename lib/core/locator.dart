@@ -61,7 +61,6 @@ void setupLocator({
 
   /// Integrations
   locator.registerSingleton<GoogleApi>(GoogleApi());
-  locator.registerSingleton<NotificationsCubit>(NotificationsCubit());
 
   /// Repositories
   locator.registerSingleton<PreferencesRepository>(preferencesRepository);
@@ -77,13 +76,14 @@ void setupLocator({
   locator.registerSingleton<SentryService>(SentryService());
   locator.registerSingleton<IntercomService>(IntercomService());
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
+  //locator.registerSingleton<NotificationsCubit>(NotificationsCubit());
 
   /// Blocs
   TodayCubit todayCubit = TodayCubit();
   SyncCubit syncCubit = SyncCubit();
+  NotificationsCubit notificationsCubit = NotificationsCubit();
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   AuthCubit authCubit = AuthCubit(syncCubit);
-  //NotificationsCubit notificationsCubit = NotificationsCubit();
 
   tasksCubit.attachAuthCubit(authCubit);
   tasksCubit.attachTodayCubit(todayCubit);
@@ -92,5 +92,6 @@ void setupLocator({
   locator.registerSingleton<TasksCubit>(tasksCubit);
   locator.registerSingleton<TodayCubit>(todayCubit);
   locator.registerSingleton<SyncCubit>(syncCubit);
+  locator.registerSingleton<NotificationsCubit>(notificationsCubit);
   locator.registerSingleton<AuthCubit>(authCubit);
 }

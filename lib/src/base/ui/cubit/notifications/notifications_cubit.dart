@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/core/services/sync_controller_service_no_locator.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,7 +32,7 @@ void callbackDispatcher() {
     //_syncCubit.sync();
     //  print('sync by background task');
     // });
-    await test();
+    test(_sharedPreference);
     try {
       //add code execution
       totalExecutions = _sharedPreference.getInt("totalExecutions");
@@ -64,8 +65,8 @@ void initWorkmanager() {
           true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
       );
   Workmanager().registerPeriodicTask(
-    "task-identifier-preiodic-task5",
-    "periodicTask5",
+    "task-identifier-preiodic-task21",
+    "periodicTask21",
     //initialDelay: Duration(seconds: 20),
     constraints: constraints.Constraints(
       // connected or metered mark the task as requiring internet
@@ -77,16 +78,56 @@ void initWorkmanager() {
   );
 }
 
-test() async {
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  DatabaseService databaseService = DatabaseService();
-  // await databaseService.open();
-  setupLocator(preferences: preferences, databaseService: databaseService);
-  SyncControllerService syncControllerService = locator<SyncControllerService>();
+test(SharedPreferences preferences) async {
+  final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  //Future.delayed((const Duration(seconds: 20)), () {
-  await syncControllerService.sync();
-  print('synched from background Test');
+  try {
+    //DatabaseService databaseService = DatabaseService();
+    //await databaseService.open();
+    // setupLocator(preferences: preferences, databaseService: databaseService);
+    //SyncControllerService syncControllerService = locator<SyncControllerService>();
+
+    //Future.delayed((const Duration(seconds: 20)), () {
+    /// GetIt test = GetIt.instance;
+    //  test.set
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    DatabaseService databaseService = DatabaseService();
+    await databaseService.open();
+    locator.reset;
+    setupLocator(preferences: preferences, databaseService: databaseService);
+
+    //locator = GetIt.asNewInstance();
+
+    SyncControllerService syncControllerServiceNoLocator = SyncControllerService();
+    var a = 0;
+    await syncControllerServiceNoLocator.sync();
+    _localNotificationsPlugin.show(
+        24,
+        "Great!",
+        "Synched successfully",
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            "channel.id",
+            "channel.name",
+            channelDescription: "channel.description",
+            // other properties...
+          ),
+        ));
+    print('synched from background Test');
+  } catch (e) {
+    _localNotificationsPlugin.show(
+        25,
+        "Error!",
+        e.toString(),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            "channel.id",
+            "channel.name",
+            channelDescription: "channel.description",
+            // other properties...
+          ),
+        ));
+  }
   //});
 }
 
@@ -97,7 +138,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     setupLocalNotificationsPlugin();
     init();
 
-    initWorkmanager();
+    // initWorkmanager();
   }
 
   // ************ INIT FUNCTIONS ************

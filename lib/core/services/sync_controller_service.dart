@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
 import 'package:mobile/core/api/event_api.dart';
@@ -15,6 +17,7 @@ import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_integration_service.dart';
 import 'package:mobile/core/services/sync_service.dart';
@@ -23,12 +26,38 @@ import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Entity { accounts, calendars, tasks, labels, events, docs }
 
 enum IntegrationEntity { gmail }
 
 class SyncControllerService {
+  /*static init() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    DatabaseService databaseService = DatabaseService();
+    await databaseService.open();
+    setupLocator(preferences: preferences, databaseService: databaseService);
+
+    locator = GetIt.asNewInstance();
+  }*/
+
+  /*factory SyncControllerService.init() {
+    test();
+    return SyncControllerService();
+  }*/
+  //late GetIt locator;
+  //static GetIt locator = //GetIt.instance;
+  /* init() async {
+    try {} catch (e) {
+      print(e);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      DatabaseService databaseService = DatabaseService();
+      await databaseService.open();
+      setupLocator(preferences: preferences, databaseService: databaseService);
+    }
+  }*/
+
   static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   static final AccountApi _accountApi = locator<AccountApi>();
@@ -43,7 +72,7 @@ class SyncControllerService {
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
 
-  final SentryService _sentryService = locator<SentryService>();
+  static final SentryService _sentryService = locator<SentryService>();
 
   static bool _isSyncing = false;
 

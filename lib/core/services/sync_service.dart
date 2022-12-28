@@ -14,7 +14,7 @@ import 'package:models/extensions/account_ext.dart';
 import 'package:models/task/task.dart';
 
 class SyncService {
-  final SentryService _sentryService = locator<SentryService>();
+  //final SentryService _sentryService = locator<SentryService>();
 
   final ApiClient api;
   final DatabaseRepository databaseRepository;
@@ -193,7 +193,7 @@ class SyncService {
     addBreadcrumb('${api.runtimeType} anyInsertErrors: $anyInsertErrors');
 
     if (anyInsertErrors) {
-      _sentryService.captureException(UpsertDatabaseException("upsert items error"));
+      //  _sentryService.captureException(UpsertDatabaseException("upsert items error"));
     }
 
     addBreadcrumb("${api.runtimeType} upsert remote items: done");
@@ -214,6 +214,6 @@ class SyncService {
   }
 
   void addBreadcrumb(String message) {
-    _sentryService.addBreadcrumb(category: "sync", message: message);
+    // _sentryService.addBreadcrumb(category: "sync", message: message);
   }
 }
