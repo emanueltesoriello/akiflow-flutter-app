@@ -190,10 +190,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
               ],
             ));
           });
+      return false;
     } else {
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
+      return true;
     }
-    return Future.value(false);
   }
 
   Widget animatedChild(bool showWidget, Widget child) {

@@ -887,6 +887,7 @@ class _DialPainter extends CustomPainter {
     final double radius = size.shortestSide / 2.0;
     final Offset center = Offset(size.width / 2.0, size.height / 2.0);
     final Offset centerPoint = center;
+    canvas.drawCircle(centerPoint, radius + 1, Paint()..color = ColorsLight.grey5);
     canvas.drawCircle(centerPoint, radius, Paint()..color = backgroundColor);
 
     const double labelPadding = 24.0;
@@ -1375,7 +1376,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     Color backgroundColor;
     switch (themeData.brightness) {
       case Brightness.light:
-        backgroundColor = Colors.grey[200]!;
+        backgroundColor = ColorsExt.grey7(context);
         break;
       case Brightness.dark:
       default:
@@ -1610,7 +1611,7 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
     final ThemeData theme = Theme.of(context);
 
     final Widget picker = Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(30.0),
       child: AspectRatio(
         aspectRatio: 1.0,
         child: _Dial(
