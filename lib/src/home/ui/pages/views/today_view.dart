@@ -149,7 +149,7 @@ class _TodayViewState extends State<TodayView> {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: todos,
-                              sorting: TaskListSorting.sortingDescending,
+                              sorting: TaskListSorting.dateAscending,
                               visible: context.watch<TodayCubit>().state.todosListOpen,
                               showLabel: true,
                               showPlanInfo: false,
