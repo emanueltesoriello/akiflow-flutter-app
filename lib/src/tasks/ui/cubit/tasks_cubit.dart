@@ -98,7 +98,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  void refreshTasksUi(Task task) async {
+  void refreshTasksUi(Task task) {
     emit(state.copyWith(
       inboxTasks: state.inboxTasks.map((task) => task.id == task.id ? task : task).toList(),
       selectedDayTasks: state.selectedDayTasks.map((task) => task.id == task.id ? task : task).toList(),
@@ -107,7 +107,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }
 
-  refreshAllFromRepository() async {
+  Future refreshAllFromRepository() async {
     await Future.wait([
       fetchInbox(),
       fetchTodayTasks(),
@@ -239,11 +239,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
 
     List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
-
-    List<Task> newInboxTasks = [];
-    List<Task> newTodayTasks = [];
-    List<Task> newLabelTasks = [];
-    bool controlVar = true;
+    all = all.toSet().toList();
 
     for (Task task in all) {
       Task newTaskDuplicated = task.copyWith(
@@ -256,31 +252,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
         originId: Nullable(null),
         originAccountId: Nullable(null),
       );
-
-      if (controlVar) {
-        duplicates.add(newTaskDuplicated);
-        controlVar = false;
-      }
-
-      if (inboxSelected.contains(task)) {
-        newInboxTasks.add(newTaskDuplicated);
-        controlVar = false;
-      }
-
-      if (todayTasksSelected.contains(task)) {
-        newTodayTasks.add(newTaskDuplicated);
-        controlVar = false;
-      }
-
-      if (labelTasksSelected.contains(task)) {
-        newLabelTasks.add(newTaskDuplicated);
-        controlVar = false;
-      }
+      duplicates.add(newTaskDuplicated);
     }
 
     await _tasksRepository.add(duplicates);
-
-    emit(state.copyWith(inboxTasks: newInboxTasks, selectedDayTasks: newTodayTasks, labelTasks: newLabelTasks));
 
     refreshAllFromRepository();
 
@@ -644,7 +619,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     });
   }
 
-  Future<void> setJustCreatedTask(Task task) async {
+  setJustCreatedTask(Task task) {
     _scrollListStreamController.add(null);
 
     emit(state.copyWith(justCreatedTask: Nullable(task)));

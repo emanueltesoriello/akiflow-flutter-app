@@ -61,9 +61,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       if (TaskExt.hasData(state.updatedTask) == false) {
         return;
       }
-
       DateTime now = DateTime.now();
-
       Task updated = state.updatedTask.copyWith(
         id: const Uuid().v4(),
         title: state.updatedTask.title,
@@ -74,20 +72,16 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       );
 
       emit(state.copyWith(updatedTask: updated));
+      emit(const EditTaskCubitState());
 
       _tasksCubit.setJustCreatedTask(updated);
-
       await _tasksRepository.add([updated]);
-
       _tasksCubit.refreshTasksUi(updated);
-
-      _tasksCubit.refreshAllFromRepository();
+      await _tasksCubit.refreshAllFromRepository();
 
       AnalyticsService.track("New Task");
 
-      _syncCubit.sync(entities: [Entity.tasks]);
-
-      emit(const EditTaskCubitState());
+      await _syncCubit.sync(entities: [Entity.tasks]);
     } catch (e) {
       print(e.toString());
     }
@@ -244,6 +238,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     await _tasksRepository.updateById(task.id, data: updated);
 
     emit(state.copyWith(updatedTask: updated));
+
+    await _tasksCubit.refreshAllFromRepository();
+
+    _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   void setDeadline(DateTime? date) {

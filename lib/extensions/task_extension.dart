@@ -214,6 +214,27 @@ extension TaskExt on Task {
     return '';
   }
 
+    String get internalDateFormatted {
+    DateTime? internalDate;
+
+    if (doc?.value?.internalDate != null) {
+      int internalDateAsMilliseconds = int.parse(doc!.value!.internalDate!);
+      internalDate = DateTime.fromMillisecondsSinceEpoch(internalDateAsMilliseconds).toLocal();
+    }
+
+    if (internalDate != null) {
+      if (internalDate.toLocal().day == DateTime.now().day &&
+          internalDate.toLocal().month == DateTime.now().month &&
+          internalDate.toLocal().year == DateTime.now().year) {
+        return t.task.today;
+      } else {
+        return DateFormat("dd MMM yyyy").format(internalDate.toLocal());
+      }
+    } else {
+      return '';
+    }
+  }
+
   String get dueDateFormatted {
     if (dueDate != null) {
       DateTime dateParsed = DateTime.parse(dueDate!).toLocal();
