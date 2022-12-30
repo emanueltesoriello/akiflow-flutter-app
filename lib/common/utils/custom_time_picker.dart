@@ -815,7 +815,7 @@ class _TimePickerHeader extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      padding: padding,
+      //padding: padding,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: borderRadiusData,
@@ -1708,15 +1708,18 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
               return SizedBox(
                 width: _kTimePickerWidthPortrait,
                 height: timePickerHeightPortrait,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    header,
-                    Expanded(
-                      child: pickerAndActions,
-                    ),
-                  ],
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(color: Colors.white, child: header),
+                      Expanded(
+                        child: Container(color: Colors.white, child: pickerAndActions),
+                      ),
+                    ],
+                  ),
                 ),
               );
           }
