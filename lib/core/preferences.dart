@@ -60,6 +60,9 @@ abstract class PreferencesRepository {
 
   bool get reconnectPageSkipped;
   Future<void> setReconnectPageSkipped(bool value);
+
+  int get calendarView;
+  Future<void> setCalendarView(int calendarView);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -284,5 +287,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setReconnectPageSkipped(bool value) async {
     await _prefs.setBool("reconnectPageSkipped", value);
+  }
+
+  @override
+  int get calendarView {
+    return _prefs.getInt("calendarView") ?? 2;
+  }
+
+  @override
+  Future<void> setCalendarView(int calendarView) async {
+    await _prefs.setInt("calendarView", calendarView);
   }
 }
