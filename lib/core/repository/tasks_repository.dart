@@ -165,6 +165,7 @@ class TasksRepository extends DatabaseRepository {
             AND deleted_at IS NULL
             AND trashed_at IS NULL
             AND datetime IS NOT NULL
+            AND duration IS NOT NULL
 """);
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
