@@ -45,7 +45,7 @@ class StylableTextEditingController extends TextEditingController {
   }
 
   Color? getColorFromValue(String? match) {
-    return mapping.entries.where((element) => element.key == match).first.value.style.color;
+    return mapping.entries.where((element) => element.key == match).first.value.style.backgroundColor;
   }
 
   Map<String, MapType> removeMapping(int type) {

@@ -88,10 +88,8 @@ class TitleField extends StatelessWidget {
               if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
                 if (result.isNotEmpty) {
-                  if (value[result.last.start - 1]!="=") {
-                    onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
-                        result.last.end);
-                  }
+                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
+                      result.last.end);
                 }
               } else {
                 stylableController.removeMapping(0);
