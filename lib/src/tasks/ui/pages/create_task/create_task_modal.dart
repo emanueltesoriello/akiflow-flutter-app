@@ -41,12 +41,21 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   void initState() {
     titleFocus.requestFocus();
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+    editTaskCubit.onOpen();
+
     simpleTitleController = editTaskCubit.simpleTitleController;
+
     String descriptionHtml = widget.sharedText ?? editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
     context.read<EditTaskCubit>().updateDescription(descriptionHtml);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    simpleTitleController.done();
   }
 
   @override
@@ -200,12 +209,12 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         "!$value": MapType(2, TextStyle(backgroundColor: bg)),
       });
 
-      context.read<EditTaskCubit>().setPriority(null, value: priority);
+      context.read<EditTaskCubit>().setPriority(null, value: priority, fromModal: false);
     } else if (!simpleTitleController.isRemoved(value)) {
       simpleTitleController.addMapping({
         "!$value": MapType(2, TextStyle(backgroundColor: bg)),
       });
-      context.read<EditTaskCubit>().setPriority(null, value: priority);
+      context.read<EditTaskCubit>().setPriority(null, value: priority, fromModal: false);
     }
   }
 

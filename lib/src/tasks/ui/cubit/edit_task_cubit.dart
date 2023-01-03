@@ -36,10 +36,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   List<Task> recurrenceTasksToCreate = [];
 
   final EntityExtractor extractor = EntityExtractor(language: EntityExtractorLanguage.english);
-  late final StylableTextEditingController simpleTitleController;
+  late  StylableTextEditingController simpleTitleController;
 
   EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState()) {
-    simpleTitleController = StylableTextEditingController({}, (String? value) {
+    simpleTitleController = getInitializedController();
+  }
+
+  StylableTextEditingController getInitializedController() {
+    return StylableTextEditingController({}, (String? value) {
       MapType type = simpleTitleController.removeMappingByValue(value);
       switch (type.type) {
         case 0:
@@ -57,7 +61,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         default:
       }
     }, {});
-    simpleTitleController.text = state.originalTask.title ?? '';
   }
 
   undoChanges() {
@@ -88,6 +91,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
+  void onOpen() {
+    simpleTitleController = getInitializedController();
+    simpleTitleController.text = state.originalTask.title ?? '';
+  }
+
   Future<void> create() async {
     try {
       if (TaskExt.hasData(state.updatedTask) == false) {
@@ -112,7 +120,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksCubit.refreshAllFromRepository();
 
       AnalyticsService.track("New Task");
-
+      onDispose();
       await _syncCubit.sync(entities: [Entity.tasks]);
     } catch (e) {
       print(e.toString());
@@ -164,14 +172,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  void setDuration(int? seconds, {bool fromModal = true}) {
+  void setDuration(int? seconds, {bool fromModal = false}) {
     if (seconds != null) {
       emit(state.copyWith(selectedDuration: seconds.toDouble()));
       Duration duration = Duration(seconds: seconds);
 
       String text = "${duration.inHours}:${duration.inMinutes.remainder(60)}";
 
-      if (state.openedDurationfromNLP && fromModal==true) {
+      if (state.openedDurationfromNLP && fromModal == true) {
         onDurationDetected(Duration(seconds: seconds), text);
       }
 
@@ -388,15 +396,20 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated, showDuration: false, showLabelsList: false));
   }
 
-  void setPriority(PriorityEnum? priority, {int? value}) {
-    if (state.openedPrirorityfromNLP) {
+  void onDispose() {
+    simpleTitleController.done();
+    simpleTitleController = getInitializedController();
+  }
+
+  void setPriority(PriorityEnum? priority, {int? value,bool fromModal = true}) {
+    if (state.openedPrirorityfromNLP && fromModal==true) {
       onPriorityDetected(priority?.value ?? value ?? 0, PriorityEnum.fromValue(priority?.value ?? value).name);
     }
     Task updated = state.updatedTask.copyWith(
       priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    emit(state.copyWith(updatedTask: updated, showPriority: false));
+    emit(state.copyWith(updatedTask: updated,showPriority: false));
   }
 
   void removePriority() {
@@ -628,13 +641,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       title: value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
+    emit(state.copyWith(updatedTask: updated));
     bool showDuration = value.contains("=") &&
         (recognized?.where((element) => element.contains("=")).isEmpty ?? true) &&
         (mapping?.keys.where((element) => element.contains("=")).isEmpty ?? true);
     bool showLabelsList = value.contains("#") &&
         (recognized?.where((element) => element.contains("#")).isEmpty ?? true) &&
         (mapping?.keys.where((element) => element.contains("#")).isEmpty ?? true);
-    bool showPriority = value.contains("!") &&
+    bool showPriority = (state.updatedTask.priority==null||state.updatedTask.priority==0)&& value.contains("!") &&
         (recognized?.where((element) => element.contains("!")).isEmpty ?? true) &&
         (mapping?.keys.where((element) => element.contains("!")).isEmpty ?? true);
     if (showDuration) {

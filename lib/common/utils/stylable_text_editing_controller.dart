@@ -56,6 +56,11 @@ class StylableTextEditingController extends TextEditingController {
     return map;
   }
 
+  void done() {
+    recognizedButRemoved = {};
+    
+  }
+
   MapType removeMappingByValue(String? value) {
     var map = mapping;
     var removed = map.entries.where((element) => element.key == value).first.value;

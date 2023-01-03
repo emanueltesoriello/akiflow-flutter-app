@@ -66,7 +66,7 @@ class TitleField extends StatelessWidget {
                   onLabelDetected(labelList.first, text);
                 }
               }
-              if (value.contains('!')) {
+              if (value.contains(' !')) {
                 final i = value.lastIndexOf('!');
                 String text = value.substring(i + 1).split(' ')[0];
 
