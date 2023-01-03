@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart' hide Entity;
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/src/base/models/chrono_model.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -19,7 +20,9 @@ import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../common/style/colors.dart';
 import '../../../../common/utils/stylable_text_editing_controller.dart';
+import '../../../../core/services/sync_controller_service.dart';
 
 part 'edit_task_state.dart';
 
@@ -32,10 +35,37 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   List<Task> recurrenceTasksToUpdate = [];
   List<Task> recurrenceTasksToCreate = [];
 
-  EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState());
+  final EntityExtractor extractor = EntityExtractor(language: EntityExtractorLanguage.english);
+  late final StylableTextEditingController simpleTitleController;
+
+  EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState()) {
+    simpleTitleController = StylableTextEditingController({}, (String? value) {
+      MapType type = simpleTitleController.removeMappingByValue(value);
+      switch (type.type) {
+        case 0:
+          planFor(null, statusType: TaskStatusType.inbox);
+          break;
+        case 1:
+          setEmptyLabel();
+          break;
+        case 2:
+          setPriority(PriorityEnum.none);
+          break;
+        case 3:
+          setDuration(0);
+          break;
+        default:
+      }
+    }, {});
+    simpleTitleController.text = state.originalTask.title ?? '';
+  }
 
   undoChanges() {
     emit(state.copyWith(updatedTask: state.originalTask));
+  }
+
+  EntityExtractor getExtractor() {
+    return extractor;
   }
 
   void attachTask(Task task) {
@@ -95,7 +125,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     required TaskStatusType statusType,
     bool forceUpdate = false,
   }) async {
-    emit(state.copyWith(selectedDate: date, showDuration: false));
+    emit(state.copyWith(selectedDate: date));
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
@@ -134,9 +164,16 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  void setDuration(int? seconds) {
+  void setDuration(int? seconds, {bool fromModal = true}) {
     if (seconds != null) {
       emit(state.copyWith(selectedDuration: seconds.toDouble()));
+      Duration duration = Duration(seconds: seconds);
+
+      String text = "${duration.inHours}:${duration.inMinutes.remainder(60)}";
+
+      if (state.openedDurationfromNLP && fromModal==true) {
+        onDurationDetected(Duration(seconds: seconds), text);
+      }
 
       Task task = state.updatedTask;
 
@@ -145,22 +182,38 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
       );
 
-      emit(state.copyWith(updatedTask: updated));
+      emit(state.copyWith(
+        updatedTask: updated,
+        showDuration: false,
+        openedDurationfromNLP: false,
+      ));
 
       AnalyticsService.track("Edit Task Duration");
     }
   }
 
-  void toggleImportance() {
-    emit(state.copyWith(showPriority: !state.showPriority, showDuration: false, showLabelsList: false));
+  void toggleImportance({bool openedFromNLP = false}) {
+    emit(state.copyWith(
+        openedPrirorityfromNLP: openedFromNLP,
+        showPriority: !state.showPriority,
+        showDuration: false,
+        showLabelsList: false));
   }
 
-  void toggleDuration() {
-    emit(state.copyWith(showDuration: !state.showDuration, showPriority: false, showLabelsList: false));
+  void toggleDuration({bool openedFromNLP = false}) {
+    emit(state.copyWith(
+        showDuration: !state.showDuration,
+        openedDurationfromNLP: openedFromNLP,
+        showPriority: false,
+        showLabelsList: false));
   }
 
-  void toggleLabels() {
-    emit(state.copyWith(showLabelsList: !state.showLabelsList, showDuration: false, showPriority: false));
+  void toggleLabels({bool openedFromNLP = false}) {
+    emit(state.copyWith(
+        openedLabelfromNLP: openedFromNLP,
+        showLabelsList: !state.showLabelsList,
+        showDuration: false,
+        showPriority: false));
   }
 
   Future<void> setEmptyLabel() async {
@@ -171,14 +224,79 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
+  onLabelDetected(Label label, String value) {
+    simpleTitleController.text = simpleTitleController.text + (label.title ?? "");
+    Color bg = ColorsExt.getFromName(label.color!).withOpacity(0.2);
+    if (simpleTitleController.hasParsedLabel() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(1);
+      simpleTitleController.addMapping({
+        "#$value": MapType(1, TextStyle(backgroundColor: bg)),
+      });
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "#$value": MapType(
+            1,
+            TextStyle(
+              backgroundColor: bg,
+            )),
+      });
+    }
+  }
+
+  onDurationDetected(Duration duration, String value) {
+    simpleTitleController.text = simpleTitleController.text + value;
+    if (simpleTitleController.hasParsedDuration() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(3);
+      simpleTitleController.addMapping({
+        "=$value": const MapType(
+            3,
+            TextStyle(
+              backgroundColor: ColorsLight.cyan25,
+            )),
+      });
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "=$value": const MapType(
+            3,
+            TextStyle(
+              backgroundColor: ColorsLight.cyan25,
+            )),
+      });
+    }
+  }
+
+  onPriorityDetected(int priority, String value) {
+    simpleTitleController.text = simpleTitleController.text + priority.toString();
+
+    Color bg = priority == 1
+        ? ColorsLight.red.withOpacity(0.2)
+        : priority == 2
+            ? ColorsLight.orange.withOpacity(0.2)
+            : ColorsLight.green.withOpacity(0.2);
+
+    if (simpleTitleController.hasParsedPriority() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(2);
+      simpleTitleController.addMapping({
+        "!$priority": MapType(2, TextStyle(backgroundColor: bg)),
+      });
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "!$priority": MapType(2, TextStyle(backgroundColor: bg)),
+      });
+    }
+  }
+
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
       listId: Nullable(label.id),
       sectionId: Nullable(null),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
+    if (state.openedLabelfromNLP) {
+      onLabelDetected(label, label.title!);
+    }
 
-    emit(state.copyWith(showLabelsList: false, updatedTask: updated));
+    emit(state.copyWith(showLabelsList: false, updatedTask: updated, openedLabelfromNLP: false));
 
     _tasksCubit.refreshTasksUi(updated);
 
@@ -271,7 +389,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setPriority(PriorityEnum? priority, {int? value}) {
-    print(priority);
+    if (state.openedPrirorityfromNLP) {
+      onPriorityDetected(priority?.value ?? value ?? 0, PriorityEnum.fromValue(priority?.value ?? value).name);
+    }
     Task updated = state.updatedTask.copyWith(
       priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
@@ -508,19 +628,25 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       title: value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
+    bool showDuration = value.contains("=") &&
+        (recognized?.where((element) => element.contains("=")).isEmpty ?? true) &&
+        (mapping?.keys.where((element) => element.contains("=")).isEmpty ?? true);
+    bool showLabelsList = value.contains("#") &&
+        (recognized?.where((element) => element.contains("#")).isEmpty ?? true) &&
+        (mapping?.keys.where((element) => element.contains("#")).isEmpty ?? true);
+    bool showPriority = value.contains("!") &&
+        (recognized?.where((element) => element.contains("!")).isEmpty ?? true) &&
+        (mapping?.keys.where((element) => element.contains("!")).isEmpty ?? true);
+    if (showDuration) {
+      toggleDuration(openedFromNLP: true);
+    }
+    if (showLabelsList) {
+      toggleLabels(openedFromNLP: true);
+    }
+    if (showPriority) {
+      toggleImportance(openedFromNLP: true);
+    }
 
-    emit(state.copyWith(
-      updatedTask: updated,
-      showDuration: value.contains("=") &&
-          (recognized?.where((element) => element.contains("=")).isEmpty ?? true) &&
-          (mapping?.keys.where((element) => element.contains("=")).isEmpty ?? true),
-      showLabelsList: value.contains("#") &&
-          (recognized?.where((element) => element.contains("#")).isEmpty ?? true) &&
-          (mapping?.keys.where((element) => element.contains("#")).isEmpty ?? true),
-      showPriority: value.contains("!") &&
-          (recognized?.where((element) => element.contains("!")).isEmpty ?? true) &&
-          (mapping?.keys.where((element) => element.contains("!")).isEmpty ?? true),
-    ));
     if (mapping != null) {
       List<MapEntry<String, MapType>> mappings = mapping.entries.toList();
 
@@ -553,12 +679,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void planWithNLP(int dateToBeParsed) async {
-    DateTime? date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
-    if (date.hour > 0 || date.minute>0) {
-      await planFor(date, dateTime: date, statusType: TaskStatusType.planned);
+    DateTime? date;
+    if (Platform.isIOS) {
+      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
     } else {
-      await planFor(date, statusType: TaskStatusType.planned);
+      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed, isUtc: false);
     }
+
+    await planFor(date, statusType: TaskStatusType.planned);
   }
 
   void updateDescription(String html) {

@@ -32,37 +32,16 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
   final FocusNode titleFocus = FocusNode();
 
-  late final StylableTextEditingController simpleTitleController;
-
   final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
-  final EntityExtractor extractor = EntityExtractor(language: EntityExtractorLanguage.english);
   final ScrollController parentScrollController = ScrollController();
+
+  late final StylableTextEditingController simpleTitleController;
 
   @override
   void initState() {
     titleFocus.requestFocus();
-    simpleTitleController = StylableTextEditingController({}, (String? value) {
-      MapType type = simpleTitleController.removeMappingByValue(value);
-      switch (type.type) {
-        case 0:
-          context.read<EditTaskCubit>().planFor(null, statusType: TaskStatusType.inbox);
-          break;
-        case 1:
-          context.read<EditTaskCubit>().setEmptyLabel();
-          break;
-        case 2:
-          context.read<EditTaskCubit>().setPriority(PriorityEnum.none);
-          break;
-        case 3:
-          context.read<EditTaskCubit>().setDuration(0);
-          break;
-        default:
-      }
-      setState(() {});
-    }, {});
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
-    simpleTitleController.text = editTaskCubit.state.originalTask.title ?? '';
-
+    simpleTitleController = editTaskCubit.simpleTitleController;
     String descriptionHtml = widget.sharedText ?? editTaskCubit.state.originalTask.description ?? '';
     descriptionController.text = descriptionHtml;
     context.read<EditTaskCubit>().updateDescription(descriptionHtml);
@@ -101,7 +80,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TitleField(
-                              entityExtractor: extractor,
+                              entityExtractor: context.read<EditTaskCubit>().getExtractor(),
                               labels: context.read<LabelsCubit>().state.labels,
                               stylableController: simpleTitleController,
                               isTitleEditing: isTitleEditing,
@@ -111,13 +90,20 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                     mapping: simpleTitleController.mapping);
                               },
                               onDurationDetected: (Duration duration, String value) {
-                                onDurationDetected(duration, value);
+                                if (duration.inSeconds != context.read<EditTaskCubit>().state.updatedTask.duration &&
+                                    duration.inSeconds > 0) {
+                                  onDurationDetected(duration, value);
+                                }
                               },
                               onPriorityDetected: (int priority, String value) {
-                                onPriorityDetected(priority, value);
+                                if (priority != context.read<EditTaskCubit>().state.updatedTask.priority) {
+                                  onPriorityDetected(priority, value);
+                                }
                               },
                               onLabelDetected: (Label label, String value) {
-                                onLabelDetected(label, value);
+                                if (label.id != context.read<EditTaskCubit>().state.updatedTask.listId) {
+                                  onLabelDetected(label, value);
+                                }
                               },
                               onDateDetected: (DateTimeEntity detected, String value, int start, int end) {
                                 onDateDetected(detected, value, start, end);
@@ -164,6 +150,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             )),
       });
 
+      print(detected.timestamp);
+
       context.read<EditTaskCubit>().planWithNLP(detected.timestamp);
     } else if (!simpleTitleController.isRemoved(value)) {
       simpleTitleController.addMapping({
@@ -178,14 +166,12 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   }
 
   onLabelDetected(Label label, String value) {
+    Color bg = ColorsExt.getFromName(label.color!).withOpacity(0.2);
+
     if (simpleTitleController.hasParsedLabel() && !simpleTitleController.isRemoved(value)) {
       simpleTitleController.removeMapping(1);
       simpleTitleController.addMapping({
-        "#$value": MapType(
-            1,
-            TextStyle(
-              backgroundColor: ColorsExt.akiflow20(context),
-            )),
+        "#$value": MapType(1, TextStyle(backgroundColor: bg)),
       });
 
       context.read<EditTaskCubit>().setLabel(label);
@@ -194,7 +180,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         "#$value": MapType(
             1,
             TextStyle(
-              backgroundColor: ColorsExt.akiflow20(context),
+              backgroundColor: bg,
             )),
       });
       context.read<EditTaskCubit>().setLabel(label);
@@ -202,30 +188,29 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   }
 
   onPriorityDetected(int priority, String value) {
+    Color bg = priority == 1
+        ? ColorsExt.red(context).withOpacity(0.2)
+        : priority == 2
+            ? ColorsExt.orange(context).withOpacity(0.2)
+            : ColorsExt.green(context).withOpacity(0.2);
+
     if (simpleTitleController.hasParsedPriority() && !simpleTitleController.isRemoved(value)) {
       simpleTitleController.removeMapping(2);
       simpleTitleController.addMapping({
-        "!$value": MapType(
-            2,
-            TextStyle(
-              backgroundColor: ColorsExt.akiflow20(context),
-            )),
+        "!$value": MapType(2, TextStyle(backgroundColor: bg)),
       });
 
       context.read<EditTaskCubit>().setPriority(null, value: priority);
     } else if (!simpleTitleController.isRemoved(value)) {
       simpleTitleController.addMapping({
-        "!$value": MapType(
-            2,
-            TextStyle(
-              backgroundColor: ColorsExt.akiflow20(context),
-            )),
+        "!$value": MapType(2, TextStyle(backgroundColor: bg)),
       });
       context.read<EditTaskCubit>().setPriority(null, value: priority);
     }
   }
 
   onDurationDetected(Duration duration, String value) {
+    print('create_task_modal');
     if (simpleTitleController.hasParsedDuration() && !simpleTitleController.isRemoved(value)) {
       simpleTitleController.removeMapping(3);
       simpleTitleController.addMapping({
@@ -236,7 +221,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             )),
       });
 
-      context.read<EditTaskCubit>().setDuration(duration.inSeconds);
+      context.read<EditTaskCubit>().setDuration(duration.inSeconds, fromModal: false);
     } else if (!simpleTitleController.isRemoved(value)) {
       simpleTitleController.addMapping({
         "=$value": MapType(
@@ -245,7 +230,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               backgroundColor: ColorsExt.cyan25(context),
             )),
       });
-      context.read<EditTaskCubit>().setDuration(duration.inSeconds);
+      context.read<EditTaskCubit>().setDuration(duration.inSeconds, fromModal: false);
     }
   }
 }
