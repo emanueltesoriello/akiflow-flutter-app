@@ -42,7 +42,7 @@ class _ViewState extends State<_View> {
   Widget build(BuildContext context) {
     calendarController.view = context.watch<CalendarCubit>().state.calendarView;
     TasksCubit tasksCubit = context.watch<TasksCubit>();
-    List<Task> tasks = List.from(tasksCubit.state.selectedDayTasks);
+    List<Task> tasks = List.from(tasksCubit.state.calendarTasks);
     tasks = List.from(tasks.where((element) => element.deletedAt == null && element.datetime != null));
 
     return BlocBuilder<CalendarCubit, CalendarCubitState>(

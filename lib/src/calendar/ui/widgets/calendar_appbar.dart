@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/widgets/calendar_settings_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -25,6 +27,21 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 26,
       ),
       actions: [
+        TextButton(
+          onPressed: () {
+            context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
+            calendarController.view = CalendarView.day;
+            calendarController.displayDate = DateTime.now();
+          },
+          child: Text(
+            t.bottomBar.today,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: ColorsExt.grey3(context),
+            ),
+          ),
+        ),
         IconButton(
           icon: SvgPicture.asset(
             "assets/images/icons/_common/ellipsis.svg",

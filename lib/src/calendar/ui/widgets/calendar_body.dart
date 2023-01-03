@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -36,9 +35,7 @@ class CalendarBody extends StatelessWidget {
         view: context.watch<CalendarCubit>().state.calendarView,
         timeZone: DateTime.now().timeZoneName,
         dataSource: _getCalendarDataSource(context),
-        timeSlotViewSettings: TimeSlotViewSettings(
-          timeIntervalHeight: calendarController.view == CalendarView.day ? 50 : 40,
-        ),
+        timeSlotViewSettings: const TimeSlotViewSettings(timeIntervalHeight: 50.0),
         scheduleViewSettings: ScheduleViewSettings(
             hideEmptyScheduleWeek: true,
             monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
@@ -50,10 +47,7 @@ class CalendarBody extends StatelessWidget {
     });
   }
 
-  void calendarTapped(
-    CalendarTapDetails calendarTapDetails,
-    BuildContext context,
-  ) {
+  void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext context) {
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
       calendarController.view = CalendarView.day;
@@ -87,7 +81,7 @@ class CalendarBody extends StatelessWidget {
     events.add(CalendarEvent(
       startTime: DateTime(now.year, now.month, now.day - 1, 16, 0, 0),
       endTime: DateTime(now.year, now.month, now.day - 1, 17, 0, 0),
-      subject: 'Title of some meeting',
+      subject: 'Title of some event',
     ));
 
     calendarTasks = tasks.map((task) => CalendarTask.taskToCalendarTask(context, task)).toList();
@@ -100,152 +94,148 @@ class CalendarBody extends StatelessWidget {
       CheckboxAnimatedController? checkboxController) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
     if (appointment is CalendarEvent) {
-      return Container(
-        width: calendarAppointmentDetails.bounds.width,
-        height: calendarAppointmentDetails.bounds.height,
-        decoration: BoxDecoration(
-            color: appointment.color.withAlpha(50),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
-            )),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(2, 2, 6, 2),
-              child: Container(
-                height: calendarAppointmentDetails.bounds.height,
-                width: 4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(3),
-                  color: appointment.color,
+      return _event(calendarAppointmentDetails, appointment, context);
+    } else if (appointment is CalendarTask) {
+      Task task = tasks.where((task) => task.id == appointment.id).first;
+      return _task(appointment, calendarAppointmentDetails, checkboxController, task, context);
+    }
+    return const SizedBox();
+  }
+
+  Container _event(
+      CalendarAppointmentDetails calendarAppointmentDetails, CalendarEvent appointment, BuildContext context) {
+    return Container(
+      width: calendarAppointmentDetails.bounds.width,
+      height: calendarAppointmentDetails.bounds.height,
+      decoration: BoxDecoration(
+          color: appointment.color.withAlpha(50),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(3.0),
+          )),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2, 2, 6, 2),
+            child: Container(
+              height: calendarAppointmentDetails.bounds.height,
+              width: 4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: appointment.color,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 2.0),
+              child: Text(
+                appointment.subject,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  height: 1.3,
+                  fontSize: calendarAppointmentDetails.bounds.height < 22.0 ? 12.0 : 17.0,
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey1(context),
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _task(CalendarTask appointment, CalendarAppointmentDetails calendarAppointmentDetails,
+      CheckboxAnimatedController? checkboxController, Task task, BuildContext context) {
+    double boxHeight = calendarAppointmentDetails.bounds.height;
+    return Container(
+      key: ObjectKey(appointment),
+      width: calendarAppointmentDetails.bounds.width,
+      height: boxHeight,
+      decoration: const BoxDecoration(
+          color: Color.fromARGB(150, 230, 230, 230),
+          borderRadius: BorderRadius.all(
+            Radius.circular(3.0),
+          )),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 2),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if ((calendarController.view == CalendarView.day || calendarController.view == CalendarView.schedule) &&
+                boxHeight > 12)
+              GestureDetector(
+                onTap: () {
+                  checkboxController!.completedClick();
+                },
+                child: Row(
+                  children: [
+                    Builder(builder: ((context) {
+                      TasksCubit tasksCubit = context.read<TasksCubit>();
+                      SyncCubit syncCubit = context.read<SyncCubit>();
+                      EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
+                      return CheckboxAnimated(
+                        onControllerReady: (controller) {
+                          checkboxController = controller;
+                        },
+                        task: task,
+                        key: ObjectKey(task),
+                        onCompleted: () async {
+                          HapticFeedback.mediumImpact();
+                          editTaskCubit.markAsDone(forceUpdate: true);
+                        },
+                      );
+                    })),
+                  ],
+                ),
+              ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(right: 2.0),
-                child: Text(
-                  appointment.subject,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    height: 1.3,
-                    fontSize: calendarAppointmentDetails.bounds.height < 20 ? 12 : 17,
-                    fontWeight: FontWeight.w500,
-                    color: ColorsExt.grey1(context),
-                  ),
+                padding: const EdgeInsets.only(left: 2.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      appointment.subject,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                        height: 1.3,
+                        fontSize: boxHeight < 12.0
+                            ? 8.0
+                            : boxHeight < 22.0
+                                ? 12.0
+                                : 17.0,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsExt.grey1(context),
+                      ),
+                    ),
+                    if ((calendarController.view == CalendarView.day ||
+                            calendarController.view == CalendarView.schedule) &&
+                        appointment.label != null &&
+                        boxHeight > 37)
+                      TagBox(
+                        icon: Assets.images.icons.common.numberSVG,
+                        text: appointment.label!.title,
+                        backgroundColor: appointment.label!.color != null
+                            ? ColorsExt.getFromName(appointment.label!.color!).withOpacity(0.1)
+                            : null,
+                        iconColor: appointment.label!.color != null
+                            ? ColorsExt.getFromName(appointment.label!.color!)
+                            : ColorsExt.grey3(context),
+                        onPressed: () {},
+                        active: appointment.label!.color != null,
+                      ),
+                  ],
                 ),
               ),
             ),
           ],
         ),
-      );
-    } else if (appointment is CalendarTask) {
-      Task task = tasks.where((task) => task.id == appointment.id).first;
-      return Container(
-        key: ObjectKey(appointment),
-        width: calendarAppointmentDetails.bounds.width,
-        height: calendarAppointmentDetails.bounds.height,
-        decoration: const BoxDecoration(
-            color: Color.fromARGB(150, 230, 230, 230),
-            borderRadius: BorderRadius.all(
-              Radius.circular(3.0),
-            )),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 2, top: 1),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (calendarController.view == CalendarView.day || calendarController.view == CalendarView.schedule)
-                GestureDetector(
-                  onTap: () {
-                    checkboxController!.completedClick();
-                  },
-                  child: Row(
-                    children: [
-                      Builder(builder: ((context) {
-                        TasksCubit tasksCubit = context.read<TasksCubit>();
-                        SyncCubit syncCubit = context.read<SyncCubit>();
-                        EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-                        return CheckboxAnimated(
-                          onControllerReady: (controller) {
-                            checkboxController = controller;
-                          },
-                          task: task,
-                          key: ObjectKey(task),
-                          onCompleted: () async {
-                            HapticFeedback.mediumImpact();
-                            editTaskCubit.markAsDone(forceUpdate: true);
-                          },
-                        );
-                      })),
-                    ],
-                  ),
-                ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 2.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        appointment.subject,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          height: 1.3,
-                          fontSize: calendarAppointmentDetails.bounds.height < 20 ? 12 : 17,
-                          fontWeight: FontWeight.w500,
-                          color: ColorsExt.grey1(context),
-                        ),
-                      ),
-                      if ((calendarController.view == CalendarView.day ||
-                              calendarController.view == CalendarView.schedule) &&
-                          appointment.label != null)
-                        TagBox(
-                          icon: Assets.images.icons.common.numberSVG,
-                          text: appointment.label!.title,
-                          backgroundColor: appointment.label!.color != null
-                              ? ColorsExt.getFromName(appointment.label!.color!).withOpacity(0.1)
-                              : null,
-                          iconColor: appointment.label!.color != null
-                              ? ColorsExt.getFromName(appointment.label!.color!)
-                              : ColorsExt.grey3(context),
-                          onPressed: () {},
-                          active: appointment.label!.color != null,
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return const SizedBox();
+      ),
+    );
   }
-}
-
-InkWell _checkbox(BuildContext context, Task task) {
-  TasksCubit tasksCubit = context.read<TasksCubit>();
-  SyncCubit syncCubit = context.read<SyncCubit>();
-  EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-  return InkWell(
-    onTap: () {
-      HapticFeedback.mediumImpact();
-      editTaskCubit.markAsDone(forceUpdate: true);
-    },
-    child: Builder(builder: (context) {
-      bool completed = task.isCompletedComputed;
-      return SvgPicture.asset(
-        completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
-        width: 22,
-        height: 22,
-        color: completed ? ColorsExt.green(context) : ColorsExt.grey3(context),
-      );
-    }),
-  );
 }
 
 class _AppointmentDataSource extends CalendarDataSource {
