@@ -17,6 +17,8 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   _init() async {
     int calendarViewInt = _preferencesRepository.calendarView;
+    bool isCalendarThreeDays = _preferencesRepository.isCalendarThreeDays;
+    bool isCalendarWeekendHidden = _preferencesRepository.isCalendarWeekendHidden;
 
     switch (calendarViewInt) {
       case CalendarViewMode.agenda:
@@ -35,6 +37,14 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         emit(state.copyWith(calendarView: CalendarView.month));
         break;
       default:
+    }
+
+    if (isCalendarThreeDays) {
+      emit(state.copyWith(isCalendarThreeDays: isCalendarThreeDays));
+    }
+
+    if (isCalendarWeekendHidden) {
+      emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden));
     }
   }
 
@@ -61,8 +71,14 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     }
   }
 
-  void calendarChangeExecuted(){
-    emit(state.copyWith(calendarChanged: true));
+  void setCalendarViewThreeDays(bool isCalendarThreeDays) {
+    emit(state.copyWith(isCalendarThreeDays: isCalendarThreeDays));
+    _preferencesRepository.setIsCalendarThreeDays(isCalendarThreeDays);
+  }
+
+  void setCalendarWeekendHidden(bool isCalendarWeekendHidden) {
+    emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden));
+    _preferencesRepository.setIsCalendarWeekendHidden(isCalendarWeekendHidden);
   }
 
   //N.B. When we need to get access to the state of other BlocProviders we can get access to them declaring streams that listen their states.

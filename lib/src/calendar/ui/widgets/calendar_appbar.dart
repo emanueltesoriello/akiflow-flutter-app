@@ -29,6 +29,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           onPressed: () {
+            context.read<CalendarCubit>().setCalendarViewThreeDays(false);
             context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
             calendarController.view = CalendarView.day;
             calendarController.displayDate = DateTime.now();

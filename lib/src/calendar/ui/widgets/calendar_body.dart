@@ -28,6 +28,7 @@ class CalendarBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(builder: (context, state) {
       CheckboxAnimatedController? checkboxController;
+      bool isThreeDays = context.watch<CalendarCubit>().state.isCalendarThreeDays;
       return SfCalendar(
         controller: calendarController,
         headerHeight: 0,
@@ -35,7 +36,9 @@ class CalendarBody extends StatelessWidget {
         view: context.watch<CalendarCubit>().state.calendarView,
         timeZone: DateTime.now().timeZoneName,
         dataSource: _getCalendarDataSource(context),
-        timeSlotViewSettings: const TimeSlotViewSettings(timeIntervalHeight: 50.0),
+        timeSlotViewSettings: TimeSlotViewSettings(
+            timeIntervalHeight: 50.0,
+            numberOfDaysInView: isThreeDays ? 3 : -1),
         scheduleViewSettings: ScheduleViewSettings(
             hideEmptyScheduleWeek: true,
             monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
