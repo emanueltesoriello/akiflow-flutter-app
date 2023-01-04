@@ -8,6 +8,8 @@ class TrelloDoc extends Doc implements DocBase {
           id: doc.id,
           taskId: doc.taskId,
           title: doc.title,
+          boardName: doc.boardName,
+          listName: doc.listName,
           description: doc.description,
           connectorId: doc.connectorId,
           originId: doc.originId,

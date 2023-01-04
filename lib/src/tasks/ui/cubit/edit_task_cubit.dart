@@ -549,9 +549,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       originAccountId: Nullable(null),
       selected: false,
     );
-
-    print(newTaskDuplicated.doc);
-    print('===============================');
     await _tasksRepository.add([newTaskDuplicated]);
 
     _tasksCubit.refreshAllFromRepository();
@@ -687,12 +684,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         }
       }
     }
-
-    // if (chrono != null && chrono.isNotEmpty) {
-    //   _planWithChrono(chrono.first);
-    // } else {
-    //   planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
-    // }
   }
 
   void planWithNLP(int dateToBeParsed) async {

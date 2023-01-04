@@ -11,6 +11,8 @@ class Doc extends DocBase implements Base {
     this.taskId,
     this.connectorId,
     this.from,
+    this.boardName,
+    this.listName,
     this.subject,
     this.internalDate,
     this.originId,
@@ -48,6 +50,8 @@ class Doc extends DocBase implements Base {
   final String? taskId;
   final String? hash;
   final String? from;
+  final String? boardName;
+  final String? listName;
   final String? subject;
   final String? internalDate;
   final String? connectorId;
@@ -84,6 +88,8 @@ class Doc extends DocBase implements Base {
         id: json['id'] as String?,
         taskId: json['task_id'] as String?,
         hash: json['hash'] as String?,
+        boardName: json['board_name'] as String?,
+        listName: json['list_name'] as String?,
         connectorId: json['connector_id'] as String?,
         originId: json['origin_id'] as String?,
         accountId: json['account_id'] as String?,
@@ -124,6 +130,8 @@ class Doc extends DocBase implements Base {
         'task_id': taskId,
         'connector_id': connectorId,
         'origin_id': originId,
+        'list_name': listName,
+        'board_name': boardName,
         'account_id': accountId,
         'hash': hash,
         'origin_account_id': originAccountId,
@@ -139,9 +147,9 @@ class Doc extends DocBase implements Base {
         "internal_date": internalDate,
         'local_url': localUrl,
         'type': type,
-        'user_name':userName,
-        'starred_at':starredAt,
-        'channel_name':channelName,
+        'user_name': userName,
+        'starred_at': starredAt,
+        'channel_name': channelName,
         'content': content,
         'priority': priority,
         'sorting': sorting,
@@ -160,6 +168,8 @@ class Doc extends DocBase implements Base {
   Doc copyWith({
     String? id,
     String? taskId,
+    String? listName,
+    String? boardName,
     String? connectorId,
     String? originId,
     String? accountId,
@@ -197,6 +207,8 @@ class Doc extends DocBase implements Base {
     return Doc(
       id: id ?? this.id,
       taskId: taskId ?? this.taskId,
+      boardName: boardName ?? this.boardName,
+      listName: listName ?? this.listName,
       connectorId: connectorId ?? this.connectorId,
       originId: originId ?? this.originId,
       accountId: accountId ?? this.accountId,
@@ -242,6 +254,8 @@ class Doc extends DocBase implements Base {
       "title": title,
       "description": description,
       "hash": hash,
+      "board_name":boardName,
+      "list_name": listName,
       "from": from,
       "subject": subject,
       "internal_date": internalDate,
@@ -253,9 +267,9 @@ class Doc extends DocBase implements Base {
       "url": url,
       "local_url": localUrl,
       "type": type,
-      "user_name":userName,
-      "starred_at":starredAt,
-      "channel_name":channelName,
+      "user_name": userName,
+      "starred_at": starredAt,
+      "channel_name": channelName,
       "updated_at": globalUpdatedAt,
       "created_at": globalCreatedAt,
       "deleted_at": deletedAt,
@@ -280,6 +294,8 @@ class Doc extends DocBase implements Base {
       id,
       taskId,
       connectorId,
+      boardName,
+      listName,
       originId,
       accountId,
       originAccountId,
