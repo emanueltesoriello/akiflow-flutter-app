@@ -79,7 +79,16 @@ class HomeBody extends StatelessWidget {
             topPadding: MediaQuery.of(context).padding.top,
           ),
           appBar: AppBar(
-            actions: [ElevatedButton(onPressed: () => initWorkmanager(), child: Text('Test'))],
+            actions: [
+              ElevatedButton(
+                  onPressed: () async {
+                    initWorkmanager();
+                    /*WidgetsFlutterBinding.ensureInitialized();
+                    final preferences = await StreamingSharedPreferences.instance;
+                    preferences.setBool('startedBackgroundSync', true);*/
+                  },
+                  child: Text('Test'))
+            ],
           ),
           body: Builder(builder: (context) {
             return const HomePageNavigator();

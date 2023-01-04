@@ -33,6 +33,13 @@ enum Entity { accounts, calendars, tasks, labels, events, docs }
 enum IntegrationEntity { gmail }
 
 class SyncControllerService {
+  GetIt? backgroundLocator;
+
+  SyncControllerService({this.backgroundLocator}) {
+    if (backgroundLocator != null) {
+      locator = backgroundLocator!;
+    }
+  }
   /*static init() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     DatabaseService databaseService = DatabaseService();

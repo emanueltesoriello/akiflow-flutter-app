@@ -38,10 +38,8 @@ import 'api/availability_api.dart';
 GetIt locator = GetIt.instance;
 
 // Order of the registration is important
-void setupLocator({
-  required SharedPreferences preferences,
-  required DatabaseService databaseService,
-}) {
+void setupLocator(
+    {required SharedPreferences preferences, required DatabaseService databaseService, String? endpoint}) {
   PreferencesRepository preferencesRepository = PreferencesRepositoryImpl(preferences);
 
   /// Core
@@ -51,13 +49,13 @@ void setupLocator({
 
   /// Apis
   locator.registerSingleton<AuthApi>(AuthApi());
-  locator.registerSingleton<AccountApi>(AccountApi());
-  locator.registerSingleton<TaskApi>(TaskApi());
-  locator.registerSingleton<AvailabilityApi>(AvailabilityApi());
-  locator.registerSingleton<CalendarApi>(CalendarApi());
-  locator.registerSingleton<LabelApi>(LabelApi());
-  locator.registerSingleton<EventApi>(EventApi());
-  locator.registerSingleton<UserApi>(UserApi());
+  locator.registerSingleton<AccountApi>(AccountApi(endpoint: endpoint));
+  locator.registerSingleton<TaskApi>(TaskApi(endpoint: endpoint));
+  locator.registerSingleton<AvailabilityApi>(AvailabilityApi(endpoint: endpoint));
+  locator.registerSingleton<CalendarApi>(CalendarApi(endpoint: endpoint));
+  locator.registerSingleton<LabelApi>(LabelApi(endpoint: endpoint));
+  locator.registerSingleton<EventApi>(EventApi(endpoint: endpoint));
+  locator.registerSingleton<UserApi>(UserApi(endpoint: endpoint));
 
   /// Integrations
   locator.registerSingleton<GoogleApi>(GoogleApi());

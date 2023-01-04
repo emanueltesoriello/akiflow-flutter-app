@@ -17,6 +17,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/di/base_providers.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/navigator/base_navigator.dart';
 import 'package:models/user.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -25,6 +26,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/services/focus_detector_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:workmanager/src/workmanager.dart';
+import 'package:workmanager/src/options.dart' as constraints;
+import 'package:workmanager/src/options.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -61,6 +65,22 @@ _identifyAnalytics(User user) async {
 
 Future<void> mainCom({kDebugMode = false}) async {
   await initFunctions();
+  Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
+      isInDebugMode:
+          true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      );
+  Workmanager().registerPeriodicTask(
+    "task-identifier-preiodic-task",
+    "periodicTask",
+    //initialDelay: Duration(seconds: 20),
+    constraints: constraints.Constraints(
+      // connected or metered mark the task as requiring internet
+      networkType: NetworkType.connected,
+      // require external power
+      // requiresCharging: true,
+    ),
+    frequency: const Duration(minutes: 15),
+  );
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   await SentryFlutter.init((options) {

@@ -3,9 +3,9 @@ import 'package:mobile/core/config.dart';
 import 'package:models/calendar/calendar.dart';
 
 class CalendarApi extends ApiClient {
-  CalendarApi()
+  CalendarApi({String? endpoint})
       : super(
-          Uri.parse("${Config.endpoint}/v3/calendars"),
+          Uri.parse("${endpoint ?? Config.endpoint}/v3/calendars"),
           fromMap: Calendar.fromMap,
         );
 }

@@ -1,4 +1,8 @@
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
@@ -80,6 +84,23 @@ class MainCubit extends Cubit<MainCubitState> {
           _sentryService.authenticate(user.id.toString(), user.email);
           await _intercomService.authenticate(
               email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+          try {
+            var port = ReceivePort();
+            IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSynch");
+            port.listen((dynamic data) async {
+              print('got $data on UI');
+              _syncControllerService.sync();
+            });
+            /* WidgetsFlutterBinding.ensureInitialized();
+            final preferences = await StreamingSharedPreferences.instance;
+            preferences.getBool('startedBackgroundSync', defaultValue: false).listen((value) {
+              if (value) {
+                _syncControllerService.sync();
+              }
+            });*/
+          } catch (e) {
+            print(e);
+          }
         } else {
           await _authCubit.planExpired();
         }
