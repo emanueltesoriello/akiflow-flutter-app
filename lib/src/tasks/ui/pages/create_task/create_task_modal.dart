@@ -100,7 +100,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               },
                               onDurationDetected: (Duration duration, String value) {
                                 if (duration.inSeconds != context.read<EditTaskCubit>().state.updatedTask.duration &&
-                                    duration.inSeconds > 0) {
+                                    duration.inSeconds > 0 && !value.contains("=")) {
                                   onDurationDetected(duration, value);
                                 }
                               },
@@ -219,7 +219,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   }
 
   onDurationDetected(Duration duration, String value) {
-    print('create_task_modal');
     if (simpleTitleController.hasParsedDuration() && !simpleTitleController.isRemoved(value)) {
       simpleTitleController.removeMapping(3);
       simpleTitleController.addMapping({

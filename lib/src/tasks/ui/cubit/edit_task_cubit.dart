@@ -36,7 +36,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   List<Task> recurrenceTasksToCreate = [];
 
   final EntityExtractor extractor = EntityExtractor(language: EntityExtractorLanguage.english);
-  late  StylableTextEditingController simpleTitleController;
+  late StylableTextEditingController simpleTitleController;
 
   EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState()) {
     simpleTitleController = getInitializedController();
@@ -132,6 +132,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     DateTime? dateTime,
     required TaskStatusType statusType,
     bool forceUpdate = false,
+    bool fromNlp = false,
   }) async {
     emit(state.copyWith(selectedDate: date));
     Task task = state.updatedTask;
@@ -143,31 +144,32 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    if (statusType == TaskStatusType.snoozed) {
-      _tasksCubit.addToUndoQueue([updated], UndoType.snooze);
-    } else {
-      _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
-    }
-
     emit(state.copyWith(updatedTask: updated));
 
     _tasksCubit.refreshTasksUi(updated);
+    if (!fromNlp) {
+      if (statusType == TaskStatusType.snoozed) {
+        _tasksCubit.addToUndoQueue([updated], UndoType.snooze);
+      } else {
+        _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+      }
 
-    if (forceUpdate) {
-      _tasksCubit
-          .addToUndoQueue([task], updated.statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
-      await _tasksRepository.updateById(updated.id!, data: updated);
-      _tasksCubit.refreshAllFromRepository();
-      _syncCubit.sync(entities: [Entity.tasks]);
+      if (forceUpdate) {
+        _tasksCubit
+            .addToUndoQueue([task], updated.statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+        await _tasksRepository.updateById(updated.id!, data: updated);
+        _tasksCubit.refreshAllFromRepository();
+        _syncCubit.sync(entities: [Entity.tasks]);
 
-      if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
-        AnalyticsService.track("Task Rescheduled");
-      } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
-        AnalyticsService.track("Task moved to Inbox");
-      } else if (statusType == TaskStatusType.planned) {
-        AnalyticsService.track("Task planned");
-      } else if (statusType == TaskStatusType.snoozed) {
-        AnalyticsService.track("Task snoozed");
+        if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
+          AnalyticsService.track("Task Rescheduled");
+        } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
+          AnalyticsService.track("Task moved to Inbox");
+        } else if (statusType == TaskStatusType.planned) {
+          AnalyticsService.track("Task planned");
+        } else if (statusType == TaskStatusType.snoozed) {
+          AnalyticsService.track("Task snoozed");
+        }
       }
     }
   }
@@ -401,15 +403,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     simpleTitleController = getInitializedController();
   }
 
-  void setPriority(PriorityEnum? priority, {int? value,bool fromModal = true}) {
-    if (state.openedPrirorityfromNLP && fromModal==true) {
+  void setPriority(PriorityEnum? priority, {int? value, bool fromModal = true}) {
+    if (state.openedPrirorityfromNLP && fromModal == true) {
       onPriorityDetected(priority?.value ?? value ?? 0, PriorityEnum.fromValue(priority?.value ?? value).name);
     }
     Task updated = state.updatedTask.copyWith(
       priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    emit(state.copyWith(updatedTask: updated,showPriority: false));
+    emit(state.copyWith(updatedTask: updated, showPriority: false));
   }
 
   void removePriority() {
@@ -648,7 +650,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     bool showLabelsList = value.contains("#") &&
         (recognized?.where((element) => element.contains("#")).isEmpty ?? true) &&
         (mapping?.keys.where((element) => element.contains("#")).isEmpty ?? true);
-    bool showPriority = (state.updatedTask.priority==null||state.updatedTask.priority==0)&& value.contains("!") &&
+    bool showPriority = (state.updatedTask.priority == null || state.updatedTask.priority == 0) &&
+        value.contains("!") &&
         (recognized?.where((element) => element.contains("!")).isEmpty ?? true) &&
         (mapping?.keys.where((element) => element.contains("!")).isEmpty ?? true);
     if (showDuration) {
@@ -700,7 +703,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed, isUtc: false);
     }
 
-    await planFor(date, statusType: TaskStatusType.planned);
+    await planFor(date, dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
   }
 
   void updateDescription(String html) {
