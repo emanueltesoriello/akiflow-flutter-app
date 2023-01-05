@@ -85,19 +85,14 @@ class MainCubit extends Cubit<MainCubitState> {
           await _intercomService.authenticate(
               email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
           try {
+            // trigger that start every time the set port is called
+            // used for handling backgroundSync that update the UI
             var port = ReceivePort();
-            IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSynch");
+            IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSync");
             port.listen((dynamic data) async {
               print('got $data on UI');
               _syncControllerService.sync();
             });
-            /* WidgetsFlutterBinding.ensureInitialized();
-            final preferences = await StreamingSharedPreferences.instance;
-            preferences.getBool('startedBackgroundSync', defaultValue: false).listen((value) {
-              if (value) {
-                _syncControllerService.sync();
-              }
-            });*/
           } catch (e) {
             print(e);
           }
