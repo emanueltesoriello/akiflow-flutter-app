@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 0.14.9+196
+version: 0.14.9+197
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -50,7 +50,6 @@ dependencies:
   device_preview: ^1.1.0
   timezone: ^0.9.0
   flutter_local_notifications: ^13.0.0
-  #flutter_background_service: ^2.4.6 
   workmanager: ^0.5.1
 
   
