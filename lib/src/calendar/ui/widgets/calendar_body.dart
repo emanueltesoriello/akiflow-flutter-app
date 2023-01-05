@@ -36,9 +36,7 @@ class CalendarBody extends StatelessWidget {
         view: context.watch<CalendarCubit>().state.calendarView,
         timeZone: DateTime.now().timeZoneName,
         dataSource: _getCalendarDataSource(context),
-        timeSlotViewSettings: TimeSlotViewSettings(
-            timeIntervalHeight: 50.0,
-            numberOfDaysInView: isThreeDays ? 3 : -1),
+        timeSlotViewSettings: TimeSlotViewSettings(timeIntervalHeight: 50.0, numberOfDaysInView: isThreeDays ? 3 : -1),
         scheduleViewSettings: ScheduleViewSettings(
             hideEmptyScheduleWeek: true,
             monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
@@ -46,13 +44,28 @@ class CalendarBody extends StatelessWidget {
         onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context),
         appointmentBuilder: (context, calendarAppointmentDetails) =>
             appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
+        allowDragAndDrop: true,
+        onDragEnd: (appointmentDragEndDetails) => dragEnd(appointmentDragEndDetails, context),
       );
     });
+  }
+
+  Widget appointmentBuilder(BuildContext context, CalendarAppointmentDetails calendarAppointmentDetails,
+      CheckboxAnimatedController? checkboxController) {
+    final Appointment appointment = calendarAppointmentDetails.appointments.first;
+    if (appointment is CalendarEvent) {
+      return _event(calendarAppointmentDetails, appointment, context);
+    } else if (appointment is CalendarTask) {
+      Task task = tasks.where((task) => task.id == appointment.id).first;
+      return _task(appointment, calendarAppointmentDetails, checkboxController, task, context);
+    }
+    return const SizedBox();
   }
 
   void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext context) {
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
+      context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
       calendarController.view = CalendarView.day;
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
@@ -60,6 +73,28 @@ class CalendarBody extends StatelessWidget {
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarEvent) {
       print('TAP ON EVENT');
+    }
+  }
+
+  void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context) {
+    dynamic appointment = appointmentDragEndDetails.appointment!;
+    DateTime droppingTime = appointmentDragEndDetails.droppingTime!;
+    DateTime droppedTimeRounded = DateTime(droppingTime.year, droppingTime.month, droppingTime.day, droppingTime.hour,
+        [0, 15, 30, 45, 60][(droppingTime.minute / 15).round()]);
+
+    if (tasks.any((task) => task.id == appointment.id)) {
+      Task task = tasks.firstWhere((task) => task.id == appointment.id);
+      DateTime taskDateTime = DateTime.parse(task.datetime!);
+      TasksCubit tasksCubit = context.read<TasksCubit>();
+
+      if (taskDateTime.difference(droppingTime.toUtc()).inMinutes.abs() > 4) {
+        SyncCubit syncCubit = context.read<SyncCubit>();
+        EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
+
+        editTaskCubit.changeDateTimeFromCalendar(date: droppingTime, dateTime: droppedTimeRounded);
+      } else {
+        tasksCubit.fetchCalendarTasks();
+      }
     }
   }
 
@@ -91,18 +126,6 @@ class CalendarBody extends StatelessWidget {
 
     List<Appointment> all = [...events, ...calendarTasks];
     return _AppointmentDataSource(all);
-  }
-
-  Widget appointmentBuilder(BuildContext context, CalendarAppointmentDetails calendarAppointmentDetails,
-      CheckboxAnimatedController? checkboxController) {
-    final Appointment appointment = calendarAppointmentDetails.appointments.first;
-    if (appointment is CalendarEvent) {
-      return _event(calendarAppointmentDetails, appointment, context);
-    } else if (appointment is CalendarTask) {
-      Task task = tasks.where((task) => task.id == appointment.id).first;
-      return _task(appointment, calendarAppointmentDetails, checkboxController, task, context);
-    }
-    return const SizedBox();
   }
 
   Container _event(
