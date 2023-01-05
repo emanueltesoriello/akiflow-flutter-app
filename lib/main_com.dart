@@ -11,6 +11,7 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/style/colors.dart';
@@ -27,7 +28,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/services/focus_detector_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:workmanager/src/workmanager.dart';
-import 'package:workmanager/src/options.dart' as constraints;
 import 'package:workmanager/src/options.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -54,6 +54,10 @@ Future<void> initFunctions() async {
   }
   await Intercom.instance.initialize(Config.intercomCredential.appId,
       iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
+
+  // Init Background Service and register periodic task
+  BackgroundService.initBackgroundService();
+  BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
 }
 
 _identifyAnalytics(User user) async {
@@ -65,22 +69,7 @@ _identifyAnalytics(User user) async {
 
 Future<void> mainCom({kDebugMode = false}) async {
   await initFunctions();
-  Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode:
-          true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-      );
-  Workmanager().registerPeriodicTask(
-    "task-identifier-preiodic-task",
-    "periodicTask",
-    //initialDelay: Duration(seconds: 20),
-    constraints: constraints.Constraints(
-      // connected or metered mark the task as requiring internet
-      networkType: NetworkType.connected,
-      // require external power
-      // requiresCharging: true,
-    ),
-    frequency: const Duration(minutes: 15),
-  );
+
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   await SentryFlutter.init((options) {

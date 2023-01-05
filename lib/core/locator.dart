@@ -74,7 +74,6 @@ void setupLocator(
   locator.registerSingleton<SentryService>(SentryService());
   locator.registerSingleton<IntercomService>(IntercomService());
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
-  //locator.registerSingleton<NotificationsCubit>(NotificationsCubit());
 
   /// Blocs
   TodayCubit todayCubit = TodayCubit();

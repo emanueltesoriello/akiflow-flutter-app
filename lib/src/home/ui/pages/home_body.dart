@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
-import 'package:mobile/core/services/dialog_service.dart';
-import 'package:mobile/main_com.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/floating_button.dart';
 import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/bottom_task_actions.dart';
@@ -21,7 +18,6 @@ import 'package:mobile/src/onboarding/ui/pages/onboarding_tutorial.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:mobile/core/preferences.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key, required this.bottomBarHeight, required this.homeViewType});
@@ -37,25 +33,13 @@ class HomeBody extends StatelessWidget {
     } catch (e) {
       print(e);
     }
-    bool userLogged =
-        locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
     print("environment: ${Config.development ? "dev" : "prod"}");
     await AnalyticsService.config();
   }
 
-  void initWorkmanager() async {
-    try {
-      //GetIt locator = GetIt.instance;
-      //var a = locator.get<DatabaseService>();
-      //await init();
-
-      var b = 0;
-    } catch (e) {
-      print(e);
-      //await init();
-    }
+  void runWorkmanagerNow() async {
     Workmanager().cancelAll;
-    Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
+    Workmanager().initialize(BackgroundService.callbackDispatcher, // The top level function, aka callbackDispatcher
         isInDebugMode:
             true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
@@ -79,17 +63,17 @@ class HomeBody extends StatelessWidget {
             topPadding: MediaQuery.of(context).padding.top,
           ),
           appBar: AppBar(
-            actions: [
-              ElevatedButton(
-                  onPressed: () async {
-                    initWorkmanager();
-                    /*WidgetsFlutterBinding.ensureInitialized();
-                    final preferences = await StreamingSharedPreferences.instance;
-                    preferences.setBool('startedBackgroundSync', true);*/
-                  },
-                  child: Text('Test'))
-            ],
-          ),
+              centerTitle: true,
+              title: SizedBox(
+                height: 30,
+                child: Center(
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        runWorkmanagerNow();
+                      },
+                      child: const Text('Test background service NOW')),
+                ),
+              )),
           body: Builder(builder: (context) {
             return const HomePageNavigator();
           }),
