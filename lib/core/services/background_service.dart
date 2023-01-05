@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
 
+@pragma('vm:entry-point')
 callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
@@ -52,6 +53,8 @@ callbackDispatcher() {
 }
 
 class BackgroundService {
+  const BackgroundService._();
+
   static initBackgroundService() {
     Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
         isInDebugMode:
