@@ -338,10 +338,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     String recurringId = const Uuid().v4();
     String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
-    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now();
+    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
+    DateTime taskDateTime = updated.datetime != null ? DateTime.parse(updated.datetime!) : DateTime.now().toUtc();
 
     updated = updated.copyWith(
       date: Nullable(taskDate.toIso8601String()),
+      datetime: Nullable(TzUtils.toUtcStringIfNotNull(taskDateTime)),
       recurrence: Nullable([rule.toString()]),
       recurringId: recurringId,
       updatedAt: Nullable(now),
@@ -353,7 +355,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.updateById(updated.id, data: updated);
 
-    List<DateTime> dates = rule.getAllInstances(start: DateTime.now().toUtc());
+    List<DateTime> dates = rule.getAllInstances(start: taskDateTime);
 
     for (DateTime date in dates) {
       if (date.isBefore(taskDate) || (isSameDay(date, taskDate))) {
@@ -363,6 +365,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       Task newTask = updated.copyWith(
         id: const Uuid().v4(),
         date: Nullable(date.toIso8601String()),
+        datetime: Nullable(TzUtils.toUtcStringIfNotNull(date)),
         createdAt: now,
       );
 
