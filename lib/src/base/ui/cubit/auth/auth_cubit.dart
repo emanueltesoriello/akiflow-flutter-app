@@ -110,9 +110,17 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           _sentryService.authenticate(user!.id.toString(), user.email);
 
-          emit(state.copyWith(user: Nullable(user), hasValidPlan: hasValidPlan));
+          try {
+            emit(state.copyWith(user: Nullable(user), hasValidPlan: hasValidPlan));
+          } catch (e) {
+            print(e);
+          }
 
-          _syncCubit.sync();
+          try {
+            _syncCubit.sync();
+          } catch (e) {
+            print(e);
+          }
 
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
