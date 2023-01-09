@@ -4,6 +4,8 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
+import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/custom_repeat_modal.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rrule/rrule.dart';
 
 enum RecurrenceModalType { none, daily, everyCurrentDay, everyYearOnThisDay, everyWeekday, custom }
@@ -136,29 +138,23 @@ class RecurrenceModal extends StatelessWidget {
               },
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      t.editTask.custom,
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: ColorsExt.grey3(context),
-                      ),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => const CustomRepeatModal(),
+                    );
+                  },
+                  child: Text(
+                    t.editTask.custom,
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: ColorsExt.grey2(context),
                     ),
                   ),
-                  Text(
-                    t.comingSoon,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
-                      color: ColorsExt.grey3(context),
-                    ),
-                  )
-                ],
-              ),
-            )
+                ))
           ],
         ),
       ),
