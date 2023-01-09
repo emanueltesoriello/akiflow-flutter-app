@@ -64,7 +64,7 @@ class BackgroundService {
 
   static registerPeriodicTask(Duration? frequency) {
     Workmanager().registerPeriodicTask(
-      "task-identifier-preiodic-task",
+      "periodicTask",
       "periodicTask",
       //initialDelay: Duration(seconds: 20),
       constraints: constraints.Constraints(

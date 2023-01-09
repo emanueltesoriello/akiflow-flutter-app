@@ -1,5 +1,7 @@
 import UIKit
 import Flutter
+import workmanager
+
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -7,6 +9,8 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    WorkmanagerPlugin.registerTask(withIdentifier: "periodicTask")
+    UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
