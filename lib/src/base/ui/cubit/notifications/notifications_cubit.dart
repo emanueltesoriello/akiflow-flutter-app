@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 part 'notifications_state.dart';
 
@@ -18,20 +17,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   // ************ INIT FUNCTIONS ************
   // ****************************************
   init() async {
-    // ************* ONESIGNAL *********
-    // *********************************
-    //Remove this method to stop OneSignal Debugging
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    OneSignal.shared.setAppId("b698eb0f-03cc-43a3-a131-8910095a4b21");
-
-    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-      print("Accepted permission: $accepted");
-    });
-
-    OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
-      print('notification received');
-      event.complete(null); //pass null param for not displaying the notification
-      _localNotificationsPlugin.show(
+    /*_localNotificationsPlugin.show(
           22,
           "title",
           "body",
@@ -42,8 +28,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
               channelDescription: "channel.description",
               // other properties...
             ),
-          ));
-    });
+          ));*/
 
     // *********************************
     // **********************************/

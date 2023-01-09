@@ -14,7 +14,6 @@ import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/user.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 part 'main_state.dart';
 
