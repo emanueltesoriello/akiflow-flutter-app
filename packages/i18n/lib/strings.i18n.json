@@ -229,9 +229,9 @@
     "dueDate": "Due date",
     "board": "Board",
     "savedOn": "Saved on",
-    "status":"Status",
-    "done":"Done",
-    "toDo":"To do"
+    "status": "Status",
+    "done": "Done",
+    "toDo": "To do"
   },
   "editTask": {
     "add": "Add",
@@ -254,6 +254,25 @@
       "description": "Do you want to change only this occurrence or change this and all future occurrences?",
       "onlyThis": "Only this task",
       "thisAndAllFuture": "This and all future tasks"
+    },
+    "recurrence": {
+      "every": "Every",
+      "day": "Day",
+      "days": "Day(s)",
+      "week": "Week",
+      "weeks": "Week(s)",
+      "month": "Month",
+      "months": "Month(s)",
+      "year": "Year",
+      "years": "Year(s)",
+      "selectedDays": "Selected days",
+      "ends": "Ends",
+      "never": "Never",
+      "until": "Until",
+      "repeatUntil": "Repeat until",
+      "after": "After",
+      "repeatEvery": "Repeat every",
+      "times": "time(s)"
     }
   },
   "today": {
@@ -294,6 +313,7 @@
     },
     "sortComingSoon": "Sort (Coming soon)"
   },
+  "confirm": "Confirm",
   "cancel": "Cancel",
   "noTitle": "(No title)",
   "connect": "Connect",

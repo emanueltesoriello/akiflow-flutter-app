@@ -335,7 +335,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     List<Task> tasks = [];
 
-    String recurringId = const Uuid().v4();
+    String? recurringId = updated.id;
     String? now = TzUtils.toUtcStringIfNotNull(DateTime.now().toUtc());
 
     DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
@@ -392,7 +392,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       recurrenceTasksToUpdate.add(task.copyWith(
         recurrence: Nullable(null),
-        trashedAt: TzUtils.toUtcStringIfNotNull(now),
+        status: Nullable(TaskStatusType.permanentlyDeleted.id),
+        deletedAt: TzUtils.toUtcStringIfNotNull(now),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       ));
     }
