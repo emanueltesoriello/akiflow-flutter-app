@@ -743,7 +743,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     switch (gmailMarkAsDoneType) {
       case GmailMarkAsDoneType.unstarTheEmail:
         for (GmailDocAction docAction in docActions) {
-          await unstarGmail(docAction.account, docAction.doc);
+          await unstarGmail(docAction);
         }
         break;
       case GmailMarkAsDoneType.goToGmail:
@@ -760,8 +760,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  Future<void> unstarGmail(Account account, Doc doc) async {
-    AccountToken? accountToken = _preferencesRepository.getAccountToken(account.accountId!)!;
+  Future<void> unstarGmail(GmailDocAction action) async {
+    Account account = action.account;
+    Doc doc = action.doc.copyWith(originId: action.task.originId!.value);
+    AccountToken? accountToken =
+        _preferencesRepository.getAccountToken(account.accountId!.replaceAll("google", "gmail"))!;
 
     GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {});
 
