@@ -252,7 +252,7 @@ extension TaskExt on Task {
   RecurrenceRule? get ruleFromStringList {
     if (recurrence != null) {
       try {
-        List<String> parts = recurrence!.toList();
+        List<String> parts = recurrence!.first.split(";");
 
         parts.removeWhere((part) => part.startsWith('DTSTART'));
 
@@ -268,7 +268,7 @@ extension TaskExt on Task {
   RecurrenceModalType? get recurrenceComputed {
     if (recurrence != null) {
       try {
-        List<String> parts = recurrence!.toList();
+        List<String> parts = recurrence!.first.split(";");
 
         parts.removeWhere((part) => part.startsWith('UNTIL'));
         parts.removeWhere((part) => part.startsWith('DTSTART'));
@@ -281,11 +281,11 @@ extension TaskExt on Task {
 
         RecurrenceRule rule = RecurrenceRule.fromString(recurrenceString);
 
-        if (rule.frequency == Frequency.daily) {
+        if (rule.frequency == Frequency.daily && rule.interval == null) {
           return RecurrenceModalType.daily;
         } else if (rule.frequency == Frequency.weekly && rule.byWeekDays.length == 5) {
           return RecurrenceModalType.everyWeekday;
-        } else if (rule.frequency == Frequency.yearly) {
+        } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
           return RecurrenceModalType.everyYearOnThisDay;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return RecurrenceModalType.everyCurrentDay;
