@@ -38,7 +38,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final handler = ShareHandlerPlatform.instance;
 
   Future<void> initPlatformState() async {
-    handler.sharedMediaStream.listen((SharedMedia? media) {
+    print('started initPlatformState');
+    try {
+      var media = await handler.getInitialSharedMedia();
       if (!mounted) return;
       if (media != null) {
         showCupertinoModalBottomSheet(
@@ -48,8 +50,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
         );
       }
-    });
-    if (!mounted) return;
+
+      handler.sharedMediaStream.listen((SharedMedia? media) {
+        if (!mounted) return;
+        if (media != null) {
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => CreateTaskModal(
+              sharedText: media.content,
+            ),
+          );
+        }
+      });
+      if (!mounted) return;
+    } catch (e) {
+      print('Erorr on initPlatformState\n');
+      print(e);
+    }
   }
 
   @override
@@ -87,7 +104,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               tasksCubit.goToGmail(action.doc);
             },
             unstarOrUnlabel: () {
-              tasksCubit.unstarGmail(action.account, action.doc);
+              tasksCubit.unstarGmail(action);
             },
           ),
         );

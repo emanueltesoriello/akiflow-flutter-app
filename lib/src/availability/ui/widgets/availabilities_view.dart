@@ -46,7 +46,7 @@ class AvailabilitiesView extends StatelessWidget {
               elevation: 0,
               expansionCallback: (panelIndex, isExpanded) {
                 context.read<AvailabilityCubit>().toggleHeader(
-                    panelIndex == 0 ? AvailabililtyConfigSlotsType.manual : AvailabililtyConfigSlotsType.recurrent);
+                    panelIndex == 1 ? AvailabililtyConfigSlotsType.manual : AvailabililtyConfigSlotsType.recurrent);
               },
               children: [
                 ExpandablePanel(
