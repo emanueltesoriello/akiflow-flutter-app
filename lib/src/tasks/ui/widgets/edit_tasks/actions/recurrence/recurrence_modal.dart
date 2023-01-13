@@ -4,7 +4,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
-import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/custom_repeat_modal.dart';
+import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/custom_recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rrule/rrule.dart';
 
@@ -13,11 +13,13 @@ enum RecurrenceModalType { none, daily, everyCurrentDay, everyYearOnThisDay, eve
 class RecurrenceModal extends StatelessWidget {
   final Function(RecurrenceRule?) onChange;
   final RecurrenceModalType? selectedRecurrence;
+  final RecurrenceRule? rule;
 
   const RecurrenceModal({
     Key? key,
     required this.onChange,
     required this.selectedRecurrence,
+    required this.rule,
   }) : super(key: key);
 
   @override
@@ -138,13 +140,17 @@ class RecurrenceModal extends StatelessWidget {
               },
             ),
             Container(
+                color: selectedRecurrence == RecurrenceModalType.custom ? ColorsExt.grey6(context) : Colors.transparent,
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 child: InkWell(
                   onTap: () {
                     Navigator.pop(context);
                     showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context) => const CustomRepeatModal(),
+                      builder: (context) => CustomRecurrenceModal(rule: rule,
+                      onChange: (RecurrenceRule? rule) {
+                        onChange(rule);
+                      },),
                     );
                   },
                   child: Text(

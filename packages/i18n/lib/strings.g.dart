@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 240 
+ * Strings: 258 
  *
- * Built on 2022-12-20 at 13:26 UTC
+ * Built on 2023-01-11 at 13:11 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -321,6 +321,7 @@ class _StringsEn {
 	String get comingSoon => 'Coming soon';
 	String get allTasks => 'All tasks';
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
+	String get confirm => 'Confirm';
 	String get cancel => 'Cancel';
 	String get noTitle => '(No title)';
 	String get connect => 'Connect';
@@ -561,6 +562,7 @@ class _StringsEditTaskEn {
 	String get custom => 'Custom';
 	String get comingSoon => 'Coming soon';
 	late final _StringsEditTaskRepeatingEditDialogEn repeatingEditDialog = _StringsEditTaskRepeatingEditDialogEn._(_root);
+	late final _StringsEditTaskRecurrenceEn recurrence = _StringsEditTaskRecurrenceEn._(_root);
 }
 
 // Path: today
@@ -764,6 +766,32 @@ class _StringsEditTaskRepeatingEditDialogEn {
 	String get description => 'Do you want to change only this occurrence or change this and all future occurrences?';
 	String get onlyThis => 'Only this task';
 	String get thisAndAllFuture => 'This and all future tasks';
+}
+
+// Path: editTask.recurrence
+class _StringsEditTaskRecurrenceEn {
+	_StringsEditTaskRecurrenceEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get every => 'Every';
+	String get day => 'Day';
+	String get days => 'Day(s)';
+	String get week => 'Week';
+	String get weeks => 'Week(s)';
+	String get month => 'Month';
+	String get months => 'Month(s)';
+	String get year => 'Year';
+	String get years => 'Year(s)';
+	String get selectedDays => 'Selected days';
+	String get ends => 'Ends';
+	String get never => 'Never';
+	String get until => 'Until';
+	String get repeatUntil => 'Repeat until';
+	String get after => 'After';
+	String get repeatEvery => 'Repeat every';
+	String get times => 'time(s)';
 }
 
 // Path: label.deleteDialog
@@ -1070,6 +1098,23 @@ extension on _StringsEn {
 			'editTask.repeatingEditDialog.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
 			'editTask.repeatingEditDialog.onlyThis': 'Only this task',
 			'editTask.repeatingEditDialog.thisAndAllFuture': 'This and all future tasks',
+			'editTask.recurrence.every': 'Every',
+			'editTask.recurrence.day': 'Day',
+			'editTask.recurrence.days': 'Day(s)',
+			'editTask.recurrence.week': 'Week',
+			'editTask.recurrence.weeks': 'Week(s)',
+			'editTask.recurrence.month': 'Month',
+			'editTask.recurrence.months': 'Month(s)',
+			'editTask.recurrence.year': 'Year',
+			'editTask.recurrence.years': 'Year(s)',
+			'editTask.recurrence.selectedDays': 'Selected days',
+			'editTask.recurrence.ends': 'Ends',
+			'editTask.recurrence.never': 'Never',
+			'editTask.recurrence.until': 'Until',
+			'editTask.recurrence.repeatUntil': 'Repeat until',
+			'editTask.recurrence.after': 'After',
+			'editTask.recurrence.repeatEvery': 'Repeat every',
+			'editTask.recurrence.times': 'time(s)',
 			'today.title': 'Today',
 			'today.toDos': 'To-dos',
 			'today.pinnedInCalendar': 'Scheduled on calendar',
@@ -1102,6 +1147,7 @@ extension on _StringsEn {
 			'label.deleteDialog.justDeleteTheLabel': 'Just delete the label',
 			'label.deleteDialog.markAllTasksAsDone': 'Mark all tasks as Done',
 			'label.sortComingSoon': 'Sort (Coming soon)',
+			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',
 			'connect': 'Connect',
