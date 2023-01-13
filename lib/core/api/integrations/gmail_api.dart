@@ -316,9 +316,9 @@ GET /gmail/v1/users/${account.identifier}/threads/$threadId?format=metadata&meta
     Uri uri;
 
     if (account.gmailSyncMode == GmailSyncMode.useAkiflowLabel) {
-      uri = Uri.parse("$endpoint/users/${account.identifier}/messages/${doc.originId}/modify");
+      uri = Uri.parse("$endpoint/users/me/threads/${doc.originId}/modify");
     } else {
-      uri = Uri.parse("$endpoint/users/${account.identifier}/messages/${doc.originId}/modify");
+      uri = Uri.parse("$endpoint/users/me/messages/${doc.originId}/modify");
     }
 
     String? labelId = account.details?['akiflowLabelId'];

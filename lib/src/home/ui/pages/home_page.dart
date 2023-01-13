@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               tasksCubit.goToGmail(action.doc);
             },
             unstarOrUnlabel: () {
-              tasksCubit.unstarGmail(action.account, action.doc);
+              tasksCubit.unstarGmail(action);
             },
           ),
         );
