@@ -214,13 +214,25 @@ extension TaskExt on Task {
     return '';
   }
 
-    String get internalDateFormatted {
+  String get internalDateFormatted {
+    DateTime? internalDate;
+
     if (doc?.value?.internalDate != null) {
-      DateTime dateParsed = DateTime.parse(createdAt!).toLocal();
-      return DateFormat('dd MMM yyyy').format(dateParsed);
+      int internalDateAsMilliseconds = int.parse(doc!.value!.internalDate!);
+      internalDate = DateTime.fromMillisecondsSinceEpoch(internalDateAsMilliseconds).toLocal();
     }
 
-    return '';
+    if (internalDate != null) {
+      if (internalDate.toLocal().day == DateTime.now().day &&
+          internalDate.toLocal().month == DateTime.now().month &&
+          internalDate.toLocal().year == DateTime.now().year) {
+        return t.task.today;
+      } else {
+        return DateFormat("dd MMM yyyy").format(internalDate.toLocal());
+      }
+    } else {
+      return '';
+    }
   }
 
   String get dueDateFormatted {
@@ -741,7 +753,6 @@ extension TaskExt on Task {
   static Future<void> editTask(BuildContext context, Task task) async {
     TasksCubit tasksCubit = context.read<TasksCubit>();
     SyncCubit syncCubit = context.read<SyncCubit>();
-
     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
     await showCupertinoModalBottomSheet(
       context: context,
@@ -750,7 +761,6 @@ extension TaskExt on Task {
         child: const EditTaskModal(),
       ),
     );
-
     Task updated = editTaskCubit.state.updatedTask;
     Task original = editTaskCubit.state.originalTask;
 
