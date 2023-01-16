@@ -60,15 +60,6 @@ abstract class PreferencesRepository {
 
   bool get reconnectPageSkipped;
   Future<void> setReconnectPageSkipped(bool value);
-
-  int get calendarView;
-  Future<void> setCalendarView(int calendarView);
-
-  bool get isCalendarThreeDays;
-  Future<void> setIsCalendarThreeDays(bool isCalendarThreeDays);
-
-  bool get isCalendarWeekendHidden;
-  Future<void> setIsCalendarWeekendHidden(bool isCalendarWeekendHidden);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -293,35 +284,5 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setReconnectPageSkipped(bool value) async {
     await _prefs.setBool("reconnectPageSkipped", value);
-  }
-
-  @override
-  int get calendarView {
-    return _prefs.getInt("calendarView") ?? 2;
-  }
-
-  @override
-  Future<void> setCalendarView(int calendarView) async {
-    await _prefs.setInt("calendarView", calendarView);
-  }
-
-  @override
-  bool get isCalendarThreeDays {
-    return _prefs.getBool("isCalendarThreeDays") ?? false;
-  }
-
-  @override
-  Future<void> setIsCalendarThreeDays(bool isCalendarThreeDays) async {
-    await _prefs.setBool("isCalendarThreeDays", isCalendarThreeDays);
-  }
-
-  @override
-  bool get isCalendarWeekendHidden {
-    return _prefs.getBool("isCalendarWeekendHidden") ?? false;
-  }
-
-  @override
-  Future<void> setIsCalendarWeekendHidden(bool isCalendarWeekendHidden) async {
-    await _prefs.setBool("isCalendarWeekendHidden", isCalendarWeekendHidden);
   }
 }

@@ -17,24 +17,20 @@ class CalendarNavigatorPage extends StatelessWidget {
       providers: calendarProviders,
       child: Builder(
         builder: ((context) {
-          //var state = context.watch<CalendarCubit>().state;
+          var state = context.watch<CalendarCubit>().state;
           return CustomNavigatorPopScope(
             navigatorStateKey: _calendarNavigationKey,
-            pages: const [
-              MaterialPage(
-                key: ValueKey('CalendarView'),
-                child: CalendarView(),
-              ),
-              // if (state.navigationState == CalendarNavigationState.loading)
-              //   const MaterialPage(
-              //     key: ValueKey('StartPage'),
-              //     child: Scaffold(body: Center(child: Text('Loading'))),
-              //   ),
-              // if (state.navigationState == CalendarNavigationState.mainPage)
-              //   const MaterialPage(
-              //     key: ValueKey('CalendarView'),
-              //     child: CalendarView(),
-              //   ),
+            pages: [
+              if (state.navigationState == CalendarNavigationState.loading)
+                const MaterialPage(
+                  key: ValueKey('StartPage'),
+                  child: Scaffold(body: Center(child: Text('Loading'))),
+                ),
+              if (state.navigationState == CalendarNavigationState.mainPage)
+                const MaterialPage(
+                  key: ValueKey('CalendarView'),
+                  child: CalendarView(),
+                ),
             ],
             onPopPage: (route, result) {
               //Handle the Main onPop here

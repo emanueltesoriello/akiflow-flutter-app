@@ -132,28 +132,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  Future<void> changeDateTimeFromCalendar({required DateTime? date, required DateTime? dateTime}) async {
-    emit(state.copyWith(selectedDate: date, showDuration: false));
-    Task task = state.updatedTask;
-
-    Task updated = task.copyWith(
-      date: Nullable(date?.toIso8601String()),
-      datetime: Nullable(TzUtils.toUtcStringIfNotNull(dateTime)),
-      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
-    );
-
-    emit(state.copyWith(updatedTask: updated));
-
-    _tasksCubit.addToUndoQueue([task], UndoType.plan);
-
-    await _tasksRepository.updateById(updated.id!, data: updated);
-
-    _tasksCubit.refreshAllFromRepository();
-    _syncCubit.sync(entities: [Entity.tasks]);
-
-    AnalyticsService.track("Task Rescheduled");
-  }
-
   void setDuration(int? seconds) {
     if (seconds != null) {
       emit(state.copyWith(selectedDuration: seconds.toDouble(), showDuration: false));
@@ -357,10 +335,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     List<Task> tasks = [];
 
-    String recurringId = const Uuid().v4();
-    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+    String? recurringId = updated.id;
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now().toUtc());
 
-    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now();
+    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
+    DateTime taskDateTime = updated.datetime != null ? DateTime.parse(updated.datetime!) : DateTime.now().toUtc();
 
     updated = updated.copyWith(
       date: Nullable(taskDate.toIso8601String()),
@@ -375,7 +354,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.updateById(updated.id, data: updated);
 
-    List<DateTime> dates = rule.getAllInstances(start: DateTime.now().toUtc());
+    List<DateTime> dates = rule.getAllInstances(start: taskDateTime);
 
     for (DateTime date in dates) {
       if (date.isBefore(taskDate) || (isSameDay(date, taskDate))) {
@@ -385,6 +364,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       Task newTask = updated.copyWith(
         id: const Uuid().v4(),
         date: Nullable(date.toIso8601String()),
+        datetime: updated.datetime != null ? Nullable(TzUtils.toUtcStringIfNotNull(date)) : Nullable(null),
         createdAt: now,
       );
 
@@ -412,7 +392,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       recurrenceTasksToUpdate.add(task.copyWith(
         recurrence: Nullable(null),
-        trashedAt: TzUtils.toUtcStringIfNotNull(now),
+        status: Nullable(TaskStatusType.permanentlyDeleted.id),
+        deletedAt: TzUtils.toUtcStringIfNotNull(now),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       ));
     }

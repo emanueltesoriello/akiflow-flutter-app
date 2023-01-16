@@ -113,7 +113,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       fetchTodayTasks(),
       _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
       _labelsCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!) : Future.value(),
-      fetchCalendarTasks(),
     ]);
 
     emit(state.copyWith(tasksLoaded: true));
@@ -160,15 +159,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     try {
       List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
       emit(state.copyWith(labelTasks: tasks));
-    } catch (e, s) {
-      _sentryService.captureException(e, stackTrace: s);
-    }
-  }
-
-  Future<void> fetchCalendarTasks() async {
-    try {
-      List<Task> tasks = await _tasksRepository.getCalendarTasks();
-      emit(state.copyWith(calendarTasks: tasks));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -700,47 +690,49 @@ class TasksCubit extends Cubit<TasksCubitState> {
       all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
     }
 
-    List<Doc> docs = state.docs;
+    List<Task> gmailTasks = [];
+
+    for (var task in all) {
+      if (task.connectorId != null && task.connectorId!.value! == 'gmail' && task.doc != null) {
+        gmailTasks.add(task);
+      }
+    }
 
     List<GmailDocAction> docActions = [];
 
-    for (Task task in all) {
-      Doc? doc = docs.firstWhereOrNull((element) => element.taskId == task.id);
+    for (Task task in gmailTasks) {
+      String? markAsDoneKey = _authCubit!.state.user?.settings?['popups']['gmail.unstar'];
+      GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
 
-      if (doc?.connectorId == "gmail") {
-        String? markAsDoneKey = _authCubit!.state.user?.settings?['popups']['gmail.unstar'];
-        GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
+      List<Account> accounts = await _accountsRepository.get();
+      Account account = accounts.firstWhere((a) => a.originAccountId == task.originAccountId!.value!);
 
-        List<Account> accounts = await _accountsRepository.get();
-        Account account = accounts.firstWhere((a) => a.accountId == doc!.accountId);
-
-        switch (gmailMarkAsDoneType) {
-          case GmailMarkAsDoneType.unstarTheEmail:
-            docActions.add(GmailDocAction(
-              doc: doc!,
-              markAsDoneType: GmailMarkAsDoneType.unstarTheEmail,
-              task: task,
-              account: account,
-            ));
-            break;
-          case GmailMarkAsDoneType.goToGmail:
-            docActions.add(GmailDocAction(
-              doc: doc!,
-              markAsDoneType: GmailMarkAsDoneType.goToGmail,
-              task: task,
-              account: account,
-            ));
-            break;
-          case GmailMarkAsDoneType.askMeEveryTime:
-            docActions.add(GmailDocAction(
-              doc: doc!,
-              markAsDoneType: GmailMarkAsDoneType.askMeEveryTime,
-              task: task,
-              account: account,
-            ));
-            break;
-          default:
-        }
+      switch (gmailMarkAsDoneType) {
+        case GmailMarkAsDoneType.unstarTheEmail:
+          docActions.add(GmailDocAction(
+            doc: task.doc!.value!,
+            markAsDoneType: GmailMarkAsDoneType.unstarTheEmail,
+            task: task,
+            account: account,
+          ));
+          break;
+        case GmailMarkAsDoneType.goToGmail:
+          docActions.add(GmailDocAction(
+            doc: task.doc!.value!,
+            markAsDoneType: GmailMarkAsDoneType.goToGmail,
+            task: task,
+            account: account,
+          ));
+          break;
+        case GmailMarkAsDoneType.askMeEveryTime:
+          docActions.add(GmailDocAction(
+            doc: task.doc!.value!,
+            markAsDoneType: GmailMarkAsDoneType.askMeEveryTime,
+            task: task,
+            account: account,
+          ));
+          break;
+        default:
       }
     }
 
@@ -751,7 +743,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     switch (gmailMarkAsDoneType) {
       case GmailMarkAsDoneType.unstarTheEmail:
         for (GmailDocAction docAction in docActions) {
-          await unstarGmail(docAction.account, docAction.doc);
+          await unstarGmail(docAction);
         }
         break;
       case GmailMarkAsDoneType.goToGmail:
@@ -768,8 +760,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  Future<void> unstarGmail(Account account, Doc doc) async {
-    AccountToken? accountToken = _preferencesRepository.getAccountToken(account.accountId!)!;
+  Future<void> unstarGmail(GmailDocAction action) async {
+    Account account = action.account;
+    Doc doc = action.doc.copyWith(originId: action.task.originId!.value);
+    AccountToken? accountToken =
+        _preferencesRepository.getAccountToken(account.accountId!.replaceAll("google", "gmail"))!;
 
     GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {});
 
