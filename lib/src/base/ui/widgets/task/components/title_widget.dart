@@ -23,7 +23,7 @@ class TitleWidget extends StatelessWidget {
       child: Container(
         constraints: const BoxConstraints(minHeight: 22),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Text(

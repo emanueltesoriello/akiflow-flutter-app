@@ -51,11 +51,14 @@ Future<List<T>> convertToObjList<T>(RawListConvert rawListConvert) async {
   return result;
 }
 
+Map<String, dynamic> removeNullsFromMap(Map<String, dynamic> json) =>
+    json..removeWhere((String key, dynamic value) => value == null);
+
 List<dynamic> fromObjToMapList<T>(List<T> items) {
   List<dynamic> result = [];
 
   for (T item in items) {
-    result.add((item as Base).toMap());
+    result.add(removeNullsFromMap((item as Base).toMap()));
   }
 
   return result;

@@ -815,7 +815,7 @@ class _TimePickerHeader extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      //padding: padding,
+      padding: padding,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: borderRadiusData,
@@ -887,7 +887,6 @@ class _DialPainter extends CustomPainter {
     final double radius = size.shortestSide / 2.0;
     final Offset center = Offset(size.width / 2.0, size.height / 2.0);
     final Offset centerPoint = center;
-    canvas.drawCircle(centerPoint, radius + 1, Paint()..color = ColorsLight.grey5);
     canvas.drawCircle(centerPoint, radius, Paint()..color = backgroundColor);
 
     const double labelPadding = 24.0;
@@ -1376,7 +1375,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     Color backgroundColor;
     switch (themeData.brightness) {
       case Brightness.light:
-        backgroundColor = ColorsExt.grey7(context);
+        backgroundColor = Colors.grey[200]!;
         break;
       case Brightness.dark:
       default:
@@ -1611,7 +1610,7 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
     final ThemeData theme = Theme.of(context);
 
     final Widget picker = Padding(
-      padding: const EdgeInsets.all(30.0),
+      padding: const EdgeInsets.all(16.0),
       child: AspectRatio(
         aspectRatio: 1.0,
         child: _Dial(
@@ -1708,18 +1707,15 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
               return SizedBox(
                 width: _kTimePickerWidthPortrait,
                 height: timePickerHeightPortrait,
-                child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(color: Colors.white, child: header),
-                      Expanded(
-                        child: Container(color: Colors.white, child: pickerAndActions),
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    header,
+                    Expanded(
+                      child: pickerAndActions,
+                    ),
+                  ],
                 ),
               );
           }

@@ -19,7 +19,7 @@ class Subtitle extends StatelessWidget {
     List<String> links = task.links ?? [];
 
     return SizedBox(
-      //height: 24,
+      height: 24,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -57,30 +57,26 @@ class Subtitle extends StatelessWidget {
                 ],
               );
             } else if (task.descriptionParsed.isNotEmpty) {
-              return Container(
-                height: 24,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/images/icons/_common/arrow_turn_down_right.svg",
+              return Row(
+                children: [
+                  SvgPicture.asset(
+                    "assets/images/icons/_common/arrow_turn_down_right.svg",
+                    color: ColorsExt.grey3(context),
+                    width: 16,
+                    height: 16,
+                  ),
+                  const SizedBox(width: 4.5),
+                  Expanded(
+                      child: Text(
+                    task.descriptionParsed,
+                    maxLines: 1,
+                    style: TextStyle(
+                      height: 1,
+                      fontSize: 15,
                       color: ColorsExt.grey3(context),
-                      width: 16,
-                      height: 16,
                     ),
-                    const SizedBox(width: 4.5),
-                    Expanded(
-                        child: Text(
-                      task.descriptionParsed,
-                      maxLines: 1,
-                      style: TextStyle(
-                        height: 1,
-                        fontSize: 15,
-                        color: ColorsExt.grey3(context),
-                      ),
-                    )),
-                  ],
-                ),
+                  )),
+                ],
               );
             } else if (links.isNotEmpty) {
               String text;

@@ -309,7 +309,7 @@ class Task extends Equatable implements Base {
     Nullable<List<String>> recurrenceList = Nullable([]);
     if (data.containsKey("recurrence") && data["recurrence"] != null) {
       String object = data["recurrence"] as String;
-      recurrenceList = Nullable([object]);
+      recurrenceList = Nullable(object.split(';'));
       data.remove("recurrence");
     }
 
