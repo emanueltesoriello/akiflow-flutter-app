@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/custom_recurrence_modal.dart';
@@ -44,7 +45,7 @@ class RecurrenceModal extends StatelessWidget {
               child: Row(
                 children: [
                   SvgPicture.asset(
-                    "assets/images/icons/_common/repeat.svg",
+                   Assets.images.icons.common.repeatSVG,
                     width: 28,
                     height: 28,
                   ),

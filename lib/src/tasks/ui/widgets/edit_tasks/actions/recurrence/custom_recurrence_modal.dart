@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -72,17 +73,16 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 16.0),
           child: ListView(
             shrinkWrap: true,
             children: [
-              const SizedBox(height: 12),
               const ScrollChip(),
               const SizedBox(height: 12),
               Row(
                 children: [
                   SvgPicture.asset(
-                    "assets/images/icons/_common/repeat.svg",
+                    Assets.images.icons.common.repeatSVG,
                     width: 28,
                     height: 28,
                   ),

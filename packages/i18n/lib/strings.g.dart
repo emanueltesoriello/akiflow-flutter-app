@@ -5,7 +5,7 @@
  * Locales: 1
  * Strings: 258 
  *
- * Built on 2023-01-11 at 13:11 UTC
+ * Built on 2023-01-16 at 09:23 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -762,7 +762,7 @@ class _StringsEditTaskRepeatingEditDialogEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	String get title => 'You are changing a repeating task';
+	String get title => 'Editing repeating task';
 	String get description => 'Do you want to change only this occurrence or change this and all future occurrences?';
 	String get onlyThis => 'Only this task';
 	String get thisAndAllFuture => 'This and all future tasks';
@@ -1094,7 +1094,7 @@ extension on _StringsEn {
 			'editTask.everyWeekday': 'Every weekday',
 			'editTask.custom': 'Custom',
 			'editTask.comingSoon': 'Coming soon',
-			'editTask.repeatingEditDialog.title': 'You are changing a repeating task',
+			'editTask.repeatingEditDialog.title': 'Editing repeating task',
 			'editTask.repeatingEditDialog.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
 			'editTask.repeatingEditDialog.onlyThis': 'Only this task',
 			'editTask.repeatingEditDialog.thisAndAllFuture': 'This and all future tasks',

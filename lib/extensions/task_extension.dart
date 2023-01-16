@@ -9,7 +9,7 @@ import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_modal.dart';
-import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
@@ -795,9 +795,9 @@ extension TaskExt on Task {
     }
 
     if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
-      showDialog(
+      showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => RecurringEditDialog(
+          builder: (context) => RecurringEditModal(
                 onlyThisTap: () {
                   editTaskCubit.modalDismissed();
                 },
