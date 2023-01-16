@@ -113,7 +113,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       fetchTodayTasks(),
       _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
       _labelsCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!) : Future.value(),
-      fetchCalendarTasks(),
     ]);
 
     emit(state.copyWith(tasksLoaded: true));
@@ -160,15 +159,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     try {
       List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
       emit(state.copyWith(labelTasks: tasks));
-    } catch (e, s) {
-      _sentryService.captureException(e, stackTrace: s);
-    }
-  }
-
-  Future<void> fetchCalendarTasks() async {
-    try {
-      List<Task> tasks = await _tasksRepository.getCalendarTasks();
-      emit(state.copyWith(calendarTasks: tasks));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
