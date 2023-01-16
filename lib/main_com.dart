@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,7 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
 Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   DatabaseService databaseService = DatabaseService();
+
   tz.initializeTimeZones();
   await databaseService.open();
   setupLocator(preferences: preferences, databaseService: databaseService);
