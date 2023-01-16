@@ -15,7 +15,11 @@
       "name": "Production",
       "type": "dart",
       "request": "launch",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "prod"
+      ]
     },
     {
       "name": "Profile",

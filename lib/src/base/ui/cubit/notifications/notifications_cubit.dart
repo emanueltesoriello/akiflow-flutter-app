@@ -28,11 +28,14 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   // ****************************************
   init() async {
     if (Platform.isAndroid) {
-      await _localNotificationsPlugin
-          .initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
-      await _localNotificationsPlugin
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
+      //  await _localNotificationsPlugin
+      //     .initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
+      //   await _localNotificationsPlugin
+      //       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      //       ?.createNotificationChannel(channel);
+      // _firebaseMessaging.app.
+      await _firebaseMessaging.requestPermission();
+
       _firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
     }
     if (Platform.isIOS) {
