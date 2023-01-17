@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/database_service.dart';
@@ -10,6 +11,8 @@ import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 @pragma('vm:entry-point')
 callbackDispatcher() {
@@ -43,6 +46,24 @@ callbackDispatcher() {
 
       // Show a local notification to confirm the background Sync
       NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
+
+      // ***********************************
+      // Test for scheduled notifications
+      // ***********************************
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation("Europe/Rome"));
+      NotificationsCubit.scheduleNotifications("Scheduled task test!", "Scheduled task runned successfully",
+          notificationId: 0,
+          scheduledDate: tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1)),
+          notificationDetails: const NotificationDetails(
+            android: AndroidNotificationDetails(
+              "channel.id",
+              "channel.name",
+              channelDescription: "default.channelDescription",
+              // other properties...
+            ),
+          ));
+      // ***********************************
     } catch (err) {
       if (kDebugMode) log(err.toString());
       throw Exception(err);

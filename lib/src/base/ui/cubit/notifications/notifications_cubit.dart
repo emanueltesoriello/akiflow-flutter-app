@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 
 part 'notifications_state.dart';
@@ -80,5 +81,14 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
                 // other properties...
               ),
             ));
+  }
+
+  static scheduleNotifications(String title, String description,
+      {int notificationId = 0, NotificationDetails? notificationDetails, required TZDateTime scheduledDate}) {
+    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    localNotificationsPlugin.zonedSchedule(
+        notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
 }
