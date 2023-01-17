@@ -32,7 +32,7 @@ callbackDispatcher() {
         production: true,
       );
 
-      setupLocator(preferences: preferences, databaseService: databaseService);
+      setupLocator(preferences: preferences, databaseService: databaseService, initFirebaseApp: false);
       final SyncControllerService syncControllerService = locator<SyncControllerService>();
       await syncControllerService.sync();
 

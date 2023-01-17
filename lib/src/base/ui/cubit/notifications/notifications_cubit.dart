@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,7 +12,6 @@ part 'notifications_state.dart';
 
 class NotificationsCubit extends Cubit<NotificationsCubitState> {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  final _firebaseMessaging = FirebaseMessaging.instance;
   final AndroidNotificationChannel channel = const AndroidNotificationChannel(
     'default_channel', // id
     "defaultChannel", // title
@@ -19,14 +19,17 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     importance: Importance.defaultImportance,
   );
 
-  NotificationsCubit() : super(const NotificationsCubitState()) {
+  NotificationsCubit({bool initFirebaseApp = true}) : super(const NotificationsCubitState()) {
     setupLocalNotificationsPlugin();
-    init();
+    if (initFirebaseApp) {
+      initFirebaseMessaging();
+    }
   }
 
   // ************ INIT FUNCTIONS ************
   // ****************************************
-  init() async {
+  initFirebaseMessaging() async {
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     if (Platform.isAndroid) {
       //  await _localNotificationsPlugin
       //     .initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
@@ -34,6 +37,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
       //       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       //       ?.createNotificationChannel(channel);
       // _firebaseMessaging.app.
+
       await _firebaseMessaging.requestPermission();
 
       _firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);

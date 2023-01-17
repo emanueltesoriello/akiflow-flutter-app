@@ -39,7 +39,10 @@ GetIt locator = GetIt.instance;
 
 // Order of the registration is important
 void setupLocator(
-    {required SharedPreferences preferences, required DatabaseService databaseService, String? endpoint}) {
+    {required SharedPreferences preferences,
+    required DatabaseService databaseService,
+    String? endpoint,
+    bool initFirebaseApp = true}) {
   PreferencesRepository preferencesRepository = PreferencesRepositoryImpl(preferences);
 
   /// Core
@@ -78,7 +81,7 @@ void setupLocator(
   /// Blocs
   TodayCubit todayCubit = TodayCubit();
   SyncCubit syncCubit = SyncCubit();
-  NotificationsCubit notificationsCubit = NotificationsCubit();
+  NotificationsCubit notificationsCubit = NotificationsCubit(initFirebaseApp: initFirebaseApp);
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   AuthCubit authCubit = AuthCubit(syncCubit);
 
