@@ -5,14 +5,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
+import 'package:models/task/task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 @pragma('vm:entry-point')
 callbackDispatcher() {
@@ -39,6 +42,7 @@ callbackDispatcher() {
       final SyncControllerService syncControllerService = locator<SyncControllerService>();
       await syncControllerService.sync();
 
+      await scheduleNotifications();
       int? totalExecutions;
 
       totalExecutions = preferences.getInt("totalExecutions");
@@ -71,6 +75,29 @@ callbackDispatcher() {
 
     return Future.value(true);
   });
+}
+
+scheduleNotifications() async {
+  NotificationsCubit.cancelScheduledNotifications();
+  TasksRepository tasksRepository = locator<TasksRepository>();
+  List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
+
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation("Europe/Rome"));
+
+  for (int i = 0; i < todayTasks.length; i++) {
+    NotificationsCubit.scheduleNotifications(todayTasks[i].title ?? '', "Will start in 5 minutes!",
+        notificationId: todayTasks[i].id.hashCode,
+        scheduledDate: tz.TZDateTime.parse(tz.local, todayTasks[i].datetime!).subtract(const Duration(minutes: 5)),
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            "channel.id",
+            "channel.name",
+            channelDescription: "default.channelDescription",
+            // other properties...
+          ),
+        ));
+  }
 }
 
 class BackgroundService {

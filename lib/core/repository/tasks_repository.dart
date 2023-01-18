@@ -110,6 +110,42 @@ class TasksRepository extends DatabaseRepository {
     return objects;
   }
 
+  Future<List<Task>> getTasksForScheduledNotifications<Task>() async {
+    DateTime date = DateTime.now().toUtc();
+    DateTime endTime = date.add(const Duration(days: 1));
+
+    List<Map<String, Object?>> items;
+
+    items = await _databaseService.database!.rawQuery(
+      """
+        SELECT * FROM tasks
+        WHERE deleted_at IS NULL
+        AND trashed_at IS NULL
+        AND datetime IS NOT NULL
+        AND status = '${TaskStatusType.planned.id}'
+        AND (datetime >= ? AND datetime <= ?)
+        ORDER BY
+          CASE
+            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
+              THEN datetime
+            ELSE
+              sorting
+          END
+""",
+      [
+        date.toUtc().toIso8601String(),
+        endTime.toUtc().toIso8601String(),
+        DateTime.now().toUtc().toIso8601String(),
+        DateTime.now().toUtc().toIso8601String(),
+      ],
+    ).catchError((e) {
+      print(e);
+    });
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
   Future<List<Task>> getSomeday() async {
     List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
       SELECT *
