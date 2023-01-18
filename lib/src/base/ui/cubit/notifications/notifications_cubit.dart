@@ -85,21 +85,24 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
 
   static cancelScheduledNotifications() async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var activeNotifications = await localNotificationsPlugin.getActiveNotifications();
+    List<ActiveNotification> activeNotifications = [];
+    activeNotifications.addAll(await localNotificationsPlugin.getActiveNotifications());
     await localNotificationsPlugin.cancelAll();
-    for (var notification in activeNotifications) {
-      localNotificationsPlugin.show(
-          notification.id,
-          notification.title,
-          notification.body,
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              "channel.id",
-              "channel.name",
-              channelDescription: "default.channelDescription",
-              // other properties...
-            ),
-          ));
+    if (activeNotifications.isNotEmpty) {
+      for (var notification in activeNotifications) {
+        localNotificationsPlugin.show(
+            notification.id,
+            notification.title,
+            notification.body,
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                "channel.id",
+                "channel.name",
+                channelDescription: "default.channelDescription",
+                // other properties...
+              ),
+            ));
+      }
     }
   }
 

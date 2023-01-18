@@ -78,7 +78,7 @@ callbackDispatcher() {
 }
 
 scheduleNotifications() async {
-  NotificationsCubit.cancelScheduledNotifications();
+  await NotificationsCubit.cancelScheduledNotifications();
   TasksRepository tasksRepository = locator<TasksRepository>();
   List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
 
