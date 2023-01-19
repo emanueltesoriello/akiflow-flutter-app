@@ -116,6 +116,7 @@ class TasksRepository extends DatabaseRepository {
 
     List<Map<String, Object?>> items;
 
+    //TODO check if the done filed have to be added as not null or false;
     items = await _databaseService.database!.rawQuery(
       """
         SELECT * FROM tasks

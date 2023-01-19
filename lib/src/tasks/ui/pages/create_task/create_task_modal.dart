@@ -91,8 +91,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 await context.read<EditTaskCubit>().create();
                                 Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
                                 Workmanager().registerOneOffTask(
-                                  "backgroundSync",
-                                  "backgroundSync",
+                                  "scheduleNotifications",
+                                  "scheduleNotifications",
                                 );
                                 Navigator.pop(context, taskUpdated);
                               }),

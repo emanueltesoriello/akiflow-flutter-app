@@ -788,8 +788,8 @@ extension TaskExt on Task {
       tasksCubit.handleDocAction([updated]);
     }
     Workmanager().registerOneOffTask(
-      "backgroundSync",
-      "backgroundSync",
+      "scheduleNotifications",
+      "scheduleNotifications",
     );
   }
 

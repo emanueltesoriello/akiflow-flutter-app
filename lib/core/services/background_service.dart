@@ -15,7 +15,6 @@ import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 @pragma('vm:entry-point')
 callbackDispatcher() {
@@ -29,7 +28,9 @@ callbackDispatcher() {
         sendPort.send(['backgroundSync']); //change this in order to send datas to all the listeners.
       }
 
-      // init local services
+      // *********************************************
+      // ***** init services *************************
+      // *********************************************
       SharedPreferences preferences = await SharedPreferences.getInstance();
       DatabaseService databaseService = DatabaseService();
       await databaseService.open(skipDirectoryCreation: true);
@@ -37,30 +38,25 @@ callbackDispatcher() {
         configFile: 'assets/config/prod.json',
         production: true,
       );
-
       setupLocator(preferences: preferences, databaseService: databaseService, initFirebaseApp: false);
+      // *********************************************
+      // *********************************************
 
+      // *********************************************
+      // ***** background notifications scheduling ***
+      // *********************************************
       if (task == 'scheduleNotifications') {
         await scheduleNotifications();
-        int? totalExecutions;
 
-        totalExecutions = preferences.getInt("totalExecutions");
-        preferences.setInt("totalExecutions", totalExecutions == null ? 1 : totalExecutions + 1);
-
-        // Show a local notification to confirm the background Sync
+        // N.B. to be remove: show a local notification to confirm the background Sync
         NotificationsCubit.showNotifications("Yeaaah!", "Updated the scheduling of notifications!");
-        // ***********************************
+        // *********************************************
 
       } else {
         final SyncControllerService syncControllerService = locator<SyncControllerService>();
         await syncControllerService.sync();
 
         await scheduleNotifications();
-        int? totalExecutions;
-
-        totalExecutions = preferences.getInt("totalExecutions");
-        preferences.setInt("totalExecutions", totalExecutions == null ? 1 : totalExecutions + 1);
-
         // Show a local notification to confirm the background Sync
         NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
 
@@ -86,29 +82,33 @@ callbackDispatcher() {
       if (kDebugMode) log(err.toString());
       throw Exception(err);
     }
-
     return Future.value(true);
   });
 }
 
 scheduleNotifications() async {
+  //TODO handle notifications settings based on shared preferences
+  SharedPreferences preferences = await SharedPreferences.getInstance();
   await NotificationsCubit.cancelScheduledNotifications();
+
   TasksRepository tasksRepository = locator<TasksRepository>();
   List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
 
   tz.initializeTimeZones();
   tz.setLocalLocation(tz.getLocation("Europe/Rome"));
 
-  for (int i = 0; i < todayTasks.length; i++) {
-    NotificationsCubit.scheduleNotifications(todayTasks[i].title ?? '', "Will start in 5 minutes!",
-        notificationId: todayTasks[i].id.hashCode,
-        scheduledDate: tz.TZDateTime.parse(tz.local, todayTasks[i].datetime!).subtract(const Duration(minutes: 5)),
+  for (Task task in todayTasks) {
+    // get the last 8 hex char from the ID and convert them into an int
+    int notificationsId = int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16);
+
+    NotificationsCubit.scheduleNotifications(task.title ?? '', "Will start in 5 minutes!",
+        notificationId: notificationsId,
+        scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!).subtract(const Duration(minutes: 5)),
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
-            "channel.id",
-            "channel.name",
-            channelDescription: "default.channelDescription",
-            // other properties...
+            "channel_d",
+            "channel_name",
+            channelDescription: "default_channelDescription",
           ),
         ));
   }
@@ -120,6 +120,7 @@ class BackgroundService {
   static initBackgroundService() {
     Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
         isInDebugMode:
+            //TODO: add a kfebugMode check
             true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
   }
