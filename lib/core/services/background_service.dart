@@ -98,8 +98,13 @@ scheduleNotifications() async {
   tz.setLocalLocation(tz.getLocation("Europe/Rome"));
 
   for (Task task in todayTasks) {
-    // get the last 8 hex char from the ID and convert them into an int
-    int notificationsId = int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16);
+    int notificationsId = 0;
+    try {
+      // get the last 8 hex char from the ID and convert them into an int
+      notificationsId = int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16);
+    } catch (e) {
+      notificationsId = task.id.hashCode;
+    }
 
     NotificationsCubit.scheduleNotifications(task.title ?? '', "Will start in 5 minutes!",
         notificationId: notificationsId,
