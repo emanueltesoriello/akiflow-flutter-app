@@ -10,6 +10,7 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
 import 'package:models/task/task.dart';
+import 'package:workmanager/workmanager.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
@@ -85,10 +86,14 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 titleController: simpleTitleController,
                                 titleFocus: titleFocus,
                               ),
-                              SendTaskButton(onTap: () {
+                              SendTaskButton(onTap: () async {
                                 HapticFeedback.mediumImpact();
-                                context.read<EditTaskCubit>().create();
+                                await context.read<EditTaskCubit>().create();
                                 Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
+                                Workmanager().registerOneOffTask(
+                                  "backgroundSync",
+                                  "backgroundSync",
+                                );
                                 Navigator.pop(context, taskUpdated);
                               }),
                             ],

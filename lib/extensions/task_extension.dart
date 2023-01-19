@@ -25,6 +25,7 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:workmanager/workmanager.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -786,6 +787,10 @@ extension TaskExt on Task {
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
     }
+    Workmanager().registerOneOffTask(
+      "backgroundSync",
+      "backgroundSync",
+    );
   }
 
   Future<void> openLinkedContentUrl([Doc? doc]) async {

@@ -39,35 +39,49 @@ callbackDispatcher() {
       );
 
       setupLocator(preferences: preferences, databaseService: databaseService, initFirebaseApp: false);
-      final SyncControllerService syncControllerService = locator<SyncControllerService>();
-      await syncControllerService.sync();
 
-      await scheduleNotifications();
-      int? totalExecutions;
+      if (task == 'scheduleNotifications') {
+        await scheduleNotifications();
+        int? totalExecutions;
 
-      totalExecutions = preferences.getInt("totalExecutions");
-      preferences.setInt("totalExecutions", totalExecutions == null ? 1 : totalExecutions + 1);
+        totalExecutions = preferences.getInt("totalExecutions");
+        preferences.setInt("totalExecutions", totalExecutions == null ? 1 : totalExecutions + 1);
 
-      // Show a local notification to confirm the background Sync
-      NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
+        // Show a local notification to confirm the background Sync
+        NotificationsCubit.showNotifications("Yeaaah!", "Updated the scheduling of notifications!");
+        // ***********************************
 
-      // ***********************************
-      // Test for scheduled notifications
-      // ***********************************
-      tz.initializeTimeZones();
-      tz.setLocalLocation(tz.getLocation("Europe/Rome"));
-      NotificationsCubit.scheduleNotifications("Scheduled task test!", "Scheduled task runned successfully",
-          notificationId: 0,
-          scheduledDate: tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1)),
-          notificationDetails: const NotificationDetails(
-            android: AndroidNotificationDetails(
-              "channel.id",
-              "channel.name",
-              channelDescription: "default.channelDescription",
-              // other properties...
-            ),
-          ));
-      // ***********************************
+      } else {
+        final SyncControllerService syncControllerService = locator<SyncControllerService>();
+        await syncControllerService.sync();
+
+        await scheduleNotifications();
+        int? totalExecutions;
+
+        totalExecutions = preferences.getInt("totalExecutions");
+        preferences.setInt("totalExecutions", totalExecutions == null ? 1 : totalExecutions + 1);
+
+        // Show a local notification to confirm the background Sync
+        NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
+
+        // ***********************************
+        // Test for scheduled notifications
+        // ***********************************
+        tz.initializeTimeZones();
+        tz.setLocalLocation(tz.getLocation("Europe/Rome"));
+        NotificationsCubit.scheduleNotifications("Scheduled task test!", "Scheduled task runned successfully",
+            notificationId: 0,
+            scheduledDate: tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1)),
+            notificationDetails: const NotificationDetails(
+              android: AndroidNotificationDetails(
+                "channel.id",
+                "channel.name",
+                channelDescription: "default.channelDescription",
+                // other properties...
+              ),
+            ));
+        // ***********************************
+      }
     } catch (err) {
       if (kDebugMode) log(err.toString());
       throw Exception(err);
