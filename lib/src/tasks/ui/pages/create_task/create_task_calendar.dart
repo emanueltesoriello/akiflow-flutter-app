@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
+import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurrence_modal.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/task/task.dart';
+import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CreateTaskCalendar extends StatefulWidget {
@@ -192,43 +199,89 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: ValueListenableBuilder(
-                            valueListenable: _selectedDatetime,
-                            builder: (context, TimeOfDay? selectedTime, child) {
-                              return TextButton(
-                                  onPressed: () {
-                                    TimeOfDay initialTime =
-                                        _selectedDatetime.value ?? TimeOfDay(hour: widget.defaultTimeHour, minute: 0);
-                                    TimePickerUtils.pick(
-                                      context,
-                                      initialTime: initialTime,
-                                      onTimeSelected: (selected) {
-                                        _selectedDatetime.value = selected;
+                        Row(
+                          children: [
+                            ValueListenableBuilder(
+                              valueListenable: _selectedDatetime,
+                              builder: (context, TimeOfDay? selectedTime, child) {
+                                return TextButton(
+                                    onPressed: () {
+                                      TimeOfDay initialTime =
+                                          _selectedDatetime.value ?? TimeOfDay(hour: widget.defaultTimeHour, minute: 0);
+                                      TimePickerUtils.pick(
+                                        context,
+                                        initialTime: initialTime,
+                                        onTimeSelected: (selected) {
+                                          _selectedDatetime.value = selected;
 
-                                        if (widget.onSelectTime != null) {
-                                          widget.onSelectTime!(_selectedDatetime.value);
-                                        }
-                                      },
-                                    );
-                                  },
-                                  style: const ButtonStyle(
-                                    alignment: Alignment.centerLeft,
+                                          if (widget.onSelectTime != null) {
+                                            widget.onSelectTime!(_selectedDatetime.value);
+                                          }
+                                        },
+                                      );
+                                    },
+                                    style: const ButtonStyle(
+                                      alignment: Alignment.centerLeft,
+                                    ),
+                                    child: Text(
+                                      selectedTime == null
+                                          ? t.addTask.addTime
+                                          : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
+                                              selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: ColorsExt.grey2(context),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ));
+                              },
+                            ),
+                            const SizedBox(width: 16),
+                            InkWell(
+                              onTap: () {
+                                var cubit = context.read<EditTaskCubit>();
+                                cubit.recurrenceTap();
+                                Task updatedTask = context.read<EditTaskCubit>().state.updatedTask;
+                                print('UPDATED TASK: $updatedTask');
+
+                                showCupertinoModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => RecurrenceModal(
+                                    onChange: (RecurrenceRule? rule) {
+                                      cubit.setRecurrence(rule);
+                                    },
+                                    selectedRecurrence: updatedTask.recurrenceComputed,
+                                    rule: updatedTask.ruleFromStringList,
                                   ),
-                                  child: Text(
-                                    selectedTime == null
-                                        ? t.addTask.addTime
-                                        : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
-                                            selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/icons/_common/repeat.svg",
+                                    width: 20,
+                                    height: 20,
+                                    color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
+                                        ? ColorsExt.grey2(context)
+                                        : ColorsExt.grey3(context),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    t.editTask.repeat,
                                     style: TextStyle(
                                       fontSize: 15,
-                                      color: ColorsExt.grey2(context),
                                       fontWeight: FontWeight.w500,
+                                      color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
+                                          ? ColorsExt.grey2(context)
+                                          : ColorsExt.grey3(context),
                                     ),
-                                  ));
-                            },
-                          ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(width: 16),
                         InkWell(
