@@ -88,13 +88,15 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               ),
                               SendTaskButton(onTap: () async {
                                 HapticFeedback.mediumImpact();
+                                Navigator.pop(context);
+
                                 await context.read<EditTaskCubit>().create();
                                 Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
+                                //Navigator.pop(context, taskUpdated);
                                 Workmanager().registerOneOffTask(
                                   "scheduleNotifications",
                                   "scheduleNotifications",
                                 );
-                                Navigator.pop(context, taskUpdated);
                               }),
                             ],
                           ),
