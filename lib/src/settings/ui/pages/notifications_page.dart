@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
+import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -18,11 +19,14 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   String dailyOverviewTime = '';
+  NextTaskNotificationsModel selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
 
   @override
   void initState() {
     super.initState();
     final service = locator<PreferencesRepository>();
+    selectedNextTaskNotificationsModel = service.nextTaskNotificationSetting;
+
     dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
   }
 
@@ -78,9 +82,83 @@ class _NotificationsPageState extends State<NotificationsPage> {
     );
   }
 
+  _receiveNotificationSettingModal() {
+    return Material(
+        color: Theme.of(context).backgroundColor,
+        child: AnimatedSize(
+          curve: Curves.elasticOut,
+          duration: const Duration(milliseconds: 400),
+          child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+              ),
+              margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  const SizedBox(height: 12),
+                  const ScrollChip(),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                          child: Text('Send notifications ...',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey2(context))),
+                        ),
+                        const SizedBox(height: 12),
+                        ...List.generate(
+                          NextTaskNotificationsModel.values.length,
+                          (index) => RadioListTile(
+                            activeColor: ColorsExt.akiflow(context),
+                            onChanged: (bool? value) {
+                              if (value == true) {
+                                PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+                                preferencesRepository
+                                    .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
+                                setState(() {
+                                  selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
+                                });
+                              }
+                            },
+                            value: true,
+                            title: Text(NextTaskNotificationsModel.values[index].title,
+                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                                      fontSize: 17,
+                                      color: ColorsExt.grey2(context),
+                                    )),
+                            groupValue: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
+                                selectedNextTaskNotificationsModel.minutesBeforeToStart,
+                          ),
+                        ).reversed,
+                        const SizedBox(height: 50),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+        ));
+  }
+
   onReceiveNotificationNextTaskClick() async {
     await showCupertinoModalBottomSheet(
-        context: context, builder: (context) => const ReceiveNotificationSettingModal());
+      context: context,
+      builder: (context) => ReceiveNotificationSettingModal(
+        selectedNextTaskNotificationsModel: selectedNextTaskNotificationsModel,
+        onSelectedNextTaskNotificationsModel: (NextTaskNotificationsModel newVal) {
+          setState(() {
+            selectedNextTaskNotificationsModel = newVal;
+          });
+        },
+      ),
+    );
   }
 
   fromTimeOfDayToFormattedString(TimeOfDay value) {
@@ -123,7 +201,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                 ),
                 const SizedBox(height: 5),
-                mainItem("Next tasks", "Receive notification", "X minutes before the task starts",
+                mainItem("Next tasks", "Receive notification", selectedNextTaskNotificationsModel.title,
                     () => onReceiveNotificationNextTaskClick()),
                 const SizedBox(height: 20),
                 Text(

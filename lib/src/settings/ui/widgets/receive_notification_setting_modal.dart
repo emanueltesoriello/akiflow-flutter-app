@@ -6,20 +6,26 @@ import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 class ReceiveNotificationSettingModal extends StatefulWidget {
-  const ReceiveNotificationSettingModal({Key? key}) : super(key: key);
+  final NextTaskNotificationsModel selectedNextTaskNotificationsModel;
+  final Function(NextTaskNotificationsModel value) onSelectedNextTaskNotificationsModel;
+
+  const ReceiveNotificationSettingModal({
+    required this.selectedNextTaskNotificationsModel,
+    required this.onSelectedNextTaskNotificationsModel,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ReceiveNotificationSettingModal> createState() => _ReceiveNotificationSettingModalState();
 }
 
 class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSettingModal> {
-  NextTaskNotificationsModel selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
+  NextTaskNotificationsModel _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
 
   @override
   void initState() {
     super.initState();
-    final service = locator<PreferencesRepository>();
-    selectedNextTaskNotificationsModel = service.nextTaskNotificationSetting;
+    _selectedNextTaskNotificationsModel = widget.selectedNextTaskNotificationsModel;
   }
 
   @override
@@ -64,8 +70,9 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                 PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
                                 preferencesRepository
                                     .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
+                                widget.onSelectedNextTaskNotificationsModel(NextTaskNotificationsModel.values[index]);
                                 setState(() {
-                                  selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
+                                  _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
                                 });
                               }
                             },
@@ -76,7 +83,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                       color: ColorsExt.grey2(context),
                                     )),
                             groupValue: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
-                                selectedNextTaskNotificationsModel.minutesBeforeToStart,
+                                _selectedNextTaskNotificationsModel.minutesBeforeToStart,
                           ),
                         ).reversed,
                         const SizedBox(height: 50),
