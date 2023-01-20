@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 class ReceiveNotificationSettingModal extends StatefulWidget {
@@ -41,10 +42,10 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey2(context))),
                         const SizedBox(height: 12),
                         ...List.generate(
-                          5,
+                          NextTaskNotificationsModel.values.length,
                           (index) => Container(
                             padding: const EdgeInsets.symmetric(vertical: 15),
-                            child: Text('${index * 5} minutes before',
+                            child: Text(NextTaskNotificationsModel.values[index].title,
                                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                                       fontSize: 17,
                                       color: ColorsExt.grey2(context),
