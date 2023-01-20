@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,6 +62,12 @@ abstract class PreferencesRepository {
 
   bool get reconnectPageSkipped;
   Future<void> setReconnectPageSkipped(bool value);
+
+  NextTaskNotificationsModel get nextTaskNotificationSetting;
+  Future<void> setNextTaskNotificationSetting(NextTaskNotificationsModel value);
+
+  TimeOfDay get dailyOverviewNotificationTime;
+  Future<void> setDailyOverviewNotificationTime(TimeOfDay value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -284,5 +292,38 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setReconnectPageSkipped(bool value) async {
     await _prefs.setBool("reconnectPageSkipped", value);
+  }
+
+  @override
+  NextTaskNotificationsModel get nextTaskNotificationSetting {
+    return NextTaskNotificationsModel.fromMap(
+      jsonDecode(_prefs.getString("nextTaskNotificationSetting") ?? ''),
+    );
+  }
+
+  @override
+  Future<void> setNextTaskNotificationSetting(NextTaskNotificationsModel value) async {
+    await _prefs.setString(
+      "nextTaskNotificationSetting",
+      jsonEncode(
+        NextTaskNotificationsModel.toMap(value).toString(),
+      ),
+    );
+  }
+
+  @override
+  TimeOfDay get dailyOverviewNotificationTime {
+    String? value = _prefs.getString("dailyOverviewNotificationTime");
+    if (value != null) {
+      TimeOfDay time = TimeOfDay(hour: int.parse(value.split(":")[0]), minute: int.parse(value.split(":")[1]));
+      return time;
+    } else {
+      return const TimeOfDay(hour: 8, minute: 0);
+    }
+  }
+
+  @override
+  Future<void> setDailyOverviewNotificationTime(TimeOfDay value) async {
+    await _prefs.setString("dailyOverviewNotificationTime", value.toString());
   }
 }

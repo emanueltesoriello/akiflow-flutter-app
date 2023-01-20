@@ -38,7 +38,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Send notifications...',
+                        Text('Send notifications ...',
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey2(context))),
                         const SizedBox(height: 12),
                         ...List.generate(

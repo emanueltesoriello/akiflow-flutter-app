@@ -8,4 +8,25 @@ enum NextTaskNotificationsModel {
   const NextTaskNotificationsModel(this.minutesBeforeToStart, this.title);
   final int minutesBeforeToStart;
   final String title;
+
+  static Map<String, dynamic> toMap(NextTaskNotificationsModel model) {
+    return {"minutesBeforeToStart": model.minutesBeforeToStart, "title": model.title};
+  }
+
+  static NextTaskNotificationsModel fromMap(Map<String, dynamic> map) {
+    switch (map["minutesBeforeToStart"]) {
+      case 1:
+        return a;
+      case 2:
+        return b;
+      case 3:
+        return c;
+      case 5:
+        return d;
+      case 10:
+        return e;
+      default:
+        return d;
+    }
+  }
 }
