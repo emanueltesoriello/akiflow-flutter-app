@@ -11,6 +11,7 @@ import 'package:mobile/src/integrations/ui/pages/integrations_page.dart';
 import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
 import 'package:mobile/src/settings/ui/pages/about_page.dart';
 import 'package:mobile/src/settings/ui/pages/my_account_page.dart';
+import 'package:mobile/src/settings/ui/pages/notifications_page.dart';
 import 'package:mobile/src/settings/ui/widgets/settings_header_text.dart';
 import 'package:models/account/account.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -49,8 +50,10 @@ class SettingsPage extends StatelessWidget {
             title: t.settings.notifications,
             position: ButtonListPosition.center,
             leading: "assets/images/icons/_common/bell.svg",
-            enabled: false,
-            onPressed: () {},
+            enabled: true,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationsPage()));
+            },
           ),
           ButtonList(
             title: t.settings.tasks,
