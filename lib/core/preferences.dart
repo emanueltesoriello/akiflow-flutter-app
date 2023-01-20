@@ -313,7 +313,7 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   TimeOfDay get dailyOverviewNotificationTime {
-    String? value = _prefs.getString("dailyOverviewNotificationTime");
+    String? value = _prefs.getString("dailyOverviewNotificationSetTime");
     if (value != null) {
       TimeOfDay time = TimeOfDay(hour: int.parse(value.split(":")[0]), minute: int.parse(value.split(":")[1]));
       return time;
@@ -324,6 +324,6 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   Future<void> setDailyOverviewNotificationTime(TimeOfDay value) async {
-    await _prefs.setString("dailyOverviewNotificationTime", value.toString());
+    await _prefs.setString("dailyOverviewNotificationSetTime", "${value.hour.toString()}:${value.minute.toString()}");
   }
 }

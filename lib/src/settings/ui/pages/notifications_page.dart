@@ -3,6 +3,8 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -15,6 +17,19 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  String dailyOverviewTime = '';
+
+  @override
+  void initState() {
+    super.initState();
+    final service = locator<PreferencesRepository>();
+    dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
+  }
+
+  void updateUserDetails() {
+    setState(() {});
+  }
+
   mainItem(String switchTitle, String mainButtonListTitle, String selectedButtonListItem, Function onTap) {
     return Container(
       margin: const EdgeInsets.all(1),
@@ -72,12 +87,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
         context: context, builder: (context) => const ReceiveNotificationSettingModal());
   }
 
+  fromTimeOfDayToFormattedString(TimeOfDay value) {
+    return "At ${value.hour.toString()}:${value.minute.toString()}";
+  }
+
   onReceiveNotificationDailyOverviewClick() {
-    TimeOfDay initialTime = const TimeOfDay(hour: 8, minute: 0);
+    PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
     TimePickerUtils.pick(
       context,
-      initialTime: initialTime,
-      onTimeSelected: (selected) {},
+      initialTime: preferencesRepository.dailyOverviewNotificationTime,
+      onTimeSelected: (selected) {
+        if (selected != null) {
+          preferencesRepository.setDailyOverviewNotificationTime(selected);
+          setState(() {
+            dailyOverviewTime = fromTimeOfDayToFormattedString(selected);
+          });
+        }
+      },
     );
   }
 
@@ -109,7 +135,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                 ),
                 const SizedBox(height: 5),
-                mainItem("Daily overview notification", "Receive notification", "At 10:00",
+                FutureBuilder(builder: (context, AsyncSnapshot<PreferencesRepository> repo) {
+                  return Container();
+                }),
+                mainItem("Daily overview notification", "Receive notification", dailyOverviewTime,
                     () => onReceiveNotificationDailyOverviewClick()),
               ],
             ),

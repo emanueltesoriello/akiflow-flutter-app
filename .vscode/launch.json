@@ -12,6 +12,12 @@
       ]
     },
     {
+      "name": "Development iOS",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main_dev.dart",
+    },
+    {
       "name": "Production",
       "type": "dart",
       "request": "launch",
@@ -20,6 +26,12 @@
         "--flavor",
         "prod"
       ]
+    },
+    {
+      "name": "Production iOS",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
     },
     {
       "name": "Profile",
