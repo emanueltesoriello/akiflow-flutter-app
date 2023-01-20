@@ -296,18 +296,16 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   NextTaskNotificationsModel get nextTaskNotificationSetting {
-    return NextTaskNotificationsModel.fromMap(
-      jsonDecode(_prefs.getString("nextTaskNotificationSetting") ?? ''),
+    return NextTaskNotificationsModel.fromMap( 
+      jsonDecode(_prefs.getString("nextTaskNotificationSettingValue") ?? '{}'),
     );
   }
 
   @override
   Future<void> setNextTaskNotificationSetting(NextTaskNotificationsModel value) async {
     await _prefs.setString(
-      "nextTaskNotificationSetting",
-      jsonEncode(
-        NextTaskNotificationsModel.toMap(value).toString(),
-      ),
+      "nextTaskNotificationSettingValue",
+      jsonEncode(NextTaskNotificationsModel.toMap(value)),
     );
   }
 

@@ -26,10 +26,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
   }
 
-  void updateUserDetails() {
-    setState(() {});
-  }
-
   mainItem(String switchTitle, String mainButtonListTitle, String selectedButtonListItem, Function onTap) {
     return Container(
       margin: const EdgeInsets.all(1),
