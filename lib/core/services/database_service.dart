@@ -166,13 +166,16 @@ CREATE TABLE IF NOT EXISTS calendars(
   `icon` VARCHAR(255),
   `akiflow_primary` INTEGER,
   `is_akiflow_calendar` INTEGER,
+  `timezone` VARCHAR(255),
   `settings` TEXT,
   `etag` VARCHAR(255),
   `sync_status` VARCHAR(255),
   `remote_updated_at` TEXT,
   `created_at` TEXT,
   `updated_at` TEXT,
-  `deleted_at` TEXT
+  `deleted_at` TEXT,
+  `account_identifier` VARCHAR(255),
+  `account_picture` VARCHAR(255)
 )
     ''');
     batch.execute('''

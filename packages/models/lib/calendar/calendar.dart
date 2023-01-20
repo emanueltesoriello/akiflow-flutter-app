@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
 import 'package:models/nullable.dart';
@@ -5,7 +6,6 @@ import 'package:models/nullable.dart';
 class Calendar extends Equatable implements Base {
   const Calendar({
     this.id,
-    this.userId,
     this.originId,
     this.connectorId,
     this.akiflowAccountId,
@@ -23,186 +23,200 @@ class Calendar extends Equatable implements Base {
     this.syncStatus,
     this.isAkiflowCalendar,
     this.settings,
-    this.webhookId,
-    this.webhookResourceId,
-    this.globalUpdatedAt,
-    this.globalCreatedAt,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
     this.remoteUpdatedAt,
+    this.globalUpdatedAt,
+    this.globalCreatedAt,
+    this.accountId,
+    this.timezone,
+    this.accountIdentifier,
+    this.accountPicture,
   });
 
   final String? id;
-  final int? userId;
-  final String? originId;
-  final String? connectorId;
-  final String? akiflowAccountId;
-  final String? originAccountId;
+  final dynamic content;
   final String? etag;
   final String? title;
   final String? description;
-  final dynamic content;
-  final bool? primary;
-  final bool? akiflowPrimary;
-  final bool? readOnly;
+  final String? originId;
+  final String? akiflowAccountId;
+  final String? originAccountId;
+  final String? accountId;
+  final String? connectorId;
   final String? url;
   final String? color;
-  final dynamic icon;
-  final dynamic syncStatus;
+  final bool? readOnly;
+  final String? icon;
+  final String? syncStatus;
+  final bool? primary;
+  final bool? akiflowPrimary;
   final bool? isAkiflowCalendar;
+  final String? timezone;
   final dynamic settings;
-  final dynamic webhookId;
-  final String? webhookResourceId;
+  final String? remoteUpdatedAt;
   final String? globalUpdatedAt;
   final String? globalCreatedAt;
   final String? createdAt;
   final String? updatedAt;
-  final dynamic deletedAt;
-  final String? remoteUpdatedAt;
+  final String? deletedAt;
+  final String? accountIdentifier;
+  final String? accountPicture;
 
-  factory Calendar.fromMap(Map<String, dynamic> json) => Calendar(
-        id: json['id'] as String?,
-        userId: json['user_id'] as int?,
-        originId: json['origin_id'] as String?,
-        connectorId: json['connector_id'] as String?,
-        akiflowAccountId: json['akiflow_account_id'] as String?,
-        originAccountId: json['origin_account_id'] as String?,
-        etag: json['etag'] as String?,
-        title: json['title'] as String?,
-        description: json['description'] as String?,
-        content: json['content'] as dynamic,
-        primary: json['primary'] as bool?,
-        akiflowPrimary: json['akiflow_primary'] as bool?,
-        readOnly: json['read_only'] as bool?,
-        url: json['url'] as String?,
-        color: json['color'] as String?,
-        icon: json['icon'] as dynamic,
-        syncStatus: json['sync_status'] as dynamic,
-        isAkiflowCalendar: json['is_akiflow_calendar'] as bool?,
-        settings: json['settings'] as dynamic,
-        webhookId: json['webhook_id'] as dynamic,
-        webhookResourceId: json['webhook_resource_id'] as String?,
-        globalUpdatedAt: json['global_updated_at'] as String?,
-        globalCreatedAt: json['global_created_at'] as String?,
-        createdAt: json['created_at'] as String?,
-        updatedAt: json['updated_at'] as String?,
-        deletedAt: json['deleted_at'] as dynamic,
-        remoteUpdatedAt: json['remote_updated_at'] as String?,
+  factory Calendar.fromMap(Map<String, dynamic> map) => Calendar(
+        id: map['id'] as String?,
+        content: map['content'] as dynamic,
+        etag: map['etag'] as String?,
+        title: map['title'] as String?,
+        description: map['description'] as String?,
+        originId: map['origin_id'] as String?,
+        akiflowAccountId: map['akiflow_account_id'] as String?,
+        originAccountId: map['origin_account_id'] as String?,
+        accountId: map['account_id'] as String?,
+        connectorId: map['connector_id'] as String?,
+        url: map['url'] as String?,
+        color: map['color'] as String?,
+        readOnly: map['read_only'] as bool?,
+        icon: map['icon'] as String?,
+        syncStatus: map['sync_status'] as String?,
+        primary: map['primary'] as bool?,
+        akiflowPrimary: map['akiflow_primary'] as bool?,
+        isAkiflowCalendar: map['is_akiflow_calendar'] as bool?,
+        timezone: map['timezone'] as String?,
+        settings: map['settings'] as dynamic,
+        remoteUpdatedAt: map['remote_updated_at'] as String?,
+        globalCreatedAt: map['global_created_at'] as String?,
+        globalUpdatedAt: map['global_updated_at'] as String?,
+        createdAt: map['created_at'] as String?,
+        updatedAt: map['updated_at'] as String?,
+        deletedAt: map['deleted_at'] as String?,
+        accountIdentifier: map['account_identifier'] as String?,
+        accountPicture: map['account_picture'] as String?,
       );
 
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'user_id': userId,
-        'origin_id': originId,
-        'connector_id': connectorId,
-        'akiflow_account_id': akiflowAccountId,
-        'origin_account_id': originAccountId,
+        'content': content,
         'etag': etag,
         'title': title,
         'description': description,
-        'content': content,
-        'primary': primary,
-        'akiflow_primary': akiflowPrimary,
-        'read_only': readOnly,
+        'origin_id': originId,
+        'akiflow_account_id': akiflowAccountId,
+        'origin_account_id': originAccountId,
+        'account_id': accountId,
+        'connector_id': connectorId,
         'url': url,
         'color': color,
+        'read_only': readOnly,
         'icon': icon,
         'sync_status': syncStatus,
+        'primary': primary,
+        'akiflow_primary': akiflowPrimary,
         'is_akiflow_calendar': isAkiflowCalendar,
-        'settings': settings?.toMap(),
-        'webhook_id': webhookId,
-        'webhook_resource_id': webhookResourceId,
-        'global_updated_at': globalUpdatedAt,
+        'timezone': timezone,
+        'settings': settings,
+        'remote_updated_at': remoteUpdatedAt,
         'global_created_at': globalCreatedAt,
+        'global_updated_at': globalUpdatedAt,
         'created_at': createdAt,
         'updated_at': updatedAt,
         'deleted_at': deletedAt,
-        'remote_updated_at': remoteUpdatedAt,
+        'account_identifier': accountIdentifier,
+        'account_picture': accountPicture,
       };
 
   Calendar copyWith({
-    String? id,
-    int? userId,
-    String? originId,
-    String? connectorId,
-    String? akiflowAccountId,
-    String? originAccountId,
-    String? etag,
-    String? title,
-    String? description,
-    dynamic content,
-    bool? primary,
-    bool? akiflowPrimary,
-    bool? readOnly,
-    String? url,
-    String? color,
-    dynamic icon,
-    dynamic syncStatus,
-    bool? isAkiflowCalendar,
-    dynamic settings,
-    dynamic webhookId,
-    String? webhookResourceId,
-    String? globalUpdatedAt,
-    String? globalCreatedAt,
-    String? createdAt,
-    Nullable<String?>? updatedAt,
-    Nullable<String?>? remoteUpdatedAt,
-    dynamic deletedAt,
+    final String? id,
+    final dynamic content,
+    final String? etag,
+    final String? title,
+    final String? description,
+    final String? originId,
+    final String? akiflowAccountId,
+    final String? originAccountId,
+    final String? accountId,
+    final String? connectorId,
+    final String? url,
+    final String? color,
+    final bool? readOnly,
+    final String? icon,
+    final String? syncStatus,
+    final bool? primary,
+    final bool? akiflowPrimary,
+    final bool? isAkiflowCalendar,
+    final String? timezone,
+    final dynamic settings,
+    final Nullable<String?>? remoteUpdatedAt,
+    final String? globalUpdatedAt,
+    final String? globalCreatedAt,
+    final String? createdAt,
+    final Nullable<String?>? updatedAt,
+    final String? deletedAt,
+    final String? accountIdentifier,
+    final String? accountPicture,
   }) {
     return Calendar(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      originId: originId ?? this.originId,
-      connectorId: connectorId ?? this.connectorId,
-      akiflowAccountId: akiflowAccountId ?? this.akiflowAccountId,
-      originAccountId: originAccountId ?? this.originAccountId,
-      etag: etag ?? this.etag,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      content: content ?? this.content,
-      primary: primary ?? this.primary,
-      akiflowPrimary: akiflowPrimary ?? this.akiflowPrimary,
-      readOnly: readOnly ?? this.readOnly,
-      url: url ?? this.url,
-      color: color ?? this.color,
-      icon: icon ?? this.icon,
-      syncStatus: syncStatus ?? this.syncStatus,
-      isAkiflowCalendar: isAkiflowCalendar ?? this.isAkiflowCalendar,
-      settings: settings ?? this.settings,
-      webhookId: webhookId ?? this.webhookId,
-      webhookResourceId: webhookResourceId ?? this.webhookResourceId,
-      globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
-      globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
-      deletedAt: deletedAt ?? this.deletedAt,
-    );
+        id: id ?? this.id,
+        content: content ?? this.content,
+        etag: etag ?? this.etag,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        originId: originId ?? this.originId,
+        akiflowAccountId: akiflowAccountId ?? this.akiflowAccountId,
+        originAccountId: originAccountId ?? this.originAccountId,
+        accountId: accountId ?? this.accountId,
+        connectorId: connectorId ?? this.connectorId,
+        url: url ?? this.url,
+        color: color ?? this.color,
+        readOnly: readOnly ?? this.readOnly,
+        icon: icon ?? this.icon,
+        syncStatus: syncStatus ?? this.syncStatus,
+        primary: primary ?? this.primary,
+        akiflowPrimary: akiflowPrimary ?? this.akiflowPrimary,
+        isAkiflowCalendar: isAkiflowCalendar ?? this.isAkiflowCalendar,
+        timezone: timezone ?? this.timezone,
+        settings: settings ?? this.settings,
+        remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+        globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
+        globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
+        deletedAt: deletedAt ?? this.deletedAt,
+        accountIdentifier: accountIdentifier ?? this.accountIdentifier,
+        accountPicture: accountPicture ?? this.accountPicture);
   }
 
   @override
   Map<String, Object?> toSql() {
     return {
       "id": id,
-      "origin_id": originId,
-      "connector_id": connectorId,
-      "akiflow_account_id": akiflowAccountId,
-      "origin_account_id": originAccountId,
+      "content": content != null ? jsonEncode(color) : null,
+      "etag": etag,
       "title": title,
       "description": description,
-      "primary": primary == true ? 1 : 0,
-      "akiflow_primary": akiflowPrimary == true ? 1 : 0,
-      "read_only": readOnly == true ? 1 : 0,
+      "origin_id": originId,
+      "akiflow_account_id": akiflowAccountId,
+      "origin_account_id": originAccountId,
+      "account_id": accountId,
+      "connector_id": connectorId,
       "url": url,
       "color": color,
+      "read_only": readOnly == true ? 1 : 0,
       "icon": icon,
-      "is_akiflow_calendar": isAkiflowCalendar == null,
+      "sync_status": syncStatus,
+      "primary": primary == true ? 1 : 0,
+      "akiflow_primary": akiflowPrimary == true ? 1 : 0,
+      "is_akiflow_calendar": isAkiflowCalendar == true ? 1 : 0,
+      "timezone": timezone,
+      "settings": settings != null ? jsonEncode(settings) : null,
+      "remote_updated_at": remoteUpdatedAt,
       "updated_at": updatedAt,
       "created_at": createdAt,
       "deleted_at": deletedAt,
-      "remote_updated_at": remoteUpdatedAt,
+      "account_identifier": accountIdentifier,
+      "account_picture": accountPicture,
     };
   }
 
@@ -227,6 +241,14 @@ class Calendar extends Equatable implements Base {
       }
     }
 
+    if (data.containsKey("content") && data["content"] != null) {
+      data["content"] = jsonDecode(data["content"] as String);
+    }
+
+    if (data.containsKey("settings") && data["settings"] != null) {
+      data["settings"] = jsonDecode(data["settings"] as String);
+    }
+
     return Calendar.fromMap(data);
   }
 
@@ -234,32 +256,33 @@ class Calendar extends Equatable implements Base {
   List<Object?> get props {
     return [
       id,
-      userId,
-      originId,
-      connectorId,
-      akiflowAccountId,
-      originAccountId,
+      content,
       etag,
       title,
       description,
-      content,
-      primary,
-      akiflowPrimary,
-      readOnly,
+      originId,
+      akiflowAccountId,
+      originAccountId,
+      accountId,
+      connectorId,
       url,
       color,
+      readOnly,
       icon,
       syncStatus,
+      primary,
+      akiflowPrimary,
       isAkiflowCalendar,
+      timezone,
       settings,
-      webhookId,
-      webhookResourceId,
-      globalUpdatedAt,
+      remoteUpdatedAt,
       globalCreatedAt,
+      globalUpdatedAt,
       createdAt,
       updatedAt,
       deletedAt,
-      remoteUpdatedAt,
+      accountIdentifier,
+      accountPicture,
     ];
   }
 }

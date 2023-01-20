@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -10,8 +11,11 @@ import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_event.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
+import 'package:mobile/src/events/ui/widgets/event_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/event/event.dart';
 import 'package:models/task/task.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -20,9 +24,11 @@ class CalendarBody extends StatelessWidget {
     Key? key,
     required this.calendarController,
     required this.tasks,
+    required this.events,
   }) : super(key: key);
   final CalendarController calendarController;
   final List<Task> tasks;
+  final List<Event> events;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,17 @@ class CalendarBody extends StatelessWidget {
         view: context.watch<CalendarCubit>().state.calendarView,
         timeZone: DateTime.now().timeZoneName,
         dataSource: _getCalendarDataSource(context),
-        timeSlotViewSettings: TimeSlotViewSettings(timeIntervalHeight: 50.0, numberOfDaysInView: isThreeDays ? 3 : -1),
+        viewHeaderStyle: ViewHeaderStyle(
+          dayTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+          dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
+        ),
+        timeSlotViewSettings: TimeSlotViewSettings(
+          timeIntervalHeight: 50.0,
+          minimumAppointmentDuration: const Duration(minutes: 23),
+          timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
+          numberOfDaysInView: isThreeDays ? 3 : -1,
+          //timeFormat: 'h a' ' hh:mm',
+        ),
         scheduleViewSettings: ScheduleViewSettings(
             hideEmptyScheduleWeek: true,
             monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
@@ -53,13 +69,14 @@ class CalendarBody extends StatelessWidget {
   Widget appointmentBuilder(BuildContext context, CalendarAppointmentDetails calendarAppointmentDetails,
       CheckboxAnimatedController? checkboxController) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
-    if (appointment is CalendarEvent) {
-      return _event(calendarAppointmentDetails, appointment, context);
-    } else if (appointment is CalendarTask) {
+    if (appointment is CalendarTask) {
       Task task = tasks.where((task) => task.id == appointment.id).first;
       return _task(appointment, calendarAppointmentDetails, checkboxController, task, context);
+    } else if (appointment.notes == 'deleted') {
+      return const SizedBox();
+    } else {
+      return _event(calendarAppointmentDetails, appointment, context);
     }
-    return const SizedBox();
   }
 
   void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext context) {
@@ -70,9 +87,16 @@ class CalendarBody extends StatelessWidget {
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
-    } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
-        calendarTapDetails.appointments!.first is CalendarEvent) {
-      print('TAP ON EVENT');
+    } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
+      Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
+
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => EventModal(
+          event: event,
+          tapedDate: calendarTapDetails.date,
+        ),
+      );
     }
   }
 
@@ -99,42 +123,67 @@ class CalendarBody extends StatelessWidget {
   }
 
   _AppointmentDataSource _getCalendarDataSource(BuildContext context) {
-    List<CalendarEvent> events = <CalendarEvent>[];
+    List<CalendarEvent> calendarNonRecurringEvents = <CalendarEvent>[];
+    List<CalendarEvent> calendarParentEvents = <CalendarEvent>[];
+    List<CalendarEvent> calendarExceptionEvents = <CalendarEvent>[];
     List<CalendarTask> calendarTasks = <CalendarTask>[];
 
-    DateTime now = DateTime.now();
+    List<Event> nonRecurring = <Event>[];
+    List<Event> recurringParents = <Event>[];
+    List<Event> recurringExceptions = <Event>[];
 
-    events.add(CalendarEvent(
-      startTime: DateTime(now.year, now.month, now.day, 12, 0, 0),
-      endTime: DateTime(now.year, now.month, now.day, 13, 0, 0),
-      subject: 'Meeting',
-      color: Colors.red,
-    ));
-    events.add(CalendarEvent(
-      startTime: DateTime(now.year, now.month, now.day, 14, 0, 0),
-      endTime: DateTime(now.year, now.month, now.day, 16, 0, 0),
-      subject: 'Title of some meeting',
-      color: Colors.green,
-    ));
-    events.add(CalendarEvent(
-      startTime: DateTime(now.year, now.month, now.day - 1, 16, 0, 0),
-      endTime: DateTime(now.year, now.month, now.day - 1, 17, 0, 0),
-      subject: 'Title of some event',
-    ));
+    nonRecurring = events.where((event) => event.recurringId == null).toList();
+    recurringParents = events.where((event) => event.hidden != null && event.hidden == true).toList();
+    recurringExceptions =
+        events.where((event) => event.hidden != null && event.hidden == false && event.recurringId != null).toList();
 
+    calendarNonRecurringEvents = nonRecurring
+        .map((event) => CalendarEvent.fromEvent(
+              context: context,
+              event: event,
+              isRecurringParent: false,
+              isRecurringException: false,
+              isNonRecurring: true,
+            ))
+        .toList();
+    calendarParentEvents = recurringParents
+        .map((event) => CalendarEvent.fromEvent(
+              context: context,
+              event: event,
+              isRecurringParent: true,
+              isRecurringException: false,
+              isNonRecurring: false,
+              exceptions: recurringExceptions,
+            ))
+        .toList();
+    calendarExceptionEvents = recurringExceptions
+        .map((event) => CalendarEvent.fromEvent(
+              context: context,
+              event: event,
+              isRecurringParent: false,
+              isRecurringException: true,
+              isNonRecurring: false,
+            ))
+        .toList();
     calendarTasks = tasks.map((task) => CalendarTask.taskToCalendarTask(context, task)).toList();
 
-    List<Appointment> all = [...events, ...calendarTasks];
+    List<Appointment> all = [
+      ...calendarNonRecurringEvents,
+      ...calendarParentEvents,
+      ...calendarExceptionEvents,
+      ...calendarTasks
+    ];
     return _AppointmentDataSource(all);
   }
 
   Container _event(
-      CalendarAppointmentDetails calendarAppointmentDetails, CalendarEvent appointment, BuildContext context) {
+      CalendarAppointmentDetails calendarAppointmentDetails, Appointment appointment, BuildContext context) {
+    double boxHeight = calendarAppointmentDetails.bounds.height;
     return Container(
       width: calendarAppointmentDetails.bounds.width,
-      height: calendarAppointmentDetails.bounds.height,
+      height: boxHeight,
       decoration: BoxDecoration(
-          color: appointment.color.withAlpha(50),
+          color: HSLColor.fromColor(appointment.color).withLightness(0.93).toColor(),
           borderRadius: const BorderRadius.all(
             Radius.circular(3.0),
           )),
@@ -143,8 +192,8 @@ class CalendarBody extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(2, 2, 6, 2),
             child: Container(
-              height: calendarAppointmentDetails.bounds.height,
-              width: 4,
+              height: boxHeight - 4,
+              width: 2,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
                 color: appointment.color,
@@ -153,17 +202,28 @@ class CalendarBody extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right: 2.0),
-              child: Text(
-                appointment.subject,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  height: 1.3,
-                  fontSize: calendarAppointmentDetails.bounds.height < 22.0 ? 12.0 : 17.0,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey1(context),
-                ),
+              padding: const EdgeInsets.only(right: 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    appointment.subject,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
+                    style: TextStyle(
+                      height: 1.3,
+                      fontSize: boxHeight < 12.0
+                          ? 9.0
+                          : boxHeight < 22.0
+                              ? 13.0
+                              : appointment.isAllDay
+                                  ? 13.0
+                                  : 17.0,
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey1(context),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

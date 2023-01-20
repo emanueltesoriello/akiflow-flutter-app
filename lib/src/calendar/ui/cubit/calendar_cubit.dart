@@ -2,24 +2,37 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/repository/calendars_repository.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_view_mode.dart';
 import 'package:mobile/src/calendar/ui/models/navigation_state.dart';
+import 'package:models/calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 part 'calendar_state.dart';
 
 class CalendarCubit extends Cubit<CalendarCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
+  final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
+  final SyncCubit _syncCubit;
 
-  CalendarCubit() : super(const CalendarCubitState()) {
+  CalendarCubit(this._syncCubit) : super(const CalendarCubitState()) {
     _init();
   }
 
   _init() async {
+    fetchFromPreferences();
+    fetchCalendars();
+
+    _syncCubit.syncCompletedStream.listen((_) async {
+      await fetchCalendars();
+    });
+  }
+
+  fetchFromPreferences() {
     int calendarViewInt = _preferencesRepository.calendarView;
     bool isCalendarThreeDays = _preferencesRepository.isCalendarThreeDays;
     bool isCalendarWeekendHidden = _preferencesRepository.isCalendarWeekendHidden;
-
     switch (calendarViewInt) {
       case CalendarViewMode.agenda:
         emit(state.copyWith(calendarView: CalendarView.schedule));
@@ -81,5 +94,9 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     _preferencesRepository.setIsCalendarWeekendHidden(isCalendarWeekendHidden);
   }
 
-  //N.B. When we need to get access to the state of other BlocProviders we can get access to them declaring streams that listen their states.
+  Future<void> fetchCalendars() async {
+    List<Calendar> calendars = await _calendarsRepository.getCalendars();
+    calendars.sort((a, b) => b.primary ?? false ? 1 : -1);
+    emit(state.copyWith(calendars: calendars));
+  }
 }

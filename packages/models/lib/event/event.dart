@@ -1,14 +1,16 @@
+import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
+import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
 
 class Event extends Equatable implements Base {
   const Event({
     this.id,
-    this.userId,
     this.originId,
     this.customOriginId,
     this.connectorId,
+    this.accountId,
     this.akiflowAccountId,
     this.originAccountId,
     this.recurringId,
@@ -58,45 +60,45 @@ class Event extends Equatable implements Base {
   });
 
   final String? id;
-  final int? userId;
   final String? originId;
   final String? customOriginId;
   final String? connectorId;
+  final String? accountId;
   final String? akiflowAccountId;
   final String? originAccountId;
-  final dynamic recurringId;
-  final dynamic originRecurringId;
+  final String? recurringId;
+  final String? originRecurringId;
   final String? calendarId;
   final String? originCalendarId;
   final String? creatorId;
   final String? organizerId;
-  final dynamic originalStartTime;
-  final dynamic originalStartDate;
-  final dynamic startTime;
-  final dynamic endTime;
-  final dynamic startDatetimeTz;
+  final String? originalStartTime;
+  final String? originalStartDate;
+  final String? startTime;
+  final String? endTime;
+  final String? startDatetimeTz;
   final String? startDate;
   final String? endDate;
-  final dynamic endDatetimeTz;
+  final String? endDatetimeTz;
   final String? originUpdatedAt;
   final String? etag;
   final String? title;
   final String? description;
   final dynamic content;
-  final List<dynamic>? attendees;
-  final List<dynamic>? recurrence;
+  final List<EventAtendee>? attendees;
+  final List<String>? recurrence;
   final bool? recurrenceException;
   final bool? declined;
   final bool? readOnly;
   final bool? hidden;
   final String? url;
-  final dynamic meetingStatus;
-  final dynamic meetingUrl;
-  final dynamic meetingIcon;
-  final dynamic meetingSolution;
-  final dynamic color;
+  final String? meetingStatus;
+  final String? meetingUrl;
+  final String? meetingIcon;
+  final String? meetingSolution;
+  final String? color;
   final String? calendarColor;
-  final dynamic taskId;
+  final String? taskId;
   final dynamic fingerprints;
   final String? globalUpdatedAt;
   final String? globalCreatedAt;
@@ -104,60 +106,61 @@ class Event extends Equatable implements Base {
   final String? updatedAt;
   final dynamic deletedAt;
   final String? createdBy;
-  final dynamic untilDatetime;
+  final String? untilDatetime;
   final bool? recurrenceExceptionDelete;
   final int? recurrenceSyncRetry;
   final String? remoteUpdatedAt;
 
   factory Event.fromMap(Map<String, dynamic> json) => Event(
         id: json['id'] as String?,
-        userId: json['user_id'] as int?,
         originId: json['origin_id'] as String?,
         customOriginId: json['custom_origin_id'] as String?,
+        accountId: json['account_id'] as String?,
         connectorId: json['connector_id'] as String?,
         akiflowAccountId: json['akiflow_account_id'] as String?,
         originAccountId: json['origin_account_id'] as String?,
-        recurringId: json['recurring_id'] as dynamic,
-        originRecurringId: json['origin_recurring_id'] as dynamic,
+        recurringId: json['recurring_id'] as String?,
+        originRecurringId: json['origin_recurring_id'] as String?,
         calendarId: json['calendar_id'] as String?,
         originCalendarId: json['origin_calendar_id'] as String?,
         creatorId: json['creator_id'] as String?,
         organizerId: json['organizer_id'] as String?,
-        originalStartTime: json['original_start_time'] as dynamic,
-        originalStartDate: json['original_start_date'] as dynamic,
-        startTime: json['start_time'] as dynamic,
-        endTime: json['end_time'] as dynamic,
-        startDatetimeTz: json['start_datetime_tz'] as dynamic,
+        originalStartTime: json['original_start_time'] as String?,
+        originalStartDate: json['original_start_date'] as String?,
+        startTime: json['start_time'] as String?,
+        endTime: json['end_time'] as String?,
+        startDatetimeTz: json['start_datetime_tz'] as String?,
         startDate: json['start_date'] as String?,
         endDate: json['end_date'] as String?,
-        endDatetimeTz: json['end_datetime_tz'] as dynamic,
+        endDatetimeTz: json['end_datetime_tz'] as String?,
         originUpdatedAt: json['origin_updated_at'] as String?,
         etag: json['etag'] as String?,
         title: json['title'] as String?,
         description: json['description'] as String?,
         content: json['content'] as dynamic,
-        attendees: json['attendees'] as List<dynamic>?,
-        recurrence: json['recurrence'] as List<dynamic>?,
+        attendees:
+            json['attendees'] != null ? (json['attendees'] as List).map((i) => EventAtendee.fromMap(i)).toList() : null,
+        recurrence: json['recurrence'] != null ? List<String>.from(json['recurrence'] as List<dynamic>) : null,
         recurrenceException: json['recurrence_exception'] as bool?,
         declined: json['declined'] as bool?,
         readOnly: json['read_only'] as bool?,
         hidden: json['hidden'] as bool?,
         url: json['url'] as String?,
-        meetingStatus: json['meeting_status'] as dynamic,
-        meetingUrl: json['meeting_url'] as dynamic,
-        meetingIcon: json['meeting_icon'] as dynamic,
-        meetingSolution: json['meeting_solution'] as dynamic,
-        color: json['color'] as dynamic,
+        meetingStatus: json['meeting_status'] as String?,
+        meetingUrl: json['meeting_url'] as String?,
+        meetingIcon: json['meeting_icon'] as String?,
+        meetingSolution: json['meeting_solution'] as String?,
+        color: json['color'] as String?,
         calendarColor: json['calendar_color'] as String?,
-        taskId: json['task_id'] as dynamic,
+        taskId: json['task_id'] as String?,
         fingerprints: json['fingerprints'] as dynamic,
         globalUpdatedAt: json['global_updated_at'] as String?,
         globalCreatedAt: json['global_created_at'] as String?,
         createdAt: json['created_at'] as String?,
         updatedAt: json['updated_at'] as String?,
-        deletedAt: json['deleted_at'] as dynamic,
+        deletedAt: json['deleted_at'] as String?,
         createdBy: json['created_by'] as String?,
-        untilDatetime: json['until_datetime'] as dynamic,
+        untilDatetime: json['until_datetime'] as String?,
         recurrenceExceptionDelete: json['recurrence_exception_delete'] as bool?,
         recurrenceSyncRetry: json['recurrence_sync_retry'] as int?,
         remoteUpdatedAt: json['remote_updated_at'] as String?,
@@ -166,10 +169,10 @@ class Event extends Equatable implements Base {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'user_id': userId,
         'origin_id': originId,
         'custom_origin_id': customOriginId,
         'connector_id': connectorId,
+        'account_id': accountId,
         'akiflow_account_id': akiflowAccountId,
         'origin_account_id': originAccountId,
         'recurring_id': recurringId,
@@ -191,8 +194,9 @@ class Event extends Equatable implements Base {
         'title': title,
         'description': description,
         'content': content,
-        'attendees': attendees,
-        'recurrence': recurrence,
+        'attendees': (attendees == null || attendees!.isEmpty) ? null : List<dynamic>.from(attendees!.map((x) => x)),
+        'recurrence':
+            (recurrence == null || recurrence!.isEmpty) ? null : List<dynamic>.from(recurrence!.map((x) => x)),
         'recurrence_exception': recurrenceException,
         'declined': declined,
         'read_only': readOnly,
@@ -220,63 +224,63 @@ class Event extends Equatable implements Base {
 
   Event copyWith({
     String? id,
-    int? userId,
     String? originId,
     String? customOriginId,
     String? connectorId,
+    String? accountId,
     String? akiflowAccountId,
     String? originAccountId,
-    dynamic recurringId,
-    dynamic originRecurringId,
+    String? recurringId,
+    String? originRecurringId,
     String? calendarId,
     String? originCalendarId,
     String? creatorId,
     String? organizerId,
-    dynamic originalStartTime,
-    dynamic originalStartDate,
-    dynamic startTime,
-    dynamic endTime,
-    dynamic startDatetimeTz,
+    String? originalStartTime,
+    String? originalStartDate,
+    String? startTime,
+    String? endTime,
+    String? startDatetimeTz,
     String? startDate,
     String? endDate,
-    dynamic endDatetimeTz,
+    String? endDatetimeTz,
     String? originUpdatedAt,
     String? etag,
     String? title,
     String? description,
     dynamic content,
-    List<dynamic>? attendees,
-    List<dynamic>? recurrence,
+    List<EventAtendee>? attendees,
+    List<String>? recurrence,
     bool? recurrenceException,
     bool? declined,
     bool? readOnly,
     bool? hidden,
     String? url,
-    dynamic meetingStatus,
-    dynamic meetingUrl,
-    dynamic meetingIcon,
-    dynamic meetingSolution,
-    dynamic color,
+    String? meetingStatus,
+    String? meetingUrl,
+    String? meetingIcon,
+    String? meetingSolution,
+    String? color,
     String? calendarColor,
-    dynamic taskId,
+    String? taskId,
     dynamic fingerprints,
     String? globalUpdatedAt,
     String? globalCreatedAt,
     String? createdAt,
     Nullable<String?>? updatedAt,
     Nullable<String?>? remoteUpdatedAt,
-    dynamic deletedAt,
+    String? deletedAt,
     String? createdBy,
-    dynamic untilDatetime,
+    String? untilDatetime,
     bool? recurrenceExceptionDelete,
     int? recurrenceSyncRetry,
   }) {
     return Event(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
       originId: originId ?? this.originId,
       customOriginId: customOriginId ?? this.customOriginId,
       connectorId: connectorId ?? this.connectorId,
+      accountId: accountId ?? this.accountId,
       akiflowAccountId: akiflowAccountId ?? this.akiflowAccountId,
       originAccountId: originAccountId ?? this.originAccountId,
       recurringId: recurringId ?? this.recurringId,
@@ -350,6 +354,11 @@ class Event extends Equatable implements Base {
       "origin_updated_at": originUpdatedAt,
       "title": title,
       "description": description,
+      'content': content != null ? jsonEncode(content) : null,
+      'attendees': (attendees == null || attendees!.isEmpty)
+          ? null
+          : jsonEncode(attendees!.map((i) => i.toMap()).toList()).toString(),
+      'recurrence': (recurrence == null || recurrence!.isEmpty) ? null : recurrence?.toList().join(';'),
       "recurrence_exception": recurrenceException == true ? 1 : 0,
       "declined": declined == true ? 1 : 0,
       "read_only": readOnly == true ? 1 : 0,
@@ -376,9 +385,6 @@ class Event extends Equatable implements Base {
 
     for (var key in data.keys) {
       switch (key) {
-        case "done":
-          data[key] = (data[key] == 1);
-          break;
         case "recurrence_exception":
           data[key] = (data[key] == 1);
           break;
@@ -398,17 +404,37 @@ class Event extends Equatable implements Base {
       }
     }
 
-    return Event.fromMap(data);
+    List<String>? recurrenceList = [];
+    if (data.containsKey("recurrence") && data["recurrence"] != null) {
+      String object = data["recurrence"] as String;
+      recurrenceList = [object];
+      data.remove("recurrence");
+    }
+
+    if (data.containsKey("attendees") && data["attendees"] != null) {
+      String object = data["attendees"] as String;
+      data["attendees"] = jsonDecode(object);
+    }
+
+    if (data.containsKey("content") && data["content"] != null) {
+      data["content"] = jsonDecode(data["content"] as String);
+    }
+
+    Event event = Event.fromMap(data);
+
+    event = event.copyWith(recurrence: recurrenceList);
+
+    return event;
   }
 
   @override
   List<Object?> get props {
     return [
       id,
-      userId,
       originId,
       customOriginId,
       connectorId,
+      accountId,
       akiflowAccountId,
       originAccountId,
       recurringId,
