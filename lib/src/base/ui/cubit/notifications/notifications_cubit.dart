@@ -114,4 +114,26 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
+
+  static Future<void> scheduleDailyReminder(
+    TZDateTime scheduledDate, {
+    String? scheduledTitle,
+    String? scheduledBody,
+  }) async {
+    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('your channel id', 'your channel name',
+        channelDescription: 'your channel description', importance: Importance.max, priority: Priority.high);
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await localNotificationsPlugin.zonedSchedule(
+      9999,
+      scheduledTitle,
+      scheduledBody,
+      scheduledDate,
+      platformChannelSpecifics,
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
 }
