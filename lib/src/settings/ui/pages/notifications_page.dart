@@ -10,6 +10,7 @@ import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:workmanager/workmanager.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -155,6 +156,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   });
                   if (newVal == false) {
                     await NotificationsCubit.cancelScheduledNotifications();
+                  } else if (newVal) {
+                    Workmanager().registerOneOffTask(
+                      "scheduleNotifications",
+                      "scheduleNotifications",
+                    );
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),
                 const SizedBox(height: 20),
@@ -166,13 +172,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 FutureBuilder(builder: (context, AsyncSnapshot<PreferencesRepository> repo) {
                   return Container();
                 }),
-                mainItem("Daily overview notification", "Receive notification", dailyOverviewTime,
-                    () => onReceiveNotificationDailyOverviewClick(), onChanged: (newVal) {
-                  service.seDailyOverviewNotificationTime(newVal);
-                  setState(() {
-                    dailyOverviewNotificationTimeEnabled = newVal;
-                  });
-                }, isEnabled: dailyOverviewNotificationTimeEnabled),
+                Opacity(
+                  opacity: 0.3,
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: mainItem("Daily overview notification", "Receive notification", dailyOverviewTime,
+                        () => onReceiveNotificationDailyOverviewClick(), onChanged: (newVal) {
+                      service.seDailyOverviewNotificationTime(newVal);
+                      setState(() {
+                        dailyOverviewNotificationTimeEnabled = newVal;
+                      });
+                    }, isEnabled: dailyOverviewNotificationTimeEnabled),
+                  ),
+                )
               ],
             ),
           ),

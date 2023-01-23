@@ -4,6 +4,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
+import 'package:workmanager/workmanager.dart';
 
 class ReceiveNotificationSettingModal extends StatefulWidget {
   final NextTaskNotificationsModel selectedNextTaskNotificationsModel;
@@ -74,6 +75,8 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                 setState(() {
                                   _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
                                 });
+                                Workmanager().registerOneOffTask("scheduleNotifications", "scheduleNotifications",
+                                    existingWorkPolicy: ExistingWorkPolicy.replace);
                               }
                             },
                             value: true,

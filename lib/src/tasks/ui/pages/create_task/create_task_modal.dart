@@ -93,10 +93,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 await context.read<EditTaskCubit>().create();
                                 //Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
                                 //Navigator.pop(context, taskUpdated);
-                                Workmanager().registerOneOffTask(
-                                  "scheduleNotifications",
-                                  "scheduleNotifications",
-                                );
+                                Workmanager().registerOneOffTask("scheduleNotifications", "scheduleNotifications",
+                                    existingWorkPolicy: ExistingWorkPolicy.replace);
                               }),
                             ],
                           ),

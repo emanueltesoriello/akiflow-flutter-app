@@ -787,10 +787,8 @@ extension TaskExt on Task {
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
     }
-    Workmanager().registerOneOffTask(
-      "scheduleNotifications",
-      "scheduleNotifications",
-    );
+    Workmanager().registerOneOffTask("scheduleNotifications", "scheduleNotifications",
+        existingWorkPolicy: ExistingWorkPolicy.replace);
   }
 
   Future<void> openLinkedContentUrl([Doc? doc]) async {
