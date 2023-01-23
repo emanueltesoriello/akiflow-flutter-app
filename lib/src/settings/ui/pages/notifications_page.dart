@@ -5,6 +5,7 @@ import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
@@ -18,19 +19,23 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  final service = locator<PreferencesRepository>();
   String dailyOverviewTime = '';
   NextTaskNotificationsModel selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
+  bool nextTaskNotificationSettingEnabled = false;
+  bool dailyOverviewNotificationTimeEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    final service = locator<PreferencesRepository>();
     selectedNextTaskNotificationsModel = service.nextTaskNotificationSetting;
-
+    nextTaskNotificationSettingEnabled = service.nextTaskNotificationSettingEnabled;
+    dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
     dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
   }
 
-  mainItem(String switchTitle, String mainButtonListTitle, String selectedButtonListItem, Function onTap) {
+  mainItem(String switchTitle, String mainButtonListTitle, String selectedButtonListItem, Function onTap,
+      {required Function(bool) onChanged, required bool isEnabled}) {
     return Container(
       margin: const EdgeInsets.all(1),
       //padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
@@ -44,8 +49,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
         shrinkWrap: true,
         children: [
           SwitchListTile(
-            value: true,
-            onChanged: (newVal) {},
+            value: isEnabled,
+            onChanged: (val) => onChanged(val),
             activeColor: ColorsExt.akiflow(context),
             title: Text(
               switchTitle,
@@ -57,94 +62,35 @@ class _NotificationsPageState extends State<NotificationsPage> {
             ),
           ),
           const Divider(),
-          ListTile(
-            onTap: () => onTap(),
-            title: Text(
-              mainButtonListTitle,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 17,
-                color: ColorsExt.grey2(context),
+          Opacity(
+            opacity: isEnabled ? 1 : 0.5,
+            child: IgnorePointer(
+              ignoring: !isEnabled,
+              child: ListTile(
+                onTap: () => onTap(),
+                title: Text(
+                  mainButtonListTitle,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: ColorsExt.grey2(context),
+                  ),
+                ),
+                subtitle: Text(
+                  selectedButtonListItem,
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.normal),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
               ),
             ),
-            subtitle: Text(
-              selectedButtonListItem,
-              textAlign: TextAlign.left,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle2
-                  ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.normal),
-            ),
-            trailing: const Icon(Icons.arrow_forward_ios),
           ),
         ],
       ),
     );
-  }
-
-  _receiveNotificationSettingModal() {
-    return Material(
-        color: Theme.of(context).backgroundColor,
-        child: AnimatedSize(
-          curve: Curves.elasticOut,
-          duration: const Duration(milliseconds: 400),
-          child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
-                ),
-              ),
-              margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  const SizedBox(height: 12),
-                  const ScrollChip(),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                          child: Text('Send notifications ...',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey2(context))),
-                        ),
-                        const SizedBox(height: 12),
-                        ...List.generate(
-                          NextTaskNotificationsModel.values.length,
-                          (index) => RadioListTile(
-                            activeColor: ColorsExt.akiflow(context),
-                            onChanged: (bool? value) {
-                              if (value == true) {
-                                PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
-                                preferencesRepository
-                                    .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
-                                setState(() {
-                                  selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
-                                });
-                              }
-                            },
-                            value: true,
-                            title: Text(NextTaskNotificationsModel.values[index].title,
-                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                                      fontSize: 17,
-                                      color: ColorsExt.grey2(context),
-                                    )),
-                            groupValue: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
-                                selectedNextTaskNotificationsModel.minutesBeforeToStart,
-                          ),
-                        ).reversed,
-                        const SizedBox(height: 50),
-                      ],
-                    ),
-                  ),
-                ],
-              )),
-        ));
   }
 
   onReceiveNotificationNextTaskClick() async {
@@ -202,7 +148,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 ),
                 const SizedBox(height: 5),
                 mainItem("Next tasks", "Receive notification", selectedNextTaskNotificationsModel.title,
-                    () => onReceiveNotificationNextTaskClick()),
+                    () => onReceiveNotificationNextTaskClick(), onChanged: (newVal) async {
+                  service.setNextTaskNotificationSettingEnabled(newVal);
+                  setState(() {
+                    nextTaskNotificationSettingEnabled = newVal;
+                  });
+                  if (newVal == false) {
+                    await NotificationsCubit.cancelScheduledNotifications();
+                  }
+                }, isEnabled: nextTaskNotificationSettingEnabled),
                 const SizedBox(height: 20),
                 Text(
                   "DAILY OVERVIEW".toUpperCase(),
@@ -213,7 +167,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   return Container();
                 }),
                 mainItem("Daily overview notification", "Receive notification", dailyOverviewTime,
-                    () => onReceiveNotificationDailyOverviewClick()),
+                    () => onReceiveNotificationDailyOverviewClick(), onChanged: (newVal) {
+                  service.seDailyOverviewNotificationTime(newVal);
+                  setState(() {
+                    dailyOverviewNotificationTimeEnabled = newVal;
+                  });
+                }, isEnabled: dailyOverviewNotificationTimeEnabled),
               ],
             ),
           ),

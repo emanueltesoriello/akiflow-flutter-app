@@ -68,6 +68,12 @@ abstract class PreferencesRepository {
 
   TimeOfDay get dailyOverviewNotificationTime;
   Future<void> setDailyOverviewNotificationTime(TimeOfDay value);
+
+  bool get nextTaskNotificationSettingEnabled;
+  Future<void> setNextTaskNotificationSettingEnabled(bool value);
+
+  bool get dailyOverviewNotificationTimeEnabled;
+  Future<void> seDailyOverviewNotificationTime(bool value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -296,7 +302,7 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   NextTaskNotificationsModel get nextTaskNotificationSetting {
-    return NextTaskNotificationsModel.fromMap( 
+    return NextTaskNotificationsModel.fromMap(
       jsonDecode(_prefs.getString("nextTaskNotificationSettingValue") ?? '{}'),
     );
   }
@@ -323,5 +329,25 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setDailyOverviewNotificationTime(TimeOfDay value) async {
     await _prefs.setString("dailyOverviewNotificationSetTime", "${value.hour.toString()}:${value.minute.toString()}");
+  }
+
+  @override
+  bool get nextTaskNotificationSettingEnabled {
+    return _prefs.getBool("nextTaskNotificationSettingEnabled") ?? true;
+  }
+
+  @override
+  Future<void> setNextTaskNotificationSettingEnabled(bool value) async {
+    await _prefs.setBool("nextTaskNotificationSettingEnabled", value);
+  }
+
+  @override
+  bool get dailyOverviewNotificationTimeEnabled {
+    return _prefs.getBool("dailyOverviewNotificationTimeEnabled") ?? true;
+  }
+
+  @override
+  Future<void> seDailyOverviewNotificationTime(bool value) async {
+    await _prefs.setBool("dailyOverviewNotificationTimeEnabled", value);
   }
 }
