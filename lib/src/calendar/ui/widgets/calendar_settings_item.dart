@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/calendar/calendar.dart';
 
@@ -51,7 +52,7 @@ class _CalendarItemState extends State<CalendarItem> {
                     ],
                   ),
                   SvgPicture.asset(
-                    "assets/images/icons/_common/chevron_down.svg",
+                    Assets.images.icons.common.chevronDownSVG,
                     width: 22,
                     height: 22,
                     color: ColorsExt.grey3(context),
@@ -77,8 +78,8 @@ class _CalendarItemState extends State<CalendarItem> {
                           },
                           child: SvgPicture.asset(
                             widget.calendars[index].settings["visible"] ?? false
-                                ? "assets/images/icons/_common/Check-done.svg"
-                                : "assets/images/icons/_common/Check-empty.svg",
+                                ? Assets.images.icons.common.checkDoneSVG
+                                : Assets.images.icons.common.checkEmptySVG,
                             width: 22,
                             height: 22,
                             color: Color(int.parse(widget.calendars[index].color!.replaceAll('#', '0xff'))),

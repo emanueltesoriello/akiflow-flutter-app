@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -49,12 +50,12 @@ class CalendarSettingsModal extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 8, bottom: 10),
                         child: Text(
-                          'CALENDAR VIEW',
+                          t.calendar.calendarView.toUpperCase(),
                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
                         ),
                       ),
                       ButtonSelectable(
-                        title: 'Agenda',
+                        title: t.calendar.view.agenda,
                         leading: SizedBox(
                           height: 22,
                           width: 22,
@@ -74,7 +75,7 @@ class CalendarSettingsModal extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       ButtonSelectable(
-                        title: '1 Day',
+                        title: t.calendar.view.oneDay,
                         leading: SizedBox(
                           height: 22,
                           width: 22,
@@ -94,7 +95,7 @@ class CalendarSettingsModal extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       ButtonSelectable(
-                        title: '3 Days',
+                        title: t.calendar.view.threeDays,
                         leading: SizedBox(
                           height: 22,
                           width: 22,
@@ -119,7 +120,7 @@ class CalendarSettingsModal extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       ButtonSelectable(
-                        title: 'Week',
+                        title: t.calendar.view.week,
                         leading: SizedBox(
                           height: 22,
                           width: 22,
@@ -146,7 +147,7 @@ class CalendarSettingsModal extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       ButtonSelectable(
-                        title: 'Month',
+                        title: t.calendar.view.month,
                         leading: SizedBox(
                           height: 22,
                           width: 22,
@@ -173,7 +174,7 @@ class CalendarSettingsModal extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Hide Weekends',
+                              t.calendar.hideWeekends,
                               style: TextStyle(
                                 fontSize: 17,
                                 color: ColorsExt.grey2(context),
@@ -210,7 +211,7 @@ class CalendarSettingsModal extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 8, top: 8.0),
                         child: Text(
-                          'CALENDARS',
+                          t.calendar.calendars.toUpperCase(),
                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
                         ),
                       ),

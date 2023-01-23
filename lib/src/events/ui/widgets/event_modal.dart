@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
@@ -180,14 +181,14 @@ class EventModal extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 16.0),
                                 Text(
-                                  'Google Meet',
+                                  t.event.googleMeet,
                                   style: TextStyle(
                                       fontSize: 17.0, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                                 ),
                               ],
                             ),
                             Text(
-                              'JOIN',
+                              t.event.join.toUpperCase(),
                               style: TextStyle(
                                   fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
                             ),
@@ -206,7 +207,7 @@ class EventModal extends StatelessWidget {
                             ),
                             const SizedBox(width: 16.0),
                             Text(
-                              'Busy',
+                              t.event.busy,
                               style: TextStyle(
                                   fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                             ),
@@ -229,7 +230,7 @@ class EventModal extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 16.0),
                                 Text(
-                                  'Guests',
+                                  t.event.guests,
                                   style: TextStyle(
                                     fontSize: 17.0,
                                     fontWeight: FontWeight.w400,
@@ -290,7 +291,7 @@ class EventModal extends StatelessWidget {
                                       ),
                                       if (event.attendees![index].organizer ?? false)
                                         Text(
-                                          ' - Organizer',
+                                          ' - ${t.event.organizer}',
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w400,
@@ -326,26 +327,26 @@ class EventModal extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Going?',
+                              t.event.going,
                               style: TextStyle(
                                   fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                             ),
                             Row(
                               children: [
                                 Text(
-                                  'Yes',
+                                  t.event.yes,
                                   style: TextStyle(
                                       fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                                 ),
                                 const SizedBox(width: 32.0),
                                 Text(
-                                  'No',
+                                  t.event.no,
                                   style: TextStyle(
                                       fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                                 ),
                                 const SizedBox(width: 32.0),
                                 Text(
-                                  'Maybe',
+                                  t.event.maybe,
                                   style: TextStyle(
                                       fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                                 ),
@@ -360,11 +361,12 @@ class EventModal extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _BottomButton(title: 'Copy', image: Assets.images.icons.common.squareOnSquareSVG),
-                            _BottomButton(title: 'Share', image: Assets.images.icons.common.arrowUpRightSquareSVG),
-                            _BottomButton(title: 'Email guests', image: Assets.images.icons.common.envelopeSVG),
-                            _BottomButton(title: 'Edit', image: Assets.images.icons.common.pencilSVG),
-                            _BottomButton(title: 'Delete', image: Assets.images.icons.common.trashSVG),
+                            _BottomButton(title: t.event.copy, image: Assets.images.icons.common.squareOnSquareSVG),
+                            _BottomButton(
+                                title: t.event.share, image: Assets.images.icons.common.arrowUpRightSquareSVG),
+                            _BottomButton(title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
+                            _BottomButton(title: t.event.edit, image: Assets.images.icons.common.pencilSVG),
+                            _BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
                           ],
                         ),
                       ),

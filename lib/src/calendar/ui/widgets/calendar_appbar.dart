@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/calendar/ui/widgets/calendar_settings_modal.dart';
@@ -20,7 +21,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBarComp(
       title: t.bottomBar.calendar,
       leading: SvgPicture.asset(
-        "assets/images/icons/_common/calendar.svg",
+        Assets.images.icons.common.calendarSVG,
         width: 26,
         height: 26,
       ),
@@ -40,7 +41,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           icon: SvgPicture.asset(
-            "assets/images/icons/_common/ellipsis.svg",
+            Assets.images.icons.common.ellipsisSVG,
             width: 24,
             height: 24,
             color: ColorsExt.grey3(context),

@@ -206,7 +206,17 @@
   },
   "calendar": {
     "comingSoon": "Calendar is coming in the near future!",
-    "goToToday": "Go to Today"
+    "goToToday": "Go to Today",
+    "calendarView": "Calendar View",
+    "view": {
+      "agenda": "Agenda",
+      "oneDay": "1 Day",
+      "threeDays": "3 Days",
+      "week": "Week",
+      "month": "Month"
+    },
+    "hideWeekends": "Hide Weekends",
+    "calendars": "Calendars"
   },
   "linkedContent": {
     "subject": "Subject:",
@@ -229,9 +239,9 @@
     "dueDate": "Due date",
     "board": "Board",
     "savedOn": "Saved on",
-    "status":"Status",
-    "done":"Done",
-    "toDo":"To do"
+    "status": "Status",
+    "done": "Done",
+    "toDo": "To do"
   },
   "editTask": {
     "add": "Add",
@@ -293,6 +303,33 @@
       "markAllTasksAsDone": "Mark all tasks as Done"
     },
     "sortComingSoon": "Sort (Coming soon)"
+  },
+  "event": {
+    "googleMeet": "Google Meet",
+    "zoom": "Zoom",
+    "join": "Join",
+    "busy": "Busy",
+    "guests": "Guests",
+    "organizer": "Organizer",
+    "going": "Going?",
+    "yes": "Yes",
+    "no": "No",
+    "maybe": "Maybe",
+    "copy": "Copy",
+    "share": "Share",
+    "mailGuests": "Mail Guests",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editEvent": {
+      "setRepeat": "Set Repeat",
+      "allDay": "All Day",
+      "addConference": "Add Conference",
+      "addLocation": "Add Location",
+      "addDescription": "Add Description",
+      "defaultColor": "Default Color",
+      "viewOnGoogleCalendar": "View on Google Calendar",
+      "saveChanges": "Save Changes"
+    }
   },
   "cancel": "Cancel",
   "noTitle": "(No title)",
