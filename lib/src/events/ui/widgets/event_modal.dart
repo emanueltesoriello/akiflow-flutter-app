@@ -9,6 +9,7 @@ import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
+import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:models/event/event.dart';
 
 class EventModal extends StatelessWidget {
@@ -25,7 +26,7 @@ class EventModal extends StatelessWidget {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(
       builder: (context, state) {
         return Material(
-          color: Colors.transparent,
+          color: Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
@@ -45,15 +46,10 @@ class EventModal extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: Row(
                           children: [
-                            Container(
-                              height: 20.0,
-                              width: 20.0,
-                              decoration: const BoxDecoration(
-                                color: Colors.cyan,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(4.0),
-                                ),
-                              ),
+                            SvgPicture.asset(
+                              Assets.images.icons.common.squareFillSVG,
+                              width: 20,
+                              height: 20,
                             ),
                             const SizedBox(width: 16.0),
                             Text(
@@ -176,8 +172,8 @@ class EventModal extends StatelessWidget {
                               children: [
                                 SvgPicture.asset(
                                   Assets.images.icons.google.googleSVG,
-                                  width: 22,
-                                  height: 22,
+                                  width: 20,
+                                  height: 20,
                                 ),
                                 const SizedBox(width: 16.0),
                                 Text(
@@ -201,9 +197,9 @@ class EventModal extends StatelessWidget {
                         child: Row(
                           children: [
                             SvgPicture.asset(
-                              Assets.images.icons.common.folderSVG,
-                              width: 22,
-                              height: 22,
+                              Assets.images.icons.common.briefcaseSVG,
+                              width: 20,
+                              height: 20,
                             ),
                             const SizedBox(width: 16.0),
                             Text(
@@ -224,8 +220,8 @@ class EventModal extends StatelessWidget {
                               children: [
                                 SvgPicture.asset(
                                   Assets.images.icons.common.personCropCircleSVG,
-                                  width: 22,
-                                  height: 22,
+                                  width: 20,
+                                  height: 20,
                                   color: event.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
                                 ),
                                 const SizedBox(width: 16.0),
@@ -242,8 +238,8 @@ class EventModal extends StatelessWidget {
                             ),
                             SvgPicture.asset(
                               Assets.images.icons.common.envelopeSVG,
-                              width: 22,
-                              height: 22,
+                              width: 20,
+                              height: 20,
                               color: event.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
                             ),
                           ],
@@ -256,27 +252,27 @@ class EventModal extends StatelessWidget {
                           itemCount: event.attendees?.length ?? 0,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                               child: Row(
                                 children: [
                                   event.attendees![index].responseStatus == 'accepted'
                                       ? SvgPicture.asset(
-                                          Assets.images.icons.common.checkDoneSVG,
-                                          width: 22,
-                                          height: 22,
+                                          Assets.images.icons.common.checkmarkAltCircleFillSVG,
+                                          width: 20,
+                                          height: 20,
                                           color: ColorsExt.green(context),
                                         )
                                       : event.attendees![index].responseStatus == 'declined'
                                           ? SvgPicture.asset(
-                                              Assets.images.icons.common.xmarkSquareSVG,
-                                              width: 22,
-                                              height: 22,
+                                              Assets.images.icons.common.xmarkCircleFillSVG,
+                                              width: 20,
+                                              height: 20,
                                               color: ColorsExt.red(context),
                                             )
                                           : SvgPicture.asset(
-                                              Assets.images.icons.common.checkEmptySVG,
-                                              width: 22,
-                                              height: 22,
+                                              Assets.images.icons.common.questionCircleFillSVG,
+                                              width: 20,
+                                              height: 20,
                                               color: ColorsExt.grey3(context),
                                             ),
                                   const SizedBox(width: 16.0),
@@ -321,54 +317,68 @@ class EventModal extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              t.event.going,
-                              style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  t.event.yes,
-                                  style: TextStyle(
-                                      fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                ),
-                                const SizedBox(width: 32.0),
-                                Text(
-                                  t.event.no,
-                                  style: TextStyle(
-                                      fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                ),
-                                const SizedBox(width: 32.0),
-                                Text(
-                                  t.event.maybe,
-                                  style: TextStyle(
-                                      fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                ),
-                              ],
-                            ),
-                          ],
+                      if (event.attendees != null)
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                t.event.going,
+                                style: TextStyle(
+                                    fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    t.event.yes,
+                                    style: TextStyle(
+                                        fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                  ),
+                                  const SizedBox(width: 32.0),
+                                  Text(
+                                    t.event.no,
+                                    style: TextStyle(
+                                        fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                  ),
+                                  const SizedBox(width: 32.0),
+                                  Text(
+                                    t.event.maybe,
+                                    style: TextStyle(
+                                        fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                       const Separator(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _BottomButton(title: t.event.copy, image: Assets.images.icons.common.squareOnSquareSVG),
-                            _BottomButton(
-                                title: t.event.share, image: Assets.images.icons.common.arrowUpRightSquareSVG),
-                            _BottomButton(title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
-                            _BottomButton(title: t.event.edit, image: Assets.images.icons.common.pencilSVG),
-                            _BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
-                          ],
-                        ),
+                        child: event.content['organizer']['self'] == true
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  BottomButton(
+                                      title: t.event.copy, image: Assets.images.icons.common.squareOnSquareSVG),
+                                  BottomButton(
+                                      title: t.event.share, image: Assets.images.icons.common.arrowshapeTurnUpRightSVG),
+                                  BottomButton(
+                                      title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
+                                  BottomButton(title: t.event.edit, image: Assets.images.icons.common.pencilSVG),
+                                  BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  BottomButton(
+                                      title: t.event.share, image: Assets.images.icons.common.arrowshapeTurnUpRightSVG),
+                                  BottomButton(
+                                      title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
+                                  BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
+                                ],
+                              ),
                       ),
                     ],
                   ),
@@ -378,52 +388,6 @@ class EventModal extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _BottomButton extends StatelessWidget {
-  final String title;
-  final String image;
-  const _BottomButton({
-    Key? key,
-    required this.title,
-    required this.image,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {},
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                height: 40.0,
-                width: 40.0,
-                decoration: BoxDecoration(
-                  color: ColorsExt.grey6(context),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(12.0),
-                  ),
-                ),
-              ),
-              SvgPicture.asset(
-                image,
-                width: 22,
-                height: 22,
-                color: ColorsExt.grey3(context),
-              ),
-            ],
-          ),
-        ),
-        Text(
-          title,
-          style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-        ),
-      ],
     );
   }
 }

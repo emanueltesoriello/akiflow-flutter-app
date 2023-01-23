@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -57,10 +58,10 @@ class CalendarSettingsModal extends StatelessWidget {
                       ButtonSelectable(
                         title: t.calendar.view.agenda,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: 20,
+                          width: 20,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/rectangle_grid_1x2.svg",
+                             Assets.images.icons.common.agendaSVG,
                             color: ColorsExt.grey2(context),
                           ),
                         ),
@@ -77,11 +78,11 @@ class CalendarSettingsModal extends StatelessWidget {
                       ButtonSelectable(
                         title: t.calendar.view.oneDay,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: 20,
+                          width: 20,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/01_square.svg",
-                            color: ColorsExt.grey1(context),
+                             Assets.images.icons.common.daySVG,
+                            color: ColorsExt.grey2(context),
                           ),
                         ),
                         trailing: const SizedBox(),
@@ -97,11 +98,11 @@ class CalendarSettingsModal extends StatelessWidget {
                       ButtonSelectable(
                         title: t.calendar.view.threeDays,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: 20,
+                          width: 20,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/03_square.svg",
-                            color: ColorsExt.grey1(context),
+                             Assets.images.icons.common.threeDaysSVG,
+                            color: ColorsExt.grey2(context),
                           ),
                         ),
                         trailing: const SizedBox(),
@@ -122,11 +123,11 @@ class CalendarSettingsModal extends StatelessWidget {
                       ButtonSelectable(
                         title: t.calendar.view.week,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: 20,
+                          width: 20,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/07_square.svg",
-                            color: ColorsExt.grey1(context),
+                             Assets.images.icons.common.weekSVG,
+                            color: ColorsExt.grey2(context),
                           ),
                         ),
                         trailing: const SizedBox(),
@@ -149,11 +150,11 @@ class CalendarSettingsModal extends StatelessWidget {
                       ButtonSelectable(
                         title: t.calendar.view.month,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: 20,
+                          width: 20,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/30_square.svg",
-                            color: ColorsExt.grey1(context),
+                            Assets.images.icons.common.monthSVG,
+                            color: ColorsExt.grey2(context),
                           ),
                         ),
                         trailing: const SizedBox(),
@@ -209,7 +210,7 @@ class CalendarSettingsModal extends StatelessWidget {
                       const Separator(),
                       const SizedBox(height: 10),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8, top: 8.0),
+                        padding: const EdgeInsets.only(left: 8, top: 10.0),
                         child: Text(
                           t.calendar.calendars.toUpperCase(),
                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
