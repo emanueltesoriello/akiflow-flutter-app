@@ -28,7 +28,7 @@ bool shouldForceLogOut(DateTime? to) {
 class MainCubit extends Cubit<MainCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
-  final IntercomService _intercomService = locator<IntercomService>();
+  //final IntercomService _intercomService = locator<IntercomService>();
   final UserApi _userApi = locator<UserApi>();
 
   final SyncCubit _syncCubit;
@@ -81,8 +81,8 @@ class MainCubit extends Cubit<MainCubitState> {
               status: user.status,
               planExpireDate: user.planExpireDate));
           _sentryService.authenticate(user.id.toString(), user.email);
-          await _intercomService.authenticate(
-              email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+          //await _intercomService.authenticate(
+          //    email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
           try {
             // trigger that start every time the set port is called
             // used for handling backgroundSync that update the UI

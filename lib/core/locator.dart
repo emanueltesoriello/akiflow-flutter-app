@@ -75,7 +75,7 @@ void setupLocator(
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
-  locator.registerSingleton<IntercomService>(IntercomService());
+  //locator.registerSingleton<IntercomService>(IntercomService());
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
 
   /// Blocs

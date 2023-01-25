@@ -38,7 +38,13 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
       //       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       //       ?.createNotificationChannel(channel);
       // _firebaseMessaging.app.
-
+      final bool? result = await _localNotificationsPlugin
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
       await _firebaseMessaging.requestPermission();
 
       _firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
