@@ -787,7 +787,8 @@ extension TaskExt on Task {
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
     }
-    Workmanager().registerOneOffTask("scheduleNotifications", "scheduleNotifications",
+    Workmanager().registerOneOffTask(
+        "com.akiflow.mobile.scheduleNotifications", "com.akiflow.mobile.scheduleNotifications",
         existingWorkPolicy: ExistingWorkPolicy.replace);
   }
 

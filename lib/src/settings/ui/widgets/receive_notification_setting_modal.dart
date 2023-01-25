@@ -75,7 +75,8 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                 setState(() {
                                   _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
                                 });
-                                Workmanager().registerOneOffTask("scheduleNotifications", "scheduleNotifications",
+                                Workmanager().registerOneOffTask("com.akiflow.mobile.scheduleNotifications",
+                                    "com.akiflow.mobile.scheduleNotifications",
                                     existingWorkPolicy: ExistingWorkPolicy.replace);
                               }
                             },

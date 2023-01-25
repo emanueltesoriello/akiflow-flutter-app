@@ -158,8 +158,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     await NotificationsCubit.cancelScheduledNotifications();
                   } else if (newVal) {
                     Workmanager().registerOneOffTask(
-                      "scheduleNotifications",
-                      "scheduleNotifications",
+                      "com.akiflow.mobile.scheduleNotifications",
+                      "com.akiflow.mobile.scheduleNotifications",
                     );
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),

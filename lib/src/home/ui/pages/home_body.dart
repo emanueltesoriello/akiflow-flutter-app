@@ -6,6 +6,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/floating_button.dart';
 import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/bottom_task_actions.dart';
@@ -18,6 +19,8 @@ import 'package:mobile/src/onboarding/ui/pages/onboarding_tutorial.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key, required this.bottomBarHeight, required this.homeViewType});
@@ -43,9 +46,11 @@ class HomeBody extends StatelessWidget {
         isInDebugMode:
             true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );*/
+    print('forced test using runWorkmanagerNow');
+    await Future.delayed(Duration(seconds: 5));
     Workmanager().registerOneOffTask(
-      DateTime.now().toString(),
-      DateTime.now().toString(),
+      "com.akiflow.mobile.scheduleNotifications",
+      "com.akiflow.mobile.scheduleNotifications",
     );
   }
 

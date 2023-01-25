@@ -47,7 +47,7 @@ callbackDispatcher() {
       // *********************************************
       // ***** background notifications scheduling ***
       // *********************************************
-      if (task == 'scheduleNotifications') {
+      if (task == 'com.akiflow.mobile.scheduleNotifications') {
         await scheduleNotifications(locator<PreferencesRepository>());
 
         // N.B. to be remove: show a local notification to confirm the background Sync
@@ -136,8 +136,8 @@ class BackgroundService {
 
   static registerPeriodicTask(Duration? frequency) {
     Workmanager().registerPeriodicTask(
-      "periodicTask",
-      "periodicTask",
+      "com.akiflow.mobile.periodicTask",
+      "com.akiflow.mobile.periodicTask",
       //initialDelay: Duration(seconds: 20),
       constraints: constraints.Constraints(
         // connected or metered mark the task as requiring internet
