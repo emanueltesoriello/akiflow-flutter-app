@@ -192,7 +192,7 @@ class Calendar extends Equatable implements Base {
   Map<String, Object?> toSql() {
     return {
       "id": id,
-      "content": content != null ? jsonEncode(color) : null,
+      "content": content != null ? jsonEncode(content) : null,
       "etag": etag,
       "title": title,
       "description": description,

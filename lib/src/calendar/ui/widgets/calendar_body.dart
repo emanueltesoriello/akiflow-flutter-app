@@ -138,7 +138,7 @@ class CalendarBody extends StatelessWidget {
     List<Event> recurringExceptions = <Event>[];
 
     nonRecurring = events.where((event) => event.recurringId == null).toList();
-    recurringParents = events.where((event) => event.hidden != null && event.hidden == true).toList();
+    recurringParents = events.where((event) => event.id == event.recurringId).toList();
     recurringExceptions =
         events.where((event) => event.hidden != null && event.hidden == false && event.recurringId != null).toList();
 

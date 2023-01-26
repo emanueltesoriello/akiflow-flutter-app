@@ -57,6 +57,7 @@ class Event extends Equatable implements Base {
     this.recurrenceExceptionDelete,
     this.recurrenceSyncRetry,
     this.remoteUpdatedAt,
+    this.status,
     this.oldId,
   });
 
@@ -111,6 +112,7 @@ class Event extends Equatable implements Base {
   final bool? recurrenceExceptionDelete;
   final int? recurrenceSyncRetry;
   final String? remoteUpdatedAt;
+  final String? status;
   final String? oldId;
 
   factory Event.fromMap(Map<String, dynamic> json) => Event(
@@ -166,6 +168,7 @@ class Event extends Equatable implements Base {
         recurrenceExceptionDelete: json['recurrence_exception_delete'] as bool?,
         recurrenceSyncRetry: json['recurrence_sync_retry'] as int?,
         remoteUpdatedAt: json['remote_updated_at'] as String?,
+        status: json['status'] as String?,
         oldId: json['_old_id'] as String?,
       );
 
@@ -223,6 +226,7 @@ class Event extends Equatable implements Base {
         'recurrence_exception_delete': recurrenceExceptionDelete,
         'recurrence_sync_retry': recurrenceSyncRetry,
         'remote_updated_at': remoteUpdatedAt,
+        'status': status,
         '_old_id': oldId,
       };
 
@@ -278,6 +282,7 @@ class Event extends Equatable implements Base {
     String? untilDatetime,
     bool? recurrenceExceptionDelete,
     int? recurrenceSyncRetry,
+    String? status,
   }) {
     return Event(
       id: id ?? this.id,
@@ -331,6 +336,7 @@ class Event extends Equatable implements Base {
       untilDatetime: untilDatetime ?? this.untilDatetime,
       recurrenceExceptionDelete: recurrenceExceptionDelete ?? this.recurrenceExceptionDelete,
       recurrenceSyncRetry: recurrenceSyncRetry ?? this.recurrenceSyncRetry,
+      status: status ?? this.status,
     );
   }
 
@@ -381,6 +387,7 @@ class Event extends Equatable implements Base {
       "created_at": createdAt,
       "deleted_at": deletedAt,
       "remote_updated_at": remoteUpdatedAt,
+      "status": status
     };
   }
 
@@ -485,6 +492,7 @@ class Event extends Equatable implements Base {
       recurrenceExceptionDelete,
       recurrenceSyncRetry,
       remoteUpdatedAt,
+      status,
       oldId,
     ];
   }

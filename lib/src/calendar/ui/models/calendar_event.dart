@@ -28,7 +28,7 @@ class CalendarEvent extends Appointment {
     required bool isNonRecurring,
     List<Event>? exceptions,
   }) {
-    DateTime startTime = DateTime(DateTime.now().year-1, 2, 31);
+    DateTime startTime = DateTime(DateTime.now().year - 1, 2, 31);
     DateTime endTime = startTime;
     if (event.startTime != null && event.endTime != null) {
       startTime = DateTime.parse(event.startTime!);

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
+import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_view_mode.dart';
 import 'package:mobile/src/calendar/ui/models/navigation_state.dart';
@@ -98,5 +99,13 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     List<Calendar> calendars = await _calendarsRepository.getCalendars();
     calendars.sort((a, b) => b.primary ?? false ? 1 : -1);
     emit(state.copyWith(calendars: calendars));
+  }
+
+  Future<void> updateCalendar(Calendar calendar) async {
+    await _calendarsRepository.updateById(calendar.id, data: calendar);
+
+    await fetchCalendars();
+
+    _syncCubit.sync(entities: [Entity.calendars, Entity.events]);
   }
 }

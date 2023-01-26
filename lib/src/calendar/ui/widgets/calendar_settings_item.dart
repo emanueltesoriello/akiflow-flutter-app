@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/calendar/calendar.dart';
+import 'package:models/nullable.dart';
 
 class CalendarItem extends StatefulWidget {
   const CalendarItem({super.key, required this.calendars, required this.title});
@@ -74,7 +77,29 @@ class _CalendarItemState extends State<CalendarItem> {
                       children: [
                         InkWell(
                           onTap: () {
-                            print(widget.calendars[index].title);
+                            bool isVisible = widget.calendars[index].settings != null &&
+                                    widget.calendars[index].settings["visible"] != null
+                                ? widget.calendars[index].settings["visible"]
+                                : false;
+                            bool notificationsEnabled = widget.calendars[index].settings != null &&
+                                    widget.calendars[index].settings["notificationsEnabled"] != null
+                                ? widget.calendars[index].settings["notificationsEnabled"]
+                                : false;
+                            dynamic settings = widget.calendars[index].settings;
+                            if (settings != null) {
+                              settings["visible"] = !isVisible;
+                              isVisible
+                                  ? settings["notificationsEnabled"] = notificationsEnabled
+                                  : settings["notificationsEnabled"] = false;
+                            } else {
+                              settings = {"visible": !isVisible, "notificationsEnabled": true};
+                            }
+
+                            Calendar updatedCalendar = widget.calendars[index].copyWith(
+                                settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+                            context.read<CalendarCubit>().updateCalendar(updatedCalendar);
+
+                            print(updatedCalendar.settings);
                           },
                           child: SvgPicture.asset(
                             widget.calendars[index].settings != null &&

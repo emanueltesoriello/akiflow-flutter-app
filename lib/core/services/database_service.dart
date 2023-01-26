@@ -285,7 +285,8 @@ CREATE TABLE IF NOT EXISTS events(
   `deleted_at` TEXT,
   `until_date_time` TEXT,
   `recurrence_exception_delete` INTEGER,
-  `recurrence_sync_retry` INTEGER
+  `recurrence_sync_retry` INTEGER,
+  `status` VARCHAR(255)
 )
     ''');
     batch.execute('CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');
