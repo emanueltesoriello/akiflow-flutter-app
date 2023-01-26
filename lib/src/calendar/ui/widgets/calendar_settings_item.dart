@@ -77,7 +77,9 @@ class _CalendarItemState extends State<CalendarItem> {
                             print(widget.calendars[index].title);
                           },
                           child: SvgPicture.asset(
-                            widget.calendars[index].settings["visible"] ?? false
+                            widget.calendars[index].settings != null &&
+                                    widget.calendars[index].settings["visible"] != null &&
+                                    widget.calendars[index].settings["visible"] == true
                                 ? Assets.images.icons.common.checkDoneSVG
                                 : Assets.images.icons.common.checkEmptySVG,
                             width: 22,

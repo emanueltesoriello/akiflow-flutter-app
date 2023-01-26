@@ -8,8 +8,10 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
-import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
+import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
+import 'package:mobile/src/events/ui/widgets/event_edit_modal.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 
 class EventModal extends StatelessWidget {
@@ -23,7 +25,7 @@ class EventModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarCubit, CalendarCubitState>(
+    return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
           color: Colors.white,
@@ -46,10 +48,12 @@ class EventModal extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: Row(
                           children: [
-                            SvgPicture.asset(
-                              Assets.images.icons.common.squareFillSVG,
+                            SizedBox(
                               width: 20,
                               height: 20,
+                              child: SvgPicture.asset(
+                                Assets.images.icons.common.squareFillSVG,
+                              ),
                             ),
                             const SizedBox(width: 16.0),
                             Text(
@@ -65,10 +69,12 @@ class EventModal extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: Row(
                           children: [
-                            SvgPicture.asset(
-                              Assets.images.icons.common.calendarSVG,
-                              width: 22,
-                              height: 22,
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: SvgPicture.asset(
+                                Assets.images.icons.common.calendarSVG,
+                              ),
                             ),
                             const SizedBox(width: 16.0),
                             Expanded(
@@ -170,10 +176,12 @@ class EventModal extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                SvgPicture.asset(
-                                  Assets.images.icons.google.googleSVG,
+                                SizedBox(
                                   width: 20,
                                   height: 20,
+                                  child: SvgPicture.asset(
+                                    Assets.images.icons.google.googleSVG,
+                                  ),
                                 ),
                                 const SizedBox(width: 16.0),
                                 Text(
@@ -196,10 +204,12 @@ class EventModal extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: Row(
                           children: [
-                            SvgPicture.asset(
-                              Assets.images.icons.common.briefcaseSVG,
+                            SizedBox(
                               width: 20,
                               height: 20,
+                              child: SvgPicture.asset(
+                                Assets.images.icons.common.briefcaseSVG,
+                              ),
                             ),
                             const SizedBox(width: 16.0),
                             Text(
@@ -218,11 +228,14 @@ class EventModal extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                SvgPicture.asset(
-                                  Assets.images.icons.common.personCropCircleSVG,
+                                SizedBox(
                                   width: 20,
                                   height: 20,
-                                  color: event.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                                  child: SvgPicture.asset(
+                                    Assets.images.icons.common.personCropCircleSVG,
+                                    color:
+                                        event.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                                  ),
                                 ),
                                 const SizedBox(width: 16.0),
                                 Text(
@@ -236,11 +249,13 @@ class EventModal extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SvgPicture.asset(
-                              Assets.images.icons.common.envelopeSVG,
+                            SizedBox(
                               width: 20,
                               height: 20,
-                              color: event.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                              child: SvgPicture.asset(
+                                Assets.images.icons.common.envelopeSVG,
+                                color: event.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                              ),
                             ),
                           ],
                         ),
@@ -256,24 +271,30 @@ class EventModal extends StatelessWidget {
                               child: Row(
                                 children: [
                                   event.attendees![index].responseStatus == 'accepted'
-                                      ? SvgPicture.asset(
-                                          Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                                          width: 20,
-                                          height: 20,
-                                          color: ColorsExt.green(context),
+                                      ? SizedBox(
+                                          width: 19,
+                                          height: 19,
+                                          child: SvgPicture.asset(
+                                            Assets.images.icons.common.checkmarkAltCircleFillSVG,
+                                            color: ColorsExt.green(context),
+                                          ),
                                         )
                                       : event.attendees![index].responseStatus == 'declined'
-                                          ? SvgPicture.asset(
-                                              Assets.images.icons.common.xmarkCircleFillSVG,
-                                              width: 20,
-                                              height: 20,
-                                              color: ColorsExt.red(context),
+                                          ? SizedBox(
+                                              width: 19,
+                                              height: 19,
+                                              child: SvgPicture.asset(
+                                                Assets.images.icons.common.xmarkCircleFillSVG,
+                                                color: ColorsExt.red(context),
+                                              ),
                                             )
-                                          : SvgPicture.asset(
-                                              Assets.images.icons.common.questionCircleFillSVG,
-                                              width: 20,
-                                              height: 20,
-                                              color: ColorsExt.grey3(context),
+                                          : SizedBox(
+                                              width: 19,
+                                              height: 19,
+                                              child: SvgPicture.asset(
+                                                Assets.images.icons.common.questionCircleFillSVG,
+                                                color: ColorsExt.grey3(context),
+                                              ),
                                             ),
                                   const SizedBox(width: 16.0),
                                   Row(
@@ -365,7 +386,20 @@ class EventModal extends StatelessWidget {
                                       title: t.event.share, image: Assets.images.icons.common.arrowshapeTurnUpRightSVG),
                                   BottomButton(
                                       title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
-                                  BottomButton(title: t.event.edit, image: Assets.images.icons.common.pencilSVG),
+                                  BottomButton(
+                                    title: t.event.edit,
+                                    image: Assets.images.icons.common.pencilSVG,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      showCupertinoModalBottomSheet(
+                                        context: context,
+                                        builder: (context) => EventEditModal(
+                                          event: event,
+                                          tapedDate: tapedDate,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                   BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
                                 ],
                               )

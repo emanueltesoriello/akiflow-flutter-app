@@ -57,6 +57,7 @@ class Event extends Equatable implements Base {
     this.recurrenceExceptionDelete,
     this.recurrenceSyncRetry,
     this.remoteUpdatedAt,
+    this.oldId,
   });
 
   final String? id;
@@ -110,6 +111,7 @@ class Event extends Equatable implements Base {
   final bool? recurrenceExceptionDelete;
   final int? recurrenceSyncRetry;
   final String? remoteUpdatedAt;
+  final String? oldId;
 
   factory Event.fromMap(Map<String, dynamic> json) => Event(
         id: json['id'] as String?,
@@ -164,6 +166,7 @@ class Event extends Equatable implements Base {
         recurrenceExceptionDelete: json['recurrence_exception_delete'] as bool?,
         recurrenceSyncRetry: json['recurrence_sync_retry'] as int?,
         remoteUpdatedAt: json['remote_updated_at'] as String?,
+        oldId: json['_old_id'] as String?,
       );
 
   @override
@@ -220,6 +223,7 @@ class Event extends Equatable implements Base {
         'recurrence_exception_delete': recurrenceExceptionDelete,
         'recurrence_sync_retry': recurrenceSyncRetry,
         'remote_updated_at': remoteUpdatedAt,
+        '_old_id': oldId,
       };
 
   Event copyWith({
@@ -238,11 +242,11 @@ class Event extends Equatable implements Base {
     String? organizerId,
     String? originalStartTime,
     String? originalStartDate,
-    String? startTime,
-    String? endTime,
+    Nullable<String?>? startTime,
+    Nullable<String?>? endTime,
     String? startDatetimeTz,
-    String? startDate,
-    String? endDate,
+    Nullable<String?>? startDate,
+    Nullable<String?>? endDate,
     String? endDatetimeTz,
     String? originUpdatedAt,
     String? etag,
@@ -291,11 +295,11 @@ class Event extends Equatable implements Base {
       organizerId: organizerId ?? this.organizerId,
       originalStartTime: originalStartTime ?? this.originalStartTime,
       originalStartDate: originalStartDate ?? this.originalStartDate,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
+      startTime: startTime == null ? this.startTime : startTime.value,
+      endTime: endTime == null ? this.endTime : endTime.value,
       startDatetimeTz: startDatetimeTz ?? this.startDatetimeTz,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
+      startDate: startDate == null ? this.startDate : startDate.value,
+      endDate: endDate == null ? this.endDate : endDate.value,
       endDatetimeTz: endDatetimeTz ?? this.endDatetimeTz,
       originUpdatedAt: originUpdatedAt ?? this.originUpdatedAt,
       etag: etag ?? this.etag,
@@ -481,6 +485,7 @@ class Event extends Equatable implements Base {
       recurrenceExceptionDelete,
       recurrenceSyncRetry,
       remoteUpdatedAt,
+      oldId,
     ];
   }
 }

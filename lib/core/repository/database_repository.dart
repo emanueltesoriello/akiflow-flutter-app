@@ -207,4 +207,19 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
     return fromSql(result.first);
   }
+
+  Future<T?> getRecurringByOriginalStart<T>(
+      akiflowAccountId, calendarId, recurringId, originalStartDateTimeColumn) async {
+    String query =
+        """SELECT id, akiflow_account_id, calendar_id, $originalStartDateTimeColumn, recurring_id, updated_at, remote_updated_at, deleted_at 
+    FROM $tableName WHERE akiflow_account_id = ? AND calendar_id = ? AND recurring_id = ? AND $originalStartDateTimeColumn = ?""";
+    List<Map<String, Object?>> items = await _databaseService.database!
+        .rawQuery(query, [akiflowAccountId, calendarId, recurringId, originalStartDateTimeColumn]);
+    if (items.isEmpty) {
+      return null;
+    } else {
+      List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+      return objects.first;
+    }
+  }
 }

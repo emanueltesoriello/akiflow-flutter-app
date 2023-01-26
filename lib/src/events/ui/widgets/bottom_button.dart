@@ -5,18 +5,20 @@ import 'package:mobile/common/style/colors.dart';
 class BottomButton extends StatelessWidget {
   final String title;
   final String image;
-  const BottomButton({
-    Key? key,
-    required this.title,
-    required this.image,
-  }) : super(key: key);
+  final void Function()? onTap;
+  final Color? iconColor;
+  final Color? containerColor;
+
+  const BottomButton(
+      {Key? key, required this.title, required this.image, this.onTap, this.iconColor, this.containerColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         InkWell(
-          onTap: () {},
+          onTap: onTap,
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -24,17 +26,21 @@ class BottomButton extends StatelessWidget {
                 height: 40.0,
                 width: 40.0,
                 decoration: BoxDecoration(
-                  color: ColorsExt.grey6(context),
+                  color: containerColor ?? ColorsExt.grey6(context),
                   borderRadius: const BorderRadius.all(
                     Radius.circular(12.0),
                   ),
                 ),
               ),
-              SvgPicture.asset(
-                image,
-                width: 22,
-                height: 22,
-                color: ColorsExt.grey3(context),
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  image,
+                  width: iconColor != null ? 15 : 20,
+                  height: iconColor != null ? 15 : 20,
+                  color: iconColor ?? ColorsExt.grey3(context),
+                ),
               ),
             ],
           ),

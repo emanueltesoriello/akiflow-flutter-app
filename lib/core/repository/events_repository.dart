@@ -16,6 +16,7 @@ class EventsRepository extends DatabaseRepository {
     List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
           SELECT *
           FROM events
+          WHERE task_id IS NULL
 """);
 
     List<Event> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));

@@ -24,7 +24,6 @@ class CalendarView extends StatelessWidget {
 
         EventsCubit eventsCubit = context.watch<EventsCubit>();
         List<Event> events = List.from(eventsCubit.state.events);
-        events = List.from(events.where((element) => element.taskId == null));
 
         return Scaffold(
           appBar: CalendarAppBar(calendarController: calendarController),
