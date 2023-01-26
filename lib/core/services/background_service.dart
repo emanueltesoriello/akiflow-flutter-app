@@ -18,8 +18,11 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:mobile/core/preferences.dart';
 
+const scheduleNotificationsTaskKey = "com.akiflow.mobile.scheduleNotifications";
+const periodicTaskskKey = "com.akiflow.mobile.periodicTask";
+
 @pragma('vm:entry-point')
-callbackDispatcher() {
+void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
       // listen on this port in order to catch trigger from the background services.
@@ -47,7 +50,7 @@ callbackDispatcher() {
       // *********************************************
       // ***** background notifications scheduling ***
       // *********************************************
-      if (task == 'com.akiflow.mobile.scheduleNotifications') {
+      if (task == scheduleNotificationsTaskKey) {
         await scheduleNotifications(locator<PreferencesRepository>());
 
         // N.B. to be remove: show a local notification to confirm the background Sync
@@ -126,8 +129,8 @@ scheduleNotifications(PreferencesRepository preferencesRepository) async {
 class BackgroundService {
   const BackgroundService._();
 
-  static initBackgroundService() {
-    Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
+  static initBackgroundService() async {
+    await Workmanager().initialize(callbackDispatcher,
         isInDebugMode:
             //TODO: add a kfebugMode check
             true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
@@ -136,8 +139,8 @@ class BackgroundService {
 
   static registerPeriodicTask(Duration? frequency) {
     Workmanager().registerPeriodicTask(
-      "com.akiflow.mobile.periodicTask",
-      "com.akiflow.mobile.periodicTask",
+      periodicTaskskKey,
+      periodicTaskskKey,
       //initialDelay: Duration(seconds: 20),
       constraints: constraints.Constraints(
         // connected or metered mark the task as requiring internet

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
@@ -93,8 +94,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 await context.read<EditTaskCubit>().create();
                                 //Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
                                 //Navigator.pop(context, taskUpdated);
-                                Workmanager().registerOneOffTask("com.akiflow.mobile.scheduleNotifications",
-                                    "com.akiflow.mobile.scheduleNotifications",
+                                Workmanager().registerOneOffTask(
+                                    scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
                                     existingWorkPolicy: ExistingWorkPolicy.replace);
                               }),
                             ],

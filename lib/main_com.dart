@@ -20,6 +20,7 @@ import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/di/base_providers.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/navigator/base_navigator.dart';
+import 'package:mobile/src/home/ui/pages/home_body.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -54,7 +55,7 @@ Future<void> initFunctions() async {
   //    iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
 
   // Init Background Service and register periodic task
-  BackgroundService.initBackgroundService();
+  await BackgroundService.initBackgroundService();
   BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
 }
 
@@ -70,14 +71,15 @@ Future<void> mainCom({kDebugMode = false}) async {
 
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
-  await SentryFlutter.init((options) {
+  /* await SentryFlutter.init((options) {
     options.beforeSend = beforeSend;
     options.dsn = Config.sentryDsn;
     options.tracesSampleRate = 1.0;
-  },
-      appRunner: () => runApp(
-            DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
-          ));
+  }, appRunner: () => */
+  runApp(
+    DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
+    //  )
+  );
 }
 
 class Application extends StatelessWidget {

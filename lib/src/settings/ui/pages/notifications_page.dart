@@ -4,6 +4,7 @@ import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -158,8 +159,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     await NotificationsCubit.cancelScheduledNotifications();
                   } else if (newVal) {
                     Workmanager().registerOneOffTask(
-                      "com.akiflow.mobile.scheduleNotifications",
-                      "com.akiflow.mobile.scheduleNotifications",
+                      scheduleNotificationsTaskKey,
+                      scheduleNotificationsTaskKey,
                     );
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),

@@ -4,6 +4,7 @@ import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -787,8 +788,7 @@ extension TaskExt on Task {
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
     }
-    Workmanager().registerOneOffTask(
-        "com.akiflow.mobile.scheduleNotifications", "com.akiflow.mobile.scheduleNotifications",
+    Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
         existingWorkPolicy: ExistingWorkPolicy.replace);
   }
 
