@@ -170,6 +170,7 @@ class _AssetsImagesIconsCommon {
   final targetActiveSVG = 'assets/images/icons/_common/target_active.svg';
   final trashSVG = 'assets/images/icons/_common/trash.svg';
   final traySVG = 'assets/images/icons/_common/tray.svg';
+  final wifiSlashSVG = 'assets/images/icons/_common/wifi_slash.svg';
   final xmarkSVG = 'assets/images/icons/_common/xmark.svg';
   final xmarkSquareSVG = 'assets/images/icons/_common/xmark_square.svg';
 }
