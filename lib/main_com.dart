@@ -14,6 +14,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
@@ -113,6 +114,7 @@ class Application extends StatelessWidget {
                 context.read<MainCubit>().onFocusLost();
               },
               child: MaterialApp(
+                  navigatorKey: NavigationService.navigatorKey,
                   title: t.appName,
                   localizationsDelegates: const [
                     GlobalMaterialLocalizations.delegate,

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
@@ -115,6 +116,7 @@ scheduleNotifications(PreferencesRepository preferencesRepository) async {
           notificationId: notificationsId,
           scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
               .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
+          payload: jsonEncode(task.toMap()),
           notificationDetails: const NotificationDetails(
             android: AndroidNotificationDetails(
               "channel_d",

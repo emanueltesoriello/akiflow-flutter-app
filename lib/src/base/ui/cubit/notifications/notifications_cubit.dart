@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobile/core/services/navigation_service.dart';
+import 'package:mobile/extensions/task_extension.dart';
+import 'package:models/task/task.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 
@@ -61,12 +65,30 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     const androidSetting = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSetting = DarwinInitializationSettings();
     const initSettings = InitializationSettings(android: androidSetting, iOS: iosSetting);
-
-    await _localNotificationsPlugin.initialize(initSettings).then((_) {
+    await _localNotificationsPlugin
+        .initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: selectNotification,
+      onDidReceiveBackgroundNotificationResponse: selectNotification,
+    )
+        .then((_) {
       print('setupPlugin: setup success');
     }).catchError((Object error) {
       print('Error: $error');
     });
+  }
+
+  static selectNotification(NotificationResponse payload) async {
+    //payload.payload;
+    if (payload.payload != '') {
+      Task task = Task.fromMap(jsonDecode(payload.payload!));
+      // jsonDecode(payload.payload)
+      print('notification clicked');
+      BuildContext? context = NavigationService.navigatorKey.currentContext;
+      if (context != null) {
+        TaskExt.editTask(NavigationService.navigatorKey.currentContext!, task);
+      }
+    }
   }
 
   // ********************
@@ -97,27 +119,33 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     if (activeNotifications.isNotEmpty) {
       for (var notification in activeNotifications) {
         localNotificationsPlugin.show(
-            notification.id,
-            notification.title,
-            notification.body,
-            const NotificationDetails(
-              android: AndroidNotificationDetails(
-                "channel.id",
-                "channel.name",
-                channelDescription: "default.channelDescription",
-                // other properties...
-              ),
-            ));
+          notification.id,
+          notification.title,
+          notification.body,
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              "channel.id",
+              "channel.name",
+              channelDescription: "default.channelDescription",
+              // other properties...
+            ),
+          ),
+          payload: notification.payload,
+        );
       }
     }
   }
 
   static scheduleNotifications(String title, String description,
-      {int notificationId = 0, NotificationDetails? notificationDetails, required TZDateTime scheduledDate}) {
+      {int notificationId = 0,
+      NotificationDetails? notificationDetails,
+      required TZDateTime scheduledDate,
+      required String? payload}) {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     localNotificationsPlugin.zonedSchedule(
         notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
         androidAllowWhileIdle: true,
+        payload: payload,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
 
