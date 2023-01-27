@@ -36,9 +36,8 @@ class CalendarBody extends StatelessWidget {
       return SfCalendar(
         controller: calendarController,
         headerHeight: 0,
-        firstDayOfWeek: 1,
+        firstDayOfWeek: DateTime.monday,
         view: context.watch<CalendarCubit>().state.calendarView,
-        timeZone: DateTime.now().timeZoneName,
         dataSource: _getCalendarDataSource(context),
         viewHeaderStyle: ViewHeaderStyle(
           dayTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
@@ -49,7 +48,7 @@ class CalendarBody extends StatelessWidget {
           minimumAppointmentDuration: const Duration(minutes: 23),
           timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
           numberOfDaysInView: isThreeDays ? 3 : -1,
-          //timeFormat: 'h a' ' HH:mm',
+          timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
         ),
         scheduleViewSettings: ScheduleViewSettings(
             hideEmptyScheduleWeek: true,

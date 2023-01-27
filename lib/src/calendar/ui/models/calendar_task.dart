@@ -47,7 +47,7 @@ class CalendarTask extends Appointment {
       return null;
     }
 
-    List<Label> labels = context.watch<LabelsCubit>().state.labels;
+    List<Label> labels = context.read<LabelsCubit>().state.labels;
 
     Label? label = labels.firstWhereOrNull(
       (label) => task.listId!.contains(label.id!),
