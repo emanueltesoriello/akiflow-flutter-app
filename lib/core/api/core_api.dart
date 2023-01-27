@@ -13,9 +13,6 @@ class CoreApi {
 
   Future<void> check() async {
     Response response = await _httpClient.head(Uri.parse("${Config.endpoint}/check"));
-    if (response.statusCode == 401) {
-      throw ApiException({"errors": [], "message": "Server error"});
-    }
     if (response.statusCode != 204) {
       throw ApiException(jsonDecode(response.body));
     }
