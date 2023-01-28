@@ -18,9 +18,9 @@ part 'notifications_state.dart';
 class NotificationsCubit extends Cubit<NotificationsCubitState> {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final AndroidNotificationChannel channel = const AndroidNotificationChannel(
-    'default_channel', // id
-    "defaultChannel", // title
-    description: "descriptionDefaultChannel", // description
+    "channel id",
+    "channel name",
+    description: "channel description",
     importance: Importance.defaultImportance,
   );
 
@@ -34,27 +34,21 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   // ************ INIT FUNCTIONS ************
   // ****************************************
   initFirebaseMessaging() async {
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     if (Platform.isAndroid) {
-      //  await _localNotificationsPlugin
-      //     .initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
-      //   await _localNotificationsPlugin
-      //       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      //       ?.createNotificationChannel(channel);
-      // _firebaseMessaging.app.
-      final bool? result = await _localNotificationsPlugin
+      await _localNotificationsPlugin
           .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
           ?.requestPermissions(
             alert: true,
             badge: true,
             sound: true,
           );
-      await _firebaseMessaging.requestPermission();
+      await firebaseMessaging.requestPermission();
 
-      _firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
+      firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
     }
     if (Platform.isIOS) {
-      _firebaseMessaging.requestPermission();
+      firebaseMessaging.requestPermission();
     }
     print("FCM Token: ${(await FirebaseMessaging.instance.getToken()).toString()}");
     // *********************************
@@ -82,7 +76,6 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     //payload.payload;
     if (payload.payload != '') {
       Task task = Task.fromMap(jsonDecode(payload.payload!));
-      // jsonDecode(payload.payload)
       print('notification clicked');
       BuildContext? context = NavigationService.navigatorKey.currentContext;
       if (context != null) {
@@ -103,9 +96,9 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
         notificationDetails ??
             const NotificationDetails(
               android: AndroidNotificationDetails(
-                "channel.id",
-                "channel.name",
-                channelDescription: "default.channelDescription",
+                "channel id",
+                "channel name",
+                channelDescription: "channel description",
                 // other properties...
               ),
             ));
@@ -124,9 +117,9 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
           notification.body,
           const NotificationDetails(
             android: AndroidNotificationDetails(
-              "channel.id",
-              "channel.name",
-              channelDescription: "default.channelDescription",
+              "channel id",
+              "channel name",
+              channelDescription: "channel description",
               // other properties...
             ),
           ),
@@ -155,8 +148,8 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     String? scheduledBody,
   }) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('your channel id', 'your channel name',
-        channelDescription: 'your channel description', importance: Importance.max, priority: Priority.high);
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'channel name',
+        channelDescription: 'channel description', importance: Importance.max, priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await localNotificationsPlugin.zonedSchedule(
