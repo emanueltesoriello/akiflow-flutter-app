@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
@@ -76,9 +78,13 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                 setState(() {
                                   _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
                                 });
-                                Workmanager().registerOneOffTask(
-                                    scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-                                    existingWorkPolicy: ExistingWorkPolicy.replace);
+                                if (Platform.isAndroid) {
+                                  Workmanager().registerOneOffTask(
+                                      scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
+                                      existingWorkPolicy: ExistingWorkPolicy.replace);
+                                } else {
+                                  //TODO handle schedule notifications for iOS
+                                }
                               }
                             },
                             value: true,

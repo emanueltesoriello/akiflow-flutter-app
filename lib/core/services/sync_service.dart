@@ -51,7 +51,6 @@ class SyncService {
 
     // Ignore other integrations
     try {
-      // TODO remove when migrate to gmail v3
       if (api.runtimeType.toString() == "AccountApi") {
         remoteItems =
             remoteItems.where((element) => AccountExt.acceptedAccountsOrigin.contains(element.connectorId)).toList();

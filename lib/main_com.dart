@@ -132,7 +132,6 @@ class Application extends StatelessWidget {
                   home: FutureBuilder(
                       future: NotificationsCubit.handlerForNotificationsClickForTerminatedApp(),
                       builder: (context, _) {
-                        //NotificationsCubit.handlerForNotificationsClickForTerminatedApp();
                         return BaseNavigator(userLogged: userLogged);
                       })));
         }));

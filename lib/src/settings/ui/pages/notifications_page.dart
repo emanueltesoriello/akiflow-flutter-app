@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
@@ -158,10 +160,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   if (newVal == false) {
                     await NotificationsCubit.cancelScheduledNotifications();
                   } else if (newVal) {
-                    Workmanager().registerOneOffTask(
-                      scheduleNotificationsTaskKey,
-                      scheduleNotificationsTaskKey,
-                    );
+                    if (Platform.isAndroid) {
+                      Workmanager().registerOneOffTask(
+                        scheduleNotificationsTaskKey,
+                        scheduleNotificationsTaskKey,
+                      );
+                    } else {
+                      //TODO handle schedule notifications for iOS
+                    }
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),
                 const SizedBox(height: 20),

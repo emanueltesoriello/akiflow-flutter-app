@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
@@ -788,8 +790,12 @@ extension TaskExt on Task {
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
     }
-    Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-        existingWorkPolicy: ExistingWorkPolicy.replace);
+    if (Platform.isAndroid) {
+      Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
+          existingWorkPolicy: ExistingWorkPolicy.replace);
+    } else {
+      //TODO handle schedule notifications for iOS
+    }
   }
 
   Future<void> openLinkedContentUrl([Doc? doc]) async {
