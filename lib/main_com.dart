@@ -20,6 +20,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/di/base_providers.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/navigator/base_navigator.dart';
 import 'package:mobile/src/home/ui/pages/home_body.dart';
 import 'package:models/user.dart';
@@ -58,6 +59,8 @@ Future<void> initFunctions() async {
   // Init Background Service and register periodic task
   await BackgroundService.initBackgroundService();
   BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
+
+  // NotificationsCubit.handlerForNotificationsClickForTerminatedApp();
 }
 
 _identifyAnalytics(User user) async {
@@ -126,7 +129,12 @@ class Application extends StatelessWidget {
                   debugShowCheckedModeBanner: Config.development,
                   navigatorObservers: [routeObserver],
                   theme: lightTheme,
-                  home: BaseNavigator(userLogged: userLogged)));
+                  home: FutureBuilder(
+                      future: NotificationsCubit.handlerForNotificationsClickForTerminatedApp(),
+                      builder: (context, _) {
+                        //NotificationsCubit.handlerForNotificationsClickForTerminatedApp();
+                        return BaseNavigator(userLogged: userLogged);
+                      })));
         }));
   }
 }

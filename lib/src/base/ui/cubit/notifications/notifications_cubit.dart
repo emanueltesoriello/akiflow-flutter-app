@@ -55,6 +55,17 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     // **********************************/
   }
 
+  static Future<void> handlerForNotificationsClickForTerminatedApp() async {
+    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    var details = await localNotificationsPlugin.getNotificationAppLaunchDetails();
+    if (details != null && details.didNotificationLaunchApp) {
+      print(details.notificationResponse);
+      print('runned handlerForNotificationsClickForTerminatedApp');
+      handleNotificationClick(details.notificationResponse!);
+    }
+  }
+
   Future<void> setupLocalNotificationsPlugin() async {
     const androidSetting = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSetting = DarwinInitializationSettings();
@@ -62,24 +73,28 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     await _localNotificationsPlugin
         .initialize(
       initSettings,
-      onDidReceiveNotificationResponse: selectNotification,
-      onDidReceiveBackgroundNotificationResponse: selectNotification,
+      onDidReceiveNotificationResponse: handleNotificationClick,
+      onDidReceiveBackgroundNotificationResponse: handleNotificationClick,
     )
         .then((_) {
       print('setupPlugin: setup success');
     }).catchError((Object error) {
       print('Error: $error');
     });
+    // await handlerForNotificationsClickForTerminatedApp();
   }
 
-  static selectNotification(NotificationResponse payload) async {
+  static handleNotificationClick(NotificationResponse payload) async {
     //payload.payload;
     if (payload.payload != '') {
       Task task = Task.fromMap(jsonDecode(payload.payload!));
       print('notification clicked');
       BuildContext? context = NavigationService.navigatorKey.currentContext;
       if (context != null) {
-        TaskExt.editTask(NavigationService.navigatorKey.currentContext!, task);
+        print('NavigationService.navigatorKey.currentContext');
+        await TaskExt.editTask(NavigationService.navigatorKey.currentContext!, task);
+      } else {
+        print('NO NavigationService.navigatorKey.currentContext');
       }
     }
   }
@@ -87,7 +102,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   // ********************
   // ********************
   static showNotifications(String title, String description,
-      {int notificationId = 1, NotificationDetails? notificationDetails}) {
+      {int notificationId = 1, NotificationDetails? notificationDetails, String? payload}) {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     localNotificationsPlugin.show(
         notificationId,
@@ -101,7 +116,8 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
                 channelDescription: "channel description",
                 // other properties...
               ),
-            ));
+            ),
+        payload: payload);
   }
 
   static cancelScheduledNotifications() async {

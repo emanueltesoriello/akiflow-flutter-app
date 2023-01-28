@@ -69,8 +69,8 @@ void callbackDispatcher() {
         // ***********************************
         // Test for scheduled notifications
         // ***********************************
-        tz.initializeTimeZones();
-        tz.setLocalLocation(tz.getLocation("Europe/Rome"));
+        //tz.initializeTimeZones();
+        //tz.setLocalLocation(tz.getLocation("Europe/Rome"));
         /*NotificationsCubit.scheduleNotifications("Scheduled task test!", "Scheduled task runned successfully",
             notificationId: 0,
             scheduledDate: tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1)),
@@ -98,9 +98,8 @@ scheduleNotifications(PreferencesRepository preferencesRepository) async {
 
     TasksRepository tasksRepository = locator<TasksRepository>();
     List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
-
     tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation("Europe/Rome"));
+    tz.setLocalLocation(tz.getLocation(DateTime.now().timeZoneName));
 
     for (Task task in todayTasks) {
       int notificationsId = 0;
