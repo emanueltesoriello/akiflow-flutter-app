@@ -112,7 +112,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   fromTimeOfDayToFormattedString(TimeOfDay value) {
-    return "At ${value.hour.toString()}:${value.minute.toString()}";
+    String hour = value.hour.toString();
+    String minute = value.minute.toString().length == 1 ? '0${value.minute.toString()}' : value.minute.toString();
+    return "At ${hour.toString()}:${minute.toString()}";
   }
 
   onReceiveNotificationDailyOverviewClick() {
@@ -126,6 +128,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           setState(() {
             dailyOverviewTime = fromTimeOfDayToFormattedString(selected);
           });
+          NotificationsCubit.setDailyReminder();
         }
       },
     );
@@ -159,6 +162,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   });
                   if (newVal == false) {
                     await NotificationsCubit.cancelScheduledNotifications();
+                    /*if (dailyOverviewNotificationTimeEnabled) {
+                      NotificationsCubit.scheduleDailyReminder(service.dailyOverviewNotificationTime);
+                    }*/
                   } else if (newVal) {
                     if (Platform.isAndroid) {
                       Workmanager().registerOneOffTask(
@@ -179,19 +185,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 FutureBuilder(builder: (context, AsyncSnapshot<PreferencesRepository> repo) {
                   return Container();
                 }),
-                Opacity(
-                  opacity: 0.3,
-                  child: IgnorePointer(
-                    ignoring: true,
-                    child: mainItem("Daily overview notification", "Receive notification", dailyOverviewTime,
-                        () => onReceiveNotificationDailyOverviewClick(), onChanged: (newVal) {
-                      service.seDailyOverviewNotificationTime(newVal);
-                      setState(() {
-                        dailyOverviewNotificationTimeEnabled = newVal;
-                      });
-                    }, isEnabled: dailyOverviewNotificationTimeEnabled),
-                  ),
-                )
+                mainItem("Daily overview notification", "Receive notification", dailyOverviewTime,
+                    () => onReceiveNotificationDailyOverviewClick(), onChanged: (newVal) async {
+                  service.seDailyOverviewNotificationTime(newVal);
+                  setState(() {
+                    dailyOverviewNotificationTimeEnabled = newVal;
+                  });
+                  NotificationsCubit.setDailyReminder();
+                }, isEnabled: dailyOverviewNotificationTimeEnabled),
               ],
             ),
           ),

@@ -7,11 +7,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobile/core/config.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
+import 'package:mobile/core/preferences.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 part 'notifications_state.dart';
 
@@ -23,6 +30,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     description: "channel description",
     importance: Importance.defaultImportance,
   );
+  static const dailyReminderTaskId = 1000001;
 
   NotificationsCubit({bool initFirebaseApp = true}) : super(const NotificationsCubitState()) {
     setupLocalNotificationsPlugin();
@@ -124,6 +132,15 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     List<ActiveNotification> activeNotifications = [];
     activeNotifications.addAll(await localNotificationsPlugin.getActiveNotifications());
+    /*var pendingNotifications = await localNotificationsPlugin.pendingNotificationRequests();
+    if (pendingNotifications.length != 0) {
+      for (PendingNotificationRequest notification in pendingNotifications) {
+        if (notification.id == dailyReminderTaskId) {
+
+        }
+      }
+    }*/
+    setDailyReminder();
     await localNotificationsPlugin.cancelAll();
     if (activeNotifications.isNotEmpty) {
       for (var notification in activeNotifications) {
@@ -158,25 +175,52 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  static Future<void> scheduleDailyReminder(
-    TZDateTime scheduledDate, {
-    String? scheduledTitle,
-    String? scheduledBody,
-  }) async {
+  static Future<void> setDailyReminder() async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'channel name',
         channelDescription: 'channel description', importance: Importance.max, priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    await localNotificationsPlugin.zonedSchedule(
-      9999,
-      scheduledTitle,
-      scheduledBody,
-      scheduledDate,
-      platformChannelSpecifics,
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
+    // *********************************************
+    // *********************************************
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    DatabaseService databaseService = DatabaseService();
+    await databaseService.open(skipDirectoryCreation: true);
+    await Config.initialize(
+      configFile: 'assets/config/prod.json',
+      production: true,
     );
+    try {
+      setupLocator(preferences: preferences, databaseService: databaseService, initFirebaseApp: false);
+    } catch (e) {
+      print(e);
+    }
+    // *********************************************
+    // *********************************************
+
+    final service = locator<PreferencesRepository>();
+    bool dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
+
+    if (dailyOverviewNotificationTimeEnabled) {
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation(DateTime.now().timeZoneName));
+
+      TimeOfDay dailyOverviewNotificationTime = service.dailyOverviewNotificationTime;
+      final now = DateTime.now();
+
+      DateTime dt = DateTime(
+          now.year, now.month, now.day, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
+
+      await localNotificationsPlugin.zonedSchedule(
+        dailyReminderTaskId,
+        "Start your day right by checking your schedule!",
+        null,
+        tz.TZDateTime.parse(tz.local, dt.toIso8601String()),
+        platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    }
   }
 }
