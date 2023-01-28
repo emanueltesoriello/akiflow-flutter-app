@@ -191,6 +191,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   setState(() {
                     dailyOverviewNotificationTimeEnabled = newVal;
                   });
+                  if (!newVal) {
+                    NotificationsCubit.cancelNotificationById(NotificationsCubit.dailyReminderTaskId);
+                  }
                   NotificationsCubit.setDailyReminder();
                 }, isEnabled: dailyOverviewNotificationTimeEnabled),
               ],

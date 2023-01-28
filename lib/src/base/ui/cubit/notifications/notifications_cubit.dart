@@ -223,4 +223,6 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
       );
     }
   }
+
+  static cancelNotificationById(int id) => FlutterLocalNotificationsPlugin().cancel(id);
 }
