@@ -31,11 +31,11 @@ class CalendarEvent extends Appointment {
     DateTime startTime = DateTime(DateTime.now().year - 1, 2, 31);
     DateTime endTime = startTime;
     if (event.startTime != null && event.endTime != null) {
-      startTime = DateTime.parse(event.startTime!);
-      endTime = DateTime.parse(event.endTime!);
+      startTime = DateTime.parse(event.startTime!).toLocal();
+      endTime = DateTime.parse(event.endTime!).toLocal();
     } else if (event.startDate != null && event.endDate != null) {
-      startTime = DateTime.parse(event.startDate!);
-      endTime = DateTime.parse(event.endDate!);
+      startTime = DateTime.parse(event.startDate!).toLocal();
+      endTime = DateTime.parse(event.endDate!).toLocal();
     }
 
     List<DateTime>? exceptionDates = [];

@@ -30,8 +30,8 @@ class CalendarTask extends Appointment {
       this.label});
 
   static CalendarTask taskToCalendarTask(BuildContext context, Task task) {
-    DateTime startTime = DateTime.parse(task.datetime!);
-    DateTime endTime = DateTime.parse(task.datetime!).add(Duration(seconds: task.duration!));
+    DateTime startTime = DateTime.parse(task.datetime!).toLocal();
+    DateTime endTime = DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!));
     return CalendarTask(
         startTime: startTime,
         endTime: endTime,
