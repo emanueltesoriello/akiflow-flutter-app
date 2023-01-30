@@ -45,7 +45,7 @@ class RecurrenceModal extends StatelessWidget {
               child: Row(
                 children: [
                   SvgPicture.asset(
-                    Assets.images.icons.common.repeatSVG,
+                   Assets.images.icons.common.repeatSVG,
                     width: 28,
                     height: 28,
                   ),
@@ -148,12 +148,10 @@ class RecurrenceModal extends StatelessWidget {
                     Navigator.pop(context);
                     showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context) => CustomRecurrenceModal(
-                        rule: rule,
-                        onChange: (RecurrenceRule? rule) {
-                          onChange(rule);
-                        },
-                      ),
+                      builder: (context) => CustomRecurrenceModal(rule: rule,
+                      onChange: (RecurrenceRule? rule) {
+                        onChange(rule);
+                      },),
                     );
                   },
                   child: Text(

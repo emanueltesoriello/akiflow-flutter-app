@@ -358,7 +358,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     List<Task> tasks = [];
 
     String? recurringId = updated.id;
-    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now().toUtc());
 
     DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
     DateTime taskDateTime = updated.datetime != null ? DateTime.parse(updated.datetime!) : DateTime.now().toUtc();

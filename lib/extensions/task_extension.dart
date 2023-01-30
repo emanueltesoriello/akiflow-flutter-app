@@ -779,7 +779,6 @@ extension TaskExt on Task {
   static Future<void> editTask(BuildContext context, Task task) async {
     TasksCubit tasksCubit = context.read<TasksCubit>();
     SyncCubit syncCubit = context.read<SyncCubit>();
-
     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
     await showCupertinoModalBottomSheet(
       context: context,
@@ -788,13 +787,13 @@ extension TaskExt on Task {
         child: const EditTaskModal(),
       ),
     );
-
     Task updated = editTaskCubit.state.updatedTask;
     Task original = editTaskCubit.state.originalTask;
 
     if (updated == original) {
       return;
     }
+
     if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
       showCupertinoModalBottomSheet(
           context: context,
