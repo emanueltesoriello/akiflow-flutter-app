@@ -99,7 +99,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                     scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
                                     existingWorkPolicy: ExistingWorkPolicy.replace);
                               } else {
-                                //TODO handle schedule notifications for iOS
                                 scheduleNotifications(locator<PreferencesRepository>());
                               }
                             }),

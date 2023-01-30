@@ -796,7 +796,6 @@ extension TaskExt on Task {
       Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
           existingWorkPolicy: ExistingWorkPolicy.replace);
     } else {
-      //TODO handle schedule notifications for iOS
       scheduleNotifications(locator<PreferencesRepository>());
     }
   }

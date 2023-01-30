@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
@@ -45,24 +46,45 @@ class _NotificationsPageState extends State<NotificationsPage> {
       margin: const EdgeInsets.all(1),
       //padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
-          border: Border.all(color: ColorsExt.grey5(context)),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(radius),
-          ),
+          borderRadius: BorderRadius.circular(radius),
+          boxShadow: [
+            BoxShadow(
+              color: ColorsExt.grey5(context),
+              offset: const Offset(0, 2),
+              blurRadius: 1,
+            ),
+          ],
           color: Colors.white),
       child: ListView(
         shrinkWrap: true,
         children: [
-          SwitchListTile(
-            value: isEnabled,
-            onChanged: (val) => onChanged(val),
-            activeColor: ColorsExt.akiflow(context),
-            title: Text(
-              switchTitle,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 17,
-                color: ColorsExt.grey2(context),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    switchTitle,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: ColorsExt.grey2(context),
+                    ),
+                  ),
+                  FlutterSwitch(
+                    width: 48,
+                    height: 24,
+                    toggleSize: 20,
+                    activeColor: ColorsExt.akiflow(context),
+                    inactiveColor: ColorsExt.grey5(context),
+                    value: isEnabled,
+                    borderRadius: 24,
+                    padding: 2,
+                    onToggle: (val) => onChanged(val),
+                  ),
+                ],
               ),
             ),
           ),
@@ -72,6 +94,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
             child: IgnorePointer(
               ignoring: !isEnabled,
               child: ListTile(
+                visualDensity: const VisualDensity(vertical: -4), // to compact
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                 onTap: () => onTap(),
                 title: Text(
                   mainButtonListTitle,
@@ -173,7 +197,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         scheduleNotificationsTaskKey,
                       );
                     } else {
-                      //TODO handle schedule notifications for iOS
                       scheduleNotifications(locator<PreferencesRepository>());
                     }
                   }

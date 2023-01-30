@@ -7,6 +7,8 @@ import 'package:mobile/assets.dart';
 // import 'package:mobile/features/integrations/ui/gmail/gmail_instruction_integration_page.dart';
 // import 'package:mobile/features/integrations/ui/integration_list_item.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';

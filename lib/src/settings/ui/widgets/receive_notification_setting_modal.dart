@@ -32,6 +32,35 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
     _selectedNextTaskNotificationsModel = widget.selectedNextTaskNotificationsModel;
   }
 
+  Widget _predefinedDateItem(
+    BuildContext context, {
+    required String text,
+    required Function() onPressed,
+    required bool selected,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        color: selected ? ColorsExt.grey6(context) : Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        height: 40,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: ColorsExt.grey2(context),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -67,7 +96,27 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                         const SizedBox(height: 12),
                         ...List.generate(
                           NextTaskNotificationsModel.values.length,
-                          (index) => RadioListTile(
+                          (index) => _predefinedDateItem(context, text: NextTaskNotificationsModel.values[index].title,
+                              onPressed: () {
+                            PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+                            preferencesRepository
+                                .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
+                            widget.onSelectedNextTaskNotificationsModel(NextTaskNotificationsModel.values[index]);
+                            setState(() {
+                              _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
+                            });
+                            if (Platform.isAndroid) {
+                              Workmanager().registerOneOffTask(
+                                  scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
+                                  existingWorkPolicy: ExistingWorkPolicy.replace);
+                            } else {
+                              scheduleNotifications(locator<PreferencesRepository>());
+                            }
+                          },
+                              selected: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
+                                  _selectedNextTaskNotificationsModel.minutesBeforeToStart),
+
+                          /* RadioListTile(
                             activeColor: ColorsExt.akiflow(context),
                             onChanged: (bool? value) {
                               if (value == true) {
@@ -83,7 +132,6 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                       scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
                                       existingWorkPolicy: ExistingWorkPolicy.replace);
                                 } else {
-                                  //TODO handle schedule notifications for iOS
                                   scheduleNotifications(locator<PreferencesRepository>());
                                 }
                               }
@@ -96,7 +144,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                     )),
                             groupValue: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
                                 _selectedNextTaskNotificationsModel.minutesBeforeToStart,
-                          ),
+                          ),*/
                         ).reversed,
                         const SizedBox(height: 50),
                       ],

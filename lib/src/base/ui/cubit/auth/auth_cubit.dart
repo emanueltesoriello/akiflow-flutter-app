@@ -9,6 +9,7 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
@@ -118,6 +119,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           try {
             _syncCubit.sync();
+            scheduleNotifications(locator<PreferencesRepository>());
           } catch (e) {
             print(e);
           }

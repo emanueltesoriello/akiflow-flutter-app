@@ -8,6 +8,7 @@ import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
@@ -45,6 +46,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
     if (user != null) {
       _syncCubit.sync(loading: true);
+      scheduleNotifications(locator<PreferencesRepository>());
       AnalyticsService.track("Show Main Window");
     }
   }
@@ -90,7 +92,8 @@ class MainCubit extends Cubit<MainCubitState> {
             IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSync");
             port.listen((dynamic data) async {
               print('got $data on UI');
-              _syncControllerService.sync();
+              await _syncControllerService.sync();
+              scheduleNotifications(locator<PreferencesRepository>());
             });
           } catch (e) {
             print(e);
@@ -106,6 +109,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
   void onFocusLost() async {
     _preferencesRepository.setLastAppUseAt(DateTime.now());
-    _syncControllerService.sync([Entity.tasks]);
+    await _syncControllerService.sync([Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
   }
 }
