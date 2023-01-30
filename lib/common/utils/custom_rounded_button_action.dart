@@ -105,10 +105,12 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
       child: Column(
         children: [
           const Separator(),
+          const SizedBox(height: 5),
           ButtonBar(
             alignment: MainAxisAlignment.spaceEvenly,
             children: _buildActionsButton(context),
           ),
+          const SizedBox(height: 5),
         ],
       ),
     );

@@ -260,10 +260,29 @@
     "custom": "Custom",
     "comingSoon": "Coming soon",
     "repeatingEditDialog": {
-      "title": "You are changing a repeating task",
+      "title": "Editing repeating task",
       "description": "Do you want to change only this occurrence or change this and all future occurrences?",
       "onlyThis": "Only this task",
       "thisAndAllFuture": "This and all future tasks"
+    },
+    "recurrence": {
+      "every": "Every",
+      "day": "Day",
+      "days": "Day(s)",
+      "week": "Week",
+      "weeks": "Week(s)",
+      "month": "Month",
+      "months": "Month(s)",
+      "year": "Year",
+      "years": "Year(s)",
+      "selectedDays": "Selected days",
+      "ends": "Ends",
+      "never": "Never",
+      "until": "Until",
+      "repeatUntil": "Repeat until",
+      "after": "After",
+      "repeatEvery": "Repeat every",
+      "times": "time(s)"
     }
   },
   "today": {
@@ -331,6 +350,7 @@
       "saveChanges": "Save Changes"
     }
   },
+  "confirm": "Confirm",
   "cancel": "Cancel",
   "noTitle": "(No title)",
   "connect": "Connect",

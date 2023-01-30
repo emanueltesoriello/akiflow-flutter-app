@@ -11,7 +11,6 @@ class TimePickerUtils {
     required TimeOfDay initialTime,
     required Function(TimeOfDay?) onTimeSelected,
   }) async {
-
     // switch (theme.platform) {
     // case TargetPlatform.iOS:
     // case TargetPlatform.macOS:
@@ -70,8 +69,7 @@ class TimePickerUtils {
       positiveBtn: 'Confirm',
       negativeBtn: 'No time',
       context: context,
-      background: Colors.white,
-      initialTime: initialTime, //leftBtn: 'Ciao', onLeftBtn: () {},
+      initialTime: initialTime,
       borderRadius: 8,
       locale: const Locale("it", "IT"),
       theme: ThemeData(

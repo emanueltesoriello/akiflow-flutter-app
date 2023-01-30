@@ -17,7 +17,7 @@ import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/create_task/create_task_modal.dart';
-import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
@@ -38,7 +38,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final handler = ShareHandlerPlatform.instance;
 
   Future<void> initPlatformState() async {
-    handler.sharedMediaStream.listen((SharedMedia? media) {
+    print('started initPlatformState');
+    try {
+      var media = await handler.getInitialSharedMedia();
       if (!mounted) return;
       if (media != null) {
         showCupertinoModalBottomSheet(
@@ -48,8 +50,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
         );
       }
-    });
-    if (!mounted) return;
+
+      handler.sharedMediaStream.listen((SharedMedia? media) {
+        if (!mounted) return;
+        if (media != null) {
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => CreateTaskModal(
+              sharedText: media.content,
+            ),
+          );
+        }
+      });
+      if (!mounted) return;
+    } catch (e) {
+      print('Erorr on initPlatformState\n');
+      print(e);
+    }
   }
 
   @override
@@ -65,9 +82,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
 
     streamSubscription = tasksCubit.editRecurringTasksDialog.listen((allSelected) {
-      showDialog(
+      showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => RecurringEditDialog(
+          builder: (context) => RecurringEditModal(
                 onlyThisTap: () {
                   tasksCubit.update(allSelected);
                 },
@@ -87,7 +104,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               tasksCubit.goToGmail(action.doc);
             },
             unstarOrUnlabel: () {
-              tasksCubit.unstarGmail(action.account, action.doc);
+              tasksCubit.unstarGmail(action);
             },
           ),
         );
