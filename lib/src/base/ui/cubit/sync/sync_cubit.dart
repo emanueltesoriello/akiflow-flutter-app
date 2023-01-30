@@ -50,6 +50,15 @@ class SyncCubit extends Cubit<SyncCubitState> {
     }
   }
 
+  Future checkConnectivity() async {
+    try {
+      await CoreApi().check();
+      emit(state.copyWith(networkError: false));
+    } catch (e) {
+      emit(state.copyWith(networkError: true));
+    }
+  }
+
   @override
   Future<void> close() async {
     await _syncControllerService.syncCompletedController.close();
