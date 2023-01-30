@@ -18,7 +18,7 @@ import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/create_task/create_task_modal.dart';
-import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
@@ -35,6 +35,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
+  StreamSubscription? periodicStreamSubscription;
   SharedMedia? media;
   final handler = ShareHandlerPlatform.instance;
 
@@ -83,9 +84,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
 
     streamSubscription = tasksCubit.editRecurringTasksDialog.listen((allSelected) {
-      showDialog(
+      showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => RecurringEditDialog(
+          builder: (context) => RecurringEditModal(
                 onlyThisTap: () {
                   tasksCubit.update(allSelected);
                 },
@@ -121,12 +122,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _checkIfHasAccountsToReconnect();
       }
     });
+
+    if (periodicStreamSubscription != null) {
+      periodicStreamSubscription!.cancel();
+    }
+    periodicStreamSubscription =
+        Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     streamSubscription?.cancel();
+    periodicStreamSubscription?.cancel();
     super.dispose();
   }
 
@@ -160,6 +168,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     bool isAuthenticatingOAuth = context.read<IntegrationsCubit>().state.isAuthenticatingOAuth;
     if (state == AppLifecycleState.resumed && isAuthenticatingOAuth == false) {
       context.read<SyncCubit>().sync(loading: true);
+      periodicStreamSubscription =
+          Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
+    } else {
+      periodicStreamSubscription?.cancel();
       scheduleNotifications(locator<PreferencesRepository>());
     }
   }

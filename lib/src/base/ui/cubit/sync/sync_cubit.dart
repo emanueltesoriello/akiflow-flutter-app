@@ -24,6 +24,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
       emit(state.copyWith(loading: loading));
 
       await CoreApi().check();
+      emit(state.copyWith(networkError: false));
 
       User? user = _preferencesRepository.user;
 
@@ -35,7 +36,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
       emit(state.copyWith(loading: false));
     } catch (e) {
       print("sync error $e");
-      emit(state.copyWith(error: true, loading: false));
+      emit(state.copyWith(error: true, loading: false, networkError: true));
     }
   }
 
@@ -46,6 +47,15 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
     if (user != null) {
       await _syncControllerService.syncIntegrationWithCheckUser();
+    }
+  }
+
+  Future checkConnectivity() async {
+    try {
+      await CoreApi().check();
+      emit(state.copyWith(networkError: false));
+    } catch (e) {
+      emit(state.copyWith(networkError: true));
     }
   }
 

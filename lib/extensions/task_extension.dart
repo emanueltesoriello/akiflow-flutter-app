@@ -13,8 +13,8 @@ import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_modal.dart';
-import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
-import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence_modal.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
+import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
@@ -42,6 +42,7 @@ enum TaskStatusType {
   deleted, // deletedAt !== null
   someday, // has NOT `date` or `dateTime` and user has set it as `someday`
   hidden, // the user has set it as `hidden` (all other fields dont' matter)
+  permanentlyDeleted,
   trashed, // same as above
 }
 
@@ -64,6 +65,8 @@ extension TaskStatusTypeExt on TaskStatusType {
         return 7;
       case TaskStatusType.hidden:
         return 8;
+      case TaskStatusType.permanentlyDeleted:
+        return 9;
       case TaskStatusType.trashed:
         return 10;
     }
@@ -87,6 +90,8 @@ extension TaskStatusTypeExt on TaskStatusType {
         return TaskStatusType.someday;
       case 8:
         return TaskStatusType.hidden;
+      case 9:
+        return TaskStatusType.permanentlyDeleted;
       case 10:
         return TaskStatusType.trashed;
       default:
@@ -250,10 +255,26 @@ extension TaskExt on Task {
     return '';
   }
 
+  RecurrenceRule? get ruleFromStringList {
+    if (recurrence != null) {
+      try {
+        List<String> parts = recurrence!.first.split(";");
+
+        parts.removeWhere((part) => part.startsWith('DTSTART'));
+
+        String recurrenceString = parts.join(';');
+        return RecurrenceRule.fromString(recurrenceString);
+      } catch (e) {
+        print("Recurrence from String parsing error: $e");
+      }
+    }
+    return null;
+  }
+
   RecurrenceModalType? get recurrenceComputed {
     if (recurrence != null) {
       try {
-        List<String> parts = recurrence!.toList();
+        List<String> parts = recurrence!.first.split(";");
 
         parts.removeWhere((part) => part.startsWith('UNTIL'));
         parts.removeWhere((part) => part.startsWith('DTSTART'));
@@ -266,14 +287,16 @@ extension TaskExt on Task {
 
         RecurrenceRule rule = RecurrenceRule.fromString(recurrenceString);
 
-        if (rule.frequency == Frequency.daily) {
+        if (rule.frequency == Frequency.daily && rule.interval == null) {
           return RecurrenceModalType.daily;
         } else if (rule.frequency == Frequency.weekly && rule.byWeekDays.length == 5) {
           return RecurrenceModalType.everyWeekday;
-        } else if (rule.frequency == Frequency.yearly) {
+        } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
           return RecurrenceModalType.everyYearOnThisDay;
-        } else if (rule.frequency == Frequency.weekly) {
+        } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return RecurrenceModalType.everyCurrentDay;
+        } else if (rule.interval != null && rule.interval! > 1 || rule.byWeekDays.length > 1) {
+          return RecurrenceModalType.custom;
         }
       } catch (e) {
         print("Recurrence parsing error: $e");
@@ -476,6 +499,9 @@ extension TaskExt on Task {
     bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
     bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
 
+    if (original.recurringId == null) {
+      return false;
+    }
     return updated.recurringId != null &&
         (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete);
   }
@@ -775,9 +801,9 @@ extension TaskExt on Task {
     }
 
     if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
-      showDialog(
+      showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => RecurringEditDialog(
+          builder: (context) => RecurringEditModal(
                 onlyThisTap: () {
                   editTaskCubit.modalDismissed();
                 },
