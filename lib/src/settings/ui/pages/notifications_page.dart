@@ -14,6 +14,7 @@ import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:mobile/core/preferences.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -173,6 +174,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       );
                     } else {
                       //TODO handle schedule notifications for iOS
+                      scheduleNotifications(locator<PreferencesRepository>());
                     }
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),

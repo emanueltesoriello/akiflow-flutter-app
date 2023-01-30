@@ -55,7 +55,7 @@ void callbackDispatcher() {
         await scheduleNotifications(locator<PreferencesRepository>());
 
         // N.B. to be remove: show a local notification to confirm the background Sync
-        NotificationsCubit.showNotifications("Yeaaah!", "Updated the scheduling of notifications!");
+        if (kDebugMode) NotificationsCubit.showNotifications("Yeaaah!", "Updated the scheduling of notifications!");
         // *********************************************
 
       } else {
@@ -64,7 +64,7 @@ void callbackDispatcher() {
 
         await scheduleNotifications(locator<PreferencesRepository>());
         // Show a local notification to confirm the background Sync
-        NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
+        if (kDebugMode) NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
 
         // ***********************************
         // Test for scheduled notifications
@@ -110,19 +110,23 @@ scheduleNotifications(PreferencesRepository preferencesRepository) async {
         notificationsId = task.id.hashCode;
       }
       NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
-      NotificationsCubit.scheduleNotifications(task.title ?? '',
-          "Will start in ${minutesBefore.minutesBeforeToStart.toString()} ${minutesBefore.minutesBeforeToStart == 1 ? "minute" : "minutes"}!",
-          notificationId: notificationsId,
-          scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
-              .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
-          payload: jsonEncode(task.toMap()),
-          notificationDetails: const NotificationDetails(
-            android: AndroidNotificationDetails(
-              "channel_d",
-              "channel_name",
-              channelDescription: "default_channelDescription",
-            ),
-          ));
+      try {
+        NotificationsCubit.scheduleNotifications(task.title ?? '',
+            "Will start in ${minutesBefore.minutesBeforeToStart.toString()} ${minutesBefore.minutesBeforeToStart == 1 ? "minute" : "minutes"}!",
+            notificationId: notificationsId,
+            scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
+                .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
+            payload: jsonEncode(task.toMap()),
+            notificationDetails: const NotificationDetails(
+              android: AndroidNotificationDetails(
+                "channel_d",
+                "channel_name",
+                channelDescription: "default_channelDescription",
+              ),
+            ));
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }
@@ -133,8 +137,7 @@ class BackgroundService {
   static initBackgroundService() async {
     await Workmanager().initialize(callbackDispatcher,
         isInDebugMode:
-            //TODO: add a kfebugMode check
-            true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+            kDebugMode // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
   }
 

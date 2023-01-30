@@ -84,6 +84,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                       existingWorkPolicy: ExistingWorkPolicy.replace);
                                 } else {
                                   //TODO handle schedule notifications for iOS
+                                  scheduleNotifications(locator<PreferencesRepository>());
                                 }
                               }
                             },

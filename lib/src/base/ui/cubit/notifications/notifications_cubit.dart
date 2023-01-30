@@ -131,8 +131,11 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   static cancelScheduledNotifications() async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     List<ActiveNotification> activeNotifications = [];
-    activeNotifications.addAll(await localNotificationsPlugin.getActiveNotifications());
-    /*var pendingNotifications = await localNotificationsPlugin.pendingNotificationRequests();
+    try {
+      activeNotifications.addAll(await localNotificationsPlugin.getActiveNotifications());
+    } catch (e) {
+      print(e);
+    } /*var pendingNotifications = await localNotificationsPlugin.pendingNotificationRequests();
     if (pendingNotifications.length != 0) {
       for (PendingNotificationRequest notification in pendingNotifications) {
         if (notification.id == dailyReminderTaskId) {

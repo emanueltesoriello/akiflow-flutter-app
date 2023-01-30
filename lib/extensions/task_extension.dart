@@ -6,6 +6,7 @@ import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
@@ -29,6 +30,7 @@ import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:mobile/core/preferences.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -795,6 +797,7 @@ extension TaskExt on Task {
           existingWorkPolicy: ExistingWorkPolicy.replace);
     } else {
       //TODO handle schedule notifications for iOS
+      scheduleNotifications(locator<PreferencesRepository>());
     }
   }
 
