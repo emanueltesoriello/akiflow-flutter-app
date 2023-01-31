@@ -183,7 +183,6 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'channel name',
         channelDescription: 'channel description', importance: Importance.max, priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-
     // *********************************************
     // *********************************************
     SharedPreferences preferences = await SharedPreferences.getInstance();
