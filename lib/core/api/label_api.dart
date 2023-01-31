@@ -3,9 +3,9 @@ import 'package:mobile/core/config.dart';
 import 'package:models/label/label.dart';
 
 class LabelApi extends ApiClient {
-  LabelApi()
+  LabelApi({String? endpoint})
       : super(
-          Uri.parse("${Config.endpoint}/v3/labels"),
+          Uri.parse("${endpoint ?? Config.endpoint}/v3/labels"),
           fromMap: Label.fromMap,
         );
 }

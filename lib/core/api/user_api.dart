@@ -11,9 +11,9 @@ import 'package:models/user.dart';
 class UserApi extends ApiClient {
   final HttpClient _httpClient = locator<HttpClient>();
 
-  UserApi()
+  UserApi({String? endpoint})
       : super(
-          Uri.parse("${Config.endpoint}/v3/user"),
+          Uri.parse("${endpoint ?? Config.endpoint}/v3/user"),
           fromMap: User.fromMap,
         );
 

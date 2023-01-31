@@ -5,7 +5,8 @@ class CustomNavigatorPopScope extends StatelessWidget {
   final List<Page> pages;
   final PopPageCallback onPopPage;
 
-  const CustomNavigatorPopScope({super.key, 
+  const CustomNavigatorPopScope({
+    super.key,
     required this.navigatorStateKey,
     this.pages = const <Page<dynamic>>[],
     required this.onPopPage,
@@ -20,13 +21,8 @@ class CustomNavigatorPopScope extends StatelessWidget {
         pages: pages,
         onPopPage: onPopPage,
       ),
-
-      //TODO: Check again null error still exisiting
       onWillPop: () async {
         return await navigatorStateKey.currentState?.maybePop() ?? false;
-        // final result = await navigatorStateKey.currentState?.maybePop();
-        // if (result != null) return !result;
-        // return false;
       },
     );
   }

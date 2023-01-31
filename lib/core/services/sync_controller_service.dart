@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
 import 'package:mobile/core/api/event_api.dart';
@@ -29,6 +30,14 @@ enum Entity { accounts, calendars, tasks, labels, events, docs }
 enum IntegrationEntity { gmail }
 
 class SyncControllerService {
+  GetIt? newLocator;
+
+  SyncControllerService({this.newLocator}) {
+    if (newLocator != null) {
+      locator = newLocator!;
+    }
+  }
+
   static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   static final AccountApi _accountApi = locator<AccountApi>();
@@ -43,7 +52,7 @@ class SyncControllerService {
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
 
-  final SentryService _sentryService = locator<SentryService>();
+  static final SentryService _sentryService = locator<SentryService>();
 
   static bool _isSyncing = false;
 
