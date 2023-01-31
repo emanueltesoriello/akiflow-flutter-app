@@ -295,7 +295,7 @@ extension TaskExt on Task {
           return RecurrenceModalType.everyYearOnThisDay;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return RecurrenceModalType.everyCurrentDay;
-        } else if (rule.interval != null && rule.interval! > 1 || rule.byWeekDays.length > 1) {
+        } else if (rule.interval != null || rule.byWeekDays.length > 1) {
           return RecurrenceModalType.custom;
         }
       } catch (e) {
