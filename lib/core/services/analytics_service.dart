@@ -56,8 +56,12 @@ class AnalyticsService {
   }
 
   static void track(String event) {
-    if (Config.development) {
-      print("*** AnalyticsService track: $event ***");
+    try {
+      if (Config.development) {
+        print("*** AnalyticsService track: $event ***");
+      }
+    } catch (e) {
+      print(e);
     }
 
     Segment.track(eventName: event, properties: {"mobile": true});

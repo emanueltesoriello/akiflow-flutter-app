@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
@@ -10,6 +15,7 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
 import 'package:models/task/task.dart';
+import 'package:workmanager/workmanager.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
@@ -78,21 +84,25 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                           const SizedBox(height: 8),
                           DescriptionField(descriptionController: descriptionController),
                           const SizedBox(height: 8),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              CreateTaskActions(
-                                titleController: simpleTitleController,
-                                titleFocus: titleFocus,
-                              ),
-                              SendTaskButton(onTap: () {
-                                HapticFeedback.mediumImpact();
-                                context.read<EditTaskCubit>().create();
-                                Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
-                                Navigator.pop(context, taskUpdated);
-                              }),
-                            ],
-                          ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                            CreateTaskActions(
+                              titleController: simpleTitleController,
+                              titleFocus: titleFocus,
+                            ),
+                            SendTaskButton(onTap: () async {
+                              HapticFeedback.mediumImpact();
+                              Navigator.pop(context);
+
+                              await context.read<EditTaskCubit>().create();
+                              if (Platform.isAndroid) {
+                                Workmanager().registerOneOffTask(
+                                    scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
+                                    existingWorkPolicy: ExistingWorkPolicy.replace);
+                              } else {
+                                scheduleNotifications(locator<PreferencesRepository>());
+                              }
+                            }),
+                          ]),
                           const SizedBox(height: 16),
                         ],
                       ),

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "932147560739",
+    "project_id": "akiflow-dev",
+    "storage_bucket": "akiflow-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932147560739:android:5ff1c07460fe9bddb64c96",
+        "android_client_info": {
+          "package_name": "com.akiflow.mobile.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932147560739-r6953936tiir3u374lj7avh81sbl7o34.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP2dNWVTaGYRTzoivywCqSwE8TK0MdQkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932147560739-r6953936tiir3u374lj7avh81sbl7o34.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

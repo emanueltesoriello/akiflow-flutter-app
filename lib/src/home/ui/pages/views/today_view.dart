@@ -5,6 +5,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
@@ -19,6 +21,7 @@ import 'package:mobile/src/home/ui/widgets/today/today_header.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
+import 'package:mobile/core/preferences.dart';
 
 class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
@@ -136,7 +139,8 @@ class _TodayViewState extends State<TodayView> {
                     RefreshIndicator(
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
-                        return context.read<SyncCubit>().sync();
+                        context.read<SyncCubit>().sync();
+                        scheduleNotifications(locator<PreferencesRepository>());
                       },
                       child: SlidableAutoCloseBehavior(
                         child: ListView(

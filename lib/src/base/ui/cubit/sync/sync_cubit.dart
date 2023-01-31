@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/core_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:models/user.dart';
 
@@ -29,7 +30,6 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
       if (user != null) {
         await _syncControllerService.sync(entities);
-
         print("sync completed");
       }
 

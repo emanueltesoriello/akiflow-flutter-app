@@ -1,9 +1,14 @@
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
@@ -24,12 +29,15 @@ bool shouldForceLogOut(DateTime? to) {
 class MainCubit extends Cubit<MainCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
-  final IntercomService _intercomService = locator<IntercomService>();
+  //final IntercomService _intercomService = locator<IntercomService>();
   final UserApi _userApi = locator<UserApi>();
 
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
+
+  // *********************************
+  // *********************************
 
   MainCubit(this._syncCubit, this._authCubit) : super(const MainCubitState()) {
     AnalyticsService.track("Launch");
@@ -38,6 +46,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
     if (user != null) {
       _syncCubit.sync(loading: true);
+      scheduleNotifications(locator<PreferencesRepository>());
       AnalyticsService.track("Show Main Window");
     }
   }
@@ -74,8 +83,21 @@ class MainCubit extends Cubit<MainCubitState> {
               status: user.status,
               planExpireDate: user.planExpireDate));
           _sentryService.authenticate(user.id.toString(), user.email);
-          await _intercomService.authenticate(
-              email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+          //await _intercomService.authenticate(
+          //    email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+          try {
+            // trigger that start every time the set port is called
+            // used for handling backgroundSync that update the UI
+            var port = ReceivePort();
+            IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSync");
+            port.listen((dynamic data) async {
+              print('got $data on UI');
+              await _syncControllerService.sync();
+              scheduleNotifications(locator<PreferencesRepository>());
+            });
+          } catch (e) {
+            print(e);
+          }
         } else {
           await _authCubit.planExpired();
         }
@@ -87,6 +109,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
   void onFocusLost() async {
     _preferencesRepository.setLastAppUseAt(DateTime.now());
-    _syncControllerService.sync([Entity.tasks]);
+    await _syncControllerService.sync([Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
   }
 }
