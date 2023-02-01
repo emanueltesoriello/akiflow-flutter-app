@@ -10,6 +10,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/notice.dart';
@@ -84,7 +85,7 @@ class _ViewState extends State<_View> {
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        scheduleNotifications(locator<PreferencesRepository>());
+                        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: const EmptyHomeViewPlaceholder(),
                     );

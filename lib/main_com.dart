@@ -75,15 +75,14 @@ Future<void> mainCom({kDebugMode = false}) async {
 
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
-  /* await SentryFlutter.init((options) {
+  await SentryFlutter.init((options) {
     options.beforeSend = beforeSend;
     options.dsn = Config.sentryDsn;
     options.tracesSampleRate = 1.0;
-  }, appRunner: () => */
-  runApp(
-    DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
-    //  )
-  );
+  },
+      appRunner: () => runApp(
+            DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
+          ));
 }
 
 class Application extends StatelessWidget {

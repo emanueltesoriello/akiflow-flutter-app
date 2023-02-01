@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
@@ -99,7 +100,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                     scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
                                     existingWorkPolicy: ExistingWorkPolicy.replace);
                               } else {
-                                scheduleNotifications(locator<PreferencesRepository>());
+                                NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                               }
                             }),
                           ]),

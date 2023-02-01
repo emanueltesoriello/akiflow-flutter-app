@@ -197,7 +197,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         scheduleNotificationsTaskKey,
                       );
                     } else {
-                      scheduleNotifications(locator<PreferencesRepository>());
+                      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                     }
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),
