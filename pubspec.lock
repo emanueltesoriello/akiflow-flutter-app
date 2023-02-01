@@ -370,6 +370,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  flutter_displaymode:
+    dependency: "direct main"
+    description:
+      name: flutter_displaymode
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.0"
   flutter_inappwebview_quill:
     dependency: transitive
     description:

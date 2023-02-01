@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
 //import 'package:intercom_flutter/intercom_flutter.dart';
@@ -60,7 +62,13 @@ Future<void> initFunctions() async {
   await BackgroundService.initBackgroundService();
   BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
 
-  // NotificationsCubit.handlerForNotificationsClickForTerminatedApp();
+  try {
+    if (Platform.isAndroid) {
+      await FlutterDisplayMode.setHighRefreshRate();
+    }
+  } catch (e) {
+    print(e);
+  }
 }
 
 _identifyAnalytics(User user) async {
