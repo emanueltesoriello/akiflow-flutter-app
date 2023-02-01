@@ -186,6 +186,7 @@ class _AssetsImagesIconsCommon {
   final traySVG = 'assets/images/icons/_common/tray.svg';
   final videocamSVG = 'assets/images/icons/_common/videocam.svg';
   final weekSVG = 'assets/images/icons/_common/week.svg';
+  final wifiSlashSVG = 'assets/images/icons/_common/wifi_slash.svg';
   final xmarkSVG = 'assets/images/icons/_common/xmark.svg';
   final xmarkCircleFillSVG = 'assets/images/icons/_common/xmark_circle_fill.svg';
   final xmarkSquareSVG = 'assets/images/icons/_common/xmark_square.svg';

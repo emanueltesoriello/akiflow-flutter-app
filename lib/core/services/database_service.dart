@@ -12,59 +12,65 @@ class DatabaseService {
 
   DatabaseService();
 
-  Future<sql.Database> open() async {
-    if (database != null) {
-      database = null;
+  Future<sql.Database> open({bool skipDirectoryCreation = false}) async {
+    try {
+      if (database != null) {
+        database = null;
+      }
+
+      var databsePath = await sql.getDatabasesPath();
+      var path = join(databsePath, _databaseName);
+
+      if (!skipDirectoryCreation) {
+        await Directory(dirname(path)).create(recursive: true).catchError((e) {
+          print(e);
+        });
+      }
+      database = await sql.openDatabase(
+        _databaseName,
+        version: 4,
+        onCreate: (db, version) async {
+          print('Creating database version $version');
+
+          var batch = db.batch();
+
+          await _setup(batch);
+
+          List<Function(sql.Batch)> migrations = [addTasksDocField, deleteDocsTable];
+
+          for (var migration in migrations) {
+            migration(batch);
+          }
+
+          batch.commit();
+
+          print('Database created');
+        },
+        onUpgrade: (db, oldVersion, newVersion) async {
+          print('onUpgrade: $oldVersion -> $newVersion');
+          var batch = db.batch();
+
+          if (oldVersion < 4) {
+            _setupAvailabilities(batch);
+          }
+          if (oldVersion < 3) {
+            batch.execute('ALTER TABLE tasks ADD COLUMN trashed_at TEXT');
+          }
+
+          if (oldVersion < 2) {
+            addTasksDocField(batch);
+          }
+
+          await batch.commit();
+
+          print('Database upgraded');
+        },
+      );
+
+      print("database opened at $path, starting setup, version: ${await database!.getVersion()}");
+    } catch (e) {
+      print(e);
     }
-
-    var databsePath = await sql.getDatabasesPath();
-    var path = join(databsePath, _databaseName);
-
-    await Directory(dirname(path)).create(recursive: true);
-
-    database = await sql.openDatabase(
-      _databaseName,
-      version: 4,
-      onCreate: (db, version) async {
-        print('Creating database version $version');
-
-        var batch = db.batch();
-
-        await _setup(batch);
-
-        List<Function(sql.Batch)> migrations = [addTasksDocField, deleteDocsTable];
-
-        for (var migration in migrations) {
-          migration(batch);
-        }
-
-        batch.commit();
-
-        print('Database created');
-      },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        print('onUpgrade: $oldVersion -> $newVersion');
-        var batch = db.batch();
-
-        if (oldVersion < 4) {
-          _setupAvailabilities(batch);
-        }
-        if (oldVersion < 3) {
-          batch.execute('ALTER TABLE tasks ADD COLUMN trashed_at TEXT');
-        }
-
-        if (oldVersion < 2) {
-          addTasksDocField(batch);
-        }
-
-        await batch.commit();
-
-        print('Database upgraded');
-      },
-    );
-
-    print("database opened at $path, starting setup, version: ${await database!.getVersion()}");
-
     return database!;
   }
 

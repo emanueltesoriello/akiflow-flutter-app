@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -34,6 +35,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
+  StreamSubscription? periodicStreamSubscription;
   SharedMedia? media;
   final handler = ShareHandlerPlatform.instance;
 
@@ -120,12 +122,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _checkIfHasAccountsToReconnect();
       }
     });
+
+    if (periodicStreamSubscription != null) {
+      periodicStreamSubscription!.cancel();
+    }
+    periodicStreamSubscription =
+        Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     streamSubscription?.cancel();
+    periodicStreamSubscription?.cancel();
     super.dispose();
   }
 
@@ -159,6 +168,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     bool isAuthenticatingOAuth = context.read<IntegrationsCubit>().state.isAuthenticatingOAuth;
     if (state == AppLifecycleState.resumed && isAuthenticatingOAuth == false) {
       context.read<SyncCubit>().sync(loading: true);
+      periodicStreamSubscription =
+          Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
+    } else {
+      periodicStreamSubscription?.cancel();
+      scheduleNotifications(locator<PreferencesRepository>());
     }
   }
 

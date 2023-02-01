@@ -3,9 +3,9 @@ import 'package:mobile/core/config.dart';
 import 'package:models/account/account.dart';
 
 class AccountApi extends ApiClient {
-  AccountApi()
+  AccountApi({String? endpoint})
       : super(
-          Uri.parse("${Config.endpoint}/v3/accounts"),
+          Uri.parse("${endpoint ?? Config.endpoint}/v3/accounts"),
           fromMap: Account.fromMap,
         );
 }

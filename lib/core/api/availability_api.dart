@@ -3,9 +3,9 @@ import 'package:mobile/core/config.dart';
 import 'package:models/task/availability_config.dart';
 
 class AvailabilityApi extends ApiClient {
-  AvailabilityApi()
+  AvailabilityApi({String? endpoint})
       : super(
-          Uri.parse("${Config.endpoint}/v3/availability-configs"),
+          Uri.parse("${endpoint ?? Config.endpoint}/v3/availability-configs"),
           fromMap: AvailabilityConfig.fromMap,
         );
 }

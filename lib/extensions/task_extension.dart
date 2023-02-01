@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -25,6 +29,8 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:mobile/core/preferences.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -289,7 +295,7 @@ extension TaskExt on Task {
           return RecurrenceModalType.everyYearOnThisDay;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return RecurrenceModalType.everyCurrentDay;
-        } else if (rule.interval != null && rule.interval! > 1 || rule.byWeekDays.length > 1) {
+        } else if (rule.interval != null || rule.byWeekDays.length > 1) {
           return RecurrenceModalType.custom;
         }
       } catch (e) {
@@ -811,6 +817,12 @@ extension TaskExt on Task {
 
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
+    }
+    if (Platform.isAndroid) {
+      Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
+          existingWorkPolicy: ExistingWorkPolicy.replace);
+    } else {
+      scheduleNotifications(locator<PreferencesRepository>());
     }
   }
 

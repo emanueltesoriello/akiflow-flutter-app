@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
+//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -24,10 +24,10 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
     emit(state.copyWith(appVersion: '$version ($buildNumber)'));
   }
-
+/*
   Future<void> launchIntercom() async {
     await Intercom.instance.displayMessenger();
-  }
+  }*/
 
   Future<void> sendEmail() async {
     try {

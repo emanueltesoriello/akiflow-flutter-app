@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -83,7 +84,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         },
         child: Center(
           child: SvgPicture.asset(
-            "assets/images/icons/_common/arrow_left.svg",
+            Assets.images.icons.common.arrowLeftSVG,
             width: 26,
             height: 26,
             color: ColorsExt.grey2(context),
@@ -101,7 +102,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         onTap: (() => Navigator.pop(context)),
         child: Center(
           child: SvgPicture.asset(
-            "assets/images/icons/_common/arrow_left.svg",
+            Assets.images.icons.common.arrowLeftSVG,
             height: 26,
             width: 26,
             color: ColorsExt.grey2(context),
@@ -162,6 +163,16 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     return [
       BlocBuilder<SyncCubit, SyncCubitState>(
         builder: (context, state) {
+          if (state.networkError) {
+            return SizedBox(
+              height: 24,
+              width: 24,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.wifiSlashSVG,
+                color: ColorsExt.yellow(context),
+              ),
+            );
+          }
           if (showSyncButton == false || state.loading == false) {
             return const SizedBox();
           }

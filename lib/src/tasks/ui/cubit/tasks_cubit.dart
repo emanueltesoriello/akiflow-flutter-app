@@ -11,6 +11,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -95,6 +96,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     if (user != null) {
       await _syncCubit.sync(entities: [Entity.tasks]);
+      scheduleNotifications(locator<PreferencesRepository>());
     }
   }
 
@@ -235,6 +237,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
 
     handleDocAction(tasksChanged);
   }
@@ -272,6 +275,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
   }
 
   Future<void> delete() async {
@@ -429,6 +433,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
   }
 
   Future<void> setDeadline(DateTime? date) async {
@@ -457,6 +462,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
 
     if (date != null) {
       AnalyticsService.track("Tasks deadline set");
@@ -539,6 +545,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
   }
 
   void moveToInbox() {
@@ -599,6 +606,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
 
     if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
       AnalyticsService.track("Tasks unplanned");
@@ -659,6 +667,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
 
     switch (queue.first.type) {
       case UndoType.restore:
@@ -684,6 +693,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    scheduleNotifications(locator<PreferencesRepository>());
 
     emit(state.copyWith(labelTasks: []));
   }

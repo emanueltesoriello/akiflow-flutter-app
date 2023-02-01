@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/core_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:models/user.dart';
 
@@ -23,19 +24,19 @@ class SyncCubit extends Cubit<SyncCubitState> {
       emit(state.copyWith(loading: loading));
 
       await CoreApi().check();
+      emit(state.copyWith(networkError: false));
 
       User? user = _preferencesRepository.user;
 
       if (user != null) {
         await _syncControllerService.sync(entities);
-
         print("sync completed");
       }
 
       emit(state.copyWith(loading: false));
     } catch (e) {
       print("sync error $e");
-      emit(state.copyWith(error: true, loading: false));
+      emit(state.copyWith(error: true, loading: false, networkError: true));
     }
   }
 
@@ -46,6 +47,15 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
     if (user != null) {
       await _syncControllerService.syncIntegrationWithCheckUser();
+    }
+  }
+
+  Future checkConnectivity() async {
+    try {
+      await CoreApi().check();
+      emit(state.copyWith(networkError: false));
+    } catch (e) {
+      emit(state.copyWith(networkError: true));
     }
   }
 

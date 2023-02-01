@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
+//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/badged_icon.dart';
 import 'package:mobile/src/base/ui/widgets/base/icon_badge.dart';
@@ -77,16 +77,16 @@ class Header extends StatelessWidget {
             icon: "assets/images/icons/_common/gear_alt.svg",
             color: Colors.transparent,
             badge: FutureBuilder<dynamic>(
-                future: Intercom.instance.unreadConversationCount(),
+                //future: Intercom.instance.unreadConversationCount(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return IconBadge(
-                      snapshot.data,
-                      offset: const Offset(12, -9),
-                    );
-                  }
-                  return const SizedBox();
-                }),
+              if (snapshot.hasData) {
+                return IconBadge(
+                  snapshot.data,
+                  offset: const Offset(12, -9),
+                );
+              }
+              return const SizedBox();
+            }),
           ),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
