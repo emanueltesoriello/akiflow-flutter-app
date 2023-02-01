@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/extensions/date_extension.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
@@ -33,30 +33,17 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
             DateTime now = DateTime.now();
-
+            int firstDayOfWeek = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] ?? 1;
             return Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    for (var i = 0; i < 7; i++)
-                      Text(
-                        DateFormat("E").format(now.next(i)).substring(0, 1),
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: ColorsExt.grey3(context),
-                        ),
-                      )
-                  ],
-                ),
                 TableCalendar(
+                  startingDayOfWeek:
+                      firstDayOfWeek == -1 || firstDayOfWeek == 1 ? StartingDayOfWeek.monday : StartingDayOfWeek.sunday,
                   onPageChanged: (page) {
                     BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
                   },
                   rowHeight: todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
-                  daysOfWeekVisible: false,
                   calendarFormat: widget.calendarFormat != null
                       ? (widget.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month)
                       : (state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month),
