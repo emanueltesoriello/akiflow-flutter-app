@@ -14,6 +14,7 @@ import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
@@ -119,7 +120,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           try {
             _syncCubit.sync();
-            scheduleNotifications(locator<PreferencesRepository>());
+            NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
           } catch (e) {
             print(e);
           }
