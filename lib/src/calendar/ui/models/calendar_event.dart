@@ -58,6 +58,12 @@ class CalendarEvent extends Appointment {
       return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
     }
 
+    String? formatedRrule;
+    if (isRecurringParent && event.recurrence != null && event.recurrence!.isNotEmpty) {
+      List<String> parts = event.recurrence!.first.replaceFirst('RRULE:', '').split(";");
+      formatedRrule = computeRrule(parts);
+    }
+
     return CalendarEvent(
       id: event.id,
       startTime: startTime,
@@ -70,10 +76,36 @@ class CalendarEvent extends Appointment {
               : ColorsExt.cyan(context),
       isAllDay: event.startTime == null && event.endTime == null,
       recurrenceId: isRecurringException ? [event.recurringId] : null,
-      recurrenceRule: isRecurringParent && event.recurrence != null && event.recurrence!.isNotEmpty
-          ? event.recurrence!.first
-          : null,
+      recurrenceRule: formatedRrule,
       recurrenceExceptionDates: exceptionDates.isNotEmpty ? exceptionDates : null,
     );
+  }
+
+  static String? computeRrule(List<String> parts) {
+    parts.removeWhere((part) => part.startsWith('WKST'));
+
+    List<String> byDay = parts.where((part) => part.startsWith('BYDAY')).toList();
+    if (byDay.isNotEmpty) {
+      List<String> days = byDay.first.replaceFirst('BYDAY=', '').split(',');
+      List<int> bySetPos = [];
+      for (int i = 0; i < days.length; i++) {
+        if (days[i].startsWith(RegExp(r'[0-9]'))) {
+          bySetPos.add(int.parse(days[i].replaceAll(RegExp(r'[a-zA-Z]'), '')));
+          days[i] = days[i].replaceAll(RegExp(r'[0-9]'), '');
+        }
+      }
+      parts.removeWhere((part) => part.startsWith('BYDAY'));
+
+      String byDayString = days.join(',');
+      parts.add('BYDAY=$byDayString');
+
+      String bySetPosString = bySetPos.join(',');
+      if (bySetPosString.isNotEmpty) {
+        parts.add('BYSETPOS=$bySetPosString');
+      }
+    }
+
+    String? recurrenceString = parts.join(';');
+    return recurrenceString;
   }
 }
