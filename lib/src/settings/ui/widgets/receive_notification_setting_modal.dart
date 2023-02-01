@@ -6,6 +6,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -110,41 +111,11 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                   scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
                                   existingWorkPolicy: ExistingWorkPolicy.replace);
                             } else {
-                              scheduleNotifications(locator<PreferencesRepository>());
+                              NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                             }
                           },
                               selected: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
                                   _selectedNextTaskNotificationsModel.minutesBeforeToStart),
-
-                          /* RadioListTile(
-                            activeColor: ColorsExt.akiflow(context),
-                            onChanged: (bool? value) {
-                              if (value == true) {
-                                PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
-                                preferencesRepository
-                                    .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
-                                widget.onSelectedNextTaskNotificationsModel(NextTaskNotificationsModel.values[index]);
-                                setState(() {
-                                  _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
-                                });
-                                if (Platform.isAndroid) {
-                                  Workmanager().registerOneOffTask(
-                                      scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-                                      existingWorkPolicy: ExistingWorkPolicy.replace);
-                                } else {
-                                  scheduleNotifications(locator<PreferencesRepository>());
-                                }
-                              }
-                            },
-                            value: true,
-                            title: Text(NextTaskNotificationsModel.values[index].title,
-                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                                      fontSize: 17,
-                                      color: ColorsExt.grey2(context),
-                                    )),
-                            groupValue: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
-                                _selectedNextTaskNotificationsModel.minutesBeforeToStart,
-                          ),*/
                         ).reversed,
                         const SizedBox(height: 50),
                       ],
