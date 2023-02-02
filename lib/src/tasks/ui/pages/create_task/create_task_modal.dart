@@ -27,14 +27,12 @@ class CreateTaskModal extends StatefulWidget {
 
 class _CreateTaskModalState extends State<CreateTaskModal> {
   final TextEditingController descriptionController = TextEditingController();
-
   final FocusNode titleFocus = FocusNode();
-
   final TextEditingController simpleTitleController = TextEditingController();
-
   final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
-
   final ScrollController parentScrollController = ScrollController();
+  bool showRefresh = false;
+
   @override
   void initState() {
     titleFocus.requestFocus();
@@ -90,19 +88,40 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               titleController: simpleTitleController,
                               titleFocus: titleFocus,
                             ),
-                            SendTaskButton(onTap: () async {
-                              HapticFeedback.mediumImpact();
-                              Navigator.pop(context);
-
-                              await context.read<EditTaskCubit>().create();
-                              if (Platform.isAndroid) {
-                                Workmanager().registerOneOffTask(
-                                    scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-                                    existingWorkPolicy: ExistingWorkPolicy.replace);
-                              } else {
-                                NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
-                              }
-                            }),
+                            showRefresh
+                                ? const Center(
+                                    child: Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: CircularProgressIndicator(),
+                                  ))
+                                : SendTaskButton(onTap: () async {
+                                    try {
+                                      setState(() {
+                                        showRefresh = true;
+                                      });
+                                      HapticFeedback.mediumImpact();
+                                      await context.read<EditTaskCubit>().create();
+                                      setState(() {
+                                        showRefresh = false;
+                                        Navigator.pop(context);
+                                      });
+                                      if (Platform.isAndroid) {
+                                        Workmanager().registerOneOffTask(
+                                            scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
+                                            existingWorkPolicy: ExistingWorkPolicy.replace);
+                                      } else {
+                                        NotificationsCubit.scheduleNotificationsService(
+                                            locator<PreferencesRepository>());
+                                      }
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: Text(e.toString()),
+                                      ));
+                                      setState(() {
+                                        showRefresh = false;
+                                      });
+                                    }
+                                  }),
                           ]),
                           const SizedBox(height: 16),
                         ],
