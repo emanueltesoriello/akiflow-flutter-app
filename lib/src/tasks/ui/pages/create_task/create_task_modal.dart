@@ -100,29 +100,22 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                         showRefresh = true;
                                       });
                                       HapticFeedback.mediumImpact();
-                                      await context.read<EditTaskCubit>().create();
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                        content: Text('Created task'),
-                                      ));
-                                      await context.read<EditTaskCubit>().forceSync();
+                                      var cubit = context.read<EditTaskCubit>();
+                                      await cubit.create();
                                       setState(() {
                                         showRefresh = false;
                                         Navigator.pop(context);
                                       });
-                                      /*if (Platform.isAndroid) {
-                                        Workmanager().registerOneOffTask(
-                                            scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-                                            existingWorkPolicy: ExistingWorkPolicy.replace);
-                                      } else {*/
+                                      await cubit.forceSync();
                                       NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
-                                      //}
                                     } catch (e) {
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        content: Text(e.toString()),
-                                      ));
                                       setState(() {
                                         showRefresh = false;
                                       });
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                        content: Text("Error"),
+                                      ));
                                     }
                                   }),
                           ]),
