@@ -30,7 +30,7 @@ class SlotTile extends StatelessWidget {
               )),
           child: Row(
             children: [
-              config.settings != null
+              config.settings != null && config.settings?['hostPicture'] != null
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(config.settings?['hostPicture']),
                     )
