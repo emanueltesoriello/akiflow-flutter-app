@@ -74,7 +74,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         sorting: now.toUtc().millisecondsSinceEpoch,
       );
 
-      emit(state.copyWith(updatedTask: updated));
       emit(const EditTaskCubitState());
 
       _tasksCubit.setJustCreatedTask(updated);
@@ -84,11 +83,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       AnalyticsService.track("New Task");
 
-      await _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      //await _syncCubit.sync(entities: [Entity.tasks]);
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future forceSync() async {
+    await _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   Future<void> planFor(

@@ -170,7 +170,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed && isAuthenticatingOAuth == false) {
       try {
         context.read<SyncCubit>().sync(loading: true);
-        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
         periodicStreamSubscription =
             Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
       } catch (e) {

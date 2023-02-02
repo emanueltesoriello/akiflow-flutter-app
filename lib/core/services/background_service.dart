@@ -59,23 +59,6 @@ void callbackDispatcher() {
 
         // Show a local notification to confirm the background Sync
         if (kDebugMode) NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
-
-        // ***********************************
-        // Test for scheduled notifications
-        // ***********************************
-        //tz.initializeTimeZones();
-        //tz.setLocalLocation(tz.getLocation("Europe/Rome"));
-        /*NotificationsCubit.scheduleNotifications("Scheduled task test!", "Scheduled task runned successfully",
-            notificationId: 0,
-            scheduledDate: tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1)),
-            notificationDetails: const NotificationDetails(
-              android: AndroidNotificationDetails(
-                "channel.id",
-                "channel.name",
-                channelDescription: "default.channelDescription",
-                // other properties...
-              ),
-            ));*/
         // ***********************************
       }
     } catch (err) {
@@ -104,8 +87,6 @@ class BackgroundService {
       constraints: constraints.Constraints(
         // connected or metered mark the task as requiring internet
         networkType: NetworkType.connected,
-        // require external power
-        // requiresCharging: true,
       ),
       frequency: frequency,
     );

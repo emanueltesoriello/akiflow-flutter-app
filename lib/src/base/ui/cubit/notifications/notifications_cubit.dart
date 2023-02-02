@@ -22,6 +22,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:mobile/core/repository/tasks_repository.dart';
+import 'package:mobile/extensions/task_extension.dart';
 
 part 'notifications_state.dart';
 
@@ -186,7 +187,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
         }
         NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
         try {
-          String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!));
+          String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
 
           NotificationsCubit.scheduleNotifications(task.title ?? '', "Start at $startTime",
               notificationId: notificationsId,
