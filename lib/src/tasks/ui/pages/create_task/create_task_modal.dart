@@ -101,6 +101,10 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       });
                                       HapticFeedback.mediumImpact();
                                       await context.read<EditTaskCubit>().create();
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                        content: Text('Created task'),
+                                      ));
+                                      await context.read<EditTaskCubit>().forceSync();
                                       setState(() {
                                         showRefresh = false;
                                         Navigator.pop(context);
