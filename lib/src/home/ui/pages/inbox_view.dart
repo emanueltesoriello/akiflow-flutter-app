@@ -10,6 +10,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/notice.dart';
@@ -43,17 +44,26 @@ class _ViewState extends State<_View> {
 
   @override
   void initState() {
-    TasksCubit tasksCubit = context.read<TasksCubit>();
+    try {
+      TasksCubit tasksCubit = context.read<TasksCubit>();
 
-    if (streamSubscription != null) {
-      streamSubscription!.cancel();
-    }
+      if (streamSubscription != null) {
+        streamSubscription!.cancel();
+      }
 
-    streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
+        try {
+          //TODO check scrollController error
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+          });
+        } catch (e) {
+          print(e);
+        }
       });
-    });
+    } catch (e) {
+      print(e);
+    }
     super.initState();
   }
 
@@ -84,7 +94,7 @@ class _ViewState extends State<_View> {
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        scheduleNotifications(locator<PreferencesRepository>());
+                        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: const EmptyHomeViewPlaceholder(),
                     );

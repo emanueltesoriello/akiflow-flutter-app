@@ -9,6 +9,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_row.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_row_drag_mode.dart';
@@ -80,7 +81,7 @@ class _TaskListState extends State<TaskList> {
       backgroundColor: ColorsExt.background(context),
       onRefresh: () async {
         context.read<SyncCubit>().sync();
-        scheduleNotifications(locator<PreferencesRepository>());
+        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
       },
       child: SlidableAutoCloseBehavior(
         child: ReorderableListView.builder(

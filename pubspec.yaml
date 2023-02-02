@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 0.32.1+209
+version: 0.32.1+219
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -53,6 +53,7 @@ dependencies:
   workmanager: ^0.5.1 
   firebase_messaging: ^14.2.1
   firebase_core: ^2.4.1
+  flutter_displaymode: ^0.5.0
 
   
 dev_dependencies:

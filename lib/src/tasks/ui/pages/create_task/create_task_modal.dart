@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
@@ -26,14 +27,12 @@ class CreateTaskModal extends StatefulWidget {
 
 class _CreateTaskModalState extends State<CreateTaskModal> {
   final TextEditingController descriptionController = TextEditingController();
-
   final FocusNode titleFocus = FocusNode();
-
   final TextEditingController simpleTitleController = TextEditingController();
-
   final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
-
   final ScrollController parentScrollController = ScrollController();
+  bool showRefresh = false;
+
   @override
   void initState() {
     titleFocus.requestFocus();
@@ -89,19 +88,36 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               titleController: simpleTitleController,
                               titleFocus: titleFocus,
                             ),
-                            SendTaskButton(onTap: () async {
-                              HapticFeedback.mediumImpact();
-                              Navigator.pop(context);
-
-                              await context.read<EditTaskCubit>().create();
-                              if (Platform.isAndroid) {
-                                Workmanager().registerOneOffTask(
-                                    scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-                                    existingWorkPolicy: ExistingWorkPolicy.replace);
-                              } else {
-                                scheduleNotifications(locator<PreferencesRepository>());
-                              }
-                            }),
+                            showRefresh
+                                ? const Center(
+                                    child: Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: CircularProgressIndicator(),
+                                  ))
+                                : SendTaskButton(onTap: () async {
+                                    try {
+                                      setState(() {
+                                        showRefresh = true;
+                                      });
+                                      HapticFeedback.mediumImpact();
+                                      var cubit = context.read<EditTaskCubit>();
+                                      await cubit.create();
+                                      setState(() {
+                                        showRefresh = false;
+                                        Navigator.pop(context);
+                                      });
+                                      await cubit.forceSync();
+                                      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+                                    } catch (e) {
+                                      setState(() {
+                                        showRefresh = false;
+                                      });
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                        content: Text("Error"),
+                                      ));
+                                    }
+                                  }),
                           ]),
                           const SizedBox(height: 16),
                         ],

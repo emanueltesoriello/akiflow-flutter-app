@@ -187,9 +187,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   });
                   if (newVal == false) {
                     await NotificationsCubit.cancelScheduledNotifications();
-                    /*if (dailyOverviewNotificationTimeEnabled) {
-                      NotificationsCubit.scheduleDailyReminder(service.dailyOverviewNotificationTime);
-                    }*/
                   } else if (newVal) {
                     if (Platform.isAndroid) {
                       Workmanager().registerOneOffTask(
@@ -197,7 +194,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         scheduleNotificationsTaskKey,
                       );
                     } else {
-                      scheduleNotifications(locator<PreferencesRepository>());
+                      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                     }
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),

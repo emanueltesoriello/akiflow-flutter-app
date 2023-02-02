@@ -7,11 +7,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/task/task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
@@ -19,6 +21,8 @@ import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:mobile/core/repository/tasks_repository.dart';
+import 'package:mobile/extensions/task_extension.dart';
 
 part 'notifications_state.dart';
 
@@ -118,12 +122,10 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
         description,
         notificationDetails ??
             const NotificationDetails(
-              android: AndroidNotificationDetails(
-                "channel id",
-                "channel name",
-                channelDescription: "channel description",
-                // other properties...
-              ),
+              iOS: DarwinNotificationDetails(
+                  presentAlert: true, presentSound: true, interruptionLevel: InterruptionLevel.active),
+              android: AndroidNotificationDetails("channel id", "channel name",
+                  channelDescription: "channel description", priority: Priority.max, importance: Importance.high),
             ),
         payload: payload);
   }
@@ -135,16 +137,11 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
       activeNotifications.addAll(await localNotificationsPlugin.getActiveNotifications());
     } catch (e) {
       print(e);
-    } /*var pendingNotifications = await localNotificationsPlugin.pendingNotificationRequests();
-    if (pendingNotifications.length != 0) {
-      for (PendingNotificationRequest notification in pendingNotifications) {
-        if (notification.id == dailyReminderTaskId) {
-
-        }
-      }
-    }*/
-    setDailyReminder();
+    }
     await localNotificationsPlugin.cancelAll();
+
+    setDailyReminder();
+
     if (activeNotifications.isNotEmpty) {
       for (var notification in activeNotifications) {
         localNotificationsPlugin.show(
@@ -152,15 +149,61 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
           notification.title,
           notification.body,
           const NotificationDetails(
-            android: AndroidNotificationDetails(
-              "channel id",
-              "channel name",
-              channelDescription: "channel description",
-              // other properties...
-            ),
+            iOS: DarwinNotificationDetails(
+                presentAlert: false,
+                presentBadge: false,
+                presentSound: false,
+                interruptionLevel: InterruptionLevel.passive),
+            android: AndroidNotificationDetails("fcm_fallback_notification_channel", "channel name",
+                playSound: false,
+                channelDescription: "channel description",
+                enableVibration: false,
+                onlyAlertOnce: true,
+                usesChronometer: false),
           ),
           payload: notification.payload,
         );
+      }
+    }
+  }
+
+  static scheduleNotificationsService(PreferencesRepository preferencesRepository) async {
+    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+      await NotificationsCubit.cancelScheduledNotifications();
+
+      TasksRepository tasksRepository = locator<TasksRepository>();
+      List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation(DateTime.now().timeZoneName));
+
+      for (Task task in todayTasks) {
+        int notificationsId = 0;
+        try {
+          // get the last 8 hex char from the ID and convert them into an int
+          notificationsId =
+              (int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16) / 2).round();
+        } catch (e) {
+          notificationsId = task.id.hashCode;
+        }
+        NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
+        try {
+          String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
+
+          NotificationsCubit.scheduleNotifications(task.title ?? '', "Start at $startTime",
+              notificationId: notificationsId,
+              scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
+                  .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
+              payload: jsonEncode(task.toMap()),
+              notificationDetails: const NotificationDetails(
+                android: AndroidNotificationDetails(
+                  "channel_d",
+                  "channel_name",
+                  channelDescription: "default_channelDescription",
+                ),
+              ));
+        } catch (e) {
+          print(e);
+        }
       }
     }
   }

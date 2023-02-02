@@ -7,7 +7,6 @@ import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/background_service.dart';
 //import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/floating_button.dart';
 import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/bottom_task_actions.dart';

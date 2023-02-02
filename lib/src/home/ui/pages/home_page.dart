@@ -9,6 +9,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
@@ -167,12 +168,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     bool isAuthenticatingOAuth = context.read<IntegrationsCubit>().state.isAuthenticatingOAuth;
     if (state == AppLifecycleState.resumed && isAuthenticatingOAuth == false) {
-      context.read<SyncCubit>().sync(loading: true);
-      periodicStreamSubscription =
-          Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
+      try {
+        context.read<SyncCubit>().sync(loading: true);
+        periodicStreamSubscription =
+            Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
+      } catch (e) {
+        print(e);
+      }
     } else {
       periodicStreamSubscription?.cancel();
-      scheduleNotifications(locator<PreferencesRepository>());
     }
   }
 
