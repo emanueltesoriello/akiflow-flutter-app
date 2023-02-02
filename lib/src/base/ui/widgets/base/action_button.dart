@@ -24,6 +24,11 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
 
   @override
   void initState() {
+    initWidget();
+    super.initState();
+  }
+
+  initWidget() {
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       upperBound: 0.5,
@@ -43,7 +48,6 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
           .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
-    super.initState();
   }
 
   @override
@@ -55,6 +59,7 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: widget.key,
       onTapDown: (_) {
         _controller.forward();
       },
