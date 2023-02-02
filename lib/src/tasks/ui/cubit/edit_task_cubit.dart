@@ -85,7 +85,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       AnalyticsService.track("New Task");
 
       await _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
     } catch (e) {
       print(e.toString());
     }

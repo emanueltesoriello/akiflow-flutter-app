@@ -105,14 +105,13 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                         showRefresh = false;
                                         Navigator.pop(context);
                                       });
-                                      if (Platform.isAndroid) {
+                                      /*if (Platform.isAndroid) {
                                         Workmanager().registerOneOffTask(
                                             scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
                                             existingWorkPolicy: ExistingWorkPolicy.replace);
-                                      } else {
-                                        NotificationsCubit.scheduleNotificationsService(
-                                            locator<PreferencesRepository>());
-                                      }
+                                      } else {*/
+                                      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+                                      //}
                                     } catch (e) {
                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                         content: Text(e.toString()),

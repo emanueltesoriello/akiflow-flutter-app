@@ -228,9 +228,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
     handleDocAction(tasksChanged);
+    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> duplicate() async {
@@ -453,7 +453,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
     if (date != null) {
       AnalyticsService.track("Tasks deadline set");
@@ -536,7 +535,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   void moveToInbox() {
