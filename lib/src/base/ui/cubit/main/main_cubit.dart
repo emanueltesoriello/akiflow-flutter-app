@@ -94,7 +94,6 @@ class MainCubit extends Cubit<MainCubitState> {
             port.listen((dynamic data) async {
               print('got $data on UI');
               await _syncControllerService.sync();
-              NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
             });
           } catch (e) {
             print(e);
