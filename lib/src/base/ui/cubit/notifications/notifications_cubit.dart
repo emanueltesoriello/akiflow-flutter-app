@@ -186,7 +186,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
         }
         NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
         try {
-          String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!));
+          String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
 
           NotificationsCubit.scheduleNotifications(task.title ?? '', "Start at $startTime",
               notificationId: notificationsId,
