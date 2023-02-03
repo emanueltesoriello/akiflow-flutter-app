@@ -42,7 +42,7 @@ class _CalendarItemState extends State<CalendarItem> {
                         height: 22,
                         width: 22,
                         child: SvgPicture.asset(
-                          "assets/images/icons/google/calendar.svg",
+                          Assets.images.icons.google.calendarSVG,
                         ),
                       ),
                       const SizedBox(

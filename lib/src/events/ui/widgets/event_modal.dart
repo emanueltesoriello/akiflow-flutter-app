@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
@@ -180,7 +181,7 @@ class EventModal extends StatelessWidget {
                                   width: 22,
                                   height: 22,
                                   child: SvgPicture.asset(
-                                    "assets/images/icons/google/meet.svg",
+                                    Assets.images.icons.google.meetSVG,
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
@@ -270,7 +271,7 @@ class EventModal extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                               child: Row(
                                 children: [
-                                  event.attendees![index].responseStatus == 'accepted'
+                                  event.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
                                       ? SizedBox(
                                           width: 19,
                                           height: 19,
@@ -279,7 +280,7 @@ class EventModal extends StatelessWidget {
                                             color: ColorsExt.green(context),
                                           ),
                                         )
-                                      : event.attendees![index].responseStatus == 'declined'
+                                      : event.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
                                           ? SizedBox(
                                               width: 19,
                                               height: 19,
@@ -356,19 +357,31 @@ class EventModal extends StatelessWidget {
                                   Text(
                                     t.event.yes,
                                     style: TextStyle(
-                                        fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
+                                            ? ColorsExt.green(context)
+                                            : ColorsExt.grey3(context)),
                                   ),
                                   const SizedBox(width: 32.0),
                                   Text(
                                     t.event.no,
                                     style: TextStyle(
-                                        fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
+                                            ? ColorsExt.red(context)
+                                            : ColorsExt.grey3(context)),
                                   ),
                                   const SizedBox(width: 32.0),
                                   Text(
                                     t.event.maybe,
                                     style: TextStyle(
-                                        fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
+                                            ? ColorsExt.grey2(context)
+                                            : ColorsExt.grey3(context)),
                                   ),
                                 ],
                               ),

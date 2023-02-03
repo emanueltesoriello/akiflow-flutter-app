@@ -233,6 +233,8 @@ class _AssetsImagesIconsGoogle {
   final googleSVG = 'assets/images/icons/google/google.svg';
   final searchSVG = 'assets/images/icons/google/search.svg';
   final starSVG = 'assets/images/icons/google/star.svg';
+  final calendarSVG = 'assets/images/icons/google/calendar.svg';
+  final meetSVG = 'assets/images/icons/google/meet.svg';
 }
 
 class _AssetsImagesIconsJira {

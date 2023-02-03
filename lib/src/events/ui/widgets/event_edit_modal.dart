@@ -499,7 +499,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                   width: 22,
                                   height: 22,
                                   child: SvgPicture.asset(
-                                     "assets/images/icons/google/calendar.svg",
+                                     Assets.images.icons.google.calendarSVG,
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
