@@ -28,7 +28,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 4,
+        version: 5,
         onCreate: (db, version) async {
           print('Creating database version $version');
 
@@ -50,6 +50,12 @@ class DatabaseService {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
 
+          if (oldVersion < 5) {
+            batch.execute('ALTER TABLE calendars ADD COLUMN timezone VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_identifier VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_picture VARCHAR(255)');
+            batch.execute('ALTER TABLE events ADD COLUMN status VARCHAR(255)');
+          }
           if (oldVersion < 4) {
             _setupAvailabilities(batch);
           }
