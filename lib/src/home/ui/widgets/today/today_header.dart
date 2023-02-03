@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/task/task.dart';
 
@@ -29,22 +30,16 @@ class TodayHeader extends StatelessWidget {
         height: 42,
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
             const SizedBox(width: 4),
             Text("(${tasks.length})",
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color:  ColorsExt.grey2(context))),
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
             const Spacer(),
             SvgPicture.asset(
-              listOpened
-                  ? "assets/images/icons/_common/chevron_up.svg"
-                  : "assets/images/icons/_common/chevron_down.svg",
+              listOpened ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
               color: ColorsExt.grey3(context),
               width: 20,
               height: 20,

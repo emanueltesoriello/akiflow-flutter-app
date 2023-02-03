@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -53,7 +54,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
         width: 26,
         child: Center(
           child: SvgPicture.asset(
-            "assets/images/icons/_common/number.svg",
+            Assets.images.icons.common.numberSVG,
             width: 15,
             height: 15,
             color: iconForeground,
@@ -67,7 +68,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: PopupMenuButton<LabelActions>(
             padding: const EdgeInsets.all(0),
             icon: SvgPicture.asset(
-              "assets/images/icons/_common/ellipsis.svg",
+              Assets.images.icons.common.ellipsisSVG,
               width: 22,
               height: 22,
               color: ColorsExt.grey3(context),
@@ -77,9 +78,8 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                 case LabelActions.edit:
                   LabelsCubit labelsCubit = context.read<LabelsCubit>();
 
-                  List<Label> folders = labelsCubit.state.labels
-                      .where((label) => label.isFolder && label.deletedAt == null)
-                      .toList();
+                  List<Label> folders =
+                      labelsCubit.state.labels.where((label) => label.isFolder && label.deletedAt == null).toList();
 
                   Label? updated = await showCupertinoModalBottomSheet(
                     context: context,
@@ -155,7 +155,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: PopupMenuCustomItem(
-                    iconAsset: "assets/images/icons/_common/pencil.svg",
+                    iconAsset: Assets.images.icons.common.pencilSVG,
                     text: t.label.editLabel,
                   ),
                 ),
@@ -168,7 +168,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: PopupMenuCustomItem(
-                    iconAsset: "assets/images/icons/_common/arrow_up_arrow_down.svg",
+                    iconAsset: Assets.images.icons.common.arrowUpArrowDownSVG,
                     text: t.label.sortComingSoon,
                     enabled: false,
                   ),
@@ -181,7 +181,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: PopupMenuCustomItem(
-                    iconAsset: "assets/images/icons/_common/plus.svg",
+                    iconAsset: Assets.images.icons.common.plusSVG,
                     text: t.label.newSection,
                   ),
                 ),
@@ -193,7 +193,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: PopupMenuCustomItem(
-                    iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
+                    iconAsset: Assets.images.icons.common.checkDoneOutlineSVG,
                     text: showDone ? t.label.hideDone : t.label.showDone,
                   ),
                 ),
@@ -205,7 +205,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: PopupMenuCustomItem(
-                    iconAsset: "assets/images/icons/_common/trash.svg",
+                    iconAsset: Assets.images.icons.common.trashSVG,
                     text: t.label.deleteLabel,
                   ),
                 ),

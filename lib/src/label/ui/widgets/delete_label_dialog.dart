@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:models/label/label.dart';
@@ -45,7 +46,7 @@ class DeleteLabelDialog extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          SvgPicture.asset("assets/images/icons/_common/exclamationmark_triangle_fill.svg",
+                          SvgPicture.asset(Assets.images.icons.common.exclamationmarkTriangleFillSVG,
                               width: 48, height: 48, color: ColorsExt.grey2(context)),
                           const SizedBox(height: 16),
                           Text(
