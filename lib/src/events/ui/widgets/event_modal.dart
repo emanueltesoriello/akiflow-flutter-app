@@ -180,7 +180,7 @@ class EventModal extends StatelessWidget {
                                   width: 22,
                                   height: 22,
                                   child: SvgPicture.asset(
-                                     "assets/images/icons/google/meet.svg",
+                                    "assets/images/icons/google/meet.svg",
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
@@ -300,7 +300,9 @@ class EventModal extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '${event.attendees![index].email}',
+                                        event.attendees![index].email!.contains('group')
+                                            ? '${event.attendees![index].displayName}'
+                                            : '${event.attendees![index].email}',
                                         style: TextStyle(
                                             fontSize: 17.0,
                                             fontWeight: FontWeight.w400,
