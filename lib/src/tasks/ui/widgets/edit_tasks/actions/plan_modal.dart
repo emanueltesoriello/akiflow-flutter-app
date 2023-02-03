@@ -202,18 +202,19 @@ class _PlanModalState extends State<PlanModal> {
                             },
                           );
                         } else {
-                          DateTime laterToday = DateTime(now.year, now.month, now.day, now.hour);
-                          DateTime laterTodayMore3Hours = DateTime(now.year, now.month, now.day, now.hour + 3);
+                          DateTime laterTodayMore3Hours = DateTime(now.year, now.month, now.day, now.hour + 3).toUtc();
 
                           return _predefinedDateItem(
                             context,
                             iconAsset: "assets/images/icons/_common/clock.svg",
                             text: t.addTask.laterToday,
                             trailingText:
-                                '${DateFormat("EEE").format(laterToday)} - ${DateFormat("HH:mm").format(laterToday)}',
+                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat("HH:mm").format(laterTodayMore3Hours)}',
                             onPressed: () {
                               widget.onSelectDate(
-                                  date: laterToday, datetime: laterTodayMore3Hours, statusType: TaskStatusType.snoozed);
+                                  date: laterTodayMore3Hours,
+                                  datetime: laterTodayMore3Hours,
+                                  statusType: TaskStatusType.snoozed);
                               Navigator.pop(context);
                             },
                           );
