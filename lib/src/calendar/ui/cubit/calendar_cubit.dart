@@ -98,6 +98,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   Future<void> fetchCalendars() async {
     List<Calendar> calendars = await _calendarsRepository.getCalendars();
     calendars.sort((a, b) => b.primary ?? false ? 1 : -1);
+    calendars.sort((a, b) => b.akiflowPrimary ?? false ? 1 : -1);
     emit(state.copyWith(calendars: calendars));
   }
 

@@ -39,10 +39,10 @@ class _CalendarItemState extends State<CalendarItem> {
                   Row(
                     children: [
                       SizedBox(
-                        height: 20,
-                        width: 20,
+                        height: 22,
+                        width: 22,
                         child: SvgPicture.asset(
-                          "assets/images/icons/google/google.svg",
+                          "assets/images/icons/google/calendar.svg",
                         ),
                       ),
                       const SizedBox(
