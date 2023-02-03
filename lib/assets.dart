@@ -81,6 +81,8 @@ class _AssetsImagesIcons {
   final notion = _AssetsImagesIconsNotion._();
   final slack = _AssetsImagesIconsSlack._();
   final superhuman = _AssetsImagesIconsSuperhuman._();
+  final skype = _AssetsImagesIconsSkype._();
+  final teams = _AssetsImagesIconsTeams._();
   final todoist = _AssetsImagesIconsTodoist._();
   final trello = _AssetsImagesIconsTrello._();
   final twitter = _AssetsImagesIconsTwitter._();
@@ -96,6 +98,7 @@ class _AssetsImagesIconsCommon {
   final checkDoneSVG = 'assets/images/icons/_common/Check-done.svg';
   final checkEmptyGoalSVG = 'assets/images/icons/_common/Check-empty-goal.svg';
   final checkEmptySVG = 'assets/images/icons/_common/Check-empty.svg';
+  final checkEmptyRepeatSVG = 'assets/images/icons/_common/check-empty-repeat.svg';
   final clockAlertSVG = 'assets/images/icons/_common/Clock_alert.svg';
   final archiveboxSVG = 'assets/images/icons/_common/archivebox.svg';
   final arrow2CirclepathSVG = 'assets/images/icons/_common/arrow_2_circlepath.svg';
@@ -239,6 +242,18 @@ class _AssetsImagesIconsSuperhuman {
   final superhumanGreyDarkSVG = 'assets/images/icons/superhuman/superhuman-grey-dark.svg';
   final superhumanWhiteSVG = 'assets/images/icons/superhuman/superhuman-white.svg';
   final superhumanPNG = 'assets/images/icons/superhuman/superhuman.png';
+}
+
+class _AssetsImagesIconsSkype {
+  _AssetsImagesIconsSkype._();
+
+  final skypeSVG = 'assets/images/icons/skype/skype.svg';
+}
+
+class _AssetsImagesIconsTeams {
+  _AssetsImagesIconsTeams._();
+
+  final teamsSVG = 'assets/images/icons/teams/teams.svg';
 }
 
 class _AssetsImagesIconsTodoist {

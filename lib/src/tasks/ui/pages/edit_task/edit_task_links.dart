@@ -68,7 +68,7 @@ class EditTaskLinks extends StatelessWidget {
                                         width: 16,
                                         height: 16,
                                         errorBuilder: (context, error, stacktrace) => Image.asset(
-                                          "assets/images/icons/web/faviconV2.png",
+                                          Assets.images.icons.web.faviconV2PNG,
                                           width: 16,
                                           height: 16,
                                         ),

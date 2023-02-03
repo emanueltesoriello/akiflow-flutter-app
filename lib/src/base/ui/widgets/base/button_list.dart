@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 
@@ -157,7 +158,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                             }
 
                             return SvgPicture.asset(
-                              "assets/images/icons/_common/chevron_right.svg",
+                              Assets.images.icons.common.chevronRightSVG,
                               width: 20,
                               height: 20,
                               color: ColorsExt.grey3(context),

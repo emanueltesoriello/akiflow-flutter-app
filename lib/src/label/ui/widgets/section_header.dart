@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 
@@ -45,9 +46,7 @@ class SectionHeaderItem extends StatelessWidget {
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.grey2_5(context))),
             const Spacer(),
             SvgPicture.asset(
-              listOpened
-                  ? "assets/images/icons/_common/chevron_up.svg"
-                  : "assets/images/icons/_common/chevron_down.svg",
+              listOpened ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
               color: ColorsExt.grey3(context),
               width: 20,
               height: 20,
@@ -64,7 +63,7 @@ class SectionHeaderItem extends StatelessWidget {
                 child: PopupMenuButton<SectionActionType>(
                   padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
-                    "assets/images/icons/_common/ellipsis.svg",
+                    Assets.images.icons.common.ellipsisSVG,
                     color: ColorsExt.grey3(context),
                     width: 20,
                     height: 20,
@@ -90,7 +89,7 @@ class SectionHeaderItem extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/plus_square.svg",
+                          iconAsset: Assets.images.icons.common.plusSquareSVG,
                           text: t.label.addTask,
                         ),
                       ),
@@ -102,7 +101,7 @@ class SectionHeaderItem extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/pencil.svg",
+                          iconAsset: Assets.images.icons.common.pencilSVG,
                           text: t.label.rename,
                         ),
                       ),
@@ -114,7 +113,7 @@ class SectionHeaderItem extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/trash.svg",
+                          iconAsset: Assets.images.icons.common.trashSVG,
                           text: t.label.delete,
                         ),
                       ),

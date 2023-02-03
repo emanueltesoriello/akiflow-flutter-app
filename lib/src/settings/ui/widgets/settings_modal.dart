@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -70,7 +71,7 @@ class SettingsModal extends StatelessWidget {
                           height: 22,
                           width: 22,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/tray.svg",
+                            Assets.images.icons.common.traySVG,
                             color: ColorsExt.grey2(context),
                           ),
                         ),
@@ -142,7 +143,7 @@ class SettingsModal extends StatelessWidget {
                           height: 22,
                           width: 22,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/archivebox.svg",
+                            Assets.images.icons.common.archiveboxSVG,
                             color: ColorsExt.grey3(context),
                           ),
                         ),
@@ -171,7 +172,7 @@ class SettingsModal extends StatelessWidget {
                           height: 22,
                           width: 22,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/rectangle_grid_1x2.svg",
+                            Assets.images.icons.common.rectangleGrid1X2SVG,
                             height: 19,
                             color: ColorsExt.grey3(context),
                           ),
@@ -209,7 +210,7 @@ class SettingsModal extends StatelessWidget {
                               .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
                           child: PopupMenuButton<AddListType>(
                             icon: SvgPicture.asset(
-                              "assets/images/icons/_common/plus.svg",
+                              Assets.images.icons.common.plusSVG,
                               width: 22,
                               height: 22,
                               color: ColorsExt.grey3(context),
@@ -258,14 +259,14 @@ class SettingsModal extends StatelessWidget {
                               PopupMenuItem<AddListType>(
                                 value: AddListType.addLabel,
                                 child: PopupMenuCustomItem(
-                                  iconAsset: "assets/images/icons/_common/number.svg",
+                                  iconAsset: Assets.images.icons.common.numberSVG,
                                   text: t.label.addLabel,
                                 ),
                               ),
                               PopupMenuItem<AddListType>(
                                 value: AddListType.addFolder,
                                 child: PopupMenuCustomItem(
-                                  iconAsset: "assets/images/icons/_common/folder.svg",
+                                  iconAsset: Assets.images.icons.common.folderSVG,
                                   text: t.label.addFolder,
                                 ),
                               ),

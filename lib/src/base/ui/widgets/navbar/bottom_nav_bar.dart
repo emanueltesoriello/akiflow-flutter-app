@@ -51,7 +51,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                     children: [
                       NavItem(
                         active: false,
-                        activeIconAsset: "assets/images/icons/_common/menu.svg",
+                        activeIconAsset: Assets.images.icons.common.menuSVG,
                         title: t.bottomBar.menu,
                         topPadding: topPadding,
                         badge: FutureBuilder<dynamic>(
@@ -67,7 +67,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       ),
                       NavItem(
                         active: active(HomeViewType.inbox, state.homeViewType),
-                        activeIconAsset: "assets/images/icons/_common/tray.svg",
+                        activeIconAsset: Assets.images.icons.common.traySVG,
                         title: t.bottomBar.inbox,
                         homeViewType: HomeViewType.inbox,
                         badge: IconBadge(List.from(taskState.inboxTasks).length),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 //import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/badged_icon.dart';
@@ -60,7 +61,7 @@ class Header extends StatelessWidget {
         const SizedBox(width: 12),
         InkWell(
           child: SvgPicture.asset(
-            "assets/images/icons/_common/search.svg",
+            Assets.images.icons.common.searchSVG,
             height: 25,
             color: ColorsExt.grey3(context),
           ),
@@ -74,7 +75,7 @@ class Header extends StatelessWidget {
         const SizedBox(width: 12),
         InkWell(
           child: BadgedIcon(
-            icon: "assets/images/icons/_common/gear_alt.svg",
+            icon: Assets.images.icons.common.gearAltSVG,
             color: Colors.transparent,
             badge: FutureBuilder<dynamic>(
                 //future: Intercom.instance.unreadConversationCount(),
