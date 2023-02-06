@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
@@ -93,7 +94,7 @@ class SlotTile extends StatelessWidget {
                       SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
                       const SizedBox(width: 8),
                       Text(
-                        'Link copied to clipboard!',
+                        t.availability.linkCopiedToClipboard,
                         style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
                       ),
                     ],
