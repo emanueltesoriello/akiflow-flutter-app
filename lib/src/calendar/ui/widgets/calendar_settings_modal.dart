@@ -218,6 +218,7 @@ class CalendarSettingsModal extends StatelessWidget {
                       ),
                       ListView.builder(
                         shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: primaryCalendars.length,
                         itemBuilder: (context, index) {
                           return CalendarItem(

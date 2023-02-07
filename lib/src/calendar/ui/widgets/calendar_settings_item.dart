@@ -68,6 +68,7 @@ class _CalendarItemState extends State<CalendarItem> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
               child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: widget.calendars.length,
                 itemBuilder: (context, index) {
