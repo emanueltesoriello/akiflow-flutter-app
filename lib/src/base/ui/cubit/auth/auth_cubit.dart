@@ -9,10 +9,12 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
@@ -26,7 +28,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final AuthApi _authApi = locator<AuthApi>();
   final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
-  final IntercomService _intercomService = locator<IntercomService>();
+  //final IntercomService _intercomService = locator<IntercomService>();
 
   final UserApi _userApi = locator<UserApi>();
 
@@ -67,8 +69,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
         emit(AuthCubitState(user: user));
 
         _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
-        _intercomService.authenticate(
-            email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+        //_intercomService.authenticate(
+        //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
       }
     } else {
       emit(AuthCubitState(hasValidPlan: false, user: user));
@@ -110,9 +112,18 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           _sentryService.authenticate(user!.id.toString(), user.email);
 
-          emit(state.copyWith(user: Nullable(user), hasValidPlan: hasValidPlan));
+          try {
+            emit(state.copyWith(user: Nullable(user), hasValidPlan: hasValidPlan));
+          } catch (e) {
+            print(e);
+          }
 
-          _syncCubit.sync();
+          try {
+            _syncCubit.sync();
+            NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+          } catch (e) {
+            print(e);
+          }
 
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
 

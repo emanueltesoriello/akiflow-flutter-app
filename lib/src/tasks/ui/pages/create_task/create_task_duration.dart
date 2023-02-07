@@ -87,15 +87,22 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
         ValueListenableBuilder(
           valueListenable: _selectedDuration,
           builder: (context, int selectedDuration, child) {
-            return Slider(
-              value: selectedDuration / 3600,
-              min: 0,
-              max: 4,
-              divisions: 16,
-              thumbColor: ColorsExt.background(context),
-              onChanged: (double value) {
-                _selectedDuration.value = (value * 3600).toInt();
-              },
+            return SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                //activeTrackColor: Colors.red,
+                //inactiveTrackColor: Colors.grey,
+                thumbShape: const CircleThumbShape(thumbRadius: 12),
+              ),
+              child: Slider(
+                value: selectedDuration / 3600,
+                min: 0,
+                max: 4,
+                divisions: 16,
+                thumbColor: ColorsExt.akiflow(context),
+                onChanged: (double value) {
+                  _selectedDuration.value = (value * 3600).toInt();
+                },
+              ),
             );
           },
         ),
@@ -103,5 +110,45 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
         const Separator(),
       ],
     );
+  }
+}
+
+class CircleThumbShape extends SliderComponentShape {
+  final double thumbRadius;
+
+  const CircleThumbShape({
+    this.thumbRadius = 6.0,
+  });
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return Size.fromRadius(thumbRadius);
+  }
+
+  @override
+  void paint(PaintingContext context, Offset center,
+      {required Animation<double> activationAnimation,
+      required Animation<double> enableAnimation,
+      required bool isDiscrete,
+      required TextPainter labelPainter,
+      required RenderBox parentBox,
+      required SliderThemeData sliderTheme,
+      required TextDirection textDirection,
+      required double value,
+      required double textScaleFactor,
+      required Size sizeWithOverflow}) {
+    final Canvas canvas = context.canvas;
+
+    final fillPaint = Paint()
+      ..color = ColorsLight.white
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = sliderTheme.thumbColor!
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawCircle(center, thumbRadius, fillPaint);
+    canvas.drawCircle(center, thumbRadius, borderPaint);
   }
 }

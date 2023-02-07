@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
+import 'package:mobile/core/locator.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
@@ -15,6 +19,8 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:mobile/core/preferences.dart';
 
 import '../../../../../common/style/colors.dart';
 import '../../../../label/ui/cubit/labels_cubit.dart';
@@ -34,6 +40,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
   final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
   final ScrollController parentScrollController = ScrollController();
+  bool showRefresh = false;
 
   late final StylableTextEditingController simpleTitleController;
 
@@ -100,7 +107,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               },
                               onDurationDetected: (Duration duration, String value) {
                                 if (duration.inSeconds != context.read<EditTaskCubit>().state.updatedTask.duration &&
-                                    duration.inSeconds > 0 && !value.contains("=")) {
+                                    duration.inSeconds > 0 &&
+                                    !value.contains("=")) {
                                   onDurationDetected(duration, value);
                                 }
                               },
@@ -121,21 +129,42 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                           const SizedBox(height: 8),
                           DescriptionField(descriptionController: descriptionController),
                           const SizedBox(height: 8),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              CreateTaskActions(
-                                titleController: simpleTitleController,
-                                titleFocus: titleFocus,
-                              ),
-                              SendTaskButton(onTap: () {
-                                HapticFeedback.mediumImpact();
-                                context.read<EditTaskCubit>().create();
-                                Task taskUpdated = context.read<EditTaskCubit>().state.updatedTask;
-                                Navigator.pop(context, taskUpdated);
-                              }),
-                            ],
-                          ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                            CreateTaskActions(
+                              titleController: simpleTitleController,
+                              titleFocus: titleFocus,
+                            ),
+                            showRefresh
+                                ? const Center(
+                                    child: Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: CircularProgressIndicator(),
+                                  ))
+                                : SendTaskButton(onTap: () async {
+                                    try {
+                                      setState(() {
+                                        showRefresh = true;
+                                      });
+                                      HapticFeedback.mediumImpact();
+                                      var cubit = context.read<EditTaskCubit>();
+                                      await cubit.create();
+                                      setState(() {
+                                        showRefresh = false;
+                                        Navigator.pop(context);
+                                      });
+                                      await cubit.forceSync();
+                                      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+                                    } catch (e) {
+                                      setState(() {
+                                        showRefresh = false;
+                                      });
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                        content: Text("Error"),
+                                      ));
+                                    }
+                                  }),
+                          ]),
                           const SizedBox(height: 16),
                         ],
                       ),

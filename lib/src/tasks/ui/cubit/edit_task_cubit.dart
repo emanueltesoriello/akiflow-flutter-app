@@ -10,6 +10,7 @@ import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
@@ -19,6 +20,7 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
+import 'package:mobile/core/preferences.dart';
 
 import '../../../../common/style/colors.dart';
 import '../../../../common/utils/stylable_text_editing_controller.dart';
@@ -111,7 +113,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         sorting: now.toUtc().millisecondsSinceEpoch,
       );
 
-      emit(state.copyWith(updatedTask: updated));
       emit(const EditTaskCubitState());
 
       _tasksCubit.setJustCreatedTask(updated);
@@ -120,11 +121,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksCubit.refreshAllFromRepository();
 
       AnalyticsService.track("New Task");
-      onDispose();
-      await _syncCubit.sync(entities: [Entity.tasks]);
+
+      //await _syncCubit.sync(entities: [Entity.tasks]);
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future forceSync() async {
+    await _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   Future<void> planFor(
@@ -160,6 +165,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         await _tasksRepository.updateById(updated.id!, data: updated);
         _tasksCubit.refreshAllFromRepository();
         _syncCubit.sync(entities: [Entity.tasks]);
+      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
         if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
           AnalyticsService.track("Task Rescheduled");
@@ -314,6 +320,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync(entities: [Entity.tasks]);
+      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
     }
 
     AnalyticsService.track("Edit Task Label");
@@ -372,6 +379,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     await _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   void setDeadline(DateTime? date) {
@@ -473,10 +481,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     List<Task> tasks = [];
 
-    String recurringId = const Uuid().v4();
-    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
+    String? recurringId = updated.id;
+    String? now = TzUtils.toUtcStringIfNotNull(DateTime.now().toUtc());
 
-    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now();
+    DateTime taskDate = updated.date != null ? DateTime.parse(updated.date!) : DateTime.now().toUtc();
+    DateTime taskDateTime = updated.datetime != null ? DateTime.parse(updated.datetime!) : DateTime.now().toUtc();
 
     updated = updated.copyWith(
       date: Nullable(taskDate.toIso8601String()),
@@ -491,7 +500,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.updateById(updated.id, data: updated);
 
-    List<DateTime> dates = rule.getAllInstances(start: DateTime.now().toUtc());
+    List<DateTime> dates = rule.getAllInstances(start: taskDateTime);
 
     for (DateTime date in dates) {
       if (date.isBefore(taskDate) || (isSameDay(date, taskDate))) {
@@ -501,6 +510,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       Task newTask = updated.copyWith(
         id: const Uuid().v4(),
         date: Nullable(date.toIso8601String()),
+        datetime: updated.datetime != null ? Nullable(TzUtils.toUtcStringIfNotNull(date)) : Nullable(null),
         createdAt: now,
       );
 
@@ -528,7 +538,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       recurrenceTasksToUpdate.add(task.copyWith(
         recurrence: Nullable(null),
-        trashedAt: TzUtils.toUtcStringIfNotNull(now),
+        status: Nullable(TaskStatusType.permanentlyDeleted.id),
+        deletedAt: TzUtils.toUtcStringIfNotNull(now),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       ));
     }
@@ -554,6 +565,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   void onTitleChanged(String value) {
@@ -631,6 +643,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
+    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
     AnalyticsService.track("Edit Task");
   }

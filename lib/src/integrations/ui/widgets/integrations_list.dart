@@ -20,6 +20,9 @@ class IntegrationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    accounts.sort((a, b) => a.connectorId != b.connectorId ? 1 : -1);
+    accounts.sort((a, b) => b.connectorId == 'gmail' ? 1 : -1);
+
     return ListView.builder(
       shrinkWrap: true,
       padding: const EdgeInsets.only(top: 5),

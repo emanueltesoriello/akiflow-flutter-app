@@ -7,7 +7,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/label/ui/widgets/create_edit_section_modal.dart';
@@ -19,6 +22,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
+import 'package:mobile/core/preferences.dart';
 
 import '../../../base/ui/widgets/task/task_list.dart';
 import '../../../tasks/ui/pages/create_task/create_task_modal.dart';
@@ -85,7 +89,8 @@ class _LabelViewState extends State<LabelView> {
           return RefreshIndicator(
             backgroundColor: ColorsExt.background(context),
             onRefresh: () async {
-              return context.read<SyncCubit>().sync();
+              context.read<SyncCubit>().sync();
+              NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
             },
             child: SlidableAutoCloseBehavior(
               child: ListView(

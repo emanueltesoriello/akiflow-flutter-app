@@ -48,21 +48,22 @@ class SyncIntegrationService {
         .map((e) => e.doc?.value?.messageId)
         .toList();
 
-    List<Doc> newDocs = docs.where((element) => localMessageIds.contains(element.doc?["message_id"]) == false).toList();
+    List<Doc> newTasks =
+        docs.where((element) => localMessageIds.contains(element.doc?["message_id"]) == false).toList();
 
     if (docs.isEmpty) {
       return null;
     }
 
     addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${docs.length} items");
-    if (newDocs.isNotEmpty) {
+    if (newTasks.isNotEmpty) {
       try {
         List<dynamic> updated = await _taskApi
-            .postUnsynced(unsynced: newDocs, customHeader: {"Akiflow-Connector-Sync": "gmail-sync v0.1.0"});
+            .postUnsynced(unsynced: newTasks, customHeader: {"Akiflow-Connector-Sync": "gmail-sync v0.1.0"});
 
-        if (newDocs.length != updated.length) {
+        if (newTasks.length != updated.length) {
           throw PostUnsyncedExcepotion(
-            "${integrationApi.runtimeType} upserted ${newDocs.length} items, but ${updated.length} items were updated",
+            "${integrationApi.runtimeType} upserted ${newTasks.length} items, but ${updated.length} items were updated",
           );
         }
 

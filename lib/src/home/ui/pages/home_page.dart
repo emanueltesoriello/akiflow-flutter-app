@@ -6,8 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
@@ -17,7 +19,7 @@ import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/create_task/create_task_modal.dart';
-import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_dialog.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
@@ -34,11 +36,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription? streamSubscription;
+  StreamSubscription? periodicStreamSubscription;
   SharedMedia? media;
   final handler = ShareHandlerPlatform.instance;
 
   Future<void> initPlatformState() async {
-    handler.sharedMediaStream.listen((SharedMedia? media) {
+    print('started initPlatformState');
+    try {
+      var media = await handler.getInitialSharedMedia();
       if (!mounted) return;
       if (media != null) {
         showCupertinoModalBottomSheet(
@@ -48,8 +53,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
         );
       }
-    });
-    if (!mounted) return;
+
+      handler.sharedMediaStream.listen((SharedMedia? media) {
+        if (!mounted) return;
+        if (media != null) {
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => CreateTaskModal(
+              sharedText: media.content,
+            ),
+          );
+        }
+      });
+      if (!mounted) return;
+    } catch (e) {
+      print('Erorr on initPlatformState\n');
+      print(e);
+    }
   }
 
   @override
@@ -65,9 +85,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
 
     streamSubscription = tasksCubit.editRecurringTasksDialog.listen((allSelected) {
-      showDialog(
+      showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => RecurringEditDialog(
+          builder: (context) => RecurringEditModal(
                 onlyThisTap: () {
                   tasksCubit.update(allSelected);
                 },
@@ -87,7 +107,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               tasksCubit.goToGmail(action.doc);
             },
             unstarOrUnlabel: () {
-              tasksCubit.unstarGmail(action.account, action.doc);
+              tasksCubit.unstarGmail(action);
             },
           ),
         );
@@ -103,12 +123,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _checkIfHasAccountsToReconnect();
       }
     });
+
+    if (periodicStreamSubscription != null) {
+      periodicStreamSubscription!.cancel();
+    }
+    periodicStreamSubscription =
+        Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     streamSubscription?.cancel();
+    periodicStreamSubscription?.cancel();
     super.dispose();
   }
 
@@ -141,7 +168,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     bool isAuthenticatingOAuth = context.read<IntegrationsCubit>().state.isAuthenticatingOAuth;
     if (state == AppLifecycleState.resumed && isAuthenticatingOAuth == false) {
-      context.read<SyncCubit>().sync(loading: true);
+      try {
+        context.read<SyncCubit>().sync(loading: true);
+        periodicStreamSubscription =
+            Stream.periodic(const Duration(seconds: 30)).listen((_) => context.read<SyncCubit>().checkConnectivity());
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      periodicStreamSubscription?.cancel();
     }
   }
 

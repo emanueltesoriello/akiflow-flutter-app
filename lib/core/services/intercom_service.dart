@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:intercom_flutter/intercom_flutter.dart';
 
@@ -18,4 +18,4 @@ class IntercomService {
     await _intercom.loginIdentifiedUser(email: email);
     _intercom.setInAppMessagesVisibility(IntercomVisibility.gone);
   }
-}
+}*/

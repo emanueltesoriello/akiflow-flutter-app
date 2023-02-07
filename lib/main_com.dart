@@ -1,23 +1,30 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
+//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/di/base_providers.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/navigator/base_navigator.dart';
+import 'package:mobile/src/home/ui/pages/home_body.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -37,6 +44,7 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
 Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   DatabaseService databaseService = DatabaseService();
+
   tz.initializeTimeZones();
   await databaseService.open();
   setupLocator(preferences: preferences, databaseService: databaseService);
@@ -47,8 +55,20 @@ Future<void> initFunctions() async {
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
-  await Intercom.instance.initialize(Config.intercomCredential.appId,
-      iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
+  //await Intercom.instance.initialize(Config.intercomCredential.appId,
+  //    iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
+
+  // Init Background Service and register periodic task
+  await BackgroundService.initBackgroundService();
+  BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
+
+  try {
+    if (Platform.isAndroid) {
+      await FlutterDisplayMode.setHighRefreshRate();
+    }
+  } catch (e) {
+    print(e);
+  }
 }
 
 _identifyAnalytics(User user) async {
@@ -60,6 +80,7 @@ _identifyAnalytics(User user) async {
 
 Future<void> mainCom({kDebugMode = false}) async {
   await initFunctions();
+
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   await SentryFlutter.init((options) {
@@ -103,6 +124,7 @@ class Application extends StatelessWidget {
                 context.read<MainCubit>().onFocusLost();
               },
               child: MaterialApp(
+                  navigatorKey: NavigationService.navigatorKey,
                   title: t.appName,
                   localizationsDelegates: const [
                     GlobalMaterialLocalizations.delegate,
@@ -114,7 +136,11 @@ class Application extends StatelessWidget {
                   debugShowCheckedModeBanner: Config.development,
                   navigatorObservers: [routeObserver],
                   theme: lightTheme,
-                  home: BaseNavigator(userLogged: userLogged)));
+                  home: FutureBuilder(
+                      future: NotificationsCubit.handlerForNotificationsClickForTerminatedApp(),
+                      builder: (context, _) {
+                        return BaseNavigator(userLogged: userLogged);
+                      })));
         }));
   }
 }
