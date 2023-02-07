@@ -113,6 +113,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                       child: Builder(builder: (context) {
                         return (isConnected)
                             ? ActionButton(
+                                key: const Key('Disconnect'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   await context.read<IntegrationsCubit>().disconnectGmail(user);
@@ -130,6 +131,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                                   ),
                                 ))
                             : ActionButton(
+                                key: const Key('Reconnect'),
                                 onPressed: () async {
                                   context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
                                 },

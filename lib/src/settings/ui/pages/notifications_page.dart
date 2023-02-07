@@ -187,9 +187,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   });
                   if (newVal == false) {
                     await NotificationsCubit.cancelScheduledNotifications();
-                    /*if (dailyOverviewNotificationTimeEnabled) {
-                      NotificationsCubit.scheduleDailyReminder(service.dailyOverviewNotificationTime);
-                    }*/
                   } else if (newVal) {
                     if (Platform.isAndroid) {
                       Workmanager().registerOneOffTask(
