@@ -61,7 +61,7 @@ class CalendarSettingsModal extends StatelessWidget {
                           height: 20,
                           width: 20,
                           child: SvgPicture.asset(
-                             Assets.images.icons.common.agendaSVG,
+                            Assets.images.icons.common.agendaSVG,
                             color: ColorsExt.grey2(context),
                           ),
                         ),
@@ -81,7 +81,7 @@ class CalendarSettingsModal extends StatelessWidget {
                           height: 20,
                           width: 20,
                           child: SvgPicture.asset(
-                             Assets.images.icons.common.daySVG,
+                            Assets.images.icons.common.daySVG,
                             color: ColorsExt.grey2(context),
                           ),
                         ),
@@ -101,7 +101,7 @@ class CalendarSettingsModal extends StatelessWidget {
                           height: 20,
                           width: 20,
                           child: SvgPicture.asset(
-                             Assets.images.icons.common.threeDaysSVG,
+                            Assets.images.icons.common.threeDaysSVG,
                             color: ColorsExt.grey2(context),
                           ),
                         ),
@@ -126,7 +126,7 @@ class CalendarSettingsModal extends StatelessWidget {
                           height: 20,
                           width: 20,
                           child: SvgPicture.asset(
-                             Assets.images.icons.common.weekSVG,
+                            Assets.images.icons.common.weekSVG,
                             color: ColorsExt.grey2(context),
                           ),
                         ),
@@ -222,9 +222,10 @@ class CalendarSettingsModal extends StatelessWidget {
                         itemCount: primaryCalendars.length,
                         itemBuilder: (context, index) {
                           return CalendarItem(
-                            title: primaryCalendars[index].title!,
+                            title: primaryCalendars[index].originId!,
                             calendars: calendars
-                                .where((calendar) => calendar.originAccountId == calendars[index].originAccountId)
+                                .where(
+                                    (calendar) => calendar.originAccountId == primaryCalendars[index].originAccountId)
                                 .toList(),
                           );
                         },
