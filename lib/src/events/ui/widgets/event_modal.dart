@@ -57,10 +57,14 @@ class EventModal extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 16.0),
-                            Text(
-                              event.title ?? '',
-                              style: TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.w500, color: ColorsExt.grey1(context)),
+                            Expanded(
+                              child: Text(
+                                event.title ?? '',
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 20.0, fontWeight: FontWeight.w500, color: ColorsExt.grey1(context)),
+                              ),
                             ),
                           ],
                         ),
