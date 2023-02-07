@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:models/event/event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -59,9 +61,15 @@ class CalendarEvent extends Appointment {
     }
 
     String? formatedRrule;
-    if (isRecurringParent && event.recurrence != null && event.recurrence!.isNotEmpty) {
-      List<String> parts = event.recurrence!.first.replaceFirst('RRULE:', '').split(";");
-      formatedRrule = computeRrule(parts);
+    try {
+      if (isRecurringParent && event.recurrence != null && event.recurrence!.isNotEmpty) {
+        List<String> parts = event.recurrence!.first.replaceFirst('RRULE:', '').split(";");
+        formatedRrule = computeRrule(parts);
+      }
+    } catch (e) {
+      print(e);
+      SentryService sentryService = locator<SentryService>();
+      sentryService.addBreadcrumb(category: "calendar_event", message: e.toString());
     }
 
     return CalendarEvent(
