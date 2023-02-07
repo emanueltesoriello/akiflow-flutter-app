@@ -58,7 +58,6 @@ class StylableTextEditingController extends TextEditingController {
 
   void done() {
     recognizedButRemoved = {};
-    
   }
 
   MapType removeMappingByValue(String? value) {
@@ -120,18 +119,7 @@ class StylableTextEditingController extends TextEditingController {
     return CustomTextSpan(
       text: textToBeStyled,
       style: TextStyle(
-        height: 0.58,
-        leadingDistribution: TextLeadingDistribution.even,
-        wordSpacing: 0.5,
-        background: Paint()
-          ..strokeWidth = 9.9
-          ..strokeJoin = StrokeJoin.round
-          ..color = color ?? ColorsLight.akiflow20
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.square
-          ..strokeJoin = StrokeJoin.round,
-        fontSize: 16.3,
-        // color: foregroundColor,
+        color: color ?? ColorsLight.akiflow,
         fontWeight: FontWeight.w500,
       ),
       recognizer: TapGestureRecognizer()

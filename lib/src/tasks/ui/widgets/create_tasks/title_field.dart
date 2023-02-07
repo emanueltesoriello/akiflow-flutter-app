@@ -16,9 +16,9 @@ class TitleField extends StatelessWidget {
       required this.isTitleEditing,
       required this.entityExtractor,
       required this.onDateDetected,
-      required this.onLabelDetected,
-      required this.onDurationDetected,
-      required this.onPriorityDetected,
+      this.onLabelDetected,
+      this.onDurationDetected,
+      this.onPriorityDetected,
       required this.labels,
       required this.titleFocus,
       required this.onChanged})
@@ -28,9 +28,9 @@ class TitleField extends StatelessWidget {
   final List<Label> labels;
   final EntityExtractor entityExtractor;
   final Function(DateTimeEntity, String, int, int) onDateDetected;
-  final Function(Label, String) onLabelDetected;
-  final Function(Duration, String) onDurationDetected;
-  final Function(int, String) onPriorityDetected;
+  final Function(Label, String)? onLabelDetected;
+  final Function(Duration, String)? onDurationDetected;
+  final Function(int, String)? onPriorityDetected;
   final Function(String) onChanged;
 
   final FocusNode titleFocus;
@@ -58,12 +58,12 @@ class TitleField extends StatelessWidget {
             ),
             onChanged: (String value) async {
               onChanged(value);
-              if (value.contains('#')) {
+              /*if (value.contains('#')) {
                 final i = value.lastIndexOf('#');
                 String text = value.substring(i + 1).split(' ')[0].toLowerCase();
                 List<Label> labelList = labels.where((element) => element.title?.toLowerCase() == text).toList();
                 if (labelList.isNotEmpty) {
-                  onLabelDetected(labelList.first, text);
+                  onLabelDetected!(labelList.first, text);
                 }
               }
               if (value.contains(' !')) {
@@ -72,7 +72,7 @@ class TitleField extends StatelessWidget {
 
                 int? number = int.tryParse(text);
                 if (number != null) {
-                  onPriorityDetected(number, text);
+                  onPriorityDetected!(number, text);
                 }
               }
               if (value.contains('=')) {
@@ -81,9 +81,9 @@ class TitleField extends StatelessWidget {
 
                 Duration? duration = parseDuration(text);
                 if (duration != null) {
-                  onDurationDetected(duration, text);
+                  onDurationDetected!(duration, text);
                 }
-              }
+              }*/
 
               if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
@@ -94,7 +94,7 @@ class TitleField extends StatelessWidget {
               } else {
                 stylableController.removeMapping(0);
               }
-              if (value.isNotEmpty) {
+              /*if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
                 if (result.isNotEmpty) {
                   onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
@@ -102,7 +102,7 @@ class TitleField extends StatelessWidget {
                 }
               } else {
                 stylableController.removeMapping(0);
-              }
+              }*/
             },
             style: TextStyle(
               color: ColorsExt.grey2(context),

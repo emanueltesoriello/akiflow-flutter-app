@@ -105,7 +105,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                     recognized: simpleTitleController.recognizedButRemoved,
                                     mapping: simpleTitleController.mapping);
                               },
-                              onDurationDetected: (Duration duration, String value) {
+                              /*onDurationDetected: (Duration duration, String value) {
                                 if (duration.inSeconds != context.read<EditTaskCubit>().state.updatedTask.duration &&
                                     duration.inSeconds > 0 &&
                                     !value.contains("=")) {
@@ -121,7 +121,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                 if (label.id != context.read<EditTaskCubit>().state.updatedTask.listId) {
                                   onLabelDetected(label, value);
                                 }
-                              },
+                              },*/
                               onDateDetected: (DateTimeEntity detected, String value, int start, int end) {
                                 onDateDetected(detected, value, start, end);
                               },
@@ -184,7 +184,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         value: MapType(
             0,
             TextStyle(
-              backgroundColor: ColorsExt.akiflow20(context),
+              color: ColorsExt.akiflow20(context),
             )),
       });
 
@@ -196,7 +196,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         value: MapType(
             0,
             TextStyle(
-              backgroundColor: ColorsExt.akiflow20(context),
+              color: ColorsExt.akiflow20(context),
             )),
       });
       context.read<EditTaskCubit>().planWithNLP(detected.timestamp);

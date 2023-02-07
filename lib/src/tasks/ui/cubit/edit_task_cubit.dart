@@ -165,7 +165,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         await _tasksRepository.updateById(updated.id!, data: updated);
         _tasksCubit.refreshAllFromRepository();
         _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
         if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
           AnalyticsService.track("Task Rescheduled");
@@ -654,7 +654,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
     emit(state.copyWith(updatedTask: updated));
-    bool showDuration = value.contains("=") &&
+    /*bool showDuration = value.contains("=") &&
         (recognized?.where((element) => element.contains("=")).isEmpty ?? true) &&
         (mapping?.keys.where((element) => element.contains("=")).isEmpty ?? true);
     bool showLabelsList = value.contains("#") &&
@@ -672,7 +672,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
     if (showPriority) {
       toggleImportance(openedFromNLP: true);
-    }
+    }*/
 
     if (mapping != null) {
       List<MapEntry<String, MapType>> mappings = mapping.entries.toList();
@@ -682,7 +682,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           if (value.contains(map.key) == false) {
             planFor(null, statusType: TaskStatusType.inbox);
           }
-        } else if (map.value.type == 1) {
+        } /*else if (map.value.type == 1) {
           if (value.contains("#") == false) {
             removeLabel();
           }
@@ -694,7 +694,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           if (value.contains("=") == false) {
             setDuration(0);
           }
-        }
+        }*/
       }
     }
   }
@@ -707,7 +707,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed, isUtc: false);
     }
 
-    await planFor(date, dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
+    await planFor(date,
+        dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
   }
 
   void updateDescription(String html) {
