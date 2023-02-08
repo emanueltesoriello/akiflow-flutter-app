@@ -46,21 +46,25 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   StylableTextEditingController getInitializedController() {
     return StylableTextEditingController({}, (String? value) {
-      MapType type = simpleTitleController.removeMappingByValue(value);
-      switch (type.type) {
-        case 0:
-          planFor(null, statusType: TaskStatusType.inbox);
-          break;
-        case 1:
-          setEmptyLabel();
-          break;
-        case 2:
-          setPriority(PriorityEnum.none);
-          break;
-        case 3:
-          setDuration(0);
-          break;
-        default:
+      MapType? type = simpleTitleController.removeMappingByValue(value);
+      if (type == null) {
+        print('Null case');
+      } else {
+        switch (type.type) {
+          case 0:
+            planFor(null, statusType: TaskStatusType.inbox);
+            break;
+          case 1:
+            setEmptyLabel();
+            break;
+          case 2:
+            setPriority(PriorityEnum.none);
+            break;
+          case 3:
+            setDuration(0);
+            break;
+          default:
+        }
       }
     }, {});
   }

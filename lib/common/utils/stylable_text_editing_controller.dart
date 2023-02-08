@@ -60,9 +60,14 @@ class StylableTextEditingController extends TextEditingController {
     recognizedButRemoved = {};
   }
 
-  MapType removeMappingByValue(String? value) {
+  MapType? removeMappingByValue(String? value) {
     var map = mapping;
-    var removed = map.entries.where((element) => element.key == value).first.value;
+    MapType? removed;
+    try {
+      removed = map.entries.where((element) => element.key == value).first.value;
+    } catch (e) {
+      print(e);
+    }
     if (value != null) {
       recognizedButRemoved = {...recognizedButRemoved, value};
       mapping.removeWhere((k, v) => k == value);
@@ -82,12 +87,12 @@ class StylableTextEditingController extends TextEditingController {
   }
 
   bool isRemoved(String value) {
-    return recognizedButRemoved.any((element) => element.contains(value));
+    return false; //recognizedButRemoved.any((element) => element.contains(value));
   }
 
-  onTap(int type) {
+  /*onTap(int type) {
     removeMapping(type);
-  }
+  }*/
 
   @override
   TextSpan buildTextSpan({required BuildContext context, TextStyle? style, required bool withComposing}) {

@@ -56,6 +56,9 @@ class TitleField extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            onTap: () {
+              print('On tap');
+            },
             onChanged: (String value) async {
               onChanged(value);
               /*if (value.contains('#')) {
@@ -84,7 +87,6 @@ class TitleField extends StatelessWidget {
                   onDurationDetected!(duration, text);
                 }
               }*/
-
               if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
                 if (result.isNotEmpty) {

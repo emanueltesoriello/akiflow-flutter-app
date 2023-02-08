@@ -147,12 +147,12 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       });
                                       HapticFeedback.mediumImpact();
                                       var cubit = context.read<EditTaskCubit>();
-                                      await cubit.create();
+                                      cubit.create();
                                       setState(() {
                                         showRefresh = false;
                                         Navigator.pop(context);
                                       });
-                                      await cubit.forceSync();
+                                      cubit.forceSync();
                                       NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                                     } catch (e) {
                                       setState(() {
