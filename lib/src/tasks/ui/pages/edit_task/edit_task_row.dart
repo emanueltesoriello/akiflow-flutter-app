@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/extensions/string_extension.dart';
@@ -174,7 +175,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
         bool completed = task.isCompletedComputed;
 
         return SvgPicture.asset(
-          completed ? "assets/images/icons/_common/Check-done.svg" : "assets/images/icons/_common/Check-empty.svg",
+          completed ? Assets.images.icons.common.checkDoneSVG : Assets.images.icons.common.checkEmptySVG,
           width: 22,
           height: 22,
           color: completed ? ColorsExt.green(context) : ColorsExt.grey3(context),
@@ -190,7 +191,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
         task.statusType == TaskStatusType.deleted ||
         task.statusType == TaskStatusType.trashed) {
       return TagBox(
-        icon: "assets/images/icons/_common/trash.svg",
+        icon: Assets.images.icons.common.trashSVG,
         backgroundColor: ColorsExt.grey6(context),
         active: true,
         text: task.statusType!.name.capitalizeFirstCharacter(),
@@ -207,7 +208,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(
-            "assets/images/icons/_common/Clock_alert.svg",
+            Assets.images.icons.common.clockAlertSVG,
             width: 20,
             height: 20,
             color: ColorsExt.red(context),
@@ -234,7 +235,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     }
 
     return TagBox(
-      icon: "assets/images/icons/_common/number.svg",
+      icon: Assets.images.icons.common.numberSVG,
       text: label?.title ?? t.editTask.noLabel,
       backgroundColor:
           label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey6(context),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -28,7 +29,7 @@ class Subtitle extends StatelessWidget {
               return Row(
                 children: [
                   SvgPicture.asset(
-                    "assets/images/icons/_common/arrow_turn_down_right.svg",
+                    Assets.images.icons.common.arrowTurnDownRightSVG,
                     color: ColorsExt.grey3(context),
                     width: 16,
                     height: 16,
@@ -63,7 +64,7 @@ class Subtitle extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      "assets/images/icons/_common/arrow_turn_down_right.svg",
+                      Assets.images.icons.common.arrowTurnDownRightSVG,
                       color: ColorsExt.grey3(context),
                       width: 16,
                       height: 16,
@@ -96,7 +97,7 @@ class Subtitle extends StatelessWidget {
 
               return Row(children: [
                 SvgPicture.asset(
-                  "assets/images/icons/_common/arrow_turn_down_right.svg",
+                  Assets.images.icons.common.arrowTurnDownRightSVG,
                   color: ColorsExt.grey3(context),
                   width: 16,
                   height: 16,
@@ -123,7 +124,7 @@ class Subtitle extends StatelessWidget {
                                 width: 16,
                                 height: 16,
                                 errorBuilder: (context, error, stacktrace) => Image.asset(
-                                  "assets/images/icons/web/faviconV2.png",
+                                  Assets.images.icons.web.faviconV2PNG,
                                   width: 16,
                                   height: 16,
                                 ),

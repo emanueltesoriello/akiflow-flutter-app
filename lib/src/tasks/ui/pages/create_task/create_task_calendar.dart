@@ -160,7 +160,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                         child: RotatedBox(
                           quarterTurns: 2,
                           child: SvgPicture.asset(
-                            "assets/images/icons/_common/chevron_right.svg",
+                            Assets.images.icons.common.chevronRightSVG,
                             width: 20,
                             height: 20,
                             color: ColorsExt.grey2(context),
@@ -175,7 +175,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                           _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
                         },
                         child: SvgPicture.asset(
-                          "assets/images/icons/_common/chevron_right.svg",
+                          Assets.images.icons.common.chevronRightSVG,
                           width: 20,
                           height: 20,
                           color: ColorsExt.grey2(context),
@@ -260,7 +260,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                               child: Row(
                                 children: [
                                   SvgPicture.asset(
-                                    "assets/images/icons/_common/repeat.svg",
+                                    Assets.images.icons.common.repeatSVG,
                                     width: 20,
                                     height: 20,
                                     color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null

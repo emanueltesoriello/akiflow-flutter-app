@@ -626,14 +626,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     });
   }
 
-  setJustCreatedTask(Task task) {
+  void setJustCreatedTask(Task task) {
     _scrollListStreamController.add(null);
 
-    emit(state.copyWith(justCreatedTask: Nullable(task)));
+    //emit(state.copyWith(justCreatedTask: Nullable(task)));
 
-    Timer(const Duration(seconds: 3), () {
-      emit(state.copyWith(justCreatedTask: Nullable(null)));
-    });
+    //Timer(const Duration(seconds: 3), () {
+    emit(state.copyWith(justCreatedTask: Nullable(null)));
+    //});
   }
 
   Future<void> undo() async {

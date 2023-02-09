@@ -129,7 +129,7 @@ class TaskInfo extends StatelessWidget {
       }
 
       return TagBox(
-        icon: "assets/images/icons/_common/clock.svg",
+        icon: Assets.images.icons.common.clockSVG,
         backgroundColor: ColorsExt.akiflow10(context),
         text: text ?? t.task.snoozed,
         active: true,

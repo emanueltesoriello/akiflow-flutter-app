@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
@@ -113,9 +114,10 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                         showRefresh = false;
                                       });
                                       Navigator.pop(context);
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                        content: Text("Error"),
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: Text(e.toString()),
                                       ));
+                                      locator<SentryService>().captureException(Exception(e.toString()));
                                     }
                                   }),
                           ]),

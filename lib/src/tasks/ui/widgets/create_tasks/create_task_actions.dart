@@ -88,7 +88,7 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
               }
 
               return TagBox(
-                icon: "assets/images/icons/_common/hourglass.svg",
+                icon: Assets.images.icons.common.hourglassSVG,
                 active: task.duration != null && task.duration != 0,
                 backgroundColor:
                     task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),

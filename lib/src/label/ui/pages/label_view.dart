@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
@@ -174,7 +175,7 @@ class _LabelViewState extends State<LabelView> {
 
                             if (!labelState.showSnoozed) {
                               text = "$snoozedCount ${t.task.snoozed}";
-                              iconAsset = "assets/images/icons/_common/clock.svg";
+                              iconAsset = Assets.images.icons.common.clockSVG;
                             } else {
                               text = t.label.hideSnoozed;
                             }
@@ -202,7 +203,7 @@ class _LabelViewState extends State<LabelView> {
 
                             if (!labelState.showSomeday) {
                               text = "$somedayCount ${t.task.someday}";
-                              iconAsset = "assets/images/icons/_common/archivebox.svg";
+                              iconAsset = Assets.images.icons.common.archiveboxSVG;
                             } else {
                               text = t.label.hideSomeday;
                             }

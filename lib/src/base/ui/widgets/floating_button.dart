@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -65,7 +66,7 @@ class FloatingButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: SvgPicture.asset(
-                  "assets/images/icons/_common/plus.svg",
+                  Assets.images.icons.common.plusSVG,
                   color: ColorsExt.background(context),
                 ),
               ),

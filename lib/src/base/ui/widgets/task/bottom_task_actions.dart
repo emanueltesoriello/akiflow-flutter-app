@@ -158,7 +158,7 @@ class BottomTaskActions extends StatelessWidget {
                       return BlocBuilder<MainCubit, MainCubitState>(builder: (context, state) {
                         return PopupMenuButton<BottomTaskAdditionalActions>(
                           icon: SvgPicture.asset(
-                            "assets/images/icons/_common/ellipsis.svg",
+                            Assets.images.icons.common.ellipsisSVG,
                             width: 26,
                             height: 26,
                             color: ColorsExt.grey2(context),
@@ -213,7 +213,7 @@ class BottomTaskActions extends StatelessWidget {
                               PopupMenuItem<BottomTaskAdditionalActions>(
                                 value: BottomTaskAdditionalActions.moveToInbox,
                                 child: PopupMenuCustomItem(
-                                  iconAsset: "assets/images/icons/_common/tray.svg",
+                                  iconAsset: Assets.images.icons.common.traySVG,
                                   text: t.task.moveToInbox,
                                 ),
                               ),
@@ -237,21 +237,21 @@ class BottomTaskActions extends StatelessWidget {
                             PopupMenuItem<BottomTaskAdditionalActions>(
                               value: BottomTaskAdditionalActions.duplicate,
                               child: PopupMenuCustomItem(
-                                iconAsset: "assets/images/icons/_common/square_on_square.svg",
+                                iconAsset: Assets.images.icons.common.squareOnSquareSVG,
                                 text: t.task.duplicate,
                               ),
                             ),
                             PopupMenuItem<BottomTaskAdditionalActions>(
                               value: BottomTaskAdditionalActions.markAsDone,
                               child: PopupMenuCustomItem(
-                                iconAsset: "assets/images/icons/_common/Check-done-outline.svg",
+                                iconAsset: Assets.images.icons.common.checkDoneOutlineSVG,
                                 text: t.task.markAsDone,
                               ),
                             ),
                             PopupMenuItem<BottomTaskAdditionalActions>(
                               value: BottomTaskAdditionalActions.delete,
                               child: PopupMenuCustomItem(
-                                iconAsset: "assets/images/icons/_common/trash.svg",
+                                iconAsset: Assets.images.icons.common.trashSVG,
                                 text: t.task.delete,
                               ),
                             ),
