@@ -1,0 +1,11 @@
+Rules for each new feature:
+
+1) Every feature must be indipendent from the rest of the app. If it's no, it's a global feature and have to be handled in the Base feature;
+2) The 'entry point' of every feature is the 'navigator.dart' specific for the feature;
+3) The pages contain all the main pages and each page has the referments on it's own widget;
+4) In the widget and the pages it have NOT to be used any logic implementations. Implement the business logic ONLY in cubit;
+5) If a feature is too complex, divide the cubits into multiple ones;
+6) 'Watch' a state only from the navigator and then pass into the pages constructors the state itself or just the necessary things.
+7) NEVER watch or access directly to a state from the pages or even worse from the widget. The widget have to NOT know the business logic, since they just have to be UI elements. All the logic is in the cubits;
+8) The UI models have to be declared in the features_name/ui/models folder;
+9) The models of the feature have to be handled in the features_name/models: reminder that once we'll migrate the APIs into the feature itself, we'll change this system, cause we'll implement the 'data' folder and inside it we'll have the repository implementations and models. This means we'll also add a 'domain' folder that will act has bridge between the UI and the Data (in which we'll handle the Local DB accesses and the remote APIs); 

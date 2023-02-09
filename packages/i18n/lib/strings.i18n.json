@@ -1,0 +1,326 @@
+{
+  "appName": "Akiflow",
+  "login": "Login",
+  "typeHere": "Type here",
+  "dismiss": "Dismiss",
+  "ok": "OK",
+  "onboarding": {
+    "welcomeToAkiflow": "Welcome to Akiflow",
+    "login": "Login",
+    "register": "Register",
+    "welcomeToAkiflowSubtitle": "The journey to improve your productivity starts here.",
+    "or": "or",
+    "signInWithGoogle": "Sign in with Google",
+    "termsAndPrivacy": {
+      "continuingYouAcceptThe": "Continuing you accept the ",
+      "termsAndConditions": "Terms and Conditions",
+      "andThe": " and the ",
+      "privacyPolicy": "Privacy Policy",
+      "ofAkiflow": " of Akiflow"
+    },
+    "longTapMultipleSelection": "Long Tap to make multiple selection",
+    "skipAll": "Skip all",
+    "swipeLeftMoreOption": "Swipe left to show more options",
+    "swipeMorePlanTask": "Swipe more to directly plan your task",
+    "swipeRightToMarkAsDone": "Swipe right to mark a task as done",
+    "gmail": {
+      "skipForNow": "Skip for now",
+      "reconnectGmailAccount": "Reconnect Gmail account"
+    },
+    "reconnect": "Reconnect",
+    "allAccountsConnected": "All accounts connected",
+    "startAkiflow": "Start Akiflow"
+  },
+  "bottomBar": {
+    "menu": "Menu",
+    "inbox": "Inbox",
+    "today": "Today",
+    "calendar": "Calendar"
+  },
+  "notice": {
+    "inboxTitle": "Here is where the magic happens",
+    "inboxSubtitle": "Inbox is where all your new tasks are collected"
+  },
+  "expiry": {
+    "or": "or ",
+    "logout": "Log out ",
+    "title": "Your Free Trial has Expired",
+    "description": "Upgrade your plan to pick up where you left off.",
+    "button": "Upgrade your plan",
+    "alternate": "and delete all data."
+  },
+  "settings": {
+    "title": "Settings",
+    "upgradeToPro": "Upgrade to pro",
+    "general": "General",
+    "tasks": "Tasks",
+    "notifications": "Notifications",
+    "referYourFriends": "Refer your friends",
+    "helpCenter": "Help center",
+    "followUsOnTwitter": "Follow Us on Twitter",
+    "joinOurCommunity": "Join our community",
+    "labels": "Labels",
+    "searchComingSoon": "Search is coming soon in the near future!",
+    "changeLog": "Change log",
+    "chatWithUs": "Chat with us",
+    "sendUsAnEmail": "Send us an Email",
+    "myAccount": {
+      "title": "My account",
+      "connectedAs": "Connected as",
+      "manageAccount": "Manage account",
+      "manageSubscriptionAndBillingPreferences": "Manage subscription & billing preferences",
+      "logout": "Log out"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version",
+      "legal": "Legal",
+      "licensesInfo": "Licenses Info",
+      "security": "Security"
+    },
+    "learnAkiflow": {
+      "title": "Learn Akiflow",
+      "useGuide": "Use guide"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "connected": "Connected",
+      "gmail": {
+        "title": "Gmail",
+        "description": "Communication",
+        "step1": {
+          "t1": "Star an email or activate the ",
+          "t2": "Akiflow label",
+          "t3": " on Gmail."
+        },
+        "step2": "Check your new task in your Akiflow Inbox",
+        "importOptions": "Import options",
+        "useAkiflowLabel": "Use Akiflow label",
+        "star": "Star",
+        "behavior": "Behavior",
+        "communication": "Communication",
+        "onMarkAsDone": {
+          "title": "On mark as done",
+          "unstarTheEmail": "Unstar the email",
+          "unlabelTheEmail": "Unlabel the email",
+          "goToGmail": "Go to Gmail",
+          "doNothing": "Do nothing",
+          "askMeEveryTime": "Ask me every time"
+        },
+        "toImportTask": {
+          "title": "To import tasks",
+          "useAkiflowLabel": "Use Akiflow label",
+          "useStarToImport": "Use star to import",
+          "doNothing": "Do nothing",
+          "askMeEveryTime": "Ask me every time"
+        },
+        "clientSettings": "Client settings",
+        "useSuperhuman": "Use superhuman",
+        "openYourEmailsInSuperhumanInsteadOfGmail": "Open your emails in superhuman instead of Gmail"
+      },
+      "slack": {
+        "title": "Slack"
+      },
+      "calendar": {
+        "title": "Google Calendar"
+      }
+    },
+    "connected": "Connected"
+  },
+  "addTask": {
+    "titleHint": "Try: review financials today 9am",
+    "descriptionHint": "Description",
+    "plan": "Plan",
+    "label": "Label",
+    "snooze": "Snooze",
+    "today": "Today",
+    "tmw": "Tmw",
+    "tomorrow": "Tomorrow",
+    "nextWeek": "Next week",
+    "nextWeekend": "Next weekend",
+    "remove": "Remove",
+    "laterToday": "Later today",
+    "noDate": "No date",
+    "addTime": "Add time",
+    "repeat": "Repeat",
+    "folder": "Folder"
+  },
+  "task": {
+    "description": "Description",
+    "linkedContent": "Linked content",
+    "today": "Today",
+    "plan": "Plan",
+    "done": "Done",
+    "snooze": "Snooze",
+    "snoozed": "Snoozed",
+    "assign": "Assign",
+    "priority": {
+      "title": "Priority",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "noPriority": "No priority"
+    },
+    "moveToInbox": "Move to inbox",
+    "planForToday": "Plan for today",
+    "setDeadline": "Set Deadline",
+    "duplicate": "Duplicate",
+    "markAsDone": "Mark as done",
+    "delete": "Delete",
+    "snoozeTomorrow": "Snooze - Tomorrow",
+    "snoozeNextWeek": "Snooze - Next Week",
+    "someday": "Someday",
+    "undo": "Undo",
+    "markedAsDone": "Marked as done",
+    "undoActions": {
+      "markDone": "Task marked as done",
+      "markUndone": "Task marked as undone",
+      "deleted": "Task deleted",
+      "restored": "Task restored",
+      "planned": "Task planned",
+      "snoozed": "Task snoozed",
+      "movedToInbox": "Task moved to inbox",
+      "updated": "Task updated"
+    },
+    "sort": "Sort",
+    "filter": "Filter",
+    "links": {
+      "links": "links",
+      "addLink": "Add link"
+    },
+    "taskCreatedSuccessfully": "Task created successfully",
+    "nSelected": "$count selected",
+    "yesterday": "Yesterday",
+    "awesomeInboxZero": "Awesome! You reached Inbox Zero!",
+    "gmail": {
+      "doYouAlsoWantTo": "Do you also want to unstar the email on Gmail?",
+      "unstarTheEmail": "Unstar the email",
+      "goToGmail": "Go to Gmail",
+      "doNothing": "Do nothing",
+      "unlabelTheEmail": "Unlabel the email"
+    },
+    "onboardingTitle": "Hello I am a task 👋"
+  },
+  "errors": {
+    "noAccountsFound": "No accounts found"
+  },
+  "calendar": {
+    "comingSoon": "Calendar is coming in the near future!",
+    "goToToday": "Go to Today"
+  },
+  "linkedContent": {
+    "subject": "Subject:",
+    "from": "From:",
+    "date": "Date:",
+    "open": "Open",
+    "parentTask": "Parent task",
+    "project": "Project",
+    "workspace": "Workspace",
+    "title": "Title",
+    "space": "Space",
+    "folder": "Folder",
+    "list": "List",
+    "created": "Created",
+    "lastEdit": "Last edit",
+    "channel": "Channel",
+    "message": "Message",
+    "user": "User",
+    "starredAt": "Starred at",
+    "dueDate": "Due date",
+    "board": "Board",
+    "savedOn": "Saved on",
+    "status": "Status",
+    "done": "Done",
+    "toDo": "To do"
+  },
+  "editTask": {
+    "add": "Add",
+    "assignLabel": "Assign Label",
+    "searchALabel": "Search a label",
+    "noLabel": "No label",
+    "removeLabel": "Remove label",
+    "deadline": "Deadline",
+    "repeat": "Repeat",
+    "noRepeat": "No Repeat",
+    "everyDay": "Every Day",
+    "everyCurrentDay": "Every ${day}",
+    "everyFirstCurrentDayOfTheMonth": "Every first ${day} of the month",
+    "everyYearOn": "Every year on ${date}",
+    "everyWeekday": "Every weekday",
+    "custom": "Custom",
+    "comingSoon": "Coming soon",
+    "repeatingEditDialog": {
+      "title": "Editing repeating task",
+      "description": "Do you want to change only this occurrence or change this and all future occurrences?",
+      "onlyThis": "Only this task",
+      "thisAndAllFuture": "This and all future tasks"
+    },
+    "recurrence": {
+      "every": "Every",
+      "day": "Day",
+      "days": "Day(s)",
+      "week": "Week",
+      "weeks": "Week(s)",
+      "month": "Month",
+      "months": "Month(s)",
+      "year": "Year",
+      "years": "Year(s)",
+      "selectedDays": "Selected days",
+      "ends": "Ends",
+      "never": "Never",
+      "until": "Until",
+      "repeatUntil": "Repeat until",
+      "after": "After",
+      "repeatEvery": "Repeat every",
+      "times": "time(s)"
+    }
+  },
+  "today": {
+    "title": "Today",
+    "toDos": "To-dos",
+    "pinnedInCalendar": "Scheduled on calendar",
+    "done": "Done"
+  },
+  "comingSoon": "Coming soon",
+  "allTasks": "All tasks",
+  "label": {
+    "addLabel": "Add Label",
+    "addFolder": "Add Folder",
+    "createLabel": "Create Label",
+    "save": "Save",
+    "noFolder": "No Folder",
+    "color": "Color",
+    "folder": "Folder",
+    "createFolder": "Create Folder",
+    "editLabel": "Edit Label",
+    "order": "Order",
+    "newSection": "New Section",
+    "showDone": "Show Done",
+    "deleteLabel": "Delete Label",
+    "hideDone": "Hide Done",
+    "createSection": "Create Section",
+    "sectionTitle": "Section Title",
+    "addTask": "Add Task",
+    "rename": "Rename",
+    "delete": "Delete",
+    "hideSnoozed": "Hide Snoozed",
+    "hideSomeday": "Hide Someday",
+    "deleteDialog": {
+      "title": "You are deleting ${labelTitle}",
+      "description": "What do you want to do with the tasks assigned to this label?",
+      "justDeleteTheLabel": "Just delete the label",
+      "markAllTasksAsDone": "Mark all tasks as Done"
+    },
+    "sortComingSoon": "Sort (Coming soon)"
+  },
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "noTitle": "(No title)",
+  "connect": "Connect",
+  "more": "More",
+  "view": "View",
+  "integrations": {
+    "todoist": "Todoist",
+    "slack": "Slack"
+  }
+}

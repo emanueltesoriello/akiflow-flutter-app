@@ -1,92 +1,155 @@
-# Akiflow Flutter App
 
+# Akiflow Mobile App
 
+## Run
 
-## Getting started
+Use the `.vscode/launch.json` to launch the app with the specific environment or:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Development: `flutter run -t lib/main_dev.dart`
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Production: `flutter run -t lib/main.dart`
 
-## Add your files
+## Build
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### Android APK
 
-```
-cd existing_repo
-git remote add origin http://git.akiflow.com/akiflow/akiflow-flutter-app.git
-git branch -M master
-git push -uf origin master
-```
+Use only if it's necessary installs the app externally to Play Store:
 
-## Integrate with your tools
+`flutter build apk --release -t lib/main.dart`
 
-- [ ] [Set up project integrations](http://git.akiflow.com/akiflow/akiflow-flutter-app/-/settings/integrations)
+### Android Appbundle
 
-## Collaborate with your team
+Create the build to upload to Play Store channels:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+`flutter build appbundle --release -t lib/main.dart`
 
-## Test and Deploy
+### iOS
 
-Use the built-in continuous integration in GitLab.
+`flutter build ipa --release -t lib/main.dart`
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+After build completed, it will be shown the path to the Runner archive like: */Users/{username}/akiflow/build/ios/archive/Runner.xcarchive*.
 
-***
+Then just run:
 
-# Editing this README
+`open /Users/{username}/akiflow/build/ios/archive/Runner.xcarchive`
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+then tap "Distribute App" and follow the procedure through Xcode.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+# Flow and Structure
 
-## Name
-Choose a self-explaining name for your project.
+## Flow
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+![Flutter Bloc & Cubit Tutorial - Reso Coder](https://i0.wp.com/resocoder.com/wp-content/uploads/2020/07/bloc_architecture_full.png?resize=778%2C195&ssl=1)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+The application is composed of several packages, defined for execute operations in an isolated way, to facilitate the development while keeping each component simple to perform operations for the scope for which it was created.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+The application uses [BLoC](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc) as the State Management package. So call methods (*events*) on a feature blocks *(bloc)* located within the `features / cubit` package, defined one for each feature or context.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+From the controller class *\_cubit.dart*, will be updated the *state* of the *bloc* which will notify the `ui` part to render the changes just received via `BlocBuilder`.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+##  Structure
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Each package is now described with its development logic and any logical flows.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+### root
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+At the 'root' level of the project are defined the `main` classes that will take care of launching and instantiating the main entities and the setup of the app.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+The `main_dev` and `main` files are respectively the files that are launched to separate the app's launch mode. In this way it is possible to define different behaviors for each configuration environment and loading the *main* method inside the shared `main_com` file.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Api
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Contains the classes needed to perform network operations with the *Akiflow* backend.
+A `base_api.dart` class is defined and the methods within, are defined as common to all the classes used to make requests, this for a better organization of the code and for future unit testing and mocking of the code.
 
-## License
-For open source projects, say how it is licensed.
+In the `api.dart` class, is defined the implementation of the code common to the other classes, in this way passing the type of the entity, it will be possible to make specific requests without rewriting the same methods for each 'api' class.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+These classes can throw `ApiException` exceptions when the response contains values ​​within the `errors` field.
+
+### Components
+
+This package is divided into:
+1. `base`
+These are the basic components for rendering the custom UI according to the *Akiflow* style and custom components shared with multiple classes within the application.
+
+2. `calendar`, `label`, `social`, `task`
+Components exclusively related to UI related to specified context.
+
+### Core
+
+Contains the main configuration classes:
+
+1. `config`
+Here is defined the application launch config, including `endpoint` used to execute network requests with the backend, and other keys and endpoints necessary for authentication and connection with the various integrations. `development` /` production` files are defined so that you have two separate environments based on the launch of its *main* file.
+
+1. `http_client` is defined as the class that deals with handling requests (authenticated and unauthenticated) through JWT tokens.
+
+2. `locator` represents the central register [service locator](https://en.wikipedia.org/wiki/Service_locator_pattern) where the classes are instantiated so that they can be referenced anywhere in the code, for a better organization of the source code.
+
+### Exceptions
+
+Here are defined new *exceptions* to be thrown as needed.
+
+### Features
+
+Within this package, additional packages are created for each functionality or context necessary for development. The defined blocks will be accessible through the `BlocProvider` class (package [flutter_bloc](https://pub.dev/packages/flutter_bloc)).
+
+Some blocks will be available anywhere within the code, being declared as a wrapper of the main application (the `Application` widget within the `main_com.dart` class), others will be defined in the appropriate widget where you need to create a new specific context. (See `flutter_bloc` specifications).
+
+Each feature or context contains two packages: `cubit` and `ui`. The 'cubit' classes are used as controllers and receive *events* from the classes in 'ui'. The class `[filename]_state.dart` will contain the properties related to the functionality, in order to keep and track its *state*.
+
+This will update the *state* from the `_cubit.dart` controller class, which will notify the UI part to render the changes just received on the `ui`.
+
+### Repository
+
+Contains the classes needed to work with the app's local database, `SQLite`.
+A `base_database_repository.dart` class is defined and the methods are common to all the classes and used to make requests to the db.
+In the `database_repository.dart` class, the implementation of the code is common to the other classes, so you can pass the entity type to execute specific entity operations.
+
+### Services
+
+Contains reusable service classes (defined in the `locator` class) to facilitate various operations over the source code:
+
+- Synchronization service between database and backend.
+- Analytics event management
+- Dialog service to show `dialogs` directly from controller classes without using `context`.
+- Handling of exceptions via Sentry.
+
+### Style
+
+Where the application style is defined. It is divided into:
+- `colors` where are set the main palettes of the app.
+- `theme` where is defined the basic theme of the app, i.e. everything that is rendered such as colors, dimensions, transition animations.
+
+### Utils
+
+These classes are utilities that allows to perform shared operations in order to reuse the developed source code.
+
+Particular note for the `converters_isolate` class which contains the methods launched in a separate memory space from the main one, in order to support [concurrency](https://dart.dev/guides/language/concurrency) in dart.
+
+### Packages
+
+ `models` all classes that define the system entities. Each class must extend the abstract class [Equatable](https://pub.dev/packages/equatable) which facilitates the handling of objects comparison.
+If the created class needs to be decomposed into multiple entities, a package is created which will contains the main class and its sub-classes.
+
+ `i18n`, all translations are defined in the `strings.i18n.json` file.
+To generate the file with all the translations to be used within the code, run `flutter pub run fast_i18n`.
+In this way, within the code it will be possible to access the various strings using the getter `t` method.
+
+## Other
+
+In the *root* of the application source code there are also the following packages:
+
+ 1. `assets` with fonts, files, images are stored that will be made available for the application configuration through the file `pubspec.yaml`
+
+	 `config` there are the two json files `dev` and `prod` to establish the app configuration parameters in different development environments.
+
+ 2. the `pubspec.yaml` file where dependencies are established with the various *packages* and application configurations and features for *fonts*, configuration of *assets* and *launch screen* and *app icons* generations.
+ Whenever a package is added, remember to add its reference to the `LicencesPage.dart` widget.
+
+`flutter pub run fast_i18n`
+
+## JS integration
+
+Put JS code inside the folder `/assets/html/` and edit the file `index.html` to include the JS code and create
+custom methods to handle the events.

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "311578125661",
+    "project_id": "akiflow-prod-b6e34",
+    "storage_bucket": "akiflow-prod-b6e34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311578125661:android:d8019cad00b5821ec734b4",
+        "android_client_info": {
+          "package_name": "com.akiflow.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311578125661-69iq2u54vuk90snjfqcdnfp227c3t542.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFuq-8zVK9banyWWyCy2oLX01_bSnj9Mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311578125661-69iq2u54vuk90snjfqcdnfp227c3t542.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "311578125661-le2egc4e91ckrung01j43jchs0atns6s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akiflow.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

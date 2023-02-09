@@ -1,0 +1,17 @@
+{
+  "endpoint": "https://api.akiflow.com",
+  "oauth_endpoint": "https://app.akiflow.com",
+  "sentry_dsn": "https://add9dcb365c04a5998caa2a54f5b3bc9@bugtracker.akiflow.com/7",
+  "oauth_client_id": "1000006",
+  "oauth_redirect_url": "com.akiflow.mobile:/callback",
+  "google_credentials": {
+    "client_id_android": "315613968770-q31o9sq9po225sg58ap0m2rkv9jfc18c.apps.googleusercontent.com",
+    "client_id_ios": "315613968770-7bvsf78cs8chif4rm6im1lduv1j1n65o.apps.googleusercontent.com"
+  },
+  "segment_api_key": "DZseBYBuiU55K0yJP5JtRpJTFsdhzYkX",
+  "intercom": {
+    "app_id": "hqlby49q",
+    "ios_api_key": "ios_sdk-c80c16999ffce9cb6988a6478b18de09a932c4ed",
+    "android_api_key": "android_sdk-02d22b9bbde45e6ca6419ac5af05878bae1a74c6"
+  }
+}
