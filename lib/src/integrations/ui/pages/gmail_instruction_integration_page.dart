@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/ui/widgets/base/action_button.dart';
@@ -172,7 +173,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(4),
-                        child: SvgPicture.asset("assets/images/icons/google/star.svg"),
+                        child: SvgPicture.asset(Assets.images.icons.google.starSVG),
                       ),
                     ),
                   ],
@@ -180,7 +181,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
               ],
             ),
           ),
-          Align(alignment: Alignment.bottomRight, child: SvgPicture.asset("assets/images/icons/google/finger.svg")),
+          Align(alignment: Alignment.bottomRight, child: SvgPicture.asset(Assets.images.icons.google.fingerSVG)),
         ],
       ),
     );

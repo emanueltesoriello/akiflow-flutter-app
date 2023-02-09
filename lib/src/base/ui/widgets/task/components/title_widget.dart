@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
@@ -50,7 +51,7 @@ class TitleWidget extends StatelessWidget {
   Widget isGoal(BuildContext context) {
     if (task.isDailyGoal) {
       return TagBox(
-        icon: "assets/images/icons/_common/target_active.svg",
+        icon: Assets.images.icons.common.targetActiveSVG,
         isBig: true,
         isSquare: true,
         backgroundColor: Colors.transparent,

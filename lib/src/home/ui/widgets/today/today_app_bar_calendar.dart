@@ -33,7 +33,11 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
             DateTime now = DateTime.now();
-            int firstDayOfWeek = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] ?? 1;
+            int firstDayOfWeek = DateTime.monday;
+            if (context.read<AuthCubit>().state.user?.settings?["calendar"] != null &&
+                context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] != null) {
+              firstDayOfWeek = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"];
+            }
             return Column(
               children: [
                 TableCalendar(

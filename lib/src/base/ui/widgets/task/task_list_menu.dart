@@ -52,7 +52,7 @@ class TaskListMenu extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: PopupMenuCustomItem(
-                iconAsset: "assets/images/icons/_common/arrow_up_arrow_down.svg",
+                iconAsset: Assets.images.icons.common.arrowUpArrowDownSVG,
                 text: t.task.sort,
                 enabled: false,
               ),
@@ -66,7 +66,7 @@ class TaskListMenu extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: PopupMenuCustomItem(
-                iconAsset: "assets/images/icons/_common/line_horizontal_3_decrease.svg",
+                iconAsset: Assets.images.icons.common.lineHorizontal3DecreaseSVG,
                 text: t.task.filter,
                 enabled: false,
               ),

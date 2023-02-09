@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -135,8 +136,8 @@ class _TodayAppBarState extends State<TodayAppBar> {
             builder: (context, state) {
               return SvgPicture.asset(
                 state.calendarFormat == CalendarFormatState.month
-                    ? "assets/images/icons/_common/chevron_up.svg"
-                    : "assets/images/icons/_common/chevron_down.svg",
+                    ? Assets.images.icons.common.chevronUpSVG
+                    : Assets.images.icons.common.chevronDownSVG,
                 width: 16,
                 height: 16,
                 color: ColorsExt.grey3(context),
@@ -157,7 +158,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
         },
         child: Center(
           child: SvgPicture.asset(
-            "assets/images/icons/_common/arrow_left.svg",
+            Assets.images.icons.common.arrowLeftSVG,
             width: 26,
             height: 26,
             color: ColorsExt.grey2(context),

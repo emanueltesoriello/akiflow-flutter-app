@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/label/label.dart';
 
@@ -35,7 +36,7 @@ class LabelTitle extends StatelessWidget {
           return Row(
             children: [
               const SizedBox(width: 12),
-              SvgPicture.asset("assets/images/icons/_common/folder.svg",
+              SvgPicture.asset(Assets.images.icons.common.folderSVG,
                   width: 16, height: 16, color: ColorsExt.grey3(context)),
               const SizedBox(width: 4),
               Text(

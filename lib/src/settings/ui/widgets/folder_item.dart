@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/label/label.dart';
 
@@ -27,12 +28,12 @@ class FolderItem extends StatelessWidget {
                 child: SizedBox(
                   width: 22,
                   height: 22,
-                  child: SvgPicture.asset("assets/images/icons/_common/folder.svg", color: ColorsExt.grey2(context)),
+                  child: SvgPicture.asset(Assets.images.icons.common.folderSVG, color: ColorsExt.grey2(context)),
                 ),
               ),
               const SizedBox(width: 8),
               Text(
-                label.title??'(No title)',
+                label.title ?? '(No title)',
                 style: TextStyle(
                   fontSize: 17,
                   color: ColorsExt.grey2(context),

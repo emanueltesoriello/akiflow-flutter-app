@@ -28,7 +28,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 4,
+        version: 5,
         onCreate: (db, version) async {
           print('Creating database version $version');
 
@@ -50,6 +50,12 @@ class DatabaseService {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
 
+          if (oldVersion < 5) {
+            batch.execute('ALTER TABLE calendars ADD COLUMN timezone VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_identifier VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_picture VARCHAR(255)');
+            batch.execute('ALTER TABLE events ADD COLUMN status VARCHAR(255)');
+          }
           if (oldVersion < 4) {
             _setupAvailabilities(batch);
           }
@@ -172,13 +178,16 @@ CREATE TABLE IF NOT EXISTS calendars(
   `icon` VARCHAR(255),
   `akiflow_primary` INTEGER,
   `is_akiflow_calendar` INTEGER,
+  `timezone` VARCHAR(255),
   `settings` TEXT,
   `etag` VARCHAR(255),
   `sync_status` VARCHAR(255),
   `remote_updated_at` TEXT,
   `created_at` TEXT,
   `updated_at` TEXT,
-  `deleted_at` TEXT
+  `deleted_at` TEXT,
+  `account_identifier` VARCHAR(255),
+  `account_picture` VARCHAR(255)
 )
     ''');
     batch.execute('''
@@ -288,7 +297,8 @@ CREATE TABLE IF NOT EXISTS events(
   `deleted_at` TEXT,
   `until_date_time` TEXT,
   `recurrence_exception_delete` INTEGER,
-  `recurrence_sync_retry` INTEGER
+  `recurrence_sync_retry` INTEGER,
+  `status` VARCHAR(255)
 )
     ''');
     batch.execute('CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');

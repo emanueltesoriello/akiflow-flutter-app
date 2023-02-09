@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/integrations_list.dart';
@@ -29,16 +30,16 @@ class ReconnectIntegrations extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset("assets/images/icons/google/gmail_shadow.svg", width: 56, height: 56),
+                        SvgPicture.asset(Assets.images.icons.google.gmailShadowSVG, width: 56, height: 56),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: RotatedBox(
                             quarterTurns: 2,
-                            child: SvgPicture.asset("assets/images/icons/_common/arrow_left.svg",
+                            child: SvgPicture.asset(Assets.images.icons.common.arrowLeftSVG,
                                 color: ColorsExt.akiflow(context)),
                           ),
                         ),
-                        SvgPicture.asset("assets/images/logo/logo_full.svg", width: 56, height: 56),
+                        SvgPicture.asset(Assets.images.logo.logoFullSVG, width: 56, height: 56),
                       ],
                     ),
                     const SizedBox(height: 16),

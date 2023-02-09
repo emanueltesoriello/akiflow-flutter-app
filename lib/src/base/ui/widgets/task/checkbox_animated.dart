@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
@@ -241,31 +242,31 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
 
     if (widget.task.isCompletedComputed) {
       if (widget.task.isDailyGoal) {
-        firstChildIconAsset = "assets/images/icons/_common/check_done_goal.svg";
-        secondChildIconAsset = "assets/images/icons/_common/Check-empty-goal.svg";
+        firstChildIconAsset = Assets.images.icons.common.checkDoneGoalSVG;
+        secondChildIconAsset = Assets.images.icons.common.checkEmptyGoalSVG;
       } else if (widget.task.recurrence != null && widget.task.recurrence!.isNotEmpty) {
-        firstChildIconAsset = "assets/images/icons/_common/Check-done.svg";
-        secondChildIconAsset = "assets/images/icons/_common/check-empty-repeat.svg";
+        firstChildIconAsset = Assets.images.icons.common.checkDoneSVG;
+        secondChildIconAsset = Assets.images.icons.common.checkEmptyRepeatSVG;
         firstChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
         secondChildColor = color.withOpacity(_animationTopOpacity.value);
       } else {
-        firstChildIconAsset = "assets/images/icons/_common/Check-done.svg";
-        secondChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
+        firstChildIconAsset = Assets.images.icons.common.checkDoneSVG;
+        secondChildIconAsset = Assets.images.icons.common.checkEmptySVG;
         firstChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
         secondChildColor = color.withOpacity(_animationTopOpacity.value);
       }
     } else {
       if (widget.task.isDailyGoal) {
-        firstChildIconAsset = "assets/images/icons/_common/Check-empty-goal.svg";
-        secondChildIconAsset = "assets/images/icons/_common/check_done_goal.svg";
+        firstChildIconAsset = Assets.images.icons.common.checkEmptyGoalSVG;
+        secondChildIconAsset = Assets.images.icons.common.checkDoneGoalSVG;
       } else if (widget.task.recurrence != null && widget.task.recurrence!.isNotEmpty) {
-        firstChildIconAsset = "assets/images/icons/_common/check-empty-repeat.svg";
-        secondChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+        firstChildIconAsset = Assets.images.icons.common.checkEmptyRepeatSVG;
+        secondChildIconAsset = Assets.images.icons.common.checkDoneSVG;
         firstChildColor = color.withOpacity(_animationTopOpacity.value);
         secondChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);
       } else {
-        firstChildIconAsset = "assets/images/icons/_common/Check-empty.svg";
-        secondChildIconAsset = "assets/images/icons/_common/Check-done.svg";
+        firstChildIconAsset = Assets.images.icons.common.checkEmptySVG;
+        secondChildIconAsset = Assets.images.icons.common.checkDoneSVG;
 
         firstChildColor = color.withOpacity(_animationTopOpacity.value);
         secondChildColor = ColorsExt.green(context).withOpacity(_animationTopOpacity.value);

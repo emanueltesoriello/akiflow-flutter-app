@@ -122,6 +122,8 @@ class SyncControllerService {
         await _syncEntity(Entity.accounts);
         await _syncEntity(Entity.tasks);
         await _syncEntity(Entity.labels);
+        await _syncEntity(Entity.calendars);
+        await _syncEntity(Entity.events);
       } else {
         for (Entity entity in entities) {
           await _syncEntity(entity);
