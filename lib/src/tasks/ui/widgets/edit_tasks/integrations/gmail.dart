@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:models/doc/doc.dart';
+import 'package:models/doc/gmail_doc.dart';
 import 'package:models/task/task.dart';
 
 class GmailLinkedContent extends StatelessWidget {
-  final Doc doc;
+  final GmailDoc doc;
   final Task task;
   final Function itemBuilder;
 

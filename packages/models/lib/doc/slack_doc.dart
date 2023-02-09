@@ -5,25 +5,15 @@ import 'package:models/doc/doc_base.dart';
 class SlackDoc extends Doc implements DocBase {
   SlackDoc(Doc doc)
       : super(
-          id: doc.id,
-          taskId: doc.taskId,
-          title: doc.title,
-          description: doc.description,
-          connectorId: doc.connectorId,
-          originId: doc.originId,
-          accountId: doc.accountId,
-          url: doc.url,
-          localUrl: doc.localUrl,
-          type: doc.type,
-          icon: doc.icon,
-          createdAt: doc.createdAt,
-          updatedAt: doc.updatedAt,
-          deletedAt: doc.deletedAt,
-          globalUpdatedAt: doc.globalUpdatedAt,
-          globalCreatedAt: doc.globalCreatedAt,
-          remoteUpdatedAt: doc.remoteUpdatedAt,
-          content: doc.content,
-        );
+            url: doc.url,
+            localUrl: doc.localUrl,
+            type: doc.type,
+            userImage: doc.userImage,
+            userName: doc.userName,
+            starredAt: doc.starredAt,
+            channel: doc.channel,
+            channelName: doc.channelName,
+            messageTimestamp: doc.messageTimestamp);
 
   @override
   String getLinkedContentSummary([Account? account]) {
@@ -38,16 +28,14 @@ class SlackDoc extends Doc implements DocBase {
     } catch (_) {}
 
     try {
-      if (content?["channelName"] != null) {
-        summaryPieces.add(content?["channelName"]);
+      if (channelName != null && channelName!.isNotEmpty) {
+        summaryPieces.add(channelName);
       }
     } catch (_) {}
 
     try {
-      if (content?["userName"] != null) {
-        summaryPieces.add(content?["userName"]);
-      } else if (content?["user_name"] != null) {
-        summaryPieces.add(content?["user_name"]);
+      if (userName != null && userName!.isNotEmpty) {
+        summaryPieces.add(userName);
       }
     } catch (_) {}
 
@@ -67,6 +55,6 @@ class SlackDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return content?["userName"] ?? content?["user_name"] ?? super.getSummary;
+    return userName ?? super.getSummary;
   }
 }

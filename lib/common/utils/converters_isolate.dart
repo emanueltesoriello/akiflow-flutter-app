@@ -237,9 +237,7 @@ List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
       //TODO: change to partial task
       connectorId: data.connectorId,
       originId: messageContent.messageId,
-      originAccountId: data.originAccountId,
-      title: getTitleString(messageContent.subject),
-      doc: doc,
+      subject: getTitleString(messageContent.subject),
     ));
   }
   return result;

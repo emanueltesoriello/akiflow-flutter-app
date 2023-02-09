@@ -3,38 +3,30 @@ import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
 class TrelloDoc extends Doc implements DocBase {
-  TrelloDoc(Doc doc)
+  final String? title;
+  TrelloDoc(Doc doc, this.title)
       : super(
-          id: doc.id,
-          taskId: doc.taskId,
-          title: doc.title,
-          description: doc.description,
-          connectorId: doc.connectorId,
-          originId: doc.originId,
-          accountId: doc.accountId,
-          url: doc.url,
-          localUrl: doc.localUrl,
-          type: doc.type,
-          icon: doc.icon,
-          createdAt: doc.createdAt,
-          updatedAt: doc.updatedAt,
-          deletedAt: doc.deletedAt,
-          globalUpdatedAt: doc.globalUpdatedAt,
-          globalCreatedAt: doc.globalCreatedAt,
-          remoteUpdatedAt: doc.remoteUpdatedAt,
-          content: doc.content,
-        );
+            id: doc.id,
+            listId: doc.listId,
+            listName: doc.listName,
+            desc: doc.desc,
+            url: doc.url,
+            dateLastActivity: doc.dateLastActivity,
+            dueComplete: doc.dueComplete,
+            boardId: doc.boardId,
+            boardName: doc.boardName,
+            due: doc.due);
   @override
   String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
-    if (content?["boardName"] != null && content?["boardName"] != '') {
-      summaryPieces.add(content?["boardName"]);
+    if (boardName != null && boardName!.isNotEmpty) {
+      summaryPieces.add(boardName);
     }
     return summaryPieces.join(' - ');
   }
 
   @override
   String get getSummary {
-    return content?["boardName"] ?? super.getSummary;
+    return boardName ?? super.getSummary;
   }
 }

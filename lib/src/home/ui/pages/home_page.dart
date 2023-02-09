@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           builder: (context) => GmailActionDialog(
             syncMode: action.account.gmailSyncMode,
             goToGmail: () {
-              tasksCubit.goToGmail(action.doc);
+              tasksCubit.goToGmail(action.task.doc!.value!);
             },
             unstarOrUnlabel: () {
               tasksCubit.unstarGmail(action);

@@ -14,7 +14,10 @@ class Subtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Doc? doc = task.doc?.value;
+    Doc? doc;
+    if (task.doc?.value != null) {
+      doc = task.computedDoc(task.doc!.value);
+    }
 
     List<String> links = task.links ?? [];
 
@@ -42,7 +45,7 @@ class Subtitle extends StatelessWidget {
                     child: Builder(
                       builder: (context) {
                         return Text(
-                          doc.getSummary.parseHtmlString ?? '',
+                          doc!.getLinkedContentSummary().parseHtmlString ?? doc.url ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

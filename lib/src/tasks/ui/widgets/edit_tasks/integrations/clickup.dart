@@ -24,22 +24,22 @@ class ClickupLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.workspace,
-          value: doc.content?["teamName"] ?? '',
+          value: doc.teamName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.space,
-          value: doc.content?["spaceName"] ?? '',
+          value: doc.spaceName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.folder,
-          value: doc.content?["folderName"] ?? '',
+          value: doc.folderName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.list,
-          value: doc.content?["listName"] ?? '',
+          value: doc.listName ?? '',
         ),
         itemBuilder(
           context,

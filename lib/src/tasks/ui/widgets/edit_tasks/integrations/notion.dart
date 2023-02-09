@@ -24,7 +24,7 @@ class NotionLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.workspace,
-          value: doc.content?["workspaceName"] ?? '',
+          value: doc.workspaceName ?? '',
         ),
         itemBuilder(
           context,
@@ -57,7 +57,7 @@ class NotionLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.list,
-          value: doc.content?["listName"] ?? '',
+          value: doc.listName ?? '',
         ),
         itemBuilder(
           context,

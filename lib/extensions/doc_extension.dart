@@ -48,11 +48,11 @@ extension DocExt on Doc {
   }
 
   String? get internalDateFormatted {
-    if (content?["internalDate"] == null) {
+    if (internalDate == null) {
       return null;
     }
 
-    int millis = int.parse(content!["internalDate"]!);
+    int millis = int.parse(internalDate!);
 
     DateTime date = DateTime.fromMillisecondsSinceEpoch(millis).toLocal();
 
@@ -60,17 +60,12 @@ extension DocExt on Doc {
   }
 
   String? get dueDateTimeFormatted {
-    if (content?["dueDateTime"] != null) {
-      return content?["dueDateTime"];
+    if (dueDateTime != null) {
+      return dueDateTime;
     }
 
-    if (content?["dueDate"] != null) {
-      return content?["dueDate"];
-    }
-
-    if (content?["due_date"] != null) {
-      String dueDate = content!["due_date"]!;
-      DateTime date = DateTime.parse(dueDate);
+    if (dueDate != null) {
+      DateTime date = DateTime.parse(dueDate!);
       return DateFormat("dd MMMM").format(date);
     }
 
@@ -78,16 +73,16 @@ extension DocExt on Doc {
   }
 
   String? get createdAtFormatted {
-    if (content?["createdAt"] != null) {
-      return DateFormat("dd MMM yyyy").format(DateTime.parse(content!["createdAt"]!).toLocal());
+    if (createdAt != null) {
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(createdAt!).toLocal());
     }
 
     return '';
   }
 
   String? get modifiedAtFormatted {
-    if (content?["modifiedAt"] != null) {
-      return DateFormat("dd MMM yyyy").format(DateTime.parse(content!["modifiedAt"]!).toLocal());
+    if (updatedAt != null) {
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(updatedAt!).toLocal());
     }
 
     return '';
@@ -114,35 +109,10 @@ extension DocExt on Doc {
   }
 
   String? get dueFormatted {
-    if (content?["due"] != null) {
-      return DateFormat("dd MMM yyyy").format(DateTime.parse(content!["due"]!).toLocal());
+    if (due != null) {
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(due!).toLocal());
     }
 
     return '';
-  }
-
-  static Doc? fromBuiltInDoc(Task? task) {
-    if (task?.doc == null) {
-      return null;
-    }
-
-    return Doc(
-      id: task!.id,
-      taskId: task.id,
-      title: task.title,
-      description: task.description,
-      connectorId: task.connectorId?.value,
-      originId: task.originId?.value,
-      accountId: task.originAccountId?.value,
-      url: task.doc?.value?.url,
-      localUrl: task.doc?.value?.localUrl,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-      deletedAt: task.deletedAt,
-      globalUpdatedAt: task.globalUpdatedAt,
-      globalCreatedAt: task.globalCreatedAt,
-      remoteUpdatedAt: task.remoteUpdatedAt,
-      content: task.content,
-    );
   }
 }

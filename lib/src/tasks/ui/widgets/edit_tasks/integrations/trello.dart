@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/extensions/doc_extension.dart';
-import 'package:models/doc/doc.dart';
+import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
 class TrelloLinkedContent extends StatelessWidget {
   final Task task;
-  final Doc doc;
+  final TrelloDoc doc;
   final Function itemBuilder;
 
   const TrelloLinkedContent({
@@ -23,12 +23,12 @@ class TrelloLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.board,
-          value: doc.content?["boardName"] ?? '',
+          value: doc.boardName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.list,
-          value: doc.content?["listName"] ?? '',
+          value: doc.listName ?? '',
         ),
         itemBuilder(
           context,

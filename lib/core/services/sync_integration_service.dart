@@ -49,7 +49,7 @@ class SyncIntegrationService {
         .toList();
 
     List<Doc> newTasks =
-        docs.where((element) => localMessageIds.contains(element.doc?["message_id"]) == false).toList();
+        docs.where((element) => localMessageIds.contains(element.messageId) == false).toList();
 
     if (docs.isEmpty) {
       return null;

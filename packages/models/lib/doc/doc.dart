@@ -1,326 +1,314 @@
-import 'dart:convert';
-
 import 'package:models/account/account.dart';
 import 'package:models/base.dart';
 import 'package:models/doc/doc_base.dart';
-import 'package:models/nullable.dart';
 
 class Doc extends DocBase implements Base {
   Doc({
-    this.id,
-    this.taskId,
-    this.connectorId,
+    this.url,
     this.from,
     this.subject,
     this.internalDate,
-    this.originId,
-    this.accountId,
-    this.hash,
-    this.originAccountId,
-    this.title,
     this.messageId,
     this.threadId,
-    this.description,
-    this.searchText,
-    this.icon,
-    this.url,
-    this.localUrl,
+    this.hash,
+    this.accountId,
+    this.workspaceId,
+    this.workspaceName,
+    this.projectId,
+    this.projectName,
+    this.sectionId,
+    this.sectionName,
+    this.assigneeId,
+    this.assigneeName,
+    this.taskId,
+    this.parentTaskId,
+    this.parentTaskName,
+    this.teamId,
+    this.teamName,
+    this.spaceId,
+    this.spaceName,
+    this.folderId,
+    this.folderName,
+    this.listId,
+    this.listName,
+    this.issueTypeName,
     this.type,
+    this.userImage,
     this.userName,
     this.starredAt,
+    this.channel,
     this.channelName,
-    this.content,
-    this.priority,
-    this.sorting,
-    this.originUpdatedAt,
+    this.messageTimestamp,
+    this.dueDate,
+    this.dueDateTime,
+    this.isRecurring,
+    this.string,
+    this.timezone,
+    this.lang,
+    this.parentId,
+    this.parentTaskTitle,
+    this.id,
+    this.desc,
+    this.dateLastActivity,
+    this.dueComplete,
+    this.due,
+    this.boardId,
+    this.boardName,
+    this.connectorId,
+    this.originId,
+    this.localUrl,
     this.createdAt,
     this.updatedAt,
-    this.deletedAt,
-    this.globalUpdatedAt,
-    this.globalCreatedAt,
-    this.remoteUpdatedAt,
-    this.updated,
-    this.taskData,
-    this.doc,
   });
 
-  final String? id;
-  final String? taskId;
-  final String? hash;
+  final String? url;
   final String? from;
   final String? subject;
   final String? internalDate;
-  final String? connectorId;
   final String? messageId;
   final String? threadId;
-  final String? originId;
+  final String? hash;
+
   final String? accountId;
-  final String? originAccountId;
-  final String? title;
-  final dynamic description;
-  final String? searchText;
-  final dynamic icon;
-  final String? url;
+  final String? workspaceId;
+  final String? workspaceName;
+  final String? projectId;
+  final String? projectName;
+  final String? sectionId;
+  final String? sectionName;
+  final String? assigneeId;
+  final String? assigneeName;
   final String? localUrl;
-  final String? type;
-  final String? userName;
-  final int? starredAt;
-  final String? channelName;
-  final Map<String, dynamic>? content;
-  final dynamic priority;
-  final int? sorting;
-  final dynamic originUpdatedAt;
   final String? createdAt;
   final String? updatedAt;
-  final dynamic deletedAt;
-  final String? globalUpdatedAt;
-  final String? globalCreatedAt;
-  final String? remoteUpdatedAt;
-  final bool? updated;
-  final Map<String, dynamic>? taskData;
-  final Map<String, dynamic>? doc;
+
+  final String? taskId;
+  final String? parentTaskId;
+  final String? teamId;
+  final String? teamName;
+  final String? spaceId;
+  final String? spaceName;
+  final String? folderId;
+  final String? listId;
+  final String? listName;
+  final String? folderName;
+  final String? parentTaskName;
+
+  final String? connectorId;
+  final String? originId;
+
+  final String? issueTypeName;
+
+  final String? type;
+  final String? userImage;
+  final String? userName;
+  final int? starredAt;
+  final String? channel;
+  final String? channelName;
+  final String? messageTimestamp;
+
+  final String? dueDate;
+  final String? dueDateTime;
+  final bool? isRecurring;
+  final String? string;
+  final String? timezone;
+  final String? lang;
+  final String? parentId;
+  final String? parentTaskTitle;
+
+  final String? id;
+  final String? desc;
+  final String? dateLastActivity;
+  final String? dueComplete;
+  final String? boardId;
+  final String? boardName;
+  final String? due;
 
   factory Doc.fromMap(Map<String, dynamic> json) => Doc(
-        id: json['id'] as String?,
-        taskId: json['task_id'] as String?,
-        hash: json['hash'] as String?,
-        connectorId: json['connector_id'] as String?,
-        originId: json['origin_id'] as String?,
-        accountId: json['account_id'] as String?,
-        originAccountId: json['origin_account_id'] as String?,
-        title: json['title'] as String?,
-        messageId: json['message_id'] as String?,
-        threadId: json['thread_id'] as String?,
+        url: json['url'] as String?,
         from: json['from'] as String?,
         subject: json['subject'] as String?,
         internalDate: json['internal_date'] as String?,
-        description: json['description'] as dynamic,
-        searchText: json['search_text'] as String?,
-        icon: json['icon'] as dynamic,
-        url: json['url'] as String?,
+        messageId: json['message_id'] as String?,
+        threadId: json['thread_id'] as String?,
+        hash: json['hash'] as String?,
+        accountId: json['account_id'] as String?,
+        workspaceId: json['workspaceID'] as String?,
+        workspaceName: json['workspace_name'] as String?,
+        projectId: json['project_id'] as String?,
+        projectName: json['project_name'] as String?,
+        sectionId: json['section_id'] as String?,
+        sectionName: json['section_name'] as String?,
+        assigneeId: json['assignee_id'] as String?,
+        assigneeName: json['assignee_name'] as String?,
         localUrl: json['local_url'] as String?,
-        type: json['type'] as String?,
-        userName: json['user_name'] as String?,
-        starredAt: json['starred_at'] as int?,
-        channelName: json['channel_name'] as String?,
-        content: json['content'] as Map<String, dynamic>?,
-        priority: json['priority'] as dynamic,
-        sorting: json['sorting'] as int?,
-        originUpdatedAt: json['origin_updated_at'] as dynamic,
         createdAt: json['created_at'] as String?,
         updatedAt: json['updated_at'] as String?,
-        deletedAt: json['deleted_at'] as dynamic,
-        globalUpdatedAt: json['global_updated_at'] as String?,
-        globalCreatedAt: json['global_created_at'] as String?,
-        remoteUpdatedAt: json['remote_updated_at'] as String?,
-        updated: json['updated'] as bool?,
-        taskData: json['taskData'] as Map<String, dynamic>?,
-        doc: json['doc'] as Map<String, dynamic>?,
+        taskId: json['task_id'] as String?,
+        parentTaskId: json['parent_task_id'] as String?,
+        parentTaskName: json['url'] as String?,
+        teamId: json['team_id'] as String?,
+        teamName: json['team_name'] as String?,
+        spaceId: json['space_id'] as String?,
+        spaceName: json['space_name'] as String?,
+        folderId: json['folder_id'] as String?,
+        folderName: json['folder_name'] as String?,
+        listId: json['list_id'] as String?,
+        listName: json['list_name'] as String?,
+        issueTypeName: json['issue_type_name'] as String?,
+        userImage: json['user_image'] as String?,
+        userName: json['user_name'] as String?,
+        starredAt: json['starred_at'] as int?,
+        channel: json['channel'] as String?,
+        channelName: json['channel_name'] as String?,
+        messageTimestamp: json['message_timestamp'] as String?,
+        dueDate: json['due_date'] as String?,
+        dueDateTime: json['due_date_time'] as String?,
+        isRecurring: json['is_recurring'] as bool?,
+        string: json['string'] as String?,
+        timezone: json['timezone'] as String?,
+        lang: json['lang'] as String?,
+        parentTaskTitle: json['parent_task_title'] as String?,
+        desc: json['desc'] as String?,
+        dateLastActivity: json['date_last_activity'] as String?,
+        dueComplete: json['due_complete'] as String?,
+        due: json['due'] as String?,
+        boardId: json['board_id'] as String?,
+        boardName: json['board_name'] as String?,
+        id: json['id'] as String?,
       );
 
   @override
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'task_id': taskId,
-        'connector_id': connectorId,
-        'origin_id': originId,
-        'account_id': accountId,
-        'hash': hash,
-        'origin_account_id': originAccountId,
-        'title': title,
+        'url': url,
+        'from': from,
+        'subject': subject,
+        'internal_date': internalDate,
         'message_id': messageId,
         'thread_id': threadId,
-        'description': description,
-        'search_text': searchText,
-        'icon': icon,
-        'url': url,
-        "from": from,
-        "subject": subject,
-        "internal_date": internalDate,
-        'local_url': localUrl,
+        'hash': hash,
+        'account_id': accountId,
+        'workspace_id': workspaceId,
+        'workspace_name': workspaceName,
+        'project_id': projectId,
+        'project_name': projectName,
+        'section_id': sectionId,
+        'section_name': sectionName,
+        'assignee_id': assigneeId,
+        'assignee_name': assigneeName,
+        'task_id': taskId,
+        'parent_task_id': parentTaskId,
+        'parent_task_name': parentTaskName,
+        'team_id': teamId,
+        'team_name': teamName,
+        'space_id': spaceId,
+        'space_name': spaceName,
+        'folder_id': folderId,
+        'folder_name': folderName,
+        'list_id': listId,
+        'list_name': listName,
+        'issue_type_name': issueTypeName,
         'type': type,
-        'user_name':userName,
-        'starred_at':starredAt,
-        'channel_name':channelName,
-        'content': content,
-        'priority': priority,
-        'sorting': sorting,
-        'origin_updated_at': originUpdatedAt,
+        'user_image': userImage,
+        'user_name': userName,
+        'starred_at': starredAt,
+        'channel': channel,
+        'channel_name': channelName,
+        'message_timestamp': messageTimestamp,
+        'due_date': dueDate,
+        'due_date_time': dueDateTime,
+        'is_recurring': isRecurring,
+        'string': string,
+        'timezone': timezone,
+        'lang': lang,
+        'parent_id': parentId,
+        'parent_task_title': parentTaskTitle,
+        'id': id,
+        'desc': desc,
+        'date_last_activity': dateLastActivity,
+        'due_complete': dueComplete,
+        'due': due,
+        'board_id': boardId,
+        'board_name': boardName,
+        'connector_id': connectorId,
+        'origin_id': originId,
+        'local_url': localUrl,
         'created_at': createdAt,
-        'updated_at': updatedAt,
-        'deleted_at': deletedAt,
-        'global_updated_at': globalUpdatedAt,
-        'global_created_at': globalCreatedAt,
-        'remote_updated_at': remoteUpdatedAt,
-        'updated': updated,
-        'taskData': taskData,
-        'doc': doc,
+        'updated_at': createdAt,
       }..removeWhere((key, value) => value == null);
-
-  Doc copyWith({
-    String? id,
-    String? taskId,
-    String? connectorId,
-    String? originId,
-    String? accountId,
-    String? originAccountId,
-    String? title,
-    dynamic description,
-    String? hash,
-    String? searchText,
-    String? from,
-    String? subject,
-    String? internalDate,
-    String? messageId,
-    String? threadId,
-    dynamic icon,
-    String? url,
-    String? localUrl,
-    String? type,
-    String? userName,
-    int? starredAt,
-    String? channelName,
-    Map<String, dynamic>? content,
-    dynamic priority,
-    int? sorting,
-    dynamic originUpdatedAt,
-    String? createdAt,
-    Nullable<String?>? updatedAt,
-    Nullable<String?>? remoteUpdatedAt,
-    dynamic deletedAt,
-    String? globalUpdatedAt,
-    String? globalCreatedAt,
-    bool? updated,
-    Map<String, dynamic>? taskData,
-    Map<String, dynamic>? doc,
-  }) {
-    return Doc(
-      id: id ?? this.id,
-      taskId: taskId ?? this.taskId,
-      connectorId: connectorId ?? this.connectorId,
-      originId: originId ?? this.originId,
-      accountId: accountId ?? this.accountId,
-      from: from ?? this.from,
-      subject: subject ?? this.subject,
-      internalDate: internalDate ?? this.internalDate,
-      originAccountId: originAccountId ?? this.originAccountId,
-      title: title ?? this.title,
-      messageId: messageId ?? this.messageId,
-      hash: hash ?? this.hash,
-      threadId: threadId ?? this.threadId,
-      description: description ?? this.description,
-      searchText: searchText ?? this.searchText,
-      icon: icon ?? this.icon,
-      url: url ?? this.url,
-      localUrl: localUrl ?? this.localUrl,
-      type: type ?? this.type,
-      userName: userName ?? this.userName,
-      starredAt: starredAt ?? this.starredAt,
-      channelName: channelName ?? this.channelName,
-      content: content ?? this.content,
-      priority: priority ?? this.priority,
-      sorting: sorting ?? this.sorting,
-      originUpdatedAt: originUpdatedAt ?? this.originUpdatedAt,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
-      deletedAt: deletedAt ?? this.deletedAt,
-      globalUpdatedAt: globalUpdatedAt ?? this.globalUpdatedAt,
-      globalCreatedAt: globalCreatedAt ?? this.globalCreatedAt,
-      updated: updated ?? this.updated,
-      taskData: taskData ?? this.taskData,
-      doc: doc ?? this.doc,
-    );
-  }
 
   @override
   Map<String, Object?> toSql() {
-    return {
-      "id": id,
-      "task_id": taskId,
-      "connector_id": connectorId,
-      "title": title,
-      "description": description,
-      "hash": hash,
-      "from": from,
-      "subject": subject,
-      "internal_date": internalDate,
-      "origin_id": originId,
-      "message_id": messageId,
-      "thread_id": threadId,
-      "account_id": accountId,
-      "icon": icon,
-      "url": url,
-      "local_url": localUrl,
-      "type": type,
-      "user_name":userName,
-      "starred_at":starredAt,
-      "channel_name":channelName,
-      "updated_at": globalUpdatedAt,
-      "created_at": globalCreatedAt,
-      "deleted_at": deletedAt,
-      "remote_updated_at": globalUpdatedAt,
-      "content": content != null ? jsonEncode(content) : null,
-    };
+    return {};
   }
 
   static Doc fromSql(Map<String, dynamic> json) {
     Map<String, dynamic>? copy = Map<String, dynamic>.from(json);
-
-    try {
-      copy['content'] = jsonDecode(json['content'] as String) as Map<String, dynamic>?;
-    } catch (_) {}
-
     return Doc.fromMap(copy);
   }
 
   @override
   List<Object?> get props {
     return [
-      id,
-      taskId,
-      connectorId,
-      originId,
-      accountId,
-      originAccountId,
-      hash,
+      url,
+      from,
+      subject,
+      internalDate,
       messageId,
       threadId,
-      title,
-      description,
-      searchText,
-      icon,
-      url,
-      localUrl,
-      subject,
-      from,
-      internalDate,
       hash,
+      accountId,
+      workspaceId,
+      workspaceName,
+      projectId,
+      projectName,
+      sectionId,
+      sectionName,
+      assigneeId,
+      assigneeName,
+      taskId,
+      parentTaskId,
+      parentTaskName,
+      teamId,
+      teamName,
+      spaceId,
+      spaceName,
+      folderId,
+      folderName,
+      listId,
+      listName,
+      issueTypeName,
+      type,
+      userImage,
       userName,
       starredAt,
+      channel,
       channelName,
-      type,
-      content,
-      priority,
-      sorting,
-      originUpdatedAt,
+      messageTimestamp,
+      dueDate,
+      isRecurring,
+      string,
+      timezone,
+      lang,
+      parentId,
+      parentTaskTitle,
+      id,
+      desc,
+      dateLastActivity,
+      dueComplete,
+      due,
+      boardId,
+      boardName,
+      connectorId,
+      originId,
+      localUrl,
       createdAt,
-      updatedAt,
-      deletedAt,
-      globalUpdatedAt,
-      globalCreatedAt,
-      remoteUpdatedAt,
-      updated,
-      taskData,
+      createdAt,
     ];
   }
 
   @override
   String get getSummary {
-    if (description != null && description!.isNotEmpty) {
-      return description!;
-    }
-
     return url ?? '';
   }
 

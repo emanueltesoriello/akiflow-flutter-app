@@ -3,50 +3,41 @@ import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
 class TodoistDoc extends Doc implements DocBase {
-  TodoistDoc(Doc doc)
+  final String? title;
+  TodoistDoc(Doc doc, this.title)
       : super(
-          id: doc.id,
-          taskId: doc.taskId,
-          title: doc.title,
-          description: doc.description,
-          connectorId: doc.connectorId,
-          originId: doc.originId,
-          accountId: doc.accountId,
-          url: doc.url,
-          localUrl: doc.localUrl,
-          type: doc.type,
-          icon: doc.icon,
-          createdAt: doc.createdAt,
-          updatedAt: doc.updatedAt,
-          deletedAt: doc.deletedAt,
-          globalUpdatedAt: doc.globalUpdatedAt,
-          globalCreatedAt: doc.globalCreatedAt,
-          remoteUpdatedAt: doc.remoteUpdatedAt,
-          content: doc.content,
-        );
+            url: doc.url,
+            localUrl: doc.localUrl,
+            dueDate: doc.dueDate,
+            dueDateTime: doc.dueDateTime,
+            projectId: doc.projectId,
+            projectName: doc.projectName,
+            isRecurring: doc.isRecurring,
+            string: doc.string,
+            timezone: doc.timezone,
+            lang: doc.lang,
+            parentId: doc.parentId,
+            parentTaskTitle: doc.parentTaskTitle);
 
   @override
   String get getSummary {
-    return content?["parentTaskTitle"] ??
-        content?["projectName"] ??
-        content?["project_name"] ??
-        super.getSummary;
+    return parentTaskTitle ?? projectName ?? super.getSummary;
   }
 
   @override
   String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
 
-    if (content?["projectName"] != null && content?["projectName"] != '') {
-      summaryPieces.add(content?["projectName"]);
+    if (projectName != null && projectName!.isNotEmpty) {
+      summaryPieces.add(projectName);
     }
 
     if (title != null && title != '') {
       summaryPieces.add(title);
     }
 
-    if (content?["title"] != null && content?["title"] != '') {
-      summaryPieces.add(content?["title"]);
+    if (title != null && title!.isNotEmpty) {
+      summaryPieces.add(title);
     }
 
     return summaryPieces.join(' - ');

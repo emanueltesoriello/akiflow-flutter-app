@@ -280,7 +280,7 @@ class Task extends Equatable implements Base {
       "origin_id": originId?.value,
       "origin_account_id": originAccountId?.value,
       "akiflow_account_id": akiflowAccountId,
-      "doc": doc != null ? jsonEncode(doc?.value?.toSql()) : null,
+      "doc": doc != null ? jsonEncode(doc?.value?.toMap()) : null,
     };
   }
 

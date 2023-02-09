@@ -3,42 +3,40 @@ import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
 class ClickupDoc extends Doc implements DocBase {
-  ClickupDoc(Doc doc)
+  final String? title;
+  ClickupDoc(Doc doc, this.title)
       : super(
-          id: doc.id,
           taskId: doc.taskId,
-          title: doc.title,
-          description: doc.description,
-          connectorId: doc.connectorId,
-          originId: doc.originId,
-          accountId: doc.accountId,
+          parentTaskId: doc.parentTaskId,
+          parentTaskName: doc.parentTaskName,
+          teamId: doc.teamId,
+          teamName: doc.teamName,
+          spaceId: doc.spaceId,
+          spaceName: doc.spaceName,
+          folderId: doc.folderId,
+          folderName: doc.folderName,
+          listId: doc.listId,
+          listName: doc.listName,
           url: doc.url,
           localUrl: doc.localUrl,
-          type: doc.type,
-          icon: doc.icon,
           createdAt: doc.createdAt,
           updatedAt: doc.updatedAt,
-          deletedAt: doc.deletedAt,
-          globalUpdatedAt: doc.globalUpdatedAt,
-          globalCreatedAt: doc.globalCreatedAt,
-          remoteUpdatedAt: doc.remoteUpdatedAt,
-          content: doc.content,
         );
 
   @override
   String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
-    if (content?["teamName"] != null && content?["teamName"] != '') {
-      summaryPieces.add(content?["teamName"]);
+    if (teamName != null && teamName!.isNotEmpty) {
+      summaryPieces.add(teamName);
     }
-    if (content?["spaceName"] != null && content?["spaceName"] != '') {
-      summaryPieces.add(content?["spaceName"]);
+    if (spaceName != null && spaceName!.isNotEmpty) {
+      summaryPieces.add(spaceName);
     }
-    if (content?["folderName"] != null && content?["folderName"] != '') {
-      summaryPieces.add(content?["folderName"]);
+    if (folderName != null && folderName!.isNotEmpty) {
+      summaryPieces.add(folderName);
     }
-    if (content?["listName"] != null && content?["listName"] != '') {
-      summaryPieces.add(content?["listName"]);
+    if (listName != null && listName!.isNotEmpty) {
+      summaryPieces.add(listName);
     }
     if (title != null && title != '') {
       summaryPieces.add(title);
@@ -48,7 +46,6 @@ class ClickupDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return (content?["parentTaskTitle"] ?? content?["listName"]) ??
-        super.getSummary;
+    return parentTaskTitle ?? listName ?? super.getSummary;
   }
 }

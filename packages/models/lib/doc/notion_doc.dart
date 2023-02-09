@@ -3,34 +3,23 @@ import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
 class NotionDoc extends Doc implements DocBase {
-  NotionDoc(Doc doc)
+  final String? title;
+  NotionDoc(Doc doc, this.title)
       : super(
-          id: doc.id,
-          taskId: doc.taskId,
-          title: doc.title,
-          description: doc.description,
-          connectorId: doc.connectorId,
-          originId: doc.originId,
-          accountId: doc.accountId,
           url: doc.url,
           localUrl: doc.localUrl,
-          type: doc.type,
-          icon: doc.icon,
+          workspaceId: doc.workspaceId,
+          workspaceName: doc.workspaceName,
           createdAt: doc.createdAt,
           updatedAt: doc.updatedAt,
-          deletedAt: doc.deletedAt,
-          globalUpdatedAt: doc.globalUpdatedAt,
-          globalCreatedAt: doc.globalCreatedAt,
-          remoteUpdatedAt: doc.remoteUpdatedAt,
-          content: doc.content,
         );
   @override
   String getLinkedContentSummary([Account? account]) {
-    return content?["workspaceName"] ?? '';
+    return workspaceName ?? '';
   }
 
   @override
   String get getSummary {
-    return content?["workspaceName"] ?? super.getSummary;
+    return workspaceName ?? super.getSummary;
   }
 }

@@ -719,7 +719,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       switch (gmailMarkAsDoneType) {
         case GmailMarkAsDoneType.unstarTheEmail:
           docActions.add(GmailDocAction(
-            doc: task.doc!.value!,
             markAsDoneType: GmailMarkAsDoneType.unstarTheEmail,
             task: task,
             account: account,
@@ -727,7 +726,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
           break;
         case GmailMarkAsDoneType.goToGmail:
           docActions.add(GmailDocAction(
-            doc: task.doc!.value!,
             markAsDoneType: GmailMarkAsDoneType.goToGmail,
             task: task,
             account: account,
@@ -735,7 +733,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
           break;
         case GmailMarkAsDoneType.askMeEveryTime:
           docActions.add(GmailDocAction(
-            doc: task.doc!.value!,
             markAsDoneType: GmailMarkAsDoneType.askMeEveryTime,
             task: task,
             account: account,
@@ -757,7 +754,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         break;
       case GmailMarkAsDoneType.goToGmail:
         for (GmailDocAction docAction in docActions) {
-          await launchUrl(Uri.parse(docAction.doc.url!), mode: LaunchMode.externalApplication);
+          await launchUrl(Uri.parse(docAction.task.doc!.value!.url!), mode: LaunchMode.externalApplication);
         }
         break;
       case GmailMarkAsDoneType.askMeEveryTime:
@@ -771,13 +768,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> unstarGmail(GmailDocAction action) async {
     Account account = action.account;
-    Doc doc = action.doc.copyWith(originId: action.task.originId!.value);
     AccountToken? accountToken =
         _preferencesRepository.getAccountToken(account.accountId!.replaceAll("google", "gmail"))!;
 
     GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {});
 
-    await gmailApi.unstar(doc);
+    await gmailApi.unstar(action.task.doc!.value!);
   }
 
   Future<void> goToGmail(Doc doc) async {

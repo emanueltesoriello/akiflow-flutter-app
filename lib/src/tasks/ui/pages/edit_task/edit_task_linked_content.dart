@@ -24,9 +24,10 @@ class EditTaskLinkedContent extends StatelessWidget {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         Task task = state.updatedTask;
-        Doc? doc = task.computedDoc(context.watch<TasksCubit>().state.docs.firstWhereOrNull(
-              (doc) => doc.taskId == task.id,
-            ));
+        Doc? doc;
+        if (task.doc?.value != null) {
+          doc = task.computedDoc(task.doc!.value);
+        }
         print(task.toSql());
         if (doc == null) {
           return const SizedBox();
@@ -34,14 +35,14 @@ class EditTaskLinkedContent extends StatelessWidget {
 
         return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, integrations) {
           Account? account =
-              integrations.accounts.firstWhereOrNull((element) => element.connectorId == doc.connectorId);
-          print(doc.url ?? '');
+              integrations.accounts.firstWhereOrNull((element) => element.connectorId == doc?.connectorId);
+          print(doc?.url ?? '');
 
           return InkWell(
             onTap: () {
               showCupertinoModalBottomSheet(
                 context: context,
-                builder: (context) => LinkedContentModal(task: task, doc: doc, account: account),
+                builder: (context) => LinkedContentModal(task: task, doc: doc!, account: account),
               );
             },
             child: Column(
@@ -66,7 +67,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  doc.getSummary.parseHtmlString ?? doc.url ?? '',
+                                  doc?.getLinkedContentSummary().parseHtmlString ?? doc?.url ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
