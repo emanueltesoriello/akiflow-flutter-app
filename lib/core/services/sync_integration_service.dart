@@ -74,6 +74,7 @@ class SyncIntegrationService {
         throw ApiException({"message": "Server Error", "errors": []});
       }
     }
+    return null;
   }
 
   void addBreadcrumb(String message) {

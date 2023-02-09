@@ -2,13 +2,13 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 0.32.1+219
+version: 0.33.1+227
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
 
-dependencies:
-  async: ^2.9.0
+dependencies: 
+  async: ^2.9.0 
   equatable: ^2.0.3
   flutter:
     sdk: flutter
@@ -53,6 +53,8 @@ dependencies:
   firebase_messaging: ^14.2.1
   firebase_core: ^2.4.1
   flutter_displaymode: ^0.5.0
+  google_mlkit_entity_extraction: ^0.6.0
+  extended_text_field: ^10.2.0
 
   
 dev_dependencies:
@@ -64,7 +66,7 @@ flutter_native_splash:
   color: "#FAFBFD"
   image: "assets/images/akiflow_icon.png"
   android: true
-  ios: true 
+  ios: true
 
 flutter_icons:
   android: false # update from android assets directly (flutter_icons padding issue)

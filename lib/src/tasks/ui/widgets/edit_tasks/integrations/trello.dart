@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/extensions/doc_extension.dart';
 import 'package:models/doc/doc.dart';
+import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
 class TrelloLinkedContent extends StatelessWidget {
@@ -18,18 +19,11 @@ class TrelloLinkedContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(doc.toSql());
     return Column(
       children: [
-        itemBuilder(
-          context,
-          title: t.linkedContent.board,
-          value: doc.content?["boardName"] ?? '',
-        ),
-        itemBuilder(
-          context,
-          title: t.linkedContent.list,
-          value: doc.content?["listName"] ?? '',
-        ),
+        itemBuilder(context, title: t.linkedContent.board, value: doc.boardName),
+        itemBuilder(context, title: t.linkedContent.list, value: doc.listName),
         itemBuilder(
           context,
           title: t.linkedContent.title,

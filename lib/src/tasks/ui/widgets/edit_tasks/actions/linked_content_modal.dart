@@ -98,7 +98,7 @@ class LinkedContentModal extends StatelessWidget {
                             } else if (doc is TodoistDoc) {
                               return TodoistLinkedContent(task: task, doc: doc as TodoistDoc, itemBuilder: _item);
                             } else if (doc is TrelloDoc) {
-                              return TrelloLinkedContent(doc: doc, task: task, itemBuilder: _item);
+                              return TrelloLinkedContent(doc: doc , task: task, itemBuilder: _item);
                             } else if (doc is ClickupDoc) {
                               return ClickupLinkedContent(doc: doc as ClickupDoc, task: task, itemBuilder: _item);
                             } else if (doc is NotionDoc) {

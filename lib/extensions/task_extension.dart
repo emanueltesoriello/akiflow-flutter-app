@@ -735,6 +735,8 @@ extension TaskExt on Task {
       originId: task.originId?.value,
       accountId: task.originAccountId?.value,
       url: task.doc?.value?.url,
+      boardName: task.doc?.value?.boardName,
+      listName: task.doc?.value?.listName,
       localUrl: task.doc?.value?.localUrl,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
