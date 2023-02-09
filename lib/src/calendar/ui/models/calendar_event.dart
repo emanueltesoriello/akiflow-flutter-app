@@ -56,7 +56,7 @@ class CalendarEvent extends Appointment {
       }
     }
 
-    if (event.deletedAt != null) {
+    if (event.deletedAt != null || (event.status != null && event.status == 'cancelled')) {
       return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
     }
 
