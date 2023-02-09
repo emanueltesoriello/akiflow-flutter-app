@@ -7,8 +7,8 @@ version: 0.33.1+227
 environment:
   sdk: ">=2.18.0 <3.0.0"
 
-dependencies:
-  async: ^2.9.0
+dependencies: 
+  async: ^2.9.0 
   equatable: ^2.0.3
   flutter:
     sdk: flutter

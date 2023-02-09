@@ -125,8 +125,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksCubit.refreshAllFromRepository();
 
       AnalyticsService.track("New Task");
-
-      //await _syncCubit.sync(entities: [Entity.tasks]);
     } catch (e) {
       print(e.toString());
     }
@@ -285,27 +283,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  onPriorityDetected(int priority, String value) {
-    simpleTitleController.text = simpleTitleController.text + priority.toString();
-
-    Color bg = priority == 1
-        ? ColorsLight.red.withOpacity(0.2)
-        : priority == 2
-            ? ColorsLight.orange.withOpacity(0.2)
-            : ColorsLight.green.withOpacity(0.2);
-
-    if (simpleTitleController.hasParsedPriority() && !simpleTitleController.isRemoved(value)) {
-      simpleTitleController.removeMapping(2);
-      simpleTitleController.addMapping({
-        "!$priority": MapType(2, TextStyle(backgroundColor: bg)),
-      });
-    } else if (!simpleTitleController.isRemoved(value)) {
-      simpleTitleController.addMapping({
-        "!$priority": MapType(2, TextStyle(backgroundColor: bg)),
-      });
-    }
-  }
-
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
       listId: Nullable(label.id),
@@ -416,9 +393,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void setPriority(PriorityEnum? priority, {int? value, bool fromModal = true}) {
-    if (state.openedPrirorityfromNLP && fromModal == true) {
-      onPriorityDetected(priority?.value ?? value ?? 0, PriorityEnum.fromValue(priority?.value ?? value).name);
-    }
     Task updated = state.updatedTask.copyWith(
       priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
@@ -658,25 +632,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
     emit(state.copyWith(updatedTask: updated));
-    /*bool showDuration = value.contains("=") &&
-        (recognized?.where((element) => element.contains("=")).isEmpty ?? true) &&
-        (mapping?.keys.where((element) => element.contains("=")).isEmpty ?? true);
-    bool showLabelsList = value.contains("#") &&
-        (recognized?.where((element) => element.contains("#")).isEmpty ?? true) &&
-        (mapping?.keys.where((element) => element.contains("#")).isEmpty ?? true);
-    bool showPriority = (state.updatedTask.priority == null || state.updatedTask.priority == 0) &&
-        value.contains("!") &&
-        (recognized?.where((element) => element.contains("!")).isEmpty ?? true) &&
-        (mapping?.keys.where((element) => element.contains("!")).isEmpty ?? true);
-    if (showDuration) {
-      toggleDuration(openedFromNLP: true);
-    }
-    if (showLabelsList) {
-      toggleLabels(openedFromNLP: true);
-    }
-    if (showPriority) {
-      toggleImportance(openedFromNLP: true);
-    }*/
 
     if (mapping != null) {
       List<MapEntry<String, MapType>> mappings = mapping.entries.toList();
@@ -686,20 +641,34 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
           if (value.contains(map.key) == false) {
             planFor(null, statusType: TaskStatusType.inbox);
           }
-        } /*else if (map.value.type == 1) {
-          if (value.contains("#") == false) {
-            removeLabel();
-          }
-        } else if (map.value.type == 2) {
-          if (value.contains("!") == false) {
-            removePriority();
-          }
-        } else if (map.value.type == 3) {
-          if (value.contains("=") == false) {
-            setDuration(0);
-          }
-        }*/
+        }
       }
+    }
+  }
+
+  onDateDetected(BuildContext context, DateTimeEntity detected, String value, int start, int end) {
+    if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(0);
+      simpleTitleController.addMapping({
+        value: MapType(
+            0,
+            TextStyle(
+              color: ColorsExt.akiflow20(context),
+            )),
+      });
+
+      print(detected.timestamp);
+
+      planWithNLP(detected.timestamp);
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        value: MapType(
+            0,
+            TextStyle(
+              color: ColorsExt.akiflow20(context),
+            )),
+      });
+      planWithNLP(detected.timestamp);
     }
   }
 

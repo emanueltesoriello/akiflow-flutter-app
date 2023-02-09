@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
-import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:models/label/label.dart';
 
 import '../../../../../common/style/colors.dart';
@@ -61,32 +59,6 @@ class TitleField extends StatelessWidget {
             },
             onChanged: (String value) async {
               onChanged(value);
-              /*if (value.contains('#')) {
-                final i = value.lastIndexOf('#');
-                String text = value.substring(i + 1).split(' ')[0].toLowerCase();
-                List<Label> labelList = labels.where((element) => element.title?.toLowerCase() == text).toList();
-                if (labelList.isNotEmpty) {
-                  onLabelDetected!(labelList.first, text);
-                }
-              }
-              if (value.contains(' !')) {
-                final i = value.lastIndexOf('!');
-                String text = value.substring(i + 1).split(' ')[0];
-
-                int? number = int.tryParse(text);
-                if (number != null) {
-                  onPriorityDetected!(number, text);
-                }
-              }
-              if (value.contains('=')) {
-                final i = value.lastIndexOf('=');
-                String text = value.substring(i + 1).split(' ')[0];
-
-                Duration? duration = parseDuration(text);
-                if (duration != null) {
-                  onDurationDetected!(duration, text);
-                }
-              }*/
               if (value.isNotEmpty) {
                 final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
                 if (result.isNotEmpty) {
@@ -96,15 +68,6 @@ class TitleField extends StatelessWidget {
               } else {
                 stylableController.removeMapping(0);
               }
-              /*if (value.isNotEmpty) {
-                final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
-                if (result.isNotEmpty) {
-                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
-                      result.last.end);
-                }
-              } else {
-                stylableController.removeMapping(0);
-              }*/
             },
             style: TextStyle(
               color: ColorsExt.grey2(context),
@@ -113,21 +76,5 @@ class TitleField extends StatelessWidget {
             ),
           );
         });
-  }
-
-  Duration? parseDuration(String s) {
-    int? hours = 0;
-    int? minutes = 0;
-    List<String> parts = s.split(':');
-    if (parts.length > 1) {
-      hours = int.tryParse(parts[parts.length - 2]);
-    }
-    if (parts.isNotEmpty) {
-      minutes = int.tryParse(parts[parts.length - 1]);
-    }
-    if (hours != null || minutes != null) {
-      return Duration(hours: hours ?? 0, minutes: minutes ?? 0, microseconds: 0);
-    }
-    return null;
   }
 }
