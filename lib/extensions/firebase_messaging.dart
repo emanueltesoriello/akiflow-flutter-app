@@ -49,8 +49,6 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
       description: "channel.description",
     );
     onNotificationsReceived(message, flutterLocalNotificationsPlugin, channel);
-
-    //await Eraser.clearAllAppNotifications();
     return;
   } catch (e) {
     print(e);
