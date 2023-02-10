@@ -1,19 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobile/core/services/background_service.dart';
 
 onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
     AndroidNotificationChannel channel) {
   print("onMessage: ${message.notification?.title ?? ''}");
   final notification = message.notification;
+  bool haveToSync = message.data["notification_type"] == "trigger_sync";
   // If `onMessage` is triggered with a notification, construct our own
   // local notification to show to users using the created channel.
-  if (notification == null) {
-    print('test yuppieee');
+  if (notification == null && !haveToSync) {
     flutterLocalNotificationsPlugin.show(
         100,
-        "Silent notification!",
-        "Silent notification!",
+        "This should be a silent notification!",
+        "But Emanuel forced the shown :)",
         NotificationDetails(
           android: AndroidNotificationDetails(
             channel.id,
@@ -22,7 +23,7 @@ onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin f
             // other properties...
           ),
         ));
-  } else if (notification != null /*&& Platform.isAndroid*/) {
+  } else if (notification != null && !haveToSync /*&& Platform.isAndroid*/) {
     flutterLocalNotificationsPlugin.show(
         100,
         notification.title,
@@ -35,6 +36,8 @@ onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin f
             // other properties...
           ),
         ));
+  } else if (haveToSync) {
+    backgroundProcesses("backgroundSyncFromNotification");
   }
 }
 

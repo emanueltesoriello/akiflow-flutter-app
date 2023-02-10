@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
@@ -29,6 +30,9 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          FutureBuilder(
+              future: FirebaseMessaging.instance.getToken(),
+              builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
           ButtonList(
             title: t.settings.myAccount.title,
             position: ButtonListPosition.single,
