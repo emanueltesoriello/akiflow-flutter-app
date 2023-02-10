@@ -431,8 +431,6 @@ class Event extends Equatable implements Base {
       data["content"] = jsonDecode(data["content"] as String);
     }
 
-    String eventId = data["id"] as String;
-    print('CONVERTING toMap EVENT WITH ID: $eventId');
     Event event = Event.fromMap(data);
 
     event = event.copyWith(recurrence: recurrenceList);

@@ -51,10 +51,12 @@ class DatabaseService {
           var batch = db.batch();
 
           if (oldVersion < 5) {
+            batch.execute('DROP TABLE IF EXISTS events');
+            _setupEvents(batch);
+
             batch.execute('ALTER TABLE calendars ADD COLUMN timezone VARCHAR(255)');
             batch.execute('ALTER TABLE calendars ADD COLUMN account_identifier VARCHAR(255)');
             batch.execute('ALTER TABLE calendars ADD COLUMN account_picture VARCHAR(255)');
-            batch.execute('ALTER TABLE events ADD COLUMN status VARCHAR(255)');
           }
           if (oldVersion < 4) {
             _setupAvailabilities(batch);
@@ -250,15 +252,15 @@ CREATE TABLE IF NOT EXISTS event_modifiers(
 CREATE TABLE IF NOT EXISTS events(
   `id` UUID PRIMARY KEY,
   `customorigin_id` VARCHAR(255),
-  `connector_id` VARCHAR(50),
+  `connector_id` VARCHAR(255),
   `account_id` VARCHAR(100),
   `akiflow_account_id` UUID,
-  `origin_id` VARCHAR(255),
+  `origin_id` VARCHAR(2048),
   `origin_account_id` VARCHAR(50),
   `origin_calendar_id` TEXT,
   `recurring_id` UUID,
-  `custom_origin_id` UUID,
-  `origin_recurring_id` VARCHAR(255),
+  `custom_origin_id` VARCHAR(2048),
+  `origin_recurring_id` VARCHAR(2048),
   `calendar_id` VARCHAR(255),
   `origincalendar_id` VARCHAR(255),
   `creator_id` VARCHAR(255),
@@ -282,10 +284,10 @@ CREATE TABLE IF NOT EXISTS events(
   `declined` INTEGER,
   `read_only` INTEGER,
   `hidden` INTEGER,
-  `url` VARCHAR(255),
+  `url` VARCHAR(2048),
   `meeting_status` VARCHAR(255),
-  `meeting_url` VARCHAR(255),
-  `meeting_icon` VARCHAR(255),
+  `meeting_url` VARCHAR(2048),
+  `meeting_icon` VARCHAR(2048),
   `meeting_solution` VARCHAR(100),
   `color` VARCHAR(10),
   `calendar_color` VARCHAR(10),
