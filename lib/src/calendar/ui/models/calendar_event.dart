@@ -65,7 +65,7 @@ class CalendarEvent extends Appointment {
     try {
       if (isRecurringParent && event.recurrence != null && event.recurrence!.isNotEmpty) {
         List<String> parts = event.recurrence!.first.replaceFirst('RRULE:', '').split(";");
-        formatedRrule = computeRrule(parts);
+        formatedRrule = computeRrule(parts, startTime);
       }
     } catch (e) {
       print(e);
@@ -90,7 +90,7 @@ class CalendarEvent extends Appointment {
     );
   }
 
-  static String? computeRrule(List<String> parts) {
+  static String? computeRrule(List<String> parts, DateTime startTime) {
     parts.removeWhere((part) => part.startsWith('WKST'));
 
     List<String> byDay = parts.where((part) => part.startsWith('BYDAY')).toList();
@@ -111,6 +111,36 @@ class CalendarEvent extends Appointment {
       String bySetPosString = bySetPos.join(',');
       if (bySetPosString.isNotEmpty) {
         parts.add('BYSETPOS=$bySetPosString');
+      }
+    } else {
+      int dayOfWeek = startTime.weekday;
+      String? day;
+      switch (dayOfWeek) {
+        case DateTime.monday:
+          day = "MO";
+          break;
+        case DateTime.tuesday:
+          day = "TU";
+          break;
+        case DateTime.wednesday:
+          day = "WE";
+          break;
+        case DateTime.thursday:
+          day = "TH";
+          break;
+        case DateTime.friday:
+          day = "FR";
+          break;
+        case DateTime.saturday:
+          day = "SA";
+          break;
+        case DateTime.sunday:
+          day = "SU";
+          break;
+        default:
+      }
+      if (day != null) {
+        parts.add('BYDAY=$day');
       }
     }
 
