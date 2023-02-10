@@ -32,6 +32,11 @@ class CalendarEvent extends Appointment {
   }) {
     DateTime startTime = DateTime(DateTime.now().year - 1, 2, 31);
     DateTime endTime = startTime;
+
+    if (event.deletedAt != null || (event.status != null && event.status == 'cancelled')) {
+      return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
+    }
+
     if (event.startTime != null && event.endTime != null) {
       startTime = DateTime.parse(event.startTime!).toLocal();
       endTime = DateTime.parse(event.endTime!).toLocal();
@@ -54,10 +59,6 @@ class CalendarEvent extends Appointment {
           }
         }
       }
-    }
-
-    if (event.deletedAt != null || (event.status != null && event.status == 'cancelled')) {
-      return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
     }
 
     String? formatedRrule;
