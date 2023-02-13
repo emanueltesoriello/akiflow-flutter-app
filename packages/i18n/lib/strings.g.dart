@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 258 
+ * Strings: 261 
  *
- * Built on 2023-01-16 at 09:23 UTC
+ * Built on 2023-02-13 at 12:42 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -537,6 +537,9 @@ class _StringsLinkedContentEn {
 	String get status => 'Status';
 	String get done => 'Done';
 	String get toDo => 'To do';
+	String get section => 'Section';
+	String get scheduledDate => 'Scheduled Date';
+	String get duration => 'Duration';
 }
 
 // Path: editTask
@@ -1079,6 +1082,9 @@ extension on _StringsEn {
 			'linkedContent.status': 'Status',
 			'linkedContent.done': 'Done',
 			'linkedContent.toDo': 'To do',
+			'linkedContent.section': 'Section',
+			'linkedContent.scheduledDate': 'Scheduled Date',
+			'linkedContent.duration': 'Duration',
 			'editTask.add': 'Add',
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.searchALabel': 'Search a label',

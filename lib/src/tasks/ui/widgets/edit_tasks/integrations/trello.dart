@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/extensions/doc_extension.dart';
+import 'package:intl/intl.dart';
 import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
@@ -33,14 +33,21 @@ class TrelloLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.title,
-          value: doc.title ?? '',
+          value: task.title ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.dueDate,
-          value: doc.dueFormatted,
+          value: dueFormatted,
         ),
       ],
     );
+  }
+
+  String? get dueFormatted {
+    if (doc.due != null) {
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(doc.due!).toLocal());
+    }
+    return '';
   }
 }

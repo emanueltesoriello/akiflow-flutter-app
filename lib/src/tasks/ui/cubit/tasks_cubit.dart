@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
@@ -11,7 +10,6 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -714,7 +712,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
 
       List<Account> accounts = await _accountsRepository.get();
-      Account account = accounts.firstWhere((a) => a.originAccountId == task.originAccountId!.value!);
+      Account account = accounts.firstWhere((a) => a.originAccountId == task.originAccountId?.value!);
 
       switch (gmailMarkAsDoneType) {
         case GmailMarkAsDoneType.unstarTheEmail:
@@ -773,10 +771,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {});
 
-    await gmailApi.unstar(action.task.doc!.value!);
+    await gmailApi.unstar(action.task.originId!.value!);
   }
 
-  Future<void> goToGmail(Doc doc) async {
-    await launchUrl(Uri.parse(doc.url!), mode: LaunchMode.externalApplication);
+  Future<void> goToGmail(String url) async {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:models/base.dart';
 import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
@@ -8,6 +7,7 @@ import 'package:models/task/task.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:convert/convert.dart';
+import 'package:uuid/uuid.dart';
 
 class RawListConvert {
   final List<dynamic> items;
@@ -216,8 +216,8 @@ generateMd5(String data) {
   return hex.encode(digest.bytes);
 }
 
-List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
-  List<Doc> result = [];
+List<Task> payloadFromGmailData(DocsFromGmailDataModel data) {
+  List<Task> result = [];
 
   for (GmailMessage messageContent in data.messages) {
     var doc = {
@@ -233,11 +233,13 @@ List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
 
     doc.addAll({"hash": hash});
 
-    result.add(Doc(
-      //TODO: change to partial task
-      connectorId: data.connectorId,
-      originId: messageContent.messageId,
-      subject: getTitleString(messageContent.subject),
+    result.add(Task(
+      id: const Uuid().v4(),
+      title: getTitleString(messageContent.subject),
+      connectorId: Nullable(data.connectorId),
+      originId: Nullable(messageContent.messageId),
+      originAccountId: Nullable(data.originAccountId),
+      doc: doc,
     ));
   }
   return result;

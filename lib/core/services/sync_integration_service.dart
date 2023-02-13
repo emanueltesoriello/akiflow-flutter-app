@@ -8,7 +8,6 @@ import 'package:mobile/core/exceptions/post_unsynced_exception.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/task/task.dart';
 
@@ -37,25 +36,25 @@ class SyncIntegrationService {
       email: params?['email'],
     );
 
-    List<Doc> docs = await compute(payloadFromGmailData, docsFromGmailDataModel);
+    List<Task> tasks = await compute(payloadFromGmailData, docsFromGmailDataModel);
 
-    List<Task> tasks = await _taskRpository.getAllDocs();
+    List<Task> tasksWithIntegration = await _taskRpository.getAllDocs();
 
-    List<Task> localGmailTasks = tasks.where((element) => element.doc?.value?.messageId != null).toList();
+    List<Task> localGmailTasks = tasksWithIntegration.where((element) => element.doc?["message_id"] != null).toList();
 
-    List<String?> localMessageIds = localGmailTasks
-        .where((element) => element.doc?.value?.messageId != null)
-        .map((e) => e.doc?.value?.messageId)
+    List localMessageIds = localGmailTasks
+        .where((element) => element.doc?["message_id"] != null)
+        .map((e) => e.doc?["message_id"])
         .toList();
 
-    List<Doc> newTasks =
-        docs.where((element) => localMessageIds.contains(element.messageId) == false).toList();
+    List<Task> newTasks =
+        tasks.where((element) => localMessageIds.contains(element.doc?["message_id"]) == false).toList();
 
-    if (docs.isEmpty) {
+    if (tasks.isEmpty) {
       return null;
     }
 
-    addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${docs.length} items");
+    addBreadcrumb("${integrationApi.runtimeType} posting to unsynced ${tasks.length} items");
     if (newTasks.isNotEmpty) {
       try {
         List<dynamic> updated = await _taskApi
@@ -71,7 +70,10 @@ class SyncIntegrationService {
 
         return DateTime.now();
       } catch (e) {
-        throw ApiException({"message": "Server Error", "errors": []});
+        throw ApiException({
+          "message": "${integrationApi.runtimeType} integration sync Error",
+          "errors": [e]
+        });
       }
     }
   }

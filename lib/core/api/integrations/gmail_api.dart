@@ -7,7 +7,6 @@ import 'package:mobile/core/api/integrations/integration_base_api.dart';
 import 'package:mobile/core/exceptions/integrations/gmail.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/extensions/account_ext.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:uuid/uuid.dart';
@@ -312,13 +311,13 @@ GET /gmail/v1/users/${account.identifier}/threads/$threadId?format=metadata&meta
     }
   }
 
-  Future<void> unstar(Doc doc) async {
+  Future<void> unstar(String originId) async {
     Uri uri;
 
     if (account.gmailSyncMode == GmailSyncMode.useAkiflowLabel) {
-      uri = Uri.parse("$endpoint/users/me/threads/${doc.originId}/modify");
+      uri = Uri.parse("$endpoint/users/me/threads/$originId/modify");
     } else {
-      uri = Uri.parse("$endpoint/users/me/messages/${doc.originId}/modify");
+      uri = Uri.parse("$endpoint/users/me/messages/$originId/modify");
     }
 
     String? labelId = account.details?['akiflowLabelId'];
@@ -333,10 +332,10 @@ GET /gmail/v1/users/${account.identifier}/threads/$threadId?format=metadata&meta
     Map<String, dynamic> data = jsonDecode(response.body);
 
     if (!data.containsKey("id") || data["id"] == null) {
-      throw GmailUnstarException("Unstar failed for doc ${doc.originId} account ${account.identifier}",
-          jsonEncode(requestBody), response.body);
+      throw GmailUnstarException(
+          "Unstar failed for doc $originId account ${account.identifier}", jsonEncode(requestBody), response.body);
     } else {
-      print("Unstar successful for doc ${doc.originId} result id ${data['id']}");
+      print("Unstar successful for doc $originId result id ${data['id']}");
     }
   }
 }

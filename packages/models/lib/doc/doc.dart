@@ -156,6 +156,7 @@ class Doc extends DocBase implements Base {
         listId: json['list_id'] as String?,
         listName: json['list_name'] as String?,
         issueTypeName: json['issue_type_name'] as String?,
+        type: json['type'] as String?,
         userImage: json['user_image'] as String?,
         userName: json['user_name'] as String?,
         starredAt: json['starred_at'] as int?,

@@ -19,7 +19,6 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurr
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/doc/gmail_doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
@@ -229,8 +228,8 @@ extension TaskExt on Task {
   String get internalDateFormatted {
     DateTime? internalDate;
 
-    if (doc?.value?.internalDate != null) {
-      int internalDateAsMilliseconds = int.parse(doc!.value!.internalDate!);
+    if (doc?.internalDate != null) {
+      int internalDateAsMilliseconds = int.parse(doc!.internalDate!);
       internalDate = DateTime.fromMillisecondsSinceEpoch(internalDateAsMilliseconds).toLocal();
     }
 
@@ -439,12 +438,11 @@ extension TaskExt on Task {
     return null;
   }
 
-  String computedIcon(Doc? doc) {
+  String computedIcon() {
     if (connectorId != null) {
       return iconFromConnectorId(connectorId?.value);
-    } else {
-      return iconFromConnectorId(doc?.connectorId);
     }
+    return '';
   }
 
   bool get isDailyGoal {
@@ -726,7 +724,7 @@ extension TaskExt on Task {
         updatedTask.listId != null;
   }
 
-  Doc? computedDoc(Doc? doc) {
+  dynamic computedDoc() {
     String? connectorId = this.connectorId?.value;
 
     if (connectorId == null) {
@@ -735,19 +733,19 @@ extension TaskExt on Task {
 
     switch (connectorId) {
       case "asana":
-        return AsanaDoc(doc!, title);
+        return AsanaDoc.fromMap(doc)..setTitle(title);
       case "clickup":
-        return ClickupDoc(doc!, title);
+        return ClickupDoc.fromMap(doc)..setTitle(title);
       case "gmail":
-        return GmailDoc(doc!, title);
+        return GmailDoc.fromMap(doc)..setTitle(title);
       case "notion":
-        return NotionDoc(doc!, title);
+        return NotionDoc.fromMap(doc)..setTitle(title);
       case "slack":
-        return SlackDoc(doc!);
+        return SlackDoc.fromMap(doc);
       case "todoist":
-        return TodoistDoc(doc!, title);
+        return TodoistDoc.fromMap(doc)..setTitle(title);
       case "trello":
-        return TrelloDoc(doc!, title);
+        return TrelloDoc.fromMap(doc)..setTitle(title);
       default:
         return null;
     }
@@ -797,8 +795,8 @@ extension TaskExt on Task {
     }
   }
 
-  Future<void> openLinkedContentUrl([Doc? doc]) async {
-    String? localUrl = doc?.localUrl;
+  Future<void> openLinkedContentUrl([dynamic doc]) async {
+    String? localUrl = doc is GmailDoc || doc is TrelloDoc ? doc.url : doc.localUrl;
 
     Uri uri = Uri.parse(localUrl ?? '');
 

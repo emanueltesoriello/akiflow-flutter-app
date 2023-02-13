@@ -1,19 +1,39 @@
 import 'package:models/account/account.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
-class SlackDoc extends Doc implements DocBase {
-  SlackDoc(Doc doc)
-      : super(
-            url: doc.url,
-            localUrl: doc.localUrl,
-            type: doc.type,
-            userImage: doc.userImage,
-            userName: doc.userName,
-            starredAt: doc.starredAt,
-            channel: doc.channel,
-            channelName: doc.channelName,
-            messageTimestamp: doc.messageTimestamp);
+class SlackDoc extends DocBase {
+  final String? url;
+  final String? localUrl;
+  final String? type;
+  final String? userImage;
+  final String? userName;
+  final int? starredAt;
+  final String? channel;
+  final String? channelName;
+  final String? messageTimestamp;
+
+  SlackDoc(
+      {this.url,
+      this.localUrl,
+      this.type,
+      this.userImage,
+      this.userName,
+      this.starredAt,
+      this.channel,
+      this.channelName,
+      this.messageTimestamp});
+
+  factory SlackDoc.fromMap(Map<String, dynamic> json) => SlackDoc(
+        url: json['url'] as String?,
+        localUrl: json['local_url'] as String?,
+        type: json['type'] as String?,
+        userImage: json['user_image'] as String?,
+        userName: json['user_name'] as String?,
+        starredAt: json['starred_at'] as int?,
+        channel: json['channel'] as String?,
+        channelName: json['channel_name'] as String?,
+        messageTimestamp: json['message_timestamp'] as String?,
+      );
 
   @override
   String getLinkedContentSummary([Account? account]) {
@@ -40,7 +60,7 @@ class SlackDoc extends Doc implements DocBase {
     } catch (_) {}
 
     if (summaryPieces.isEmpty) {
-      return super.getLinkedContentSummary();
+      return url ?? '';
     } else {
       return "Slack: ${summaryPieces.join(' - ')}";
     }
@@ -55,6 +75,21 @@ class SlackDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return userName ?? super.getSummary;
+    return userName ?? url ?? '';
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      url,
+      localUrl,
+      type,
+      userImage,
+      userName,
+      starredAt,
+      channel,
+      channelName,
+      messageTimestamp,
+    ];
   }
 }

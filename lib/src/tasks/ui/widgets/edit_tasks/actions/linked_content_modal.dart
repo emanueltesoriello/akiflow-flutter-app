@@ -16,7 +16,6 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/trello.dart'
 import 'package:models/account/account.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/doc/gmail_doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
@@ -26,7 +25,7 @@ import 'package:models/task/task.dart';
 
 class LinkedContentModal extends StatelessWidget {
   final Task task;
-  final Doc doc;
+  final dynamic doc;
   final Account? account;
 
   const LinkedContentModal({
@@ -65,7 +64,7 @@ class LinkedContentModal extends StatelessWidget {
                         child: Row(
                           children: [
                             SvgPicture.asset(
-                              task.computedIcon(doc),
+                              task.computedIcon(),
                               width: 18,
                               height: 18,
                             ),
@@ -87,26 +86,18 @@ class LinkedContentModal extends StatelessWidget {
                           if (doc is AsanaDoc) {
                             return AsanaLinkedContent(doc: doc as AsanaDoc, itemBuilder: _item, task: task);
                           } else if (doc is GmailDoc) {
-                            return GmailLinkedContent(
-                              doc: doc as GmailDoc,
-                              itemBuilder: _item,
-                              task: task,
-                            );
+                            return GmailLinkedContent(doc: doc as GmailDoc, itemBuilder: _item, task: task);
                           } else if (doc is SlackDoc) {
                             return SlackLinkedContent(
-                              task: task,
-                              doc: doc as SlackDoc,
-                              itemBuilder: _item,
-                              account: account,
-                            );
+                                doc: doc as SlackDoc, task: task, itemBuilder: _item, account: account);
                           } else if (doc is TodoistDoc) {
-                            return TodoistLinkedContent(task: task, doc: doc as TodoistDoc, itemBuilder: _item);
+                            return TodoistLinkedContent(doc: doc as TodoistDoc, task: task, itemBuilder: _item);
                           } else if (doc is TrelloDoc) {
                             return TrelloLinkedContent(doc: doc as TrelloDoc, task: task, itemBuilder: _item);
                           } else if (doc is ClickupDoc) {
                             return ClickupLinkedContent(doc: doc as ClickupDoc, task: task, itemBuilder: _item);
                           } else if (doc is NotionDoc) {
-                            return NotionLinkedContent(task: task, doc: doc as NotionDoc, itemBuilder: _item);
+                            return NotionLinkedContent(doc: doc as NotionDoc, task: task, itemBuilder: _item);
                           }
                           return const SizedBox();
                         },
