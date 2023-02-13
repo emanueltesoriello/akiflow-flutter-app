@@ -26,7 +26,6 @@ import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';

@@ -1,13 +1,4 @@
-import 'package:i18n/strings.g.dart';
-import 'package:intl/intl.dart';
-import 'package:models/doc/doc.dart';
-import 'package:models/task/task.dart';
-
-extension DocExt on Doc {
-  String get connectorTitle {
-    return titleFromConnectorId(connectorId);
-  }
-
+class DocExt {
   static String titleFromConnectorId(String? connectorId) {
     switch (connectorId) {
       case "asana":
@@ -45,74 +36,5 @@ extension DocExt on Doc {
       default:
         return connectorId ?? "";
     }
-  }
-
-  String? get internalDateFormatted {
-    if (internalDate == null) {
-      return null;
-    }
-
-    int millis = int.parse(internalDate!);
-
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(millis).toLocal();
-
-    return DateFormat("dd MMM yyyy").format(date);
-  }
-
-  String? get dueDateTimeFormatted {
-    if (dueDateTime != null) {
-      return dueDateTime;
-    }
-
-    if (dueDate != null) {
-      DateTime date = DateTime.parse(dueDate!);
-      return DateFormat("dd MMMM").format(date);
-    }
-
-    return null;
-  }
-
-  String? get createdAtFormatted {
-    if (createdAt != null) {
-      return DateFormat("dd MMM yyyy").format(DateTime.parse(createdAt!).toLocal());
-    }
-
-    return '';
-  }
-
-  String? get modifiedAtFormatted {
-    if (updatedAt != null) {
-      return DateFormat("dd MMM yyyy").format(DateTime.parse(updatedAt!).toLocal());
-    }
-
-    return '';
-  }
-
-  String? get starredAtFormatted {
-    DateTime? starredAtDate;
-
-    if (starredAt != null) {
-      starredAtDate = DateTime.fromMillisecondsSinceEpoch(starredAt! * 1000).toLocal();
-    }
-
-    if (starredAtDate != null) {
-      if (starredAtDate.toLocal().day == DateTime.now().day &&
-          starredAtDate.toLocal().month == DateTime.now().month &&
-          starredAtDate.toLocal().year == DateTime.now().year) {
-        return t.task.today;
-      } else {
-        return DateFormat("dd MMM yyyy").format(starredAtDate.toLocal());
-      }
-    } else {
-      return null;
-    }
-  }
-
-  String? get dueFormatted {
-    if (due != null) {
-      return DateFormat("dd MMM yyyy").format(DateTime.parse(due!).toLocal());
-    }
-
-    return '';
   }
 }

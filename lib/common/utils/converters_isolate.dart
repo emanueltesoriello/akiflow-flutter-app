@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:models/base.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
@@ -173,18 +172,6 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
   }
   return [changedModels, unchangedModels, nonExistingModels];
 }
-
-class PrepareDocForRemoteModel {
-  final List<Doc> remoteItems;
-  final List<Doc?> existingItems;
-
-  PrepareDocForRemoteModel({
-    required this.remoteItems,
-    required this.existingItems,
-  });
-}
-
-class GmailTask {}
 
 class DocsFromGmailDataModel {
   final List<GmailMessage> messages;
