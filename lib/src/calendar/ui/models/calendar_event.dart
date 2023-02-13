@@ -112,33 +112,9 @@ class CalendarEvent extends Appointment {
       if (bySetPosString.isNotEmpty) {
         parts.add('BYSETPOS=$bySetPosString');
       }
-    } else {
+    } else if (parts.where((part) => part.startsWith('FREQ=WEEKLY')).isNotEmpty) {
       int dayOfWeek = startTime.weekday;
-      String? day;
-      switch (dayOfWeek) {
-        case DateTime.monday:
-          day = "MO";
-          break;
-        case DateTime.tuesday:
-          day = "TU";
-          break;
-        case DateTime.wednesday:
-          day = "WE";
-          break;
-        case DateTime.thursday:
-          day = "TH";
-          break;
-        case DateTime.friday:
-          day = "FR";
-          break;
-        case DateTime.saturday:
-          day = "SA";
-          break;
-        case DateTime.sunday:
-          day = "SU";
-          break;
-        default:
-      }
+      String? day = dayOfWeekComputed(dayOfWeek);
       if (day != null) {
         parts.add('BYDAY=$day');
       }
@@ -146,5 +122,26 @@ class CalendarEvent extends Appointment {
 
     String? recurrenceString = parts.join(';');
     return recurrenceString;
+  }
+
+  static String? dayOfWeekComputed(int dayOfWeek) {
+    switch (dayOfWeek) {
+      case DateTime.monday:
+        return "MO";
+      case DateTime.tuesday:
+        return "TU";
+      case DateTime.wednesday:
+        return "WE";
+      case DateTime.thursday:
+        return "TH";
+      case DateTime.friday:
+        return "FR";
+      case DateTime.saturday:
+        return "SA";
+      case DateTime.sunday:
+        return "SU";
+      default:
+        return null;
+    }
   }
 }
