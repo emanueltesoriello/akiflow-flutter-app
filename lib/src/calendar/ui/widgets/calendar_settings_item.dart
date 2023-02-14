@@ -78,22 +78,16 @@ class _CalendarItemState extends State<CalendarItem> {
                       children: [
                         InkWell(
                           onTap: () {
-                            bool isVisible = widget.calendars[index].settings != null &&
-                                    widget.calendars[index].settings["visible"] != null
-                                ? widget.calendars[index].settings["visible"]
-                                : false;
-                            bool notificationsEnabled = widget.calendars[index].settings != null &&
-                                    widget.calendars[index].settings["notificationsEnabled"] != null
-                                ? widget.calendars[index].settings["notificationsEnabled"]
-                                : false;
                             dynamic settings = widget.calendars[index].settings;
                             if (settings != null) {
+                              bool isVisible = widget.calendars[index].settings["visible"] ?? false;
+
                               settings["visible"] = !isVisible;
-                              isVisible
-                                  ? settings["notificationsEnabled"] = notificationsEnabled
+                              settings["visible"]
+                                  ? settings["notificationsEnabled"] = true
                                   : settings["notificationsEnabled"] = false;
                             } else {
-                              settings = {"visible": !isVisible, "notificationsEnabled": true};
+                              settings = {"visible": true, "notificationsEnabled": true};
                             }
 
                             Calendar updatedCalendar = widget.calendars[index].copyWith(
