@@ -9,7 +9,6 @@ class CalendarCubitState extends Equatable {
   final List<DateTime> visibleDates;
   final DateTime selectedPanelDate;
   final PanelState panelState;
-  final int? panelMonth;
 
   const CalendarCubitState({
     this.navigationState = CalendarNavigationState.loading,
@@ -20,7 +19,6 @@ class CalendarCubitState extends Equatable {
     this.visibleDates = const [],
     required this.selectedPanelDate,
     this.panelState = PanelState.closed,
-    this.panelMonth,
   });
 
   CalendarCubitState copyWith({
@@ -32,18 +30,17 @@ class CalendarCubitState extends Equatable {
     List<DateTime>? visibleDates,
     DateTime? selectedPanelDate,
     PanelState? panelState,
-    int? panelMonth,
   }) {
     return CalendarCubitState(
-        navigationState: navigationState ?? this.navigationState,
-        calendarView: calendarView ?? this.calendarView,
-        isCalendarThreeDays: isCalendarThreeDays ?? this.isCalendarThreeDays,
-        isCalendarWeekendHidden: isCalendarWeekendHidden ?? this.isCalendarWeekendHidden,
-        calendars: calendars ?? this.calendars,
-        visibleDates: visibleDates ?? this.visibleDates,
-        selectedPanelDate: selectedPanelDate ?? this.selectedPanelDate,
-        panelState: panelState ?? this.panelState,
-        panelMonth: panelMonth ?? this.panelMonth);
+      navigationState: navigationState ?? this.navigationState,
+      calendarView: calendarView ?? this.calendarView,
+      isCalendarThreeDays: isCalendarThreeDays ?? this.isCalendarThreeDays,
+      isCalendarWeekendHidden: isCalendarWeekendHidden ?? this.isCalendarWeekendHidden,
+      calendars: calendars ?? this.calendars,
+      visibleDates: visibleDates ?? this.visibleDates,
+      selectedPanelDate: selectedPanelDate ?? this.selectedPanelDate,
+      panelState: panelState ?? this.panelState,
+    );
   }
 
   @override
@@ -56,6 +53,5 @@ class CalendarCubitState extends Equatable {
         visibleDates,
         selectedPanelDate,
         panelState,
-        panelMonth,
       ];
 }

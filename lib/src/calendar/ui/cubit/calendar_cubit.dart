@@ -145,8 +145,4 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   void panelOpened() {
     emit(state.copyWith(panelState: PanelState.opened));
   }
-
-  setPanelMonth(int? month) {
-    emit(state.copyWith(panelMonth: month));
-  }
 }

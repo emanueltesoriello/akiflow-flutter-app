@@ -61,7 +61,7 @@ class CalendarBody extends StatelessWidget {
           bodyHeight: constraints.maxHeight,
           slideDirection: SlideDirection.down,
           controller: panelController,
-          maxHeight: 280,
+          maxHeight: 330,
           minHeight: 0,
           defaultPanelState: PanelState.closed,
           panel: ValueListenableBuilder(
@@ -106,8 +106,7 @@ class CalendarBody extends StatelessWidget {
             scheduleViewSettings: ScheduleViewSettings(
                 hideEmptyScheduleWeek: true,
                 monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
-            monthViewSettings: const MonthViewSettings(
-                appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+            monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
             onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context),
             appointmentBuilder: (context, calendarAppointmentDetails) =>
                 appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
@@ -140,6 +139,7 @@ class CalendarBody extends StatelessWidget {
   }
 
   void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext context) {
+    context.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
       context.read<CalendarCubit>().changeCalendarView(CalendarView.day);

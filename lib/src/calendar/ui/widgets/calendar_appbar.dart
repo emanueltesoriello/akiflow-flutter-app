@@ -32,7 +32,8 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           onPressed: () {
-            calendarController.displayDate = DateTime.now();
+            DateTime now = DateTime.now().toLocal();
+            calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
             context.read<CalendarCubit>().closePanel();
           },
           style: ButtonStyle(
