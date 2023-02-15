@@ -12,6 +12,7 @@ import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
 import 'package:mobile/src/calendar/ui/widgets/appbar_calendar_panel.dart';
 import 'package:mobile/src/calendar/ui/widgets/event_appointment.dart';
 import 'package:mobile/src/calendar/ui/widgets/task_appointment.dart';
+import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/event_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
@@ -89,6 +90,8 @@ class CalendarBody extends StatelessWidget {
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
+              EventsCubit eventsCubit = context.read<EventsCubit>();
+              eventsCubit.fetchEventsBetweenDates(details.visibleDates.first, details.visibleDates.last);
             },
             dataSource: _getCalendarDataSource(context),
             viewHeaderStyle: ViewHeaderStyle(

@@ -39,6 +39,11 @@ class CalendarView extends StatelessWidget {
         List<Event> events = List.from(eventsCubit.state.events);
         events = events.where((element) => visibleCalendarIds.contains(element.calendarId)).toList();
 
+        print('STATE VISIBLE DATES: ${state.visibleDates}');
+        eventsCubit.fetchEventsBetweenDates(state.visibleDates.isEmpty ? DateTime.now() : state.visibleDates.first,
+            state.visibleDates.isEmpty ? null : state.visibleDates.last);
+        print('EVENTS LENGTH: ${events.length}');
+
         return Scaffold(
           appBar: CalendarAppBar(
             calendarController: calendarController,

@@ -17,15 +17,20 @@ class EventsCubit extends Cubit<EventsCubitState> {
   final SyncCubit _syncCubit;
 
   _init() {
-    fetchEvents();
+    //fetchEvents();
 
     _syncCubit.syncCompletedStream.listen((_) async {
-      await fetchEvents();
+      //await fetchEvents();
     });
   }
 
   Future<void> fetchEvents() async {
     List<Event> events = await _eventsRepository.getEvents();
+    emit(state.copyWith(events: events));
+  }
+
+  Future<void> fetchEventsBetweenDates(DateTime startTime, DateTime? endTime) async {
+    List<Event> events = await _eventsRepository.getEventsBetweenDates(startTime, endTime);
     emit(state.copyWith(events: events));
   }
 
