@@ -47,21 +47,17 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   // ****************************************
   initFirebaseMessaging() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    if (Platform.isAndroid) {
-      await _localNotificationsPlugin
-          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-      await firebaseMessaging.requestPermission();
+    await _localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+    await firebaseMessaging.requestPermission();
 
-      firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
-    }
-    if (Platform.isIOS) {
-      firebaseMessaging.requestPermission();
-    }
+    firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
+
     print("FCM Token: ${(await FirebaseMessaging.instance.getToken()).toString()}");
     // *********************************
     // **********************************/
