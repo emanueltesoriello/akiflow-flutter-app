@@ -39,30 +39,21 @@ class EventAppointment extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 0.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    appointment.subject,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
-                    style: TextStyle(
-                      height: 1.3,
-                      fontSize: boxHeight < 12.0
-                          ? 9.0
-                          : boxHeight < 22.0
-                              ? 13.0
-                              : appointment.isAllDay
-                                  ? 13.0
-                                  : 17.0,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey1(context),
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  appointment.subject,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
+                  style: TextStyle(
+                    height: 1.3,
+                    fontSize: boxHeight < 12.0 ? 9.0 : 13.0,
+                    fontWeight: FontWeight.w500,
+                    color: ColorsExt.grey1(context),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],

@@ -89,7 +89,6 @@ class CalendarBody extends StatelessWidget {
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
-              calendarCubit.onPanelDateSelected(DateTime.now());
             },
             dataSource: _getCalendarDataSource(context),
             viewHeaderStyle: ViewHeaderStyle(

@@ -23,7 +23,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   final StreamController<PanelState> _panelStateStreamController = StreamController<PanelState>.broadcast();
   Stream<PanelState> get panelStateStream => _panelStateStreamController.stream;
 
-  CalendarCubit(this._syncCubit) : super(CalendarCubitState(selectedPanelDate: DateTime.now())) {
+  CalendarCubit(this._syncCubit) : super(const CalendarCubitState()) {
     _init();
   }
 
@@ -120,10 +120,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     emit(state.copyWith(visibleDates: visibleDates));
   }
 
-  void onPanelDateSelected(DateTime selectedDay) {
-    emit(state.copyWith(selectedPanelDate: selectedDay));
-    _panelStateStreamController.add(PanelState.closed);
-  }
+  // void onPanelDateSelected(DateTime selectedDay) {
+  //   emit(state.copyWith(selectedPanelDate: selectedDay));
+  //   _panelStateStreamController.add(PanelState.closed);
+  // }
 
   tapAppBarTextDate() {
     PanelState current = state.panelState;
