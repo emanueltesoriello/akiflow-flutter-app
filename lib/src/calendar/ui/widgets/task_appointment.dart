@@ -37,11 +37,20 @@ class TaskAppointment extends StatelessWidget {
       key: ObjectKey(appointment),
       width: calendarAppointmentDetails.bounds.width,
       height: boxHeight,
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(150, 230, 230, 230),
-          borderRadius: BorderRadius.all(
-            Radius.circular(3.0),
-          )),
+      decoration: BoxDecoration(
+        color: ColorsExt.grey7(context),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(3.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(15),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(1, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.only(left: 2),
         child: Row(
@@ -51,7 +60,7 @@ class TaskAppointment extends StatelessWidget {
                 boxHeight > 12)
               GestureDetector(
                 onTap: () {
-                  checkboxController!.completedClick();
+                  checkboxController?.completedClick();
                 },
                 child: Row(
                   children: [

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
+import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_event.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
+import 'package:mobile/src/calendar/ui/widgets/appbar_calendar_panel.dart';
 import 'package:mobile/src/calendar/ui/widgets/event_appointment.dart';
 import 'package:mobile/src/calendar/ui/widgets/task_appointment.dart';
 import 'package:mobile/src/events/ui/widgets/event_modal.dart';
@@ -23,43 +26,96 @@ class CalendarBody extends StatelessWidget {
     required this.calendarController,
     required this.tasks,
     required this.events,
+    required this.panelController,
   }) : super(key: key);
   final CalendarController calendarController;
+  final PanelController panelController;
   final List<Task> tasks;
   final List<Event> events;
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<double> calendarOffsetNotifier = ValueNotifier<double>(0);
     return BlocBuilder<CalendarCubit, CalendarCubitState>(builder: (context, state) {
       CheckboxAnimatedController? checkboxController;
-      bool isThreeDays = context.watch<CalendarCubit>().state.isCalendarThreeDays;
-      return SfCalendar(
-        controller: calendarController,
-        headerHeight: 0,
-        firstDayOfWeek: DateTime.monday,
-        view: context.watch<CalendarCubit>().state.calendarView,
-        dataSource: _getCalendarDataSource(context),
-        viewHeaderStyle: ViewHeaderStyle(
-          dayTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
-          dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
-        ),
-        timeSlotViewSettings: TimeSlotViewSettings(
-          timeIntervalHeight: 50.0,
-          minimumAppointmentDuration: const Duration(minutes: 23),
-          timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
-          numberOfDaysInView: isThreeDays ? 3 : -1,
-          timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
-        ),
-        scheduleViewSettings: ScheduleViewSettings(
-            hideEmptyScheduleWeek: true,
-            monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
-        monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-        onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context),
-        appointmentBuilder: (context, calendarAppointmentDetails) =>
-            appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
-        allowDragAndDrop: true,
-        onDragEnd: (appointmentDragEndDetails) => dragEnd(appointmentDragEndDetails, context),
-      );
+      CalendarCubit calendarCubit = context.read<CalendarCubit>();
+      bool isThreeDays = calendarCubit.state.isCalendarThreeDays;
+
+      calendarCubit.panelStateStream.listen((PanelState panelState) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          if (panelController.isAttached) {
+            switch (panelState) {
+              case PanelState.opened:
+                panelController.open();
+                break;
+              case PanelState.closed:
+                panelController.close();
+                break;
+            }
+          }
+        });
+      });
+
+      return LayoutBuilder(builder: (context, constraints) {
+        return SlidingUpPanel(
+          bodyHeight: constraints.maxHeight,
+          slideDirection: SlideDirection.down,
+          controller: panelController,
+          maxHeight: 280,
+          minHeight: 0,
+          defaultPanelState: PanelState.closed,
+          panel: ValueListenableBuilder(
+            valueListenable: calendarOffsetNotifier,
+            builder: (context, value, child) {
+              return Container(
+                color: ColorsExt.background(context),
+                child: AppbarCalendarPanel(
+                  calendarController: calendarController,
+                ),
+              );
+            },
+          ),
+          onPanelClosed: () {
+            calendarCubit.panelClosed();
+          },
+          onPanelOpened: () {
+            calendarCubit.panelOpened();
+          },
+          body: SfCalendar(
+            backgroundColor: ColorsExt.background(context),
+            controller: calendarController,
+            headerHeight: 0,
+            firstDayOfWeek: DateTime.monday,
+            view: calendarCubit.state.calendarView,
+            onViewChanged: (ViewChangedDetails details) {
+              calendarCubit.setVisibleDates(details.visibleDates);
+              calendarCubit.onPanelDateSelected(DateTime.now());
+            },
+            dataSource: _getCalendarDataSource(context),
+            viewHeaderStyle: ViewHeaderStyle(
+              dayTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+              dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
+            ),
+            timeSlotViewSettings: TimeSlotViewSettings(
+              timeIntervalHeight: 50.0,
+              minimumAppointmentDuration: const Duration(minutes: 23),
+              timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
+              numberOfDaysInView: isThreeDays ? 3 : -1,
+              timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
+            ),
+            scheduleViewSettings: ScheduleViewSettings(
+                hideEmptyScheduleWeek: true,
+                monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
+            monthViewSettings: const MonthViewSettings(
+                appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+            onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context),
+            appointmentBuilder: (context, calendarAppointmentDetails) =>
+                appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
+            allowDragAndDrop: true,
+            onDragEnd: (appointmentDragEndDetails) => dragEnd(appointmentDragEndDetails, context),
+          ),
+        );
+      });
     });
   }
 

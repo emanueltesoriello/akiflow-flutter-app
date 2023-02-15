@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/widgets/calendar_appbar.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
@@ -17,6 +18,7 @@ class CalendarView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(
       builder: (context, state) {
+        final PanelController panelController = PanelController();
         final CalendarController calendarController = CalendarController();
         calendarController.view = context.watch<CalendarCubit>().state.calendarView;
         TasksCubit tasksCubit = context.watch<TasksCubit>();
@@ -38,9 +40,12 @@ class CalendarView extends StatelessWidget {
         events = events.where((element) => visibleCalendarIds.contains(element.calendarId)).toList();
 
         return Scaffold(
-          appBar: CalendarAppBar(calendarController: calendarController),
+          appBar: CalendarAppBar(
+            calendarController: calendarController,
+          ),
           body: CalendarBody(
             calendarController: calendarController,
+            panelController: panelController,
             tasks: tasks,
             events: events,
           ),

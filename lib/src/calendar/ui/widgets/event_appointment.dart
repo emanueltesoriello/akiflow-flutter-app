@@ -21,7 +21,7 @@ class EventAppointment extends StatelessWidget {
       width: calendarAppointmentDetails.bounds.width,
       height: boxHeight,
       decoration: BoxDecoration(
-          color: HSLColor.fromColor(appointment.color).withLightness(0.93).toColor(),
+          color: HSLColor.fromColor(appointment.color).withLightness(0.94).toColor(),
           borderRadius: const BorderRadius.all(
             Radius.circular(3.0),
           )),
