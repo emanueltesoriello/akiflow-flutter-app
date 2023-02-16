@@ -18,7 +18,7 @@ class CalendarItem extends StatefulWidget {
 }
 
 class _CalendarItemState extends State<CalendarItem> {
-  bool _isExpanded = false;
+  bool _isExpanded = true;
   @override
   Widget build(BuildContext context) {
     return Padding(

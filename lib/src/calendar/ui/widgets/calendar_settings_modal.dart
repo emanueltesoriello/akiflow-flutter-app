@@ -30,7 +30,7 @@ class CalendarSettingsModal extends StatelessWidget {
         List<Calendar> calendars = context.watch<CalendarCubit>().state.calendars;
 
         List<Calendar> primaryCalendars = calendars.where((calendar) => calendar.primary ?? false == true).toList();
-
+        DateTime now = DateTime.now().toLocal();
         return Material(
           color: Colors.transparent,
           borderRadius: const BorderRadius.only(
@@ -70,6 +70,7 @@ class CalendarSettingsModal extends StatelessWidget {
                         onPressed: () {
                           context.read<CalendarCubit>().setCalendarViewThreeDays(false);
                           context.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
+                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
                           calendarController.view = CalendarView.schedule;
                           Navigator.pop(context);
                         },
@@ -90,6 +91,7 @@ class CalendarSettingsModal extends StatelessWidget {
                         onPressed: () {
                           context.read<CalendarCubit>().setCalendarViewThreeDays(false);
                           context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
+                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
                           calendarController.view = CalendarView.day;
                           Navigator.pop(context);
                         },
@@ -109,6 +111,7 @@ class CalendarSettingsModal extends StatelessWidget {
                         selected: isThreeDays,
                         onPressed: () {
                           context.read<CalendarCubit>().setCalendarViewThreeDays(true);
+                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
                           if (isWeekendHidden) {
                             context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
                             calendarController.view = CalendarView.workWeek;
@@ -135,6 +138,7 @@ class CalendarSettingsModal extends StatelessWidget {
                                 calendarController.view == CalendarView.workWeek) &&
                             !isThreeDays,
                         onPressed: () {
+                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
                           if (isWeekendHidden) {
                             context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
                             calendarController.view = CalendarView.workWeek;
@@ -162,6 +166,7 @@ class CalendarSettingsModal extends StatelessWidget {
                         onPressed: () {
                           context.read<CalendarCubit>().setCalendarViewThreeDays(false);
                           context.read<CalendarCubit>().changeCalendarView(CalendarView.month);
+                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
                           calendarController.view = CalendarView.month;
                           Navigator.pop(context);
                         },

@@ -120,11 +120,6 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     emit(state.copyWith(visibleDates: visibleDates));
   }
 
-  // void onPanelDateSelected(DateTime selectedDay) {
-  //   emit(state.copyWith(selectedPanelDate: selectedDay));
-  //   _panelStateStreamController.add(PanelState.closed);
-  // }
-
   tapAppBarTextDate() {
     PanelState current = state.panelState;
     if (current == PanelState.closed) {
