@@ -242,13 +242,11 @@ class SyncControllerService {
       // DateTime? lastSyncEvents = await _getLastSyncFromPreferences[Entity.events]!();
       DateTime? lastSyncLabels = await _getLastSyncFromPreferences[Entity.labels]!();
 
-      bool notificationsRevoked = false;
-
       String? fcmToken;
       try {
         fcmToken = await FirebaseMessaging.instance.getToken();
       } catch (e) {
-        notificationsRevoked = true;
+        rethrow;
       }
 
       String id = _getDeviceUUID;
@@ -271,7 +269,6 @@ class SyncControllerService {
                 unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
                 timezoneName: DateTime.now().timeZoneName,
                 release: '${packageInfo.version} ${packageInfo.buildNumber}',
-                notificationsRevoked: notificationsRevoked,
                 notificationsToken: fcmToken)
             .toMap(),
       );

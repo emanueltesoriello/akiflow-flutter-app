@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
 
 class Client extends Equatable implements Base {
-  Client({
+  const Client({
     required this.id,
     required this.userId,
     this.os,
@@ -18,28 +18,26 @@ class Client extends Equatable implements Base {
     this.unsafeLastAccountsSyncEndedAt,
     this.lastLabelsSyncStartedAt,
     this.unsafeLastLabelsSyncEndedAt,
-    this.notificationsRevoked,
     this.notificationsToken,
   });
 
-  String id;
-  int userId;
-  String? os;
-  String? osVersion;
-  String? release;
-  String? timezoneOffset;
-  String? timezoneName;
-  String? lastTasksSyncStartedAt;
-  String? unsafeLastTasksSyncEndedAt;
-  String? lastSettingsSyncStartedAt;
-  String? unsafeLastSettingsSyncEndedAt;
-  String? lastAccountsSyncStartedAt;
-  String? unsafeLastAccountsSyncEndedAt;
-  String? lastLabelsSyncStartedAt;
-  String? unsafeLastLabelsSyncEndedAt;
+  final String id;
+  final int userId;
+  final String? os;
+  final String? osVersion;
+  final String? release;
+  final String? timezoneOffset;
+  final String? timezoneName;
+  final String? lastTasksSyncStartedAt;
+  final String? unsafeLastTasksSyncEndedAt;
+  final String? lastSettingsSyncStartedAt;
+  final String? unsafeLastSettingsSyncEndedAt;
+  final String? lastAccountsSyncStartedAt;
+  final String? unsafeLastAccountsSyncEndedAt;
+  final String? lastLabelsSyncStartedAt;
+  final String? unsafeLastLabelsSyncEndedAt;
 
-  String? notificationsToken;
-  bool? notificationsRevoked;
+  final String? notificationsToken;
 
   factory Client.fromMap(Map<String, dynamic> json) => Client(
         id: json['id'] as String,
@@ -57,7 +55,6 @@ class Client extends Equatable implements Base {
         unsafeLastLabelsSyncEndedAt: json['unsafe_last_labels_sync_ended_at'] as String?,
         unsafeLastSettingsSyncEndedAt: json['unsafe_last_settings_sync_ended_at'] as String?,
         unsafeLastTasksSyncEndedAt: json['unsafe_last_tasks_sync_ended_at'] as String?,
-        notificationsRevoked: json['notifications_revoked'] as bool?,
         notificationsToken: json['notifications_token'] as String?,
       );
 
@@ -79,7 +76,6 @@ class Client extends Equatable implements Base {
         'unsafe_last_settings_sync_ended_at': unsafeLastSettingsSyncEndedAt,
         'unsafe_last_tasks_sync_ended_at': unsafeLastTasksSyncEndedAt,
         'notifications_token': notificationsToken,
-        'notifications_revoked': notificationsRevoked
       };
 
   Client copyWith({
@@ -99,7 +95,6 @@ class Client extends Equatable implements Base {
     String? lastLabelsSyncStartedAt,
     String? unsafeLastLabelsSyncEndedAt,
     String? notificationsToken,
-    bool? notificationsRevoked,
   }) {
     return Client(
       id: id ?? this.id,
@@ -117,7 +112,6 @@ class Client extends Equatable implements Base {
       unsafeLastLabelsSyncEndedAt: unsafeLastLabelsSyncEndedAt ?? this.unsafeLastLabelsSyncEndedAt,
       unsafeLastSettingsSyncEndedAt: unsafeLastSettingsSyncEndedAt ?? this.unsafeLastSettingsSyncEndedAt,
       unsafeLastTasksSyncEndedAt: unsafeLastTasksSyncEndedAt ?? this.unsafeLastTasksSyncEndedAt,
-      notificationsRevoked: notificationsRevoked ?? this.notificationsRevoked,
       notificationsToken: notificationsToken ?? this.notificationsToken,
     );
   }
@@ -151,7 +145,6 @@ class Client extends Equatable implements Base {
       lastLabelsSyncStartedAt,
       unsafeLastLabelsSyncEndedAt,
       notificationsToken,
-      notificationsRevoked,
     ];
   }
 }
