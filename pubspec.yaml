@@ -53,6 +53,7 @@ dependencies:
   firebase_messaging: ^14.2.1
   firebase_core: ^2.4.1
   flutter_displaymode: ^0.5.0
+  platform_device_id: ^1.0.1
 
   
 dev_dependencies:

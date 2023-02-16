@@ -93,4 +93,20 @@ class ApiClient implements IBaseApi {
 
     return objects;
   }
+
+  @override
+  Future<void> postClient<T>({required Map<String, dynamic> client}) async {
+    String json = jsonEncode(client);
+
+    Response responseRaw = await _httpClient.post(url, body: json);
+    if (responseRaw.statusCode == 401) {
+      throw ApiException({"errors": [], "message": "Server error"});
+    }
+    Map<String, dynamic> response = jsonDecode(responseRaw.body);
+
+    if (response.containsKey("errors")) {
+      log(json);
+      throw ApiException(response);
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class PreferencesRepository {
   Future<void> clear();
@@ -74,6 +75,8 @@ abstract class PreferencesRepository {
 
   bool get dailyOverviewNotificationTimeEnabled;
   Future<void> seDailyOverviewNotificationTime(bool value);
+
+  String get deviceUUID;
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -349,5 +352,19 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> seDailyOverviewNotificationTime(bool value) async {
     await _prefs.setBool("dailyOverviewNotificationTimeEnabled", value);
+  }
+
+  @override
+  String get deviceUUID {
+    String? uuid = _prefs.getString("deviceUUID");
+
+    if (uuid == null) {
+      uuid = const Uuid().v4();
+
+      _prefs.setString("deviceUUID", uuid);
+      return uuid;
+    } else {
+      return uuid;
+    }
   }
 }

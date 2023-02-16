@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
+import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
+import 'package:mobile/core/api/client_api.dart';
 import 'package:mobile/core/api/event_api.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
 import 'package:mobile/core/api/integrations/integration_base_api.dart';
@@ -22,8 +27,10 @@ import 'package:mobile/core/services/sync_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/client/client.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 enum Entity { accounts, calendars, tasks, labels, events, docs }
 
@@ -88,7 +95,6 @@ class SyncControllerService {
     Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
     Entity.labels: () => _preferencesRepository.lastLabelsSyncAt,
     Entity.events: () => _preferencesRepository.lastEventsSyncAt,
-    // Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
   };
 
   final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
@@ -97,8 +103,9 @@ class SyncControllerService {
     Entity.tasks: _preferencesRepository.setLastTasksSyncAt,
     Entity.labels: _preferencesRepository.setLastLabelsSyncAt,
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
-    // Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
+
+  final String _getDeviceUUID = _preferencesRepository.deviceUUID;
 
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
@@ -127,6 +134,10 @@ class SyncControllerService {
           await _syncEntity(entity);
         }
       }
+
+      try {
+        await postClient();
+      } catch (e) {}
 
       syncCompletedController.add(0);
 
@@ -219,6 +230,54 @@ class SyncControllerService {
     }
 
     return hasNewDocs;
+  }
+
+  Future postClient() async {
+    try {
+      ApiClient api = ClientApi();
+
+      DateTime? lastSyncTasks = await _getLastSyncFromPreferences[Entity.tasks]!();
+      DateTime? lastSyncAccounts = await _getLastSyncFromPreferences[Entity.accounts]!();
+      // DateTime? lastSyncCalendars = await _getLastSyncFromPreferences[Entity.calendars]!();
+      // DateTime? lastSyncEvents = await _getLastSyncFromPreferences[Entity.events]!();
+      DateTime? lastSyncLabels = await _getLastSyncFromPreferences[Entity.labels]!();
+
+      bool notificationsRevoked = false;
+
+      String? fcmToken;
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        notificationsRevoked = true;
+      }
+
+      String id = _getDeviceUUID;
+      String os = Platform.isAndroid ? "android" : "ios";
+
+      int userId = _preferencesRepository.user!.id ?? 0;
+
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+      return api.postClient(
+        client: Client(
+                id: id,
+                userId: userId,
+                os: os,
+                lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+                unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+                lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
+                unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
+                lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
+                unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
+                timezoneName: DateTime.now().timeZoneName,
+                release: '${packageInfo.version} ${packageInfo.buildNumber}',
+                notificationsRevoked: notificationsRevoked,
+                notificationsToken: fcmToken)
+            .toMap(),
+      );
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
   }
 
   Future<void> _syncEntity(Entity entity) async {

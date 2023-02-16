@@ -9,4 +9,6 @@ abstract class IBaseApi {
   Future<List<T>> postUnsynced<T>({
     required List<T> unsynced,
   });
+
+  Future<void> postClient<T>({required Map<String, dynamic> client});
 }
