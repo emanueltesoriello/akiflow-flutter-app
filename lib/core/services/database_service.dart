@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS events(
   `created_at` TEXT,
   `updated_at` TEXT,
   `deleted_at` TEXT,
-  `until_date_time` TEXT,
+  `until_datetime` TEXT,
   `recurrence_exception_delete` INTEGER,
   `recurrence_sync_retry` INTEGER,
   `status` VARCHAR(255)

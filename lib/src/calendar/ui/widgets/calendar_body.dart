@@ -40,6 +40,8 @@ class CalendarBody extends StatelessWidget {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(builder: (context, state) {
       CheckboxAnimatedController? checkboxController;
       CalendarCubit calendarCubit = context.read<CalendarCubit>();
+      EventsCubit eventsCubit = context.read<EventsCubit>();
+      TasksCubit tasksCubit = context.read<TasksCubit>();
       bool isThreeDays = calendarCubit.state.isCalendarThreeDays;
 
       calendarCubit.panelStateStream.listen((PanelState panelState) {
@@ -90,8 +92,10 @@ class CalendarBody extends StatelessWidget {
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
-              EventsCubit eventsCubit = context.read<EventsCubit>();
-              eventsCubit.fetchEventsBetweenDates(details.visibleDates.first, details.visibleDates.last);
+              String start = details.visibleDates.first.subtract(const Duration(days: 1)).toIso8601String();
+              String end = details.visibleDates.last.add(const Duration(days: 1)).toIso8601String();
+              tasksCubit.fetchTasksBetweenDates(start, end);
+              eventsCubit.fetchEventsBetweenDates(start, end);
             },
             dataSource: _getCalendarDataSource(context),
             viewHeaderStyle: ViewHeaderStyle(
@@ -113,7 +117,7 @@ class CalendarBody extends StatelessWidget {
             appointmentBuilder: (context, calendarAppointmentDetails) =>
                 appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
             allowDragAndDrop: true,
-            onDragEnd: (appointmentDragEndDetails) => dragEnd(appointmentDragEndDetails, context),
+            onDragEnd: (appointmentDragEndDetails) => dragEnd(appointmentDragEndDetails, context, calendarCubit),
           ),
         );
       });
@@ -162,7 +166,7 @@ class CalendarBody extends StatelessWidget {
     }
   }
 
-  void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context) {
+  void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context, CalendarCubit calendarCubit) {
     dynamic appointment = appointmentDragEndDetails.appointment!;
     DateTime droppingTime = appointmentDragEndDetails.droppingTime!;
     DateTime droppedTimeRounded = DateTime(droppingTime.year, droppingTime.month, droppingTime.day, droppingTime.hour,
@@ -196,8 +200,7 @@ class CalendarBody extends StatelessWidget {
 
     nonRecurring = events.where((event) => event.recurringId == null).toList();
     recurringParents = events.where((event) => event.id == event.recurringId).toList();
-    recurringExceptions =
-        events.where((event) => event.hidden != null && event.hidden == false && event.recurringId != null).toList();
+    recurringExceptions = events.where((event) => event.recurringId != null && event.recurringId != event.id).toList();
 
     calendarNonRecurringEvents = nonRecurring
         .map((event) => CalendarEvent.fromEvent(

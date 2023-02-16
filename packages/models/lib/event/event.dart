@@ -383,6 +383,7 @@ class Event extends Equatable implements Base {
       "task_id": taskId,
       "recurrence_exception_delete": recurrenceExceptionDelete == true ? 1 : 0,
       "recurrence_sync_retry": recurrenceSyncRetry,
+      "until_datetime": untilDatetime,
       "updated_at": updatedAt,
       "created_at": createdAt,
       "deleted_at": deletedAt,

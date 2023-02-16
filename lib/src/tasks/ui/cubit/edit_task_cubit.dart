@@ -155,7 +155,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     await _tasksRepository.updateById(updated.id!, data: updated);
 
-    _tasksCubit.refreshAllFromRepository();
+    _tasksCubit.refreshTasksUi(updated);
     _syncCubit.sync(entities: [Entity.tasks]);
 
     AnalyticsService.track("Task Rescheduled");

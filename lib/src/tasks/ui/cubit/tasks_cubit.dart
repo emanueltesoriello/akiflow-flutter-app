@@ -101,12 +101,13 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
-  void refreshTasksUi(Task task) {
+  void refreshTasksUi(Task updatedTask) {
     emit(state.copyWith(
-      inboxTasks: state.inboxTasks.map((task) => task.id == task.id ? task : task).toList(),
-      selectedDayTasks: state.selectedDayTasks.map((task) => task.id == task.id ? task : task).toList(),
-      labelTasks: state.labelTasks.map((task) => task.id == task.id ? task : task).toList(),
-      fixedTodayTasks: state.fixedTodayTasks.map((task) => task.id == task.id ? task : task).toList(),
+      inboxTasks: state.inboxTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      selectedDayTasks: state.selectedDayTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      labelTasks: state.labelTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      fixedTodayTasks: state.fixedTodayTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      calendarTasks: state.calendarTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
     ));
   }
 
@@ -171,6 +172,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> fetchCalendarTasks() async {
     try {
       List<Task> tasks = await _tasksRepository.getCalendarTasks();
+      emit(state.copyWith(calendarTasks: tasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> fetchTasksBetweenDates(String startDate, String endDate) async {
+    try {
+      List<Task> tasks = await _tasksRepository.getTasksBetweenDates(startDate, endDate);
       emit(state.copyWith(calendarTasks: tasks));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);

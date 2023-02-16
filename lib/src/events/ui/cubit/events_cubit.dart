@@ -9,36 +9,25 @@ import 'package:models/event/event.dart';
 part 'events_state.dart';
 
 class EventsCubit extends Cubit<EventsCubitState> {
-  EventsCubit(this._syncCubit) : super(const EventsCubitState()) {
-    _init();
-  }
+  EventsCubit(this._syncCubit) : super(const EventsCubitState());
 
   final EventsRepository _eventsRepository = locator<EventsRepository>();
   final SyncCubit _syncCubit;
 
-  _init() {
-    //fetchEvents();
-
-    _syncCubit.syncCompletedStream.listen((_) async {
-      //await fetchEvents();
-    });
-  }
-
-  Future<void> fetchEvents() async {
-    List<Event> events = await _eventsRepository.getEvents();
-    emit(state.copyWith(events: events));
-  }
-
-  Future<void> fetchEventsBetweenDates(DateTime startTime, DateTime? endTime) async {
-    List<Event> events = await _eventsRepository.getEventsBetweenDates(startTime, endTime);
+  Future<void> fetchEventsBetweenDates(String startDate, String endDate) async {
+    List<Event> events = await _eventsRepository.getEventsBetweenDates(startDate, endDate);
     emit(state.copyWith(events: events));
   }
 
   Future<void> updateEvent(Event event) async {
     await _eventsRepository.updateById(event.id, data: event);
-
-    await fetchEvents();
-
+    refreshEventUi(event);
     _syncCubit.sync(entities: [Entity.events]);
+  }
+
+  void refreshEventUi(Event updatedEvent) {
+    emit(state.copyWith(
+      events: state.events.map((event) => event.id == updatedEvent.id ? updatedEvent : event).toList(),
+    ));
   }
 }
