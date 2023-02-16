@@ -332,14 +332,14 @@ class EventModal extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey,
+                        color: Colors.black.withOpacity(0.08),
                         spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: Offset(0, -2),
+                        blurRadius: 3,
+                        offset: const Offset(0, -2),
                       ),
                     ],
                   ),
@@ -400,10 +400,6 @@ class EventModal extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   BottomButton(
-                                      title: t.event.copy, image: Assets.images.icons.common.squareOnSquareSVG),
-                                  BottomButton(
-                                      title: t.event.share, image: Assets.images.icons.common.arrowshapeTurnUpRightSVG),
-                                  BottomButton(
                                       title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
                                   BottomButton(
                                     title: t.event.edit,
@@ -425,8 +421,6 @@ class EventModal extends StatelessWidget {
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  BottomButton(
-                                      title: t.event.share, image: Assets.images.icons.common.arrowshapeTurnUpRightSVG),
                                   BottomButton(
                                       title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
                                   BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),

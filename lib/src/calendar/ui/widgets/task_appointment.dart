@@ -111,7 +111,7 @@ class TaskAppointment extends StatelessWidget {
                               ],
                             ),
                           )
-                        : const SizedBox(width: 2),
+                        : const SizedBox(width: 3),
                     Expanded(
                       child: Text(
                         appointment.subject,

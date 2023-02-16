@@ -559,14 +559,14 @@ class _EventEditModalState extends State<EventEditModal> {
                 ),
               ),
               Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey,
+                      color: Colors.black.withOpacity(0.08),
                       spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(0, -2),
+                      blurRadius: 3,
+                      offset: const Offset(0, -2),
                     ),
                   ],
                 ),

@@ -28,7 +28,7 @@ class EventAppointment extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(2, 2, 6, 2),
+            padding: const EdgeInsets.fromLTRB(2, 2, 3, 2),
             child: Container(
               height: boxHeight - 4,
               width: 2,
