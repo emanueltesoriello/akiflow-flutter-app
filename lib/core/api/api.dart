@@ -95,7 +95,8 @@ class ApiClient implements IBaseApi {
   }
 
   @override
-  Future<void> postClient<T>({required Map<String, dynamic> client}) async {
+  Future<String?> postClient<T>({required Map<String, dynamic> client}) async {
+    client.removeWhere((key, value) => value == null);
     String json = jsonEncode(client);
 
     Response responseRaw = await _httpClient.post(url, body: json);
@@ -108,5 +109,9 @@ class ApiClient implements IBaseApi {
       log(json);
       throw ApiException(response);
     }
+    if (response['data']['id'] != client['id']) {
+      return response['data']['id'];
+    }
+    return null;
   }
 }

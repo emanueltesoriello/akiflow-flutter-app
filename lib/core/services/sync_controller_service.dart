@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
@@ -106,6 +107,7 @@ class SyncControllerService {
   };
 
   final String _getDeviceUUID = _preferencesRepository.deviceUUID;
+  _setDeviceUUID(newId) => _preferencesRepository.setDeviceUUID(newId);
 
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
@@ -137,7 +139,9 @@ class SyncControllerService {
 
       try {
         await postClient();
-      } catch (e) {}
+      } catch (e, s) {
+        _sentryService.captureException(e, stackTrace: s);
+      }
 
       syncCompletedController.add(0);
 
@@ -246,7 +250,7 @@ class SyncControllerService {
       try {
         fcmToken = await FirebaseMessaging.instance.getToken();
       } catch (e) {
-        rethrow;
+        print('no access to firebase from background');
       }
 
       String id = _getDeviceUUID;
@@ -255,23 +259,37 @@ class SyncControllerService {
       int userId = _preferencesRepository.user!.id ?? 0;
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      BaseDeviceInfo deviceInfo = await DeviceInfoPlugin().deviceInfo;
+      String? deviceId = deviceInfo.toMap()['id'];
 
-      return api.postClient(
-        client: Client(
-                id: id,
-                userId: userId,
-                os: os,
-                lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
-                unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
-                lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
-                unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
-                lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
-                unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
-                timezoneName: DateTime.now().timeZoneName,
-                release: '${packageInfo.version} ${packageInfo.buildNumber}',
-                notificationsToken: fcmToken)
-            .toMap(),
+      Client client = Client(
+          id: id,
+          deviceId: deviceId,
+          userId: userId,
+          os: os,
+          lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+          unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+          lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
+          unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
+          lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
+          unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
+          timezoneName: DateTime.now().timeZoneName,
+          release: '${packageInfo.version} ${packageInfo.buildNumber}');
+      late Client c;
+      if (fcmToken != null) {
+        c = client.copyWith(notificationsToken: fcmToken);
+      } else {
+        c = client;
+      }
+      String? newId = await api.postClient(
+        client: c.toMap(),
       );
+
+      if (newId != null) {
+        _setDeviceUUID(newId);
+      }
+
+      return;
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }

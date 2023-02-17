@@ -2,24 +2,24 @@ import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
 
 class Client extends Equatable implements Base {
-  const Client({
-    required this.id,
-    required this.userId,
-    this.os,
-    this.osVersion,
-    this.release,
-    this.timezoneOffset,
-    this.timezoneName,
-    this.lastTasksSyncStartedAt,
-    this.unsafeLastTasksSyncEndedAt,
-    this.lastSettingsSyncStartedAt,
-    this.unsafeLastSettingsSyncEndedAt,
-    this.lastAccountsSyncStartedAt,
-    this.unsafeLastAccountsSyncEndedAt,
-    this.lastLabelsSyncStartedAt,
-    this.unsafeLastLabelsSyncEndedAt,
-    this.notificationsToken,
-  });
+  const Client(
+      {required this.id,
+      required this.userId,
+      this.os,
+      this.osVersion,
+      this.release,
+      this.timezoneOffset,
+      this.timezoneName,
+      this.lastTasksSyncStartedAt,
+      this.unsafeLastTasksSyncEndedAt,
+      this.lastSettingsSyncStartedAt,
+      this.unsafeLastSettingsSyncEndedAt,
+      this.lastAccountsSyncStartedAt,
+      this.unsafeLastAccountsSyncEndedAt,
+      this.lastLabelsSyncStartedAt,
+      this.unsafeLastLabelsSyncEndedAt,
+      this.notificationsToken,
+      this.deviceId});
 
   final String id;
   final int userId;
@@ -36,27 +36,27 @@ class Client extends Equatable implements Base {
   final String? unsafeLastAccountsSyncEndedAt;
   final String? lastLabelsSyncStartedAt;
   final String? unsafeLastLabelsSyncEndedAt;
-
   final String? notificationsToken;
+  final String? deviceId;
 
   factory Client.fromMap(Map<String, dynamic> json) => Client(
-        id: json['id'] as String,
-        userId: json['user_id'] as int,
-        lastAccountsSyncStartedAt: json['last_accounts_sync_started_at'] as String?,
-        lastLabelsSyncStartedAt: json['last_labels_sync_started_at'] as String?,
-        lastSettingsSyncStartedAt: json['last_settings_sync_started_at'] as String?,
-        lastTasksSyncStartedAt: json['last_tasks_sync_started_at'] as String?,
-        os: json['os'] as String?,
-        osVersion: json['os_version'] as String?,
-        release: json['release'] as String?,
-        timezoneName: json['timezone_name'] as String?,
-        timezoneOffset: json['timezone_offset'] as String?,
-        unsafeLastAccountsSyncEndedAt: json['unsafe_last_accounts_sync_ended_at'] as String?,
-        unsafeLastLabelsSyncEndedAt: json['unsafe_last_labels_sync_ended_at'] as String?,
-        unsafeLastSettingsSyncEndedAt: json['unsafe_last_settings_sync_ended_at'] as String?,
-        unsafeLastTasksSyncEndedAt: json['unsafe_last_tasks_sync_ended_at'] as String?,
-        notificationsToken: json['notifications_token'] as String?,
-      );
+      id: json['id'] as String,
+      userId: json['user_id'] as int,
+      lastAccountsSyncStartedAt: json['last_accounts_sync_started_at'] as String?,
+      lastLabelsSyncStartedAt: json['last_labels_sync_started_at'] as String?,
+      lastSettingsSyncStartedAt: json['last_settings_sync_started_at'] as String?,
+      lastTasksSyncStartedAt: json['last_tasks_sync_started_at'] as String?,
+      os: json['os'] as String?,
+      osVersion: json['os_version'] as String?,
+      release: json['release'] as String?,
+      timezoneName: json['timezone_name'] as String?,
+      timezoneOffset: json['timezone_offset'] as String?,
+      unsafeLastAccountsSyncEndedAt: json['unsafe_last_accounts_sync_ended_at'] as String?,
+      unsafeLastLabelsSyncEndedAt: json['unsafe_last_labels_sync_ended_at'] as String?,
+      unsafeLastSettingsSyncEndedAt: json['unsafe_last_settings_sync_ended_at'] as String?,
+      unsafeLastTasksSyncEndedAt: json['unsafe_last_tasks_sync_ended_at'] as String?,
+      notificationsToken: json['notifications_token'] as String?,
+      deviceId: json['deviceId'] as String?);
 
   @override
   Map<String, dynamic> toMap() => {
@@ -76,6 +76,7 @@ class Client extends Equatable implements Base {
         'unsafe_last_settings_sync_ended_at': unsafeLastSettingsSyncEndedAt,
         'unsafe_last_tasks_sync_ended_at': unsafeLastTasksSyncEndedAt,
         'notifications_token': notificationsToken,
+        'deviceId': deviceId,
       };
 
   Client copyWith({
@@ -95,25 +96,26 @@ class Client extends Equatable implements Base {
     String? lastLabelsSyncStartedAt,
     String? unsafeLastLabelsSyncEndedAt,
     String? notificationsToken,
+    String? deviceId,
   }) {
     return Client(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      lastAccountsSyncStartedAt: lastAccountsSyncStartedAt ?? this.lastAccountsSyncStartedAt,
-      lastLabelsSyncStartedAt: lastLabelsSyncStartedAt ?? this.lastLabelsSyncStartedAt,
-      lastSettingsSyncStartedAt: lastSettingsSyncStartedAt ?? this.lastSettingsSyncStartedAt,
-      lastTasksSyncStartedAt: lastTasksSyncStartedAt ?? this.lastTasksSyncStartedAt,
-      os: os ?? this.os,
-      osVersion: osVersion ?? this.osVersion,
-      release: release ?? this.release,
-      timezoneName: timezoneName ?? this.timezoneName,
-      timezoneOffset: timezoneOffset ?? this.timezoneOffset,
-      unsafeLastAccountsSyncEndedAt: unsafeLastAccountsSyncEndedAt ?? this.unsafeLastAccountsSyncEndedAt,
-      unsafeLastLabelsSyncEndedAt: unsafeLastLabelsSyncEndedAt ?? this.unsafeLastLabelsSyncEndedAt,
-      unsafeLastSettingsSyncEndedAt: unsafeLastSettingsSyncEndedAt ?? this.unsafeLastSettingsSyncEndedAt,
-      unsafeLastTasksSyncEndedAt: unsafeLastTasksSyncEndedAt ?? this.unsafeLastTasksSyncEndedAt,
-      notificationsToken: notificationsToken ?? this.notificationsToken,
-    );
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        lastAccountsSyncStartedAt: lastAccountsSyncStartedAt ?? this.lastAccountsSyncStartedAt,
+        lastLabelsSyncStartedAt: lastLabelsSyncStartedAt ?? this.lastLabelsSyncStartedAt,
+        lastSettingsSyncStartedAt: lastSettingsSyncStartedAt ?? this.lastSettingsSyncStartedAt,
+        lastTasksSyncStartedAt: lastTasksSyncStartedAt ?? this.lastTasksSyncStartedAt,
+        os: os ?? this.os,
+        osVersion: osVersion ?? this.osVersion,
+        release: release ?? this.release,
+        timezoneName: timezoneName ?? this.timezoneName,
+        timezoneOffset: timezoneOffset ?? this.timezoneOffset,
+        unsafeLastAccountsSyncEndedAt: unsafeLastAccountsSyncEndedAt ?? this.unsafeLastAccountsSyncEndedAt,
+        unsafeLastLabelsSyncEndedAt: unsafeLastLabelsSyncEndedAt ?? this.unsafeLastLabelsSyncEndedAt,
+        unsafeLastSettingsSyncEndedAt: unsafeLastSettingsSyncEndedAt ?? this.unsafeLastSettingsSyncEndedAt,
+        unsafeLastTasksSyncEndedAt: unsafeLastTasksSyncEndedAt ?? this.unsafeLastTasksSyncEndedAt,
+        notificationsToken: notificationsToken ?? this.notificationsToken,
+        deviceId: deviceId ?? this.deviceId);
   }
 
   @override
@@ -145,6 +147,7 @@ class Client extends Equatable implements Base {
       lastLabelsSyncStartedAt,
       unsafeLastLabelsSyncEndedAt,
       notificationsToken,
+      deviceId
     ];
   }
 }

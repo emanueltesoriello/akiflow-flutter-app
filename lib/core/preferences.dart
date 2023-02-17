@@ -77,6 +77,7 @@ abstract class PreferencesRepository {
   Future<void> seDailyOverviewNotificationTime(bool value);
 
   String get deviceUUID;
+  Future<void> setDeviceUUID(String value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -366,5 +367,10 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     } else {
       return uuid;
     }
+  }
+
+  @override
+  Future<void> setDeviceUUID(String value) async {
+    await _prefs.setString("deviceUUID", value);
   }
 }
