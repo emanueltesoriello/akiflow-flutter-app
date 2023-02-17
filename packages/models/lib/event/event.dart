@@ -361,6 +361,8 @@ class Event extends Equatable implements Base {
       "end_time": endTime,
       "start_date": startDate,
       "end_date": endDate,
+      "start_datetime_tz":startDatetimeTz,
+      "end_datetime_tz":endDatetimeTz,
       "origin_updated_at": originUpdatedAt,
       "title": title,
       "description": description,

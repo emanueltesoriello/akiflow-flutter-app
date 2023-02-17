@@ -358,34 +358,55 @@ class EventModal extends StatelessWidget {
                               ),
                               Row(
                                 children: [
-                                  Text(
-                                    t.event.yes,
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
-                                            ? ColorsExt.green(context)
-                                            : ColorsExt.grey3(context)),
+                                  InkWell(
+                                    onTap: () {
+                                      context
+                                          .read<EventsCubit>()
+                                          .updateAtend(event, AtendeeResponseStatus.accepted.id);
+                                    },
+                                    child: Text(
+                                      t.event.yes,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
+                                              ? ColorsExt.green(context)
+                                              : ColorsExt.grey3(context)),
+                                    ),
                                   ),
                                   const SizedBox(width: 32.0),
-                                  Text(
-                                    t.event.no,
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
-                                            ? ColorsExt.red(context)
-                                            : ColorsExt.grey3(context)),
+                                  InkWell(
+                                    onTap: () {
+                                      context
+                                          .read<EventsCubit>()
+                                          .updateAtend(event, AtendeeResponseStatus.declined.id);
+                                    },
+                                    child: Text(
+                                      t.event.no,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
+                                              ? ColorsExt.red(context)
+                                              : ColorsExt.grey3(context)),
+                                    ),
                                   ),
                                   const SizedBox(width: 32.0),
-                                  Text(
-                                    t.event.maybe,
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
-                                            ? ColorsExt.grey2(context)
-                                            : ColorsExt.grey3(context)),
+                                  InkWell(
+                                    onTap: () {
+                                      context
+                                          .read<EventsCubit>()
+                                          .updateAtend(event, AtendeeResponseStatus.tentative.id);
+                                    },
+                                    child: Text(
+                                      t.event.maybe,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: event.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
+                                              ? ColorsExt.grey2(context)
+                                              : ColorsExt.grey3(context)),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -395,7 +416,7 @@ class EventModal extends StatelessWidget {
                       const Separator(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: event.content['organizer']['self'] == true
+                        child: event.creatorId == event.originCalendarId
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [

@@ -8,14 +8,17 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
+import 'package:mobile/src/events/ui/widgets/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/event_edit_time_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
+import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tuple/tuple.dart' as tuple;
@@ -403,17 +406,17 @@ class _EventEditModalState extends State<EventEditModal> {
                               ],
                             ),
                           ),
-                          if (widget.event.attendees != null)
+                          if (updatedEvent.attendees != null)
                             ListView.builder(
                               shrinkWrap: true,
                               physics: const ClampingScrollPhysics(),
-                              itemCount: widget.event.attendees?.length ?? 0,
+                              itemCount: updatedEvent.attendees?.length ?? 0,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                                   child: Row(
                                     children: [
-                                      widget.event.attendees![index].responseStatus == 'accepted'
+                                      updatedEvent.attendees![index].responseStatus == 'accepted'
                                           ? SizedBox(
                                               width: 19,
                                               height: 19,
@@ -422,7 +425,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                                 color: ColorsExt.green(context),
                                               ),
                                             )
-                                          : widget.event.attendees![index].responseStatus == 'declined'
+                                          : updatedEvent.attendees![index].responseStatus == 'declined'
                                               ? SizedBox(
                                                   width: 19,
                                                   height: 19,
@@ -443,7 +446,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                       Row(
                                         children: [
                                           Text(
-                                            widget.event.attendees![index].email!.contains('group')
+                                            updatedEvent.attendees![index].email!.contains('group')
                                                 ? '${widget.event.attendees![index].displayName}'
                                                 : '${widget.event.attendees![index].email}',
                                             style: TextStyle(
@@ -451,7 +454,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                                 fontWeight: FontWeight.w400,
                                                 color: ColorsExt.grey2(context)),
                                           ),
-                                          if (widget.event.attendees![index].organizer ?? false)
+                                          if (updatedEvent.attendees![index].organizer ?? false)
                                             Text(
                                               ' - ${t.event.organizer}',
                                               style: TextStyle(
@@ -468,17 +471,37 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           Padding(
                             padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(Assets.images.icons.common.plusCircleSVG,
-                                    width: 20, height: 20, color: ColorsExt.grey3(context)),
-                                const SizedBox(width: 16.0),
-                                Text(
-                                  'Add guests',
-                                  style: TextStyle(
-                                      fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-                                ),
-                              ],
+                            child: InkWell(
+                              onTap: () {
+                                showCupertinoModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => AddGuestsModal(
+                                    updateAtendeesUi: (contact) {
+                                      print('event edit modal: ${contact.toMap()}');
+                                      EventAtendee newAtendee = EventAtendee(
+                                        displayName: contact.name,
+                                        email: contact.identifier,
+                                        responseStatus: AtendeeResponseStatus.needsAction.id,
+                                      );
+                                      setState(() {
+                                        updatedEvent.attendees?.add(newAtendee);
+                                      });
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(Assets.images.icons.common.plusCircleSVG,
+                                      width: 20, height: 20, color: ColorsExt.grey3(context)),
+                                  const SizedBox(width: 16.0),
+                                  Text(
+                                    'Add guests',
+                                    style: TextStyle(
+                                        fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           const Separator(),
@@ -580,7 +603,10 @@ class _EventEditModalState extends State<EventEditModal> {
                           BottomButton(
                               title: t.cancel,
                               image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
-                              onTap: () => Navigator.pop(context)),
+                              onTap: () {
+                                Navigator.pop(context);
+                                context.read<EventsCubit>().cleanUpdateEvent(widget.event);
+                              }),
                           BottomButton(
                             title: 'Save changes',
                             image: Assets.images.icons.common.checkmarkAltSVG,

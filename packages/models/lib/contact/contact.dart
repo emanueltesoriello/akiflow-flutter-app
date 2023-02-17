@@ -41,7 +41,7 @@ class Contact extends Equatable implements Base {
   final String? localUrl;
   final dynamic content;
   final String? etag;
-  final String? sorting;
+  final int? sorting;
   final String? originUpdatedAt;
   final String? remoteUpdatedAt;
   final String? globalUpdatedAt;
@@ -64,13 +64,13 @@ class Contact extends Equatable implements Base {
     final String? localUrl,
     final dynamic content,
     final String? etag,
-    final String? sorting,
+    final int? sorting,
     final String? originUpdatedAt,
-    final Nullable<String>? remoteUpdatedAt,
+    final Nullable<String?>? remoteUpdatedAt,
     final String? globalUpdatedAt,
     final String? globalCreatedAt,
     final String? createdAt,
-    final Nullable<String>? updatedAt,
+    final Nullable<String?>? updatedAt,
     final String? deletedAt,
   }) {
     return Contact(
@@ -112,7 +112,7 @@ class Contact extends Equatable implements Base {
         localUrl: map['local_url'] as String?,
         content: map['content'] as dynamic,
         etag: map['etag'] as String?,
-        sorting: map['sorting'] as String?,
+        sorting: map['sorting'] as int?,
         originUpdatedAt: map['origin_updated_at'] as String?,
         remoteUpdatedAt: map['remote_updated_at'] as String?,
         globalUpdatedAt: map['global_updated_at'] as String?,
@@ -164,8 +164,7 @@ class Contact extends Equatable implements Base {
       'etag': etag,
       'sorting': sorting,
       'origin_updated_at': originUpdatedAt,
-      'global_updated_at': globalUpdatedAt,
-      'global_created_at': globalCreatedAt,
+      'remote_updated_at': remoteUpdatedAt,
       'created_at': createdAt,
       'updated_at': updatedAt,
       'deleted_at': deletedAt,

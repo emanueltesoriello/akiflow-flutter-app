@@ -79,9 +79,9 @@ class CalendarEvent extends Appointment {
       endTime: endTime,
       subject: event.title ?? '',
       color: event.color != null
-          ? Color(int.parse(event.color!.replaceAll('#', '0xff')))
+          ? ColorsExt.fromHex(event.color!)
           : event.calendarColor != null
-              ? Color(int.parse(event.calendarColor!.replaceAll('#', '0xff')))
+              ? ColorsExt.fromHex(event.calendarColor!)
               : ColorsExt.cyan(context),
       isAllDay: event.startTime == null && event.endTime == null,
       recurrenceId: isRecurringException ? [event.recurringId] : null,

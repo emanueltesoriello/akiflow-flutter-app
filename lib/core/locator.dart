@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/auth_api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
+import 'package:mobile/core/api/contacts_api.dart';
 import 'package:mobile/core/api/event_api.dart';
 import 'package:mobile/core/api/integrations/google_api.dart';
 import 'package:mobile/core/api/label_api.dart';
@@ -11,6 +12,8 @@ import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/http_client.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/availabilities_repository.dart';
+import 'package:mobile/core/repository/contacts_repository.dart';
+import 'package:mobile/core/repository/event_modifiers_repository.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
@@ -30,13 +33,16 @@ import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/calendar/calendar.dart';
+import 'package:models/contact/contact.dart';
 import 'package:models/event/event.dart';
+import 'package:models/event/event_modifier.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/availability_config.dart';
 import 'package:models/task/task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/availability_api.dart';
+import 'api/event_modifiers_api.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -61,6 +67,8 @@ void setupLocator(
   locator.registerSingleton<CalendarApi>(CalendarApi(endpoint: endpoint));
   locator.registerSingleton<LabelApi>(LabelApi(endpoint: endpoint));
   locator.registerSingleton<EventApi>(EventApi(endpoint: endpoint));
+  locator.registerSingleton<EventModifiersApi>(EventModifiersApi(endpoint: endpoint));
+  locator.registerSingleton<ContactsApi>(ContactsApi(endpoint: endpoint));
   locator.registerSingleton<UserApi>(UserApi(endpoint: endpoint));
 
   /// Integrations
@@ -75,6 +83,8 @@ void setupLocator(
   locator.registerSingleton<CalendarsRepository>(CalendarsRepository(fromSql: Calendar.fromSql));
   locator.registerSingleton<LabelsRepository>(LabelsRepository(fromSql: Label.fromSql));
   locator.registerSingleton<EventsRepository>(EventsRepository(fromSql: Event.fromSql));
+  locator.registerSingleton<EventModifiersRepository>(EventModifiersRepository(fromSql: EventModifier.fromSql));
+  locator.registerSingleton<ContactsRepository>(ContactsRepository(fromSql: Contact.fromSql));
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
