@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
@@ -237,8 +235,6 @@ class SyncControllerService {
 
       DateTime? lastSyncTasks = await _getLastSyncFromPreferences[Entity.tasks]!();
       DateTime? lastSyncAccounts = await _getLastSyncFromPreferences[Entity.accounts]!();
-      // DateTime? lastSyncCalendars = await _getLastSyncFromPreferences[Entity.calendars]!();
-      // DateTime? lastSyncEvents = await _getLastSyncFromPreferences[Entity.events]!();
       DateTime? lastSyncLabels = await _getLastSyncFromPreferences[Entity.labels]!();
 
       int recurringBackgroundSyncCounter = _getRecurringBackgroundSyncCounter;
@@ -276,16 +272,15 @@ class SyncControllerService {
         recurringBackgroundSyncCounter: recurringBackgroundSyncCounter,
         recurringNotificationsSyncCounter: recurringNotificationsSyncCounter,
       );
-      late Client c;
-      if (fcmToken != null) {
-        c = client.copyWith(notificationsToken: fcmToken);
-      } else {
-        c = client;
-      }
+
+      Client c = fcmToken != null ? client.copyWith(notificationsToken: fcmToken) : client;
+
       String? newId = await api.postClient(
         client: c.toMap(),
       );
 
+      // in case of new app installation but same device ID
+      // this will set the same ID on the device that was set as first on the server
       if (newId != null) {
         _setDeviceUUID(newId);
       }
