@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "706778806959-ftldpudrbv1n9vnka5gfjefs4m0ldfj4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.akiflow.mobile.dev",
-            "certificate_hash": "dee771ba578c95503f388225d06f565a7573bbeb"
-          }
-        },
-        {
           "client_id": "706778806959-ohg1d0lvgqia5hf1orohsro49kcv66t2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
