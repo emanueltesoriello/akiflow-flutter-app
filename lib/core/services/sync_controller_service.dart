@@ -38,14 +38,6 @@ enum Entity { accounts, calendars, tasks, labels, events, docs }
 enum IntegrationEntity { gmail }
 
 class SyncControllerService {
-  GetIt? newLocator;
-
-  SyncControllerService({this.newLocator}) {
-    if (newLocator != null) {
-      locator = newLocator!;
-    }
-  }
-
   static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   static final AccountApi _accountApi = locator<AccountApi>();
@@ -108,6 +100,9 @@ class SyncControllerService {
 
   final String _getDeviceUUID = _preferencesRepository.deviceUUID;
   _setDeviceUUID(newId) => _preferencesRepository.setDeviceUUID(newId);
+
+  final int _getRecurringBackgroundSyncCounter = _preferencesRepository.recurringBackgroundSyncCounter;
+  final int _getRecurringNotificationsSyncCounter = _preferencesRepository.recurringNotificationsSyncCounter;
 
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
@@ -246,6 +241,9 @@ class SyncControllerService {
       // DateTime? lastSyncEvents = await _getLastSyncFromPreferences[Entity.events]!();
       DateTime? lastSyncLabels = await _getLastSyncFromPreferences[Entity.labels]!();
 
+      int recurringBackgroundSyncCounter = _getRecurringBackgroundSyncCounter;
+      int recurringNotificationsSyncCounter = _getRecurringNotificationsSyncCounter;
+
       String? fcmToken;
       try {
         fcmToken = await FirebaseMessaging.instance.getToken();
@@ -263,18 +261,21 @@ class SyncControllerService {
       String? deviceId = deviceInfo.toMap()['id'];
 
       Client client = Client(
-          id: id,
-          deviceId: deviceId,
-          userId: userId,
-          os: os,
-          lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
-          unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
-          lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
-          unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
-          lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
-          unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
-          timezoneName: DateTime.now().timeZoneName,
-          release: '${packageInfo.version} ${packageInfo.buildNumber}');
+        id: id,
+        deviceId: deviceId,
+        userId: userId,
+        os: os,
+        lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+        unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+        lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
+        unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
+        lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
+        unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
+        timezoneName: DateTime.now().timeZoneName,
+        release: '${packageInfo.version} ${packageInfo.buildNumber}',
+        recurringBackgroundSyncCounter: recurringBackgroundSyncCounter,
+        recurringNotificationsSyncCounter: recurringNotificationsSyncCounter,
+      );
       late Client c;
       if (fcmToken != null) {
         c = client.copyWith(notificationsToken: fcmToken);
