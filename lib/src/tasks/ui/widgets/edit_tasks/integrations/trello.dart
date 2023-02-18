@@ -18,7 +18,6 @@ class TrelloLinkedContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(doc.toSql());
     return Column(
       children: [
         itemBuilder(context, title: t.linkedContent.board, value: doc.boardName),
