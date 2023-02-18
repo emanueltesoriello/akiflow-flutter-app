@@ -5,7 +5,6 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 
 class Subtitle extends StatelessWidget {
@@ -15,7 +14,10 @@ class Subtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Doc? doc = task.doc?.value;
+    dynamic doc;
+    if (task.doc != null) {
+      doc = task.computedDoc();
+    }
 
     List<String> links = task.links ?? [];
 
@@ -37,13 +39,13 @@ class Subtitle extends StatelessWidget {
                   const SizedBox(width: 4.5),
                   ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 16, maxHeight: 16),
-                      child: SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16)),
+                      child: SvgPicture.asset(task.computedIcon(), width: 16, height: 16)),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Builder(
                       builder: (context) {
                         return Text(
-                          doc.getSummary.parseHtmlString ?? '',
+                          doc!.getLinkedContentSummary().toString().parseHtmlString ?? doc.url ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

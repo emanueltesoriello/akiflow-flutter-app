@@ -231,7 +231,10 @@
     "savedOn": "Saved on",
     "status": "Status",
     "done": "Done",
-    "toDo": "To do"
+    "toDo": "To do",
+    "section": "Section",
+    "scheduledDate":"Scheduled Date",
+    "duration":"Duration"
   },
   "editTask": {
     "add": "Add",

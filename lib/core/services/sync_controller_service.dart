@@ -25,7 +25,7 @@ import 'package:models/account/account_token.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 
-enum Entity { accounts, calendars, tasks, labels, events, docs }
+enum Entity { accounts, calendars, tasks, labels, events }
 
 enum IntegrationEntity { gmail }
 
@@ -88,7 +88,6 @@ class SyncControllerService {
     Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
     Entity.labels: () => _preferencesRepository.lastLabelsSyncAt,
     Entity.events: () => _preferencesRepository.lastEventsSyncAt,
-    // Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
   };
 
   final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
@@ -97,7 +96,6 @@ class SyncControllerService {
     Entity.tasks: _preferencesRepository.setLastTasksSyncAt,
     Entity.labels: _preferencesRepository.setLastLabelsSyncAt,
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
-    // Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
 
   final StreamController syncCompletedController = StreamController.broadcast();
@@ -257,7 +255,6 @@ class SyncControllerService {
       }
 
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
-      // await _syncEntity(Entity.docs);
 
       if (lastSyncUpdated != null) {
         await _preferencesRepository.setLastSyncForAccountId(account.id!, lastSyncUpdated);

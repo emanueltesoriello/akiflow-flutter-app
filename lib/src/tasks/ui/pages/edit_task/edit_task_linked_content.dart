@@ -9,11 +9,9 @@ import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
-import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/linked_content_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 
 class EditTaskLinkedContent extends StatelessWidget {
@@ -24,17 +22,19 @@ class EditTaskLinkedContent extends StatelessWidget {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         Task task = state.updatedTask;
-        Doc? doc = task.computedDoc(context.watch<TasksCubit>().state.docs.firstWhereOrNull(
-              (doc) => doc.taskId == task.id,
-            ));
+        dynamic doc;
+        if (task.doc != null) {
+          doc = task.computedDoc();
+        }
+        print(task.toSql());
         if (doc == null) {
           return const SizedBox();
         }
 
         return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, integrations) {
           Account? account =
-              integrations.accounts.firstWhereOrNull((element) => element.connectorId == doc.connectorId);
-          print(doc.url ?? '');
+              integrations.accounts.firstWhereOrNull((element) => element.connectorId == task.connectorId?.value);
+          print(doc?.url ?? '');
 
           return InkWell(
             onTap: () {
@@ -58,14 +58,14 @@ class EditTaskLinkedContent extends StatelessWidget {
                           child: Row(
                             children: [
                               SvgPicture.asset(
-                                task.computedIcon(doc),
+                                task.computedIcon(),
                                 width: 18,
                                 height: 18,
                               ),
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  doc.getSummary.parseHtmlString ?? doc.url ?? '',
+                                  doc?.getLinkedContentSummary().toString().parseHtmlString ?? doc?.url ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),

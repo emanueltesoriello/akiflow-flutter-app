@@ -20,7 +20,6 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurr
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/doc/gmail_doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
@@ -230,8 +229,8 @@ extension TaskExt on Task {
   String get internalDateFormatted {
     DateTime? internalDate;
 
-    if (doc?.value?.internalDate != null) {
-      int internalDateAsMilliseconds = int.parse(doc!.value!.internalDate!);
+    if (doc?.internalDate != null) {
+      int internalDateAsMilliseconds = int.parse(doc!.internalDate!);
       internalDate = DateTime.fromMillisecondsSinceEpoch(internalDateAsMilliseconds).toLocal();
     }
 
@@ -440,12 +439,11 @@ extension TaskExt on Task {
     return null;
   }
 
-  String computedIcon(Doc? doc) {
+  String computedIcon() {
     if (connectorId != null) {
       return iconFromConnectorId(connectorId?.value);
-    } else {
-      return iconFromConnectorId(doc?.connectorId);
     }
+    return '';
   }
 
   bool get isDailyGoal {
@@ -727,60 +725,28 @@ extension TaskExt on Task {
         updatedTask.listId != null;
   }
 
-  static Doc _fromBuiltinDoc(Task task) {
-    return Doc(
-      taskId: task.id,
-      title: task.title,
-      description: task.description,
-      connectorId: task.connectorId?.value,
-      originId: task.originId?.value,
-      accountId: task.originAccountId?.value,
-      url: task.doc?.value?.url,
-      boardName: task.doc?.value?.boardName,
-      listName: task.doc?.value?.listName,
-      localUrl: task.doc?.value?.localUrl,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-      deletedAt: task.deletedAt,
-      globalUpdatedAt: task.globalUpdatedAt,
-      globalCreatedAt: task.globalCreatedAt,
-      remoteUpdatedAt: task.remoteUpdatedAt,
-      content: task.doc?.value?.content,
-    );
-  }
-
-  Doc? computedDoc(Doc? doc) {
-    String? connectorId = doc?.connectorId ?? this.connectorId?.value;
+  dynamic computedDoc() {
+    String? connectorId = this.connectorId?.value;
 
     if (connectorId == null) {
       return null;
     }
 
-    doc = doc ?? _fromBuiltinDoc(this);
-
     switch (connectorId) {
       case "asana":
-        return AsanaDoc(doc);
+        return AsanaDoc.fromMap(doc)..setTitle(title);
       case "clickup":
-        return ClickupDoc(doc);
+        return ClickupDoc.fromMap(doc)..setTitle(title);
       case "gmail":
-        return GmailDoc(doc);
+        return GmailDoc.fromMap(doc)..setTitle(title);
       case "notion":
-        return NotionDoc(doc);
+        return NotionDoc.fromMap(doc)..setTitle(title);
       case "slack":
-        if (this.doc != null) {
-          return SlackDoc(_fromBuiltinDoc(this));
-        } else {
-          return SlackDoc(doc);
-        }
+        return SlackDoc.fromMap(doc);
       case "todoist":
-        if (this.doc != null) {
-          return TodoistDoc(_fromBuiltinDoc(this));
-        } else {
-          return TodoistDoc(doc);
-        }
+        return TodoistDoc.fromMap(doc)..setTitle(title);
       case "trello":
-        return TrelloDoc(doc);
+        return TrelloDoc.fromMap(doc)..setTitle(title);
       default:
         return null;
     }
@@ -830,8 +796,8 @@ extension TaskExt on Task {
     }
   }
 
-  Future<void> openLinkedContentUrl([Doc? doc]) async {
-    String? localUrl = doc?.localUrl ?? doc?.content?["local_url"] ?? content?["local_url"];
+  Future<void> openLinkedContentUrl([dynamic doc]) async {
+    String? localUrl = doc is GmailDoc || doc is TrelloDoc ? doc.url : doc.localUrl;
 
     Uri uri = Uri.parse(localUrl ?? '');
 

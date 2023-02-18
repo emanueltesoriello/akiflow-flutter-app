@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/extensions/doc_extension.dart';
-import 'package:models/doc/doc.dart';
+import 'package:intl/intl.dart';
 import 'package:models/doc/trello_doc.dart';
 import 'package:models/task/task.dart';
 
 class TrelloLinkedContent extends StatelessWidget {
   final Task task;
-  final Doc doc;
+  final TrelloDoc doc;
   final Function itemBuilder;
 
   const TrelloLinkedContent({
@@ -26,15 +25,32 @@ class TrelloLinkedContent extends StatelessWidget {
         itemBuilder(context, title: t.linkedContent.list, value: doc.listName),
         itemBuilder(
           context,
+          title: t.linkedContent.board,
+          value: doc.boardName ?? '',
+        ),
+        itemBuilder(
+          context,
+          title: t.linkedContent.list,
+          value: doc.listName ?? '',
+        ),
+        itemBuilder(
+          context,
           title: t.linkedContent.title,
-          value: doc.title ?? '',
+          value: task.title ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.dueDate,
-          value: doc.dueFormatted,
+          value: dueFormatted,
         ),
       ],
     );
+  }
+
+  String? get dueFormatted {
+    if (doc.due != null) {
+      return DateFormat("dd MMM yyyy").format(DateTime.parse(doc.due!).toLocal());
+    }
+    return '';
   }
 }
