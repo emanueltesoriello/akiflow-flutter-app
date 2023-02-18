@@ -55,7 +55,13 @@ class _ViewState extends State<_View> {
         try {
           //TODO check scrollController error
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            try {
+              if (scrollController.hasClients) {
+                scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+              }
+            } catch (e) {
+              rethrow;
+            }
           });
         } catch (e) {
           print(e);

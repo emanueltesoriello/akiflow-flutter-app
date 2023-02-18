@@ -12,7 +12,8 @@ import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 
 class CreateTaskDurationItem extends StatefulWidget {
-  const CreateTaskDurationItem({Key? key}) : super(key: key);
+  const CreateTaskDurationItem({Key? key, this.onDurationSelected}) : super(key: key);
+  final Function(String)? onDurationSelected;
 
   @override
   State<CreateTaskDurationItem> createState() => _CreateTaskDurationItemState();
@@ -62,20 +63,24 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                   },
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  context.read<EditTaskCubit>().setDuration(_selectedDuration.value);
-                },
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: SvgPicture.asset(
-                    Assets.images.icons.common.checkmarkSVG,
-                    width: 24,
-                    height: 24,
-                    color: ColorsExt.akiflow(context),
-                  ),
-                ),
-              ),
+              ValueListenableBuilder(
+                  valueListenable: _selectedDuration,
+                  builder: (context, int selectedDuration, child) {
+                    return GestureDetector(
+                      onTap: () {
+                        context.read<EditTaskCubit>().setDuration(_selectedDuration.value, fromModal: true);
+                      },
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: SvgPicture.asset(
+                          Assets.images.icons.common.checkmarkSVG,
+                          width: 24,
+                          height: 24,
+                          color: ColorsExt.akiflow(context),
+                        ),
+                      ),
+                    );
+                  })
             ],
           ),
         ),
