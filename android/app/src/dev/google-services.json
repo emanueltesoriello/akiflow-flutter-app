@@ -37,6 +37,13 @@
             {
               "client_id": "706778806959-j1dll3h32sme1sc86iqhhqq2gvk6411n.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "706778806959-p38bfggtdqq9q1ddj2ratfrd0l87kana.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akiflow.mobile"
+              }
             }
           ]
         }

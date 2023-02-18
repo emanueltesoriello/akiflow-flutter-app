@@ -14,6 +14,7 @@ import 'package:mobile/core/preferences.dart';
 
 const scheduleNotificationsTaskKey = "com.akiflow.mobile.scheduleNotifications";
 const periodicTaskskKey = "com.akiflow.mobile.periodicTask";
+const backgroundSyncFromNotification = "com.akiflow.mobile.backgroundSyncFromNotification";
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -66,13 +67,20 @@ Future<bool> backgroundProcesses(String task) async {
 
     } else {
       final SyncControllerService syncControllerService = locator<SyncControllerService>();
-      await syncControllerService.sync();
 
+      await syncControllerService.sync();
       await NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
       // Show a local notification to confirm the background Sync
-      if (kDebugMode) NotificationsCubit.showNotifications("Periodic task!", "Synched successfully");
-      NotificationsCubit.showNotifications("From background!", "Synched successfully");
+      if (kDebugMode) NotificationsCubit.showNotifications("From background!", "Synched successfully");
+
+      if (task == backgroundSyncFromNotification) {
+        int counter = (locator<PreferencesRepository>().recurringNotificationsSyncCounter) + 1;
+        await locator<PreferencesRepository>().setRecurringNotificationsSyncCounter(counter);
+      } else {
+        int counter = (locator<PreferencesRepository>().recurringBackgroundSyncCounter) + 1;
+        await locator<PreferencesRepository>().setRecurringBackgroundSyncCounter(counter);
+      }
       // ***********************************
     }
   } catch (err) {
