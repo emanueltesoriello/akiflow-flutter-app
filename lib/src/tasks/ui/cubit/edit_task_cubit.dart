@@ -218,7 +218,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Task Rescheduled");
   }
 
-  void setDuration(int? seconds) {
   void setDuration(int? seconds, {bool fromModal = false}) {
     if (seconds != null) {
       emit(state.copyWith(selectedDuration: seconds.toDouble()));
@@ -456,41 +455,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshTasksUi(updated);
   }
 
-  Future<void> setRecurrence(RecurrenceRule? rule) async {
-    List<String>? recurrence;
-
-    if (rule != null) {
-      recurrence = [rule.toString()];
-    }
-
-    Task original = state.originalTask;
-
-    Task updated = state.updatedTask.copyWith(
-      recurrence: Nullable(recurrence),
-      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
-    );
-
-    emit(state.copyWith(updatedTask: updated));
-
-    recurrenceTasksToUpdate.clear();
-    recurrenceTasksToCreate.clear();
-
-    if ((original.recurrence != null && original.recurrence!.isNotEmpty) &&
-        (updated.recurrence == null || updated.recurrence!.isEmpty)) {
-      await _removeTasksWithRecurrence(original, updated);
-    } else if ((original.recurrence == null || original.recurrence!.isEmpty) &&
-        (updated.recurrence != null && updated.recurrence!.isNotEmpty)) {
-      updated = await _addTaskWithRecurrence(updated);
-    } else {
-      await _removeTasksWithRecurrence(original, updated);
-      updated = await _addTaskWithRecurrence(updated);
-    }
-
-    emit(state.copyWith(updatedTask: updated));
-
-    AnalyticsService.track("Edit Task Priority");
-  }
-
   Future<Task> _addTaskWithRecurrence(Task updated) async {
     RecurrenceRule rule = RecurrenceRule.fromString((updated.recurrence ?? []).join(";"));
 
@@ -558,6 +522,41 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
       ));
     }
+  }
+
+  Future<void> setRecurrence(RecurrenceRule? rule) async {
+    List<String>? recurrence;
+
+    if (rule != null) {
+      recurrence = [rule.toString()];
+    }
+
+    Task original = state.originalTask;
+
+    Task updated = state.updatedTask.copyWith(
+      recurrence: Nullable(recurrence),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
+
+    recurrenceTasksToUpdate.clear();
+    recurrenceTasksToCreate.clear();
+
+    if ((original.recurrence != null && original.recurrence!.isNotEmpty) &&
+        (updated.recurrence == null || updated.recurrence!.isEmpty)) {
+      await _removeTasksWithRecurrence(original, updated);
+    } else if ((original.recurrence == null || original.recurrence!.isEmpty) &&
+        (updated.recurrence != null && updated.recurrence!.isNotEmpty)) {
+      updated = await _addTaskWithRecurrence(updated);
+    } else {
+      await _removeTasksWithRecurrence(original, updated);
+      updated = await _addTaskWithRecurrence(updated);
+    }
+
+    emit(state.copyWith(updatedTask: updated));
+
+    AnalyticsService.track("Edit Task Priority");
   }
 
   Future<void> duplicate() async {
@@ -683,6 +682,18 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
+  void planWithNLP(int dateToBeParsed) async {
+    DateTime? date;
+    if (Platform.isIOS) {
+      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
+    } else {
+      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed, isUtc: false);
+    }
+
+    await planFor(date,
+        dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
+  }
+
   onDateDetected(BuildContext context, DateTimeEntity detected, String value, int start, int end) {
     if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
       simpleTitleController.removeMapping(0);
@@ -707,18 +718,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       });
       planWithNLP(detected.timestamp);
     }
-  }
-
-  void planWithNLP(int dateToBeParsed) async {
-    DateTime? date;
-    if (Platform.isIOS) {
-      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
-    } else {
-      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed, isUtc: false);
-    }
-
-    await planFor(date,
-        dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
   }
 
   void updateDescription(String html) {
