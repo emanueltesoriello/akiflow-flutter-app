@@ -28,7 +28,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 4,
+        version: 5,
         onCreate: (db, version) async {
           print('Creating database version $version');
 
@@ -50,6 +50,14 @@ class DatabaseService {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
 
+          if (oldVersion < 5) {
+            batch.execute('DROP TABLE IF EXISTS events');
+            _setupEvents(batch);
+
+            batch.execute('ALTER TABLE calendars ADD COLUMN timezone VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_identifier VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_picture VARCHAR(255)');
+          }
           if (oldVersion < 4) {
             _setupAvailabilities(batch);
           }
@@ -172,13 +180,16 @@ CREATE TABLE IF NOT EXISTS calendars(
   `icon` VARCHAR(255),
   `akiflow_primary` INTEGER,
   `is_akiflow_calendar` INTEGER,
+  `timezone` VARCHAR(255),
   `settings` TEXT,
   `etag` VARCHAR(255),
   `sync_status` VARCHAR(255),
   `remote_updated_at` TEXT,
   `created_at` TEXT,
   `updated_at` TEXT,
-  `deleted_at` TEXT
+  `deleted_at` TEXT,
+  `account_identifier` VARCHAR(255),
+  `account_picture` VARCHAR(255)
 )
     ''');
     batch.execute('''
@@ -241,15 +252,15 @@ CREATE TABLE IF NOT EXISTS event_modifiers(
 CREATE TABLE IF NOT EXISTS events(
   `id` UUID PRIMARY KEY,
   `customorigin_id` VARCHAR(255),
-  `connector_id` VARCHAR(50),
+  `connector_id` VARCHAR(255),
   `account_id` VARCHAR(100),
   `akiflow_account_id` UUID,
-  `origin_id` VARCHAR(255),
+  `origin_id` VARCHAR(2048),
   `origin_account_id` VARCHAR(50),
   `origin_calendar_id` TEXT,
   `recurring_id` UUID,
-  `custom_origin_id` UUID,
-  `origin_recurring_id` VARCHAR(255),
+  `custom_origin_id` VARCHAR(2048),
+  `origin_recurring_id` VARCHAR(2048),
   `calendar_id` VARCHAR(255),
   `origincalendar_id` VARCHAR(255),
   `creator_id` VARCHAR(255),
@@ -260,8 +271,8 @@ CREATE TABLE IF NOT EXISTS events(
   `end_time` TEXT,
   `start_date` VARCHAR(10),
   `end_date` VARCHAR(10),
-  `start_date_time_tz` VARCHAR(255),
-  `end_date_time_tz` VARCHAR(255),
+  `start_datetime_tz` VARCHAR(255),
+  `end_datetime_tz` VARCHAR(255),
   `origin_updated_at` TEXT,
   `etag` VARCHAR(255),
   `title` VARCHAR(255),
@@ -273,10 +284,10 @@ CREATE TABLE IF NOT EXISTS events(
   `declined` INTEGER,
   `read_only` INTEGER,
   `hidden` INTEGER,
-  `url` VARCHAR(255),
+  `url` VARCHAR(2048),
   `meeting_status` VARCHAR(255),
-  `meeting_url` VARCHAR(255),
-  `meeting_icon` VARCHAR(255),
+  `meeting_url` VARCHAR(2048),
+  `meeting_icon` VARCHAR(2048),
   `meeting_solution` VARCHAR(100),
   `color` VARCHAR(10),
   `calendar_color` VARCHAR(10),
@@ -286,9 +297,10 @@ CREATE TABLE IF NOT EXISTS events(
   `created_at` TEXT,
   `updated_at` TEXT,
   `deleted_at` TEXT,
-  `until_date_time` TEXT,
+  `until_datetime` TEXT,
   `recurrence_exception_delete` INTEGER,
-  `recurrence_sync_retry` INTEGER
+  `recurrence_sync_retry` INTEGER,
+  `status` VARCHAR(255)
 )
     ''');
     batch.execute('CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');

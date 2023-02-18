@@ -3,8 +3,10 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
+ * Strings: 289 
  * Strings: 261 
  *
+ * Built on 2023-01-30 at 09:16 UTC
  * Built on 2023-02-13 at 12:42 UTC
  */
 
@@ -321,6 +323,7 @@ class _StringsEn {
 	String get comingSoon => 'Coming soon';
 	String get allTasks => 'All tasks';
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
+	late final _StringsEventEn event = _StringsEventEn._(_root);
 	late final _StringsAvailabilityEn availability = _StringsAvailabilityEn._(_root);
 	String get confirm => 'Confirm';
 	String get cancel => 'Cancel';
@@ -506,6 +509,10 @@ class _StringsCalendarEn {
 	// Translations
 	String get comingSoon => 'Calendar is coming in the near future!';
 	String get goToToday => 'Go to Today';
+	String get calendarView => 'Calendar View';
+	late final _StringsCalendarViewEn view = _StringsCalendarViewEn._(_root);
+	String get hideWeekends => 'Hide Weekends';
+	String get calendars => 'Calendars';
 }
 
 // Path: linkedContent
@@ -612,6 +619,31 @@ class _StringsLabelEn {
 	String get hideSomeday => 'Hide Someday';
 	late final _StringsLabelDeleteDialogEn deleteDialog = _StringsLabelDeleteDialogEn._(_root);
 	String get sortComingSoon => 'Sort (Coming soon)';
+}
+
+// Path: event
+class _StringsEventEn {
+	_StringsEventEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get googleMeet => 'Google Meet';
+	String get zoom => 'Zoom';
+	String get join => 'Join';
+	String get busy => 'Busy';
+	String get guests => 'Guests';
+	String get organizer => 'Organizer';
+	String get going => 'Going?';
+	String get yes => 'Yes';
+	String get no => 'No';
+	String get maybe => 'Maybe';
+	String get copy => 'Copy';
+	String get share => 'Share';
+	String get mailGuests => 'Mail Guests';
+	String get edit => 'Edit';
+	String get delete => 'Delete';
+	late final _StringsEventEditEventEn editEvent = _StringsEventEditEventEn._(_root);
 }
 
 // Path: availability
@@ -776,6 +808,20 @@ class _StringsTaskGmailEn {
 	String get unlabelTheEmail => 'Unlabel the email';
 }
 
+// Path: calendar.view
+class _StringsCalendarViewEn {
+	_StringsCalendarViewEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get agenda => 'Agenda';
+	String get oneDay => '1 Day';
+	String get threeDays => '3 Days';
+	String get week => 'Week';
+	String get month => 'Month';
+}
+
 // Path: editTask.repeatingEditDialog
 class _StringsEditTaskRepeatingEditDialogEn {
 	_StringsEditTaskRepeatingEditDialogEn._(this._root);
@@ -826,6 +872,23 @@ class _StringsLabelDeleteDialogEn {
 	String get description => 'What do you want to do with the tasks assigned to this label?';
 	String get justDeleteTheLabel => 'Just delete the label';
 	String get markAllTasksAsDone => 'Mark all tasks as Done';
+}
+
+// Path: event.editEvent
+class _StringsEventEditEventEn {
+	_StringsEventEditEventEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get setRepeat => 'Set Repeat';
+	String get allDay => 'All Day';
+	String get addConference => 'Add Conference';
+	String get addLocation => 'Add Location';
+	String get addDescription => 'Add Description';
+	String get defaultColor => 'Default Color';
+	String get viewOnGoogleCalendar => 'View on Google Calendar';
+	String get saveChanges => 'Save Changes';
 }
 
 // Path: settings.integrations.gmail
@@ -1077,6 +1140,14 @@ extension on _StringsEn {
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',
+			'calendar.calendarView': 'Calendar View',
+			'calendar.view.agenda': 'Agenda',
+			'calendar.view.oneDay': '1 Day',
+			'calendar.view.threeDays': '3 Days',
+			'calendar.view.week': 'Week',
+			'calendar.view.month': 'Month',
+			'calendar.hideWeekends': 'Hide Weekends',
+			'calendar.calendars': 'Calendars',
 			'linkedContent.subject': 'Subject:',
 			'linkedContent.from': 'From:',
 			'linkedContent.date': 'Date:',
@@ -1171,6 +1242,29 @@ extension on _StringsEn {
 			'label.deleteDialog.justDeleteTheLabel': 'Just delete the label',
 			'label.deleteDialog.markAllTasksAsDone': 'Mark all tasks as Done',
 			'label.sortComingSoon': 'Sort (Coming soon)',
+			'event.googleMeet': 'Google Meet',
+			'event.zoom': 'Zoom',
+			'event.join': 'Join',
+			'event.busy': 'Busy',
+			'event.guests': 'Guests',
+			'event.organizer': 'Organizer',
+			'event.going': 'Going?',
+			'event.yes': 'Yes',
+			'event.no': 'No',
+			'event.maybe': 'Maybe',
+			'event.copy': 'Copy',
+			'event.share': 'Share',
+			'event.mailGuests': 'Mail Guests',
+			'event.edit': 'Edit',
+			'event.delete': 'Delete',
+			'event.editEvent.setRepeat': 'Set Repeat',
+			'event.editEvent.allDay': 'All Day',
+			'event.editEvent.addConference': 'Add Conference',
+			'event.editEvent.addLocation': 'Add Location',
+			'event.editEvent.addDescription': 'Add Description',
+			'event.editEvent.defaultColor': 'Default Color',
+			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
+			'event.editEvent.saveChanges': 'Save Changes',
 			'availability.availabilities': 'Availabilities',
 			'availability.activeRecurrentSlots': 'Active recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',

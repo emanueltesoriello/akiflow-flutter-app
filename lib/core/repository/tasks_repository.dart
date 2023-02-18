@@ -193,6 +193,37 @@ class TasksRepository extends DatabaseRepository {
     return objects;
   }
 
+  Future<List<Task>> getCalendarTasks<Task>() async {
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
+          SELECT *
+          FROM tasks
+          WHERE status = '${TaskStatusType.planned.id}'
+            AND deleted_at IS NULL
+            AND trashed_at IS NULL
+            AND datetime IS NOT NULL
+            AND duration IS NOT NULL
+""");
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
+  Future<List<Task>> getTasksBetweenDates<Task>(String startDate, String endDate) async {
+    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
+          SELECT *
+          FROM tasks
+          WHERE status = '${TaskStatusType.planned.id}'
+            AND deleted_at IS NULL
+            AND trashed_at IS NULL
+            AND datetime IS NOT NULL
+            AND duration IS NOT NULL
+            AND (datetime >= ? AND datetime <= ?)
+""", [startDate, endDate]);
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
   Future<List<T>> getByRecurringIds<T>(List<dynamic> ids) async {
     List<T> items = [];
 

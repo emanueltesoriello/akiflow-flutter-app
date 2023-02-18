@@ -95,6 +95,7 @@ class _AssetsImagesIcons {
 class _AssetsImagesIconsCommon {
   _AssetsImagesIconsCommon._();
 
+  final agendaSVG = 'assets/images/icons/_common/agenda.svg';
   final checkDoneOutlineSVG = 'assets/images/icons/_common/Check-done-outline.svg';
   final checkDoneSVG = 'assets/images/icons/_common/Check-done.svg';
   final checkEmptyGoalSVG = 'assets/images/icons/_common/Check-empty-goal.svg';
@@ -108,11 +109,17 @@ class _AssetsImagesIconsCommon {
   final arrowUpSVG = 'assets/images/icons/_common/arrow_up.svg';
   final arrowUpArrowDownSVG = 'assets/images/icons/_common/arrow_up_arrow_down.svg';
   final arrowUpRightSquareSVG = 'assets/images/icons/_common/arrow_up_right_square.svg';
+  final arrowshapeTurnUpLeftSVG = 'assets/images/icons/_common/arrowshape_turn_up_left.svg';
+  final arrowshapeTurnUpRightSVG = 'assets/images/icons/_common/arrowshape_turn_up_right.svg';
   final availabilitySVG = 'assets/images/icons/_common/availability.svg';
   final bellSVG = 'assets/images/icons/_common/bell.svg';
+  final briefcaseSVG = 'assets/images/icons/_common/briefcase.svg';
   final calendarSVG = 'assets/images/icons/_common/calendar.svg';
   final chatBubbleSVG = 'assets/images/icons/_common/chat_bubble.svg';
   final checkDoneGoalSVG = 'assets/images/icons/_common/check_done_goal.svg';
+  final checkmarkAltCircleFillSVG = 'assets/images/icons/_common/checkmark_alt_circle_fill.svg';
+  final checkmarkAltSVG = 'assets/images/icons/_common/checkmark_alt.svg';
+  final checkmarkSquareFillSVG = 'assets/images/icons/_common/checkmark_square_fill.svg';
   final checkmarkSVG = 'assets/images/icons/_common/checkmark.svg';
   final chevronDownSVG = 'assets/images/icons/_common/chevron_down.svg';
   final chevronRightSVG = 'assets/images/icons/_common/chevron_right.svg';
@@ -121,6 +128,7 @@ class _AssetsImagesIconsCommon {
   final clockSVG = 'assets/images/icons/_common/clock.svg';
   final crownSVG = 'assets/images/icons/_common/crown.svg';
   final curlybracesSVG = 'assets/images/icons/_common/curlybraces.svg';
+  final daySVG = 'assets/images/icons/_common/day.svg';
   final ellipsisSVG = 'assets/images/icons/_common/ellipsis.svg';
   final envelopeSVG = 'assets/images/icons/_common/envelope.svg';
   final exclamationmarkSVG = 'assets/images/icons/_common/exclamationmark.svg';
@@ -145,8 +153,10 @@ class _AssetsImagesIconsCommon {
   final lineHorizontal3SVG = 'assets/images/icons/_common/line_horizontal_3.svg';
   final lineHorizontal3DecreaseSVG = 'assets/images/icons/_common/line_horizontal_3_decrease.svg';
   final linkSVG = 'assets/images/icons/_common/link.svg';
+  final mapSVG = 'assets/images/icons/_common/map.svg';
   final menuSVG = 'assets/images/icons/_common/menu.svg';
   final moneyDollarCircleSVG = 'assets/images/icons/_common/money_dollar_circle.svg';
+  final monthSVG = 'assets/images/icons/_common/month.svg';
   final noPrioritySVG = 'assets/images/icons/_common/no-priority.svg';
   final noActiveLinksSVG = 'assets/images/icons/_common/no_active_links.svg';
   final numberSVG = 'assets/images/icons/_common/number.svg';
@@ -156,11 +166,13 @@ class _AssetsImagesIconsCommon {
   final personCircleSVG = 'assets/images/icons/_common/person_circle.svg';
   final personCropCircleSVG = 'assets/images/icons/_common/person_crop_circle.svg';
   final plusSVG = 'assets/images/icons/_common/plus.svg';
+  final plusCircleSVG = 'assets/images/icons/_common/plus_circle.svg';
   final plusSquareSVG = 'assets/images/icons/_common/plus_square.svg';
   final priorityHighSVG = 'assets/images/icons/_common/priority-high.svg';
   final priorityLowSVG = 'assets/images/icons/_common/priority-low.svg';
   final priorityMidSVG = 'assets/images/icons/_common/priority-mid.svg';
   final puzzleSVG = 'assets/images/icons/_common/puzzle.svg';
+  final questionCircleFillSVG = 'assets/images/icons/_common/question_circle_fill.svg';
   final rectangleGrid1X2SVG = 'assets/images/icons/_common/rectangle_grid_1x2.svg';
   final recurrentJPG = 'assets/images/icons/_common/recurrent.jpg';
   final recurrentSVG = 'assets/images/icons/_common/recurrent.svg';
@@ -168,14 +180,20 @@ class _AssetsImagesIconsCommon {
   final searchSVG = 'assets/images/icons/_common/search.svg';
   final slashCircleSVG = 'assets/images/icons/_common/slash_circle.svg';
   final squareSVG = 'assets/images/icons/_common/square.svg';
+  final squareFillSVG = 'assets/images/icons/_common/square_fill.svg';
   final squareOnSquareSVG = 'assets/images/icons/_common/square_on_square.svg';
   final syncingSVG = 'assets/images/icons/_common/syncing.svg';
   final targetSVG = 'assets/images/icons/_common/target.svg';
   final targetActiveSVG = 'assets/images/icons/_common/target_active.svg';
+  final textJustifyLeftSVG = 'assets/images/icons/_common/text_justifyleft.svg';
+  final threeDaysSVG = 'assets/images/icons/_common/three_days.svg';
   final trashSVG = 'assets/images/icons/_common/trash.svg';
   final traySVG = 'assets/images/icons/_common/tray.svg';
+  final videocamSVG = 'assets/images/icons/_common/videocam.svg';
+  final weekSVG = 'assets/images/icons/_common/week.svg';
   final wifiSlashSVG = 'assets/images/icons/_common/wifi_slash.svg';
   final xmarkSVG = 'assets/images/icons/_common/xmark.svg';
+  final xmarkCircleFillSVG = 'assets/images/icons/_common/xmark_circle_fill.svg';
   final xmarkSquareSVG = 'assets/images/icons/_common/xmark_square.svg';
 }
 
@@ -216,6 +234,8 @@ class _AssetsImagesIconsGoogle {
   final googleSVG = 'assets/images/icons/google/google.svg';
   final searchSVG = 'assets/images/icons/google/search.svg';
   final starSVG = 'assets/images/icons/google/star.svg';
+  final calendarSVG = 'assets/images/icons/google/calendar.svg';
+  final meetSVG = 'assets/images/icons/google/meet.svg';
 }
 
 class _AssetsImagesIconsJira {

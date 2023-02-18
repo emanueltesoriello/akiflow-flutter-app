@@ -10,7 +10,9 @@ import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:models/account/account.dart';
+import 'package:models/event/event.dart';
 import 'package:models/extensions/account_ext.dart';
+import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 
 class SyncService {
@@ -114,7 +116,7 @@ class SyncService {
 
       addBreadcrumb("${api.runtimeType} local to remote: done");
     } catch (e) {
-      throw ApiException({"message": "Server Error", "errors": []});
+      throw ApiException({"message": "Server Error", "errors": [e]});
     }
   }
 
@@ -180,14 +182,42 @@ class SyncService {
           }
         }
       }
+      if (api.runtimeType.toString() == "EventApi") {
+        for (Event event in nonExistingModels) {
+          if (event.recurringId != null && event.id != event.recurringId) {
+            String? originalStartDateTimeColumn = event.originalStartDate != null
+                ? 'original_start_date'
+                : event.originalStartTime != null
+                    ? 'original_start_time'
+                    : null;
+            if (originalStartDateTimeColumn != null) {
+              addBreadcrumb('${api.runtimeType} recurring event instance by original start time. id: ${event.id}');
+
+              Event? dbEvent;
+              dbEvent = await databaseRepository.getRecurringByOriginalStart(
+                  event.akiflowAccountId, event.calendarId, event.recurringId, originalStartDateTimeColumn);
+              if (dbEvent != null) {
+                await _prepareUpsertIfNewer(dbEvent: dbEvent, remoteEvent: event, eventIsNewer: false);
+              }
+            }
+          }
+        }
+      }
       if (nonExistingModels.isNotEmpty) {
         anyInsertErrors = await _addRemoteTaskToLocalDb(nonExistingModels);
       }
     }
 
     if (changedModels.isNotEmpty) {
-      for (var item in changedModels) {
-        await databaseRepository.updateById(item.id!, data: item);
+      if (api.runtimeType.toString() == "EventApi") {
+        for (Event event in changedModels) {
+          Event dbEvent = await databaseRepository.getById(event.id);
+          await _prepareUpsertIfNewer(dbEvent: dbEvent, remoteEvent: event);
+        }
+      } else {
+        for (var item in changedModels) {
+          await databaseRepository.updateById(item.id!, data: item);
+        }
       }
     }
 
@@ -216,5 +246,60 @@ class SyncService {
 
   void addBreadcrumb(String message) {
     _sentryService.addBreadcrumb(category: "sync", message: message);
+  }
+
+  Future<void> _prepareUpsertIfNewer(
+      {required Event dbEvent, required Event remoteEvent, bool eventIsNewer = true}) async {
+    bool eventUpdatedInLocal = false;
+    if (eventIsNewer) {
+      if (dbEvent.globalUpdatedAt != null) {
+        int dbRemoteUpdatedAtMillis = DateTime.parse(dbEvent.globalUpdatedAt!).millisecondsSinceEpoch;
+        int dbUpdatedAtMillis = DateTime.parse(dbEvent.updatedAt!).millisecondsSinceEpoch;
+        eventUpdatedInLocal = dbUpdatedAtMillis > dbRemoteUpdatedAtMillis;
+      }
+
+      bool isStale = remoteEvent.remoteUpdatedAt != dbEvent.updatedAt &&
+          ((!eventUpdatedInLocal &&
+                  DateTime.parse(remoteEvent.remoteUpdatedAt!).isBefore(DateTime.parse(dbEvent.updatedAt!))) ||
+              (eventUpdatedInLocal &&
+                  DateTime.parse(remoteEvent.remoteUpdatedAt!)
+                      .isBefore(DateTime.parse(dbEvent.updatedAt!).add(const Duration(minutes: 5)))));
+
+      if (isStale) {
+        addBreadcrumb('${api.runtimeType} partially updating stale event with id: ${remoteEvent.id}');
+        await _prepareUpdateStaleEvent(dbEvent: dbEvent, remoteEvent: remoteEvent);
+      } else if (remoteEvent.recurrenceException != null && remoteEvent.oldId != null) {
+        await databaseRepository.removeById(remoteEvent.oldId, data: remoteEvent);
+      } else {
+        await databaseRepository.updateById(remoteEvent.id!, data: remoteEvent);
+      }
+    }
+    if (remoteEvent.id != dbEvent.id && !eventIsNewer) {
+      addBreadcrumb('${api.runtimeType} partially updating event with id: ${remoteEvent.id}');
+      await _prepareUpdateStaleEvent(dbEvent: dbEvent, remoteEvent: remoteEvent);
+    }
+  }
+
+  Future<void> _prepareUpdateStaleEvent({required Event dbEvent, required Event remoteEvent}) async {
+    Event steledEvent = dbEvent.copyWith(
+      id: remoteEvent.id,
+      recurringId: remoteEvent.recurringId ?? dbEvent.recurringId,
+      originId: remoteEvent.originId,
+      originRecurringId: remoteEvent.originRecurringId,
+      etag: remoteEvent.etag,
+      attendees: remoteEvent.attendees,
+      meetingStatus: remoteEvent.meetingStatus,
+      meetingUrl: remoteEvent.meetingUrl,
+      meetingIcon: remoteEvent.meetingIcon,
+      meetingSolution: remoteEvent.meetingSolution,
+      originUpdatedAt: remoteEvent.originUpdatedAt,
+      remoteUpdatedAt: Nullable(remoteEvent.remoteUpdatedAt),
+      updatedAt: remoteEvent.recurringId != null ||
+              remoteEvent.id == remoteEvent.recurringId ||
+              dbEvent.recurrenceException != null
+          ? Nullable(DateTime.now().toUtc().toIso8601String())
+          : Nullable(dbEvent.updatedAt),
+    );
+    await databaseRepository.updateById(dbEvent.id!, data: steledEvent);
   }
 }

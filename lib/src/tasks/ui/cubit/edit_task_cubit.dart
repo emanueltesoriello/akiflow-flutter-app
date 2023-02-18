@@ -196,6 +196,29 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
+  Future<void> changeDateTimeFromCalendar({required DateTime? date, required DateTime? dateTime}) async {
+    emit(state.copyWith(selectedDate: date, showDuration: false));
+    Task task = state.updatedTask;
+
+    Task updated = task.copyWith(
+      date: Nullable(date?.toIso8601String()),
+      datetime: Nullable(TzUtils.toUtcStringIfNotNull(dateTime)),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
+
+    _tasksCubit.addToUndoQueue([task], UndoType.plan);
+
+    await _tasksRepository.updateById(updated.id!, data: updated);
+
+    _tasksCubit.refreshTasksUi(updated);
+    _syncCubit.sync(entities: [Entity.tasks]);
+
+    AnalyticsService.track("Task Rescheduled");
+  }
+
+  void setDuration(int? seconds) {
   void setDuration(int? seconds, {bool fromModal = false}) {
     if (seconds != null) {
       emit(state.copyWith(selectedDuration: seconds.toDouble()));
