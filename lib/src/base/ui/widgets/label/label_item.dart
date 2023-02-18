@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/label/label.dart';
 
@@ -33,9 +34,9 @@ class LabelItem extends StatelessWidget {
     String iconAsset;
 
     if (label.id != null) {
-      iconAsset = "assets/images/icons/_common/number.svg";
+      iconAsset = Assets.images.icons.common.numberSVG;
     } else {
-      iconAsset = "assets/images/icons/_common/slash_circle.svg";
+      iconAsset = Assets.images.icons.common.slashCircleSVG;
       iconBackground = Colors.transparent;
       iconForeground = ColorsExt.grey3(context);
     }

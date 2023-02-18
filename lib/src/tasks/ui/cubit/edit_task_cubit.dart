@@ -21,6 +21,7 @@ import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 
 import '../../../../common/style/colors.dart';
 import '../../../../common/utils/stylable_text_editing_controller.dart';
@@ -119,19 +120,32 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
       emit(const EditTaskCubitState());
 
-      _tasksCubit.setJustCreatedTask(updated);
-      await _tasksRepository.add([updated]);
+      //_tasksCubit.setJustCreatedTask(updated);
+      await _tasksRepository.add([updated]).timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          throw Exception("Error on add");
+        },
+      );
       _tasksCubit.refreshTasksUi(updated);
-      await _tasksCubit.refreshAllFromRepository();
+      await _tasksCubit.refreshAllFromRepository().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          throw Exception("Error on refreshAllFromRepository");
+        },
+      );
 
       AnalyticsService.track("New Task");
     } catch (e) {
       print(e.toString());
+      locator<SentryService>().addBreadcrumb(message: e.toString(), timestamp: DateTime.now());
     }
   }
 
   Future forceSync() async {
-    await _syncCubit.sync(entities: [Entity.tasks]);
+    await _syncCubit.sync(entities: [Entity.tasks]).catchError((e) {
+      locator<SentryService>().addBreadcrumb(message: e.toString(), timestamp: DateTime.now());
+    });
   }
 
   Future<void> planFor(

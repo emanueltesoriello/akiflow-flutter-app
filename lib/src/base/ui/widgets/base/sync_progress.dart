@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
@@ -56,7 +57,7 @@ class _SyncProgressState extends State<SyncProgress> with SingleTickerProviderSt
         return RotationTransition(
           turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
           child: SvgPicture.asset(
-            "assets/images/icons/_common/arrow_2_circlepath.svg",
+            Assets.images.icons.common.arrow2CirclepathSVG,
             width: 24,
             height: 24,
             color: state.loading ? ColorsExt.akiflow(context) : ColorsExt.grey3(context),

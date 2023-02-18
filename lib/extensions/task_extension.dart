@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
@@ -458,39 +459,39 @@ extension TaskExt on Task {
   static String iconFromConnectorId(String? connectorId) {
     switch (connectorId) {
       case "asana":
-        return "assets/images/icons/asana/asana.svg";
+        return Assets.images.icons.asana.asanaSVG;
       case "clickup":
-        return "assets/images/icons/clickup/clickup.svg";
+        return Assets.images.icons.clickup.clickupSVG;
       case "dropbox":
-        return "assets/images/icons/dropbox/dropbox.svg";
+        return Assets.images.icons.dropbox.dropboxSVG;
       case "google":
-        return "assets/images/icons/google/google.svg";
+        return Assets.images.icons.google.googleSVG;
       case "gmail":
-        return "assets/images/icons/google/gmail.svg";
+        return Assets.images.icons.google.gmailSVG;
       case "jira":
-        return "assets/images/icons/jira/jira.svg";
+        return Assets.images.icons.jira.jiraSVG;
       case "skype":
-        return "assets/images/icons/skype/skype.svg";
+        return Assets.images.icons.skype.skypeSVG;
       case "teams":
-        return "assets/images/icons/teams/teams.svg";
+        return Assets.images.icons.teams.teamsSVG;
       case "notion":
-        return "assets/images/icons/notion/notion.svg";
+        return Assets.images.icons.notion.notionSVG;
       case "slack":
-        return "assets/images/icons/slack/slack.svg";
+        return Assets.images.icons.slack.slackSVG;
       case "superhuman":
-        return "assets/images/icons/superhuman/superhuman-grey-dark.svg";
+        return Assets.images.icons.superhuman.superhumanGreyDarkSVG;
       case "todoist":
-        return "assets/images/icons/todoist/todoist.svg";
+        return Assets.images.icons.todoist.todoistSVG;
       case "trello":
-        return "assets/images/icons/trello/trello.svg";
+        return Assets.images.icons.trello.trelloSVG;
       case "twitter":
-        return "assets/images/icons/twitter/twitter.svg";
+        return Assets.images.icons.twitter.twitterSVG;
       case "zapier":
-        return "assets/images/icons/zapier/zapier.svg";
+        return Assets.images.icons.zapier.zapierSVG;
       case "zoom":
-        return "assets/images/icons/zoom/zoom.svg";
+        return Assets.images.icons.zoom.zoomSVG;
       default:
-        return "assets/images/icons/_common/info.svg";
+        return Assets.images.icons.common.infoSVG;
     }
   }
 

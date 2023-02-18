@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 //import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -32,7 +33,7 @@ class SettingsPage extends StatelessWidget {
           ButtonList(
             title: t.settings.myAccount.title,
             position: ButtonListPosition.single,
-            leading: "assets/images/icons/_common/person_circle.svg",
+            leading: Assets.images.icons.common.personCircleSVG,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAccountPage()));
             },
@@ -42,14 +43,14 @@ class SettingsPage extends StatelessWidget {
           ButtonList(
             title: t.settings.general,
             position: ButtonListPosition.top,
-            leading: "assets/images/icons/_common/gear_alt.svg",
+            leading: Assets.images.icons.common.gearAltSVG,
             enabled: false,
             onPressed: () {},
           ),
           ButtonList(
             title: t.settings.notifications,
             position: ButtonListPosition.center,
-            leading: "assets/images/icons/_common/bell.svg",
+            leading: Assets.images.icons.common.bellSVG,
             enabled: true,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationsPage()));
@@ -58,14 +59,14 @@ class SettingsPage extends StatelessWidget {
           ButtonList(
             title: t.settings.tasks,
             position: ButtonListPosition.bottom,
-            leading: "assets/images/icons/_common/Check-done-outline.svg",
+            leading: Assets.images.icons.common.checkDoneOutlineSVG,
             enabled: false,
             onPressed: () {},
           ),
           const SizedBox(height: 16),
           ButtonList(
             title: t.settings.integrations.title,
-            leading: "assets/images/icons/_common/puzzle.svg",
+            leading: Assets.images.icons.common.puzzleSVG,
             position: ButtonListPosition.single,
             preTrailing: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
               builder: (context, state) {
@@ -95,7 +96,7 @@ class SettingsPage extends StatelessWidget {
           const SizedBox(height: 16),
           ButtonList(
             title: t.settings.about.title,
-            leading: "assets/images/icons/_common/info_circle.svg",
+            leading: Assets.images.icons.common.infoCircleSVG,
             position: ButtonListPosition.top,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AboutPage()));
@@ -103,7 +104,7 @@ class SettingsPage extends StatelessWidget {
           ),
           ButtonList(
             title: t.settings.learnAkiflow.title,
-            leading: "assets/images/icons/_common/guidebook.svg",
+            leading: Assets.images.icons.common.guidebookSVG,
             position: ButtonListPosition.center,
             showShevron: false,
             onPressed: () {
@@ -113,7 +114,7 @@ class SettingsPage extends StatelessWidget {
           ),
           ButtonList(
             title: t.settings.changeLog,
-            leading: "assets/images/icons/_common/curlybraces.svg",
+            leading: Assets.images.icons.common.curlybracesSVG,
             position: ButtonListPosition.bottom,
             showShevron: false,
             onPressed: () {
@@ -123,7 +124,7 @@ class SettingsPage extends StatelessWidget {
           const SizedBox(height: 16),
           ButtonList(
             title: t.settings.followUsOnTwitter,
-            leading: "assets/images/icons/twitter/logo_twitter.svg",
+            leading: Assets.images.icons.twitter.logoTwitterSVG,
             position: ButtonListPosition.top,
             showShevron: false,
             useSvgColor: true,
@@ -133,7 +134,7 @@ class SettingsPage extends StatelessWidget {
           ),
           ButtonList(
             title: t.settings.joinOurCommunity,
-            leading: "assets/images/icons/slack/slack.svg",
+            leading: Assets.images.icons.slack.slackSVG,
             position: ButtonListPosition.center,
             showShevron: false,
             useSvgColor: true,
@@ -161,7 +162,7 @@ class SettingsPage extends StatelessWidget {
           ),*/
           ButtonList(
             title: t.settings.sendUsAnEmail,
-            leading: "assets/images/icons/_common/envelope.svg",
+            leading: Assets.images.icons.common.envelopeSVG,
             position: ButtonListPosition.bottom,
             showShevron: false,
             useSvgColor: true,

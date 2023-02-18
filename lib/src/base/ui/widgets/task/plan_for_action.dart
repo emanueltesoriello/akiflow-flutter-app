@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -24,11 +25,11 @@ class PlanForAction extends StatelessWidget {
     Color? color;
 
     if (task.statusType == TaskStatusType.inbox) {
-      leadingIconAsset = "assets/images/icons/_common/tray.svg";
+      leadingIconAsset = Assets.images.icons.common.traySVG;
       color = ColorsExt.cyan25(context);
       text = t.bottomBar.inbox;
     } else if (task.statusType == TaskStatusType.someday) {
-      leadingIconAsset = "assets/images/icons/_common/archivebox.svg";
+      leadingIconAsset = Assets.images.icons.common.archiveboxSVG;
       color = ColorsExt.akiflow10(context);
       text = task.statusType!.name.capitalizeFirstCharacter();
     } else if (task.statusType == TaskStatusType.snoozed) {
@@ -46,11 +47,11 @@ class PlanForAction extends StatelessWidget {
         text = task.datetimeFormatted;
       }
 
-      leadingIconAsset = "assets/images/icons/_common/clock.svg";
+      leadingIconAsset = Assets.images.icons.common.clockSVG;
       color = ColorsExt.akiflow10(context);
       text = text ?? t.task.snoozed;
     } else if (task.statusType == TaskStatusType.planned) {
-      leadingIconAsset = "assets/images/icons/_common/calendar.svg";
+      leadingIconAsset = Assets.images.icons.common.calendarSVG;
       color = ColorsExt.grey5(context);
 
       if (task.date != null) {

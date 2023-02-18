@@ -40,17 +40,17 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
               IgnorePointer(
                 child: Column(
                   children: [
-                    const Text(
-                      "No active links to show",
+                    Text(
+                      t.availability.noActiveLinksToShow,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 17,
                       ),
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      "To create a link use the desktop app",
+                      t.availability.toCreateLinkUseDesktop,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 17,

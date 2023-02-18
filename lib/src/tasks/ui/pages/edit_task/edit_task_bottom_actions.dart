@@ -80,7 +80,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             ),
             const SizedBox(width: 11),
             TagBox(
-              icon: "assets/images/icons/_common/target_active.svg",
+              icon: Assets.images.icons.common.targetActiveSVG,
               isBig: true,
               isSquare: true,
               backgroundColor:
@@ -134,7 +134,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               } catch (_) {}
 
               return TagBox(
-                icon: "assets/images/icons/_common/link.svg",
+                icon: Assets.images.icons.common.linkSVG,
                 iconSize: 19.5,
                 isBig: true,
                 isSquare: true,
@@ -183,7 +183,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           ),
           child: Center(
             child: SvgPicture.asset(
-              "assets/images/icons/_common/ellipsis.svg",
+              Assets.images.icons.common.ellipsisSVG,
               width: 22,
               height: 22,
               color: ColorsExt.grey2(context),
@@ -228,35 +228,35 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
           PopupMenuItem<EditTaskAdditionalAction>(
             value: EditTaskAdditionalAction.duplicate,
             child: PopupMenuCustomItem(
-              iconAsset: "assets/images/icons/_common/square_on_square.svg",
+              iconAsset: Assets.images.icons.common.squareOnSquareSVG,
               text: t.task.duplicate,
             ),
           ),
           PopupMenuItem<EditTaskAdditionalAction>(
             value: EditTaskAdditionalAction.snoozeTomorrow,
             child: PopupMenuCustomItem(
-              iconAsset: "assets/images/icons/_common/clock.svg",
+              iconAsset: Assets.images.icons.common.clockSVG,
               text: t.task.snoozeTomorrow,
             ),
           ),
           PopupMenuItem<EditTaskAdditionalAction>(
             value: EditTaskAdditionalAction.snoozeNextWeek,
             child: PopupMenuCustomItem(
-              iconAsset: "assets/images/icons/_common/clock.svg",
+              iconAsset: Assets.images.icons.common.clockSVG,
               text: t.task.snoozeNextWeek,
             ),
           ),
           PopupMenuItem<EditTaskAdditionalAction>(
             value: EditTaskAdditionalAction.someday,
             child: PopupMenuCustomItem(
-              iconAsset: "assets/images/icons/_common/tray.svg",
+              iconAsset: Assets.images.icons.common.traySVG,
               text: t.task.someday,
             ),
           ),
           PopupMenuItem<EditTaskAdditionalAction>(
             value: EditTaskAdditionalAction.delete,
             child: PopupMenuCustomItem(
-              iconAsset: "assets/images/icons/_common/trash.svg",
+              iconAsset: Assets.images.icons.common.trashSVG,
               text: t.task.delete,
             ),
           ),

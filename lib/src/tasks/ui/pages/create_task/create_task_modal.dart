@@ -7,6 +7,9 @@ import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.da
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
@@ -141,9 +144,10 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                         showRefresh = false;
                                       });
                                       Navigator.pop(context);
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                        content: Text("Error"),
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: Text(e.toString()),
                                       ));
+                                      locator<SentryService>().captureException(Exception(e.toString()));
                                     }
                                   }),
                           ]),

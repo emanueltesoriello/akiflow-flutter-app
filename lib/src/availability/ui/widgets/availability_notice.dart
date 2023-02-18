@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/src/base/ui/widgets/task/notice.dart';
 
 import '../cubit/availability_cubit.dart';
@@ -23,8 +24,8 @@ class _AvailabilityNoticeState extends State<AvailabilityNotice> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Notice(
-                  title: "Coming Soon",
-                  subtitle: "The full calendar experience is coming in the near future",
+                  title: t.availability.comingSoon,
+                  subtitle: t.availability.fullCalendarExperienceInFuture,
                   icon: Icons.info_outline,
                   onClose: () {
                     context.read<AvailabilityCubit>().noticeClosed();

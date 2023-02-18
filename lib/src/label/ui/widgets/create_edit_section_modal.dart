@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/label/label.dart';
@@ -95,7 +96,7 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                                     width: 36,
                                     child: Center(
                                       child: SvgPicture.asset(
-                                        "assets/images/icons/_common/arrow_up.svg",
+                                        Assets.images.icons.common.arrowUpSVG,
                                         width: 24,
                                         height: 24,
                                         color: Theme.of(context).backgroundColor,
