@@ -96,8 +96,6 @@ class SyncService {
     try {
       List<dynamic> updated = await api.postUnsynced(unsynced: unsynced);
 
-      await api.postClient(client: {});
-
       if (unsynced.length != updated.length) {
         throw PostUnsyncedExcepotion(
           "${api.runtimeType} upserted ${unsynced.length} items, but ${updated.length} items were updated",
@@ -116,7 +114,10 @@ class SyncService {
 
       addBreadcrumb("${api.runtimeType} local to remote: done");
     } catch (e) {
-      throw ApiException({"message": "Server Error", "errors": [e]});
+      throw ApiException({
+        "message": "Server Error",
+        "errors": [e]
+      });
     }
   }
 

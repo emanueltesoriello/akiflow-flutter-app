@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
@@ -279,6 +280,7 @@ class SyncControllerService {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       BaseDeviceInfo deviceInfo = await DeviceInfoPlugin().deviceInfo;
       String? deviceId = deviceInfo.toMap()['id'];
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
       Client client = Client(
         id: id,
@@ -291,7 +293,7 @@ class SyncControllerService {
         unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
         lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
         unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
-        timezoneName: DateTime.now().timeZoneName,
+        timezoneName: currentTimeZone,
         release: '${packageInfo.version} ${packageInfo.buildNumber}',
         recurringBackgroundSyncCounter: recurringBackgroundSyncCounter,
         recurringNotificationsSyncCounter: recurringNotificationsSyncCounter,

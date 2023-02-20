@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
@@ -169,8 +170,10 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
 
       TasksRepository tasksRepository = locator<TasksRepository>();
       List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
+
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
       tz.initializeTimeZones();
-      tz.setLocalLocation(tz.getLocation(DateTime.now().timeZoneName));
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
       for (Task task in todayTasks) {
         int notificationsId = 0;
@@ -243,8 +246,9 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
     bool dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
 
     if (dailyOverviewNotificationTimeEnabled) {
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
       tz.initializeTimeZones();
-      tz.setLocalLocation(tz.getLocation(DateTime.now().timeZoneName));
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
       TimeOfDay dailyOverviewNotificationTime = service.dailyOverviewNotificationTime;
       final now = DateTime.now();
