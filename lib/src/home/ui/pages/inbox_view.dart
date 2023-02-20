@@ -53,7 +53,6 @@ class _ViewState extends State<_View> {
 
       streamSubscription = tasksCubit.scrollListStream.listen((allSelected) {
         try {
-          //TODO check scrollController error
           SchedulerBinding.instance.addPostFrameCallback((_) {
             try {
               if (scrollController.hasClients) {
