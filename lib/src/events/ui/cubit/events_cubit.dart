@@ -26,23 +26,20 @@ class EventsCubit extends Cubit<EventsCubitState> {
     emit(state.copyWith(events: events));
   }
 
-  Future<void> updateEvent(Event event) async {
-    await _eventsRepository.updateById(event.id, data: event);
-    refreshEventUi(event);
-    _syncCubit.sync(entities: [Entity.events]);
+  Future<void> fetchSearchedContacts(String query) async {
+    List<Contact> searchedContacts = await _contactsRepository.getSearchedContacts(query);
+    emit(state.copyWith(searchedContacts: searchedContacts));
   }
 
-  void refreshEventUi(Event updatedEvent) {
-    emit(state.copyWith(
-      events: state.events.map((event) => event.id == updatedEvent.id ? updatedEvent : event).toList(),
-    ));
-  }
-
-  void cleanUpdateEvent(Event updatedEvent) async {
+  void refetchEvent(Event updatedEvent) async {
     Event fetchedEvent = await _eventsRepository.getById(updatedEvent.id);
     emit(state.copyWith(
       events: state.events.map((event) => event.id == updatedEvent.id ? fetchedEvent : event).toList(),
     ));
+  }
+
+  Future<void> scheduleEventsSync() async {
+    Future.delayed(const Duration(seconds: 4)).whenComplete(() => _syncCubit.sync(entities: [Entity.events]));
   }
 
   Future<void> updateAtend(Event event, String response) async {
@@ -56,11 +53,48 @@ class EventsCubit extends Cubit<EventsCubitState> {
         createdAt: DateTime.now().toUtc().toIso8601String());
     _eventModifiersRepository.add([eventModifier]);
 
-    _syncCubit.sync(entities: [Entity.eventModifiers, Entity.events]);
+    _syncCubit.sync(entities: [Entity.eventModifiers]);
+    await scheduleEventsSync();
+    refetchEvent(event);
   }
 
-  Future<void> fetchSearchedContacts(String query) async {
-    List<Contact> searchedContacts = await _contactsRepository.getSearchedContacts(query);
-    emit(state.copyWith(searchedContacts: searchedContacts));
+  Future<void> updateEventAndAtendees(
+      Event event, List<String> atendeesToAdd, List<String> atendeesToRemove, bool addMeeting) async {
+    if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
+      EventModifier eventModifier = EventModifier(
+          id: const Uuid().v4(),
+          akiflowAccountId: event.akiflowAccountId,
+          eventId: event.id,
+          calendarId: event.calendarId,
+          action: 'attendees/updateList',
+          content: {
+            "attendeeEmailsToAdd": atendeesToAdd,
+            "attendeeEmailsToRemove": atendeesToRemove,
+          },
+          createdAt: DateTime.now().toUtc().toIso8601String());
+      await _eventModifiersRepository.add([eventModifier]);
+    }
+    if (addMeeting) {
+      await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
+    }
+    await _eventsRepository.updateById(event.id, data: event);
+    refetchEvent(event);
+    await _syncCubit.sync(entities: [Entity.eventModifiers, Entity.events]);
+    await scheduleEventsSync();
+    refetchEvent(event);
+  }
+
+  EventModifier addMeetingEventModifier(Event event) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: event.id,
+        calendarId: event.calendarId,
+        action: 'meeting/add',
+        content: {
+          "meetingSolution": "meet",
+        },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
   }
 }

@@ -199,8 +199,8 @@ class Event extends Equatable implements Base {
         'etag': etag,
         'title': title,
         'description': description,
-        'content': content,
-        'attendees': (attendees == null || attendees!.isEmpty) ? null : List<dynamic>.from(attendees!.map((x) => x)),
+        //'content': content,
+        //'attendees': (attendees == null || attendees!.isEmpty) ? null : List<dynamic>.from(attendees!.map((x) => x)),
         'recurrence':
             (recurrence == null || recurrence!.isEmpty) ? null : List<dynamic>.from(recurrence!.map((x) => x)),
         'recurrence_exception': recurrenceException,

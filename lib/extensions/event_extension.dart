@@ -1,4 +1,5 @@
 import 'package:models/event/event.dart';
+import 'package:models/event/event_atendee.dart';
 
 enum AtendeeResponseStatus { needsAction, accepted, declined, tentative }
 
@@ -49,11 +50,20 @@ extension TaskStatusTypeExt on AtendeeResponseStatus {
 
 extension EventExt on Event {
   AtendeeResponseStatus get isLoggedUserAttndingEvent {
-    String? response = attendees!.firstWhere((atendee) => atendee.email == originCalendarId).responseStatus;
+    String? response = attendees?.firstWhere((atendee) => atendee.email == originCalendarId).responseStatus;
 
     if (response != null) {
       return TaskStatusTypeExt.fromString(response);
     }
     return AtendeeResponseStatus.needsAction;
+  }
+
+  setLoggeduserAttendingResponse(AtendeeResponseStatus response) {
+    List<EventAtendee> updatedAtendees = attendees!;
+    EventAtendee loggedUser = attendees!.firstWhere((atendee) => atendee.email == originCalendarId);
+    loggedUser = loggedUser.copyWith(responseStatus: response.id);
+    updatedAtendees.removeWhere((attendee) => attendee.email == originCalendarId);
+    updatedAtendees.add(loggedUser);
+    copyWith(attendees: updatedAtendees);
   }
 }
