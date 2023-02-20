@@ -121,7 +121,10 @@ class SyncControllerService {
   _setDeviceUUID(newId) => _preferencesRepository.setDeviceUUID(newId);
 
   final int _getRecurringBackgroundSyncCounter = _preferencesRepository.recurringBackgroundSyncCounter;
+  _setRecurringBackgroundSyncCounter(val) => _preferencesRepository.setRecurringBackgroundSyncCounter(val);
+
   final int _getRecurringNotificationsSyncCounter = _preferencesRepository.recurringNotificationsSyncCounter;
+  _setRecurringNotificationsSyncCounter(val) => _preferencesRepository.setRecurringNotificationsSyncCounter(val);
 
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
@@ -301,14 +304,30 @@ class SyncControllerService {
 
       Client c = fcmToken != null ? client.copyWith(notificationsToken: fcmToken) : client;
 
-      String? newId = await api.postClient(
+      Map<String, dynamic>? response = await api.postClient(
         client: c.toMap(),
       );
 
-      // in case of new app installation but same device ID
-      // this will set the same ID on the device that was set as first on the server
-      if (newId != null) {
-        _setDeviceUUID(newId);
+      if (response != null) {
+        String? deviceIdFromServer = response['id'];
+        int recurringNotificationsSyncCounterFromServer = response['recurring_notifications_sync_counter'] ?? 0;
+        int recurringBackgroundSyncCounterFromServer = response['recurring_background_sync_counter'] ?? 0;
+
+        // in case of new app installation but same device ID
+        // this will set the same ID on the device that was set as first on the server
+        if (deviceIdFromServer != null && deviceIdFromServer != client.id) {
+          _setDeviceUUID(deviceIdFromServer);
+        }
+
+        // in case of new app installation continue to increment the old recurring_notifications_sync_counter value
+        if (recurringNotificationsSyncCounterFromServer > client.recurringNotificationsSyncCounter!) {
+          _setRecurringNotificationsSyncCounter(recurringNotificationsSyncCounterFromServer);
+        }
+
+        // in case of new app installation continue to increment the old recurring_background_sync_counter value
+        if (recurringBackgroundSyncCounterFromServer > client.recurringBackgroundSyncCounter!) {
+          _setRecurringBackgroundSyncCounter(recurringBackgroundSyncCounterFromServer);
+        }
       }
 
       return;
