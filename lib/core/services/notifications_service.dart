@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
@@ -23,11 +20,8 @@ import 'package:mobile/core/preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:mobile/core/repository/tasks_repository.dart';
-import 'package:mobile/extensions/task_extension.dart';
 
-part 'notifications_state.dart';
-
-class NotificationsCubit extends Cubit<NotificationsCubitState> {
+class NotificationsService {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final AndroidNotificationChannel channel = const AndroidNotificationChannel(
     "channel id",
@@ -37,7 +31,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
   );
   static const dailyReminderTaskId = 1000001;
 
-  NotificationsCubit({bool initFirebaseApp = true}) : super(const NotificationsCubitState()) {
+  NotificationsService({bool initFirebaseApp = true}) {
     setupLocalNotificationsPlugin();
     if (initFirebaseApp) {
       initFirebaseMessaging();
@@ -166,7 +160,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
 
   static scheduleNotificationsService(PreferencesRepository preferencesRepository) async {
     if (preferencesRepository.nextTaskNotificationSettingEnabled) {
-      await NotificationsCubit.cancelScheduledNotifications();
+      await NotificationsService.cancelScheduledNotifications();
 
       TasksRepository tasksRepository = locator<TasksRepository>();
       List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
@@ -188,7 +182,7 @@ class NotificationsCubit extends Cubit<NotificationsCubitState> {
         try {
           String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
 
-          NotificationsCubit.scheduleNotifications(task.title ?? '', "Start at $startTime",
+          NotificationsService.scheduleNotifications(task.title ?? '', "Start at $startTime",
               notificationId: notificationsId,
               scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
                   .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),

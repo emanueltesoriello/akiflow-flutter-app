@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/database_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
@@ -59,20 +59,20 @@ Future<bool> backgroundProcesses(String task) async {
     // ***** background notifications scheduling ***
     // *********************************************
     if (task == scheduleNotificationsTaskKey) {
-      await NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      await NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
       // N.B. to be remove: show a local notification to confirm the background Sync
-      if (kDebugMode) NotificationsCubit.showNotifications("Yeaaah!", "Updated the scheduling of notifications!");
+      if (kDebugMode) NotificationsService.showNotifications("Yeaaah!", "Updated the scheduling of notifications!");
       // *********************************************
 
     } else {
       final SyncControllerService syncControllerService = locator<SyncControllerService>();
 
       await syncControllerService.sync();
-      await NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      await NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
       // Show a local notification to confirm the background Sync
-      if (kDebugMode) NotificationsCubit.showNotifications("From background!", "Synched successfully");
+      if (kDebugMode) NotificationsService.showNotifications("From background!", "Synched successfully");
 
       if (task == backgroundSyncFromNotification) {
         int counter = (locator<PreferencesRepository>().recurringNotificationsSyncCounter) + 1;
@@ -104,7 +104,6 @@ class BackgroundService {
     Workmanager().registerPeriodicTask(
       periodicTaskskKey,
       periodicTaskskKey,
-      //initialDelay: Duration(seconds: 20),
       constraints: constraints.Constraints(
         // connected or metered mark the task as requiring internet
         networkType: NetworkType.connected,

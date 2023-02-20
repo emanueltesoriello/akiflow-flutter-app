@@ -10,13 +10,13 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
@@ -94,7 +94,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     if (user != null) {
       await _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
     }
   }
 
@@ -247,7 +247,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync(entities: [Entity.tasks]);
 
     handleDocAction(tasksChanged);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> duplicate() async {
@@ -283,7 +283,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> delete() async {
@@ -441,7 +441,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> setDeadline(DateTime? date) async {
@@ -612,7 +612,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
       AnalyticsService.track("Tasks unplanned");
@@ -646,11 +646,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
   void setJustCreatedTask(Task task) {
     _scrollListStreamController.add(null);
 
-    //emit(state.copyWith(justCreatedTask: Nullable(task)));
+    emit(state.copyWith(justCreatedTask: Nullable(task)));
 
-    //Timer(const Duration(seconds: 3), () {
-    emit(state.copyWith(justCreatedTask: Nullable(null)));
-    //});
+    Timer(const Duration(seconds: 3), () {
+      emit(state.copyWith(justCreatedTask: Nullable(null)));
+    });
   }
 
   Future<void> undo() async {
@@ -673,7 +673,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     switch (queue.first.type) {
       case UndoType.restore:
@@ -699,7 +699,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     emit(state.copyWith(labelTasks: []));
   }

@@ -2,18 +2,16 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/user.dart';
 
@@ -47,7 +45,7 @@ class MainCubit extends Cubit<MainCubitState> {
 
     if (user != null) {
       _syncCubit.sync(loading: true);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
       AnalyticsService.track("Show Main Window");
     }
   }
@@ -110,6 +108,6 @@ class MainCubit extends Cubit<MainCubitState> {
   void onFocusLost() async {
     _preferencesRepository.setLastAppUseAt(DateTime.now());
     await _syncControllerService.sync([Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 }

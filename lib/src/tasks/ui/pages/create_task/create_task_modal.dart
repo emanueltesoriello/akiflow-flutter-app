@@ -1,18 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
-import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_widget.dart';
@@ -20,12 +15,7 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/label_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
-import 'package:models/label/label.dart';
-import 'package:models/task/task.dart';
-import 'package:workmanager/workmanager.dart';
-import 'package:mobile/core/preferences.dart';
 
-import '../../../../../common/style/colors.dart';
 import '../../../../label/ui/cubit/labels_cubit.dart';
 
 class CreateTaskModal extends StatefulWidget {
@@ -132,13 +122,14 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       });
                                       HapticFeedback.mediumImpact();
                                       var cubit = context.read<EditTaskCubit>();
-                                      cubit.create();
+                                      await cubit.create();
                                       setState(() {
                                         showRefresh = false;
                                         Navigator.pop(context);
                                       });
                                       cubit.forceSync();
-                                      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+                                      NotificationsService.scheduleNotificationsService(
+                                          locator<PreferencesRepository>());
                                     } catch (e) {
                                       setState(() {
                                         showRefresh = false;

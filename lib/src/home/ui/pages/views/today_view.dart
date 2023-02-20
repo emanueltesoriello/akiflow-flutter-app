@@ -6,8 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
@@ -141,7 +140,7 @@ class _TodayViewState extends State<TodayView> {
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+                        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: SlidableAutoCloseBehavior(
                         child: ListView(

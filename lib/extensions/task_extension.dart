@@ -9,7 +9,7 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -792,7 +792,7 @@ extension TaskExt on Task {
       Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
           existingWorkPolicy: ExistingWorkPolicy.replace);
     } else {
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
     }
   }
 
