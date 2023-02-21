@@ -6,8 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:models/base.dart';
 import 'package:models/nullable.dart';
 
-import '../doc/doc.dart';
-
 class Task extends Equatable implements Base {
   final String? id;
   final String? title;
@@ -44,7 +42,7 @@ class Task extends Equatable implements Base {
   final Nullable<String?>? originId;
   final Nullable<String?>? originAccountId;
   final String? akiflowAccountId;
-  final Nullable<Doc?>? doc; // TODO: change to built_in_doc interface
+  final dynamic doc;
 
   const Task({
     this.id,
@@ -121,7 +119,7 @@ class Task extends Equatable implements Base {
     Nullable<String?>? originId,
     Nullable<String?>? originAccountId,
     String? akiflowAccountId,
-    Nullable<Doc?>? doc,
+    dynamic doc,
   }) {
     return Task(
       id: id ?? this.id,
@@ -201,7 +199,7 @@ class Task extends Equatable implements Base {
       'origin_id': originId?.value,
       'origin_account_id': originAccountId?.value,
       'akiflow_account_id': akiflowAccountId,
-      'doc': doc?.value?.toMap(),
+      'doc': doc,
     };
   }
 
@@ -241,7 +239,7 @@ class Task extends Equatable implements Base {
       originId: map['origin_id'] != null ? Nullable(map['origin_id'] as String?) : null,
       originAccountId: map['origin_account_id'] != null ? Nullable(map['origin_account_id'] as String?) : null,
       akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
-      doc: map['doc'] != null ? Nullable(Doc.fromMap(map['doc'])) as dynamic : null,
+      doc: map['doc'] != null ? map['doc'] as dynamic : null,
       trashedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
     );
   }
@@ -280,7 +278,7 @@ class Task extends Equatable implements Base {
       "origin_id": originId?.value,
       "origin_account_id": originAccountId?.value,
       "akiflow_account_id": akiflowAccountId,
-      "doc": doc != null ? jsonEncode(doc?.value?.toSql()) : null,
+      "doc": doc != null ? jsonEncode(doc) : null,
     };
   }
 

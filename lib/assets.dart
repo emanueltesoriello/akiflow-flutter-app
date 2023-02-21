@@ -79,6 +79,7 @@ class _AssetsImagesIcons {
   final google = _AssetsImagesIconsGoogle._();
   final jira = _AssetsImagesIconsJira._();
   final notion = _AssetsImagesIconsNotion._();
+  final onboarding = _AssetsImagesIconsOnboarding._();
   final slack = _AssetsImagesIconsSlack._();
   final superhuman = _AssetsImagesIconsSuperhuman._();
   final skype = _AssetsImagesIconsSkype._();
@@ -247,6 +248,17 @@ class _AssetsImagesIconsNotion {
   _AssetsImagesIconsNotion._();
 
   final notionSVG = 'assets/images/icons/notion/notion.svg';
+}
+
+class _AssetsImagesIconsOnboarding {
+  _AssetsImagesIconsOnboarding._();
+
+  final arrowLeftSVG = 'assets/images/onboarding/arrow_left.svg';
+  final arrowRightSVG = 'assets/images/onboarding/arrow_right.svg';
+  final fingerSVG = 'assets/images/onboarding/onboarding_finger.svg';
+  final fingerMoveSVG = 'assets/images/onboarding/finger_move.svg';
+  final fingerLongMoveSVG = 'assets/images/onboarding/finger_long_move.svg';
+  final fingerMoveInvertSVG = 'assets/images/onboarding/finger_move_invert.svg';
 }
 
 class _AssetsImagesIconsSlack {

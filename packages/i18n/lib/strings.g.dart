@@ -4,8 +4,10 @@
  *
  * Locales: 1
  * Strings: 289 
+ * Strings: 261 
  *
  * Built on 2023-01-30 at 09:16 UTC
+ * Built on 2023-02-13 at 12:42 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -322,6 +324,7 @@ class _StringsEn {
 	String get allTasks => 'All tasks';
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
 	late final _StringsEventEn event = _StringsEventEn._(_root);
+	late final _StringsAvailabilityEn availability = _StringsAvailabilityEn._(_root);
 	String get confirm => 'Confirm';
 	String get cancel => 'Cancel';
 	String get noTitle => '(No title)';
@@ -542,6 +545,9 @@ class _StringsLinkedContentEn {
 	String get status => 'Status';
 	String get done => 'Done';
 	String get toDo => 'To do';
+	String get section => 'Section';
+	String get scheduledDate => 'Scheduled Date';
+	String get duration => 'Duration';
 }
 
 // Path: editTask
@@ -638,6 +644,23 @@ class _StringsEventEn {
 	String get edit => 'Edit';
 	String get delete => 'Delete';
 	late final _StringsEventEditEventEn editEvent = _StringsEventEditEventEn._(_root);
+}
+
+// Path: availability
+class _StringsAvailabilityEn {
+	_StringsAvailabilityEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get availabilities => 'Availabilities';
+	String get activeRecurrentSlots => 'Active recurrent slots';
+	String get activeManualSlots => 'Active manual slots';
+	String get comingSoon => 'Coming Soon';
+	String get fullCalendarExperienceInFuture => 'The full calendar experience is coming in the near future';
+	String get noActiveLinksToShow => 'No active links to show';
+	String get toCreateLinkUseDesktop => 'To create a link use the desktop app';
+	String get linkCopiedToClipboard => 'Link copied to clipboard!';
 }
 
 // Path: integrations
@@ -1148,6 +1171,9 @@ extension on _StringsEn {
 			'linkedContent.status': 'Status',
 			'linkedContent.done': 'Done',
 			'linkedContent.toDo': 'To do',
+			'linkedContent.section': 'Section',
+			'linkedContent.scheduledDate': 'Scheduled Date',
+			'linkedContent.duration': 'Duration',
 			'editTask.add': 'Add',
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.searchALabel': 'Search a label',
@@ -1239,6 +1265,14 @@ extension on _StringsEn {
 			'event.editEvent.defaultColor': 'Default Color',
 			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
 			'event.editEvent.saveChanges': 'Save Changes',
+			'availability.availabilities': 'Availabilities',
+			'availability.activeRecurrentSlots': 'Active recurrent slots',
+			'availability.activeManualSlots': 'Active manual slots',
+			'availability.comingSoon': 'Coming Soon',
+			'availability.fullCalendarExperienceInFuture': 'The full calendar experience is coming in the near future',
+			'availability.noActiveLinksToShow': 'No active links to show',
+			'availability.toCreateLinkUseDesktop': 'To create a link use the desktop app',
+			'availability.linkCopiedToClipboard': 'Link copied to clipboard!',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',

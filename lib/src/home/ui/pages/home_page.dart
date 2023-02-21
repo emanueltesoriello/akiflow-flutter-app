@@ -6,10 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
@@ -104,7 +102,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           builder: (context) => GmailActionDialog(
             syncMode: action.account.gmailSyncMode,
             goToGmail: () {
-              tasksCubit.goToGmail(action.doc);
+              tasksCubit.goToGmail(action.task.doc.url);
             },
             unstarOrUnlabel: () {
               tasksCubit.unstarGmail(action);

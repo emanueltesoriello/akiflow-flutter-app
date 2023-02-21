@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,14 +18,13 @@ import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/navigation_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/di/base_providers.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/navigator/base_navigator.dart';
-import 'package:mobile/src/home/ui/pages/home_body.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -137,7 +137,7 @@ class Application extends StatelessWidget {
                   navigatorObservers: [routeObserver],
                   theme: lightTheme,
                   home: FutureBuilder(
-                      future: NotificationsCubit.handlerForNotificationsClickForTerminatedApp(),
+                      future: NotificationsService.handlerForNotificationsClickForTerminatedApp(),
                       builder: (context, _) {
                         return BaseNavigator(userLogged: userLogged);
                       })));

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/integrations_list.dart';
 import 'package:models/account/account.dart';
@@ -67,6 +68,7 @@ class ReconnectIntegrations extends StatelessWidget {
 
                               if (accounts.every((account) => bloc.isLocalActive(account))) {
                                 Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(context));
                               }
                             });
                           },

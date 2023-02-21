@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:get_it/get_it.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:mobile/core/api/account_api.dart';
+import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/api/calendar_api.dart';
 import 'package:mobile/core/api/contacts_api.dart';
+import 'package:mobile/core/api/client_api.dart';
 import 'package:mobile/core/api/event_api.dart';
 import 'package:mobile/core/api/event_modifiers_api.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
@@ -26,22 +31,16 @@ import 'package:mobile/core/services/sync_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/client/client.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers, docs }
 
 enum IntegrationEntity { gmail }
 
 class SyncControllerService {
-  GetIt? newLocator;
-
-  SyncControllerService({this.newLocator}) {
-    if (newLocator != null) {
-      locator = newLocator!;
-    }
-  }
-
   static final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
 
   static final AccountApi _accountApi = locator<AccountApi>();
@@ -106,7 +105,6 @@ class SyncControllerService {
     Entity.events: () => _preferencesRepository.lastEventsSyncAt,
     Entity.eventModifiers: () => _preferencesRepository.lastEventModifiersSyncAt,
     Entity.contacts: () => _preferencesRepository.lastContactsSyncAt
-    // Entity.docs: () => _preferencesRepository.lastDocsSyncAt,
   };
 
   final Map<Entity, Function(DateTime?)> _setLastSyncPreferences = {
@@ -117,8 +115,16 @@ class SyncControllerService {
     Entity.events: _preferencesRepository.setLastEventsSyncAt,
     Entity.eventModifiers: _preferencesRepository.setLastEventModifiersSyncAt,
     Entity.contacts: _preferencesRepository.setLastContactsSyncAt,
-    // Entity.docs: _preferencesRepository.setLastDocsSyncAt,
   };
+
+  final String _getDeviceUUID = _preferencesRepository.deviceUUID;
+  _setDeviceUUID(newId) => _preferencesRepository.setDeviceUUID(newId);
+
+  final int _getRecurringBackgroundSyncCounter = _preferencesRepository.recurringBackgroundSyncCounter;
+  _setRecurringBackgroundSyncCounter(val) => _preferencesRepository.setRecurringBackgroundSyncCounter(val);
+
+  final int _getRecurringNotificationsSyncCounter = _preferencesRepository.recurringNotificationsSyncCounter;
+  _setRecurringNotificationsSyncCounter(val) => _preferencesRepository.setRecurringNotificationsSyncCounter(val);
 
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
@@ -150,6 +156,12 @@ class SyncControllerService {
         for (Entity entity in entities) {
           await _syncEntity(entity);
         }
+      }
+
+      try {
+        await postClient();
+      } catch (e, s) {
+        _sentryService.captureException(e, stackTrace: s);
       }
 
       syncCompletedController.add(0);
@@ -245,6 +257,85 @@ class SyncControllerService {
     return hasNewDocs;
   }
 
+  Future postClient() async {
+    try {
+      ApiClient api = ClientApi();
+
+      DateTime? lastSyncTasks = await _getLastSyncFromPreferences[Entity.tasks]!();
+      DateTime? lastSyncAccounts = await _getLastSyncFromPreferences[Entity.accounts]!();
+      DateTime? lastSyncLabels = await _getLastSyncFromPreferences[Entity.labels]!();
+
+      int recurringBackgroundSyncCounter = _getRecurringBackgroundSyncCounter;
+      int recurringNotificationsSyncCounter = _getRecurringNotificationsSyncCounter;
+
+      String? fcmToken;
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        print('no access to firebase from background');
+      }
+
+      String id = _getDeviceUUID;
+      String os = Platform.isAndroid ? "android" : "ios";
+
+      int userId = _preferencesRepository.user!.id ?? 0;
+
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      BaseDeviceInfo deviceInfo = await DeviceInfoPlugin().deviceInfo;
+      String? deviceId = deviceInfo.toMap()['id'];
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+
+      Client client = Client(
+        id: id,
+        deviceId: deviceId,
+        userId: userId,
+        os: os,
+        lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+        unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+        lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
+        unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
+        lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
+        unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
+        timezoneName: currentTimeZone,
+        release: '${packageInfo.version} ${packageInfo.buildNumber}',
+        recurringBackgroundSyncCounter: recurringBackgroundSyncCounter,
+        recurringNotificationsSyncCounter: recurringNotificationsSyncCounter,
+      );
+
+      Client c = fcmToken != null ? client.copyWith(notificationsToken: fcmToken) : client;
+
+      Map<String, dynamic>? response = await api.postClient(
+        client: c.toMap(),
+      );
+
+      if (response != null) {
+        String? deviceIdFromServer = response['id'];
+        int recurringNotificationsSyncCounterFromServer = response['recurring_notifications_sync_counter'] ?? 0;
+        int recurringBackgroundSyncCounterFromServer = response['recurring_background_sync_counter'] ?? 0;
+
+        // in case of new app installation but same device ID
+        // this will set the same ID on the device that was set as first on the server
+        if (deviceIdFromServer != null && deviceIdFromServer != client.id) {
+          _setDeviceUUID(deviceIdFromServer);
+        }
+
+        // in case of new app installation continue to increment the old recurring_notifications_sync_counter value
+        if (recurringNotificationsSyncCounterFromServer > client.recurringNotificationsSyncCounter!) {
+          _setRecurringNotificationsSyncCounter(recurringNotificationsSyncCounterFromServer);
+        }
+
+        // in case of new app installation continue to increment the old recurring_background_sync_counter value
+        if (recurringBackgroundSyncCounterFromServer > client.recurringBackgroundSyncCounter!) {
+          _setRecurringBackgroundSyncCounter(recurringBackgroundSyncCounterFromServer);
+        }
+      }
+
+      return;
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
   Future<void> _syncEntity(Entity entity) async {
     try {
       print("Syncing $entity...");
@@ -281,7 +372,6 @@ class SyncControllerService {
       }
 
       DateTime? lastSyncUpdated = await SyncIntegrationService(integrationApi: api).start(lastSync, params: params);
-      // await _syncEntity(Entity.docs);
 
       if (lastSyncUpdated != null) {
         await _preferencesRepository.setLastSyncForAccountId(account.id!, lastSyncUpdated);

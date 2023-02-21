@@ -9,12 +9,11 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
@@ -120,7 +119,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           try {
             _syncCubit.sync();
-            NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+            NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
           } catch (e) {
             print(e);
           }

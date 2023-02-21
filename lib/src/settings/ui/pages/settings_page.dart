@@ -1,3 +1,5 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
@@ -6,7 +8,6 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
-import 'package:mobile/src/base/ui/widgets/base/notification_count_icon.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/pages/integrations_page.dart';
 import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
@@ -30,6 +31,10 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (kDebugMode)
+            FutureBuilder(
+                future: FirebaseMessaging.instance.getToken(),
+                builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
           ButtonList(
             title: t.settings.myAccount.title,
             position: ButtonListPosition.single,

@@ -22,10 +22,10 @@ import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
@@ -94,7 +94,7 @@ void setupLocator(
   /// Blocs
   TodayCubit todayCubit = TodayCubit();
   SyncCubit syncCubit = SyncCubit();
-  NotificationsCubit notificationsCubit = NotificationsCubit(initFirebaseApp: initFirebaseApp);
+  NotificationsService notificationsService = NotificationsService(initFirebaseApp: initFirebaseApp);
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   AuthCubit authCubit = AuthCubit(syncCubit);
   CalendarCubit calendarCubit = CalendarCubit(syncCubit);
@@ -108,7 +108,7 @@ void setupLocator(
   locator.registerSingleton<TasksCubit>(tasksCubit);
   locator.registerSingleton<TodayCubit>(todayCubit);
   locator.registerSingleton<SyncCubit>(syncCubit);
-  locator.registerSingleton<NotificationsCubit>(notificationsCubit);
+  locator.registerSingleton<NotificationsService>(notificationsService);
   locator.registerSingleton<AuthCubit>(authCubit);
   locator.registerSingleton<CalendarCubit>(calendarCubit);
   locator.registerSingleton<EventsCubit>(eventsCubit);

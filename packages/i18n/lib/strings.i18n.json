@@ -241,7 +241,10 @@
     "savedOn": "Saved on",
     "status": "Status",
     "done": "Done",
-    "toDo": "To do"
+    "toDo": "To do",
+    "section": "Section",
+    "scheduledDate":"Scheduled Date",
+    "duration":"Duration"
   },
   "editTask": {
     "add": "Add",
@@ -349,6 +352,16 @@
       "viewOnGoogleCalendar": "View on Google Calendar",
       "saveChanges": "Save Changes"
     }
+  },
+  "availability": {
+    "availabilities":"Availabilities",
+    "activeRecurrentSlots":"Active recurrent slots",
+    "activeManualSlots":"Active manual slots",
+    "comingSoon":"Coming Soon",
+    "fullCalendarExperienceInFuture":"The full calendar experience is coming in the near future",
+    "noActiveLinksToShow":"No active links to show",
+    "toCreateLinkUseDesktop":"To create a link use the desktop app",
+    "linkCopiedToClipboard":"Link copied to clipboard!"
   },
   "confirm": "Confirm",
   "cancel": "Cancel",

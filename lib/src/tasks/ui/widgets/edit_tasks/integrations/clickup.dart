@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/doc/click_up_doc.dart';
 import 'package:models/task/task.dart';
@@ -24,57 +23,51 @@ class ClickupLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.workspace,
-          value: doc.content?["teamName"] ?? '',
+          value: doc.teamName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.space,
-          value: doc.content?["spaceName"] ?? '',
+          value: doc.spaceName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.folder,
-          value: doc.content?["folderName"] ?? '',
+          value: doc.folderName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.list,
-          value: doc.content?["listName"] ?? '',
+          value: doc.listName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.title,
-          value: doc.title ?? '',
+          value: task.title ?? '',
           syncing: true,
         ),
         itemBuilder(
           context,
           title: t.linkedContent.date,
-          value: doc.dueDateTimeFormatted ?? '',
+          value: task.dueDateFormatted,
           syncing: true,
         ),
         itemBuilder(
           context,
-          title: "Scheduled Date",
+          title: t.linkedContent.scheduledDate,
           value: task.datetimeFormatted,
           syncing: true,
         ),
         itemBuilder(
           context,
-          title: "Priority",
-          value: task.priorityName,
+          title: t.linkedContent.duration,
+          value: task.endTime ?? '',
           syncing: true,
         ),
         itemBuilder(
           context,
-          title: "Duration",
-          value: task.endTime ?? '-',
-          syncing: true,
-        ),
-        itemBuilder(
-          context,
-          title: "Status",
-          value: (task.done ?? false) ? "Done" : "Not Done",
+          title: t.linkedContent.status,
+          value: (task.done ?? false) ? t.linkedContent.done : t.linkedContent.toDo,
           syncing: true,
         ),
       ],

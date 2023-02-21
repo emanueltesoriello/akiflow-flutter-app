@@ -5,6 +5,7 @@ import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class PreferencesRepository {
   Future<void> clear();
@@ -88,6 +89,15 @@ abstract class PreferencesRepository {
 
   bool get dailyOverviewNotificationTimeEnabled;
   Future<void> seDailyOverviewNotificationTime(bool value);
+
+  String get deviceUUID;
+  Future<void> setDeviceUUID(String value);
+
+  int get recurringBackgroundSyncCounter;
+  Future<void> setRecurringBackgroundSyncCounter(int value);
+
+  int get recurringNotificationsSyncCounter;
+  Future<void> setRecurringNotificationsSyncCounter(int value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -418,5 +428,44 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> seDailyOverviewNotificationTime(bool value) async {
     await _prefs.setBool("dailyOverviewNotificationTimeEnabled", value);
+  }
+
+  @override
+  String get deviceUUID {
+    String? uuid = _prefs.getString("deviceUUID");
+
+    if (uuid == null) {
+      uuid = const Uuid().v4();
+
+      _prefs.setString("deviceUUID", uuid);
+      return uuid;
+    } else {
+      return uuid;
+    }
+  }
+
+  @override
+  Future<void> setDeviceUUID(String value) async {
+    await _prefs.setString("deviceUUID", value);
+  }
+
+  @override
+  int get recurringBackgroundSyncCounter {
+    return _prefs.getInt("recurring_background_sync_counter") ?? 0;
+  }
+
+  @override
+  Future<void> setRecurringBackgroundSyncCounter(int value) async {
+    await _prefs.setInt("recurring_background_sync_counter", value);
+  }
+
+  @override
+  int get recurringNotificationsSyncCounter {
+    return _prefs.getInt("recurring_notifications_sync_counter") ?? 0;
+  }
+
+  @override
+  Future<void> setRecurringNotificationsSyncCounter(int value) async {
+    await _prefs.setInt("recurring_notifications_sync_counter", value);
   }
 }

@@ -1,16 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart' hide Entity;
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/src/base/models/chrono_model.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
@@ -21,6 +21,11 @@ import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/sentry_service.dart';
+
+import '../../../../common/style/colors.dart';
+import '../../../../common/utils/stylable_text_editing_controller.dart';
+import '../../../../core/services/sync_controller_service.dart';
 
 part 'edit_task_state.dart';
 
@@ -33,10 +38,44 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   List<Task> recurrenceTasksToUpdate = [];
   List<Task> recurrenceTasksToCreate = [];
 
-  EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState());
+  final EntityExtractor extractor = EntityExtractor(language: EntityExtractorLanguage.english);
+  late StylableTextEditingController simpleTitleController;
+
+  EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState()) {
+    simpleTitleController = getInitializedController();
+  }
+
+  StylableTextEditingController getInitializedController() {
+    return StylableTextEditingController({}, (String? value) {
+      MapType? type = simpleTitleController.removeMappingByValue(value);
+      if (type == null) {
+        print('Null case');
+      } else {
+        switch (type.type) {
+          case 0:
+            planFor(null, statusType: TaskStatusType.inbox);
+            break;
+          case 1:
+            setEmptyLabel();
+            break;
+          case 2:
+            setPriority(PriorityEnum.none);
+            break;
+          case 3:
+            setDuration(0);
+            break;
+          default:
+        }
+      }
+    }, {});
+  }
 
   undoChanges() {
     emit(state.copyWith(updatedTask: state.originalTask));
+  }
+
+  EntityExtractor getExtractor() {
+    return extractor;
   }
 
   void attachTask(Task task) {
@@ -59,6 +98,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
+  void onOpen() {
+    simpleTitleController = getInitializedController();
+    simpleTitleController.text = state.originalTask.title ?? '';
+  }
+
   Future<void> create() async {
     try {
       if (TaskExt.hasData(state.updatedTask) == false) {
@@ -74,23 +118,38 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         sorting: now.toUtc().millisecondsSinceEpoch,
       );
 
+      _tasksCubit.setJustCreatedTask(updated);
+      _tasksCubit.refreshTasksUi(updated);
+
+      await _tasksRepository.add([
+        updated
+      ]); /*.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          throw Exception("Error on add");
+        },
+      );*/
+
+      await _tasksCubit.refreshAllFromRepository().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          throw Exception("Error on refreshAllFromRepository");
+        },
+      );
+
       emit(const EditTaskCubitState());
 
-      _tasksCubit.setJustCreatedTask(updated);
-      await _tasksRepository.add([updated]);
-      _tasksCubit.refreshTasksUi(updated);
-      await _tasksCubit.refreshAllFromRepository();
-
       AnalyticsService.track("New Task");
-
-      //await _syncCubit.sync(entities: [Entity.tasks]);
     } catch (e) {
       print(e.toString());
+      locator<SentryService>().addBreadcrumb(message: e.toString(), timestamp: DateTime.now());
     }
   }
 
   Future forceSync() async {
-    await _syncCubit.sync(entities: [Entity.tasks]);
+    await _syncCubit.sync(entities: [Entity.tasks]).catchError((e) {
+      locator<SentryService>().addBreadcrumb(message: e.toString(), timestamp: DateTime.now());
+    });
   }
 
   Future<void> planFor(
@@ -98,8 +157,9 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     DateTime? dateTime,
     required TaskStatusType statusType,
     bool forceUpdate = false,
+    bool fromNlp = false,
   }) async {
-    emit(state.copyWith(selectedDate: date, showDuration: false));
+    emit(state.copyWith(selectedDate: date));
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
@@ -109,32 +169,33 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    if (statusType == TaskStatusType.snoozed) {
-      _tasksCubit.addToUndoQueue([updated], UndoType.snooze);
-    } else {
-      _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
-    }
-
     emit(state.copyWith(updatedTask: updated));
 
     _tasksCubit.refreshTasksUi(updated);
+    if (!fromNlp) {
+      if (statusType == TaskStatusType.snoozed) {
+        _tasksCubit.addToUndoQueue([updated], UndoType.snooze);
+      } else {
+        _tasksCubit.addToUndoQueue([updated], statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+      }
 
-    if (forceUpdate) {
-      _tasksCubit
-          .addToUndoQueue([task], updated.statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
-      await _tasksRepository.updateById(updated.id!, data: updated);
-      _tasksCubit.refreshAllFromRepository();
-      _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      if (forceUpdate) {
+        _tasksCubit
+            .addToUndoQueue([task], updated.statusType == TaskStatusType.someday ? UndoType.snooze : UndoType.plan);
+        await _tasksRepository.updateById(updated.id!, data: updated);
+        _tasksCubit.refreshAllFromRepository();
+        _syncCubit.sync(entities: [Entity.tasks]);
+        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
-      if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
-        AnalyticsService.track("Task Rescheduled");
-      } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
-        AnalyticsService.track("Task moved to Inbox");
-      } else if (statusType == TaskStatusType.planned) {
-        AnalyticsService.track("Task planned");
-      } else if (statusType == TaskStatusType.snoozed) {
-        AnalyticsService.track("Task snoozed");
+        if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
+          AnalyticsService.track("Task Rescheduled");
+        } else if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
+          AnalyticsService.track("Task moved to Inbox");
+        } else if (statusType == TaskStatusType.planned) {
+          AnalyticsService.track("Task planned");
+        } else if (statusType == TaskStatusType.snoozed) {
+          AnalyticsService.track("Task snoozed");
+        }
       }
     }
   }
@@ -161,9 +222,16 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Task Rescheduled");
   }
 
-  void setDuration(int? seconds) {
+  void setDuration(int? seconds, {bool fromModal = false}) {
     if (seconds != null) {
-      emit(state.copyWith(selectedDuration: seconds.toDouble(), showDuration: false));
+      emit(state.copyWith(selectedDuration: seconds.toDouble()));
+      Duration duration = Duration(seconds: seconds);
+
+      String text = "${duration.inHours}:${duration.inMinutes.remainder(60)}";
+
+      if (state.openedDurationfromNLP && fromModal == true) {
+        onDurationDetected(Duration(seconds: seconds), text);
+      }
 
       Task task = state.updatedTask;
 
@@ -172,22 +240,38 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
       );
 
-      emit(state.copyWith(updatedTask: updated));
+      emit(state.copyWith(
+        updatedTask: updated,
+        showDuration: false,
+        openedDurationfromNLP: false,
+      ));
 
       AnalyticsService.track("Edit Task Duration");
     }
   }
 
-  void toggleImportance() {
-    emit(state.copyWith(showPriority: !state.showPriority, showDuration: false, showLabelsList: false));
+  void toggleImportance({bool openedFromNLP = false}) {
+    emit(state.copyWith(
+        openedPrirorityfromNLP: openedFromNLP,
+        showPriority: !state.showPriority,
+        showDuration: false,
+        showLabelsList: false));
   }
 
-  void toggleDuration() {
-    emit(state.copyWith(showDuration: !state.showDuration, showPriority: false, showLabelsList: false));
+  void toggleDuration({bool openedFromNLP = false}) {
+    emit(state.copyWith(
+        showDuration: !state.showDuration,
+        openedDurationfromNLP: openedFromNLP,
+        showPriority: false,
+        showLabelsList: false));
   }
 
-  void toggleLabels() {
-    emit(state.copyWith(showLabelsList: !state.showLabelsList, showDuration: false, showPriority: false));
+  void toggleLabels({bool openedFromNLP = false}) {
+    emit(state.copyWith(
+        openedLabelfromNLP: openedFromNLP,
+        showLabelsList: !state.showLabelsList,
+        showDuration: false,
+        showPriority: false));
   }
 
   Future<void> setEmptyLabel() async {
@@ -198,14 +282,58 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
+  onLabelDetected(Label label, String value) {
+    simpleTitleController.text = simpleTitleController.text + (label.title ?? "");
+    Color bg = ColorsExt.getFromName(label.color!).withOpacity(0.2);
+    if (simpleTitleController.hasParsedLabel() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(1);
+      simpleTitleController.addMapping({
+        "#$value": MapType(1, TextStyle(backgroundColor: bg)),
+      });
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "#$value": MapType(
+            1,
+            TextStyle(
+              backgroundColor: bg,
+            )),
+      });
+    }
+  }
+
+  onDurationDetected(Duration duration, String value) {
+    simpleTitleController.text = simpleTitleController.text + value;
+    if (simpleTitleController.hasParsedDuration() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(3);
+      simpleTitleController.addMapping({
+        "=$value": const MapType(
+            3,
+            TextStyle(
+              backgroundColor: ColorsLight.cyan25,
+            )),
+      });
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        "=$value": const MapType(
+            3,
+            TextStyle(
+              backgroundColor: ColorsLight.cyan25,
+            )),
+      });
+    }
+  }
+
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
       listId: Nullable(label.id),
       sectionId: Nullable(null),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
+    if (state.openedLabelfromNLP) {
+      onLabelDetected(label, label.title!);
+    }
 
-    emit(state.copyWith(showLabelsList: false, updatedTask: updated));
+    emit(state.copyWith(showLabelsList: false, updatedTask: updated, openedLabelfromNLP: false));
 
     _tasksCubit.refreshTasksUi(updated);
 
@@ -213,7 +341,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
     }
 
     AnalyticsService.track("Edit Task Label");
@@ -272,7 +400,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     await _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   void setDeadline(DateTime? date) {
@@ -299,12 +427,17 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated, showDuration: false, showLabelsList: false));
   }
 
-  void setPriority(PriorityEnum? priority, {int? value}) {
+  void onDispose() {
+    simpleTitleController.done();
+    simpleTitleController = getInitializedController();
+  }
+
+  void setPriority(PriorityEnum? priority, {int? value, bool fromModal = true}) {
     Task updated = state.updatedTask.copyWith(
       priority: priority?.value ?? value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated, showPriority: false));
   }
 
   void removePriority() {
@@ -312,7 +445,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       priority: -1,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated, showPriority: false));
   }
 
   Future<void> removeLabel() async {
@@ -324,41 +457,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(showLabelsList: false, updatedTask: updated));
 
     _tasksCubit.refreshTasksUi(updated);
-  }
-
-  Future<void> setRecurrence(RecurrenceRule? rule) async {
-    List<String>? recurrence;
-
-    if (rule != null) {
-      recurrence = [rule.toString()];
-    }
-
-    Task original = state.originalTask;
-
-    Task updated = state.updatedTask.copyWith(
-      recurrence: Nullable(recurrence),
-      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
-    );
-
-    emit(state.copyWith(updatedTask: updated));
-
-    recurrenceTasksToUpdate.clear();
-    recurrenceTasksToCreate.clear();
-
-    if ((original.recurrence != null && original.recurrence!.isNotEmpty) &&
-        (updated.recurrence == null || updated.recurrence!.isEmpty)) {
-      await _removeTasksWithRecurrence(original, updated);
-    } else if ((original.recurrence == null || original.recurrence!.isEmpty) &&
-        (updated.recurrence != null && updated.recurrence!.isNotEmpty)) {
-      updated = await _addTaskWithRecurrence(updated);
-    } else {
-      await _removeTasksWithRecurrence(original, updated);
-      updated = await _addTaskWithRecurrence(updated);
-    }
-
-    emit(state.copyWith(updatedTask: updated));
-
-    AnalyticsService.track("Edit Task Priority");
   }
 
   Future<Task> _addTaskWithRecurrence(Task updated) async {
@@ -430,6 +528,41 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
+  Future<void> setRecurrence(RecurrenceRule? rule) async {
+    List<String>? recurrence;
+
+    if (rule != null) {
+      recurrence = [rule.toString()];
+    }
+
+    Task original = state.originalTask;
+
+    Task updated = state.updatedTask.copyWith(
+      recurrence: Nullable(recurrence),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
+
+    recurrenceTasksToUpdate.clear();
+    recurrenceTasksToCreate.clear();
+
+    if ((original.recurrence != null && original.recurrence!.isNotEmpty) &&
+        (updated.recurrence == null || updated.recurrence!.isEmpty)) {
+      await _removeTasksWithRecurrence(original, updated);
+    } else if ((original.recurrence == null || original.recurrence!.isEmpty) &&
+        (updated.recurrence != null && updated.recurrence!.isNotEmpty)) {
+      updated = await _addTaskWithRecurrence(updated);
+    } else {
+      await _removeTasksWithRecurrence(original, updated);
+      updated = await _addTaskWithRecurrence(updated);
+    }
+
+    emit(state.copyWith(updatedTask: updated));
+
+    AnalyticsService.track("Edit Task Priority");
+  }
+
   Future<void> duplicate() async {
     String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
@@ -445,15 +578,12 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       originAccountId: Nullable(null),
       selected: false,
     );
-
-    print(newTaskDuplicated.doc);
-    print('===============================');
     await _tasksRepository.add([newTaskDuplicated]);
 
     _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   void onTitleChanged(String value) {
@@ -531,44 +661,67 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     AnalyticsService.track("Edit Task");
   }
 
-  void updateTitle(String value, {List<ChronoModel>? chrono}) {
+  void updateTitle(String value, {Map<String, MapType>? mapping, Set<String>? recognized}) {
     Task updated = state.updatedTask.copyWith(
       title: value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-
     emit(state.copyWith(updatedTask: updated));
 
-    // if (chrono != null && chrono.isNotEmpty) {
-    //   _planWithChrono(chrono.first);
-    // } else {
-    //   planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
-    // }
+    if (mapping != null) {
+      List<MapEntry<String, MapType>> mappings = mapping.entries.toList();
+
+      for (var map in mappings) {
+        if (map.value.type == 0) {
+          if (value.contains(map.key) == false) {
+            planFor(null, statusType: TaskStatusType.inbox);
+          }
+        }
+      }
+    }
   }
 
-  void _planWithChrono(ChronoModel chrono) {
-    DateTime? date = chrono.impliedDate;
-
-    if (date == null) return;
-
-    DateTime? datetime;
-
-    if (chrono.start?.knownValues?.hour != null && chrono.start?.knownValues?.minute != null) {
-      datetime = date;
+  void planWithNLP(int dateToBeParsed) async {
+    DateTime? date;
+    if (Platform.isIOS) {
+      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
+    } else {
+      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed, isUtc: false);
     }
 
-    Task updated = state.updatedTask;
+    await planFor(date,
+        dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
+  }
 
-    TaskStatusType type = updated.statusType == TaskStatusType.planned || updated.statusType == TaskStatusType.snoozed
-        ? updated.statusType!
-        : TaskStatusType.planned;
+  onDateDetected(BuildContext context, DateTimeEntity detected, String value, int start, int end) {
+    if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
+      simpleTitleController.removeMapping(0);
+      simpleTitleController.addMapping({
+        value: MapType(
+            0,
+            TextStyle(
+              color: ColorsExt.akiflow20(context),
+            )),
+      });
 
-    planFor(date, dateTime: datetime, statusType: type);
+      print(detected.timestamp);
+
+      planWithNLP(detected.timestamp);
+    } else if (!simpleTitleController.isRemoved(value)) {
+      simpleTitleController.addMapping({
+        value: MapType(
+            0,
+            TextStyle(
+              color: ColorsExt.akiflow20(context),
+            )),
+      });
+      planWithNLP(detected.timestamp);
+    }
   }
 
   void updateDescription(String html) {

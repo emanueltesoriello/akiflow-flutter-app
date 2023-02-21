@@ -5,8 +5,8 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -111,7 +111,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                                   scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
                                   existingWorkPolicy: ExistingWorkPolicy.replace);
                             } else {
-                              NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+                              NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                             }
                           },
                               selected: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
