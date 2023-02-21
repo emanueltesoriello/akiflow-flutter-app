@@ -58,8 +58,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     refetchEvent(event);
   }
 
-  Future<void> updateEventAndAtendees(
-      Event event, List<String> atendeesToAdd, List<String> atendeesToRemove, bool addMeeting) async {
+  Future<void> updateEventAndCreateModifiers(Event event, List<String> atendeesToAdd, List<String> atendeesToRemove,
+      bool addMeeting, bool removeMeeting) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
       EventModifier eventModifier = EventModifier(
           id: const Uuid().v4(),
@@ -76,6 +76,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
     if (addMeeting) {
       await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
+    }
+    if (removeMeeting) {
+      await _eventModifiersRepository.add([removeMeetingEventModifier(event)]);
     }
     await _eventsRepository.updateById(event.id, data: event);
     refetchEvent(event);
@@ -94,6 +97,18 @@ class EventsCubit extends Cubit<EventsCubitState> {
         content: {
           "meetingSolution": "meet",
         },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
+  }
+
+  EventModifier removeMeetingEventModifier(Event event) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: event.id,
+        calendarId: event.calendarId,
+        action: 'meeting/remove',
+        content: {},
         createdAt: DateTime.now().toUtc().toIso8601String());
     return eventModifier;
   }

@@ -47,7 +47,8 @@ class _EventEditModalState extends State<EventEditModal> {
   StreamSubscription? streamSubscription;
   late List<String> atendeesToAdd;
   late List<String> atendeesToRemove;
-  late bool addMeeting;
+  late bool addingMeeting;
+  late bool removingMeeting;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -62,7 +63,8 @@ class _EventEditModalState extends State<EventEditModal> {
 
     atendeesToAdd = List.empty(growable: true);
     atendeesToRemove = List.empty(growable: true);
-    addMeeting = false;
+    addingMeeting = false;
+    removingMeeting = false;
 
     initDescription().whenComplete(() {
       streamSubscription = quillController.value.changes.listen((change) async {
@@ -257,7 +259,7 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           ),
                           const Separator(),
-                          updatedEvent.meetingUrl != null || addMeeting
+                          (updatedEvent.meetingUrl != null || addingMeeting) && !removingMeeting
                               ? Padding(
                                   padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                                   child: Row(
@@ -282,21 +284,41 @@ class _EventEditModalState extends State<EventEditModal> {
                                           ),
                                         ],
                                       ),
-                                      if (!addMeeting)
-                                        Text(
-                                          t.event.join.toUpperCase(),
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w500,
-                                              color: ColorsExt.akiflow(context)),
-                                        ),
+                                      Row(
+                                        children: [
+                                          if (!addingMeeting)
+                                            Text(
+                                              t.event.join.toUpperCase(),
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: ColorsExt.akiflow(context)),
+                                            ),
+                                          const SizedBox(width: 24),
+                                          InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                removingMeeting = true;
+                                                addingMeeting = false;
+                                              });
+                                            },
+                                            child: SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG,
+                                                  color: ColorsExt.grey3(context)),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 )
                               : InkWell(
                                   onTap: () {
                                     setState(() {
-                                      addMeeting = true;
+                                      addingMeeting = true;
+                                      removingMeeting = false;
                                     });
                                   },
                                   child: Padding(
@@ -660,9 +682,8 @@ class _EventEditModalState extends State<EventEditModal> {
                                   title: titleController.text,
                                   description: descriptionController.text,
                                   updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
-                              context
-                                  .read<EventsCubit>()
-                                  .updateEventAndAtendees(updatedEvent, atendeesToAdd, atendeesToRemove, addMeeting);
+                              context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                  updatedEvent, atendeesToAdd, atendeesToRemove, addingMeeting, removingMeeting);
                               Navigator.of(context).pop();
                             },
                           ),
