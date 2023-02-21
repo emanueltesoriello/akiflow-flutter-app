@@ -8,6 +8,7 @@ import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_widget.dart';
@@ -122,7 +123,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       });
                                       HapticFeedback.mediumImpact();
                                       var cubit = context.read<EditTaskCubit>();
+                                      var tasksCubit = context.read<TasksCubit>();
                                       await cubit.create();
+                                      await tasksCubit.refreshAllFromRepository();
                                       setState(() {
                                         showRefresh = false;
                                         Navigator.pop(context);
