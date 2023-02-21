@@ -138,7 +138,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }*/
 
-  Future refreshAllFromRepository() async {
+  refreshAllFromRepository() async {
     await Future.wait([
       fetchInbox(),
       fetchTodayTasks(),

@@ -122,7 +122,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                         showRefresh = true;
                                       });
                                       HapticFeedback.mediumImpact();
-                                      
+
                                       var cubit = context.read<EditTaskCubit>();
                                       var tasksCubit = context.read<TasksCubit>();
 
@@ -133,8 +133,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                         showRefresh = false;
                                         Navigator.pop(context);
                                       });
-                                      
-                                      cubit.forceSync();
+
+                                      await cubit.forceSync();
                                       NotificationsService.scheduleNotificationsService(
                                           locator<PreferencesRepository>());
                                     } catch (e) {
