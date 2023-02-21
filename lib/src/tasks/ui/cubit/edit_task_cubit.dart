@@ -118,24 +118,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         sorting: now.toUtc().millisecondsSinceEpoch,
       );
 
+      await _tasksRepository.add([updated]);
+
+      //show a toast for the just created task for 3 seconds
       _tasksCubit.setJustCreatedTask(updated);
-      _tasksCubit.refreshTasksUi(updated);
-
-      await _tasksRepository.add([
-        updated
-      ]); /*.timeout(
-        const Duration(seconds: 5),
-        onTimeout: () {
-          throw Exception("Error on add");
-        },
-      );*/
-
-      await _tasksCubit.refreshAllFromRepository().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () {
-          throw Exception("Error on refreshAllFromRepository");
-        },
-      );
 
       emit(const EditTaskCubitState());
 

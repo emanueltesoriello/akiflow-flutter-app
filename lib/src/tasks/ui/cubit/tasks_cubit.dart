@@ -108,6 +108,36 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }
 
+/*
+  void showJustCreatedTaskInUi(Task newTask) {
+    List<Task> inboxTasks = state.inboxTasks;
+    List<Task> selectedDayTasks = state.selectedDayTasks;
+    List<Task> labelTasks = state.labelTasks;
+    List<Task> fixedTodayTasks = state.fixedTodayTasks;
+    List<Task> calendarTasks = state.calendarTasks;
+
+    if (newTask.date == null) {
+      inboxTasks.add(newTask);
+    }
+    if (newTask.date != null) {
+      selectedDayTasks.add(newTask);
+    }
+    if (newTask.datetime != null) {
+      calendarTasks.add(newTask);
+    }
+    if (newTask.isToday) {
+      fixedTodayTasks.add(newTask);
+    }
+
+    emit(state.copyWith(
+      inboxTasks: inboxTasks,
+      selectedDayTasks: selectedDayTasks,
+      labelTasks: labelTasks,
+      fixedTodayTasks: fixedTodayTasks,
+      calendarTasks: calendarTasks,
+    ));
+  }*/
+
   Future refreshAllFromRepository() async {
     await Future.wait([
       fetchInbox(),

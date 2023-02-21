@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/core_api.dart';
@@ -12,7 +14,6 @@ part 'sync_state.dart';
 class SyncCubit extends Cubit<SyncCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
-
   Stream get syncCompletedStream => _syncControllerService.syncCompletedStream;
 
   SyncCubit() : super(const SyncCubitState(loading: true));
