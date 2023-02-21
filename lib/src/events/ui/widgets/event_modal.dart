@@ -32,7 +32,7 @@ class _EventModalState extends State<EventModal> {
   late Event selectedEvent;
   @override
   void initState() {
-    selectedEvent = widget.event;
+    selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
     super.initState();
   }
 
@@ -197,22 +197,39 @@ class _EventModalState extends State<EventModal> {
                                   width: 22,
                                   height: 22,
                                   child: SvgPicture.asset(
-                                    Assets.images.icons.google.meetSVG,
+                                    selectedEvent.meetingSolution == 'meet'
+                                        ? Assets.images.icons.google.meetSVG
+                                        : selectedEvent.meetingSolution == 'zoom'
+                                            ? Assets.images.icons.zoom.zoomSVG
+                                            : Assets.images.icons.common.videocamSVG,
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
                                 Text(
-                                  t.event.googleMeet,
-                                  style: TextStyle(
-                                      fontSize: 17.0, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                                  selectedEvent.meetingSolution == 'meet'
+                                      ? t.event.googleMeet
+                                      : selectedEvent.meetingSolution == 'zoom'
+                                          ? t.event.zoom
+                                          : 'Conference',
+                                  style:
+                                      selectedEvent.meetingSolution == 'meet' || selectedEvent.meetingSolution == 'zoom'
+                                          ? TextStyle(
+                                              fontSize: 17.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: ColorsExt.grey2(context))
+                                          : TextStyle(
+                                              fontSize: 17.0,
+                                              fontWeight: FontWeight.w400,
+                                              color: ColorsExt.grey3(context)),
                                 ),
                               ],
                             ),
-                            Text(
-                              t.event.join.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
-                            ),
+                            if (selectedEvent.meetingUrl != null && selectedEvent.meetingSolution != null)
+                              Text(
+                                t.event.join.toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
+                              ),
                           ],
                         ),
                       ),
@@ -378,7 +395,7 @@ class _EventModalState extends State<EventModal> {
                                   InkWell(
                                     onTap: () {
                                       setState(() {
-                                        selectedEvent.setLoggeduserAttendingResponse(AtendeeResponseStatus.accepted);
+                                        selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.accepted);
                                       });
                                       context
                                           .read<EventsCubit>()
@@ -399,7 +416,7 @@ class _EventModalState extends State<EventModal> {
                                   InkWell(
                                     onTap: () {
                                       setState(() {
-                                        selectedEvent.setLoggeduserAttendingResponse(AtendeeResponseStatus.declined);
+                                        selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.declined);
                                       });
                                       context
                                           .read<EventsCubit>()
@@ -420,7 +437,7 @@ class _EventModalState extends State<EventModal> {
                                   InkWell(
                                     onTap: () {
                                       setState(() {
-                                        selectedEvent.setLoggeduserAttendingResponse(AtendeeResponseStatus.tentative);
+                                        selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.tentative);
                                       });
                                       context
                                           .read<EventsCubit>()
@@ -459,7 +476,7 @@ class _EventModalState extends State<EventModal> {
                                       showCupertinoModalBottomSheet(
                                         context: context,
                                         builder: (context) => EventEditModal(
-                                          event: widget.event,
+                                          event: selectedEvent,
                                           tapedDate: widget.tapedDate,
                                         ),
                                       ).whenComplete(

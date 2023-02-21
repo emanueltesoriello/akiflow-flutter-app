@@ -58,7 +58,7 @@ extension EventExt on Event {
     return AtendeeResponseStatus.needsAction;
   }
 
-  setLoggeduserAttendingResponse(AtendeeResponseStatus response) {
+  setLoggedUserAttendingResponse(AtendeeResponseStatus response) {
     List<EventAtendee> updatedAtendees = attendees!;
     EventAtendee loggedUser = attendees!.firstWhere((atendee) => atendee.email == originCalendarId);
     loggedUser = loggedUser.copyWith(responseStatus: response.id);

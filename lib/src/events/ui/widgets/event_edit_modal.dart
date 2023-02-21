@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/event_extension.dart';
+import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
@@ -259,7 +260,7 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           ),
                           const Separator(),
-                          (updatedEvent.meetingUrl != null || addingMeeting) && !removingMeeting
+                          (updatedEvent.meetingSolution != null || addingMeeting) && !removingMeeting
                               ? Padding(
                                   padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                                   child: Row(
@@ -271,12 +272,26 @@ class _EventEditModalState extends State<EventEditModal> {
                                             width: 20,
                                             height: 20,
                                             child: SvgPicture.asset(
-                                              Assets.images.icons.google.meetSVG,
+                                              updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                                                  ? Assets.images.icons.google.meetSVG
+                                                  : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                                                      ? Assets.images.icons.zoom.zoomSVG
+                                                      : context.read<EventsCubit>().getDefaultConferenceIcon(),
                                             ),
                                           ),
                                           const SizedBox(width: 16.0),
                                           Text(
-                                            t.event.googleMeet,
+                                            updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                                                ? t.event.googleMeet
+                                                : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                                                    ? t.event.zoom
+                                                    : context.read<EventsCubit>().getDefaultConferenceSolution() ==
+                                                            'meet'
+                                                        ? t.event.googleMeet
+                                                        : context
+                                                            .read<EventsCubit>()
+                                                            .getDefaultConferenceSolution()
+                                                            .capitalizeFirstCharacter(),
                                             style: TextStyle(
                                                 fontSize: 17.0,
                                                 fontWeight: FontWeight.w500,
@@ -509,11 +524,10 @@ class _EventEditModalState extends State<EventEditModal> {
                                       InkWell(
                                         onTap: () {
                                           atendeesToRemove.add(updatedEvent.attendees![index].email!);
-                                          print(atendeesToRemove);
                                           List<EventAtendee>? atendees = updatedEvent.attendees;
                                           atendees!.removeAt(index);
                                           setState(() {
-                                            updatedEvent = updatedEvent.copyWith(attendees: atendees);
+                                            updatedEvent.copyWith(attendees: atendees);
                                           });
                                         },
                                         child: SizedBox(
@@ -545,12 +559,12 @@ class _EventEditModalState extends State<EventEditModal> {
                                         responseStatus: AtendeeResponseStatus.needsAction.id,
                                       );
                                       atendeesToAdd.add(newAtendee.email!);
-                                      print(atendeesToAdd);
                                       if (atendees == null) {
                                         atendees = List.from([newAtendee]);
                                       } else {
                                         atendees.add(newAtendee);
                                       }
+
                                       updatedEvent = updatedEvent.copyWith(attendees: atendees);
                                     },
                                   ),

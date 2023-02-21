@@ -292,7 +292,7 @@ class SyncService {
       meetingStatus: remoteEvent.meetingStatus,
       meetingUrl: remoteEvent.meetingUrl,
       meetingIcon: remoteEvent.meetingIcon,
-      meetingSolution: remoteEvent.meetingSolution,
+      meetingSolution: Nullable(remoteEvent.meetingSolution),
       originUpdatedAt: remoteEvent.originUpdatedAt,
       remoteUpdatedAt: Nullable(remoteEvent.remoteUpdatedAt),
       updatedAt: remoteEvent.recurringId != null ||
