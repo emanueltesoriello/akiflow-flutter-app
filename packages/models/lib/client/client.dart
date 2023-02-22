@@ -60,7 +60,7 @@ class Client extends Equatable implements Base {
         unsafeLastSettingsSyncEndedAt: json['unsafe_last_settings_sync_ended_at'] as String?,
         unsafeLastTasksSyncEndedAt: json['unsafe_last_tasks_sync_ended_at'] as String?,
         notificationsToken: json['notifications_token'] as String?,
-        deviceId: json['deviceId'] as String?,
+        deviceId: json['device_id'] as String?,
         recurringBackgroundSyncCounter: json['recurring_background_sync_counter'] as int?,
         recurringNotificationsSyncCounter: json['recurring_notifications_sync_counter'] as int?,
       );
@@ -83,7 +83,7 @@ class Client extends Equatable implements Base {
         'unsafe_last_settings_sync_ended_at': unsafeLastSettingsSyncEndedAt,
         'unsafe_last_tasks_sync_ended_at': unsafeLastTasksSyncEndedAt,
         'notifications_token': notificationsToken,
-        'deviceId': deviceId,
+        'device_id': deviceId,
         "recurring_background_sync_counter": recurringBackgroundSyncCounter,
         "recurringNotificationsSyncCounter": recurringNotificationsSyncCounter
       };
