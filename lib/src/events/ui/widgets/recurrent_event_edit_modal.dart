@@ -14,7 +14,6 @@ class RecurrentEventEditModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('RecurrentEventEditModal entered');
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Container(
@@ -41,7 +40,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                         width: 28, height: 28, color: ColorsExt.grey2(context)),
                     const SizedBox(width: 8.0),
                     Text(
-                      'Editing repeating event',
+                      t.event.editEvent.repeatingEditModal.title,
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                     ),
                   ],
@@ -49,7 +48,7 @@ class RecurrentEventEditModal extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                child: Text(t.editTask.repeatingEditDialog.description,
+                child: Text(t.event.editEvent.repeatingEditModal.description,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
               const SizedBox(height: 24),
@@ -66,7 +65,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
-                      'Only this event',
+                      t.event.editEvent.repeatingEditModal.onlyThis,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,
@@ -90,7 +89,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
-                      'This and all future events',
+                      t.event.editEvent.repeatingEditModal.thisAndAllFuture,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,
@@ -114,7 +113,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
-                      'All events',
+                      t.event.editEvent.repeatingEditModal.allEvents,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,
