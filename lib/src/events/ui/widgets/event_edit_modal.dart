@@ -17,6 +17,7 @@ import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/event_edit_time_modal.dart';
+import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
@@ -702,14 +703,33 @@ class _EventEditModalState extends State<EventEditModal> {
                             image: Assets.images.icons.common.checkmarkAltSVG,
                             containerColor: ColorsExt.green20(context),
                             iconColor: ColorsExt.green(context),
-                            onTap: () {
+                            onTap: () async {
                               updatedEvent = updatedEvent.copyWith(
                                   title: titleController.text,
                                   description: descriptionController.text,
                                   updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
-                              context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                  updatedEvent, atendeesToAdd, atendeesToRemove, addingMeeting, removingMeeting);
-                              Navigator.of(context).pop();
+
+                              if (updatedEvent.id == updatedEvent.recurringId) {
+                                await showCupertinoModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => RecurrentEventEditModal(
+                                          onlyThisTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          thisAndFutureTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          allTap: () {
+                                            context.read<EventsCubit>().updateEventAndCreateModifiers(updatedEvent,
+                                                atendeesToAdd, atendeesToRemove, addingMeeting, removingMeeting);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ));
+                              } else {
+                                context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                    updatedEvent, atendeesToAdd, atendeesToRemove, addingMeeting, removingMeeting);
+                                Navigator.of(context).pop();
+                              }
                             },
                           ),
                         ],
