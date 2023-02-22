@@ -113,7 +113,7 @@ class CalendarBody extends StatelessWidget {
                 hideEmptyScheduleWeek: true,
                 monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
             monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-            onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context),
+            onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit),
             appointmentBuilder: (context, calendarAppointmentDetails) =>
                 appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
             allowDragAndDrop: true,
@@ -144,7 +144,7 @@ class CalendarBody extends StatelessWidget {
     }
   }
 
-  void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext context) {
+  void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext context, EventsCubit eventsCubit) {
     context.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
@@ -155,13 +155,16 @@ class CalendarBody extends StatelessWidget {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
       Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
-
       showCupertinoModalBottomSheet(
         context: context,
         builder: (context) => EventModal(
           event: event,
           tapedDate: calendarTapDetails.date,
         ),
+      ).whenComplete(
+        () {
+          eventsCubit.fetchUnprocessedEventModifiers();
+        },
       );
     }
   }

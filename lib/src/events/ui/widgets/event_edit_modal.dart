@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/event_extension.dart';
+import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
@@ -45,6 +46,10 @@ class _EventEditModalState extends State<EventEditModal> {
   late Event updatedEvent;
   final FocusNode _descriptionFocusNode = FocusNode();
   StreamSubscription? streamSubscription;
+  late List<String> atendeesToAdd;
+  late List<String> atendeesToRemove;
+  late bool addingMeeting;
+  late bool removingMeeting;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -56,6 +61,11 @@ class _EventEditModalState extends State<EventEditModal> {
 
     locationController = TextEditingController()..text = widget.event.content['location'] ?? '';
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
+
+    atendeesToAdd = List.empty(growable: true);
+    atendeesToRemove = List.empty(growable: true);
+    addingMeeting = false;
+    removingMeeting = false;
 
     initDescription().whenComplete(() {
       streamSubscription = quillController.value.changes.listen((change) async {
@@ -250,7 +260,7 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           ),
                           const Separator(),
-                          widget.event.meetingUrl != null
+                          (updatedEvent.meetingSolution != null || addingMeeting) && !removingMeeting
                               ? Padding(
                                   padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                                   child: Row(
@@ -262,12 +272,26 @@ class _EventEditModalState extends State<EventEditModal> {
                                             width: 20,
                                             height: 20,
                                             child: SvgPicture.asset(
-                                              Assets.images.icons.google.googleSVG,
+                                              updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                                                  ? Assets.images.icons.google.meetSVG
+                                                  : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                                                      ? Assets.images.icons.zoom.zoomSVG
+                                                      : context.read<EventsCubit>().getDefaultConferenceIcon(),
                                             ),
                                           ),
                                           const SizedBox(width: 16.0),
                                           Text(
-                                            t.event.googleMeet,
+                                            updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                                                ? t.event.googleMeet
+                                                : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                                                    ? t.event.zoom
+                                                    : context.read<EventsCubit>().getDefaultConferenceSolution() ==
+                                                            'meet'
+                                                        ? t.event.googleMeet
+                                                        : context
+                                                            .read<EventsCubit>()
+                                                            .getDefaultConferenceSolution()
+                                                            .capitalizeFirstCharacter(),
                                             style: TextStyle(
                                                 fontSize: 17.0,
                                                 fontWeight: FontWeight.w500,
@@ -275,37 +299,65 @@ class _EventEditModalState extends State<EventEditModal> {
                                           ),
                                         ],
                                       ),
-                                      Text(
-                                        t.event.join.toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.w500,
-                                            color: ColorsExt.akiflow(context)),
+                                      Row(
+                                        children: [
+                                          if (!addingMeeting)
+                                            Text(
+                                              t.event.join.toUpperCase(),
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: ColorsExt.akiflow(context)),
+                                            ),
+                                          const SizedBox(width: 24),
+                                          InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                removingMeeting = true;
+                                                addingMeeting = false;
+                                              });
+                                            },
+                                            child: SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG,
+                                                  color: ColorsExt.grey3(context)),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: SvgPicture.asset(
-                                          Assets.images.icons.common.videocamSVG,
-                                          color: ColorsExt.grey3(context),
+                              : InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      addingMeeting = true;
+                                      removingMeeting = false;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: SvgPicture.asset(
+                                            Assets.images.icons.common.videocamSVG,
+                                            color: ColorsExt.grey3(context),
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 16.0),
-                                      Text(
-                                        'Add conference',
-                                        style: TextStyle(
-                                            fontSize: 17.0,
-                                            fontWeight: FontWeight.w400,
-                                            color: ColorsExt.grey3(context)),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 16.0),
+                                        Text(
+                                          'Add conference',
+                                          style: TextStyle(
+                                              fontSize: 17.0,
+                                              fontWeight: FontWeight.w400,
+                                              color: ColorsExt.grey3(context)),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                           const Separator(),
@@ -415,54 +467,77 @@ class _EventEditModalState extends State<EventEditModal> {
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      updatedEvent.attendees![index].responseStatus == 'accepted'
-                                          ? SizedBox(
-                                              width: 19,
-                                              height: 19,
-                                              child: SvgPicture.asset(
-                                                Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                                                color: ColorsExt.green(context),
-                                              ),
-                                            )
-                                          : updatedEvent.attendees![index].responseStatus == 'declined'
+                                      Row(
+                                        children: [
+                                          updatedEvent.attendees![index].responseStatus == 'accepted'
                                               ? SizedBox(
                                                   width: 19,
                                                   height: 19,
                                                   child: SvgPicture.asset(
-                                                    Assets.images.icons.common.xmarkCircleFillSVG,
-                                                    color: ColorsExt.red(context),
+                                                    Assets.images.icons.common.checkmarkAltCircleFillSVG,
+                                                    color: ColorsExt.green(context),
                                                   ),
                                                 )
-                                              : SizedBox(
-                                                  width: 19,
-                                                  height: 19,
-                                                  child: SvgPicture.asset(
-                                                    Assets.images.icons.common.questionCircleFillSVG,
-                                                    color: ColorsExt.grey3(context),
-                                                  ),
+                                              : updatedEvent.attendees![index].responseStatus == 'declined'
+                                                  ? SizedBox(
+                                                      width: 19,
+                                                      height: 19,
+                                                      child: SvgPicture.asset(
+                                                        Assets.images.icons.common.xmarkCircleFillSVG,
+                                                        color: ColorsExt.red(context),
+                                                      ),
+                                                    )
+                                                  : SizedBox(
+                                                      width: 19,
+                                                      height: 19,
+                                                      child: SvgPicture.asset(
+                                                        Assets.images.icons.common.questionCircleFillSVG,
+                                                        color: ColorsExt.grey3(context),
+                                                      ),
+                                                    ),
+                                          const SizedBox(width: 16.0),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                updatedEvent.attendees![index].email!.contains('group')
+                                                    ? '${updatedEvent.attendees![index].displayName}'
+                                                    : '${updatedEvent.attendees![index].email}',
+                                                style: TextStyle(
+                                                    fontSize: 17.0,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: ColorsExt.grey2(context)),
+                                              ),
+                                              if (updatedEvent.attendees![index].organizer ?? false)
+                                                Text(
+                                                  ' - ${t.event.organizer}',
+                                                  style: TextStyle(
+                                                      fontSize: 17.0,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: ColorsExt.grey3(context)),
                                                 ),
-                                      const SizedBox(width: 16.0),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            updatedEvent.attendees![index].email!.contains('group')
-                                                ? '${widget.event.attendees![index].displayName}'
-                                                : '${widget.event.attendees![index].email}',
-                                            style: TextStyle(
-                                                fontSize: 17.0,
-                                                fontWeight: FontWeight.w400,
-                                                color: ColorsExt.grey2(context)),
+                                            ],
                                           ),
-                                          if (updatedEvent.attendees![index].organizer ?? false)
-                                            Text(
-                                              ' - ${t.event.organizer}',
-                                              style: TextStyle(
-                                                  fontSize: 17.0,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: ColorsExt.grey3(context)),
-                                            ),
                                         ],
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          atendeesToRemove.add(updatedEvent.attendees![index].email!);
+                                          List<EventAtendee>? atendees = updatedEvent.attendees;
+                                          atendees!.removeAt(index);
+                                          setState(() {
+                                            updatedEvent.copyWith(attendees: atendees);
+                                          });
+                                        },
+                                        child: SizedBox(
+                                          width: 19,
+                                          height: 19,
+                                          child: SvgPicture.asset(
+                                            Assets.images.icons.common.xmarkSVG,
+                                            color: ColorsExt.grey3(context),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -477,15 +552,30 @@ class _EventEditModalState extends State<EventEditModal> {
                                   context: context,
                                   builder: (context) => AddGuestsModal(
                                     updateAtendeesUi: (contact) {
-                                      print('event edit modal: ${contact.toMap()}');
+                                      List<EventAtendee>? attendees = updatedEvent.attendees;
                                       EventAtendee newAtendee = EventAtendee(
                                         displayName: contact.name,
                                         email: contact.identifier,
                                         responseStatus: AtendeeResponseStatus.needsAction.id,
                                       );
-                                      setState(() {
-                                        updatedEvent.attendees?.add(newAtendee);
-                                      });
+                                      atendeesToAdd.add(newAtendee.email!);
+                                      if (attendees == null) {
+                                        attendees = List.from([newAtendee]);
+                                        if (newAtendee.email! != updatedEvent.originCalendarId) {
+                                          EventAtendee loggedInUserAtendee = EventAtendee(
+                                            organizer: true,
+                                            displayName: updatedEvent.originCalendarId,
+                                            email: updatedEvent.originCalendarId,
+                                            responseStatus: AtendeeResponseStatus.needsAction.id,
+                                          );
+                                          atendeesToAdd.add(loggedInUserAtendee.email!);
+                                          attendees.add(loggedInUserAtendee);
+                                        }
+                                      } else {
+                                        attendees.add(newAtendee);
+                                      }
+
+                                      updatedEvent = updatedEvent.copyWith(attendees: attendees);
                                     },
                                   ),
                                 );
@@ -604,8 +694,8 @@ class _EventEditModalState extends State<EventEditModal> {
                               title: t.cancel,
                               image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
                               onTap: () {
-                                Navigator.pop(context);
-                                context.read<EventsCubit>().cleanUpdateEvent(widget.event);
+                                context.read<EventsCubit>().refetchEvent(updatedEvent);
+                                Navigator.of(context).pop();
                               }),
                           BottomButton(
                             title: 'Save changes',
@@ -617,9 +707,9 @@ class _EventEditModalState extends State<EventEditModal> {
                                   title: titleController.text,
                                   description: descriptionController.text,
                                   updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
-
-                              context.read<EventsCubit>().updateEvent(updatedEvent);
-                              Navigator.pop(context);
+                              context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                  updatedEvent, atendeesToAdd, atendeesToRemove, addingMeeting, removingMeeting);
+                              Navigator.of(context).pop();
                             },
                           ),
                         ],
