@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/contacts_repository.dart';
@@ -76,6 +77,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     return Assets.images.icons.google.meetSVG;
   }
 
+  //EventModifiers
+
   Future<void> updateAtend(Event event, String response) async {
     EventModifier eventModifier = EventModifier(
         id: const Uuid().v4(),
@@ -92,8 +95,13 @@ class EventsCubit extends Cubit<EventsCubitState> {
     refetchEvent(event);
   }
 
-  Future<void> updateEventAndCreateModifiers(Event event, List<String> atendeesToAdd, List<String> atendeesToRemove,
-      bool addMeeting, bool removeMeeting) async {
+  Future<void> updateEventAndCreateModifiers({
+    required Event event,
+    required List<String> atendeesToAdd,
+    required List<String> atendeesToRemove,
+    required bool addMeeting,
+    required bool removeMeeting,
+  }) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
       EventModifier eventModifier = EventModifier(
           id: const Uuid().v4(),
@@ -255,5 +263,67 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
 
     return event;
+  }
+
+  //create event
+
+  Future<void> createEventException(
+      {required DateTime tappedDate,
+      required Event event,
+      required bool dateChanged,
+      required bool timeChanged,
+      required String? originalStartDate,
+      required String? originalStartTime,
+      required List<String> atendeesToAdd,
+      required List<String> atendeesToRemove,
+      required bool addMeeting,
+      required bool removeMeeting}) async {
+    String now = DateTime.now().toIso8601String();
+
+    DateTime? eventStartTime = event.startTime != null ? DateTime.parse(event.startTime!) : null;
+    DateTime? eventEndTime = event.endTime != null ? DateTime.parse(event.endTime!) : null;
+    String? startTime = timeChanged
+        ? event.startTime
+        : eventStartTime != null
+            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute)
+                .toIso8601String()
+            : null;
+    String? endTime = timeChanged
+        ? event.endTime
+        : eventEndTime != null
+            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute)
+                .toIso8601String()
+            : null;
+
+    Event recurringException = event.copyWith(
+      id: const Uuid().v4(),
+      recurrenceException: true,
+      startDate: event.startDate != null
+          ? dateChanged
+              ? Nullable(event.startDate)
+              : Nullable(DateFormat("y-MM-dd").format(tappedDate.toUtc()))
+          : Nullable(null),
+      endDate: event.endDate != null
+          ? dateChanged
+              ? Nullable(event.endDate)
+              : Nullable(DateFormat("y-MM-dd").format(tappedDate.toUtc()))
+          : Nullable(null),
+      hidden: false,
+      startTime: Nullable(startTime),
+      endTime: Nullable(endTime),
+      originalStartDate: Nullable(originalStartDate),
+      originalStartTime: Nullable(originalStartTime),
+      createdAt: now,
+      updatedAt: Nullable(now),
+    );
+    await _eventsRepository.add([recurringException]);
+    _syncCubit.sync(entities: [Entity.events]);
+
+    // updateEventAndCreateModifiers(
+    //     event: recurringException,
+    //     atendeesToAdd: atendeesToAdd,
+    //     atendeesToRemove: atendeesToRemove,
+    //     addMeeting: addMeeting,
+    //     removeMeeting: removeMeeting);
   }
 }

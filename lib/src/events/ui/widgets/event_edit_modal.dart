@@ -51,6 +51,10 @@ class _EventEditModalState extends State<EventEditModal> {
   late List<String> atendeesToRemove;
   late bool addingMeeting;
   late bool removingMeeting;
+  late bool timeChanged;
+  late bool dateChanged;
+  late String? originalStartDate;
+  late String? originalStartTime;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -76,7 +80,11 @@ class _EventEditModalState extends State<EventEditModal> {
       });
     });
 
+    originalStartDate = widget.event.startDate;
+    originalStartTime = widget.event.startTime;
     isAllDay = widget.event.startTime == null && widget.event.startDate != null;
+    timeChanged = false;
+    dateChanged = false;
 
     updatedEvent = widget.event;
     super.initState();
@@ -715,19 +723,38 @@ class _EventEditModalState extends State<EventEditModal> {
                                     builder: (context) => RecurrentEventEditModal(
                                           onlyThisTap: () {
                                             Navigator.of(context).pop();
+                                            context.read<EventsCubit>().createEventException(
+                                                tappedDate: widget.tapedDate!,
+                                                dateChanged: dateChanged,
+                                                timeChanged: timeChanged,
+                                                originalStartDate: originalStartDate,
+                                                originalStartTime: originalStartTime,
+                                                event: updatedEvent,
+                                                atendeesToAdd: atendeesToAdd,
+                                                atendeesToRemove: atendeesToRemove,
+                                                addMeeting: addingMeeting,
+                                                removeMeeting: removingMeeting);
                                           },
                                           thisAndFutureTap: () {
                                             Navigator.of(context).pop();
                                           },
                                           allTap: () {
-                                            context.read<EventsCubit>().updateEventAndCreateModifiers(updatedEvent,
-                                                atendeesToAdd, atendeesToRemove, addingMeeting, removingMeeting);
+                                            context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                                event: updatedEvent,
+                                                atendeesToAdd: atendeesToAdd,
+                                                atendeesToRemove: atendeesToRemove,
+                                                addMeeting: addingMeeting,
+                                                removeMeeting: removingMeeting);
                                             Navigator.of(context).pop();
                                           },
                                         ));
                               } else {
                                 context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                    updatedEvent, atendeesToAdd, atendeesToRemove, addingMeeting, removingMeeting);
+                                    event: updatedEvent,
+                                    atendeesToAdd: atendeesToAdd,
+                                    atendeesToRemove: atendeesToRemove,
+                                    addMeeting: addingMeeting,
+                                    removeMeeting: removingMeeting);
                                 Navigator.of(context).pop();
                               }
                             },
@@ -759,6 +786,7 @@ class _EventEditModalState extends State<EventEditModal> {
             initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
+                timeChanged = true;
                 isAllDay = true;
                 updatedEvent = updatedEvent.copyWith(
                   startDate: Nullable(DateFormat("y-MM-dd").format(date!.toUtc())),
@@ -793,6 +821,7 @@ class _EventEditModalState extends State<EventEditModal> {
             initialDatetime: updatedEvent.startTime != null ? DateTime.parse(updatedEvent.startTime!).toLocal() : null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
+                timeChanged = true;
                 datetime == null ? isAllDay = true : isAllDay = false;
                 updatedEvent = updatedEvent.copyWith(
                   startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
@@ -839,6 +868,7 @@ class _EventEditModalState extends State<EventEditModal> {
             initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
+                timeChanged = true;
                 isAllDay = true;
                 updatedEvent = updatedEvent.copyWith(endDate: Nullable(DateFormat("y-MM-dd").format(date!.toUtc())));
               });
@@ -872,6 +902,7 @@ class _EventEditModalState extends State<EventEditModal> {
             initialDatetime: updatedEvent.endTime != null ? DateTime.parse(updatedEvent.endTime!).toLocal() : null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
+                timeChanged = true;
                 if (datetime == null) {
                   isAllDay = true;
                 }
