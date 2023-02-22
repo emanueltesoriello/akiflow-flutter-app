@@ -552,20 +552,30 @@ class _EventEditModalState extends State<EventEditModal> {
                                   context: context,
                                   builder: (context) => AddGuestsModal(
                                     updateAtendeesUi: (contact) {
-                                      List<EventAtendee>? atendees = updatedEvent.attendees;
+                                      List<EventAtendee>? attendees = updatedEvent.attendees;
                                       EventAtendee newAtendee = EventAtendee(
                                         displayName: contact.name,
                                         email: contact.identifier,
                                         responseStatus: AtendeeResponseStatus.needsAction.id,
                                       );
                                       atendeesToAdd.add(newAtendee.email!);
-                                      if (atendees == null) {
-                                        atendees = List.from([newAtendee]);
+                                      if (attendees == null) {
+                                        attendees = List.from([newAtendee]);
+                                        if (newAtendee.email! != updatedEvent.originCalendarId) {
+                                          EventAtendee loggedInUserAtendee = EventAtendee(
+                                            organizer: true,
+                                            displayName: updatedEvent.originCalendarId,
+                                            email: updatedEvent.originCalendarId,
+                                            responseStatus: AtendeeResponseStatus.needsAction.id,
+                                          );
+                                          atendeesToAdd.add(loggedInUserAtendee.email!);
+                                          attendees.add(loggedInUserAtendee);
+                                        }
                                       } else {
-                                        atendees.add(newAtendee);
+                                        attendees.add(newAtendee);
                                       }
 
-                                      updatedEvent = updatedEvent.copyWith(attendees: atendees);
+                                      updatedEvent = updatedEvent.copyWith(attendees: attendees);
                                     },
                                   ),
                                 );
@@ -684,6 +694,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               title: t.cancel,
                               image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
                               onTap: () {
+                                context.read<EventsCubit>().refetchEvent(updatedEvent);
                                 Navigator.of(context).pop();
                               }),
                           BottomButton(

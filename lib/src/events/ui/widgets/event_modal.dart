@@ -32,6 +32,7 @@ class _EventModalState extends State<EventModal> {
   late Event selectedEvent;
   @override
   void initState() {
+    context.read<EventsCubit>().fetchUnprocessedEventModifiers();
     selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
     super.initState();
   }

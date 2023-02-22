@@ -23,7 +23,13 @@ class EventsCubit extends Cubit<EventsCubitState> {
   final ContactsRepository _contactsRepository = locator<ContactsRepository>();
   final SyncCubit _syncCubit;
 
-  EventsCubit(this._syncCubit) : super(const EventsCubitState());
+  EventsCubit(this._syncCubit) : super(const EventsCubitState()) {
+    _init();
+  }
+
+  _init() async {
+    await fetchUnprocessedEventModifiers();
+  }
 
   Future<void> fetchEventsBetweenDates(String startDate, String endDate) async {
     List<Event> events = await _eventsRepository.getEventsBetweenDates(startDate, endDate);
@@ -43,7 +49,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   Future<void> scheduleEventsSync() async {
-    Future.delayed(const Duration(seconds: 4)).whenComplete(() => _syncCubit.sync(entities: [Entity.events]));
+    Future.delayed(const Duration(seconds: 4))
+        .whenComplete(() => _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]));
+    Future.delayed(const Duration(seconds: 10))
+        .whenComplete(() => _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]));
   }
 
   String getDefaultConferenceSolution() {
@@ -155,14 +164,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
     return eventModifier;
   }
 
-  Future<void> fetchUnprocessedEventModifiers(String eventId) async {
-    List<EventModifier> unprocessed = await _eventModifiersRepository.getUnprocessedEventModifiersByEventId(eventId);
+  Future<void> fetchUnprocessedEventModifiers() async {
+    List<EventModifier> unprocessed = await _eventModifiersRepository.getUnprocessedEventModifiers();
     emit(state.copyWith(unprocessedEventModifiers: unprocessed));
   }
 
   Event patchEventWithEventModifier(Event event) {
-    fetchUnprocessedEventModifiers(event.id!);
-    List<EventModifier> eventModifiers = state.unprocessedEventModifiers;
+    List<EventModifier> eventModifiers = state.unprocessedEventModifiers
+        .where((modifier) => modifier.eventId == event.id && modifier.attempts == null)
+        .toList();
 
     if (eventModifiers.isEmpty) {
       return event;
@@ -176,17 +186,20 @@ class EventsCubit extends Cubit<EventsCubitState> {
       print('No unprocessed EventModifier with attendees/updateList');
     }
     if (atendeesModifier != null) {
-      List<EventAtendee> updatedAtendees = event.attendees!;
+      List<EventAtendee>? updatedAtendees = event.attendees;
 
       List<dynamic> attendeeEmailsToAdd = atendeesModifier.content['attendeeEmailsToAdd'];
       List<dynamic> attendeeEmailsToRemove = atendeesModifier.content['attendeeEmailsToRemove'];
 
       if (attendeeEmailsToAdd.isNotEmpty) {
+        if (updatedAtendees == null || updatedAtendees.isEmpty) {
+          updatedAtendees = List.empty(growable: true);
+        }
         for (var emailToAdd in attendeeEmailsToAdd) {
           updatedAtendees.add(EventAtendee(email: emailToAdd));
         }
       }
-      if (attendeeEmailsToRemove.isNotEmpty) {
+      if (attendeeEmailsToRemove.isNotEmpty && updatedAtendees != null) {
         for (var emailToRemove in attendeeEmailsToRemove) {
           updatedAtendees.removeWhere((atendee) => atendee.email == emailToRemove);
         }
