@@ -129,42 +129,65 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
   @override
   Future<List<Object?>> add<T>(List<T> items) async {
-    Batch batch = _databaseService.database!.batch();
-
     List<dynamic> result = await compute(fromObjToSqlList, items);
 
-    batch = await compute(prepareBatchInsert, BatchInsertModel(items: result, batch: batch, tableName: tableName));
-
-    return await batch.commit();
+    try {
+      return await _databaseService.database!.transaction<List<Object?>>((txn) async {
+        Batch batch = txn.batch();
+        batch = await compute(prepareBatchInsert, BatchInsertModel(items: result, batch: batch, tableName: tableName));
+        return await batch.commit();
+      });
+    } catch (e) {
+      print('Error adding items to the database: $e');
+      return [];
+    }
   }
 
   @override
   Future<void> removeById<T>(String? id, {required T data}) async {
-    await _databaseService.database!.delete(
-      tableName,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    try {
+      await _databaseService.database!.transaction((txn) async {
+        await txn.delete(
+          tableName,
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      });
+    } catch (e) {
+      print('Error removing item from the database: $e');
+    }
   }
 
   @override
   Future<void> updateById<T>(String? id, {required T data}) async {
-    await _databaseService.database!.update(
-      tableName,
-      (data as Base).toSql(),
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    try {
+      await _databaseService.database!.transaction((txn) async {
+        await txn.update(
+          tableName,
+          (data as Base).toSql(),
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      });
+    } catch (e) {
+      print('Error updating item in the database: $e');
+    }
   }
 
   @override
   Future<void> setFieldByName<T>(String? id, {required String field, required T value}) async {
-    await _databaseService.database!.update(
-      tableName,
-      {field: value},
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    try {
+      await _databaseService.database!.transaction((txn) async {
+        await txn.update(
+          tableName,
+          {field: value},
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      });
+    } catch (e) {
+      print('Error setting field in the database: $e');
+    }
   }
 
   @override
@@ -173,19 +196,26 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     const deletedAtGreaterThanRemoteUpdatedAt = 'deleted_at > remote_updated_at';
     const updatedAtGreaterThanRemoteUpdatedAt = 'updated_at > remote_updated_at';
     const trashedAtGreaterThanRemoteUpdatedAt = 'trashed_at > remote_updated_at';
-    List<Map<String, Object?>> items;
-    if (tableName == "tasks") {
-      items = await _databaseService.database!.query(
-        tableName,
-        where:
-            '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $trashedAtGreaterThanRemoteUpdatedAt',
-      );
-    } else {
-      items = await _databaseService.database!.query(
-        tableName,
-        where:
-            '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
-      );
+    List<Map<String, Object?>> items = [];
+    try {
+      await _databaseService.database!.transaction((txn) async {
+        if (tableName == "tasks") {
+          items = await txn.query(
+            tableName,
+            where:
+                '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $trashedAtGreaterThanRemoteUpdatedAt',
+          );
+        } else {
+          items = await txn.query(
+            tableName,
+            where:
+                '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
+          );
+        }
+      });
+    } catch (e) {
+      print('Error retrieving unsynced records: $e');
+      return [];
     }
 
     List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));

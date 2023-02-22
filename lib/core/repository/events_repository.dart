@@ -13,33 +13,49 @@ class EventsRepository extends DatabaseRepository {
   }) : super(tableName: table, fromSql: fromSql);
 
   Future<List<Event>> getEvents<Event>() async {
-    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
-          SELECT *
-          FROM events
-          WHERE task_id IS NULL
-""");
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.rawQuery("""
+        SELECT *
+        FROM events
+        WHERE task_id IS NULL
+      """);
+      });
+    } catch (e) {
+      print('Error retrieving events: $e');
+      return [];
+    }
 
     List<Event> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
   }
 
   Future<List<Event>> getEventsBetweenDates<Event>(String startDate, String endDate) async {
-    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
-          SELECT *
-          FROM events
-          WHERE task_id IS NULL         
-          AND ( 
-              (recurring_id IS NULL
-              AND ((start_time >= ? AND end_time <= ?) OR (start_date >= ? AND end_date <= ?)))
-              OR (recurring_id IS NOT NULL AND (until_datetime IS NULL OR until_datetime >= ?)) 
-              )    
-""", [
-      startDate,
-      endDate,
-      startDate,
-      endDate,
-      startDate,
-    ]);
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.rawQuery("""
+        SELECT *
+        FROM events
+        WHERE task_id IS NULL         
+        AND ( 
+          (recurring_id IS NULL
+          AND ((start_time >= ? AND end_time <= ?) OR (start_date >= ? AND end_date <= ?)))
+          OR (recurring_id IS NOT NULL AND (until_datetime IS NULL OR until_datetime >= ?)) 
+        )    
+      """, [
+          startDate,
+          endDate,
+          startDate,
+          endDate,
+          startDate,
+        ]);
+      });
+    } catch (e) {
+      print('Error retrieving events between dates: $e');
+      return [];
+    }
 
     List<Event> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
