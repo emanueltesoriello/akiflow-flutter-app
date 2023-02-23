@@ -88,9 +88,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
         action: 'attendees/updateRsvp',
         content: {"responseStatus": response},
         createdAt: DateTime.now().toUtc().toIso8601String());
-    _eventModifiersRepository.add([eventModifier]);
 
-    _syncCubit.sync(entities: [Entity.eventModifiers]);
+    await _eventModifiersRepository.add([eventModifier]);
+    refetchEvent(event);
+    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
     refetchEvent(event);
   }
@@ -125,7 +126,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
     await _eventsRepository.updateById(event.id, data: event);
     refetchEvent(event);
-    await _syncCubit.sync(entities: [Entity.eventModifiers, Entity.events]);
+    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
     refetchEvent(event);
   }
@@ -269,61 +270,79 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
   Future<void> createEventException(
       {required DateTime tappedDate,
-      required Event event,
+      required Event parentEvent,
       required bool dateChanged,
       required bool timeChanged,
-      required String? originalStartDate,
-      required String? originalStartTime,
       required List<String> atendeesToAdd,
       required List<String> atendeesToRemove,
       required bool addMeeting,
-      required bool removeMeeting}) async {
-    String now = DateTime.now().toIso8601String();
+      required bool removeMeeting,
+      required bool rsvpChanged,
+      String? rsvpResponse}) async {
+    String now = DateTime.now().toUtc().toIso8601String();
 
-    DateTime? eventStartTime = event.startTime != null ? DateTime.parse(event.startTime!) : null;
-    DateTime? eventEndTime = event.endTime != null ? DateTime.parse(event.endTime!) : null;
+    DateTime? eventStartTime = parentEvent.startTime != null ? DateTime.parse(parentEvent.startTime!).toLocal() : null;
+    DateTime? eventEndTime = parentEvent.endTime != null ? DateTime.parse(parentEvent.endTime!).toLocal() : null;
     String? startTime = timeChanged
-        ? event.startTime
+        ? parentEvent.startTime
         : eventStartTime != null
-            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute)
+            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
+                    eventStartTime.second)
+                .toUtc()
                 .toIso8601String()
             : null;
     String? endTime = timeChanged
-        ? event.endTime
+        ? parentEvent.endTime
         : eventEndTime != null
-            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute)
+            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
+                    eventEndTime.second)
+                .toUtc()
                 .toIso8601String()
             : null;
 
-    Event recurringException = event.copyWith(
+    String? startDate = parentEvent.startDate != null
+        ? dateChanged
+            ? parentEvent.startDate
+            : DateFormat("y-MM-dd").format(tappedDate.toUtc())
+        : null;
+    String? endDate = parentEvent.endDate != null
+        ? dateChanged
+            ? parentEvent.endDate
+            : DateFormat("y-MM-dd").format(tappedDate.toUtc())
+        : null;
+
+    Event recurringException = parentEvent.copyWith(
       id: const Uuid().v4(),
       recurrenceException: true,
-      startDate: event.startDate != null
-          ? dateChanged
-              ? Nullable(event.startDate)
-              : Nullable(DateFormat("y-MM-dd").format(tappedDate.toUtc()))
-          : Nullable(null),
-      endDate: event.endDate != null
-          ? dateChanged
-              ? Nullable(event.endDate)
-              : Nullable(DateFormat("y-MM-dd").format(tappedDate.toUtc()))
-          : Nullable(null),
       hidden: false,
+      startDate: Nullable(startDate),
+      endDate: Nullable(endDate),
       startTime: Nullable(startTime),
       endTime: Nullable(endTime),
-      originalStartDate: Nullable(originalStartDate),
-      originalStartTime: Nullable(originalStartTime),
+      originalStartDate: Nullable(startDate),
+      originalStartTime: Nullable(startTime),
       createdAt: now,
       updatedAt: Nullable(now),
+      originId: Nullable(null),
+      customOriginId: Nullable(null),
+      originRecurringId: parentEvent.originId,
+      originUpdatedAt: Nullable(null),
+      untilDatetime: Nullable(null),
+      url: Nullable(null),
+      remoteUpdatedAt: Nullable(null),
     );
-    await _eventsRepository.add([recurringException]);
-    _syncCubit.sync(entities: [Entity.events]);
 
-    // updateEventAndCreateModifiers(
-    //     event: recurringException,
-    //     atendeesToAdd: atendeesToAdd,
-    //     atendeesToRemove: atendeesToRemove,
-    //     addMeeting: addMeeting,
-    //     removeMeeting: removeMeeting);
+    await _eventsRepository.add([recurringException]);
+
+    if (rsvpChanged && rsvpResponse != null) {
+      updateAtend(recurringException, rsvpResponse);
+    } else {
+      updateEventAndCreateModifiers(
+          event: recurringException,
+          atendeesToAdd: atendeesToAdd,
+          atendeesToRemove: atendeesToRemove,
+          addMeeting: addMeeting,
+          removeMeeting: removeMeeting);
+    }
   }
 }

@@ -285,7 +285,7 @@ class SyncService {
     Event steledEvent = dbEvent.copyWith(
       id: remoteEvent.id,
       recurringId: remoteEvent.recurringId ?? dbEvent.recurringId,
-      originId: remoteEvent.originId,
+      originId: Nullable(remoteEvent.originId),
       originRecurringId: remoteEvent.originRecurringId,
       etag: remoteEvent.etag,
       attendees: remoteEvent.attendees,
@@ -293,7 +293,7 @@ class SyncService {
       meetingUrl: remoteEvent.meetingUrl,
       meetingIcon: remoteEvent.meetingIcon,
       meetingSolution: Nullable(remoteEvent.meetingSolution),
-      originUpdatedAt: remoteEvent.originUpdatedAt,
+      originUpdatedAt: Nullable(remoteEvent.originUpdatedAt),
       remoteUpdatedAt: Nullable(remoteEvent.remoteUpdatedAt),
       updatedAt: remoteEvent.recurringId != null ||
               remoteEvent.id == remoteEvent.recurringId ||

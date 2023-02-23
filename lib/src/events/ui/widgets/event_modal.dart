@@ -12,6 +12,7 @@ import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 
@@ -394,13 +395,55 @@ class _EventModalState extends State<EventModal> {
                               Row(
                                 children: [
                                   InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.accepted);
-                                      });
-                                      context
-                                          .read<EventsCubit>()
-                                          .updateAtend(widget.event, AtendeeResponseStatus.accepted.id);
+                                    onTap: () async {
+                                      if (selectedEvent.id == selectedEvent.recurringId) {
+                                        await showCupertinoModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => RecurrentEventEditModal(
+                                                  onlyThisTap: () {
+                                                    Navigator.of(context).pop();
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.accepted);
+                                                    });
+                                                    context.read<EventsCubit>().createEventException(
+                                                        tappedDate: widget.tapedDate!,
+                                                        dateChanged: false,
+                                                        timeChanged: false,
+                                                        parentEvent: selectedEvent,
+                                                        atendeesToAdd: const [],
+                                                        atendeesToRemove: const [],
+                                                        addMeeting: false,
+                                                        removeMeeting: false,
+                                                        rsvpChanged: true,
+                                                        rsvpResponse: AtendeeResponseStatus.accepted.id);
+                                                  },
+                                                  thisAndFutureTap: () {
+                                                    Navigator.of(context).pop();
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.accepted);
+                                                    });
+                                                  },
+                                                  allTap: () {
+                                                    Navigator.of(context).pop();
+                                                    context
+                                                        .read<EventsCubit>()
+                                                        .updateAtend(widget.event, AtendeeResponseStatus.accepted.id);
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.accepted);
+                                                    });
+                                                  },
+                                                ));
+                                      } else {
+                                        context
+                                            .read<EventsCubit>()
+                                            .updateAtend(widget.event, AtendeeResponseStatus.accepted.id);
+                                        setState(() {
+                                          selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.accepted);
+                                        });
+                                      }
                                     },
                                     child: Text(
                                       t.event.yes,
@@ -415,13 +458,55 @@ class _EventModalState extends State<EventModal> {
                                   ),
                                   const SizedBox(width: 32.0),
                                   InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.declined);
-                                      });
-                                      context
-                                          .read<EventsCubit>()
-                                          .updateAtend(widget.event, AtendeeResponseStatus.declined.id);
+                                    onTap: () async {
+                                      if (selectedEvent.id == selectedEvent.recurringId) {
+                                        await showCupertinoModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => RecurrentEventEditModal(
+                                                  onlyThisTap: () {
+                                                    Navigator.of(context).pop();
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.declined);
+                                                    });
+                                                    context.read<EventsCubit>().createEventException(
+                                                        tappedDate: widget.tapedDate!,
+                                                        dateChanged: false,
+                                                        timeChanged: false,
+                                                        parentEvent: selectedEvent,
+                                                        atendeesToAdd: const [],
+                                                        atendeesToRemove: const [],
+                                                        addMeeting: false,
+                                                        removeMeeting: false,
+                                                        rsvpChanged: true,
+                                                        rsvpResponse: AtendeeResponseStatus.declined.id);
+                                                  },
+                                                  thisAndFutureTap: () {
+                                                    Navigator.of(context).pop();
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.declined);
+                                                    });
+                                                  },
+                                                  allTap: () {
+                                                    Navigator.of(context).pop();
+                                                    context
+                                                        .read<EventsCubit>()
+                                                        .updateAtend(widget.event, AtendeeResponseStatus.declined.id);
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.declined);
+                                                    });
+                                                  },
+                                                ));
+                                      } else {
+                                        context
+                                            .read<EventsCubit>()
+                                            .updateAtend(widget.event, AtendeeResponseStatus.declined.id);
+                                        setState(() {
+                                          selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.declined);
+                                        });
+                                      }
                                     },
                                     child: Text(
                                       t.event.no,
@@ -436,13 +521,55 @@ class _EventModalState extends State<EventModal> {
                                   ),
                                   const SizedBox(width: 32.0),
                                   InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.tentative);
-                                      });
-                                      context
-                                          .read<EventsCubit>()
-                                          .updateAtend(widget.event, AtendeeResponseStatus.tentative.id);
+                                    onTap: () async {
+                                      if (selectedEvent.id == selectedEvent.recurringId) {
+                                        await showCupertinoModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => RecurrentEventEditModal(
+                                                  onlyThisTap: () {
+                                                    Navigator.of(context).pop();
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.tentative);
+                                                    });
+                                                    context.read<EventsCubit>().createEventException(
+                                                        tappedDate: widget.tapedDate!,
+                                                        dateChanged: false,
+                                                        timeChanged: false,
+                                                        parentEvent: selectedEvent,
+                                                        atendeesToAdd: const [],
+                                                        atendeesToRemove: const [],
+                                                        addMeeting: false,
+                                                        removeMeeting: false,
+                                                        rsvpChanged: true,
+                                                        rsvpResponse: AtendeeResponseStatus.tentative.id);
+                                                  },
+                                                  thisAndFutureTap: () {
+                                                    Navigator.of(context).pop();
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.tentative);
+                                                    });
+                                                  },
+                                                  allTap: () {
+                                                    Navigator.of(context).pop();
+                                                    context
+                                                        .read<EventsCubit>()
+                                                        .updateAtend(widget.event, AtendeeResponseStatus.tentative.id);
+                                                    setState(() {
+                                                      selectedEvent.setLoggedUserAttendingResponse(
+                                                          AtendeeResponseStatus.tentative);
+                                                    });
+                                                  },
+                                                ));
+                                      } else {
+                                        context
+                                            .read<EventsCubit>()
+                                            .updateAtend(widget.event, AtendeeResponseStatus.tentative.id);
+                                        setState(() {
+                                          selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.tentative);
+                                        });
+                                      }
                                     },
                                     child: Text(
                                       t.event.maybe,

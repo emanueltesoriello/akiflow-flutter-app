@@ -53,8 +53,6 @@ class _EventEditModalState extends State<EventEditModal> {
   late bool removingMeeting;
   late bool timeChanged;
   late bool dateChanged;
-  late String? originalStartDate;
-  late String? originalStartTime;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -64,7 +62,7 @@ class _EventEditModalState extends State<EventEditModal> {
     titleController = TextEditingController()..text = widget.event.title ?? '';
     titleController.selection = TextSelection.collapsed(offset: titleController.text.length);
 
-    locationController = TextEditingController()..text = widget.event.content['location'] ?? '';
+    locationController = TextEditingController()..text = widget.event.content?['location'] ?? '';
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
 
     atendeesToAdd = List.empty(growable: true);
@@ -80,8 +78,6 @@ class _EventEditModalState extends State<EventEditModal> {
       });
     });
 
-    originalStartDate = widget.event.startDate;
-    originalStartTime = widget.event.startTime;
     isAllDay = widget.event.startTime == null && widget.event.startDate != null;
     timeChanged = false;
     dateChanged = false;
@@ -379,7 +375,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.mapSVG,
-                                    color: widget.event.content['location'] == null
+                                    color: updatedEvent.content?['location'] == null
                                         ? ColorsExt.grey3(context)
                                         : ColorsExt.grey2(context),
                                   ),
@@ -436,7 +432,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                       height: 20,
                                       child: SvgPicture.asset(
                                         Assets.images.icons.common.personCropCircleSVG,
-                                        color: widget.event.attendees != null
+                                        color: updatedEvent.attendees != null
                                             ? ColorsExt.grey2(context)
                                             : ColorsExt.grey3(context),
                                       ),
@@ -447,7 +443,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                       style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.w400,
-                                        color: widget.event.attendees != null
+                                        color: updatedEvent.attendees != null
                                             ? ColorsExt.grey2(context)
                                             : ColorsExt.grey3(context),
                                       ),
@@ -459,7 +455,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.envelopeSVG,
-                                    color: widget.event.attendees != null
+                                    color: updatedEvent.attendees != null
                                         ? ColorsExt.grey2(context)
                                         : ColorsExt.grey3(context),
                                   ),
@@ -727,13 +723,12 @@ class _EventEditModalState extends State<EventEditModal> {
                                                 tappedDate: widget.tapedDate!,
                                                 dateChanged: dateChanged,
                                                 timeChanged: timeChanged,
-                                                originalStartDate: originalStartDate,
-                                                originalStartTime: originalStartTime,
-                                                event: updatedEvent,
+                                                parentEvent: updatedEvent,
                                                 atendeesToAdd: atendeesToAdd,
                                                 atendeesToRemove: atendeesToRemove,
                                                 addMeeting: addingMeeting,
-                                                removeMeeting: removingMeeting);
+                                                removeMeeting: removingMeeting,
+                                                rsvpChanged: false);
                                           },
                                           thisAndFutureTap: () {
                                             Navigator.of(context).pop();
