@@ -89,6 +89,7 @@ class CalendarBody extends StatelessWidget {
             controller: calendarController,
             headerHeight: 0,
             firstDayOfWeek: DateTime.monday,
+            selectionDecoration: const BoxDecoration(),
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
