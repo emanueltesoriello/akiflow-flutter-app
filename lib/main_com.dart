@@ -46,7 +46,12 @@ Future<void> initFunctions() async {
   DatabaseService databaseService = DatabaseService();
 
   tz.initializeTimeZones();
-  await databaseService.open();
+  if (databaseService.database == null || !databaseService.database!.isOpen) {
+    await databaseService.open();
+    print('new database opened - initFunctions');
+  } else {
+    print('database already opened - initFunctions');
+  }
   setupLocator(preferences: preferences, databaseService: databaseService);
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;

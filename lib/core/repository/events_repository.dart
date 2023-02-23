@@ -15,13 +15,11 @@ class EventsRepository extends DatabaseRepository {
   Future<List<Event>> getEvents<Event>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE task_id IS NULL
       """);
-      });
     } catch (e) {
       print('Error retrieving events: $e');
       return [];
@@ -34,8 +32,7 @@ class EventsRepository extends DatabaseRepository {
   Future<List<Event>> getEventsBetweenDates<Event>(String startDate, String endDate) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE task_id IS NULL         
@@ -45,13 +42,12 @@ class EventsRepository extends DatabaseRepository {
           OR (recurring_id IS NOT NULL AND (until_datetime IS NULL OR until_datetime >= ?)) 
         )    
       """, [
-          startDate,
-          endDate,
-          startDate,
-          endDate,
-          startDate,
-        ]);
-      });
+        startDate,
+        endDate,
+        startDate,
+        endDate,
+        startDate,
+      ]);
     } catch (e) {
       print('Error retrieving events between dates: $e');
       return [];

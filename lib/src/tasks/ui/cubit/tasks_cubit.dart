@@ -138,14 +138,20 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }*/
 
-  refreshAllFromRepository() async {
-    await Future.wait([
-      fetchInbox(),
-      fetchTodayTasks(),
-      _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
-      _labelsCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!) : Future.value(),
-      fetchCalendarTasks(),
-    ]);
+  Future<void> refreshAllFromRepository() async {
+    await fetchInbox();
+    print('fetched inbox');
+
+    await fetchTodayTasks();
+    print('fetched today tasks');
+
+    _todayCubit != null ? await fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value();
+    print('fetched selected day tasks');
+
+    _labelsCubit?.state.selectedLabel != null
+        ? await fetchLabelTasks(_labelsCubit!.state.selectedLabel!)
+        : Future.value();
+    print('fetched label tasks');
 
     emit(state.copyWith(tasksLoaded: true));
   }

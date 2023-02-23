@@ -119,7 +119,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       );
 
       await _tasksRepository.add([updated]);
-
+      print('completed add');
       //show a toast for the just created task for 3 seconds
       _tasksCubit.setJustCreatedTask(updated);
 

@@ -28,7 +28,8 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 5,
+        version: 6,
+        singleInstance: true,
         onCreate: (db, version) async {
           print('Creating database version $version');
 
@@ -49,7 +50,11 @@ class DatabaseService {
         onUpgrade: (db, oldVersion, newVersion) async {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
-
+          if (oldVersion < 6) {
+            batch.execute('DROP TABLE IF EXISTS tasks');
+            _setupTasks(batch);
+            addTasksDocField(batch);
+          }
           if (oldVersion < 5) {
             batch.execute('DROP TABLE IF EXISTS events');
             _setupEvents(batch);
@@ -375,6 +380,12 @@ CREATE TABLE IF NOT EXISTS tasks(
   `due_date` TEXT
 )
     ''');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_deleted_at ON tasks(`deleted_at`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_updated_at ON tasks(`updated_at`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_date ON tasks(`date`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_datetime ON tasks(`datetime`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_done ON tasks(`done`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_trashed_at ON tasks(`trashed_at`)');
   }
 
   void addTasksDocField(Batch batch) {
@@ -385,6 +396,8 @@ CREATE TABLE IF NOT EXISTS tasks(
     batch.execute('ALTER TABLE tasks ADD COLUMN origin_account_id VARCHAR(255)');
     batch.execute('ALTER TABLE tasks ADD COLUMN akiflow_account_id VARCHAR(255)');
     batch.execute('ALTER TABLE tasks ADD COLUMN doc TEXT');
+
+    batch.execute('CREATE INDEX IF NOT EXISTS doc ON tasks(`doc`)');
   }
 
   void deleteDocsTable(Batch batch) {

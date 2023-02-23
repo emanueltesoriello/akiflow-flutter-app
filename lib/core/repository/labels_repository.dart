@@ -19,9 +19,7 @@ class LabelsRepository extends DatabaseRepository {
 
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery(query);
-      });
+      items = await _databaseService.database!.rawQuery(query);
     } catch (e) {
       print('Error retrieving labels: $e');
       return [];

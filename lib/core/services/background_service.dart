@@ -19,12 +19,6 @@ const backgroundSyncFromNotification = "com.akiflow.mobile.backgroundSyncFromNot
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    return backgroundProcesses(task);
-  });
-}
-
-Future<bool> backgroundProcesses(String task) async {
-  try {
     // listen on this port in order to catch trigger from the background services.
     // Useful for UI updates based on background sync
     final sendPort = IsolateNameServer.lookupPortByName("backgroundSync");
@@ -38,7 +32,12 @@ Future<bool> backgroundProcesses(String task) async {
     // *********************************************
     SharedPreferences preferences = await SharedPreferences.getInstance();
     DatabaseService databaseService = DatabaseService();
-    await databaseService.open(skipDirectoryCreation: true);
+    if (databaseService.database == null || !databaseService.database!.isOpen) {
+      await databaseService.open(skipDirectoryCreation: true);
+      print('new database opened - backgroundProcesses');
+    } else {
+      print('database already opened - backgroundProcesses');
+    }
     await Config.initialize(
       configFile: 'assets/config/prod.json',
       production: true,
@@ -52,9 +51,13 @@ Future<bool> backgroundProcesses(String task) async {
     } catch (e) {
       print(e);
     }
-    // *********************************************
-    // *********************************************
 
+    return backgroundProcesses(task);
+  });
+}
+
+Future<bool> backgroundProcesses(String task) async {
+  try {
     // *********************************************
     // ***** background notifications scheduling ***
     // *********************************************

@@ -151,7 +151,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           setState(() {
             dailyOverviewTime = fromTimeOfDayToFormattedString(selected);
           });
-          NotificationsService.setDailyReminder();
+          NotificationsService.setDailyReminder(locator<PreferencesRepository>());
         }
       },
     );
@@ -184,7 +184,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     nextTaskNotificationSettingEnabled = newVal;
                   });
                   if (newVal == false) {
-                    await NotificationsService.cancelScheduledNotifications();
+                    await NotificationsService.cancelScheduledNotifications(locator<PreferencesRepository>());
                   } else if (newVal) {
                     if (Platform.isAndroid) {
                       Workmanager().registerOneOffTask(
@@ -214,7 +214,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   if (!newVal) {
                     NotificationsService.cancelNotificationById(NotificationsService.dailyReminderTaskId);
                   }
-                  NotificationsService.setDailyReminder();
+                  NotificationsService.setDailyReminder(locator<PreferencesRepository>());
                 }, isEnabled: dailyOverviewNotificationTimeEnabled),
               ],
             ),

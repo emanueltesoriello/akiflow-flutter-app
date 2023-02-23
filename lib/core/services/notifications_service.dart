@@ -121,7 +121,7 @@ class NotificationsService {
         payload: payload);
   }
 
-  static cancelScheduledNotifications() async {
+  static cancelScheduledNotifications(PreferencesRepository service) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     List<ActiveNotification> activeNotifications = [];
     try {
@@ -131,7 +131,7 @@ class NotificationsService {
     }
     await localNotificationsPlugin.cancelAll();
 
-    setDailyReminder();
+    setDailyReminder(service);
 
     if (activeNotifications.isNotEmpty) {
       for (var notification in activeNotifications) {
@@ -160,7 +160,7 @@ class NotificationsService {
 
   static scheduleNotificationsService(PreferencesRepository preferencesRepository) async {
     if (preferencesRepository.nextTaskNotificationSettingEnabled) {
-      await NotificationsService.cancelScheduledNotifications();
+      await NotificationsService.cancelScheduledNotifications(preferencesRepository);
 
       TasksRepository tasksRepository = locator<TasksRepository>();
       List<Task> todayTasks = await (tasksRepository.getTasksForScheduledNotifications());
@@ -214,29 +214,15 @@ class NotificationsService {
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  static Future<void> setDailyReminder() async {
+  static Future<void> setDailyReminder(PreferencesRepository service) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'channel name',
         channelDescription: 'channel description', importance: Importance.max, priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    // *********************************************
-    // *********************************************
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    DatabaseService databaseService = DatabaseService();
-    await databaseService.open(skipDirectoryCreation: true);
-    await Config.initialize(
-      configFile: 'assets/config/prod.json',
-      production: true,
-    );
-    try {
-      setupLocator(preferences: preferences, databaseService: databaseService, initFirebaseApp: false);
-    } catch (e) {
-      print(e);
-    }
+
     // *********************************************
     // *********************************************
 
-    final service = locator<PreferencesRepository>();
     bool dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
 
     if (dailyOverviewNotificationTimeEnabled) {
