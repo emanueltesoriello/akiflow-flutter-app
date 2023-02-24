@@ -11,6 +11,7 @@ import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
+import 'package:mobile/src/events/ui/widgets/delete_event_confirmation_modal.dart';
 import 'package:mobile/src/events/ui/widgets/event_edit_modal.dart';
 import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -20,10 +21,10 @@ class EventModal extends StatefulWidget {
   const EventModal({
     Key? key,
     required this.event,
-    required this.tapedDate,
+    required this.tappedDate,
   }) : super(key: key);
   final Event event;
-  final DateTime? tapedDate;
+  final DateTime? tappedDate;
 
   @override
   State<EventModal> createState() => _EventModalState();
@@ -31,10 +32,21 @@ class EventModal extends StatefulWidget {
 
 class _EventModalState extends State<EventModal> {
   late Event selectedEvent;
+  late String? originalStartTime;
   @override
   void initState() {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
     selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
+
+    DateTime? eventStartTime =
+        widget.event.startTime != null ? DateTime.parse(widget.event.startTime!).toLocal() : null;
+    originalStartTime = eventStartTime != null
+        ? DateTime(widget.tappedDate!.year, widget.tappedDate!.month, widget.tappedDate!.day, eventStartTime.hour,
+                eventStartTime.minute, eventStartTime.second, eventStartTime.millisecond)
+            .toUtc()
+            .toIso8601String()
+        : null;
+
     super.initState();
   }
 
@@ -107,7 +119,7 @@ class _EventModalState extends State<EventModal> {
                                         Text(
                                           widget.event.recurringId == null
                                               ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.startTime!))
-                                              : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w400,
@@ -130,7 +142,7 @@ class _EventModalState extends State<EventModal> {
                                         Text(
                                           widget.event.recurringId == null
                                               ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.startDate!))
-                                              : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w400,
@@ -150,7 +162,7 @@ class _EventModalState extends State<EventModal> {
                                         Text(
                                           widget.event.recurringId == null
                                               ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.endTime!))
-                                              : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w400,
@@ -173,7 +185,7 @@ class _EventModalState extends State<EventModal> {
                                         Text(
                                           widget.event.recurringId == null
                                               ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.endDate!))
-                                              : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w400,
@@ -396,7 +408,7 @@ class _EventModalState extends State<EventModal> {
                                 children: [
                                   InkWell(
                                     onTap: () async {
-                                      if (selectedEvent.id == selectedEvent.recurringId) {
+                                      if (selectedEvent.recurringId != null) {
                                         await showCupertinoModalBottomSheet(
                                             context: context,
                                             builder: (context) => RecurrentEventEditModal(
@@ -406,17 +418,24 @@ class _EventModalState extends State<EventModal> {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.accepted);
                                                     });
-                                                    context.read<EventsCubit>().createEventException(
-                                                        tappedDate: widget.tapedDate!,
-                                                        dateChanged: false,
-                                                        timeChanged: false,
-                                                        parentEvent: selectedEvent,
-                                                        atendeesToAdd: const [],
-                                                        atendeesToRemove: const [],
-                                                        addMeeting: false,
-                                                        removeMeeting: false,
-                                                        rsvpChanged: true,
-                                                        rsvpResponse: AtendeeResponseStatus.accepted.id);
+                                                    if (selectedEvent.id == selectedEvent.recurringId) {
+                                                      context.read<EventsCubit>().createEventException(
+                                                          tappedDate: widget.tappedDate!,
+                                                          originalStartTime: originalStartTime,
+                                                          dateChanged: false,
+                                                          timeChanged: false,
+                                                          parentEvent: selectedEvent,
+                                                          atendeesToAdd: const [],
+                                                          atendeesToRemove: const [],
+                                                          addMeeting: false,
+                                                          removeMeeting: false,
+                                                          rsvpChanged: true,
+                                                          rsvpResponse: AtendeeResponseStatus.accepted.id);
+                                                    } else {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.accepted.id);
+                                                    }
                                                   },
                                                   thisAndFutureTap: () {
                                                     Navigator.of(context).pop();
@@ -427,19 +446,25 @@ class _EventModalState extends State<EventModal> {
                                                   },
                                                   allTap: () {
                                                     Navigator.of(context).pop();
-                                                    context
-                                                        .read<EventsCubit>()
-                                                        .updateAtend(widget.event, AtendeeResponseStatus.accepted.id);
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.accepted);
                                                     });
+                                                    if (selectedEvent.id == selectedEvent.recurringId) {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.accepted.id);
+                                                    } else {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.accepted.id,
+                                                          updateParent: true);
+                                                    }
                                                   },
                                                 ));
                                       } else {
-                                        context
-                                            .read<EventsCubit>()
-                                            .updateAtend(widget.event, AtendeeResponseStatus.accepted.id);
+                                        context.read<EventsCubit>().updateAtend(
+                                            event: widget.event, response: AtendeeResponseStatus.accepted.id);
                                         setState(() {
                                           selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.accepted);
                                         });
@@ -459,7 +484,7 @@ class _EventModalState extends State<EventModal> {
                                   const SizedBox(width: 32.0),
                                   InkWell(
                                     onTap: () async {
-                                      if (selectedEvent.id == selectedEvent.recurringId) {
+                                      if (selectedEvent.recurringId != null) {
                                         await showCupertinoModalBottomSheet(
                                             context: context,
                                             builder: (context) => RecurrentEventEditModal(
@@ -469,17 +494,24 @@ class _EventModalState extends State<EventModal> {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.declined);
                                                     });
-                                                    context.read<EventsCubit>().createEventException(
-                                                        tappedDate: widget.tapedDate!,
-                                                        dateChanged: false,
-                                                        timeChanged: false,
-                                                        parentEvent: selectedEvent,
-                                                        atendeesToAdd: const [],
-                                                        atendeesToRemove: const [],
-                                                        addMeeting: false,
-                                                        removeMeeting: false,
-                                                        rsvpChanged: true,
-                                                        rsvpResponse: AtendeeResponseStatus.declined.id);
+                                                    if (selectedEvent.id == selectedEvent.recurringId) {
+                                                      context.read<EventsCubit>().createEventException(
+                                                          tappedDate: widget.tappedDate!,
+                                                          originalStartTime: originalStartTime,
+                                                          dateChanged: false,
+                                                          timeChanged: false,
+                                                          parentEvent: selectedEvent,
+                                                          atendeesToAdd: const [],
+                                                          atendeesToRemove: const [],
+                                                          addMeeting: false,
+                                                          removeMeeting: false,
+                                                          rsvpChanged: true,
+                                                          rsvpResponse: AtendeeResponseStatus.declined.id);
+                                                    } else {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.declined.id);
+                                                    }
                                                   },
                                                   thisAndFutureTap: () {
                                                     Navigator.of(context).pop();
@@ -490,19 +522,21 @@ class _EventModalState extends State<EventModal> {
                                                   },
                                                   allTap: () {
                                                     Navigator.of(context).pop();
-                                                    context
-                                                        .read<EventsCubit>()
-                                                        .updateAtend(widget.event, AtendeeResponseStatus.declined.id);
-                                                    setState(() {
-                                                      selectedEvent.setLoggedUserAttendingResponse(
-                                                          AtendeeResponseStatus.declined);
-                                                    });
+                                                    if (selectedEvent.id == selectedEvent.recurringId) {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.declined.id);
+                                                    } else {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.declined.id,
+                                                          updateParent: true);
+                                                    }
                                                   },
                                                 ));
                                       } else {
-                                        context
-                                            .read<EventsCubit>()
-                                            .updateAtend(widget.event, AtendeeResponseStatus.declined.id);
+                                        context.read<EventsCubit>().updateAtend(
+                                            event: widget.event, response: AtendeeResponseStatus.declined.id);
                                         setState(() {
                                           selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.declined);
                                         });
@@ -522,7 +556,7 @@ class _EventModalState extends State<EventModal> {
                                   const SizedBox(width: 32.0),
                                   InkWell(
                                     onTap: () async {
-                                      if (selectedEvent.id == selectedEvent.recurringId) {
+                                      if (selectedEvent.recurringId != null) {
                                         await showCupertinoModalBottomSheet(
                                             context: context,
                                             builder: (context) => RecurrentEventEditModal(
@@ -532,17 +566,24 @@ class _EventModalState extends State<EventModal> {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.tentative);
                                                     });
-                                                    context.read<EventsCubit>().createEventException(
-                                                        tappedDate: widget.tapedDate!,
-                                                        dateChanged: false,
-                                                        timeChanged: false,
-                                                        parentEvent: selectedEvent,
-                                                        atendeesToAdd: const [],
-                                                        atendeesToRemove: const [],
-                                                        addMeeting: false,
-                                                        removeMeeting: false,
-                                                        rsvpChanged: true,
-                                                        rsvpResponse: AtendeeResponseStatus.tentative.id);
+                                                    if (selectedEvent.id == selectedEvent.recurringId) {
+                                                      context.read<EventsCubit>().createEventException(
+                                                          tappedDate: widget.tappedDate!,
+                                                          originalStartTime: originalStartTime,
+                                                          dateChanged: false,
+                                                          timeChanged: false,
+                                                          parentEvent: selectedEvent,
+                                                          atendeesToAdd: const [],
+                                                          atendeesToRemove: const [],
+                                                          addMeeting: false,
+                                                          removeMeeting: false,
+                                                          rsvpChanged: true,
+                                                          rsvpResponse: AtendeeResponseStatus.tentative.id);
+                                                    } else {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.tentative.id);
+                                                    }
                                                   },
                                                   thisAndFutureTap: () {
                                                     Navigator.of(context).pop();
@@ -553,19 +594,25 @@ class _EventModalState extends State<EventModal> {
                                                   },
                                                   allTap: () {
                                                     Navigator.of(context).pop();
-                                                    context
-                                                        .read<EventsCubit>()
-                                                        .updateAtend(widget.event, AtendeeResponseStatus.tentative.id);
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.tentative);
                                                     });
+                                                    if (selectedEvent.id == selectedEvent.recurringId) {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.tentative.id);
+                                                    } else {
+                                                      context.read<EventsCubit>().updateAtend(
+                                                          event: widget.event,
+                                                          response: AtendeeResponseStatus.tentative.id,
+                                                          updateParent: true);
+                                                    }
                                                   },
                                                 ));
                                       } else {
-                                        context
-                                            .read<EventsCubit>()
-                                            .updateAtend(widget.event, AtendeeResponseStatus.tentative.id);
+                                        context.read<EventsCubit>().updateAtend(
+                                            event: widget.event, response: AtendeeResponseStatus.tentative.id);
                                         setState(() {
                                           selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.tentative);
                                         });
@@ -605,7 +652,8 @@ class _EventModalState extends State<EventModal> {
                                         context: context,
                                         builder: (context) => EventEditModal(
                                           event: selectedEvent,
-                                          tapedDate: widget.tapedDate,
+                                          tappedDate: widget.tappedDate!,
+                                          originalStartTime: originalStartTime,
                                         ),
                                       ).whenComplete(
                                         () {
@@ -614,7 +662,57 @@ class _EventModalState extends State<EventModal> {
                                       );
                                     },
                                   ),
-                                  BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
+                                  BottomButton(
+                                    title: t.event.delete,
+                                    image: Assets.images.icons.common.trashSVG,
+                                    onTap: () {
+                                      if (selectedEvent.recurringId != null) {
+                                        showCupertinoModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => RecurrentEventEditModal(
+                                            deleteEvent: true,
+                                            onlyThisTap: () {
+                                              Navigator.of(context).pop();
+                                              if (selectedEvent.recurringId == selectedEvent.id) {
+                                                context.read<EventsCubit>().createEventException(
+                                                    tappedDate: widget.tappedDate!,
+                                                    originalStartTime: originalStartTime,
+                                                    dateChanged: false,
+                                                    timeChanged: false,
+                                                    parentEvent: selectedEvent,
+                                                    atendeesToAdd: const [],
+                                                    atendeesToRemove: const [],
+                                                    addMeeting: false,
+                                                    removeMeeting: false,
+                                                    rsvpChanged: false,
+                                                    deleteEvent: true);
+                                              } else {
+                                                context.read<EventsCubit>().deleteEvent(selectedEvent);
+                                              }
+                                            },
+                                            thisAndFutureTap: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            allTap: () {
+                                              Navigator.of(context).pop();
+                                              context.read<EventsCubit>().deleteEvent(selectedEvent);
+                                            },
+                                          ),
+                                        );
+                                      } else {
+                                        showCupertinoModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => DeleteEventConfirmationModal(
+                                            eventName: selectedEvent.title ?? '',
+                                            onTapDelete: () {
+                                              Navigator.of(context).pop();
+                                              context.read<EventsCubit>().deleteEvent(selectedEvent);
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ],
                               )
                             : Row(

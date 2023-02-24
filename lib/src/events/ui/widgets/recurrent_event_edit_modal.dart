@@ -9,8 +9,14 @@ class RecurrentEventEditModal extends StatelessWidget {
   final Function() onlyThisTap;
   final Function() thisAndFutureTap;
   final Function() allTap;
-  const RecurrentEventEditModal(
-      {super.key, required this.onlyThisTap, required this.thisAndFutureTap, required this.allTap});
+  final bool deleteEvent;
+  const RecurrentEventEditModal({
+    super.key,
+    required this.onlyThisTap,
+    required this.thisAndFutureTap,
+    required this.allTap,
+    this.deleteEvent = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +42,14 @@ class RecurrentEventEditModal extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                 child: Row(
                   children: [
-                    SvgPicture.asset(Assets.images.icons.common.pencilSVG,
-                        width: 28, height: 28, color: ColorsExt.grey2(context)),
+                    SvgPicture.asset(
+                        deleteEvent ? Assets.images.icons.common.trashSVG : Assets.images.icons.common.pencilSVG,
+                        width: 28,
+                        height: 28,
+                        color: ColorsExt.grey2(context)),
                     const SizedBox(width: 8.0),
                     Text(
-                      t.event.editEvent.repeatingEditModal.title,
+                      deleteEvent ? 'You are deleting a recurrent event' : t.event.editEvent.repeatingEditModal.title,
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                     ),
                   ],
@@ -48,7 +57,10 @@ class RecurrentEventEditModal extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                child: Text(t.event.editEvent.repeatingEditModal.description,
+                child: Text(
+                    deleteEvent
+                        ? 'Do you want to delete only this occurrence or delete this and all future occurrences?'
+                        : t.event.editEvent.repeatingEditModal.description,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
               const SizedBox(height: 24),
@@ -75,30 +87,30 @@ class RecurrentEventEditModal extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              InkWell(
-                onTap: () {
-                  thisAndFutureTap();
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  constraints: const BoxConstraints(
-                    minHeight: 46,
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
-                  child: Center(
-                    child: Text(
-                      t.event.editEvent.repeatingEditModal.thisAndAllFuture,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: ColorsExt.grey2(context),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // const SizedBox(height: 12),
+              // InkWell(
+              //   onTap: () {
+              //     thisAndFutureTap();
+              //     Navigator.pop(context);
+              //   },
+              //   child: Container(
+              //     constraints: const BoxConstraints(
+              //       minHeight: 46,
+              //     ),
+              //     decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
+              //     child: Center(
+              //       child: Text(
+              //         t.event.editEvent.repeatingEditModal.thisAndAllFuture,
+              //         style: TextStyle(
+              //           fontSize: 17,
+              //           fontWeight: FontWeight.w400,
+              //           color: ColorsExt.grey2(context),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 12),
               InkWell(
                 onTap: () {

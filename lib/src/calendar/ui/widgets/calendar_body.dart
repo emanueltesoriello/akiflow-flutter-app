@@ -160,7 +160,7 @@ class CalendarBody extends StatelessWidget {
         context: context,
         builder: (context) => EventModal(
           event: event,
-          tapedDate: calendarTapDetails.date,
+          tappedDate: calendarTapDetails.date,
         ),
       ).whenComplete(
         () {

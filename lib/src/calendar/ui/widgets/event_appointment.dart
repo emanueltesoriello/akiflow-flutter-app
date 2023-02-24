@@ -17,7 +17,6 @@ class EventAppointment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double boxHeight = calendarAppointmentDetails.bounds.height;
-    print(boxHeight);
     return Container(
       width: calendarAppointmentDetails.bounds.width,
       height: boxHeight,

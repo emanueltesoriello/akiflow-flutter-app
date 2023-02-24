@@ -30,10 +30,12 @@ class EventEditModal extends StatefulWidget {
   const EventEditModal({
     Key? key,
     required this.event,
-    required this.tapedDate,
+    required this.tappedDate,
+    required this.originalStartTime,
   }) : super(key: key);
   final Event event;
-  final DateTime? tapedDate;
+  final DateTime tappedDate;
+  final String? originalStartTime;
 
   @override
   State<EventEditModal> createState() => _EventEditModalState();
@@ -247,13 +249,13 @@ class _EventEditModalState extends State<EventEditModal> {
                                         updatedEvent = updatedEvent.copyWith(
                                             startTime: Nullable(null),
                                             endTime: Nullable(null),
-                                            startDate: Nullable(DateFormat("y-MM-dd").format(widget.tapedDate!)),
-                                            endDate: Nullable(DateFormat("y-MM-dd").format(widget.tapedDate!)));
+                                            startDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate)),
+                                            endDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate)));
                                       } else {
                                         updatedEvent = updatedEvent.copyWith(
-                                          startTime: Nullable(widget.tapedDate!.toIso8601String()),
+                                          startTime: Nullable(widget.tappedDate.toIso8601String()),
                                           endTime: Nullable(
-                                              widget.tapedDate!.add(const Duration(minutes: 30)).toIso8601String()),
+                                              widget.tappedDate.add(const Duration(minutes: 30)).toIso8601String()),
                                           startDate: Nullable(null),
                                           endDate: Nullable(null),
                                         );
@@ -532,7 +534,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                           List<EventAtendee>? atendees = updatedEvent.attendees;
                                           atendees!.removeAt(index);
                                           setState(() {
-                                            updatedEvent.copyWith(attendees: atendees);
+                                            updatedEvent.copyWith(attendees: Nullable(atendees));
                                           });
                                         },
                                         child: SizedBox(
@@ -580,7 +582,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                         attendees.add(newAtendee);
                                       }
 
-                                      updatedEvent = updatedEvent.copyWith(attendees: attendees);
+                                      updatedEvent = updatedEvent.copyWith(attendees: Nullable(attendees));
                                     },
                                   ),
                                 );
@@ -709,38 +711,57 @@ class _EventEditModalState extends State<EventEditModal> {
                             iconColor: ColorsExt.green(context),
                             onTap: () async {
                               updatedEvent = updatedEvent.copyWith(
-                                  title: titleController.text,
-                                  description: descriptionController.text,
+                                  title: Nullable(titleController.text),
+                                  description: Nullable(descriptionController.text),
                                   updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
 
-                              if (updatedEvent.id == updatedEvent.recurringId) {
+                              if (updatedEvent.recurringId != null) {
                                 await showCupertinoModalBottomSheet(
                                     context: context,
                                     builder: (context) => RecurrentEventEditModal(
                                           onlyThisTap: () {
                                             Navigator.of(context).pop();
-                                            context.read<EventsCubit>().createEventException(
-                                                tappedDate: widget.tapedDate!,
-                                                dateChanged: dateChanged,
-                                                timeChanged: timeChanged,
-                                                parentEvent: updatedEvent,
-                                                atendeesToAdd: atendeesToAdd,
-                                                atendeesToRemove: atendeesToRemove,
-                                                addMeeting: addingMeeting,
-                                                removeMeeting: removingMeeting,
-                                                rsvpChanged: false);
+                                            if (updatedEvent.recurringId == updatedEvent.id) {
+                                              context.read<EventsCubit>().createEventException(
+                                                  tappedDate: widget.tappedDate,
+                                                  dateChanged: dateChanged,
+                                                  originalStartTime: widget.originalStartTime,
+                                                  timeChanged: timeChanged,
+                                                  parentEvent: updatedEvent,
+                                                  atendeesToAdd: atendeesToAdd,
+                                                  atendeesToRemove: atendeesToRemove,
+                                                  addMeeting: addingMeeting,
+                                                  removeMeeting: removingMeeting,
+                                                  rsvpChanged: false);
+                                            } else {
+                                              context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                                  event: updatedEvent,
+                                                  atendeesToAdd: atendeesToAdd,
+                                                  atendeesToRemove: atendeesToRemove,
+                                                  addMeeting: addingMeeting,
+                                                  removeMeeting: removingMeeting);
+                                            }
                                           },
                                           thisAndFutureTap: () {
                                             Navigator.of(context).pop();
                                           },
                                           allTap: () {
-                                            context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                                event: updatedEvent,
-                                                atendeesToAdd: atendeesToAdd,
-                                                atendeesToRemove: atendeesToRemove,
-                                                addMeeting: addingMeeting,
-                                                removeMeeting: removingMeeting);
                                             Navigator.of(context).pop();
+                                            if (updatedEvent.recurringId == updatedEvent.id) {
+                                              context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                                  event: updatedEvent,
+                                                  atendeesToAdd: atendeesToAdd,
+                                                  atendeesToRemove: atendeesToRemove,
+                                                  addMeeting: addingMeeting,
+                                                  removeMeeting: removingMeeting);
+                                            } else {
+                                              context.read<EventsCubit>().updateParentAndExceptions(
+                                                  exceptionEvent: updatedEvent,
+                                                  atendeesToAdd: atendeesToAdd,
+                                                  atendeesToRemove: atendeesToRemove,
+                                                  addMeeting: addingMeeting,
+                                                  removeMeeting: removingMeeting);
+                                            }
                                           },
                                         ));
                               } else {
@@ -777,7 +798,7 @@ class _EventEditModalState extends State<EventEditModal> {
             showTime: false,
             initialDate: updatedEvent.startDate != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.startDate!).toLocal()
-                : widget.tapedDate!,
+                : widget.tappedDate,
             initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
@@ -798,7 +819,7 @@ class _EventEditModalState extends State<EventEditModal> {
           Text(
             updatedEvent.recurringId == null
                 ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startDate!))
-                : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                : DateFormat("EEE dd MMM").format(widget.tappedDate),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
           ),
         ],
@@ -812,7 +833,7 @@ class _EventEditModalState extends State<EventEditModal> {
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EventEditTimeModal(
-            initialDate: widget.tapedDate!,
+            initialDate: widget.tappedDate,
             initialDatetime: updatedEvent.startTime != null ? DateTime.parse(updatedEvent.startTime!).toLocal() : null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
@@ -837,7 +858,7 @@ class _EventEditModalState extends State<EventEditModal> {
           Text(
             updatedEvent.recurringId == null
                 ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!))
-                : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                : DateFormat("EEE dd MMM").format(widget.tappedDate),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
           ),
           const SizedBox(height: 12.0),
@@ -859,7 +880,7 @@ class _EventEditModalState extends State<EventEditModal> {
             showTime: false,
             initialDate: updatedEvent.endDate != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endDate!).toLocal()
-                : widget.tapedDate!,
+                : widget.tappedDate,
             initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
@@ -877,7 +898,7 @@ class _EventEditModalState extends State<EventEditModal> {
           Text(
             updatedEvent.recurringId == null
                 ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endDate!))
-                : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                : DateFormat("EEE dd MMM").format(widget.tappedDate),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
           ),
         ],
@@ -893,7 +914,7 @@ class _EventEditModalState extends State<EventEditModal> {
           builder: (context) => EventEditTimeModal(
             initialDate: updatedEvent.endTime != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endTime!).toLocal()
-                : widget.tapedDate!,
+                : widget.tappedDate,
             initialDatetime: updatedEvent.endTime != null ? DateTime.parse(updatedEvent.endTime!).toLocal() : null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
@@ -916,7 +937,7 @@ class _EventEditModalState extends State<EventEditModal> {
           Text(
             updatedEvent.recurringId == null
                 ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!))
-                : DateFormat("EEE dd MMM").format(widget.tapedDate!),
+                : DateFormat("EEE dd MMM").format(widget.tappedDate),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
           ),
           const SizedBox(height: 12.0),
