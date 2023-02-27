@@ -96,20 +96,25 @@ class _CalendarItemState extends State<CalendarItem> {
 
                             print(updatedCalendar.settings);
                           },
-                          child: SvgPicture.asset(
-                            widget.calendars[index].settings != null &&
-                                    widget.calendars[index].settings["visible"] != null &&
-                                    widget.calendars[index].settings["visible"] == true
-                                ? Assets.images.icons.common.checkDoneSVG
-                                : Assets.images.icons.common.checkEmptySVG,
-                            width: 22,
-                            height: 22,
-                            color: Color(int.parse(widget.calendars[index].color!.replaceAll('#', '0xff'))),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                widget.calendars[index].settings != null &&
+                                        widget.calendars[index].settings["visible"] != null &&
+                                        widget.calendars[index].settings["visible"] == true
+                                    ? Assets.images.icons.common.checkDoneSVG
+                                    : Assets.images.icons.common.checkEmptySVG,
+                                width: 22,
+                                height: 22,
+                                color: Color(int.parse(widget.calendars[index].color!.replaceAll('#', '0xff'))),
+                              ),
+                              Text(
+                                "${widget.calendars[index].title}",
+                                style: TextStyle(
+                                    fontSize: 17, color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
+                              ),
+                            ],
                           ),
-                        ),
-                        Text(
-                          "${widget.calendars[index].title}",
-                          style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
                         ),
                       ],
                     ),

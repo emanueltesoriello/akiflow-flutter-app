@@ -1,5 +1,6 @@
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
+import 'package:models/nullable.dart';
 
 enum AtendeeResponseStatus { needsAction, accepted, declined, tentative }
 
@@ -64,6 +65,6 @@ extension EventExt on Event {
     loggedUser = loggedUser.copyWith(responseStatus: response.id);
     updatedAtendees.removeWhere((attendee) => attendee.email == originCalendarId);
     updatedAtendees.add(loggedUser);
-    copyWith(attendees: updatedAtendees);
+    copyWith(attendees: Nullable(updatedAtendees));
   }
 }

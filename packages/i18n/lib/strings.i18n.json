@@ -243,8 +243,8 @@
     "done": "Done",
     "toDo": "To do",
     "section": "Section",
-    "scheduledDate":"Scheduled Date",
-    "duration":"Duration"
+    "scheduledDate": "Scheduled Date",
+    "duration": "Duration"
   },
   "editTask": {
     "add": "Add",
@@ -350,18 +350,25 @@
       "addDescription": "Add Description",
       "defaultColor": "Default Color",
       "viewOnGoogleCalendar": "View on Google Calendar",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "repeatingEditModal": {
+        "title": "Editing repeating event",
+        "description": "Do you want to change only this occurrence or change this and all future occurrences?",
+        "onlyThis": "Only this event",
+        "thisAndAllFuture": "This and all future events",
+        "allEvents":"All events"
+      }
     }
   },
   "availability": {
-    "availabilities":"Availabilities",
-    "activeRecurrentSlots":"Active recurrent slots",
-    "activeManualSlots":"Active manual slots",
-    "comingSoon":"Coming Soon",
-    "fullCalendarExperienceInFuture":"The full calendar experience is coming in the near future",
-    "noActiveLinksToShow":"No active links to show",
-    "toCreateLinkUseDesktop":"To create a link use the desktop app",
-    "linkCopiedToClipboard":"Link copied to clipboard!"
+    "availabilities": "Availabilities",
+    "activeRecurrentSlots": "Active recurrent slots",
+    "activeManualSlots": "Active manual slots",
+    "comingSoon": "Coming Soon",
+    "fullCalendarExperienceInFuture": "The full calendar experience is coming in the near future",
+    "noActiveLinksToShow": "No active links to show",
+    "toCreateLinkUseDesktop": "To create a link use the desktop app",
+    "linkCopiedToClipboard": "Link copied to clipboard!"
   },
   "confirm": "Confirm",
   "cancel": "Cancel",

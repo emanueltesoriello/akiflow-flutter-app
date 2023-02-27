@@ -89,6 +89,7 @@ class CalendarBody extends StatelessWidget {
             controller: calendarController,
             headerHeight: 0,
             firstDayOfWeek: DateTime.monday,
+            selectionDecoration: const BoxDecoration(),
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
@@ -103,8 +104,8 @@ class CalendarBody extends StatelessWidget {
               dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
             ),
             timeSlotViewSettings: TimeSlotViewSettings(
-              timeIntervalHeight: 50.0,
-              minimumAppointmentDuration: const Duration(minutes: 23),
+              timeIntervalHeight: 56.0,
+              minimumAppointmentDuration: const Duration(minutes: 15),
               timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
@@ -139,8 +140,12 @@ class CalendarBody extends StatelessWidget {
     } else if (appointment.notes == 'deleted') {
       return const SizedBox();
     } else {
+      Event event = events.where((event) => event.id == appointment.id).first;
       return EventAppointment(
-          calendarAppointmentDetails: calendarAppointmentDetails, appointment: appointment, context: context);
+          calendarAppointmentDetails: calendarAppointmentDetails,
+          appointment: appointment,
+          event: event,
+          context: context);
     }
   }
 
@@ -159,7 +164,7 @@ class CalendarBody extends StatelessWidget {
         context: context,
         builder: (context) => EventModal(
           event: event,
-          tapedDate: calendarTapDetails.date,
+          tappedDate: calendarTapDetails.date,
         ),
       ).whenComplete(
         () {

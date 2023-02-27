@@ -3,11 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 289 
- * Strings: 261 
+ * Strings: 305 
  *
- * Built on 2023-01-30 at 09:16 UTC
- * Built on 2023-02-13 at 12:42 UTC
+ * Built on 2023-02-22 at 13:20 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -889,6 +887,7 @@ class _StringsEventEditEventEn {
 	String get defaultColor => 'Default Color';
 	String get viewOnGoogleCalendar => 'View on Google Calendar';
 	String get saveChanges => 'Save Changes';
+	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
 }
 
 // Path: settings.integrations.gmail
@@ -932,6 +931,20 @@ class _StringsSettingsIntegrationsCalendarEn {
 
 	// Translations
 	String get title => 'Google Calendar';
+}
+
+// Path: event.editEvent.repeatingEditModal
+class _StringsEventEditEventRepeatingEditModalEn {
+	_StringsEventEditEventRepeatingEditModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Editing repeating event';
+	String get description => 'Do you want to change only this occurrence or change this and all future occurrences?';
+	String get onlyThis => 'Only this event';
+	String get thisAndAllFuture => 'This and all future events';
+	String get allEvents => 'All events';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1265,6 +1278,11 @@ extension on _StringsEn {
 			'event.editEvent.defaultColor': 'Default Color',
 			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
 			'event.editEvent.saveChanges': 'Save Changes',
+			'event.editEvent.repeatingEditModal.title': 'Editing repeating event',
+			'event.editEvent.repeatingEditModal.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
+			'event.editEvent.repeatingEditModal.onlyThis': 'Only this event',
+			'event.editEvent.repeatingEditModal.thisAndAllFuture': 'This and all future events',
+			'event.editEvent.repeatingEditModal.allEvents': 'All events',
 			'availability.availabilities': 'Availabilities',
 			'availability.activeRecurrentSlots': 'Active recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',
