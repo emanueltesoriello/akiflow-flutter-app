@@ -144,6 +144,10 @@ class EventModifier extends Equatable implements Base {
       data["content"] = jsonDecode(data["content"] as String);
     }
 
+    if (data.containsKey("result") && data["result"] != null) {
+      data["result"] = jsonDecode(data["result"] as String);
+    }
+
     return EventModifier.fromMap(data);
   }
 
