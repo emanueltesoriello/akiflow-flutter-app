@@ -95,31 +95,36 @@ class DatabaseRepository implements IBaseDatabaseRepository {
       }
 
       for (var chunk in chunks) {
-        List<T> existingModelsChunk = await _getByItems(chunk);
+        List<T> existingModelsChunk = await _supportGetByItems(chunk);
         items.addAll(existingModelsChunk);
       }
     } else {
-      items = await _getByItems(ids);
+      items = await _supportGetByItems(ids);
     }
 
     return items;
   }
 
-  Future<List<T>> _getByItems<T>(List<dynamic> elements) async {
+  Future<List<T>> _supportGetByItems<T>(List<dynamic> elements) async {
     try {
       List<dynamic> ids = elements.map((remoteItem) => remoteItem.id).toList();
       String ins = ids.map((el) => '?').join(',');
-      List<Map<String, Object?>> items =
-          await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
-      if (elements.length != items.length) {
-        print("checking if connectorId & originAccountId matches");
-        List<dynamic> originAccountIds = elements.map((remoteItem) => remoteItem.originAccountId).toList();
-        List<dynamic> connectorIds = elements.map((remoteItem) => remoteItem.connectorId).toList();
+      List<Map<String, Object?>> items = [];
 
-        items = await _databaseService.database!
-            .rawQuery("SELECT * FROM $tableName WHERE origin_account_id in ($ins) ", originAccountIds);
-      }
+      await _databaseService.database!.transaction((txn) async {
+        items = await txn.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
+
+        if (elements.length != items.length) {
+          print("checking if connectorId & originAccountId matches");
+
+          List<dynamic> originAccountIds = elements.map((remoteItem) => remoteItem.originAccountId).toList();
+          //List<dynamic> connectorIds = elements.map((remoteItem) => remoteItem.connectorId).toList();
+          items = await txn.rawQuery("SELECT * FROM $tableName WHERE origin_account_id in ($ins) ", originAccountIds);
+        }
+      });
+
       List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+
       return objects;
     } catch (e) {
       print(e);

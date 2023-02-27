@@ -139,19 +139,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }*/
 
   Future<void> refreshAllFromRepository() async {
-    await fetchInbox();
-    print('fetched inbox');
-
-    await fetchTodayTasks();
-    print('fetched today tasks');
-
-    _todayCubit != null ? await fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value();
-    print('fetched selected day tasks');
-
-    _labelsCubit?.state.selectedLabel != null
-        ? await fetchLabelTasks(_labelsCubit!.state.selectedLabel!)
-        : Future.value();
-    print('fetched label tasks');
+    await Future.wait([
+      fetchInbox().then((_) => print('fetched inbox')),
+      fetchTodayTasks().then((_) => print('fetched today tasks')),
+      (_todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value())
+          .then((_) => print('fetched selected day tasks')),
+      _labelsCubit?.state.selectedLabel != null
+          ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!)
+          : Future.value().then((_) => print('fetched label tasks'))
+    ]);
 
     emit(state.copyWith(tasksLoaded: true));
   }
