@@ -95,8 +95,13 @@ class ApiClient implements IBaseApi {
   }
 
   @override
-  Future<Map<String, dynamic>?> postClient<T>({required Map<String, dynamic> client}) async {
-    client.removeWhere((key, value) => value == null);
+  Future<Map<String, dynamic>?> postClient<T>(
+      {required Map<String, dynamic> client, bool keepFCMTokenToNull = false}) async {
+    if (keepFCMTokenToNull) {
+      client.removeWhere((key, value) => key == "notifications_token" ? false : value == null);
+    } else {
+      client.removeWhere((key, value) => value == null);
+    }
     String json = jsonEncode(client);
 
     Response responseRaw = await _httpClient.post(url, body: json);

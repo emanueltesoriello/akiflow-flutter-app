@@ -295,38 +295,38 @@ class SyncControllerService {
       final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
       Client client = Client(
-        id: id,
-        deviceId: deviceId,
-        userId: userId,
-        os: os,
-        lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
-        unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
-        lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
-        unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
-        lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
-        unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
-        timezoneName: currentTimeZone,
-        release: '${packageInfo.version} ${packageInfo.buildNumber}',
-        recurringBackgroundSyncCounter: recurringBackgroundSyncCounter,
-        recurringNotificationsSyncCounter: recurringNotificationsSyncCounter,
-      );
+          id: id,
+          deviceId: deviceId,
+          userId: userId,
+          os: os,
+          lastAccountsSyncStartedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+          unsafeLastAccountsSyncEndedAt: lastSyncAccounts?.toUtc().toIso8601String(),
+          lastLabelsSyncStartedAt: lastSyncLabels?.toUtc().toIso8601String(),
+          unsafeLastLabelsSyncEndedAt: lastSyncLabels?.toUtc().toIso8601String(),
+          lastTasksSyncStartedAt: lastSyncTasks?.toUtc().toIso8601String(),
+          unsafeLastTasksSyncEndedAt: lastSyncTasks?.toUtc().toIso8601String(),
+          timezoneName: currentTimeZone,
+          release: '${packageInfo.version} ${packageInfo.buildNumber}',
+          recurringBackgroundSyncCounter: recurringBackgroundSyncCounter,
+          recurringNotificationsSyncCounter: recurringNotificationsSyncCounter,
+          notificationsRevoked: false);
 
-      Client c = fcmToken != null ? client.copyWith(notificationsToken: fcmToken) : client;
+      Client c = fcmToken != null ? client.copyWith(notificationsToken: Nullable(fcmToken)) : client;
 
       Map<String, dynamic>? response = await api.postClient(
         client: c.toMap(),
       );
 
       if (response != null) {
-        String? deviceIdFromServer = response['id'];
+        //String? deviceIdFromServer = response['id'];
         int recurringNotificationsSyncCounterFromServer = response['recurring_notifications_sync_counter'] ?? 0;
         int recurringBackgroundSyncCounterFromServer = response['recurring_background_sync_counter'] ?? 0;
 
-        // in case of new app installation but same device ID
+        /*// in case of new app installation but same device ID
         // this will set the same ID on the device that was set as first on the server
         if (deviceIdFromServer != null && deviceIdFromServer != client.id) {
           _setDeviceUUID(deviceIdFromServer);
-        }
+        }*/
 
         // in case of new app installation continue to increment the old recurring_notifications_sync_counter value
         if (recurringNotificationsSyncCounterFromServer > client.recurringNotificationsSyncCounter!) {
