@@ -86,8 +86,9 @@ Future<bool> backgroundProcesses(String task) async {
       await NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
       // Show a local notification to confirm the background Sync
-      //if (kDebugMode)
-      NotificationsService.showNotifications("From background!", "Synched successfully");
+      if (kDebugMode) {
+        NotificationsService.showNotifications("From background!", "Synched successfully");
+      }
 
       if (task == backgroundSyncFromNotification) {
         int counter = (locator<PreferencesRepository>().recurringNotificationsSyncCounter) + 1;
