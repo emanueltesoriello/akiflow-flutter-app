@@ -788,12 +788,6 @@ extension TaskExt on Task {
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
     }
-    if (Platform.isAndroid) {
-      Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-          existingWorkPolicy: ExistingWorkPolicy.replace);
-    } else {
-      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
-    }
   }
 
   Future<void> openLinkedContentUrl([dynamic doc]) async {

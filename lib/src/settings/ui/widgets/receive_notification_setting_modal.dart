@@ -106,13 +106,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                             setState(() {
                               _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
                             });
-                            if (Platform.isAndroid) {
-                              Workmanager().registerOneOffTask(
-                                  scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-                                  existingWorkPolicy: ExistingWorkPolicy.replace);
-                            } else {
-                              NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
-                            }
+                            NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                           },
                               selected: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
                                   _selectedNextTaskNotificationsModel.minutesBeforeToStart),

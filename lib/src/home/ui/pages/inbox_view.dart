@@ -98,7 +98,6 @@ class _ViewState extends State<_View> {
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: const EmptyHomeViewPlaceholder(),
                     );

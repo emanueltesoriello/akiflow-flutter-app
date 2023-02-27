@@ -140,8 +140,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       });
 
                                       await cubit.forceSync();
-                                      NotificationsService.scheduleNotificationsService(
-                                          locator<PreferencesRepository>());
                                     } catch (e) {
                                       setState(() {
                                         showRefresh = false;

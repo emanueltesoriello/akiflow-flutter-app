@@ -171,7 +171,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         await _tasksRepository.updateById(updated.id!, data: updated);
         _tasksCubit.refreshAllFromRepository();
         _syncCubit.sync(entities: [Entity.tasks]);
-        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
         if (statusType == TaskStatusType.planned && state.originalTask.statusType == TaskStatusType.planned) {
           AnalyticsService.track("Task Rescheduled");
@@ -327,7 +326,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
       _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
     }
 
     AnalyticsService.track("Edit Task Label");
@@ -386,7 +384,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     await _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   void setDeadline(DateTime? date) {
@@ -569,7 +566,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   void onTitleChanged(String value) {
@@ -647,7 +643,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     AnalyticsService.track("Edit Task");
   }

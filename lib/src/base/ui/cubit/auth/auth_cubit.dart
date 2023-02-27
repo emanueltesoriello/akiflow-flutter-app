@@ -122,7 +122,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           try {
             _syncCubit.sync();
-            NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
           } catch (e) {
             print(e);
           }

@@ -45,7 +45,6 @@ class MainCubit extends Cubit<MainCubitState> {
 
     if (user != null) {
       _syncCubit.sync(loading: true);
-      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
       AnalyticsService.track("Show Main Window");
     }
   }
@@ -108,6 +107,5 @@ class MainCubit extends Cubit<MainCubitState> {
   void onFocusLost() async {
     _preferencesRepository.setLastAppUseAt(DateTime.now());
     await _syncControllerService.sync([Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 }

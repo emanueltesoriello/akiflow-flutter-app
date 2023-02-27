@@ -84,7 +84,106 @@ class NotificationsService {
     }).catchError((Object error) {
       print('Error: $error');
     });
-    // await handlerForNotificationsClickForTerminatedApp();
+  }
+
+  /// This method schedule all the planned notifications for tasks
+  /// It automatically schedule the new one and also update the existing ones and removes the deleted/done/trashed tasks
+  static planTasksNotifications(PreferencesRepository preferencesRepository,
+      {List<Task>? changedTasks, List<Task>? notExistingTasks}) async {
+    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+      List<Task> toBeScheduled = [];
+      List<Task> toBeRemoved = [];
+
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
+
+      DateTime date = DateTime.now().toUtc();
+      DateTime endTime = date.add(const Duration(days: 1));
+
+      if (notExistingTasks != null && notExistingTasks.isNotEmpty) {
+        toBeScheduled.addAll(notExistingTasks
+            .where((task) =>
+                task.deletedAt == null &&
+                task.trashedAt == null &&
+                task.datetime != null &&
+                task.status == TaskStatusType.planned.id &&
+                (DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())) &&
+                    DateTime.parse(task.datetime!).isBefore(DateTime.parse(endTime.toUtc().toIso8601String()))))
+            .toList());
+      }
+
+      if (changedTasks != null && changedTasks.isNotEmpty) {
+        toBeScheduled.addAll(changedTasks
+            .where((task) =>
+                task.deletedAt == null &&
+                task.trashedAt == null &&
+                task.datetime != null &&
+                task.status == TaskStatusType.planned.id &&
+                (DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())) &&
+                    DateTime.parse(task.datetime!).isBefore(DateTime.parse(endTime.toUtc().toIso8601String()))))
+            .toList());
+      }
+
+      if (changedTasks != null && changedTasks.isNotEmpty) {
+        toBeRemoved.addAll(changedTasks
+            .where((task) =>
+                (task.deletedAt != null ||
+                    task.trashedAt != null ||
+                    task.datetime != null ||
+                    task.status != TaskStatusType.planned.id) &&
+                DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())))
+            .toList());
+      }
+
+      if (toBeScheduled.isNotEmpty) {
+        for (var task in toBeScheduled) {
+          int notificationsId = 0;
+
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId =
+                (int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16) / 2).round();
+          } catch (e) {
+            notificationsId = task.id.hashCode;
+          }
+          NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
+
+          try {
+            String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
+
+            NotificationsService.scheduleNotifications(task.title ?? '', "Start at $startTime",
+                notificationId: notificationsId,
+                scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
+                    .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
+                payload: jsonEncode(task.toMap()),
+                notificationDetails: const NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    "channel_d",
+                    "channel_name",
+                    channelDescription: "default_channelDescription",
+                  ),
+                ));
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
+      if (toBeRemoved.isNotEmpty) {
+        for (var task in toBeRemoved) {
+          int notificationsId = 0;
+
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId =
+                (int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16) / 2).round();
+          } catch (e) {
+            notificationsId = task.id.hashCode;
+          }
+          cancelNotificationById(notificationsId);
+        }
+      }
+    }
   }
 
   static handleNotificationClick(NotificationResponse payload) async {

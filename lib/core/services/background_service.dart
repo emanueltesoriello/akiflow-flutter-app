@@ -72,33 +72,24 @@ Future<bool> backgroundProcesses(String task) async {
     // *********************************************
     // ***** background notifications scheduling ***
     // *********************************************
-    if (task == scheduleNotificationsTaskKey) {
-      await NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
+    final SyncControllerService syncControllerService = locator<SyncControllerService>();
 
-      // N.B. to be remove: show a local notification to confirm the background Sync
-      if (kDebugMode) NotificationsService.showNotifications("Yeaaah!", "Updated the scheduling of notifications!");
-      // *********************************************
+    await syncControllerService.sync();
 
-    } else {
-      final SyncControllerService syncControllerService = locator<SyncControllerService>();
-
-      await syncControllerService.sync();
-      await NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
-
-      // Show a local notification to confirm the background Sync
-      if (kDebugMode) {
-        NotificationsService.showNotifications("From background!", "Synched successfully");
-      }
-
-      if (task == backgroundSyncFromNotification) {
-        int counter = (locator<PreferencesRepository>().recurringNotificationsSyncCounter) + 1;
-        await locator<PreferencesRepository>().setRecurringNotificationsSyncCounter(counter);
-      } else {
-        int counter = (locator<PreferencesRepository>().recurringBackgroundSyncCounter) + 1;
-        await locator<PreferencesRepository>().setRecurringBackgroundSyncCounter(counter);
-      }
-      // ***********************************
+    // Show a local notification to confirm the background Sync
+    if (kDebugMode) {
+      NotificationsService.showNotifications("From background!", "Synched successfully");
     }
+
+    if (task == backgroundSyncFromNotification) {
+      int counter = (locator<PreferencesRepository>().recurringNotificationsSyncCounter) + 1;
+      await locator<PreferencesRepository>().setRecurringNotificationsSyncCounter(counter);
+    } else {
+      int counter = (locator<PreferencesRepository>().recurringBackgroundSyncCounter) + 1;
+      await locator<PreferencesRepository>().setRecurringBackgroundSyncCounter(counter);
+    }
+    // ***********************************
+
   } catch (err) {
     if (kDebugMode) log(err.toString());
     throw Exception(err);
