@@ -140,8 +140,12 @@ class CalendarBody extends StatelessWidget {
     } else if (appointment.notes == 'deleted') {
       return const SizedBox();
     } else {
+      Event event = events.where((event) => event.id == appointment.id).first;
       return EventAppointment(
-          calendarAppointmentDetails: calendarAppointmentDetails, appointment: appointment, context: context);
+          calendarAppointmentDetails: calendarAppointmentDetails,
+          appointment: appointment,
+          event: event,
+          context: context);
     }
   }
 
