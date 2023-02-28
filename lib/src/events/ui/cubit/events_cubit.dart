@@ -427,6 +427,35 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
   }
 
+  Future<void> updateThisAndFuture(
+      {required DateTime tappedDate, required String? newParentStartTime, required Event selectedEvent}) async {
+    var id = const Uuid().v4();
+    String now = DateTime.now().toUtc().toIso8601String();
+
+    DateTime? eventEndTime = selectedEvent.endTime != null ? DateTime.parse(selectedEvent.endTime!).toLocal() : null;
+    String? originalEndTime = eventEndTime != null
+        ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
+                eventEndTime.second, eventEndTime.millisecond)
+            .toUtc()
+            .toIso8601String()
+        : null;
+
+    Event newParent = selectedEvent.copyWith(
+      id: id,
+      recurringId: id,
+      startTime: Nullable(newParentStartTime),
+      endTime: Nullable(originalEndTime),
+      originId: Nullable(null),
+      customOriginId: Nullable(null),
+      untilDatetime: Nullable(null),
+      url: Nullable(null),
+      updatedAt: Nullable(now),
+    );
+    await _eventsRepository.add([newParent]);
+
+    endParentAtSelectedEvent(tappedDate: tappedDate, selectedEvent: selectedEvent);
+  }
+
   Future<void> endParentAtSelectedEvent({required DateTime tappedDate, required Event selectedEvent}) async {
     Event parentEvent = await _eventsRepository.getById(selectedEvent.recurringId);
     String now = DateTime.now().toUtc().toIso8601String();

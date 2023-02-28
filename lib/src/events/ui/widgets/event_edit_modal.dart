@@ -744,6 +744,10 @@ class _EventEditModalState extends State<EventEditModal> {
                                           },
                                           thisAndFutureTap: () {
                                             Navigator.of(context).pop();
+                                            context.read<EventsCubit>().updateThisAndFuture(
+                                                tappedDate: widget.tappedDate,
+                                                newParentStartTime: widget.originalStartTime,
+                                                selectedEvent: updatedEvent);
                                           },
                                           allTap: () {
                                             Navigator.of(context).pop();

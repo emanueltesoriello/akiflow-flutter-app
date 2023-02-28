@@ -63,7 +63,8 @@ class EventsRepository extends DatabaseRepository {
       items = await _databaseService.database!.rawQuery("""
         SELECT *
         FROM events
-        WHERE recurring_id = ?
+        WHERE deleted_at IS NULL
+        AND recurring_id = ?
         AND id != recurring_id 
       """, [recurringId]);
     } catch (e) {
