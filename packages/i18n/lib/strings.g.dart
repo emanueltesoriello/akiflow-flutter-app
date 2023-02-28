@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 305 
+ * Strings: 307 
  *
- * Built on 2023-02-22 at 13:20 UTC
+ * Built on 2023-02-28 at 11:42 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -941,7 +941,9 @@ class _StringsEventEditEventRepeatingEditModalEn {
 
 	// Translations
 	String get title => 'Editing repeating event';
+	String get deleteTitle => 'You are deleting a recurrent event';
 	String get description => 'Do you want to change only this occurrence or change this and all future occurrences?';
+	String get deleteDescription => 'Do you want to delete only this occurrence or delete this and all future occurrences?';
 	String get onlyThis => 'Only this event';
 	String get thisAndAllFuture => 'This and all future events';
 	String get allEvents => 'All events';
@@ -1279,7 +1281,9 @@ extension on _StringsEn {
 			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
 			'event.editEvent.saveChanges': 'Save Changes',
 			'event.editEvent.repeatingEditModal.title': 'Editing repeating event',
+			'event.editEvent.repeatingEditModal.deleteTitle': 'You are deleting a recurrent event',
 			'event.editEvent.repeatingEditModal.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
+			'event.editEvent.repeatingEditModal.deleteDescription': 'Do you want to delete only this occurrence or delete this and all future occurrences?',
 			'event.editEvent.repeatingEditModal.onlyThis': 'Only this event',
 			'event.editEvent.repeatingEditModal.thisAndAllFuture': 'This and all future events',
 			'event.editEvent.repeatingEditModal.allEvents': 'All events',

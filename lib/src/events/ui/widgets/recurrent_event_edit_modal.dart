@@ -49,7 +49,9 @@ class RecurrentEventEditModal extends StatelessWidget {
                         color: ColorsExt.grey2(context)),
                     const SizedBox(width: 8.0),
                     Text(
-                      deleteEvent ? 'You are deleting a recurrent event' : t.event.editEvent.repeatingEditModal.title,
+                      deleteEvent
+                          ? t.event.editEvent.repeatingEditModal.deleteTitle
+                          : t.event.editEvent.repeatingEditModal.title,
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                     ),
                   ],
@@ -59,7 +61,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                 child: Text(
                     deleteEvent
-                        ? 'Do you want to delete only this occurrence or delete this and all future occurrences?'
+                        ? t.event.editEvent.repeatingEditModal.deleteDescription
                         : t.event.editEvent.repeatingEditModal.description,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
@@ -87,30 +89,30 @@ class RecurrentEventEditModal extends StatelessWidget {
                   ),
                 ),
               ),
-              // const SizedBox(height: 12),
-              // InkWell(
-              //   onTap: () {
-              //     thisAndFutureTap();
-              //     Navigator.pop(context);
-              //   },
-              //   child: Container(
-              //     constraints: const BoxConstraints(
-              //       minHeight: 46,
-              //     ),
-              //     decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
-              //     child: Center(
-              //       child: Text(
-              //         t.event.editEvent.repeatingEditModal.thisAndAllFuture,
-              //         style: TextStyle(
-              //           fontSize: 17,
-              //           fontWeight: FontWeight.w400,
-              //           color: ColorsExt.grey2(context),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              const SizedBox(height: 12),
+              InkWell(
+                onTap: () {
+                  thisAndFutureTap();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 46,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
+                  child: Center(
+                    child: Text(
+                      t.event.editEvent.repeatingEditModal.thisAndAllFuture,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
+                        color: ColorsExt.grey2(context),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 12),
               InkWell(
                 onTap: () {

@@ -692,10 +692,14 @@ class _EventModalState extends State<EventModal> {
                                             },
                                             thisAndFutureTap: () {
                                               Navigator.of(context).pop();
+                                              context.read<EventsCubit>().endParentAtSelectedEvent(
+                                                  tappedDate: widget.tappedDate!, selectedEvent: selectedEvent);
                                             },
                                             allTap: () {
                                               Navigator.of(context).pop();
-                                              context.read<EventsCubit>().deleteEvent(selectedEvent);
+                                              context
+                                                  .read<EventsCubit>()
+                                                  .deleteEvent(selectedEvent, deleteExceptions: true);
                                             },
                                           ),
                                         );

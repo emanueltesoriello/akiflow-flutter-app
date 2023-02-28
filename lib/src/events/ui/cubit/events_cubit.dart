@@ -14,6 +14,7 @@ import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/event/event_modifier.dart';
 import 'package:models/nullable.dart';
+import 'package:rrule/rrule.dart';
 import 'package:uuid/uuid.dart';
 
 part 'events_state.dart';
@@ -426,7 +427,51 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
   }
 
-  Future<void> deleteEvent(Event event) async {
+  Future<void> endParentAtSelectedEvent({required DateTime tappedDate, required Event selectedEvent}) async {
+    Event parentEvent = await _eventsRepository.getById(selectedEvent.recurringId);
+    String now = DateTime.now().toUtc().toIso8601String();
+
+    DateTime oldParenUntil = DateTime(tappedDate.year, tappedDate.month, tappedDate.day - 1, 23, 59, 59).toUtc();
+
+    RecurrenceRule parentRrule = RecurrenceRule.fromString(parentEvent.recurrence!.join(';'));
+    String newParenRrule = parentRrule.copyWith(clearCount: true, until: oldParenUntil).toString();
+
+    List<String> parts = newParenRrule.split(";");
+    String untilString = parts.where((part) => part.startsWith('UNTIL')).first;
+    if (!untilString.endsWith('Z')) {
+      parts.removeWhere((part) => part.startsWith('UNTIL'));
+      untilString = '${untilString}Z';
+      parts.add(untilString);
+    }
+    newParenRrule = parts.join(";");
+
+    parentEvent = parentEvent.copyWith(
+        recurrence: Nullable([newParenRrule]),
+        untilDatetime: Nullable(oldParenUntil.toIso8601String()),
+        updatedAt: Nullable(now));
+
+    await _eventsRepository.updateById(parentEvent.id, data: parentEvent);
+    deleteExceptionsByRecurringId(parentEvent.recurringId!);
+    await _syncCubit.sync(entities: [Entity.events]);
+    await scheduleEventsSync();
+  }
+
+  Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false}) async {
+    List<Event> exceptions = await _eventsRepository.getExceptionsByRecurringId(recurringId);
+    String now = DateTime.now().toUtc().toIso8601String();
+    for (var exception in exceptions) {
+      exception = prepareEventToDelete(exception).copyWith(
+        updatedAt: Nullable(now),
+        deletedAt: now,
+      );
+      await _eventsRepository.updateById(exception.id, data: exception);
+    }
+    if (sync) {
+      await _syncCubit.sync(entities: [Entity.events]);
+    }
+  }
+
+  Future<void> deleteEvent(Event event, {bool deleteExceptions = false}) async {
     String now = DateTime.now().toUtc().toIso8601String();
     List<Entity> entitiesToSync = List.empty(growable: true);
     Event eventToDelete = prepareEventToDelete(event).copyWith(
@@ -440,6 +485,11 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
 
     await _eventsRepository.updateById(event.id, data: eventToDelete);
+
+    if (deleteExceptions) {
+      deleteExceptionsByRecurringId(event.recurringId!);
+    }
+
     entitiesToSync.add(Entity.events);
 
     _syncCubit.sync(entities: entitiesToSync);

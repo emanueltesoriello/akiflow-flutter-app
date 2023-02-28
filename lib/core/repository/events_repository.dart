@@ -56,4 +56,22 @@ class EventsRepository extends DatabaseRepository {
     List<Event> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
   }
+
+  Future<List<Event>> getExceptionsByRecurringId<Event>(String recurringId) async {
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.rawQuery("""
+        SELECT *
+        FROM events
+        WHERE recurring_id = ?
+        AND id != recurring_id 
+      """, [recurringId]);
+    } catch (e) {
+      print('Error retrieving events: $e');
+      return [];
+    }
+
+    List<Event> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
 }
