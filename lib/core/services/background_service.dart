@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
@@ -11,7 +10,6 @@ import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/preferences.dart';
 
 const scheduleNotificationsTaskKey = "com.akiflow.mobile.scheduleNotifications";
@@ -64,13 +62,13 @@ Future<bool> backgroundProcesses(String task, {DatabaseService? db}) async {
     // ***** background notifications scheduling ***
     // *********************************************
     final SyncControllerService syncControllerService = locator<SyncControllerService>();
-    // if (DateTime.now().toUtc().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15 ||
-    //   task != backgroundSyncFromNotification) {
-    await syncControllerService.sync();
-    if (db != null) {
-      db.database!.close();
+    if (DateTime.now().toUtc().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15 ||
+        task == backgroundSyncFromNotification) {
+      await syncControllerService.sync();
+      if (db != null) {
+        db.database!.close();
+      }
     }
-    // }
 
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {

@@ -6,14 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/task/task.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';
@@ -127,12 +124,10 @@ class NotificationsService {
 
       if (changedTasks != null && changedTasks.isNotEmpty) {
         toBeRemoved.addAll(changedTasks
-            .where((task) =>
-                (task.deletedAt != null ||
-                    task.trashedAt != null ||
-                    task.datetime != null ||
-                    task.status != TaskStatusType.planned.id) &&
-                DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())))
+            .where((task) => (task.done == true ||
+                ((task.deletedAt != null || task.trashedAt != null) && task.datetime != null ||
+                        task.status != TaskStatusType.planned.id) &&
+                    DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String()))))
             .toList());
       }
 
