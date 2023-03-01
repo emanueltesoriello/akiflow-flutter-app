@@ -50,6 +50,12 @@ class EventsCubit extends Cubit<EventsCubitState> {
     ));
   }
 
+  void saveToStatePatchedEvent(Event patchedEvent) {
+    emit(state.copyWith(
+      events: state.events.map((event) => event.id == patchedEvent.id ? patchedEvent : event).toList(),
+    ));
+  }
+
   Future<void> scheduleEventsSync() async {
     Future.delayed(const Duration(seconds: 4))
         .whenComplete(() => _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]));
@@ -90,7 +96,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
         content: {"responseStatus": response},
         createdAt: DateTime.now().toUtc().toIso8601String());
 
-    List<EventModifier> eventModifiersToSync = [eventModifier];
+    await _eventModifiersRepository.add([eventModifier]);
 
     if (updateParent) {
       EventModifier parentEventModifier = EventModifier(
@@ -102,11 +108,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
           content: {"responseStatus": response},
           createdAt: DateTime.now().toUtc().toIso8601String());
 
-      eventModifiersToSync.add(parentEventModifier);
+      await _eventModifiersRepository.add([parentEventModifier]);
     }
-
-    await _eventModifiersRepository.add(eventModifiersToSync);
-    refetchEvent(event);
     await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
     refetchEvent(event);
@@ -133,14 +136,13 @@ class EventsCubit extends Cubit<EventsCubitState> {
           createdAt: DateTime.now().toUtc().toIso8601String());
       await _eventModifiersRepository.add([eventModifier]);
     }
-    if (addMeeting) {
+    if (addMeeting || (event.meetingUrl == null && atendeesToAdd.isNotEmpty)) {
       await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
     }
     if (removeMeeting) {
       await _eventModifiersRepository.add([removeMeetingEventModifier(event)]);
     }
     await _eventsRepository.updateById(event.id, data: event);
-    refetchEvent(event);
     await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
     refetchEvent(event);

@@ -85,7 +85,7 @@ class _EventModalState extends State<EventModal> {
                             const SizedBox(width: 16.0),
                             Expanded(
                               child: Text(
-                                widget.event.title ?? '',
+                                selectedEvent.title ?? '',
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -112,13 +112,14 @@ class _EventModalState extends State<EventModal> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  if (widget.event.startTime != null)
+                                  if (selectedEvent.startTime != null)
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          widget.event.recurringId == null
-                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.startTime!))
+                                          selectedEvent.recurringId == null
+                                              ? DateFormat("EEE dd MMM")
+                                                  .format(DateTime.parse(selectedEvent.startTime!))
                                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
@@ -127,7 +128,8 @@ class _EventModalState extends State<EventModal> {
                                         ),
                                         const SizedBox(height: 12.0),
                                         Text(
-                                          DateFormat("HH:mm").format(DateTime.parse(widget.event.startTime!).toLocal()),
+                                          DateFormat("HH:mm")
+                                              .format(DateTime.parse(selectedEvent.startTime!).toLocal()),
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w600,
@@ -135,13 +137,14 @@ class _EventModalState extends State<EventModal> {
                                         ),
                                       ],
                                     ),
-                                  if (widget.event.startDate != null)
+                                  if (selectedEvent.startDate != null)
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          widget.event.recurringId == null
-                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.startDate!))
+                                          selectedEvent.recurringId == null
+                                              ? DateFormat("EEE dd MMM")
+                                                  .format(DateTime.parse(selectedEvent.startDate!))
                                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
@@ -155,13 +158,13 @@ class _EventModalState extends State<EventModal> {
                                     width: 22,
                                     height: 22,
                                   ),
-                                  if (widget.event.endTime != null)
+                                  if (selectedEvent.endTime != null)
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          widget.event.recurringId == null
-                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.endTime!))
+                                          selectedEvent.recurringId == null
+                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endTime!))
                                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
@@ -170,7 +173,7 @@ class _EventModalState extends State<EventModal> {
                                         ),
                                         const SizedBox(height: 12.0),
                                         Text(
-                                          DateFormat("HH:mm").format(DateTime.parse(widget.event.endTime!).toLocal()),
+                                          DateFormat("HH:mm").format(DateTime.parse(selectedEvent.endTime!).toLocal()),
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w600,
@@ -178,13 +181,13 @@ class _EventModalState extends State<EventModal> {
                                         ),
                                       ],
                                     ),
-                                  if (widget.event.endDate != null)
+                                  if (selectedEvent.endDate != null)
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          widget.event.recurringId == null
-                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(widget.event.endDate!))
+                                          selectedEvent.recurringId == null
+                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endDate!))
                                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                                           style: TextStyle(
                                               fontSize: 17.0,
@@ -281,7 +284,7 @@ class _EventModalState extends State<EventModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.personCropCircleSVG,
-                                    color: widget.event.attendees != null
+                                    color: selectedEvent.attendees != null
                                         ? ColorsExt.grey2(context)
                                         : ColorsExt.grey3(context),
                                   ),
@@ -292,7 +295,7 @@ class _EventModalState extends State<EventModal> {
                                   style: TextStyle(
                                     fontSize: 17.0,
                                     fontWeight: FontWeight.w400,
-                                    color: widget.event.attendees != null
+                                    color: selectedEvent.attendees != null
                                         ? ColorsExt.grey2(context)
                                         : ColorsExt.grey3(context),
                                   ),
@@ -304,7 +307,7 @@ class _EventModalState extends State<EventModal> {
                               height: 20,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.envelopeSVG,
-                                color: widget.event.attendees != null
+                                color: selectedEvent.attendees != null
                                     ? ColorsExt.grey2(context)
                                     : ColorsExt.grey3(context),
                               ),
@@ -312,17 +315,17 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       ),
-                      if (widget.event.attendees != null)
+                      if (selectedEvent.attendees != null)
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const ClampingScrollPhysics(),
-                          itemCount: widget.event.attendees?.length ?? 0,
+                          itemCount: selectedEvent.attendees?.length ?? 0,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                               child: Row(
                                 children: [
-                                  widget.event.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
+                                  selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
                                       ? SizedBox(
                                           width: 19,
                                           height: 19,
@@ -331,7 +334,7 @@ class _EventModalState extends State<EventModal> {
                                             color: ColorsExt.green(context),
                                           ),
                                         )
-                                      : widget.event.attendees![index].responseStatus ==
+                                      : selectedEvent.attendees![index].responseStatus ==
                                               AtendeeResponseStatus.declined.id
                                           ? SizedBox(
                                               width: 19,
@@ -353,15 +356,15 @@ class _EventModalState extends State<EventModal> {
                                   Row(
                                     children: [
                                       Text(
-                                        widget.event.attendees![index].email!.contains('group')
-                                            ? '${widget.event.attendees![index].displayName}'
-                                            : '${widget.event.attendees![index].email}',
+                                        selectedEvent.attendees![index].email!.contains('group')
+                                            ? '${selectedEvent.attendees![index].displayName}'
+                                            : '${selectedEvent.attendees![index].email}',
                                         style: TextStyle(
                                             fontSize: 17.0,
                                             fontWeight: FontWeight.w400,
                                             color: ColorsExt.grey2(context)),
                                       ),
-                                      if (widget.event.attendees![index].organizer ?? false)
+                                      if (selectedEvent.attendees![index].organizer ?? false)
                                         Text(
                                           ' - ${t.event.organizer}',
                                           style: TextStyle(
@@ -393,7 +396,7 @@ class _EventModalState extends State<EventModal> {
                   ),
                   child: Column(
                     children: [
-                      if (widget.event.attendees != null && widget.event.attendees!.isNotEmpty)
+                      if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -433,7 +436,7 @@ class _EventModalState extends State<EventModal> {
                                                           rsvpResponse: AtendeeResponseStatus.accepted.id);
                                                     } else {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.accepted.id);
                                                     }
                                                   },
@@ -452,11 +455,11 @@ class _EventModalState extends State<EventModal> {
                                                     });
                                                     if (selectedEvent.id == selectedEvent.recurringId) {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.accepted.id);
                                                     } else {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.accepted.id,
                                                           updateParent: true);
                                                     }
@@ -464,9 +467,10 @@ class _EventModalState extends State<EventModal> {
                                                 ));
                                       } else {
                                         context.read<EventsCubit>().updateAtend(
-                                            event: widget.event, response: AtendeeResponseStatus.accepted.id);
+                                            event: selectedEvent, response: AtendeeResponseStatus.accepted.id);
                                         setState(() {
-                                          selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.accepted);
+                                          selectedEvent = selectedEvent
+                                              .setLoggedUserAttendingResponse(AtendeeResponseStatus.accepted);
                                         });
                                       }
                                     },
@@ -476,7 +480,7 @@ class _EventModalState extends State<EventModal> {
                                           fontSize: 15.0,
                                           fontWeight: FontWeight.w500,
                                           color:
-                                              widget.event.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
+                                              selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
                                                   ? ColorsExt.green(context)
                                                   : ColorsExt.grey3(context)),
                                     ),
@@ -509,7 +513,7 @@ class _EventModalState extends State<EventModal> {
                                                           rsvpResponse: AtendeeResponseStatus.declined.id);
                                                     } else {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.declined.id);
                                                     }
                                                   },
@@ -524,11 +528,11 @@ class _EventModalState extends State<EventModal> {
                                                     Navigator.of(context).pop();
                                                     if (selectedEvent.id == selectedEvent.recurringId) {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.declined.id);
                                                     } else {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.declined.id,
                                                           updateParent: true);
                                                     }
@@ -536,9 +540,10 @@ class _EventModalState extends State<EventModal> {
                                                 ));
                                       } else {
                                         context.read<EventsCubit>().updateAtend(
-                                            event: widget.event, response: AtendeeResponseStatus.declined.id);
+                                            event: selectedEvent, response: AtendeeResponseStatus.declined.id);
                                         setState(() {
-                                          selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.declined);
+                                          selectedEvent = selectedEvent
+                                              .setLoggedUserAttendingResponse(AtendeeResponseStatus.declined);
                                         });
                                       }
                                     },
@@ -548,7 +553,7 @@ class _EventModalState extends State<EventModal> {
                                           fontSize: 15.0,
                                           fontWeight: FontWeight.w500,
                                           color:
-                                              widget.event.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
+                                              selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
                                                   ? ColorsExt.red(context)
                                                   : ColorsExt.grey3(context)),
                                     ),
@@ -581,7 +586,7 @@ class _EventModalState extends State<EventModal> {
                                                           rsvpResponse: AtendeeResponseStatus.tentative.id);
                                                     } else {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.tentative.id);
                                                     }
                                                   },
@@ -600,11 +605,11 @@ class _EventModalState extends State<EventModal> {
                                                     });
                                                     if (selectedEvent.id == selectedEvent.recurringId) {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.tentative.id);
                                                     } else {
                                                       context.read<EventsCubit>().updateAtend(
-                                                          event: widget.event,
+                                                          event: selectedEvent,
                                                           response: AtendeeResponseStatus.tentative.id,
                                                           updateParent: true);
                                                     }
@@ -612,9 +617,10 @@ class _EventModalState extends State<EventModal> {
                                                 ));
                                       } else {
                                         context.read<EventsCubit>().updateAtend(
-                                            event: widget.event, response: AtendeeResponseStatus.tentative.id);
+                                            event: selectedEvent, response: AtendeeResponseStatus.tentative.id);
                                         setState(() {
-                                          selectedEvent.setLoggedUserAttendingResponse(AtendeeResponseStatus.tentative);
+                                          selectedEvent = selectedEvent
+                                              .setLoggedUserAttendingResponse(AtendeeResponseStatus.tentative);
                                         });
                                       }
                                     },
@@ -624,7 +630,7 @@ class _EventModalState extends State<EventModal> {
                                           fontSize: 15.0,
                                           fontWeight: FontWeight.w500,
                                           color:
-                                              widget.event.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
+                                              selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
                                                   ? ColorsExt.grey2(context)
                                                   : ColorsExt.grey3(context)),
                                     ),
@@ -637,11 +643,11 @@ class _EventModalState extends State<EventModal> {
                       const Separator(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: widget.event.creatorId == widget.event.originCalendarId
+                        child: selectedEvent.creatorId == selectedEvent.originCalendarId
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  if (widget.event.attendees != null)
+                                  if (selectedEvent.attendees != null)
                                     BottomButton(
                                         title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
                                   BottomButton(

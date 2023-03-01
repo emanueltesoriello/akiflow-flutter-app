@@ -573,7 +573,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                             organizer: true,
                                             displayName: updatedEvent.originCalendarId,
                                             email: updatedEvent.originCalendarId,
-                                            responseStatus: AtendeeResponseStatus.needsAction.id,
+                                            responseStatus: AtendeeResponseStatus.accepted.id,
                                           );
                                           atendeesToAdd.add(loggedInUserAtendee.email!);
                                           attendees.add(loggedInUserAtendee);
@@ -769,13 +769,13 @@ class _EventEditModalState extends State<EventEditModal> {
                                           },
                                         ));
                               } else {
-                                context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                Navigator.of(context).pop();
+                                await context.read<EventsCubit>().updateEventAndCreateModifiers(
                                     event: updatedEvent,
                                     atendeesToAdd: atendeesToAdd,
                                     atendeesToRemove: atendeesToRemove,
                                     addMeeting: addingMeeting,
                                     removeMeeting: removingMeeting);
-                                Navigator.of(context).pop();
                               }
                             },
                           ),
