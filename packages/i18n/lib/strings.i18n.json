@@ -353,10 +353,12 @@
       "saveChanges": "Save Changes",
       "repeatingEditModal": {
         "title": "Editing repeating event",
+        "deleteTitle": "You are deleting a recurrent event",
         "description": "Do you want to change only this occurrence or change this and all future occurrences?",
+        "deleteDescription": "Do you want to delete only this occurrence or delete this and all future occurrences?",
         "onlyThis": "Only this event",
         "thisAndAllFuture": "This and all future events",
-        "allEvents":"All events"
+        "allEvents": "All events"
       }
     }
   },
