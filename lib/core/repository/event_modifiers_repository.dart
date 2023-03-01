@@ -18,9 +18,9 @@ class EventModifiersRepository extends DatabaseRepository {
           FROM event_modifiers
           WHERE deleted_at IS NULL
           AND processed_at IS NULL
+          AND failed_at IS NULL
           ORDER BY created_at DESC
 """);
-
     List<EventModifier> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
   }

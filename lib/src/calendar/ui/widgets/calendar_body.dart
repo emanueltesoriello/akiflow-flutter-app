@@ -160,6 +160,7 @@ class CalendarBody extends StatelessWidget {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
       Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
+      eventsCubit.refetchEvent(event);
       showCupertinoModalBottomSheet(
         context: context,
         builder: (context) => EventModal(
@@ -167,8 +168,9 @@ class CalendarBody extends StatelessWidget {
           tappedDate: calendarTapDetails.date,
         ),
       ).whenComplete(
-        () {
-          eventsCubit.fetchUnprocessedEventModifiers();
+        () async {
+          await eventsCubit.fetchUnprocessedEventModifiers();
+          eventsCubit.saveToStatePatchedEvent(eventsCubit.patchEventWithEventModifier(event));
         },
       );
     }
