@@ -41,15 +41,6 @@ class NotificationsService {
   initFirebaseMessaging() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-      'default_channel_id',
-      'Default notification',
-      channelDescription: 'The default notification channel.',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-
     await _localNotificationsPlugin
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -57,13 +48,14 @@ class NotificationsService {
           badge: true,
           sound: true,
         );
+
     await _localNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
 
-    //await _localNotificationsPlugin
-    //    .show(0, 'Notification Permission Granted', 'You can now receive notifications!', platformChannelSpecifics)
-    //   .then((value) => print('Notification Permission Granted'));
+    await _localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
 
     await firebaseMessaging.requestPermission();
 
