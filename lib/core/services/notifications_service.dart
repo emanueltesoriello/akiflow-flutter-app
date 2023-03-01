@@ -22,8 +22,8 @@ class NotificationsService {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final AndroidNotificationChannel channel = const AndroidNotificationChannel(
     "channel id",
-    "channel name",
-    description: "channel description",
+    "Default remote channel",
+    description: "Default notification channel for remote notifications",
     importance: Importance.defaultImportance,
   );
   static const dailyReminderTaskId = 1000001;
@@ -37,8 +37,19 @@ class NotificationsService {
 
   // ************ INIT FUNCTIONS ************
   // ****************************************
+
   initFirebaseMessaging() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+      'default_channel_id',
+      'Default notification',
+      channelDescription: 'The default notification channel.',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+
     await _localNotificationsPlugin
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -46,6 +57,14 @@ class NotificationsService {
           badge: true,
           sound: true,
         );
+    await _localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+
+    //await _localNotificationsPlugin
+    //    .show(0, 'Notification Permission Granted', 'You can now receive notifications!', platformChannelSpecifics)
+    //   .then((value) => print('Notification Permission Granted'));
+
     await firebaseMessaging.requestPermission();
 
     firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
@@ -70,6 +89,7 @@ class NotificationsService {
     const androidSetting = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSetting = DarwinInitializationSettings();
     const initSettings = InitializationSettings(android: androidSetting, iOS: iosSetting);
+
     await _localNotificationsPlugin
         .initialize(
       initSettings,
@@ -155,8 +175,8 @@ class NotificationsService {
                 notificationDetails: const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "channel_d",
-                    "channel_name",
-                    channelDescription: "default_channelDescription",
+                    "Tasks notification",
+                    channelDescription: "The notifications received as a reminder for a task.",
                   ),
                 ));
           } catch (e) {
@@ -209,8 +229,10 @@ class NotificationsService {
             const NotificationDetails(
               iOS: DarwinNotificationDetails(
                   presentAlert: true, presentSound: true, interruptionLevel: InterruptionLevel.active),
-              android: AndroidNotificationDetails("channel id", "channel name",
-                  channelDescription: "channel description", priority: Priority.max, importance: Importance.high),
+              android: AndroidNotificationDetails("channel id", "Default notification",
+                  channelDescription: "The default notification channel.",
+                  priority: Priority.max,
+                  importance: Importance.high),
             ),
         payload: payload);
   }
@@ -239,9 +261,9 @@ class NotificationsService {
                 presentBadge: false,
                 presentSound: false,
                 interruptionLevel: InterruptionLevel.passive),
-            android: AndroidNotificationDetails("fcm_fallback_notification_channel", "channel name",
+            android: AndroidNotificationDetails("fcm_fallback_notification_channel", "Default remote channel",
                 playSound: false,
-                channelDescription: "channel description",
+                channelDescription: "Default notification channel for remote notifications",
                 enableVibration: false,
                 onlyAlertOnce: true,
                 usesChronometer: false),
@@ -284,8 +306,8 @@ class NotificationsService {
               notificationDetails: const NotificationDetails(
                 android: AndroidNotificationDetails(
                   "channel_d",
-                  "channel_name",
-                  channelDescription: "default_channelDescription",
+                  "Tasks notification",
+                  channelDescription: "The notifications received as a reminder for a task.",
                 ),
               ));
         } catch (e) {
@@ -301,17 +323,30 @@ class NotificationsService {
       required TZDateTime scheduledDate,
       required String? payload}) {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    localNotificationsPlugin.zonedSchedule(
-        notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
-        androidAllowWhileIdle: true,
+    if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
+      localNotificationsPlugin.zonedSchedule(
+          notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
+          androidAllowWhileIdle: true,
+          payload: payload,
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+    } else {
+      print('show immediately this notification');
+      localNotificationsPlugin.show(
+        notificationId,
+        title,
+        description,
+        notificationDetails ?? const NotificationDetails(),
         payload: payload,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+      );
+    }
   }
 
   static Future<void> setDailyReminder(PreferencesRepository service) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'channel name',
-        channelDescription: 'channel description', importance: Importance.max, priority: Priority.high);
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'Daily reminder',
+        channelDescription: 'The channel for the daily overview  notification.',
+        importance: Importance.max,
+        priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
     // *********************************************
