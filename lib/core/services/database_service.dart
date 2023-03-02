@@ -37,7 +37,7 @@ class DatabaseService {
 
           await _setup(batch);
 
-          List<Function(sql.Batch)> migrations = [addTasksDocField, _addIndexes, deleteDocsTable, _addListIdToTask];
+          List<Function(sql.Batch)> migrations = [addTasksDocField, _addIndexes, deleteDocsTable];
 
           for (var migration in migrations) {
             migration(batch);
@@ -372,6 +372,8 @@ CREATE TABLE IF NOT EXISTS tasks(
   `updated_at` TEXT,
   `deleted_at` TEXT,
   `trashed_at` TEXT,
+  `list_id_updated_at` TEXT,
+  `remote_list_id_updated_at` TEXT,
   `daily_goal` INTEGER,
   `origin` TEXT,
   `remote_updated_at` TEXT,
@@ -394,6 +396,7 @@ CREATE TABLE IF NOT EXISTS tasks(
   }
 
   void _addListIdToTask(Batch batch) {
+    print('processing _addListIdToTask...');
     batch.execute('ALTER TABLE tasks ADD COLUMN list_id_updated_at TEXT');
     batch.execute('ALTER TABLE tasks ADD COLUMN remote_list_id_updated_at TEXT');
   }

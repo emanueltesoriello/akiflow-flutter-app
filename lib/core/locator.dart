@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/auth_api.dart';
@@ -88,7 +87,7 @@ void setupLocator(
 
   /// Services
   locator.registerSingleton<SentryService>(SentryService());
-  //locator.registerSingleton<IntercomService>(IntercomService());
+  locator.registerSingleton<IntercomService>(IntercomService());
   locator.registerSingleton<SyncControllerService>(SyncControllerService());
 
   /// Blocs

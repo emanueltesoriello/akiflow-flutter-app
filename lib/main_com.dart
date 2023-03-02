@@ -2,15 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
-//import 'package:intercom_flutter/intercom_flutter.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -60,8 +58,8 @@ Future<void> initFunctions() async {
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
-  //await Intercom.instance.initialize(Config.intercomCredential.appId,
-  //    iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
+  await Intercom.instance.initialize(Config.intercomCredential.appId,
+      iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
 
   // Init Background Service and register periodic task
   await BackgroundService.initBackgroundService();
