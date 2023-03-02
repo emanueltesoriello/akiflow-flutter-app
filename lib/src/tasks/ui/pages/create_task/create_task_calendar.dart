@@ -24,6 +24,7 @@ class CreateTaskCalendar extends StatefulWidget {
   final DateTime? initialDateTime;
   final Function(TimeOfDay? time)? onSelectTime;
   final bool showTime;
+  final bool showRepeat;
   final int defaultTimeHour;
 
   const CreateTaskCalendar({
@@ -33,6 +34,7 @@ class CreateTaskCalendar extends StatefulWidget {
     required this.initialDateTime,
     this.onSelectTime,
     this.showTime = true,
+    this.showRepeat = true,
     required this.defaultTimeHour,
   }) : super(key: key);
 
@@ -239,48 +241,49 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                               },
                             ),
                             const SizedBox(width: 16),
-                            InkWell(
-                              onTap: () {
-                                var cubit = context.read<EditTaskCubit>();
-                                cubit.recurrenceTap();
-                                Task updatedTask = context.read<EditTaskCubit>().state.updatedTask;
-                                print('UPDATED TASK: $updatedTask');
+                            if (widget.showRepeat)
+                              InkWell(
+                                onTap: () {
+                                  var cubit = context.read<EditTaskCubit>();
+                                  cubit.recurrenceTap();
+                                  Task updatedTask = context.read<EditTaskCubit>().state.updatedTask;
+                                  print('UPDATED TASK: $updatedTask');
 
-                                showCupertinoModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => RecurrenceModal(
-                                    onChange: (RecurrenceRule? rule) {
-                                      cubit.setRecurrence(rule);
-                                    },
-                                    selectedRecurrence: updatedTask.recurrenceComputed,
-                                    rule: updatedTask.ruleFromStringList,
-                                  ),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    Assets.images.icons.common.repeatSVG,
-                                    width: 20,
-                                    height: 20,
-                                    color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                        ? ColorsExt.grey2(context)
-                                        : ColorsExt.grey3(context),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    t.editTask.repeat,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
+                                  showCupertinoModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => RecurrenceModal(
+                                      onChange: (RecurrenceRule? rule) {
+                                        cubit.setRecurrence(rule);
+                                      },
+                                      selectedRecurrence: updatedTask.recurrenceComputed,
+                                      rule: updatedTask.ruleFromStringList,
+                                    ),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      Assets.images.icons.common.repeatSVG,
+                                      width: 20,
+                                      height: 20,
                                       color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
                                           ? ColorsExt.grey2(context)
                                           : ColorsExt.grey3(context),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      t.editTask.repeat,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
+                                            ? ColorsExt.grey2(context)
+                                            : ColorsExt.grey3(context),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
                           ],
                         ),
                         const SizedBox(width: 16),

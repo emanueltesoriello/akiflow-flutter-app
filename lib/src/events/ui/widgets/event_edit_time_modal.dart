@@ -54,6 +54,7 @@ class _EventEditTimeModalState extends State<EventEditTimeModal> {
                 children: [
                   CreateTaskCalendar(
                     showTime: widget.showTime ?? true,
+                    showRepeat: false,
                     initialDate: _selectedDate.value,
                     initialDateTime: _selectedDatetime.value,
                     onConfirm: (DateTime date, DateTime? datetime) {
