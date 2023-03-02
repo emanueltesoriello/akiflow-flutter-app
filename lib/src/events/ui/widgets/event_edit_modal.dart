@@ -744,28 +744,30 @@ class _EventEditModalState extends State<EventEditModal> {
                                           },
                                           thisAndFutureTap: () {
                                             Navigator.of(context).pop();
-                                            context.read<EventsCubit>().updateThisAndFuture(
-                                                tappedDate: widget.tappedDate,
-                                                newParentStartTime: widget.originalStartTime,
-                                                selectedEvent: updatedEvent);
+                                            if (widget.event.startTime == widget.originalStartTime) {
+                                              _allTap(
+                                                  context: context,
+                                                  updatedEvent: updatedEvent,
+                                                  atendeesToAdd: atendeesToAdd,
+                                                  atendeesToRemove: atendeesToRemove,
+                                                  addingMeeting: addingMeeting,
+                                                  removingMeeting: removingMeeting);
+                                            } else {
+                                              context.read<EventsCubit>().updateThisAndFuture(
+                                                  tappedDate: widget.tappedDate,
+                                                  newParentStartTime: widget.originalStartTime,
+                                                  selectedEvent: updatedEvent);
+                                            }
                                           },
                                           allTap: () {
                                             Navigator.of(context).pop();
-                                            if (updatedEvent.recurringId == updatedEvent.id) {
-                                              context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                                  event: updatedEvent,
-                                                  atendeesToAdd: atendeesToAdd,
-                                                  atendeesToRemove: atendeesToRemove,
-                                                  addMeeting: addingMeeting,
-                                                  removeMeeting: removingMeeting);
-                                            } else {
-                                              context.read<EventsCubit>().updateParentAndExceptions(
-                                                  exceptionEvent: updatedEvent,
-                                                  atendeesToAdd: atendeesToAdd,
-                                                  atendeesToRemove: atendeesToRemove,
-                                                  addMeeting: addingMeeting,
-                                                  removeMeeting: removingMeeting);
-                                            }
+                                            _allTap(
+                                                context: context,
+                                                updatedEvent: updatedEvent,
+                                                atendeesToAdd: atendeesToAdd,
+                                                atendeesToRemove: atendeesToRemove,
+                                                addingMeeting: addingMeeting,
+                                                removingMeeting: removingMeeting);
                                           },
                                         ));
                               } else {
@@ -791,6 +793,39 @@ class _EventEditModalState extends State<EventEditModal> {
         );
       },
     );
+  }
+
+  _allTap(
+      {required BuildContext context,
+      required Event updatedEvent,
+      required List<String> atendeesToAdd,
+      required List<String> atendeesToRemove,
+      required bool addingMeeting,
+      required bool removingMeeting}) {
+    if (updatedEvent.recurringId == updatedEvent.id) {
+      if (timeChanged &&
+          widget.event.startTime != null &&
+          widget.event.endTime != null &&
+          updatedEvent.startTime != null &&
+          updatedEvent.endTime != null) {
+        updatedEvent = updatedEvent.copyWith(
+            startTime: Nullable(widget.event.computeStartTimeForParent(updatedEvent)),
+            endTime: Nullable(widget.event.computeEndTimeForParent(updatedEvent)));
+      }
+      context.read<EventsCubit>().updateEventAndCreateModifiers(
+          event: updatedEvent,
+          atendeesToAdd: atendeesToAdd,
+          atendeesToRemove: atendeesToRemove,
+          addMeeting: addingMeeting,
+          removeMeeting: removingMeeting);
+    } else {
+      context.read<EventsCubit>().updateParentAndExceptions(
+          exceptionEvent: updatedEvent,
+          atendeesToAdd: atendeesToAdd,
+          atendeesToRemove: atendeesToRemove,
+          addMeeting: addingMeeting,
+          removeMeeting: removingMeeting);
+    }
   }
 
   InkWell _startDate(BuildContext context) {

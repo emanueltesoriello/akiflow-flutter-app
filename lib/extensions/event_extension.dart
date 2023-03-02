@@ -67,4 +67,38 @@ extension EventExt on Event {
     updatedAtendees.add(loggedUser);
     copyWith(attendees: Nullable(updatedAtendees));
   }
+
+  String computeStartTimeForParent(Event updatedEvent) {
+    DateTime parentOriginalStartTime = DateTime.parse(startTime!).toLocal();
+    DateTime updatedStartTime = DateTime.parse(updatedEvent.startTime!).toLocal();
+
+    DateTime computedStartTime = DateTime(
+            parentOriginalStartTime.year,
+            parentOriginalStartTime.month,
+            parentOriginalStartTime.day,
+            updatedStartTime.hour,
+            updatedStartTime.minute,
+            updatedStartTime.second,
+            updatedStartTime.millisecond)
+        .toUtc();
+
+    return computedStartTime.toIso8601String();
+  }
+
+  String computeEndTimeForParent(Event updatedEvent) {
+    DateTime parentOriginalEndTime = DateTime.parse(endTime!).toLocal();
+    DateTime updatedEndTime = DateTime.parse(updatedEvent.endTime!).toLocal();
+
+    DateTime computedEndTime = DateTime(
+            parentOriginalEndTime.year,
+            parentOriginalEndTime.month,
+            parentOriginalEndTime.day,
+            updatedEndTime.hour,
+            updatedEndTime.minute,
+            updatedEndTime.second,
+            updatedEndTime.millisecond)
+        .toUtc();
+
+    return computedEndTime.toIso8601String();
+  }
 }

@@ -123,18 +123,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required bool removeMeeting,
   }) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
-      EventModifier eventModifier = EventModifier(
-          id: const Uuid().v4(),
-          akiflowAccountId: event.akiflowAccountId,
-          eventId: event.id,
-          calendarId: event.calendarId,
-          action: 'attendees/updateList',
-          content: {
-            "attendeeEmailsToAdd": atendeesToAdd,
-            "attendeeEmailsToRemove": atendeesToRemove,
-          },
-          createdAt: DateTime.now().toUtc().toIso8601String());
-      await _eventModifiersRepository.add([eventModifier]);
+      await _eventModifiersRepository.add([
+        updateAtendeesEventModifier(event: event, atendeesToAdd: atendeesToAdd, atendeesToRemove: atendeesToRemove)
+      ]);
     }
     if (addMeeting || (event.meetingUrl == null && atendeesToAdd.isNotEmpty)) {
       await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
@@ -205,6 +196,40 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting);
+  }
+
+  EventModifier updateAtendeesEventModifier({
+    required Event event,
+    required List<String> atendeesToAdd,
+    required List<String> atendeesToRemove,
+  }) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: event.id,
+        calendarId: event.calendarId,
+        action: 'attendees/updateList',
+        content: {
+          "attendeeEmailsToAdd": atendeesToAdd,
+          "attendeeEmailsToRemove": atendeesToRemove,
+        },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
+  }
+
+  EventModifier newParentMeetingEventModifier(Event newParent) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: newParent.akiflowAccountId,
+        eventId: newParent.id,
+        calendarId: newParent.calendarId,
+        action: 'meeting/add',
+        content: {
+          "meetingSolution": newParent.meetingSolution,
+          "conferenceData": newParent.content["conferenceData"],
+        },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
   }
 
   EventModifier addMeetingEventModifier(Event event) {
@@ -455,6 +480,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
     );
     await _eventsRepository.add([newParent]);
 
+    if (newParent.attendees != null) {
+      List<String> atendeesToAdd = newParent.attendees!.map((atendee) => atendee.email!).toList();
+      await _eventModifiersRepository
+          .add([updateAtendeesEventModifier(event: newParent, atendeesToAdd: atendeesToAdd, atendeesToRemove: [])]);
+    }
+    if (newParent.meetingUrl != null && newParent.meetingSolution != null) {
+      _eventModifiersRepository.add([newParentMeetingEventModifier(newParent)]);
+    }
+
     endParentAtSelectedEvent(tappedDate: tappedDate, selectedEvent: selectedEvent);
   }
 
@@ -483,7 +517,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     await _eventsRepository.updateById(parentEvent.id, data: parentEvent);
     deleteExceptionsByRecurringId(parentEvent.recurringId!);
-    await _syncCubit.sync(entities: [Entity.events]);
+    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
   }
 
