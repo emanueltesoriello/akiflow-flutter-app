@@ -656,7 +656,12 @@ class _EventModalState extends State<EventModal> {
                                 children: [
                                   if (selectedEvent.attendees != null)
                                     BottomButton(
-                                        title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
+                                      title: t.event.mailGuests,
+                                      image: Assets.images.icons.common.envelopeSVG,
+                                      onTap: () {
+                                        selectedEvent.sendEmail();
+                                      },
+                                    ),
                                   BottomButton(
                                     title: t.event.edit,
                                     image: Assets.images.icons.common.pencilSVG,
@@ -736,7 +741,12 @@ class _EventModalState extends State<EventModal> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   BottomButton(
-                                      title: t.event.mailGuests, image: Assets.images.icons.common.envelopeSVG),
+                                    title: t.event.mailGuests,
+                                    image: Assets.images.icons.common.envelopeSVG,
+                                    onTap: () {
+                                      selectedEvent.sendEmail();
+                                    },
+                                  ),
                                   BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
                                 ],
                               ),

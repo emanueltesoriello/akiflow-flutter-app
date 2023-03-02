@@ -112,4 +112,27 @@ extension EventExt on Event {
       print(e);
     }
   }
+
+  Future<void> sendEmail() async {
+    String recipients = attendees!.map((e) => e.email!).toList().join(",");
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: recipients,
+      query: encodeQueryParameters(<String, String>{
+        'subject': 'Calendar event: $title',
+      }),
+    );
+    print(emailLaunchUri);
+    try {
+      await launchUrl(emailLaunchUri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
 }
