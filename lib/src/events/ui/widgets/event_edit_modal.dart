@@ -138,10 +138,10 @@ class _EventEditModalState extends State<EventEditModal> {
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.squareFillSVG,
                                     color: updatedEvent.color != null
-                                    ? ColorsExt.fromHex(updatedEvent.color!)
-                                    : updatedEvent.calendarColor != null
-                                        ? ColorsExt.fromHex(updatedEvent.calendarColor!)
-                                        : null,
+                                        ? ColorsExt.fromHex(updatedEvent.color!)
+                                        : updatedEvent.calendarColor != null
+                                            ? ColorsExt.fromHex(updatedEvent.calendarColor!)
+                                            : null,
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
@@ -314,12 +314,19 @@ class _EventEditModalState extends State<EventEditModal> {
                                       Row(
                                         children: [
                                           if (!addingMeeting)
-                                            Text(
-                                              t.event.join.toUpperCase(),
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: ColorsExt.akiflow(context)),
+                                            InkWell(
+                                              onTap: () {
+                                                if (updatedEvent.meetingUrl != null) {
+                                                  updatedEvent.openUrl(updatedEvent.meetingUrl);
+                                                }
+                                              },
+                                              child: Text(
+                                                t.event.join.toUpperCase(),
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: ColorsExt.akiflow(context)),
+                                              ),
                                             ),
                                           const SizedBox(width: 24),
                                           InkWell(
@@ -647,34 +654,43 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           ),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: SvgPicture.asset(
-                                        Assets.images.icons.google.calendarSVG,
+                          InkWell(
+                            onTap: () {
+                              if (updatedEvent.url != null) {
+                                updatedEvent.openUrl(updatedEvent.url);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 22,
+                                        height: 22,
+                                        child: SvgPicture.asset(
+                                          Assets.images.icons.google.calendarSVG,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 16.0),
-                                    Text(
-                                      'View on Google Calendar',
-                                      style: TextStyle(
-                                          fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                    ),
-                                  ],
-                                ),
-                                SvgPicture.asset(
-                                  Assets.images.icons.common.arrowUpRightSquareSVG,
-                                  width: 20,
-                                  height: 20,
-                                ),
-                              ],
+                                      const SizedBox(width: 16.0),
+                                      Text(
+                                        'View on Google Calendar',
+                                        style: TextStyle(
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.w400,
+                                            color: ColorsExt.grey2(context)),
+                                      ),
+                                    ],
+                                  ),
+                                  SvgPicture.asset(
+                                    Assets.images.icons.common.arrowUpRightSquareSVG,
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

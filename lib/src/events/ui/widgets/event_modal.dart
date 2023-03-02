@@ -251,10 +251,17 @@ class _EventModalState extends State<EventModal> {
                               ],
                             ),
                             if (selectedEvent.meetingUrl != null && selectedEvent.meetingSolution != null)
-                              Text(
-                                t.event.join.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
+                              InkWell(
+                                onTap: () {
+                                  if (selectedEvent.meetingUrl != null) {
+                                    selectedEvent.openUrl(selectedEvent.meetingUrl);
+                                  }
+                                },
+                                child: Text(
+                                  t.event.join.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
+                                ),
                               ),
                           ],
                         ),

@@ -1,6 +1,7 @@
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum AtendeeResponseStatus { needsAction, accepted, declined, tentative }
 
@@ -100,5 +101,15 @@ extension EventExt on Event {
         .toUtc();
 
     return computedEndTime.toIso8601String();
+  }
+
+  Future<void> openUrl(String? url) async {
+    Uri uri = Uri.parse(url ?? '');
+
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print(e);
+    }
   }
 }
