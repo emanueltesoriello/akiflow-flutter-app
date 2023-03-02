@@ -754,9 +754,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                                   removingMeeting: removingMeeting);
                                             } else {
                                               context.read<EventsCubit>().updateThisAndFuture(
-                                                  tappedDate: widget.tappedDate,
-                                                  newParentStartTime: widget.originalStartTime,
-                                                  selectedEvent: updatedEvent);
+                                                  tappedDate: widget.tappedDate, selectedEvent: updatedEvent);
                                             }
                                           },
                                           allTap: () {

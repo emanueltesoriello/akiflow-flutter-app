@@ -38,7 +38,7 @@ class _EventModalState extends State<EventModal> {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
     selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
 
-    if(selectedEvent.attendees != null){
+    if (selectedEvent.attendees != null) {
       selectedEvent.attendees!.sort((a, b) => b.organizer ?? false ? 1 : -1);
     }
 
@@ -420,7 +420,6 @@ class _EventModalState extends State<EventModal> {
                                             context: context,
                                             builder: (context) => RecurrentEventEditModal(
                                                   onlyThisTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.accepted);
@@ -445,14 +444,12 @@ class _EventModalState extends State<EventModal> {
                                                     }
                                                   },
                                                   thisAndFutureTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.accepted);
                                                     });
                                                   },
                                                   allTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.accepted);
@@ -497,7 +494,6 @@ class _EventModalState extends State<EventModal> {
                                             context: context,
                                             builder: (context) => RecurrentEventEditModal(
                                                   onlyThisTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.declined);
@@ -522,14 +518,12 @@ class _EventModalState extends State<EventModal> {
                                                     }
                                                   },
                                                   thisAndFutureTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.declined);
                                                     });
                                                   },
                                                   allTap: () {
-                                                    Navigator.of(context).pop();
                                                     if (selectedEvent.id == selectedEvent.recurringId) {
                                                       context.read<EventsCubit>().updateAtend(
                                                           event: selectedEvent,
@@ -570,7 +564,6 @@ class _EventModalState extends State<EventModal> {
                                             context: context,
                                             builder: (context) => RecurrentEventEditModal(
                                                   onlyThisTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.tentative);
@@ -595,14 +588,12 @@ class _EventModalState extends State<EventModal> {
                                                     }
                                                   },
                                                   thisAndFutureTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.tentative);
                                                     });
                                                   },
                                                   allTap: () {
-                                                    Navigator.of(context).pop();
                                                     setState(() {
                                                       selectedEvent.setLoggedUserAttendingResponse(
                                                           AtendeeResponseStatus.tentative);

@@ -213,8 +213,6 @@ class SyncService {
                     ? 'original_start_time'
                     : null;
             if (originalStartDateTimeColumn != null) {
-              addBreadcrumb('${api.runtimeType} recurring event instance by original start time. id: ${event.id}');
-
               Event? dbEvent;
               dbEvent = await databaseRepository.getRecurringByOriginalStart(
                   event.akiflowAccountId, event.calendarId, event.recurringId, originalStartDateTimeColumn);

@@ -437,7 +437,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     );
 
     if (deleteEvent) {
-      recurringException = prepareEventToDelete(recurringException);
+      recurringException = prepareEventToDelete(recurringException).copyWith(updatedAt: Nullable(now), deletedAt: now);
     }
 
     await _eventsRepository.add([recurringException]);
@@ -454,10 +454,18 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
   }
 
-  Future<void> updateThisAndFuture(
-      {required DateTime tappedDate, required String? newParentStartTime, required Event selectedEvent}) async {
+  Future<void> updateThisAndFuture({required DateTime tappedDate, required Event selectedEvent}) async {
     var id = const Uuid().v4();
     String now = DateTime.now().toUtc().toIso8601String();
+
+    DateTime? eventStartTime =
+        selectedEvent.startTime != null ? DateTime.parse(selectedEvent.startTime!).toLocal() : null;
+    String? originalStartTime = eventStartTime != null
+        ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
+                eventStartTime.second, eventStartTime.millisecond)
+            .toUtc()
+            .toIso8601String()
+        : null;
 
     DateTime? eventEndTime = selectedEvent.endTime != null ? DateTime.parse(selectedEvent.endTime!).toLocal() : null;
     String? originalEndTime = eventEndTime != null
@@ -470,7 +478,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     Event newParent = selectedEvent.copyWith(
       id: id,
       recurringId: id,
-      startTime: Nullable(newParentStartTime),
+      startTime: Nullable(originalStartTime),
       endTime: Nullable(originalEndTime),
       originId: Nullable(null),
       customOriginId: Nullable(null),
@@ -524,13 +532,16 @@ class EventsCubit extends Cubit<EventsCubitState> {
   Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false}) async {
     List<Event> exceptions = await _eventsRepository.getExceptionsByRecurringId(recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
-    for (var exception in exceptions) {
-      exception = prepareEventToDelete(exception).copyWith(
-        updatedAt: Nullable(now),
-        deletedAt: now,
-      );
-      await _eventsRepository.updateById(exception.id, data: exception);
+    if (exceptions.isNotEmpty) {
+      for (var exception in exceptions) {
+        exception = prepareEventToDelete(exception).copyWith(
+          updatedAt: Nullable(now),
+          deletedAt: now,
+        );
+        await _eventsRepository.updateById(exception.id, data: exception);
+      }
     }
+
     if (sync) {
       await _syncCubit.sync(entities: [Entity.events]);
     }
