@@ -19,6 +19,9 @@ const backgroundSyncFromNotification = "com.akiflow.mobile.backgroundSyncFromNot
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    await initProcesses();
+
+    await backgroundProcesses(task);
     // listen on this port in order to catch trigger from the background services.
     // Useful for UI updates based on background sync
     final sendPort = IsolateNameServer.lookupPortByName("backgroundSync");
@@ -28,9 +31,7 @@ void callbackDispatcher() {
       sendPort.send(['backgroundSync']); //change this in order to send datas to all the listeners.
     }
 
-    initProcesses();
-
-    return backgroundProcesses(task);
+    return Future.value(true);
   });
 }
 
