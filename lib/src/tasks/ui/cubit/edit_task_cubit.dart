@@ -577,6 +577,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
+  onListIdOrSectionIdChanges({required Task original}) {
+    state.updatedTask.copyWith(
+      updatedAt: Nullable(original.updatedAt),
+      listIdUpdatedAt: DateTime.now().toUtc().toIso8601String(),
+    );
+  }
+
   modalDismissed({bool updateAllFuture = false}) async {
     if (recurrenceTasksToUpdate.isNotEmpty) {
       for (Task task in recurrenceTasksToUpdate) {

@@ -544,6 +544,14 @@ extension TaskExt on Task {
     return original.deletedAt != updated.deletedAt;
   }
 
+  static bool hasEditedListId({required Task original, required Task updated}) {
+    return original.listId != updated.listId;
+  }
+
+  static bool hasEditedSectionId({required Task original, required Task updated}) {
+    return original.sectionId != updated.sectionId;
+  }
+
   static bool hasEditedCalendar({required Task original, required Task updated}) {
     return original.content?["calendarUniqueId"] != updated.content?["calendarUniqueId"];
   }
@@ -787,6 +795,12 @@ extension TaskExt on Task {
 
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
+    }
+
+    if (hasEditedListId(original: original, updated: updated) ||
+        hasEditedSectionId(original: original, updated: updated)) {
+      print("hasEditedListId || hasEditedSectionId");
+      editTaskCubit.onListIdOrSectionIdChanges(original: original);
     }
   }
 
