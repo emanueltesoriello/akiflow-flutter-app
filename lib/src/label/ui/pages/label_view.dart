@@ -90,7 +90,6 @@ class _LabelViewState extends State<LabelView> {
             backgroundColor: ColorsExt.background(context),
             onRefresh: () async {
               context.read<SyncCubit>().sync();
-              NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
             },
             child: SlidableAutoCloseBehavior(
               child: ListView(

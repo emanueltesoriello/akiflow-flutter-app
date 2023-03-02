@@ -17,6 +17,7 @@ class Task extends Equatable implements Base {
   final String? updatedAt;
   final String? deletedAt;
   final String? trashedAt;
+  final String? listIdUpdatedAt;
   final bool? done;
   final String? doneAt;
   final String? datetime;
@@ -26,6 +27,7 @@ class Task extends Equatable implements Base {
   final String? activationDatetime;
   final String? dueDate;
   final String? remoteUpdatedAt;
+  final String? remoteListIdUpdatedAt;
   final String? recurringId;
   final int? priority;
   final String? listId;
@@ -55,6 +57,7 @@ class Task extends Equatable implements Base {
     this.updatedAt,
     this.deletedAt,
     this.trashedAt,
+    this.listIdUpdatedAt,
     this.done,
     this.doneAt,
     this.datetime,
@@ -64,6 +67,7 @@ class Task extends Equatable implements Base {
     this.activationDatetime,
     this.dueDate,
     this.remoteUpdatedAt,
+    this.remoteListIdUpdatedAt,
     this.recurringId,
     this.priority,
     this.listId,
@@ -93,6 +97,7 @@ class Task extends Equatable implements Base {
     String? createdAt,
     String? deletedAt,
     String? trashedAt,
+    String? listIdUpdatedAt,
     bool? done,
     Nullable<String?>? doneAt,
     Nullable<String?>? datetime,
@@ -114,6 +119,7 @@ class Task extends Equatable implements Base {
     Nullable<List<String>?>? recurrence,
     Nullable<String?>? updatedAt,
     Nullable<String?>? remoteUpdatedAt,
+    Nullable<String?>? remoteListIdUpdatedAt,
     dynamic content,
     Nullable<String?>? connectorId,
     Nullable<String?>? originId,
@@ -131,6 +137,7 @@ class Task extends Equatable implements Base {
       createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
       trashedAt: trashedAt ?? this.trashedAt,
+      listIdUpdatedAt: listIdUpdatedAt ?? this.listIdUpdatedAt,
       done: done ?? this.done,
       doneAt: doneAt == null ? this.doneAt : doneAt.value,
       datetime: datetime == null ? this.datetime : datetime.value,
@@ -152,6 +159,7 @@ class Task extends Equatable implements Base {
       recurrence: recurrence == null ? this.recurrence : recurrence.value,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
       remoteUpdatedAt: remoteUpdatedAt == null ? this.remoteUpdatedAt : remoteUpdatedAt.value,
+      remoteListIdUpdatedAt: remoteListIdUpdatedAt == null ? this.remoteListIdUpdatedAt : remoteListIdUpdatedAt.value,
       content: content ?? this.content,
       connectorId: connectorId ?? this.connectorId,
       originId: originId ?? this.originId,
@@ -173,6 +181,7 @@ class Task extends Equatable implements Base {
       'created_at': createdAt,
       'updated_at': updatedAt,
       'deleted_at': deletedAt,
+      'listId_updated_at': listIdUpdatedAt,
       'done': done,
       'done_at': doneAt,
       'datetime': datetime,
@@ -182,6 +191,7 @@ class Task extends Equatable implements Base {
       'activation_datetime': activationDatetime,
       'due_date': dueDate != null ? DateFormat('yyyy-MM-dd').format(DateTime.parse(dueDate!)) : null,
       'remote_updated_at': remoteUpdatedAt,
+      'remote_list_id_updated_at ': remoteListIdUpdatedAt,
       'recurring_id': recurringId,
       'priority': priority,
       'listId': listId,
@@ -213,6 +223,7 @@ class Task extends Equatable implements Base {
       status: map['status'] != null ? map['status'] as int : 1,
       createdAt: map['created_at'] != null ? map['created_at'] as String : null,
       updatedAt: map['updated_at'] != null ? map['updated_at'] as String : null,
+      listIdUpdatedAt: map['list_id_updated_at'] != null ? map['list_id_updated_at'] as String : null,
       deletedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
       done: map['done'] != null ? map['done'] as bool : null,
       doneAt: map['done_at'] != null ? map['done_at'] as String : null,
@@ -223,6 +234,8 @@ class Task extends Equatable implements Base {
       activationDatetime: map['activation_datetime'] != null ? map['activation_datetime'] as String : null,
       dueDate: map['due_date'] != null ? map['due_date'] as String : null,
       remoteUpdatedAt: map['remote_updated_at'] != null ? map['remote_updated_at'] as String : null,
+      remoteListIdUpdatedAt:
+          map['remote_list_id_updated_at'] != null ? map['remote_list_id_updated_at'] as String : null,
       recurringId: map['recurring_id'] != null ? map['recurring_id'] as String : null,
       priority: map['priority'] != null ? map['priority'] as int : null,
       listId: map['listId'] != null ? map['listId'] as String : null,
@@ -266,8 +279,10 @@ class Task extends Equatable implements Base {
       "created_at": createdAt,
       "deleted_at": deletedAt,
       "trashed_at": trashedAt,
+      "list_id_updated_at": listIdUpdatedAt,
       "origin": origin,
       "remote_updated_at": remoteUpdatedAt,
+      "remote_list_id_updated_at": remoteListIdUpdatedAt,
       "sorting": sorting,
       "sorting_label": sortingLabel,
       "links": (links == null || links!.isEmpty) ? null : links?.toList().join(';'),
@@ -353,6 +368,7 @@ class Task extends Equatable implements Base {
       updatedAt,
       deletedAt,
       trashedAt,
+      listIdUpdatedAt,
       done,
       doneAt,
       datetime,
@@ -362,6 +378,7 @@ class Task extends Equatable implements Base {
       activationDatetime,
       dueDate,
       remoteUpdatedAt,
+      remoteListIdUpdatedAt,
       recurringId,
       priority,
       listId,

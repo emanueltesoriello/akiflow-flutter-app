@@ -4,14 +4,15 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobile/core/services/background_service.dart';
 
 onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-    AndroidNotificationChannel channel) {
+    AndroidNotificationChannel channel,
+    {bool fromBackground = false}) {
   print("onMessage: ${message.notification?.title ?? ''}");
   //final notification = message.notification;
   String notificationType = message.data["notification_type"] ?? '';
   // If `onMessage` is triggered with a notification, construct our own
   // local notification to show to users using the created channel.
-  if (notificationType == 'trigger_sync:tasks,events,whatever_we_will_add') {
-    backgroundProcesses(backgroundSyncFromNotification);
+  if (notificationType == 'trigger_sync:tasks,events') {
+    backgroundProcesses(backgroundSyncFromNotification, fromBackground: fromBackground);
   }
   //TODO add support for other  type of notifications like the handling of the visible ones
 }
@@ -23,9 +24,9 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
     AndroidNotificationChannel channel = const AndroidNotificationChannel(
       "background_channel",
       "background_channel",
-      description: "channel.description",
+      description: "Channel for background notifications",
     );
-    onNotificationsReceived(message, flutterLocalNotificationsPlugin, channel);
+    onNotificationsReceived(message, flutterLocalNotificationsPlugin, channel, fromBackground: true);
     return;
   } catch (e) {
     print(e);

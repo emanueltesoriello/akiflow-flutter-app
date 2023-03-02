@@ -31,10 +31,10 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          if (kDebugMode)
-            FutureBuilder(
-                future: FirebaseMessaging.instance.getToken(),
-                builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
+          //if (kDebugMode)
+          FutureBuilder(
+              future: FirebaseMessaging.instance.getToken(),
+              builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
           ButtonList(
             title: t.settings.myAccount.title,
             position: ButtonListPosition.single,

@@ -80,7 +80,6 @@ class _TaskListState extends State<TaskList> {
       backgroundColor: ColorsExt.background(context),
       onRefresh: () async {
         context.read<SyncCubit>().sync();
-        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
       },
       child: SlidableAutoCloseBehavior(
         child: ReorderableListView.builder(

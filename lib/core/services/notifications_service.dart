@@ -6,14 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/task/task.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';
@@ -25,8 +22,8 @@ class NotificationsService {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final AndroidNotificationChannel channel = const AndroidNotificationChannel(
     "channel id",
-    "channel name",
-    description: "channel description",
+    "Default remote channel",
+    description: "Default notification channel for remote notifications",
     importance: Importance.defaultImportance,
   );
   static const dailyReminderTaskId = 1000001;
@@ -40,8 +37,10 @@ class NotificationsService {
 
   // ************ INIT FUNCTIONS ************
   // ****************************************
+
   initFirebaseMessaging() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
     await _localNotificationsPlugin
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -49,6 +48,15 @@ class NotificationsService {
           badge: true,
           sound: true,
         );
+
+    await _localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+
+    await _localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
     await firebaseMessaging.requestPermission();
 
     firebaseMessaging.registerOnMessage(_localNotificationsPlugin, channel);
@@ -73,6 +81,7 @@ class NotificationsService {
     const androidSetting = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSetting = DarwinInitializationSettings();
     const initSettings = InitializationSettings(android: androidSetting, iOS: iosSetting);
+
     await _localNotificationsPlugin
         .initialize(
       initSettings,
@@ -84,7 +93,104 @@ class NotificationsService {
     }).catchError((Object error) {
       print('Error: $error');
     });
-    // await handlerForNotificationsClickForTerminatedApp();
+  }
+
+  /// This method schedule all the planned notifications for tasks
+  /// It automatically schedule the new one and also update the existing ones and removes the deleted/done/trashed tasks
+  static planTasksNotifications(PreferencesRepository preferencesRepository,
+      {List<Task>? changedTasks, List<Task>? notExistingTasks}) async {
+    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+      List<Task> toBeScheduled = [];
+      List<Task> toBeRemoved = [];
+
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
+
+      DateTime date = DateTime.now().toUtc();
+      DateTime endTime = date.add(const Duration(days: 1));
+
+      if (notExistingTasks != null && notExistingTasks.isNotEmpty) {
+        toBeScheduled.addAll(notExistingTasks
+            .where((task) =>
+                task.deletedAt == null &&
+                task.trashedAt == null &&
+                task.datetime != null &&
+                task.status == TaskStatusType.planned.id &&
+                (DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())) &&
+                    DateTime.parse(task.datetime!).isBefore(DateTime.parse(endTime.toUtc().toIso8601String()))))
+            .toList());
+      }
+
+      if (changedTasks != null && changedTasks.isNotEmpty) {
+        toBeScheduled.addAll(changedTasks
+            .where((task) =>
+                task.deletedAt == null &&
+                task.trashedAt == null &&
+                task.datetime != null &&
+                task.status == TaskStatusType.planned.id &&
+                (DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())) &&
+                    DateTime.parse(task.datetime!).isBefore(DateTime.parse(endTime.toUtc().toIso8601String()))))
+            .toList());
+      }
+
+      if (changedTasks != null && changedTasks.isNotEmpty) {
+        toBeRemoved.addAll(changedTasks
+            .where((task) => (task.done == true ||
+                ((task.deletedAt != null || task.trashedAt != null) && task.datetime != null ||
+                        task.status != TaskStatusType.planned.id) &&
+                    DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String()))))
+            .toList());
+      }
+
+      if (toBeScheduled.isNotEmpty) {
+        for (var task in toBeScheduled) {
+          int notificationsId = 0;
+
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId =
+                (int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16) / 2).round();
+          } catch (e) {
+            notificationsId = task.id.hashCode;
+          }
+          NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
+
+          try {
+            String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
+
+            NotificationsService.scheduleNotifications(task.title ?? '', "Start at $startTime",
+                notificationId: notificationsId,
+                scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
+                    .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
+                payload: jsonEncode(task.toMap()),
+                notificationDetails: const NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    "channel_d",
+                    "Tasks notification",
+                    channelDescription: "The notifications received as a reminder for a task.",
+                  ),
+                ));
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
+      if (toBeRemoved.isNotEmpty) {
+        for (var task in toBeRemoved) {
+          int notificationsId = 0;
+
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId =
+                (int.parse(task.id!.substring(task.id!.length - 8, task.id!.length), radix: 16) / 2).round();
+          } catch (e) {
+            notificationsId = task.id.hashCode;
+          }
+          cancelNotificationById(notificationsId);
+        }
+      }
+    }
   }
 
   static handleNotificationClick(NotificationResponse payload) async {
@@ -115,8 +221,10 @@ class NotificationsService {
             const NotificationDetails(
               iOS: DarwinNotificationDetails(
                   presentAlert: true, presentSound: true, interruptionLevel: InterruptionLevel.active),
-              android: AndroidNotificationDetails("channel id", "channel name",
-                  channelDescription: "channel description", priority: Priority.max, importance: Importance.high),
+              android: AndroidNotificationDetails("channel id", "Default notification",
+                  channelDescription: "The default notification channel.",
+                  priority: Priority.max,
+                  importance: Importance.high),
             ),
         payload: payload);
   }
@@ -145,9 +253,9 @@ class NotificationsService {
                 presentBadge: false,
                 presentSound: false,
                 interruptionLevel: InterruptionLevel.passive),
-            android: AndroidNotificationDetails("fcm_fallback_notification_channel", "channel name",
+            android: AndroidNotificationDetails("fcm_fallback_notification_channel", "Default remote channel",
                 playSound: false,
-                channelDescription: "channel description",
+                channelDescription: "Default notification channel for remote notifications",
                 enableVibration: false,
                 onlyAlertOnce: true,
                 usesChronometer: false),
@@ -190,8 +298,8 @@ class NotificationsService {
               notificationDetails: const NotificationDetails(
                 android: AndroidNotificationDetails(
                   "channel_d",
-                  "channel_name",
-                  channelDescription: "default_channelDescription",
+                  "Tasks notification",
+                  channelDescription: "The notifications received as a reminder for a task.",
                 ),
               ));
         } catch (e) {
@@ -207,17 +315,30 @@ class NotificationsService {
       required TZDateTime scheduledDate,
       required String? payload}) {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    localNotificationsPlugin.zonedSchedule(
-        notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
-        androidAllowWhileIdle: true,
+    if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
+      localNotificationsPlugin.zonedSchedule(
+          notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
+          androidAllowWhileIdle: true,
+          payload: payload,
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+    } else {
+      print('show immediately this notification');
+      localNotificationsPlugin.show(
+        notificationId,
+        title,
+        description,
+        notificationDetails ?? const NotificationDetails(),
         payload: payload,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+      );
+    }
   }
 
   static Future<void> setDailyReminder(PreferencesRepository service) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'channel name',
-        channelDescription: 'channel description', importance: Importance.max, priority: Priority.high);
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'Daily reminder',
+        channelDescription: 'The channel for the daily overview  notification.',
+        importance: Importance.max,
+        priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
     // *********************************************

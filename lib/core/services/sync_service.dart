@@ -7,6 +7,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/exceptions/post_unsynced_exception.dart';
 import 'package:mobile/core/exceptions/upsert_database_exception.dart';
 import 'package:mobile/core/repository/database_repository.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:models/account/account.dart';
@@ -14,6 +15,7 @@ import 'package:models/event/event.dart';
 import 'package:models/extensions/account_ext.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
+import 'package:mobile/core/preferences.dart';
 
 class SyncService {
   final SentryService _sentryService = locator<SentryService>();
@@ -70,7 +72,10 @@ class SyncService {
     addBreadcrumb("${api.runtimeType} update lastSyncAt to $maxRemoteUpdateAt, upserting items to db");
 
     // Upsert only after retrieved max remote update at.
-    bool hasDataToImportValue = await _upsertItems(remoteItems);
+    bool hasDataToImportValue = await _upsertItems(
+      remoteItems,
+      apiType: api.runtimeType.toString(),
+    );
 
     if (hasDataToImportValue && hasDataToImport != null) {
       hasDataToImport!();
@@ -109,7 +114,10 @@ class SyncService {
       addBreadcrumb("${api.runtimeType} posted to api ${updated.length} items");
 
       if (updated.isNotEmpty) {
-        await _upsertItems(updated);
+        await _upsertItems(
+          updated,
+          apiType: api.runtimeType.toString(),
+        );
       }
 
       addBreadcrumb("${api.runtimeType} local to remote: done");
@@ -122,7 +130,7 @@ class SyncService {
   }
 
   /// Return if there is data to import.
-  Future<bool> _upsertItems<T>(List<dynamic> remoteItems) async {
+  Future<bool> _upsertItems<T>(List<dynamic> remoteItems, {required String? apiType}) async {
     addBreadcrumb("${api.runtimeType} upsert remote items: ${remoteItems.length} to db");
 
     bool anyInsertErrors = false;
@@ -148,6 +156,19 @@ class SyncService {
     // var unchangedModels = result[1];
     List nonExistingModels = result[2];
     List valToBeDeleted = [];
+
+    if (apiType == "TaskApi") {
+      print('started to updating the scheduling of tasks notifications');
+
+      List<Task> changedTasks = changedModels.cast<Task>().toList();
+      List<Task> notExistingTasks = nonExistingModels.cast<Task>().toList();
+
+      NotificationsService.planTasksNotifications(
+        locator<PreferencesRepository>(),
+        changedTasks: changedTasks,
+        notExistingTasks: notExistingTasks,
+      );
+    }
 
     addBreadcrumb("${api.runtimeType} changedModels length: ${changedModels.length}");
     addBreadcrumb("${api.runtimeType} nonExistingModels length: ${nonExistingModels.length}");

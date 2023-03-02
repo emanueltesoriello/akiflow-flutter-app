@@ -94,7 +94,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     if (user != null) {
       await _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
     }
   }
 
@@ -107,36 +106,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       calendarTasks: state.calendarTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
     ));
   }
-
-/*
-  void showJustCreatedTaskInUi(Task newTask) {
-    List<Task> inboxTasks = state.inboxTasks;
-    List<Task> selectedDayTasks = state.selectedDayTasks;
-    List<Task> labelTasks = state.labelTasks;
-    List<Task> fixedTodayTasks = state.fixedTodayTasks;
-    List<Task> calendarTasks = state.calendarTasks;
-
-    if (newTask.date == null) {
-      inboxTasks.add(newTask);
-    }
-    if (newTask.date != null) {
-      selectedDayTasks.add(newTask);
-    }
-    if (newTask.datetime != null) {
-      calendarTasks.add(newTask);
-    }
-    if (newTask.isToday) {
-      fixedTodayTasks.add(newTask);
-    }
-
-    emit(state.copyWith(
-      inboxTasks: inboxTasks,
-      selectedDayTasks: selectedDayTasks,
-      labelTasks: labelTasks,
-      fixedTodayTasks: fixedTodayTasks,
-      calendarTasks: calendarTasks,
-    ));
-  }*/
 
   Future<void> refreshAllFromRepository() async {
     await Future.wait([
@@ -279,7 +248,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync(entities: [Entity.tasks]);
 
     handleDocAction(tasksChanged);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> duplicate() async {
@@ -315,7 +283,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> delete() async {
@@ -473,7 +440,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> setDeadline(DateTime? date) async {
@@ -644,7 +610,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
       AnalyticsService.track("Tasks unplanned");
@@ -705,7 +670,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     switch (queue.first.type) {
       case UndoType.restore:
@@ -731,7 +695,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
 
     emit(state.copyWith(labelTasks: []));
   }

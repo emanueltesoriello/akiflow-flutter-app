@@ -186,14 +186,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   if (newVal == false) {
                     await NotificationsService.cancelScheduledNotifications(locator<PreferencesRepository>());
                   } else if (newVal) {
-                    if (Platform.isAndroid) {
-                      Workmanager().registerOneOffTask(
-                        scheduleNotificationsTaskKey,
-                        scheduleNotificationsTaskKey,
-                      );
-                    } else {
-                      NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
-                    }
+                    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),
                 const SizedBox(height: 20),
