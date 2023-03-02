@@ -28,7 +28,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 6,
+        version: 7,
         singleInstance: true,
         onCreate: (db, version) async {
           print('Creating database version $version');
@@ -37,7 +37,7 @@ class DatabaseService {
 
           await _setup(batch);
 
-          List<Function(sql.Batch)> migrations = [addTasksDocField, _addIndexes, deleteDocsTable];
+          List<Function(sql.Batch)> migrations = [addTasksDocField, _addIndexes, deleteDocsTable, _addListIdToTask];
 
           for (var migration in migrations) {
             migration(batch);
@@ -50,6 +50,9 @@ class DatabaseService {
         onUpgrade: (db, oldVersion, newVersion) async {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
+          if (oldVersion < 7) {
+            _addListIdToTask(batch);
+          }
           if (oldVersion < 6) {
             _addIndexes(batch);
           }
@@ -388,6 +391,11 @@ CREATE TABLE IF NOT EXISTS tasks(
     batch.execute('CREATE INDEX IF NOT EXISTS tasks_done ON tasks(`done`)');
     batch.execute('CREATE INDEX IF NOT EXISTS tasks_trashed_at ON tasks(`trashed_at`)');
     batch.execute('CREATE INDEX IF NOT EXISTS doc ON tasks(`doc`)');
+  }
+
+  void _addListIdToTask(Batch batch) {
+    batch.execute('ALTER TABLE tasks ADD COLUMN list_id_updated_at TEXT');
+    batch.execute('ALTER TABLE tasks ADD COLUMN remote_list_id_updated_at TEXT');
   }
 
   void addTasksDocField(Batch batch) {
