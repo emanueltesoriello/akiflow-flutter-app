@@ -137,6 +137,11 @@ class _EventEditModalState extends State<EventEditModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.squareFillSVG,
+                                    color: updatedEvent.color != null
+                                    ? ColorsExt.fromHex(updatedEvent.color!)
+                                    : updatedEvent.calendarColor != null
+                                        ? ColorsExt.fromHex(updatedEvent.calendarColor!)
+                                        : null,
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
