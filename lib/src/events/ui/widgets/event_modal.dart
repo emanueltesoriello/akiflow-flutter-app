@@ -38,6 +38,10 @@ class _EventModalState extends State<EventModal> {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
     selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
 
+    if(selectedEvent.attendees != null){
+      selectedEvent.attendees!.sort((a, b) => b.organizer ?? false ? 1 : -1);
+    }
+
     DateTime? eventStartTime =
         widget.event.startTime != null ? DateTime.parse(widget.event.startTime!).toLocal() : null;
     originalStartTime = eventStartTime != null
