@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 307 
+ * Strings: 309 
  *
- * Built on 2023-02-28 at 11:42 UTC
+ * Built on 2023-03-02 at 07:57 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -888,6 +888,7 @@ class _StringsEventEditEventEn {
 	String get viewOnGoogleCalendar => 'View on Google Calendar';
 	String get saveChanges => 'Save Changes';
 	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
+	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
 }
 
 // Path: settings.integrations.gmail
@@ -947,6 +948,17 @@ class _StringsEventEditEventRepeatingEditModalEn {
 	String get onlyThis => 'Only this event';
 	String get thisAndAllFuture => 'This and all future events';
 	String get allEvents => 'All events';
+}
+
+// Path: event.editEvent.deleteModal
+class _StringsEventEditEventDeleteModalEn {
+	_StringsEventEditEventDeleteModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String title({required Object eventName}) => 'Are you sure you want to delete ${eventName}';
+	String get description => 'You can\'t undo this action!';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1287,6 +1299,8 @@ extension on _StringsEn {
 			'event.editEvent.repeatingEditModal.onlyThis': 'Only this event',
 			'event.editEvent.repeatingEditModal.thisAndAllFuture': 'This and all future events',
 			'event.editEvent.repeatingEditModal.allEvents': 'All events',
+			'event.editEvent.deleteModal.title': ({required Object eventName}) => 'Are you sure you want to delete ${eventName}',
+			'event.editEvent.deleteModal.description': 'You can\'t undo this action!',
 			'availability.availabilities': 'Availabilities',
 			'availability.activeRecurrentSlots': 'Active recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',

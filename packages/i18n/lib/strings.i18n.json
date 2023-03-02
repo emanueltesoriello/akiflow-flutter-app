@@ -359,6 +359,10 @@
         "onlyThis": "Only this event",
         "thisAndAllFuture": "This and all future events",
         "allEvents": "All events"
+      },
+      "deleteModal":{
+        "title":"Are you sure you want to delete ${eventName}",
+        "description":"You can't undo this action!"
       }
     }
   },
