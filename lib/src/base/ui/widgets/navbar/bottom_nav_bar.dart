@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
-//import 'package:intercom_flutter/intercom_flutter.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
@@ -55,15 +55,15 @@ class CustomBottomNavigationBar extends StatelessWidget {
                         title: t.bottomBar.menu,
                         topPadding: topPadding,
                         badge: FutureBuilder<dynamic>(
-                            // future: Intercom.instance.unreadConversationCount(),
+                            future: Intercom.instance.unreadConversationCount(),
                             builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return IconBadge(
-                              snapshot.data,
-                            );
-                          }
-                          return const SizedBox();
-                        }),
+                              if (snapshot.hasData) {
+                                return IconBadge(
+                                  snapshot.data,
+                                );
+                              }
+                              return const SizedBox();
+                            }),
                       ),
                       NavItem(
                         active: active(HomeViewType.inbox, state.homeViewType),

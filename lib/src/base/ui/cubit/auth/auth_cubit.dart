@@ -14,7 +14,6 @@ import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/client/client.dart';
@@ -30,7 +29,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final AuthApi _authApi = locator<AuthApi>();
   final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
-  //final IntercomService _intercomService = locator<IntercomService>();
+  final IntercomService _intercomService = locator<IntercomService>();
 
   final UserApi _userApi = locator<UserApi>();
 
@@ -71,8 +70,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
         emit(AuthCubitState(user: user));
 
         _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
-        //_intercomService.authenticate(
-        //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+        _intercomService.authenticate(
+            email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
       }
     } else {
       emit(AuthCubitState(hasValidPlan: false, user: user));
