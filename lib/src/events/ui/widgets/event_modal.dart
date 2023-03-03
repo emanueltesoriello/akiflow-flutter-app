@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +11,7 @@ import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/delete_event_confirmation_modal.dart';
@@ -16,6 +19,9 @@ import 'package:mobile/src/events/ui/widgets/event_edit_modal.dart';
 import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:tuple/tuple.dart' as tuple;
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class EventModal extends StatefulWidget {
   const EventModal({
@@ -33,6 +39,12 @@ class EventModal extends StatefulWidget {
 class _EventModalState extends State<EventModal> {
   late Event selectedEvent;
   late String? originalStartTime;
+  late FocusNode descriptionFocusNode;
+  late TextEditingController descriptionController;
+  StreamSubscription? streamSubscription;
+  ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
+      quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
+
   @override
   void initState() {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
@@ -51,7 +63,31 @@ class _EventModalState extends State<EventModal> {
             .toIso8601String()
         : null;
 
+    descriptionFocusNode = FocusNode();
+    descriptionController = TextEditingController()..text = widget.event.description ?? '';
+    initDescription().whenComplete(() {
+      streamSubscription = quillController.value.changes.listen((change) async {
+        List<dynamic> delta = quillController.value.document.toDelta().toJson();
+        String html = await InteractiveWebView.deltaToHtml(delta);
+        descriptionController.text = html;
+      });
+    });
+
     super.initState();
+  }
+
+  Future initDescription() async {
+    String html = widget.event.description ?? '';
+    quill.Document document = await InteractiveWebView.htmlToDelta(html);
+    quillController.value =
+        quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+    quillController.value.moveCursorToEnd();
+  }
+
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -318,83 +354,106 @@ class _EventModalState extends State<EventModal> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset(
-                                Assets.images.icons.common.envelopeSVG,
-                                color: selectedEvent.attendees != null
-                                    ? ColorsExt.grey2(context)
-                                    : ColorsExt.grey3(context),
+                            if (selectedEvent.attendees != null)
+                              SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: SvgPicture.asset(
+                                  Assets.images.icons.common.envelopeSVG,
+                                  color: selectedEvent.attendees != null
+                                      ? ColorsExt.grey2(context)
+                                      : ColorsExt.grey3(context),
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
                       if (selectedEvent.attendees != null)
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: selectedEvent.attendees?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                              child: Row(
-                                children: [
-                                  selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
-                                      ? SizedBox(
-                                          width: 19,
-                                          height: 19,
-                                          child: SvgPicture.asset(
-                                            Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                                            color: ColorsExt.green(context),
-                                          ),
-                                        )
-                                      : selectedEvent.attendees![index].responseStatus ==
-                                              AtendeeResponseStatus.declined.id
-                                          ? SizedBox(
-                                              width: 19,
-                                              height: 19,
-                                              child: SvgPicture.asset(
-                                                Assets.images.icons.common.xmarkCircleFillSVG,
-                                                color: ColorsExt.red(context),
-                                              ),
-                                            )
-                                          : SizedBox(
-                                              width: 19,
-                                              height: 19,
-                                              child: SvgPicture.asset(
-                                                Assets.images.icons.common.questionCircleFillSVG,
-                                                color: ColorsExt.grey3(context),
-                                              ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: selectedEvent.attendees?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                child: Row(
+                                  children: [
+                                    selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
+                                        ? SizedBox(
+                                            width: 19,
+                                            height: 19,
+                                            child: SvgPicture.asset(
+                                              Assets.images.icons.common.checkmarkAltCircleFillSVG,
+                                              color: ColorsExt.green(context),
                                             ),
-                                  const SizedBox(width: 16.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        selectedEvent.attendees![index].email!.contains('group')
-                                            ? '${selectedEvent.attendees![index].displayName}'
-                                            : '${selectedEvent.attendees![index].email}',
-                                        style: TextStyle(
-                                            fontSize: 17.0,
-                                            fontWeight: FontWeight.w400,
-                                            color: ColorsExt.grey2(context)),
-                                      ),
-                                      if (selectedEvent.attendees![index].organizer ?? false)
+                                          )
+                                        : selectedEvent.attendees![index].responseStatus ==
+                                                AtendeeResponseStatus.declined.id
+                                            ? SizedBox(
+                                                width: 19,
+                                                height: 19,
+                                                child: SvgPicture.asset(
+                                                  Assets.images.icons.common.xmarkCircleFillSVG,
+                                                  color: ColorsExt.red(context),
+                                                ),
+                                              )
+                                            : SizedBox(
+                                                width: 19,
+                                                height: 19,
+                                                child: SvgPicture.asset(
+                                                  Assets.images.icons.common.questionCircleFillSVG,
+                                                  color: ColorsExt.grey3(context),
+                                                ),
+                                              ),
+                                    const SizedBox(width: 16.0),
+                                    Row(
+                                      children: [
                                         Text(
-                                          ' - ${t.event.organizer}',
+                                          selectedEvent.attendees![index].email!.contains('group')
+                                              ? '${selectedEvent.attendees![index].displayName}'
+                                              : '${selectedEvent.attendees![index].email}',
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey3(context)),
+                                              color: ColorsExt.grey2(context)),
                                         ),
-                                    ],
-                                  ),
-                                ],
+                                        if (selectedEvent.attendees![index].organizer ?? false)
+                                          Text(
+                                            ' - ${t.event.organizer}',
+                                            style: TextStyle(
+                                                fontSize: 17.0,
+                                                fontWeight: FontWeight.w400,
+                                                color: ColorsExt.grey3(context)),
+                                          ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      const Separator(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: SvgPicture.asset(
+                                Assets.images.icons.common.textJustifyLeftSVG,
                               ),
-                            );
-                          },
-                        )
+                            ),
+                            const SizedBox(width: 16.0),
+                            Expanded(
+                              child: _description(context),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -650,7 +709,8 @@ class _EventModalState extends State<EventModal> {
                       const Separator(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: selectedEvent.creatorId == selectedEvent.originCalendarId
+                        child: selectedEvent.creatorId == selectedEvent.originCalendarId ||
+                                (selectedEvent.content["guestsCanModify"] ?? false)
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
@@ -747,7 +807,11 @@ class _EventModalState extends State<EventModal> {
                                       selectedEvent.sendEmail();
                                     },
                                   ),
-                                  BottomButton(title: t.event.delete, image: Assets.images.icons.common.trashSVG),
+                                  BottomButton(
+                                    title: t.event.delete,
+                                    image: Assets.images.icons.common.trashSVG,
+                                    onTap: () {},
+                                  ),
                                 ],
                               ),
                       ),
@@ -759,6 +823,42 @@ class _EventModalState extends State<EventModal> {
           ),
         );
       },
+    );
+  }
+
+  Widget _description(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: quillController,
+      builder: (context, quill.QuillController value, child) => Theme(
+        data: Theme.of(context).copyWith(
+          textSelectionTheme: TextSelectionThemeData(
+            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+          ),
+        ),
+        child: quill.QuillEditor(
+          controller: value,
+          readOnly: false,
+          scrollController: ScrollController(),
+          scrollable: true,
+          focusNode: descriptionFocusNode,
+          autoFocus: false,
+          expands: false,
+          padding: EdgeInsets.zero,
+          placeholder: t.task.description,
+          linkActionPickerDelegate: (BuildContext context, String link, node) async {
+            launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+            return quill.LinkMenuAction.none;
+          },
+          customStyles: quill.DefaultStyles(
+            placeHolder: quill.DefaultTextBlockStyle(
+              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+              const tuple.Tuple2(0, 0),
+              const tuple.Tuple2(0, 0),
+              null,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

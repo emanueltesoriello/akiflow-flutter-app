@@ -464,16 +464,17 @@ class _EventEditModalState extends State<EventEditModal> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.envelopeSVG,
-                                    color: updatedEvent.attendees != null
-                                        ? ColorsExt.grey2(context)
-                                        : ColorsExt.grey3(context),
+                                if (updatedEvent.attendees != null)
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(
+                                      Assets.images.icons.common.envelopeSVG,
+                                      color: updatedEvent.attendees != null
+                                          ? ColorsExt.grey2(context)
+                                          : ColorsExt.grey3(context),
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
