@@ -527,15 +527,20 @@ class EventsCubit extends Cubit<EventsCubitState> {
         updatedAt: Nullable(now));
 
     await _eventsRepository.updateById(parentEvent.id, data: parentEvent);
-    deleteExceptionsByRecurringId(parentEvent.recurringId!);
+    deleteExceptionsByRecurringId(parentEvent.recurringId!, startingFrom: tappedDate.add(const Duration(days: 1)));
     await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
   }
 
-  Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false}) async {
+  Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false, DateTime? startingFrom}) async {
     List<Event> exceptions = await _eventsRepository.getExceptionsByRecurringId(recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
     if (exceptions.isNotEmpty) {
+      if (startingFrom != null) {
+        exceptions = exceptions
+            .where((exception) => DateTime.parse(exception.startTime ?? exception.startDate!).isAfter(startingFrom))
+            .toList();
+      }
       for (var exception in exceptions) {
         exception = prepareEventToDelete(exception).copyWith(
           updatedAt: Nullable(now),
