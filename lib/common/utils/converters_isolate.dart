@@ -161,9 +161,50 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
     );
 
     if (existingModelsById.containsKey(remoteModel.id)) {
+      int remoteListIdUpdatedAtAtMillis = 0;
+      int localListIdUpdatedAtAtMillis = 0;
+
+      if (remoteModel.runtimeType == Task) {
+        if (remoteModel.remoteListIdUpdatedAt != null) {
+          remoteListIdUpdatedAtAtMillis = DateTime.parse(remoteModel.remoteListIdUpdatedAt).millisecondsSinceEpoch;
+        }
+        if (existingModelsById[remoteModel.id] != null && existingModelsById[remoteModel.id].listIdUpdatedAt != null) {
+          localListIdUpdatedAtAtMillis = existingModelsById[remoteModel.id]?.listIdUpdatedAt;
+        }
+      }
+
       if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
+        //TODO if remoteModel.remoteListUpdatedAt< localListIdUpdatedAt {remoteModel.listId = localModel.listId}
+        if (remoteModel.runtimeType == Task) {
+          if (remoteListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
+            remoteModel = remoteModel.copyWith(
+                listId: existingModelsById[remoteModel.id]?.listId,
+                sectionId: existingModelsById[remoteModel.id]?.sectionId);
+          }
+        }
+
         changedModels.add(remoteModel);
       } else {
+        //TODO if remoteModel.remoteListUpdatedAt > localListIdUpdatedAt {localModel.listId = remoteModel.listId} ==> add it into the changed Models;
+        if (remoteModel.runtimeType == Task) {
+          if (remoteListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
+            existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id]
+                .copyWith(listId: remoteModel.listId, sectionId: remoteModel.sectionId);
+          }
+        }
+
+        /*if (remoteModel.runtimeType == Task) {
+          int remoteListIdUpdatedAtAtMillis = 0;
+          int localListIdUpdatedAtAtMillis = 0;
+
+          if (remoteModel.remoteListIdUpdatedAt != null &&
+              remoteModel.remoteListIdUpdatedAt > existingModelsById[remoteModel.id]?.listIdUpdatedAt) {
+            existingModelsById[remoteModel.id]?.listId = remoteModel.listId;
+            existingModelsById[remoteModel.id]?.sectionId = remoteModel.sectionId;
+            changedModels.add(existingModelsById[remoteModel.id]);
+          }
+        }*/
+
         unchangedModels.add(remoteModel);
       }
     } else {

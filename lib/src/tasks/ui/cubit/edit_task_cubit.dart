@@ -577,14 +577,21 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  onListIdOrSectionIdChanges({required Task original}) {
-    state.updatedTask.copyWith(
-      updatedAt: Nullable(original.updatedAt),
-      listIdUpdatedAt: DateTime.now().toUtc().toIso8601String(),
-    );
+  onListIdOrSectionIdChanges({required Task original, required Task updated}) {
+    if (TaskExt.hasDataChanges(original: original, updated: updated, includeListIdAndSectionId: false)) {
+      state.updatedTask.copyWith(
+        updatedAt: Nullable(original.updatedAt),
+        listIdUpdatedAt: DateTime.now().toUtc().toIso8601String(),
+      );
+    } else {
+      state.updatedTask.copyWith(
+        updatedAt: Nullable(original.updatedAt),
+        listIdUpdatedAt: DateTime.now().toUtc().toIso8601String(),
+      );
+    }
   }
 
-  modalDismissed({bool updateAllFuture = false}) async {
+  modalDismissed({bool updateAllFuture = false, bool hasEditedListIdOrSectionId = false}) async {
     if (recurrenceTasksToUpdate.isNotEmpty) {
       for (Task task in recurrenceTasksToUpdate) {
         await _tasksRepository.updateById(task.id, data: task);
@@ -613,19 +620,34 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
       for (Task task in tasks) {
-        Task updatedRecurringTask = state.updatedTask.copyWith(
-          id: task.id,
-          date: Nullable(task.date),
-          datetime: Nullable(task.datetime),
-          status: Nullable(task.status),
-          createdAt: (task.createdAt),
-          trashedAt: (task.trashedAt),
-          globalCreatedAt: (task.globalCreatedAt),
-          globalUpdatedAt: (task.globalUpdatedAt),
-          readAt: (task.readAt),
-          updatedAt: Nullable(now),
-        );
-
+        late Task updatedRecurringTask;
+        if (hasEditedListIdOrSectionId) {
+          updatedRecurringTask = state.updatedTask.copyWith(
+            id: task.id,
+            date: Nullable(task.date),
+            datetime: Nullable(task.datetime),
+            status: Nullable(task.status),
+            createdAt: (task.createdAt),
+            trashedAt: (task.trashedAt),
+            globalCreatedAt: (task.globalCreatedAt),
+            globalUpdatedAt: (task.globalUpdatedAt),
+            readAt: (task.readAt),
+            listIdUpdatedAt: now,
+          );
+        } else {
+          updatedRecurringTask = state.updatedTask.copyWith(
+            id: task.id,
+            date: Nullable(task.date),
+            datetime: Nullable(task.datetime),
+            status: Nullable(task.status),
+            createdAt: (task.createdAt),
+            trashedAt: (task.trashedAt),
+            globalCreatedAt: (task.globalCreatedAt),
+            globalUpdatedAt: (task.globalUpdatedAt),
+            readAt: (task.readAt),
+            updatedAt: Nullable(now),
+          );
+        }
         updatedRecurringTasks.add(updatedRecurringTask);
       }
 

@@ -493,8 +493,13 @@ extension TaskExt on Task {
     }
   }
 
-  static bool hasRecurringDataChanges({required Task original, required Task updated}) {
-    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
+  static bool hasRecurringDataChanges({
+    required Task original,
+    required Task updated,
+    bool includeListIdAndSectionId = true,
+  }) {
+    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(
+        original: original, updated: updated, includeListIdAndSectionId: includeListIdAndSectionId);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
     bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
     bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
@@ -506,8 +511,13 @@ extension TaskExt on Task {
         (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete);
   }
 
-  static bool hasDataChanges({required Task original, required Task updated}) {
-    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
+  static bool hasDataChanges({
+    required Task original,
+    required Task updated,
+    bool includeListIdAndSectionId = true,
+  }) {
+    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(
+        original: original, updated: updated, includeListIdAndSectionId: includeListIdAndSectionId);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
     bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
     bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
@@ -515,15 +525,15 @@ extension TaskExt on Task {
     return askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete;
   }
 
-  static bool hasEditedData({required Task original, required Task updated}) {
+  static bool hasEditedData({required Task original, required Task updated, bool includeListIdAndSectionId = true}) {
     return original.title != updated.title ||
         original.priority != updated.priority ||
         original.dailyGoal != (updated.dailyGoal != null ? updated.dailyGoal!.toInt() : null) ||
         (original.eventLockInCalendar != updated.eventLockInCalendar) ||
         original.duration != updated.duration ||
         original.description != updated.description ||
-        original.listId != updated.listId ||
-        original.sectionId != updated.sectionId ||
+        (original.listId != updated.listId && includeListIdAndSectionId) ||
+        (original.sectionId != updated.sectionId && includeListIdAndSectionId) ||
         original.dueDate != updated.dueDate ||
         ((original.links ?? []).length != (updated.links ?? []).length ||
             (original.links ?? []).any((element) => !(updated.links ?? []).contains(element)));
@@ -778,7 +788,17 @@ extension TaskExt on Task {
       return;
     }
 
-    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
+    bool hasEditedListIdOrSectionId = false;
+
+    if (hasEditedListId(original: original, updated: updated) ||
+        hasEditedSectionId(original: original, updated: updated)) {
+      print("hasEditedListId || hasEditedSectionId");
+      hasEditedListIdOrSectionId = true;
+      editTaskCubit.onListIdOrSectionIdChanges(original: original, updated: updated);
+    }
+
+    if (TaskExt.hasRecurringDataChanges(
+        original: original, updated: updated, includeListIdAndSectionId: !hasEditedListIdOrSectionId)) {
       showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => RecurringEditModal(
@@ -786,7 +806,8 @@ extension TaskExt on Task {
                   editTaskCubit.modalDismissed();
                 },
                 allTap: () {
-                  editTaskCubit.modalDismissed(updateAllFuture: true);
+                  editTaskCubit.modalDismissed(
+                      updateAllFuture: true, hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
                 },
               ));
     } else {
@@ -795,12 +816,6 @@ extension TaskExt on Task {
 
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
-    }
-
-    if (hasEditedListId(original: original, updated: updated) ||
-        hasEditedSectionId(original: original, updated: updated)) {
-      print("hasEditedListId || hasEditedSectionId");
-      editTaskCubit.onListIdOrSectionIdChanges(original: original);
     }
   }
 

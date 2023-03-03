@@ -201,15 +201,21 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     const deletedAtGreaterThanRemoteUpdatedAt = 'deleted_at > remote_updated_at';
     const updatedAtGreaterThanRemoteUpdatedAt = 'updated_at > remote_updated_at';
     const trashedAtGreaterThanRemoteUpdatedAt = 'trashed_at > remote_updated_at';
+
+    List<String> conditionsListId = [
+      'global_list_id_updated_at IS NULL',
+      'deleted_at > global_list_id_updated_at',
+      "updated_at > global_list_id_updated_at",
+      "trashed_at > global_list_id_updated_at"
+    ];
+    String joinedConditionsListId = conditionsListId.join(' OR ');
     List<Map<String, Object?>> items = [];
     try {
       await _databaseService.database!.transaction((txn) async {
         if (tableName == "tasks") {
-          items = await txn.query(
-            tableName,
-            where:
-                '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $trashedAtGreaterThanRemoteUpdatedAt',
-          );
+          items = await txn.query(tableName,
+              where:
+                  '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $trashedAtGreaterThanRemoteUpdatedAt OR $joinedConditionsListId');
         } else {
           items = await txn.query(
             tableName,
