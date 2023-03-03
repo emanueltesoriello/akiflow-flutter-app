@@ -473,7 +473,7 @@ class _EventModalState extends State<EventModal> {
                     children: [
                       if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.only(left: 16, right: 16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -546,18 +546,24 @@ class _EventModalState extends State<EventModal> {
                                         });
                                       }
                                     },
-                                    child: Text(
-                                      t.event.yes,
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 40,
+                                      child: Center(
+                                        child: Text(
+                                          t.event.yes,
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: selectedEvent.isLoggedUserAttndingEvent ==
+                                                      AtendeeResponseStatus.accepted
                                                   ? ColorsExt.green(context)
                                                   : ColorsExt.grey3(context)),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(width: 32.0),
+                                  const SizedBox(width: 28.0),
                                   InkWell(
                                     onTap: () async {
                                       if (selectedEvent.recurringId != null) {
@@ -616,18 +622,24 @@ class _EventModalState extends State<EventModal> {
                                         });
                                       }
                                     },
-                                    child: Text(
-                                      t.event.no,
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 40,
+                                      child: Center(
+                                        child: Text(
+                                          t.event.no,
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: selectedEvent.isLoggedUserAttndingEvent ==
+                                                      AtendeeResponseStatus.declined
                                                   ? ColorsExt.red(context)
                                                   : ColorsExt.grey3(context)),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(width: 32.0),
+                                  const SizedBox(width: 28.0),
                                   InkWell(
                                     onTap: () async {
                                       if (selectedEvent.recurringId != null) {
@@ -690,15 +702,20 @@ class _EventModalState extends State<EventModal> {
                                         });
                                       }
                                     },
-                                    child: Text(
-                                      t.event.maybe,
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
+                                    child: SizedBox(
+                                      height: 50,
+                                      child: Center(
+                                        child: Text(
+                                          t.event.maybe,
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: selectedEvent.isLoggedUserAttndingEvent ==
+                                                      AtendeeResponseStatus.tentative
                                                   ? ColorsExt.grey2(context)
                                                   : ColorsExt.grey3(context)),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
