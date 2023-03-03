@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
@@ -9,11 +10,13 @@ class EventAppointment extends StatelessWidget {
     Key? key,
     required this.event,
     required this.calendarAppointmentDetails,
+    required this.calendarController,
     required this.appointment,
     required this.context,
   }) : super(key: key);
 
   final CalendarAppointmentDetails calendarAppointmentDetails;
+  final CalendarController calendarController;
   final Appointment appointment;
   final Event event;
   final BuildContext context;
@@ -58,6 +61,18 @@ class EventAppointment extends StatelessWidget {
                     decoration: responseStatus == AtendeeResponseStatus.declined ? TextDecoration.lineThrough : null,
                   ),
                 ),
+                if (calendarController.view == CalendarView.schedule &&
+                    event.startTime != null &&
+                    event.endTime != null)
+                  Text(
+                    '${DateFormat("HH:mm").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(event.endTime!).toLocal())}',
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey3(context),
+                    ),
+                  ),
               ],
             ),
           ),
