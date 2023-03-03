@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 309 
+ * Strings: 311 
  *
- * Built on 2023-03-02 at 07:57 UTC
+ * Built on 2023-03-03 at 16:40 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -323,6 +323,7 @@ class _StringsEn {
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
 	late final _StringsEventEn event = _StringsEventEn._(_root);
 	late final _StringsAvailabilityEn availability = _StringsAvailabilityEn._(_root);
+	late final _StringsSnackbarEn snackbar = _StringsSnackbarEn._(_root);
 	String get confirm => 'Confirm';
 	String get cancel => 'Cancel';
 	String get noTitle => '(No title)';
@@ -659,6 +660,17 @@ class _StringsAvailabilityEn {
 	String get noActiveLinksToShow => 'No active links to show';
 	String get toCreateLinkUseDesktop => 'To create a link use the desktop app';
 	String get linkCopiedToClipboard => 'Link copied to clipboard!';
+}
+
+// Path: snackbar
+class _StringsSnackbarEn {
+	_StringsSnackbarEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get connectedSuccesfully => 'Connected successfully!';
+	String get cannotMoveThisEvent => 'You cannot move this event!';
 }
 
 // Path: integrations
@@ -1309,6 +1321,8 @@ extension on _StringsEn {
 			'availability.noActiveLinksToShow': 'No active links to show',
 			'availability.toCreateLinkUseDesktop': 'To create a link use the desktop app',
 			'availability.linkCopiedToClipboard': 'Link copied to clipboard!',
+			'snackbar.connectedSuccesfully': 'Connected successfully!',
+			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',

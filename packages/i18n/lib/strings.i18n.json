@@ -360,9 +360,9 @@
         "thisAndAllFuture": "This and all future events",
         "allEvents": "All events"
       },
-      "deleteModal":{
-        "title":"Are you sure you want to delete ${eventName}",
-        "description":"You can't undo this action!"
+      "deleteModal": {
+        "title": "Are you sure you want to delete ${eventName}",
+        "description": "You can't undo this action!"
       }
     }
   },
@@ -375,6 +375,10 @@
     "noActiveLinksToShow": "No active links to show",
     "toCreateLinkUseDesktop": "To create a link use the desktop app",
     "linkCopiedToClipboard": "Link copied to clipboard!"
+  },
+  "snackbar": {
+    "connectedSuccesfully": "Connected successfully!",
+    "cannotMoveThisEvent": "You cannot move this event!"
   },
   "confirm": "Confirm",
   "cancel": "Cancel",

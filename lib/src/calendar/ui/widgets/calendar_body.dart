@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
@@ -210,6 +212,12 @@ class CalendarBody extends StatelessWidget {
         editTaskCubit.changeDateTimeFromCalendar(date: droppingTime, dateTime: droppedTimeRounded);
       } else {
         tasksCubit.fetchCalendarTasks();
+      }
+    } else if (events.any((event) => event.id == appointment.id)) {
+      Event event = events.firstWhere((event) => event.id == appointment.id);
+      if (event.creatorId != event.originCalendarId) {
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
+            context: context, type: CustomSnackbarType.error, message: t.snackbar.cannotMoveThisEvent));
       }
     }
   }
