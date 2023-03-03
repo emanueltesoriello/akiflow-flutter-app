@@ -153,6 +153,7 @@ class _AssetsImagesIconsCommon {
   final lineHorizontal3SVG = 'assets/images/icons/_common/line_horizontal_3.svg';
   final lineHorizontal3DecreaseSVG = 'assets/images/icons/_common/line_horizontal_3_decrease.svg';
   final linkSVG = 'assets/images/icons/_common/link.svg';
+  final lockSVG = 'assets/images/icons/_common/lock.svg';
   final mapSVG = 'assets/images/icons/_common/map.svg';
   final menuSVG = 'assets/images/icons/_common/menu.svg';
   final moneyDollarCircleSVG = 'assets/images/icons/_common/money_dollar_circle.svg';

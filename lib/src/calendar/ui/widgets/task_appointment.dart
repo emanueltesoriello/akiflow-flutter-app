@@ -69,17 +69,18 @@ class TaskAppointment extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 2, bottom: 2),
-                child: Container(
-                  height: boxHeight - 4,
-                  width: 2,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                    color: ColorsExt.cyan(context),
+              if (task.calendarId != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2, bottom: 2),
+                  child: Container(
+                    height: boxHeight - 4,
+                    width: 2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      color: ColorsExt.cyan(context),
+                    ),
                   ),
                 ),
-              ),
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,9 +143,18 @@ class TaskAppointment extends StatelessWidget {
                           color: ColorsExt.grey3(context),
                         ),
                       ),
-                    if (appointment.label != null &&
+                    if (task.calendarId != null &&
                         (calendarController.view == CalendarView.day ||
                             calendarController.view == CalendarView.schedule))
+                      SizedBox(
+                        height: 14,
+                        width: 14,
+                        child: SvgPicture.asset(
+                          Assets.images.icons.common.lockSVG,
+                          color: ColorsExt.grey3(context),
+                        ),
+                      ),
+                    if (appointment.label != null && calendarController.view != CalendarView.month)
                       Padding(
                         padding: const EdgeInsets.only(left: 4),
                         child: Container(
