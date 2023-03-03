@@ -889,6 +889,10 @@ class _EventEditModalState extends State<EventEditModal> {
   InkWell _startTime(BuildContext context) {
     return InkWell(
       onTap: () {
+        Duration duration = const Duration(minutes: 30);
+        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
+          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
+        }
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EventEditTimeModal(
@@ -902,9 +906,8 @@ class _EventEditModalState extends State<EventEditModal> {
                   startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
                   endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
                   startTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
-                  endTime: datetime != null
-                      ? Nullable(datetime.toUtc().add(const Duration(minutes: 30)).toIso8601String())
-                      : Nullable(null),
+                  endTime:
+                      datetime != null ? Nullable(datetime.toUtc().add(duration).toIso8601String()) : Nullable(null),
                 );
               });
             },
