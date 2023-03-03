@@ -52,7 +52,12 @@ extension TaskStatusTypeExt on AtendeeResponseStatus {
 
 extension EventExt on Event {
   AtendeeResponseStatus get isLoggedUserAttndingEvent {
-    String? response = attendees?.firstWhere((atendee) => atendee.email == originCalendarId).responseStatus;
+    String? response;
+    try {
+      response = attendees?.firstWhere((atendee) => atendee.email == originCalendarId).responseStatus;
+    } catch (e) {
+      print(e);
+    }
 
     if (response != null) {
       return TaskStatusTypeExt.fromString(response);
