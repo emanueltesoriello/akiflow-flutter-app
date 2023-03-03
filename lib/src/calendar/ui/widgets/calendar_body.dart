@@ -104,7 +104,7 @@ class CalendarBody extends StatelessWidget {
               dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
             ),
             timeSlotViewSettings: TimeSlotViewSettings(
-              timeIntervalHeight: 56.0,
+              timeIntervalHeight: 60.0,
               minimumAppointmentDuration: const Duration(minutes: 15),
               timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
               numberOfDaysInView: isThreeDays ? 3 : -1,

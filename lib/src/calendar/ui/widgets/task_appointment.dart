@@ -33,6 +33,7 @@ class TaskAppointment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double boxHeight = calendarAppointmentDetails.bounds.height;
+    double boxWidth = calendarAppointmentDetails.bounds.width;
     String? duration;
     double hours = task.duration! / 3600;
     double minutes = (hours - hours.floor()) * 60;
@@ -47,7 +48,7 @@ class TaskAppointment extends StatelessWidget {
       opacity: task.done ?? false ? 0.6 : 1.0,
       child: Container(
         key: ObjectKey(appointment),
-        width: calendarAppointmentDetails.bounds.width,
+        width: boxWidth,
         height: boxHeight,
         decoration: BoxDecoration(
           color: ColorsExt.grey7(context),
@@ -85,8 +86,9 @@ class TaskAppointment extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    (calendarController.view == CalendarView.day || calendarController.view == CalendarView.schedule) &&
-                            boxHeight > 12
+                    boxHeight > 14 &&
+                            (calendarController.view == CalendarView.day ||
+                                calendarController.view == CalendarView.schedule)
                         ? GestureDetector(
                             onTap: () {
                               checkboxController?.completedClick();
@@ -119,7 +121,7 @@ class TaskAppointment extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
-                          height: 1.3,
+                          height: boxHeight < 15 ? 1.1 : 1.3,
                           fontSize: boxHeight < 12.0 ? 9.0 : 13.0,
                           fontWeight: FontWeight.w500,
                           color: ColorsExt.grey1(context),
@@ -133,17 +135,20 @@ class TaskAppointment extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 2, right: 2),
                 child: Row(
                   children: [
-                    if (calendarController.view == CalendarView.day || calendarController.view == CalendarView.schedule)
+                    if (boxWidth > 92 &&
+                        (calendarController.view == CalendarView.day ||
+                            calendarController.view == CalendarView.schedule))
                       Text(
                         duration,
                         style: TextStyle(
-                          height: 1.3,
+                          height: boxHeight < 15 ? 1.1 : 1.3,
                           fontSize: boxHeight < 12.0 ? 9.0 : 13.0,
                           fontWeight: FontWeight.w500,
                           color: ColorsExt.grey3(context),
                         ),
                       ),
                     if (task.calendarId != null &&
+                        boxWidth > 75 &&
                         (calendarController.view == CalendarView.day ||
                             calendarController.view == CalendarView.schedule))
                       SizedBox(
@@ -154,7 +159,7 @@ class TaskAppointment extends StatelessWidget {
                           color: ColorsExt.grey3(context),
                         ),
                       ),
-                    if (appointment.label != null && calendarController.view != CalendarView.month)
+                    if (appointment.label != null && calendarController.view != CalendarView.month && boxWidth > 25)
                       Padding(
                         padding: const EdgeInsets.only(left: 4),
                         child: Container(
