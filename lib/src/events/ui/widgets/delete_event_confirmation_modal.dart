@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -38,7 +39,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                     const SizedBox(width: 8.0),
                     Expanded(
                       child: Text(
-                        'Are you sure you want to delete $eventName',
+                        t.event.editEvent.deleteModal.title(eventName: eventName),
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                       ),
                     ),
@@ -47,7 +48,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                child: Text('You can\'t undo this action!',
+                child: Text(t.event.editEvent.deleteModal.description,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
               const SizedBox(height: 24),
@@ -64,7 +65,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
-                      "Delete",
+                      t.event.delete,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,

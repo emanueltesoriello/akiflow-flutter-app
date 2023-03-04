@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 307 
+ * Strings: 311 
  *
- * Built on 2023-02-28 at 11:42 UTC
+ * Built on 2023-03-03 at 16:40 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -323,6 +323,7 @@ class _StringsEn {
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
 	late final _StringsEventEn event = _StringsEventEn._(_root);
 	late final _StringsAvailabilityEn availability = _StringsAvailabilityEn._(_root);
+	late final _StringsSnackbarEn snackbar = _StringsSnackbarEn._(_root);
 	String get confirm => 'Confirm';
 	String get cancel => 'Cancel';
 	String get noTitle => '(No title)';
@@ -661,6 +662,17 @@ class _StringsAvailabilityEn {
 	String get linkCopiedToClipboard => 'Link copied to clipboard!';
 }
 
+// Path: snackbar
+class _StringsSnackbarEn {
+	_StringsSnackbarEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get connectedSuccesfully => 'Connected successfully!';
+	String get cannotMoveThisEvent => 'You cannot move this event!';
+}
+
 // Path: integrations
 class _StringsIntegrationsEn {
 	_StringsIntegrationsEn._(this._root);
@@ -888,6 +900,7 @@ class _StringsEventEditEventEn {
 	String get viewOnGoogleCalendar => 'View on Google Calendar';
 	String get saveChanges => 'Save Changes';
 	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
+	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
 }
 
 // Path: settings.integrations.gmail
@@ -947,6 +960,17 @@ class _StringsEventEditEventRepeatingEditModalEn {
 	String get onlyThis => 'Only this event';
 	String get thisAndAllFuture => 'This and all future events';
 	String get allEvents => 'All events';
+}
+
+// Path: event.editEvent.deleteModal
+class _StringsEventEditEventDeleteModalEn {
+	_StringsEventEditEventDeleteModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String title({required Object eventName}) => 'Are you sure you want to delete ${eventName}';
+	String get description => 'You can\'t undo this action!';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1287,6 +1311,8 @@ extension on _StringsEn {
 			'event.editEvent.repeatingEditModal.onlyThis': 'Only this event',
 			'event.editEvent.repeatingEditModal.thisAndAllFuture': 'This and all future events',
 			'event.editEvent.repeatingEditModal.allEvents': 'All events',
+			'event.editEvent.deleteModal.title': ({required Object eventName}) => 'Are you sure you want to delete ${eventName}',
+			'event.editEvent.deleteModal.description': 'You can\'t undo this action!',
 			'availability.availabilities': 'Availabilities',
 			'availability.activeRecurrentSlots': 'Active recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',
@@ -1295,6 +1321,8 @@ extension on _StringsEn {
 			'availability.noActiveLinksToShow': 'No active links to show',
 			'availability.toCreateLinkUseDesktop': 'To create a link use the desktop app',
 			'availability.linkCopiedToClipboard': 'Link copied to clipboard!',
+			'snackbar.connectedSuccesfully': 'Connected successfully!',
+			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',

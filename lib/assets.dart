@@ -153,6 +153,7 @@ class _AssetsImagesIconsCommon {
   final lineHorizontal3SVG = 'assets/images/icons/_common/line_horizontal_3.svg';
   final lineHorizontal3DecreaseSVG = 'assets/images/icons/_common/line_horizontal_3_decrease.svg';
   final linkSVG = 'assets/images/icons/_common/link.svg';
+  final lockSVG = 'assets/images/icons/_common/lock.svg';
   final mapSVG = 'assets/images/icons/_common/map.svg';
   final menuSVG = 'assets/images/icons/_common/menu.svg';
   final moneyDollarCircleSVG = 'assets/images/icons/_common/money_dollar_circle.svg';
@@ -193,6 +194,7 @@ class _AssetsImagesIconsCommon {
   final weekSVG = 'assets/images/icons/_common/week.svg';
   final wifiSlashSVG = 'assets/images/icons/_common/wifi_slash.svg';
   final xmarkSVG = 'assets/images/icons/_common/xmark.svg';
+  final xmarkCircleSVG = 'assets/images/icons/_common/xmark_circle.svg';
   final xmarkCircleFillSVG = 'assets/images/icons/_common/xmark_circle_fill.svg';
   final xmarkSquareSVG = 'assets/images/icons/_common/xmark_square.svg';
 }

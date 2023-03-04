@@ -28,7 +28,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 7,
+        version: 8,
         singleInstance: true,
         onCreate: (db, version) async {
           print('Creating database version $version');
@@ -50,6 +50,9 @@ class DatabaseService {
         onUpgrade: (db, oldVersion, newVersion) async {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
+          if (oldVersion < 8) {
+            batch.execute('ALTER TABLE tasks ADD COLUMN calendar_id VARCHAR(255)');
+          }
           if (oldVersion < 7) {
             _addListIdToTask(batch);
           }
@@ -374,6 +377,7 @@ CREATE TABLE IF NOT EXISTS tasks(
   `trashed_at` TEXT,
   `list_id_updated_at` TEXT,
   `remote_list_id_updated_at` TEXT,
+  `calendar_id` VARCHAR(255),
   `daily_goal` INTEGER,
   `origin` TEXT,
   `remote_updated_at` TEXT,

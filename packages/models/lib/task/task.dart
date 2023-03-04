@@ -44,6 +44,7 @@ class Task extends Equatable implements Base {
   final Nullable<String?>? originId;
   final Nullable<String?>? originAccountId;
   final String? akiflowAccountId;
+  final String? calendarId;
   final dynamic doc;
 
   const Task({
@@ -84,6 +85,7 @@ class Task extends Equatable implements Base {
     this.originId,
     this.originAccountId,
     this.akiflowAccountId,
+    this.calendarId,
     this.doc,
   });
 
@@ -125,6 +127,7 @@ class Task extends Equatable implements Base {
     Nullable<String?>? originId,
     Nullable<String?>? originAccountId,
     String? akiflowAccountId,
+    String? calendarId,
     dynamic doc,
   }) {
     return Task(
@@ -165,6 +168,7 @@ class Task extends Equatable implements Base {
       originId: originId ?? this.originId,
       originAccountId: originAccountId ?? this.originAccountId,
       akiflowAccountId: akiflowAccountId ?? this.akiflowAccountId,
+      calendarId: calendarId ?? this.calendarId,
       doc: doc ?? this.doc,
     );
   }
@@ -209,6 +213,7 @@ class Task extends Equatable implements Base {
       'origin_id': originId?.value,
       'origin_account_id': originAccountId?.value,
       'akiflow_account_id': akiflowAccountId,
+      'calendar_id': calendarId,
       'doc': doc,
     };
   }
@@ -252,6 +257,7 @@ class Task extends Equatable implements Base {
       originId: map['origin_id'] != null ? Nullable(map['origin_id'] as String?) : null,
       originAccountId: map['origin_account_id'] != null ? Nullable(map['origin_account_id'] as String?) : null,
       akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
+      calendarId: map['calendar_id'] != null ? map['calendar_id'] as String? : null,
       doc: map['doc'] != null ? map['doc'] as dynamic : null,
       trashedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
     );
@@ -293,6 +299,7 @@ class Task extends Equatable implements Base {
       "origin_id": originId?.value,
       "origin_account_id": originAccountId?.value,
       "akiflow_account_id": akiflowAccountId,
+      "calendar_id": calendarId,
       "doc": doc != null ? jsonEncode(doc) : null,
     };
   }
@@ -395,6 +402,7 @@ class Task extends Equatable implements Base {
       originId,
       originAccountId,
       akiflowAccountId,
+      calendarId,
       doc,
     ];
   }
