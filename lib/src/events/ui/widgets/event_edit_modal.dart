@@ -137,6 +137,11 @@ class _EventEditModalState extends State<EventEditModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.squareFillSVG,
+                                    color: updatedEvent.color != null
+                                        ? ColorsExt.fromHex(updatedEvent.color!)
+                                        : updatedEvent.calendarColor != null
+                                            ? ColorsExt.fromHex(updatedEvent.calendarColor!)
+                                            : null,
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
@@ -309,12 +314,19 @@ class _EventEditModalState extends State<EventEditModal> {
                                       Row(
                                         children: [
                                           if (!addingMeeting)
-                                            Text(
-                                              t.event.join.toUpperCase(),
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: ColorsExt.akiflow(context)),
+                                            InkWell(
+                                              onTap: () {
+                                                if (updatedEvent.meetingUrl != null) {
+                                                  updatedEvent.openUrl(updatedEvent.meetingUrl);
+                                                }
+                                              },
+                                              child: Text(
+                                                t.event.join.toUpperCase(),
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: ColorsExt.akiflow(context)),
+                                              ),
                                             ),
                                           const SizedBox(width: 24),
                                           InkWell(
@@ -452,16 +464,17 @@ class _EventEditModalState extends State<EventEditModal> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.envelopeSVG,
-                                    color: updatedEvent.attendees != null
-                                        ? ColorsExt.grey2(context)
-                                        : ColorsExt.grey3(context),
+                                if (updatedEvent.attendees != null)
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(
+                                      Assets.images.icons.common.envelopeSVG,
+                                      color: updatedEvent.attendees != null
+                                          ? ColorsExt.grey2(context)
+                                          : ColorsExt.grey3(context),
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
@@ -642,34 +655,43 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           ),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: SvgPicture.asset(
-                                        Assets.images.icons.google.calendarSVG,
+                          InkWell(
+                            onTap: () {
+                              if (updatedEvent.url != null) {
+                                updatedEvent.openUrl(updatedEvent.url);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 22,
+                                        height: 22,
+                                        child: SvgPicture.asset(
+                                          Assets.images.icons.google.calendarSVG,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 16.0),
-                                    Text(
-                                      'View on Google Calendar',
-                                      style: TextStyle(
-                                          fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                    ),
-                                  ],
-                                ),
-                                SvgPicture.asset(
-                                  Assets.images.icons.common.arrowUpRightSquareSVG,
-                                  width: 20,
-                                  height: 20,
-                                ),
-                              ],
+                                      const SizedBox(width: 16.0),
+                                      Text(
+                                        'View on Google Calendar',
+                                        style: TextStyle(
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.w400,
+                                            color: ColorsExt.grey2(context)),
+                                      ),
+                                    ],
+                                  ),
+                                  SvgPicture.asset(
+                                    Assets.images.icons.common.arrowUpRightSquareSVG,
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -744,28 +766,28 @@ class _EventEditModalState extends State<EventEditModal> {
                                           },
                                           thisAndFutureTap: () {
                                             Navigator.of(context).pop();
-                                            context.read<EventsCubit>().updateThisAndFuture(
-                                                tappedDate: widget.tappedDate,
-                                                newParentStartTime: widget.originalStartTime,
-                                                selectedEvent: updatedEvent);
+                                            if (widget.event.startTime == widget.originalStartTime) {
+                                              _allTap(
+                                                  context: context,
+                                                  updatedEvent: updatedEvent,
+                                                  atendeesToAdd: atendeesToAdd,
+                                                  atendeesToRemove: atendeesToRemove,
+                                                  addingMeeting: addingMeeting,
+                                                  removingMeeting: removingMeeting);
+                                            } else {
+                                              context.read<EventsCubit>().updateThisAndFuture(
+                                                  tappedDate: widget.tappedDate, selectedEvent: updatedEvent);
+                                            }
                                           },
                                           allTap: () {
                                             Navigator.of(context).pop();
-                                            if (updatedEvent.recurringId == updatedEvent.id) {
-                                              context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                                  event: updatedEvent,
-                                                  atendeesToAdd: atendeesToAdd,
-                                                  atendeesToRemove: atendeesToRemove,
-                                                  addMeeting: addingMeeting,
-                                                  removeMeeting: removingMeeting);
-                                            } else {
-                                              context.read<EventsCubit>().updateParentAndExceptions(
-                                                  exceptionEvent: updatedEvent,
-                                                  atendeesToAdd: atendeesToAdd,
-                                                  atendeesToRemove: atendeesToRemove,
-                                                  addMeeting: addingMeeting,
-                                                  removeMeeting: removingMeeting);
-                                            }
+                                            _allTap(
+                                                context: context,
+                                                updatedEvent: updatedEvent,
+                                                atendeesToAdd: atendeesToAdd,
+                                                atendeesToRemove: atendeesToRemove,
+                                                addingMeeting: addingMeeting,
+                                                removingMeeting: removingMeeting);
                                           },
                                         ));
                               } else {
@@ -791,6 +813,39 @@ class _EventEditModalState extends State<EventEditModal> {
         );
       },
     );
+  }
+
+  _allTap(
+      {required BuildContext context,
+      required Event updatedEvent,
+      required List<String> atendeesToAdd,
+      required List<String> atendeesToRemove,
+      required bool addingMeeting,
+      required bool removingMeeting}) {
+    if (updatedEvent.recurringId == updatedEvent.id) {
+      if (timeChanged &&
+          widget.event.startTime != null &&
+          widget.event.endTime != null &&
+          updatedEvent.startTime != null &&
+          updatedEvent.endTime != null) {
+        updatedEvent = updatedEvent.copyWith(
+            startTime: Nullable(widget.event.computeStartTimeForParent(updatedEvent)),
+            endTime: Nullable(widget.event.computeEndTimeForParent(updatedEvent)));
+      }
+      context.read<EventsCubit>().updateEventAndCreateModifiers(
+          event: updatedEvent,
+          atendeesToAdd: atendeesToAdd,
+          atendeesToRemove: atendeesToRemove,
+          addMeeting: addingMeeting,
+          removeMeeting: removingMeeting);
+    } else {
+      context.read<EventsCubit>().updateParentAndExceptions(
+          exceptionEvent: updatedEvent,
+          atendeesToAdd: atendeesToAdd,
+          atendeesToRemove: atendeesToRemove,
+          addMeeting: addingMeeting,
+          removeMeeting: removingMeeting);
+    }
   }
 
   InkWell _startDate(BuildContext context) {
@@ -834,6 +889,10 @@ class _EventEditModalState extends State<EventEditModal> {
   InkWell _startTime(BuildContext context) {
     return InkWell(
       onTap: () {
+        Duration duration = const Duration(minutes: 30);
+        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
+          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
+        }
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EventEditTimeModal(
@@ -847,9 +906,8 @@ class _EventEditModalState extends State<EventEditModal> {
                   startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
                   endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
                   startTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
-                  endTime: datetime != null
-                      ? Nullable(datetime.toUtc().add(const Duration(minutes: 30)).toIso8601String())
-                      : Nullable(null),
+                  endTime:
+                      datetime != null ? Nullable(datetime.toUtc().add(duration).toIso8601String()) : Nullable(null),
                 );
               });
             },

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
@@ -104,15 +106,30 @@ class CalendarBody extends StatelessWidget {
               dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
             ),
             timeSlotViewSettings: TimeSlotViewSettings(
-              timeIntervalHeight: 56.0,
+              timeIntervalHeight: 60.0,
               minimumAppointmentDuration: const Duration(minutes: 15),
               timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
             ),
             scheduleViewSettings: ScheduleViewSettings(
+                appointmentItemHeight: 48,
                 hideEmptyScheduleWeek: true,
-                monthHeaderSettings: MonthHeaderSettings(height: 80, backgroundColor: ColorsExt.akiflow(context))),
+                dayHeaderSettings: DayHeaderSettings(
+                  dayTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey2(context)),
+                  dateTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
+                ),
+                weekHeaderSettings: WeekHeaderSettings(
+                  startDateFormat: 'dd',
+                  endDateFormat: 'dd MMM',
+                  weekTextStyle:
+                      TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ColorsExt.grey2_5(context)),
+                ),
+                monthHeaderSettings: MonthHeaderSettings(
+                  height: 66,
+                  backgroundColor: ColorsExt.grey7(context),
+                  monthTextStyle: TextStyle(fontSize: 20, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                )),
             monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
             onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit),
             appointmentBuilder: (context, calendarAppointmentDetails) =>
@@ -143,6 +160,7 @@ class CalendarBody extends StatelessWidget {
       Event event = events.where((event) => event.id == appointment.id).first;
       return EventAppointment(
           calendarAppointmentDetails: calendarAppointmentDetails,
+          calendarController: calendarController,
           appointment: appointment,
           event: event,
           context: context);
@@ -194,6 +212,12 @@ class CalendarBody extends StatelessWidget {
         editTaskCubit.changeDateTimeFromCalendar(date: droppingTime, dateTime: droppedTimeRounded);
       } else {
         tasksCubit.fetchCalendarTasks();
+      }
+    } else if (events.any((event) => event.id == appointment.id)) {
+      Event event = events.firstWhere((event) => event.id == appointment.id);
+      if (event.creatorId != event.originCalendarId) {
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
+            context: context, type: CustomSnackbarType.error, message: t.snackbar.cannotMoveThisEvent));
       }
     }
   }

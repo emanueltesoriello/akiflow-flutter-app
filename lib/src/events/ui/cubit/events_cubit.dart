@@ -40,6 +40,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
   Future<void> fetchSearchedContacts(String query) async {
     List<Contact> searchedContacts = await _contactsRepository.getSearchedContacts(query);
+    if (searchedContacts.isEmpty) {
+      searchedContacts.add(Contact(name: query, identifier: query));
+    }
     emit(state.copyWith(searchedContacts: searchedContacts));
   }
 
@@ -123,18 +126,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required bool removeMeeting,
   }) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
-      EventModifier eventModifier = EventModifier(
-          id: const Uuid().v4(),
-          akiflowAccountId: event.akiflowAccountId,
-          eventId: event.id,
-          calendarId: event.calendarId,
-          action: 'attendees/updateList',
-          content: {
-            "attendeeEmailsToAdd": atendeesToAdd,
-            "attendeeEmailsToRemove": atendeesToRemove,
-          },
-          createdAt: DateTime.now().toUtc().toIso8601String());
-      await _eventModifiersRepository.add([eventModifier]);
+      await _eventModifiersRepository.add([
+        updateAtendeesEventModifier(event: event, atendeesToAdd: atendeesToAdd, atendeesToRemove: atendeesToRemove)
+      ]);
     }
     if (addMeeting || (event.meetingUrl == null && atendeesToAdd.isNotEmpty)) {
       await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
@@ -205,6 +199,40 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting);
+  }
+
+  EventModifier updateAtendeesEventModifier({
+    required Event event,
+    required List<String> atendeesToAdd,
+    required List<String> atendeesToRemove,
+  }) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: event.id,
+        calendarId: event.calendarId,
+        action: 'attendees/updateList',
+        content: {
+          "attendeeEmailsToAdd": atendeesToAdd,
+          "attendeeEmailsToRemove": atendeesToRemove,
+        },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
+  }
+
+  EventModifier newParentMeetingEventModifier(Event newParent) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: newParent.akiflowAccountId,
+        eventId: newParent.id,
+        calendarId: newParent.calendarId,
+        action: 'meeting/add',
+        content: {
+          "meetingSolution": newParent.meetingSolution,
+          "conferenceData": newParent.content["conferenceData"],
+        },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
   }
 
   EventModifier addMeetingEventModifier(Event event) {
@@ -412,7 +440,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     );
 
     if (deleteEvent) {
-      recurringException = prepareEventToDelete(recurringException);
+      recurringException = prepareEventToDelete(recurringException).copyWith(updatedAt: Nullable(now), deletedAt: now);
     }
 
     await _eventsRepository.add([recurringException]);
@@ -429,10 +457,18 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
   }
 
-  Future<void> updateThisAndFuture(
-      {required DateTime tappedDate, required String? newParentStartTime, required Event selectedEvent}) async {
+  Future<void> updateThisAndFuture({required DateTime tappedDate, required Event selectedEvent}) async {
     var id = const Uuid().v4();
     String now = DateTime.now().toUtc().toIso8601String();
+
+    DateTime? eventStartTime =
+        selectedEvent.startTime != null ? DateTime.parse(selectedEvent.startTime!).toLocal() : null;
+    String? originalStartTime = eventStartTime != null
+        ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
+                eventStartTime.second, eventStartTime.millisecond)
+            .toUtc()
+            .toIso8601String()
+        : null;
 
     DateTime? eventEndTime = selectedEvent.endTime != null ? DateTime.parse(selectedEvent.endTime!).toLocal() : null;
     String? originalEndTime = eventEndTime != null
@@ -445,7 +481,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     Event newParent = selectedEvent.copyWith(
       id: id,
       recurringId: id,
-      startTime: Nullable(newParentStartTime),
+      startTime: Nullable(originalStartTime),
       endTime: Nullable(originalEndTime),
       originId: Nullable(null),
       customOriginId: Nullable(null),
@@ -454,6 +490,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
       updatedAt: Nullable(now),
     );
     await _eventsRepository.add([newParent]);
+
+    if (newParent.attendees != null) {
+      List<String> atendeesToAdd = newParent.attendees!.map((atendee) => atendee.email!).toList();
+      await _eventModifiersRepository
+          .add([updateAtendeesEventModifier(event: newParent, atendeesToAdd: atendeesToAdd, atendeesToRemove: [])]);
+    }
+    if (newParent.meetingUrl != null && newParent.meetingSolution != null) {
+      _eventModifiersRepository.add([newParentMeetingEventModifier(newParent)]);
+    }
 
     endParentAtSelectedEvent(tappedDate: tappedDate, selectedEvent: selectedEvent);
   }
@@ -482,21 +527,29 @@ class EventsCubit extends Cubit<EventsCubitState> {
         updatedAt: Nullable(now));
 
     await _eventsRepository.updateById(parentEvent.id, data: parentEvent);
-    deleteExceptionsByRecurringId(parentEvent.recurringId!);
-    await _syncCubit.sync(entities: [Entity.events]);
+    deleteExceptionsByRecurringId(parentEvent.recurringId!, startingFrom: tappedDate.add(const Duration(days: 1)));
+    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
   }
 
-  Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false}) async {
+  Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false, DateTime? startingFrom}) async {
     List<Event> exceptions = await _eventsRepository.getExceptionsByRecurringId(recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
-    for (var exception in exceptions) {
-      exception = prepareEventToDelete(exception).copyWith(
-        updatedAt: Nullable(now),
-        deletedAt: now,
-      );
-      await _eventsRepository.updateById(exception.id, data: exception);
+    if (exceptions.isNotEmpty) {
+      if (startingFrom != null) {
+        exceptions = exceptions
+            .where((exception) => DateTime.parse(exception.startTime ?? exception.startDate!).isAfter(startingFrom))
+            .toList();
+      }
+      for (var exception in exceptions) {
+        exception = prepareEventToDelete(exception).copyWith(
+          updatedAt: Nullable(now),
+          deletedAt: now,
+        );
+        await _eventsRepository.updateById(exception.id, data: exception);
+      }
     }
+
     if (sync) {
       await _syncCubit.sync(entities: [Entity.events]);
     }

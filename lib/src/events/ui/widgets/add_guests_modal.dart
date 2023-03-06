@@ -19,7 +19,6 @@ class AddGuestsModal extends StatefulWidget {
 
 class _AddGuestsModalState extends State<AddGuestsModal> {
   final FocusNode searchFocus = FocusNode();
-  final TextEditingController searchController = TextEditingController();
   Timer? debounce;
 
   @override
@@ -31,7 +30,6 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
 
   @override
   void dispose() {
-    searchController.dispose();
     searchFocus.dispose();
     super.dispose();
   }

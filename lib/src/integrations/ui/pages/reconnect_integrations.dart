@@ -68,7 +68,10 @@ class ReconnectIntegrations extends StatelessWidget {
 
                               if (accounts.every((account) => bloc.isLocalActive(account))) {
                                 Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(context));
+                                ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
+                                    context: context,
+                                    type: CustomSnackbarType.success,
+                                    message: t.snackbar.connectedSuccesfully));
                               }
                             });
                           },
