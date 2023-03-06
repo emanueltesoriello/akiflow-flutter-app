@@ -493,13 +493,8 @@ extension TaskExt on Task {
     }
   }
 
-  static bool hasRecurringDataChanges({
-    required Task original,
-    required Task updated,
-    bool includeListIdAndSectionId = true,
-  }) {
-    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(
-        original: original, updated: updated, includeListIdAndSectionId: includeListIdAndSectionId);
+  static bool hasRecurringDataChanges({required Task original, required Task updated}) {
+    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
     bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
     bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
@@ -796,14 +791,14 @@ extension TaskExt on Task {
       hasEditedListIdOrSectionId = true;
       editTaskCubit.onListIdOrSectionIdChanges(original: original, updated: updated);
     }
+    await Future.delayed(const Duration(seconds: 1));
 
-    if (TaskExt.hasRecurringDataChanges(
-        original: original, updated: updated, includeListIdAndSectionId: !hasEditedListIdOrSectionId)) {
-      showCupertinoModalBottomSheet(
+    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
+      await showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => RecurringEditModal(
                 onlyThisTap: () {
-                  editTaskCubit.modalDismissed();
+                  editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
                 },
                 allTap: () {
                   editTaskCubit.modalDismissed(

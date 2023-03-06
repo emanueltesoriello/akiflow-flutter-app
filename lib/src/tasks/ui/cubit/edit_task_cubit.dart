@@ -578,17 +578,19 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   onListIdOrSectionIdChanges({required Task original, required Task updated}) {
+    Task newUpdatedTask;
     if (TaskExt.hasDataChanges(original: original, updated: updated, includeListIdAndSectionId: false)) {
-      state.updatedTask.copyWith(
+      newUpdatedTask = state.updatedTask.copyWith(
         updatedAt: Nullable(original.updatedAt),
-        listIdUpdatedAt: DateTime.now().toUtc().toIso8601String(),
+        globalListIdUpdatedAt: Nullable(DateTime.now().toIso8601String()),
       );
     } else {
-      state.updatedTask.copyWith(
+      newUpdatedTask = state.updatedTask.copyWith(
         updatedAt: Nullable(original.updatedAt),
-        listIdUpdatedAt: DateTime.now().toUtc().toIso8601String(),
+        globalListIdUpdatedAt: Nullable(DateTime.now().toIso8601String()),
       );
     }
+    emit(state.copyWith(updatedTask: newUpdatedTask));
   }
 
   modalDismissed({bool updateAllFuture = false, bool hasEditedListIdOrSectionId = false}) async {
@@ -632,7 +634,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
             globalCreatedAt: (task.globalCreatedAt),
             globalUpdatedAt: (task.globalUpdatedAt),
             readAt: (task.readAt),
-            listIdUpdatedAt: now,
+            globalListIdUpdatedAt: Nullable(now),
           );
         } else {
           updatedRecurringTask = state.updatedTask.copyWith(

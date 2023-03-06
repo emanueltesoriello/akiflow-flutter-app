@@ -154,58 +154,64 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
     Nullable<String?>? remoteUpdatedAt = Nullable(remoteModel.globalUpdatedAt);
 
     remoteModel = remoteModel.copyWith(
-      updatedAt: remoteUpdatedAt,
-      createdAt: remoteModel.globalCreatedAt,
-      deletedAt: remoteModel.deletedAt,
-      remoteUpdatedAt: remoteUpdatedAt,
-    );
+        updatedAt: remoteUpdatedAt,
+        createdAt: remoteModel.globalCreatedAt,
+        deletedAt: remoteModel.deletedAt,
+        remoteUpdatedAt: remoteUpdatedAt);
 
     if (existingModelsById.containsKey(remoteModel.id)) {
-      int remoteListIdUpdatedAtAtMillis = 0;
+      int globalListIdUpdatedAtAtMillis = 0;
       int localListIdUpdatedAtAtMillis = 0;
 
       if (remoteModel.runtimeType == Task) {
-        if (remoteModel.remoteListIdUpdatedAt != null) {
-          remoteListIdUpdatedAtAtMillis = DateTime.parse(remoteModel.remoteListIdUpdatedAt).millisecondsSinceEpoch;
+        var remoteListIdUpdatedAt = remoteModel.globalListIdUpdatedAt;
+
+        remoteModel = remoteModel.copyWith(remoteListIdUpdatedAt: remoteListIdUpdatedAt);
+
+        if (remoteModel.globalListIdUpdatedAt != null) {
+          globalListIdUpdatedAtAtMillis = DateTime.parse(remoteModel.globalListIdUpdatedAt).millisecondsSinceEpoch;
         }
-        if (existingModelsById[remoteModel.id] != null && existingModelsById[remoteModel.id].listIdUpdatedAt != null) {
-          localListIdUpdatedAtAtMillis = existingModelsById[remoteModel.id]?.listIdUpdatedAt;
+        if (existingModelsById[remoteModel.id] != null &&
+            existingModelsById[remoteModel.id].globalListIdUpdatedAt != null) {
+          localListIdUpdatedAtAtMillis =
+              DateTime.parse(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt).millisecondsSinceEpoch;
         }
       }
 
       if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
-        //TODO if remoteModel.remoteListUpdatedAt< localListIdUpdatedAt {remoteModel.listId = localModel.listId}
         if (remoteModel.runtimeType == Task) {
-          if (remoteListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
-            remoteModel = remoteModel.copyWith(
-                listId: existingModelsById[remoteModel.id]?.listId,
-                sectionId: existingModelsById[remoteModel.id]?.sectionId);
+          if (globalListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
+            Nullable<String?>? globalListIdUpdatedAt =
+                Nullable(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt);
+            Nullable<String?>? listId = Nullable(existingModelsById[remoteModel.id]?.listId);
+            Nullable<String?>? sectionId = Nullable(existingModelsById[remoteModel.id]?.sectionId);
+
+            remoteModel = (remoteModel as Task).copyWith(
+                listId: listId,
+                sectionId: sectionId,
+                globalListIdUpdatedAt: globalListIdUpdatedAt,
+                remoteListIdUpdatedAt: existingModelsById[remoteModel.id]?.remoteListIdUpdatedAt);
           }
         }
 
         changedModels.add(remoteModel);
       } else {
-        //TODO if remoteModel.remoteListUpdatedAt > localListIdUpdatedAt {localModel.listId = remoteModel.listId} ==> add it into the changed Models;
         if (remoteModel.runtimeType == Task) {
-          if (remoteListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
-            existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id]
-                .copyWith(listId: remoteModel.listId, sectionId: remoteModel.sectionId);
-          }
-        }
+          if (globalListIdUpdatedAtAtMillis > localListIdUpdatedAtAtMillis) {
+            Nullable<String?>? globalListIdUpdatedAt = Nullable(remoteModel.globalListIdUpdatedAt);
+            existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id].copyWith(
+                listId: remoteModel.listId,
+                sectionId: remoteModel.sectionId,
+                globalListIdUpdatedAt: globalListIdUpdatedAt,
+                remoteListIdUpdatedAt: remoteModel.remoteListIdUpdatedAt);
 
-        /*if (remoteModel.runtimeType == Task) {
-          int remoteListIdUpdatedAtAtMillis = 0;
-          int localListIdUpdatedAtAtMillis = 0;
-
-          if (remoteModel.remoteListIdUpdatedAt != null &&
-              remoteModel.remoteListIdUpdatedAt > existingModelsById[remoteModel.id]?.listIdUpdatedAt) {
-            existingModelsById[remoteModel.id]?.listId = remoteModel.listId;
-            existingModelsById[remoteModel.id]?.sectionId = remoteModel.sectionId;
             changedModels.add(existingModelsById[remoteModel.id]);
+          } else {
+            unchangedModels.add(existingModelsById[remoteModel.id]);
           }
-        }*/
-
-        unchangedModels.add(remoteModel);
+        } else {
+          unchangedModels.add(remoteModel);
+        }
       }
     } else {
       nonExistingModels.add(remoteModel);
