@@ -794,17 +794,22 @@ extension TaskExt on Task {
     await Future.delayed(const Duration(seconds: 1));
 
     if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
-      await showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => RecurringEditModal(
-                onlyThisTap: () {
-                  editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
-                },
-                allTap: () {
-                  editTaskCubit.modalDismissed(
-                      updateAllFuture: true, hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
-                },
-              ));
+      try {
+        await showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => RecurringEditModal(
+                  onlyThisTap: () {
+                    editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+                  },
+                  allTap: () {
+                    editTaskCubit.modalDismissed(
+                        updateAllFuture: true, hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+                  },
+                ));
+      } catch (e) {
+        print(e);
+        editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+      }
     } else {
       editTaskCubit.modalDismissed();
     }
