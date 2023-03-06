@@ -135,7 +135,8 @@ class CalendarBody extends StatelessWidget {
             appointmentBuilder: (context, calendarAppointmentDetails) =>
                 appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
             allowDragAndDrop: true,
-            onDragEnd: (appointmentDragEndDetails) => dragEnd(appointmentDragEndDetails, context, calendarCubit),
+            onDragEnd: (appointmentDragEndDetails) =>
+                dragEnd(appointmentDragEndDetails, context, calendarCubit, eventsCubit),
           ),
         );
       });
@@ -146,24 +147,34 @@ class CalendarBody extends StatelessWidget {
       CheckboxAnimatedController? checkboxController) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
     if (appointment is CalendarTask) {
-      Task task = tasks.where((task) => task.id == appointment.id).first;
-      return TaskAppointment(
-          calendarController: calendarController,
-          appointment: appointment,
-          calendarAppointmentDetails: calendarAppointmentDetails,
-          checkboxController: checkboxController,
-          task: task,
-          context: context);
+      try {
+        Task task = tasks.where((task) => task.id == appointment.id).first;
+        return TaskAppointment(
+            calendarController: calendarController,
+            appointment: appointment,
+            calendarAppointmentDetails: calendarAppointmentDetails,
+            checkboxController: checkboxController,
+            task: task,
+            context: context);
+      } catch (e) {
+        print(e);
+      }
+      return const SizedBox();
     } else if (appointment.notes == 'deleted') {
       return const SizedBox();
     } else {
-      Event event = events.where((event) => event.id == appointment.id).first;
-      return EventAppointment(
-          calendarAppointmentDetails: calendarAppointmentDetails,
-          calendarController: calendarController,
-          appointment: appointment,
-          event: event,
-          context: context);
+      try {
+        Event event = events.where((event) => event.id == appointment.id).first;
+        return EventAppointment(
+            calendarAppointmentDetails: calendarAppointmentDetails,
+            calendarController: calendarController,
+            appointment: appointment,
+            event: event,
+            context: context);
+      } catch (e) {
+        print(e);
+      }
+      return const SizedBox();
     }
   }
 
@@ -190,11 +201,12 @@ class CalendarBody extends StatelessWidget {
           await eventsCubit.fetchUnprocessedEventModifiers();
           eventsCubit.saveToStatePatchedEvent(eventsCubit.patchEventWithEventModifier(event));
         },
-      );
+      ).then((value) => eventsCubit.refreshAllEvents(context));
     }
   }
 
-  void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context, CalendarCubit calendarCubit) {
+  void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context, CalendarCubit calendarCubit,
+      EventsCubit eventsCubit) {
     dynamic appointment = appointmentDragEndDetails.appointment!;
     DateTime droppingTime = appointmentDragEndDetails.droppingTime!;
     DateTime droppedTimeRounded = DateTime(droppingTime.year, droppingTime.month, droppingTime.day, droppingTime.hour,
@@ -216,8 +228,33 @@ class CalendarBody extends StatelessWidget {
     } else if (events.any((event) => event.id == appointment.id)) {
       Event event = events.firstWhere((event) => event.id == appointment.id);
       if (event.creatorId != event.originCalendarId) {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
-            context: context, type: CustomSnackbarType.error, message: t.snackbar.cannotMoveThisEvent));
+        _noPermissionToEditEvent(context, calendarCubit);
+      } else {
+        if (event.startTime != null &&
+            event.endTime != null &&
+            DateTime.parse(event.startTime!).difference(droppingTime.toUtc()).inMinutes.abs() > 4) {
+          if (event.recurringId != null) {
+            eventsCubit.showRecurrenceEditModal(context: context, event: event, droppedTimeRounded: droppedTimeRounded);
+          } else {
+            eventsCubit.updateEventFromCalendarDragAndDrop(event: event, droppedTimeRounded: droppedTimeRounded);
+          }
+        } else {
+          eventsCubit.refreshAllEvents(context);
+        }
+      }
+    } else if (events.any((event) => event.recurringId == appointment.recurrenceId)) {
+      Event parentEvent = events.firstWhere((event) => event.recurringId == appointment.recurrenceId);
+      if (parentEvent.creatorId != parentEvent.originCalendarId) {
+        _noPermissionToEditEvent(context, calendarCubit);
+      } else {
+        if (parentEvent.startTime != null &&
+            parentEvent.endTime != null &&
+            DateTime.parse(parentEvent.startTime!).difference(droppingTime.toUtc()).inMinutes.abs() > 4) {
+          eventsCubit.showRecurrenceEditModal(
+              context: context, event: parentEvent, droppedTimeRounded: droppedTimeRounded);
+        } else {
+          eventsCubit.refreshAllEvents(context);
+        }
       }
     }
   }
@@ -274,6 +311,13 @@ class CalendarBody extends StatelessWidget {
     ];
     return _AppointmentDataSource(all);
   }
+}
+
+_noPermissionToEditEvent(BuildContext context, CalendarCubit calendarCubit) {
+  ScaffoldMessenger.of(context).showSnackBar(
+      CustomSnackbar.get(context: context, type: CustomSnackbarType.error, message: t.snackbar.cannotMoveThisEvent));
+  EventsCubit eventsCubit = context.read<EventsCubit>();
+  eventsCubit.refreshAllEvents(context);
 }
 
 class _AppointmentDataSource extends CalendarDataSource {

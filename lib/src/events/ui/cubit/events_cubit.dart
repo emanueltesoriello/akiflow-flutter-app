@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/contacts_repository.dart';
 import 'package:mobile/core/repository/event_modifiers_repository.dart';
@@ -9,6 +11,9 @@ import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
+import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/contact/contact.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
@@ -33,9 +38,22 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await fetchUnprocessedEventModifiers();
   }
 
+  Future<void> fetchEvents() async {
+    try {
+      List<Event> events = await _eventsRepository.getEvents();
+      emit(state.copyWith(events: events));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> fetchEventsBetweenDates(String startDate, String endDate) async {
-    List<Event> events = await _eventsRepository.getEventsBetweenDates(startDate, endDate);
-    emit(state.copyWith(events: events));
+    try {
+      List<Event> events = await _eventsRepository.getEventsBetweenDates(startDate, endDate);
+      emit(state.copyWith(events: events));
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> fetchSearchedContacts(String query) async {
@@ -51,6 +69,19 @@ class EventsCubit extends Cubit<EventsCubitState> {
     emit(state.copyWith(
       events: state.events.map((event) => event.id == updatedEvent.id ? fetchedEvent : event).toList(),
     ));
+  }
+
+  Future<void> refreshAllEvents(BuildContext context) async {
+    CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    fetchEvents();
+    Future.delayed(
+      const Duration(milliseconds: 1500),
+      () {
+        fetchEventsBetweenDates(
+            calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)).toIso8601String(),
+            calendarCubit.state.visibleDates.last.add(const Duration(days: 1)).toIso8601String());
+      },
+    );
   }
 
   void saveToStatePatchedEvent(Event patchedEvent) {
@@ -592,6 +623,95 @@ class EventsCubit extends Cubit<EventsCubitState> {
       meetingStatus: Nullable(null),
       meetingUrl: Nullable(null),
       status: 'cancelled',
+    );
+  }
+
+  Future<void> showRecurrenceEditModal(
+      {required BuildContext context, required Event event, required DateTime droppedTimeRounded}) async {
+    DateTime? eventStartTime = event.startTime != null ? DateTime.parse(event.startTime!).toLocal() : null;
+    String? originalStartTime = eventStartTime != null
+        ? DateTime(droppedTimeRounded.year, droppedTimeRounded.month, droppedTimeRounded.day, eventStartTime.hour,
+                eventStartTime.minute, eventStartTime.second, eventStartTime.millisecond)
+            .toUtc()
+            .toIso8601String()
+        : null;
+
+    await showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => RecurrentEventEditModal(
+              onlyThisTap: () {
+                if (event.recurringId == event.id) {
+                  Duration duration = const Duration(minutes: 30);
+                  duration = DateTime.parse(event.endTime!).difference(DateTime.parse(event.startTime!));
+                  event = event.copyWith(
+                    startTime: Nullable(TzUtils.toUtcStringIfNotNull(droppedTimeRounded)),
+                    endTime: Nullable(TzUtils.toUtcStringIfNotNull(droppedTimeRounded.add(duration))),
+                    updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+                  );
+                  createEventException(
+                      tappedDate: droppedTimeRounded,
+                      dateChanged: false,
+                      originalStartTime: originalStartTime,
+                      timeChanged: true,
+                      parentEvent: event,
+                      atendeesToAdd: [],
+                      atendeesToRemove: [],
+                      addMeeting: false,
+                      removeMeeting: false,
+                      rsvpChanged: false);
+                } else {
+                  updateEventFromCalendarDragAndDrop(event: event, droppedTimeRounded: droppedTimeRounded);
+                }
+              },
+              thisAndFutureTap: () {
+                event = prepareEventForDragAndDrop(event, droppedTimeRounded);
+                if (event.startTime == originalStartTime) {
+                  updateEventAndCreateModifiers(
+                      event: event, atendeesToAdd: [], atendeesToRemove: [], addMeeting: false, removeMeeting: false);
+                } else {
+                  context.read<EventsCubit>().updateThisAndFuture(tappedDate: droppedTimeRounded, selectedEvent: event);
+                }
+              },
+              allTap: () {
+                event = prepareEventForDragAndDrop(event, droppedTimeRounded);
+                if (event.recurringId == event.id) {
+                  updateEventAndCreateModifiers(
+                      event: event, atendeesToAdd: [], atendeesToRemove: [], addMeeting: false, removeMeeting: false);
+                } else {
+                  updateParentAndExceptions(
+                      exceptionEvent: event,
+                      atendeesToAdd: [],
+                      atendeesToRemove: [],
+                      addMeeting: false,
+                      removeMeeting: false);
+                }
+              },
+            )).whenComplete(() => refreshAllEvents(context));
+  }
+
+  Future<void> updateEventFromCalendarDragAndDrop({required Event event, required DateTime droppedTimeRounded}) async {
+    Duration duration = const Duration(minutes: 30);
+    duration = DateTime.parse(event.endTime!).difference(DateTime.parse(event.startTime!));
+    event = event.copyWith(
+      startTime: Nullable(TzUtils.toUtcStringIfNotNull(droppedTimeRounded)),
+      endTime: Nullable(TzUtils.toUtcStringIfNotNull(droppedTimeRounded.add(duration))),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+    await _eventsRepository.updateById(event.id, data: event);
+    refetchEvent(event);
+    await _syncCubit.sync(entities: [Entity.events]);
+  }
+
+  Event prepareEventForDragAndDrop(Event event, DateTime droppedTimeRounded) {
+    Duration duration = const Duration(minutes: 30);
+    duration = DateTime.parse(event.endTime!).difference(DateTime.parse(event.startTime!));
+    DateTime eventStartTime = DateTime.parse(event.startTime!);
+    DateTime startTime = DateTime(eventStartTime.year, eventStartTime.month, eventStartTime.day,
+        droppedTimeRounded.hour, droppedTimeRounded.minute, droppedTimeRounded.second);
+    return event.copyWith(
+      startTime: Nullable(TzUtils.toUtcStringIfNotNull(startTime)),
+      endTime: Nullable(TzUtils.toUtcStringIfNotNull(startTime.add(duration))),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
   }
 }
