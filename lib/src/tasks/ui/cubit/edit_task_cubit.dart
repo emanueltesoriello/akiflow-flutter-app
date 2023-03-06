@@ -317,8 +317,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     emit(state.copyWith(updatedTask: updated));
 
-    // _tasksCubit.refreshTasksUi(updated);
-
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);
       _tasksCubit.refreshAllFromRepository();
