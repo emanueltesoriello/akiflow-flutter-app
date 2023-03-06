@@ -314,13 +314,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       sectionId: Nullable(null),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    if (state.openedLabelfromNLP) {
-      onLabelDetected(label, label.title!);
-    }
 
-    emit(state.copyWith(showLabelsList: false, updatedTask: updated, openedLabelfromNLP: false));
+    emit(state.copyWith(updatedTask: updated));
 
-    _tasksCubit.refreshTasksUi(updated);
+    // _tasksCubit.refreshTasksUi(updated);
 
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);
