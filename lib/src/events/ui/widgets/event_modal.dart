@@ -247,61 +247,68 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       ),
-                      const Separator(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      if (selectedEvent.meetingUrl != null)
+                        Column(
                           children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: SvgPicture.asset(
-                                    selectedEvent.meetingSolution == 'meet'
-                                        ? Assets.images.icons.google.meetSVG
-                                        : selectedEvent.meetingSolution == 'zoom'
-                                            ? Assets.images.icons.zoom.zoomSVG
-                                            : Assets.images.icons.common.videocamSVG,
+                            const Separator(),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 22,
+                                        height: 22,
+                                        child: SvgPicture.asset(
+                                          selectedEvent.meetingSolution == 'meet'
+                                              ? Assets.images.icons.google.meetSVG
+                                              : selectedEvent.meetingSolution == 'zoom'
+                                                  ? Assets.images.icons.zoom.zoomSVG
+                                                  : Assets.images.icons.common.videocamSVG,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16.0),
+                                      Text(
+                                        selectedEvent.meetingSolution == 'meet'
+                                            ? t.event.googleMeet
+                                            : selectedEvent.meetingSolution == 'zoom'
+                                                ? t.event.zoom
+                                                : 'Conference',
+                                        style: selectedEvent.meetingSolution == 'meet' ||
+                                                selectedEvent.meetingSolution == 'zoom'
+                                            ? TextStyle(
+                                                fontSize: 17.0,
+                                                fontWeight: FontWeight.w500,
+                                                color: ColorsExt.grey2(context))
+                                            : TextStyle(
+                                                fontSize: 17.0,
+                                                fontWeight: FontWeight.w400,
+                                                color: ColorsExt.grey3(context)),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Text(
-                                  selectedEvent.meetingSolution == 'meet'
-                                      ? t.event.googleMeet
-                                      : selectedEvent.meetingSolution == 'zoom'
-                                          ? t.event.zoom
-                                          : 'Conference',
-                                  style:
-                                      selectedEvent.meetingSolution == 'meet' || selectedEvent.meetingSolution == 'zoom'
-                                          ? TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w500,
-                                              color: ColorsExt.grey2(context))
-                                          : TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey3(context)),
-                                ),
-                              ],
-                            ),
-                            if (selectedEvent.meetingUrl != null && selectedEvent.meetingSolution != null)
-                              InkWell(
-                                onTap: () {
-                                  if (selectedEvent.meetingUrl != null) {
-                                    selectedEvent.openUrl(selectedEvent.meetingUrl);
-                                  }
-                                },
-                                child: Text(
-                                  t.event.join.toUpperCase(),
-                                  style: TextStyle(
-                                      fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
-                                ),
+                                  if (selectedEvent.meetingUrl != null && selectedEvent.meetingSolution != null)
+                                    InkWell(
+                                      onTap: () {
+                                        if (selectedEvent.meetingUrl != null) {
+                                          selectedEvent.openUrl(selectedEvent.meetingUrl);
+                                        }
+                                      },
+                                      child: Text(
+                                        t.event.join.toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.w500,
+                                            color: ColorsExt.akiflow(context)),
+                                      ),
+                                    ),
+                                ],
                               ),
+                            ),
                           ],
                         ),
-                      ),
                       const Separator(),
                       Padding(
                         padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
@@ -323,117 +330,115 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       ),
-                      const Separator(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.personCropCircleSVG,
-                                    color: selectedEvent.attendees != null
-                                        ? ColorsExt.grey2(context)
-                                        : ColorsExt.grey3(context),
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Text(
-                                  t.event.guests,
-                                  style: TextStyle(
-                                    fontSize: 17.0,
-                                    fontWeight: FontWeight.w400,
-                                    color: selectedEvent.attendees != null
-                                        ? ColorsExt.grey2(context)
-                                        : ColorsExt.grey3(context),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (selectedEvent.attendees != null)
-                              SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: SvgPicture.asset(
-                                  Assets.images.icons.common.envelopeSVG,
-                                  color: selectedEvent.attendees != null
-                                      ? ColorsExt.grey2(context)
-                                      : ColorsExt.grey3(context),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
                       if (selectedEvent.attendees != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: selectedEvent.attendees?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                                child: Row(
-                                  children: [
-                                    selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
-                                        ? SizedBox(
-                                            width: 19,
-                                            height: 19,
-                                            child: SvgPicture.asset(
-                                              Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                                              color: ColorsExt.green(context),
-                                            ),
-                                          )
-                                        : selectedEvent.attendees![index].responseStatus ==
-                                                AtendeeResponseStatus.declined.id
+                        Column(
+                          children: [
+                            const Separator(),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: SvgPicture.asset(
+                                          Assets.images.icons.common.personCropCircleSVG,
+                                          color: ColorsExt.grey2(context),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16.0),
+                                      Text(
+                                        t.event.guests,
+                                        style: TextStyle(
+                                          fontSize: 17.0,
+                                          fontWeight: FontWeight.w400,
+                                          color: ColorsExt.grey2(context),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(
+                                      Assets.images.icons.common.envelopeSVG,
+                                      color: ColorsExt.grey2(context),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const ClampingScrollPhysics(),
+                                itemCount: selectedEvent.attendees?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                    child: Row(
+                                      children: [
+                                        selectedEvent.attendees![index].responseStatus ==
+                                                AtendeeResponseStatus.accepted.id
                                             ? SizedBox(
                                                 width: 19,
                                                 height: 19,
                                                 child: SvgPicture.asset(
-                                                  Assets.images.icons.common.xmarkCircleFillSVG,
-                                                  color: ColorsExt.red(context),
+                                                  Assets.images.icons.common.checkmarkAltCircleFillSVG,
+                                                  color: ColorsExt.green(context),
                                                 ),
                                               )
-                                            : SizedBox(
-                                                width: 19,
-                                                height: 19,
-                                                child: SvgPicture.asset(
-                                                  Assets.images.icons.common.questionCircleFillSVG,
-                                                  color: ColorsExt.grey3(context),
-                                                ),
+                                            : selectedEvent.attendees![index].responseStatus ==
+                                                    AtendeeResponseStatus.declined.id
+                                                ? SizedBox(
+                                                    width: 19,
+                                                    height: 19,
+                                                    child: SvgPicture.asset(
+                                                      Assets.images.icons.common.xmarkCircleFillSVG,
+                                                      color: ColorsExt.red(context),
+                                                    ),
+                                                  )
+                                                : SizedBox(
+                                                    width: 19,
+                                                    height: 19,
+                                                    child: SvgPicture.asset(
+                                                      Assets.images.icons.common.questionCircleFillSVG,
+                                                      color: ColorsExt.grey3(context),
+                                                    ),
+                                                  ),
+                                        const SizedBox(width: 16.0),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              selectedEvent.attendees![index].email!.contains('group')
+                                                  ? '${selectedEvent.attendees![index].displayName}'
+                                                  : '${selectedEvent.attendees![index].email}',
+                                              style: TextStyle(
+                                                  fontSize: 17.0,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: ColorsExt.grey2(context)),
+                                            ),
+                                            if (selectedEvent.attendees![index].organizer ?? false)
+                                              Text(
+                                                ' - ${t.event.organizer}',
+                                                style: TextStyle(
+                                                    fontSize: 17.0,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: ColorsExt.grey3(context)),
                                               ),
-                                    const SizedBox(width: 16.0),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          selectedEvent.attendees![index].email!.contains('group')
-                                              ? '${selectedEvent.attendees![index].displayName}'
-                                              : '${selectedEvent.attendees![index].email}',
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey2(context)),
+                                          ],
                                         ),
-                                        if (selectedEvent.attendees![index].organizer ?? false)
-                                          Text(
-                                            ' - ${t.event.organizer}',
-                                            style: TextStyle(
-                                                fontSize: 17.0,
-                                                fontWeight: FontWeight.w400,
-                                                color: ColorsExt.grey3(context)),
-                                          ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       const Separator(),
                       Padding(
