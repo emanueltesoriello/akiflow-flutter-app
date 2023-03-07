@@ -136,10 +136,11 @@ class NotificationsService {
 
       if (changedTasks != null && changedTasks.isNotEmpty) {
         toBeRemoved.addAll(changedTasks
-            .where((task) => (task.done == true ||
-                ((task.deletedAt != null || task.trashedAt != null) && task.datetime != null ||
-                        task.status != TaskStatusType.planned.id) &&
-                    DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String()))))
+            .where((task) =>
+                task.datetime != null &&
+                (task.done == true ||
+                    ((task.deletedAt != null || task.trashedAt != null) || task.status != TaskStatusType.planned.id) &&
+                        DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String()))))
             .toList());
       }
 
