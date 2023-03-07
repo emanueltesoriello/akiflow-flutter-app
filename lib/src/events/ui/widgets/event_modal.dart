@@ -502,6 +502,7 @@ class _EventModalState extends State<EventModal> {
                                                     });
                                                     if (selectedEvent.id == selectedEvent.recurringId) {
                                                       context.read<EventsCubit>().createEventException(
+                                                          context: context,
                                                           tappedDate: widget.tappedDate!,
                                                           originalStartTime: originalStartTime,
                                                           dateChanged: false,
@@ -582,6 +583,7 @@ class _EventModalState extends State<EventModal> {
                                                     });
                                                     if (selectedEvent.id == selectedEvent.recurringId) {
                                                       context.read<EventsCubit>().createEventException(
+                                                          context: context,
                                                           tappedDate: widget.tappedDate!,
                                                           originalStartTime: originalStartTime,
                                                           dateChanged: false,
@@ -658,6 +660,7 @@ class _EventModalState extends State<EventModal> {
                                                     });
                                                     if (selectedEvent.id == selectedEvent.recurringId) {
                                                       context.read<EventsCubit>().createEventException(
+                                                          context: context,
                                                           tappedDate: widget.tappedDate!,
                                                           originalStartTime: originalStartTime,
                                                           dateChanged: false,
@@ -775,6 +778,7 @@ class _EventModalState extends State<EventModal> {
                                               Navigator.of(context).pop();
                                               if (selectedEvent.recurringId == selectedEvent.id) {
                                                 context.read<EventsCubit>().createEventException(
+                                                    context: context,
                                                     tappedDate: widget.tappedDate!,
                                                     originalStartTime: originalStartTime,
                                                     dateChanged: false,
@@ -787,7 +791,8 @@ class _EventModalState extends State<EventModal> {
                                                     rsvpChanged: false,
                                                     deleteEvent: true);
                                               } else {
-                                                context.read<EventsCubit>().deleteEvent(selectedEvent);
+                                                context.read<EventsCubit>().deleteEvent(selectedEvent).then(
+                                                    (value) => context.read<EventsCubit>().refreshAllEvents(context));
                                               }
                                             },
                                             thisAndFutureTap: () {
@@ -799,7 +804,9 @@ class _EventModalState extends State<EventModal> {
                                               Navigator.of(context).pop();
                                               context
                                                   .read<EventsCubit>()
-                                                  .deleteEvent(selectedEvent, deleteExceptions: true);
+                                                  .deleteEvent(selectedEvent, deleteExceptions: true)
+                                                  .then(
+                                                      (value) => context.read<EventsCubit>().refreshAllEvents(context));
                                             },
                                           ),
                                         );
@@ -810,7 +817,8 @@ class _EventModalState extends State<EventModal> {
                                             eventName: selectedEvent.title ?? '',
                                             onTapDelete: () {
                                               Navigator.of(context).pop();
-                                              context.read<EventsCubit>().deleteEvent(selectedEvent);
+                                              context.read<EventsCubit>().deleteEvent(selectedEvent).then(
+                                                  (value) => context.read<EventsCubit>().refreshAllEvents(context));
                                             },
                                           ),
                                         );

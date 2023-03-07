@@ -201,7 +201,7 @@ class CalendarBody extends StatelessWidget {
           await eventsCubit.fetchUnprocessedEventModifiers();
           eventsCubit.saveToStatePatchedEvent(eventsCubit.patchEventWithEventModifier(event));
         },
-      ).then((value) => eventsCubit.refreshAllEvents(context));
+      );
     }
   }
 
