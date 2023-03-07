@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/expandable_fab.dart';
+import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -26,6 +28,30 @@ class FloatingButton extends StatelessWidget {
         HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
         if (homeViewType == HomeViewType.availability) {
           return Container();
+        } else if (homeViewType == HomeViewType.calendar) {
+          GlobalKey<ExpandableFabState> fabKey = GlobalKey();
+          return ExpandableFab(
+            key: fabKey,
+            distance: 70.0,
+            children: [
+              FabActionButton(
+                icon: Assets.images.icons.common.checkDoneOutlineSVG,
+                title: 'Task',
+                onTap: () async {
+                  _onTapTask(context: context, homeViewType: homeViewType);
+                  fabKey.currentState!.toggle();
+                },
+              ),
+              FabActionButton(
+                icon: Assets.images.icons.common.daySVG,
+                title: 'Event',
+                onTap: () async {
+                  _onTapEvent(context);
+                  fabKey.currentState!.toggle();
+                },
+              ),
+            ],
+          );
         } else {
           return Padding(
             padding: EdgeInsets.only(
@@ -35,32 +61,7 @@ class FloatingButton extends StatelessWidget {
               height: 52,
               child: FloatingActionButton(
                 onPressed: () async {
-                  TaskStatusType taskStatusType;
-                  if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
-                    taskStatusType = TaskStatusType.inbox;
-                  } else {
-                    taskStatusType = TaskStatusType.planned;
-                  }
-                  DateTime date = context.read<TodayCubit>().state.selectedDate;
-
-                  Label? label = context.read<LabelsCubit>().state.selectedLabel;
-
-                  EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
-
-                  Task task = editTaskCubit.state.updatedTask.copyWith(
-                    status: Nullable(taskStatusType.id),
-                    date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
-                        ? Nullable(null)
-                        : Nullable(date.toIso8601String()),
-                    listId: Nullable(label?.id),
-                  );
-
-                  editTaskCubit.attachTask(task);
-
-                  showCupertinoModalBottomSheet(
-                    context: context,
-                    builder: (context) => const CreateTaskModal(),
-                  );
+                  _onTapTask(context: context, homeViewType: homeViewType);
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -75,5 +76,38 @@ class FloatingButton extends StatelessWidget {
         }
       },
     );
+  }
+
+  _onTapTask({required BuildContext context, required HomeViewType homeViewType}) {
+    TaskStatusType taskStatusType;
+    if (homeViewType == HomeViewType.inbox || homeViewType == HomeViewType.label) {
+      taskStatusType = TaskStatusType.inbox;
+    } else {
+      taskStatusType = TaskStatusType.planned;
+    }
+    DateTime date = context.read<TodayCubit>().state.selectedDate;
+
+    Label? label = context.read<LabelsCubit>().state.selectedLabel;
+
+    EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+
+    Task task = editTaskCubit.state.updatedTask.copyWith(
+      status: Nullable(taskStatusType.id),
+      date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
+          ? Nullable(null)
+          : Nullable(date.toIso8601String()),
+      listId: Nullable(label?.id),
+    );
+
+    editTaskCubit.attachTask(task);
+
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => const CreateTaskModal(),
+    );
+  }
+
+  _onTapEvent(BuildContext context) {
+    context.read<EventsCubit>().createEvent(context);
   }
 }
