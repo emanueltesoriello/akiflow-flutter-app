@@ -398,7 +398,6 @@ class _EventEditModalState extends State<EventEditModal> {
                                 const SizedBox(width: 16.0),
                                 Expanded(
                                   child: TextField(
-                                    readOnly: true,
                                     controller: locationController,
                                     decoration: InputDecoration(
                                       hintText: 'Add location',
@@ -738,10 +737,16 @@ class _EventEditModalState extends State<EventEditModal> {
                             containerColor: ColorsExt.green20(context),
                             iconColor: ColorsExt.green(context),
                             onTap: () async {
+                              dynamic content = updatedEvent.content;
+                              content['location'] = locationController.text;
+
                               updatedEvent = updatedEvent.copyWith(
                                   title: Nullable(titleController.text),
                                   description: Nullable(descriptionController.text),
+                                  content: content,
                                   updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+                              print(updatedEvent.content);
 
                               if (widget.createingEvent ?? false) {
                                 await context.read<EventsCubit>().addEventToDb(updatedEvent);

@@ -330,6 +330,35 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       ),
+                      if (selectedEvent.content?["location"] != null)
+                        Column(
+                          children: [
+                            const Separator(),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(Assets.images.icons.common.mapSVG,
+                                        color: ColorsExt.grey2(context)),
+                                  ),
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: Text(
+                                      '${selectedEvent.content?["location"]}',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       if (selectedEvent.attendees != null)
                         Column(
                           children: [
