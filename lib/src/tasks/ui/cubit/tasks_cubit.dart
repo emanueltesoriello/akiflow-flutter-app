@@ -58,22 +58,32 @@ class TasksCubit extends Cubit<TasksCubitState> {
   TodayCubit? _todayCubit;
 
   TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
+    init();
+  }
+
+  init() async {
     print("listen tasks sync");
 
     bool firstTimeLoaded = _preferencesRepository.firstTimeLoaded;
-    emit(state.copyWith(loading: firstTimeLoaded == false));
 
-    refreshAllFromRepository();
+    emit(state.copyWith(loading: firstTimeLoaded == false));
+    _syncCubit.emit(_syncCubit.state.copyWith(loading: firstTimeLoaded == false));
+
+    await refreshAllFromRepository();
 
     _syncCubit.syncCompletedStream.listen((_) async {
-      await refreshAllFromRepository();
+      User? user = _preferencesRepository.user;
 
-      if (firstTimeLoaded == false) {
-        _preferencesRepository.setFirstTimeLoaded(true);
-        emit(state.copyWith(loading: false));
+      if (user != null) {
+        await refreshAllFromRepository();
+
+        if (firstTimeLoaded == false) {
+          _preferencesRepository.setFirstTimeLoaded(true);
+          emit(state.copyWith(loading: false));
+        }
+
+        _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
       }
-
-      _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
     });
   }
 
