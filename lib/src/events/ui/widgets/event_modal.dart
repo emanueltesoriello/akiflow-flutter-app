@@ -867,7 +867,8 @@ class _EventModalState extends State<EventModal> {
         ),
         child: quill.QuillEditor(
           controller: value,
-          readOnly: false,
+          readOnly: true,
+          enableInteractiveSelection: false,
           scrollController: ScrollController(),
           scrollable: true,
           focusNode: descriptionFocusNode,
