@@ -39,6 +39,7 @@ class EventModal extends StatefulWidget {
 class _EventModalState extends State<EventModal> {
   late Event selectedEvent;
   late String? originalStartTime;
+  late String? location;
   late FocusNode descriptionFocusNode;
   late TextEditingController descriptionController;
   StreamSubscription? streamSubscription;
@@ -49,6 +50,7 @@ class _EventModalState extends State<EventModal> {
   void initState() {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
     selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
+    location = selectedEvent.content?["location"] ?? '';
 
     if (selectedEvent.attendees != null) {
       selectedEvent.attendees!.sort((a, b) => b.organizer ?? false ? 1 : -1);
@@ -330,7 +332,7 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       ),
-                      if (selectedEvent.content?["location"] != null)
+                      if (location != null && location!.isNotEmpty)
                         Column(
                           children: [
                             const Separator(),

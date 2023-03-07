@@ -743,7 +743,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
       akiflowAccountId: calendar.akiflowAccountId,
       originAccountId: calendar.originAccountId,
       calendarColor: calendar.color,
-      content: const {"transparency": "opaque", "visibility": "default", "location": null},
+      content: {"transparency": "opaque", "visibility": "default", "location": null},
       startDatetimeTz: currentTimeZone,
       startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
       endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(const Duration(minutes: 30))),

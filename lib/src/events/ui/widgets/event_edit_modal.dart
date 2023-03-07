@@ -390,7 +390,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.mapSVG,
-                                    color: updatedEvent.content?['location'] == null
+                                    color: locationController.text.isEmpty
                                         ? ColorsExt.grey3(context)
                                         : ColorsExt.grey2(context),
                                   ),
