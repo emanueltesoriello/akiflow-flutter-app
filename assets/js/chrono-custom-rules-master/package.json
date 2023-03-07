@@ -1,0 +1,17 @@
+{
+  "name": "@akiflow/chrono-custom-rules",
+  "version": "1.0.3",
+  "main": "dist/index.js",
+  "repository": "https://github.com/akiflow/chrono-custom-rules",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc src/index.ts --outDir dist --declaration"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "chrono-node": "^2.5.1"
+  }
+}

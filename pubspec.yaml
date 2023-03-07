@@ -54,10 +54,11 @@ dependencies:
   firebase_messaging: ^14.2.2
   firebase_core: ^2.5.0
   flutter_displaymode: ^0.5.0
-  platform_device_id: ^1.0.1
+  platform_device_id: ^1.0.1 
   google_mlkit_entity_extraction: ^0.6.0
   extended_text_field: ^10.2.0
   flutter_native_timezone: ^2.0.0
+  flutter_js: ^0.6.0
 
   
 dev_dependencies:
@@ -108,6 +109,8 @@ flutter:
     - assets/images/icons/zapier/
     - assets/images/icons/zoom/
     - assets/html/
+    - assets/js/chrono-custom-rules-master/
+    - assets/js/chrono-custom-rules-master/dist/
 
   fonts:
     - family: Inter

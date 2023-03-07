@@ -412,6 +412,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.4.6"
+  flutter_js:
+    dependency: "direct main"
+    description:
+      name: flutter_js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -1279,6 +1286,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  sync_http:
+    dependency: transitive
+    description:
+      name: sync_http
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   syncfusion_flutter_calendar:
     dependency: "direct main"
     description:
