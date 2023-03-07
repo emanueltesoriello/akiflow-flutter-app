@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -83,51 +84,71 @@ class TaskAppointment extends StatelessWidget {
                   ),
                 ),
               Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
                   children: [
-                    boxHeight > 14 &&
-                            (calendarController.view == CalendarView.day ||
-                                calendarController.view == CalendarView.schedule)
-                        ? GestureDetector(
-                            onTap: () {
-                              checkboxController?.completedClick();
-                            },
-                            child: Row(
-                              children: [
-                                Builder(builder: ((context) {
-                                  TasksCubit tasksCubit = context.read<TasksCubit>();
-                                  SyncCubit syncCubit = context.read<SyncCubit>();
-                                  EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-                                  return CheckboxAnimated(
-                                    onControllerReady: (controller) {
-                                      checkboxController = controller;
-                                    },
-                                    task: task,
-                                    key: ObjectKey(task),
-                                    onCompleted: () async {
-                                      HapticFeedback.mediumImpact();
-                                      editTaskCubit.markAsDone(forceUpdate: true);
-                                    },
-                                  );
-                                })),
-                              ],
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        boxHeight > 14 &&
+                                (calendarController.view == CalendarView.day ||
+                                    calendarController.view == CalendarView.schedule)
+                            ? GestureDetector(
+                                onTap: () {
+                                  checkboxController?.completedClick();
+                                },
+                                child: Row(
+                                  children: [
+                                    Builder(builder: ((context) {
+                                      TasksCubit tasksCubit = context.read<TasksCubit>();
+                                      SyncCubit syncCubit = context.read<SyncCubit>();
+                                      EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)
+                                        ..attachTask(task);
+                                      return CheckboxAnimated(
+                                        onControllerReady: (controller) {
+                                          checkboxController = controller;
+                                        },
+                                        task: task,
+                                        key: ObjectKey(task),
+                                        onCompleted: () async {
+                                          HapticFeedback.mediumImpact();
+                                          editTaskCubit.markAsDone(forceUpdate: true);
+                                        },
+                                      );
+                                    })),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(width: 3),
+                        Expanded(
+                          child: Text(
+                            appointment.subject,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              height: boxHeight < 15 ? 1.1 : 1.3,
+                              fontSize: boxHeight < 12.0 ? 9.0 : 13.0,
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey1(context),
                             ),
-                          )
-                        : const SizedBox(width: 3),
-                    Expanded(
-                      child: Text(
-                        appointment.subject,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          height: boxHeight < 15 ? 1.1 : 1.3,
-                          fontSize: boxHeight < 12.0 ? 9.0 : 13.0,
-                          fontWeight: FontWeight.w500,
-                          color: ColorsExt.grey1(context),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
+                    if (calendarController.view == CalendarView.schedule)
+                      Row(
+                        children: [
+                          const SizedBox(width: 5),
+                          Text(
+                            DateFormat("HH:mm").format(DateTime.parse(task.datetime!).toLocal()),
+                            style: TextStyle(
+                              height: 1.3,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey3(context),
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -141,8 +162,8 @@ class TaskAppointment extends StatelessWidget {
                       Text(
                         duration,
                         style: TextStyle(
-                          height: boxHeight < 15 ? 1.1 : 1.3,
-                          fontSize: boxHeight < 12.0 ? 9.0 : 13.0,
+                          height: boxHeight < 15 ? 1.0 : 1.3,
+                          fontSize: boxHeight < 12.0 ? 9.0 : 11.0,
                           fontWeight: FontWeight.w500,
                           color: ColorsExt.grey3(context),
                         ),

@@ -745,6 +745,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                             Navigator.of(context).pop();
                                             if (updatedEvent.recurringId == updatedEvent.id) {
                                               context.read<EventsCubit>().createEventException(
+                                                  context: context,
                                                   tappedDate: widget.tappedDate,
                                                   dateChanged: dateChanged,
                                                   originalStartTime: widget.originalStartTime,

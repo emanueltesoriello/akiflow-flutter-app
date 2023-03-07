@@ -75,7 +75,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
     fetchEvents();
     Future.delayed(
-      const Duration(milliseconds: 1500),
+      const Duration(milliseconds: 1200),
       () {
         fetchEventsBetweenDates(
             calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)).toIso8601String(),
@@ -404,7 +404,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
   //create event exception
 
   Future<void> createEventException(
-      {required DateTime tappedDate,
+      {required BuildContext context,
+      required DateTime tappedDate,
       required Event parentEvent,
       required bool dateChanged,
       required bool timeChanged,
@@ -477,14 +478,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _eventsRepository.add([recurringException]);
 
     if (rsvpChanged && rsvpResponse != null) {
-      updateAtend(event: recurringException, response: rsvpResponse);
+      updateAtend(event: recurringException, response: rsvpResponse).then((value) => refreshAllEvents(context));
     } else {
       updateEventAndCreateModifiers(
-          event: recurringException,
-          atendeesToAdd: atendeesToAdd,
-          atendeesToRemove: atendeesToRemove,
-          addMeeting: addMeeting,
-          removeMeeting: removeMeeting);
+              event: recurringException,
+              atendeesToAdd: atendeesToAdd,
+              atendeesToRemove: atendeesToRemove,
+              addMeeting: addMeeting,
+              removeMeeting: removeMeeting)
+          .then((value) => refreshAllEvents(context));
     }
   }
 
@@ -649,6 +651,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
                     updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
                   );
                   createEventException(
+                      context: context,
                       tappedDate: droppedTimeRounded,
                       dateChanged: false,
                       originalStartTime: originalStartTime,

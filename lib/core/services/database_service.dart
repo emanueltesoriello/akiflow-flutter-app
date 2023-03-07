@@ -383,6 +383,7 @@ CREATE TABLE IF NOT EXISTS tasks(
   `section_id` UUID,
   `sorting` INTEGER,
   `sorting_label` INTEGER,
+  `calendar_id` VARCHAR(255),
   `due_date` TEXT
 )
     ''');
