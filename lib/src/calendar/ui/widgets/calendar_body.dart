@@ -97,8 +97,13 @@ class CalendarBody extends StatelessWidget {
               calendarCubit.setVisibleDates(details.visibleDates);
               String start = details.visibleDates.first.subtract(const Duration(days: 1)).toIso8601String();
               String end = details.visibleDates.last.add(const Duration(days: 1)).toIso8601String();
-              tasksCubit.fetchTasksBetweenDates(start, end);
-              eventsCubit.fetchEventsBetweenDates(start, end);
+              if (calendarController.view == CalendarView.schedule) {
+                tasksCubit.fetchCalendarTasks();
+                eventsCubit.fetchEvents();
+              } else {
+                tasksCubit.fetchTasksBetweenDates(start, end);
+                eventsCubit.fetchEventsBetweenDates(start, end);
+              }
             },
             dataSource: _getCalendarDataSource(context),
             viewHeaderStyle: ViewHeaderStyle(
