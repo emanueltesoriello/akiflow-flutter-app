@@ -32,10 +32,12 @@ class EventEditModal extends StatefulWidget {
     required this.event,
     required this.tappedDate,
     required this.originalStartTime,
+    this.createingEvent,
   }) : super(key: key);
   final Event event;
   final DateTime tappedDate;
   final String? originalStartTime;
+  final bool? createingEvent;
 
   @override
   State<EventEditModal> createState() => _EventEditModalState();
@@ -147,10 +149,9 @@ class _EventEditModalState extends State<EventEditModal> {
                                 const SizedBox(width: 16.0),
                                 Expanded(
                                   child: TextField(
+                                    autofocus: widget.createingEvent ?? false,
                                     controller: titleController,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                    ),
+                                    decoration: const InputDecoration(border: InputBorder.none, hintText: 'Add title'),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w500,
@@ -389,7 +390,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.mapSVG,
-                                    color: updatedEvent.content?['location'] == null
+                                    color: locationController.text.isEmpty
                                         ? ColorsExt.grey3(context)
                                         : ColorsExt.grey2(context),
                                   ),
@@ -397,7 +398,6 @@ class _EventEditModalState extends State<EventEditModal> {
                                 const SizedBox(width: 16.0),
                                 Expanded(
                                   child: TextField(
-                                    readOnly: true,
                                     controller: locationController,
                                     decoration: InputDecoration(
                                       hintText: 'Add location',
@@ -643,6 +643,11 @@ class _EventEditModalState extends State<EventEditModal> {
                                   height: 20,
                                   child: SvgPicture.asset(
                                     Assets.images.icons.common.squareFillSVG,
+                                    color: updatedEvent.color != null
+                                        ? ColorsExt.fromHex(updatedEvent.color!)
+                                        : updatedEvent.calendarColor != null
+                                            ? ColorsExt.fromHex(updatedEvent.calendarColor!)
+                                            : null,
                                   ),
                                 ),
                                 const SizedBox(width: 16.0),
@@ -727,15 +732,25 @@ class _EventEditModalState extends State<EventEditModal> {
                                 Navigator.of(context).pop();
                               }),
                           BottomButton(
-                            title: 'Save changes',
+                            title: widget.createingEvent ?? false ? 'Create event' : 'Save changes',
                             image: Assets.images.icons.common.checkmarkAltSVG,
                             containerColor: ColorsExt.green20(context),
                             iconColor: ColorsExt.green(context),
                             onTap: () async {
+                              dynamic content = updatedEvent.content;
+                              content['location'] = locationController.text;
+
                               updatedEvent = updatedEvent.copyWith(
                                   title: Nullable(titleController.text),
                                   description: Nullable(descriptionController.text),
+                                  content: content,
                                   updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+                              print(updatedEvent.content);
+
+                              if (widget.createingEvent ?? false) {
+                                await context.read<EventsCubit>().addEventToDb(updatedEvent);
+                              }
 
                               if (updatedEvent.recurringId != null) {
                                 await showCupertinoModalBottomSheet(
@@ -792,13 +807,15 @@ class _EventEditModalState extends State<EventEditModal> {
                                           },
                                         ));
                               } else {
-                                Navigator.of(context).pop();
-                                await context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                    event: updatedEvent,
-                                    atendeesToAdd: atendeesToAdd,
-                                    atendeesToRemove: atendeesToRemove,
-                                    addMeeting: addingMeeting,
-                                    removeMeeting: removingMeeting);
+                                if (mounted) {
+                                  Navigator.of(context).pop();
+                                  await context.read<EventsCubit>().updateEventAndCreateModifiers(
+                                      event: updatedEvent,
+                                      atendeesToAdd: atendeesToAdd,
+                                      atendeesToRemove: atendeesToRemove,
+                                      addMeeting: addingMeeting,
+                                      removeMeeting: removingMeeting);
+                                }
                               }
                             },
                           ),

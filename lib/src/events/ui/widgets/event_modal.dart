@@ -39,6 +39,7 @@ class EventModal extends StatefulWidget {
 class _EventModalState extends State<EventModal> {
   late Event selectedEvent;
   late String? originalStartTime;
+  late String? location;
   late FocusNode descriptionFocusNode;
   late TextEditingController descriptionController;
   StreamSubscription? streamSubscription;
@@ -49,6 +50,7 @@ class _EventModalState extends State<EventModal> {
   void initState() {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
     selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
+    location = selectedEvent.content?["location"] ?? '';
 
     if (selectedEvent.attendees != null) {
       selectedEvent.attendees!.sort((a, b) => b.organizer ?? false ? 1 : -1);
@@ -330,6 +332,35 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       ),
+                      if (location != null && location!.isNotEmpty)
+                        Column(
+                          children: [
+                            const Separator(),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(Assets.images.icons.common.mapSVG,
+                                        color: ColorsExt.grey2(context)),
+                                  ),
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: Text(
+                                      '${selectedEvent.content?["location"]}',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       if (selectedEvent.attendees != null)
                         Column(
                           children: [
@@ -867,7 +898,8 @@ class _EventModalState extends State<EventModal> {
         ),
         child: quill.QuillEditor(
           controller: value,
-          readOnly: false,
+          readOnly: true,
+          enableInteractiveSelection: false,
           scrollController: ScrollController(),
           scrollable: true,
           focusNode: descriptionFocusNode,
