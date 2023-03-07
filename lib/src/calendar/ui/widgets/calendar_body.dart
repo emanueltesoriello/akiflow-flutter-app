@@ -118,7 +118,6 @@ class CalendarBody extends StatelessWidget {
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
             ),
             scheduleViewSettings: ScheduleViewSettings(
-                appointmentItemHeight: 48,
                 hideEmptyScheduleWeek: true,
                 dayHeaderSettings: DayHeaderSettings(
                   dayTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey2(context)),
