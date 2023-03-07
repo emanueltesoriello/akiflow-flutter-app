@@ -506,8 +506,13 @@ extension TaskExt on Task {
         (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete);
   }
 
-  static bool hasDataChanges({required Task original, required Task updated}) {
-    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
+  static bool hasDataChanges({
+    required Task original,
+    required Task updated,
+    bool includeListIdAndSectionId = true,
+  }) {
+    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(
+        original: original, updated: updated, includeListIdAndSectionId: includeListIdAndSectionId);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
     bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
     bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
@@ -515,15 +520,15 @@ extension TaskExt on Task {
     return askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete;
   }
 
-  static bool hasEditedData({required Task original, required Task updated}) {
+  static bool hasEditedData({required Task original, required Task updated, bool includeListIdAndSectionId = true}) {
     return original.title != updated.title ||
         original.priority != updated.priority ||
         original.dailyGoal != (updated.dailyGoal != null ? updated.dailyGoal!.toInt() : null) ||
         (original.eventLockInCalendar != updated.eventLockInCalendar) ||
         original.duration != updated.duration ||
         original.description != updated.description ||
-        original.listId != updated.listId ||
-        original.sectionId != updated.sectionId ||
+        (original.listId != updated.listId && includeListIdAndSectionId) ||
+        (original.sectionId != updated.sectionId && includeListIdAndSectionId) ||
         original.dueDate != updated.dueDate ||
         ((original.links ?? []).length != (updated.links ?? []).length ||
             (original.links ?? []).any((element) => !(updated.links ?? []).contains(element)));
@@ -542,6 +547,14 @@ extension TaskExt on Task {
 
   static bool hasEditedDelete({required Task original, required Task updated}) {
     return original.deletedAt != updated.deletedAt;
+  }
+
+  static bool hasEditedListId({required Task original, required Task updated}) {
+    return original.listId != updated.listId;
+  }
+
+  static bool hasEditedSectionId({required Task original, required Task updated}) {
+    return original.sectionId != updated.sectionId;
   }
 
   static bool hasEditedCalendar({required Task original, required Task updated}) {
@@ -770,17 +783,32 @@ extension TaskExt on Task {
       return;
     }
 
-    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
-      showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => RecurringEditModal(
-                onlyThisTap: () {
-                  editTaskCubit.modalDismissed();
-                },
-                allTap: () {
-                  editTaskCubit.modalDismissed(updateAllFuture: true);
-                },
-              ));
+    bool hasEditedListIdOrSectionId = false;
+
+    if (hasEditedListId(original: original, updated: updated) ||
+        hasEditedSectionId(original: original, updated: updated)) {
+      print("hasEditedListId || hasEditedSectionId");
+      hasEditedListIdOrSectionId = true;
+      editTaskCubit.onListIdOrSectionIdChanges(original: original, updated: updated);
+    }
+
+    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated) || hasEditedListIdOrSectionId) {
+      try {
+        await showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => RecurringEditModal(
+                  onlyThisTap: () {
+                    editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+                  },
+                  allTap: () {
+                    editTaskCubit.modalDismissed(
+                        updateAllFuture: true, hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+                  },
+                ));
+      } catch (e) {
+        print(e);
+        editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+      }
     } else {
       editTaskCubit.modalDismissed();
     }

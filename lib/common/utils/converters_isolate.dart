@@ -154,17 +154,64 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
     Nullable<String?>? remoteUpdatedAt = Nullable(remoteModel.globalUpdatedAt);
 
     remoteModel = remoteModel.copyWith(
-      updatedAt: remoteUpdatedAt,
-      createdAt: remoteModel.globalCreatedAt,
-      deletedAt: remoteModel.deletedAt,
-      remoteUpdatedAt: remoteUpdatedAt,
-    );
+        updatedAt: remoteUpdatedAt,
+        createdAt: remoteModel.globalCreatedAt,
+        deletedAt: remoteModel.deletedAt,
+        remoteUpdatedAt: remoteUpdatedAt);
 
     if (existingModelsById.containsKey(remoteModel.id)) {
+      int globalListIdUpdatedAtAtMillis = 0;
+      int localListIdUpdatedAtAtMillis = 0;
+
+      if (remoteModel.runtimeType == Task) {
+        var remoteListIdUpdatedAt = remoteModel.globalListIdUpdatedAt;
+
+        remoteModel = remoteModel.copyWith(remoteListIdUpdatedAt: remoteListIdUpdatedAt);
+
+        if (remoteModel.globalListIdUpdatedAt != null) {
+          globalListIdUpdatedAtAtMillis = DateTime.parse(remoteModel.globalListIdUpdatedAt).millisecondsSinceEpoch;
+        }
+        if (existingModelsById[remoteModel.id] != null &&
+            existingModelsById[remoteModel.id].globalListIdUpdatedAt != null) {
+          localListIdUpdatedAtAtMillis =
+              DateTime.parse(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt).millisecondsSinceEpoch;
+        }
+      }
+
       if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
+        if (remoteModel.runtimeType == Task) {
+          if (globalListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
+            Nullable<String?>? globalListIdUpdatedAt =
+                Nullable(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt);
+            Nullable<String?>? listId = Nullable(existingModelsById[remoteModel.id]?.listId);
+            Nullable<String?>? sectionId = Nullable(existingModelsById[remoteModel.id]?.sectionId);
+
+            remoteModel = (remoteModel as Task).copyWith(
+                listId: listId,
+                sectionId: sectionId,
+                globalListIdUpdatedAt: globalListIdUpdatedAt,
+                remoteListIdUpdatedAt: existingModelsById[remoteModel.id]?.remoteListIdUpdatedAt);
+          }
+        }
+
         changedModels.add(remoteModel);
       } else {
-        unchangedModels.add(remoteModel);
+        if (remoteModel.runtimeType == Task) {
+          if (globalListIdUpdatedAtAtMillis > localListIdUpdatedAtAtMillis) {
+            Nullable<String?>? globalListIdUpdatedAt = Nullable(remoteModel.globalListIdUpdatedAt);
+            existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id].copyWith(
+                listId: remoteModel.listId,
+                sectionId: remoteModel.sectionId,
+                globalListIdUpdatedAt: globalListIdUpdatedAt,
+                remoteListIdUpdatedAt: remoteModel.remoteListIdUpdatedAt);
+
+            changedModels.add(existingModelsById[remoteModel.id]);
+          } else {
+            unchangedModels.add(existingModelsById[remoteModel.id]);
+          }
+        } else {
+          unchangedModels.add(remoteModel);
+        }
       }
     } else {
       nonExistingModels.add(remoteModel);

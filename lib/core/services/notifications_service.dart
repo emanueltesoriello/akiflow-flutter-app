@@ -23,7 +23,7 @@ class NotificationsService {
   final AndroidNotificationChannel channel = const AndroidNotificationChannel(
     "channel id",
     "Default remote channel",
-    description: "Default notification channel for remote notifications",
+    description: "Remote notifications from server and desktop app",
     importance: Importance.defaultImportance,
   );
   static const dailyReminderTaskId = 1000001;
@@ -167,8 +167,8 @@ class NotificationsService {
                 notificationDetails: const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "channel_d",
-                    "Tasks notification",
-                    channelDescription: "The notifications received as a reminder for a task.",
+                    "Task Notification",
+                    channelDescription: "Reminders that a task is about to start.",
                   ),
                 ));
           } catch (e) {
@@ -255,7 +255,7 @@ class NotificationsService {
                 interruptionLevel: InterruptionLevel.passive),
             android: AndroidNotificationDetails("fcm_fallback_notification_channel", "Default remote channel",
                 playSound: false,
-                channelDescription: "Default notification channel for remote notifications",
+                channelDescription: "Remote notifications from server and desktop app",
                 enableVibration: false,
                 onlyAlertOnce: true,
                 usesChronometer: false),
@@ -298,8 +298,8 @@ class NotificationsService {
               notificationDetails: const NotificationDetails(
                 android: AndroidNotificationDetails(
                   "channel_d",
-                  "Tasks notification",
-                  channelDescription: "The notifications received as a reminder for a task.",
+                  "Task Notification",
+                  channelDescription: "Reminders that a task is about to start.",
                 ),
               ));
         } catch (e) {
@@ -335,8 +335,8 @@ class NotificationsService {
 
   static Future<void> setDailyReminder(PreferencesRepository service) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'Daily reminder',
-        channelDescription: 'The channel for the daily overview  notification.',
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails('channel id', 'Daily Overview',
+        channelDescription: 'Reminder to view how your day looks like.',
         importance: Importance.max,
         priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);

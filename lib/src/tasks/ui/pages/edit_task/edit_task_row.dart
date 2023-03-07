@@ -222,9 +222,10 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _label(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.updatedTask;
+    EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+    Task task = editTaskCubit.state.updatedTask;
 
-    List<Label> labels = context.watch<LabelsCubit>().state.labels;
+    List<Label> labels = context.read<LabelsCubit>().state.labels;
 
     Label? label;
 
@@ -242,14 +243,11 @@ class _EditTaskRowState extends State<EditTaskRow> {
       iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey3(context),
       active: label?.color != null,
       onPressed: () {
-        var cubit = context.read<EditTaskCubit>();
-
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => LabelsModal(
             selectLabel: (Label label) {
-              cubit.setLabel(label);
-              Navigator.pop(context);
+              editTaskCubit.setLabel(label);
             },
             showNoLabel: task.listId != null,
           ),

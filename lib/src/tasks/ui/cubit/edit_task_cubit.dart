@@ -314,13 +314,8 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       sectionId: Nullable(null),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
-    if (state.openedLabelfromNLP) {
-      onLabelDetected(label, label.title!);
-    }
 
-    emit(state.copyWith(showLabelsList: false, updatedTask: updated, openedLabelfromNLP: false));
-
-    _tasksCubit.refreshTasksUi(updated);
+    emit(state.copyWith(updatedTask: updated));
 
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);
@@ -577,7 +572,23 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  modalDismissed({bool updateAllFuture = false}) async {
+  onListIdOrSectionIdChanges({required Task original, required Task updated}) {
+    Task newUpdatedTask;
+    if (TaskExt.hasDataChanges(original: original, updated: updated, includeListIdAndSectionId: false)) {
+      newUpdatedTask = state.updatedTask.copyWith(
+        updatedAt: Nullable(original.updatedAt),
+        globalListIdUpdatedAt: Nullable(DateTime.now().toIso8601String()),
+      );
+    } else {
+      newUpdatedTask = state.updatedTask.copyWith(
+        updatedAt: Nullable(original.updatedAt),
+        globalListIdUpdatedAt: Nullable(DateTime.now().toIso8601String()),
+      );
+    }
+    emit(state.copyWith(updatedTask: newUpdatedTask));
+  }
+
+  modalDismissed({bool updateAllFuture = false, bool hasEditedListIdOrSectionId = false}) async {
     if (recurrenceTasksToUpdate.isNotEmpty) {
       for (Task task in recurrenceTasksToUpdate) {
         await _tasksRepository.updateById(task.id, data: task);
@@ -606,19 +617,34 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
       for (Task task in tasks) {
-        Task updatedRecurringTask = state.updatedTask.copyWith(
-          id: task.id,
-          date: Nullable(task.date),
-          datetime: Nullable(task.datetime),
-          status: Nullable(task.status),
-          createdAt: (task.createdAt),
-          trashedAt: (task.trashedAt),
-          globalCreatedAt: (task.globalCreatedAt),
-          globalUpdatedAt: (task.globalUpdatedAt),
-          readAt: (task.readAt),
-          updatedAt: Nullable(now),
-        );
-
+        late Task updatedRecurringTask;
+        if (hasEditedListIdOrSectionId) {
+          updatedRecurringTask = state.updatedTask.copyWith(
+            id: task.id,
+            date: Nullable(task.date),
+            datetime: Nullable(task.datetime),
+            status: Nullable(task.status),
+            createdAt: (task.createdAt),
+            trashedAt: (task.trashedAt),
+            globalCreatedAt: (task.globalCreatedAt),
+            globalUpdatedAt: (task.globalUpdatedAt),
+            readAt: (task.readAt),
+            globalListIdUpdatedAt: Nullable(now),
+          );
+        } else {
+          updatedRecurringTask = state.updatedTask.copyWith(
+            id: task.id,
+            date: Nullable(task.date),
+            datetime: Nullable(task.datetime),
+            status: Nullable(task.status),
+            createdAt: (task.createdAt),
+            trashedAt: (task.trashedAt),
+            globalCreatedAt: (task.globalCreatedAt),
+            globalUpdatedAt: (task.globalUpdatedAt),
+            readAt: (task.readAt),
+            updatedAt: Nullable(now),
+          );
+        }
         updatedRecurringTasks.add(updatedRecurringTask);
       }
 
