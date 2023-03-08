@@ -725,7 +725,10 @@ class _EventEditModalState extends State<EventEditModal> {
                               title: t.cancel,
                               image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
                               onTap: () {
-                                context.read<EventsCubit>().refetchEvent(updatedEvent);
+                                if (widget.createingEvent ?? false) {
+                                } else {
+                                  context.read<EventsCubit>().refetchEvent(updatedEvent);
+                                }
                                 Navigator.of(context).pop();
                               }),
                           BottomButton(
