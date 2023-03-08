@@ -132,7 +132,7 @@ class _EventModalState extends State<EventModal> {
                             const SizedBox(width: 16.0),
                             Expanded(
                               child: Text(
-                                selectedEvent.title ?? '',
+                                selectedEvent.title ?? t.event.noTitle,
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

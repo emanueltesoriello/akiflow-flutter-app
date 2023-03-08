@@ -659,46 +659,51 @@ class _EventEditModalState extends State<EventEditModal> {
                               ],
                             ),
                           ),
-                          const Separator(),
-                          InkWell(
-                            onTap: () {
-                              if (updatedEvent.url != null) {
-                                updatedEvent.openUrl(updatedEvent.url);
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: SvgPicture.asset(
-                                          Assets.images.icons.google.calendarSVG,
+                          if (updatedEvent.url != null)
+                            Column(
+                              children: [
+                                const Separator(),
+                                InkWell(
+                                  onTap: () {
+                                    if (updatedEvent.url != null) {
+                                      updatedEvent.openUrl(updatedEvent.url);
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 22,
+                                              height: 22,
+                                              child: SvgPicture.asset(
+                                                Assets.images.icons.google.calendarSVG,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 16.0),
+                                            Text(
+                                              'View on Google Calendar',
+                                              style: TextStyle(
+                                                  fontSize: 17.0,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: ColorsExt.grey2(context)),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      const SizedBox(width: 16.0),
-                                      Text(
-                                        'View on Google Calendar',
-                                        style: TextStyle(
-                                            fontSize: 17.0,
-                                            fontWeight: FontWeight.w400,
-                                            color: ColorsExt.grey2(context)),
-                                      ),
-                                    ],
+                                        SvgPicture.asset(
+                                          Assets.images.icons.common.arrowUpRightSquareSVG,
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  SvgPicture.asset(
-                                    Assets.images.icons.common.arrowUpRightSquareSVG,
-                                    width: 20,
-                                    height: 20,
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ),
                         ],
                       ),
                     ],
