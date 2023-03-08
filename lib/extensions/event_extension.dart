@@ -1,7 +1,9 @@
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
+import 'package:rrule/rrule.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum AtendeeResponseStatus { needsAction, accepted, declined, tentative }
@@ -190,5 +192,75 @@ extension EventExt on Event {
       return calendarColor[event.calendarColor] ?? event.calendarColor!;
     }
     return ColorsLight.akiflow.value.toRadixString(16);
+  }
+
+  RecurrenceRule? get ruleFromStringList {
+    if (recurrence != null) {
+      try {
+        List<String> parts = recurrence!.first.split(";");
+
+        parts.removeWhere((part) => part.startsWith('DTSTART'));
+        print("Recurrence $recurrence");
+        String recurrenceString = parts.join(';');
+        return RecurrenceRule.fromString(recurrenceString);
+      } catch (e) {
+        print("Recurrence from String parsing error: $e");
+      }
+    }
+    return null;
+  }
+
+  EventRecurrenceModalType get recurrenceComputed {
+    if (recurrence != null) {
+      try {
+        List<String> parts = recurrence!.first.split(";");
+
+        parts.removeWhere((part) => part.startsWith('DTSTART'));
+
+        String recurrenceString = parts.join(';');
+
+        if (recurrenceString.isEmpty) {
+          return EventRecurrenceModalType.none;
+        }
+
+        RecurrenceRule rule = RecurrenceRule.fromString(recurrenceString);
+
+        if (rule.frequency == Frequency.daily && rule.interval == null) {
+          return EventRecurrenceModalType.daily;
+        } else if (rule.frequency == Frequency.weekly && rule.byWeekDays.length == 5) {
+          return EventRecurrenceModalType.everyWeekday;
+        } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
+          return EventRecurrenceModalType.everyYearOnThisDay;
+        } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
+          return EventRecurrenceModalType.everyCurrentDay;
+        } else if (rule.interval != null || rule.byWeekDays.length > 1) {
+          return EventRecurrenceModalType.custom;
+        }
+      } catch (e) {
+        print("Recurrence parsing error: $e");
+      }
+    }
+
+    return EventRecurrenceModalType.none;
+  }
+
+  String recurrenceRuleComputed(RecurrenceRule rule) {
+    String computedRule = rule.toString();
+    List<String> parts = computedRule.split(";");
+    String? untilString;
+    try {
+      untilString = parts.where((part) => part.startsWith('UNTIL')).first;
+    } catch (e) {
+      print(e);
+    }
+    if (untilString != null) {
+      if (!untilString.endsWith('Z')) {
+        parts.removeWhere((part) => part.startsWith('UNTIL'));
+        untilString = '${untilString}Z';
+        parts.add(untilString);
+      }
+    }
+    computedRule = parts.join(";");
+    return computedRule;
   }
 }

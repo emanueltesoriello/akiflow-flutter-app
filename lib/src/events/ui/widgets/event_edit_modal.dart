@@ -17,11 +17,13 @@ import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/event_edit_time_modal.dart';
+import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
+import 'package:rrule/rrule.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tuple/tuple.dart' as tuple;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -47,6 +49,7 @@ class _EventEditModalState extends State<EventEditModal> {
   late TextEditingController titleController;
   late TextEditingController locationController;
   late TextEditingController descriptionController;
+  late EventRecurrenceModalType selectedRecurrence;
   late bool isAllDay;
   late Event updatedEvent;
   final FocusNode _descriptionFocusNode = FocusNode();
@@ -87,6 +90,7 @@ class _EventEditModalState extends State<EventEditModal> {
     dateChanged = false;
 
     updatedEvent = widget.event;
+    selectedRecurrence = updatedEvent.recurrenceComputed;
     super.initState();
   }
 
@@ -190,25 +194,59 @@ class _EventEditModalState extends State<EventEditModal> {
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.recurrentSVG,
-                                    color: ColorsExt.grey3(context),
+                          InkWell(
+                            onTap: () {
+                              showCupertinoModalBottomSheet(
+                                context: context,
+                                builder: (context) => EventRecurrenceModal(
+                                  onChange: (RecurrenceRule? rule) {
+                                    if (rule != null) {
+                                      updatedEvent = updatedEvent.copyWith(
+                                          recurringId: updatedEvent.recurringId ?? updatedEvent.id,
+                                          recurrence: Nullable([updatedEvent.recurrenceRuleComputed(rule)]));
+                                    } else {
+                                      updatedEvent = updatedEvent.copyWith(recurrence: Nullable(null));
+                                    }
+                                  },
+                                  onRecurrenceType: (EventRecurrenceModalType type) {
+                                    setState(() {
+                                      selectedRecurrence = type;
+                                    });
+                                  },
+                                  selectedRecurrence: updatedEvent.recurrenceComputed,
+                                  rule: updatedEvent.ruleFromStringList,
+                                  eventStartTime: updatedEvent.startTime != null
+                                      ? DateTime.parse(updatedEvent.startTime!)
+                                      : DateTime.parse(updatedEvent.startDate!),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(
+                                      Assets.images.icons.common.recurrentSVG,
+                                      color: selectedRecurrence == EventRecurrenceModalType.none
+                                          ? ColorsExt.grey3(context)
+                                          : ColorsExt.grey2(context),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Text(
-                                  'Set Repeat',
-                                  style: TextStyle(
-                                      fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-                                ),
-                              ],
+                                  const SizedBox(width: 16.0),
+                                  Text(
+                                    _recurrence(selectedRecurrence),
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.w400,
+                                        color: selectedRecurrence == EventRecurrenceModalType.none
+                                            ? ColorsExt.grey3(context)
+                                            : ColorsExt.grey2(context)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Padding(
@@ -752,7 +790,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                 await context.read<EventsCubit>().addEventToDb(updatedEvent);
                               }
 
-                              if (updatedEvent.recurringId != null) {
+                              if (updatedEvent.recurringId != null && widget.event.recurringId != null) {
                                 await showCupertinoModalBottomSheet(
                                     context: context,
                                     builder: (context) => RecurrentEventEditModal(
@@ -1064,5 +1102,30 @@ class _EventEditModalState extends State<EventEditModal> {
         ),
       ),
     );
+  }
+
+  String _recurrence(EventRecurrenceModalType? selectedRecurrence) {
+    if (selectedRecurrence == null) {
+      return 'Set Repeat';
+    }
+
+    switch (selectedRecurrence) {
+      case EventRecurrenceModalType.none:
+        return 'Set Repeat';
+      case EventRecurrenceModalType.daily:
+        return 'Every Day';
+      case EventRecurrenceModalType.everyCurrentDay:
+        return t.editTask.everyCurrentDay(day: DateFormat("EEEE").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyWeekday:
+        return 'Every weekday';
+      case EventRecurrenceModalType.everyYearOnThisDay:
+        return t.editTask.everyYearOn(
+          date: DateFormat("MMM dd").format(widget.tappedDate),
+        );
+      case EventRecurrenceModalType.custom:
+        return 'Custom';
+      default:
+        return 'Set Repeat';
+    }
   }
 }
