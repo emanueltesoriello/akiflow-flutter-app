@@ -122,17 +122,13 @@ class _EventModalState extends State<EventModal> {
                               height: 20,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.squareFillSVG,
-                                color: selectedEvent.color != null
-                                    ? ColorsExt.fromHex(selectedEvent.color!)
-                                    : selectedEvent.calendarColor != null
-                                        ? ColorsExt.fromHex(selectedEvent.calendarColor!)
-                                        : null,
+                                color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
                               ),
                             ),
                             const SizedBox(width: 16.0),
                             Expanded(
                               child: Text(
-                                selectedEvent.title ?? '',
+                                selectedEvent.title ?? t.event.noTitle,
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -471,25 +467,30 @@ class _EventModalState extends State<EventModal> {
                             ),
                           ],
                         ),
-                      const Separator(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: Row(
+                      if (descriptionController.text.isNotEmpty &&
+                          !descriptionController.text.startsWith('<br \/><br \/>Scheduled with <a href'))
+                        Column(
                           children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset(
-                                Assets.images.icons.common.textJustifyLeftSVG,
+                            const Separator(),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG,
+                                        color: ColorsExt.grey2(context)),
+                                  ),
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: _description(context),
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(width: 16.0),
-                            Expanded(
-                              child: _description(context),
                             ),
                           ],
                         ),
-                      ),
                     ],
                   ),
                 ),

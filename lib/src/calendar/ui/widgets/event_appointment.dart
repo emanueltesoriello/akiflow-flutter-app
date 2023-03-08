@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/event_extension.dart';
@@ -48,7 +49,7 @@ class EventAppointment extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appointment.subject,
+                  appointment.subject.isEmpty ? t.event.noTitle : appointment.subject,
                   overflow: TextOverflow.ellipsis,
                   maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
                   style: TextStyle(
