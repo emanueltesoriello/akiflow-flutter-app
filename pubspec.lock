@@ -728,27 +728,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.2"
-  intercom_flutter:
-    dependency: "direct main"
-    description:
-      name: intercom_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "7.6.5"
-  intercom_flutter_platform_interface:
-    dependency: transitive
-    description:
-      name: intercom_flutter_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.3"
-  intercom_flutter_web:
-    dependency: transitive
-    description:
-      name: intercom_flutter_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.3"
   intl:
     dependency: "direct main"
     description:

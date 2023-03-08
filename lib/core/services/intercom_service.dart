@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:intercom_flutter/intercom_flutter.dart';
 
@@ -19,3 +19,4 @@ class IntercomService {
     _intercom.setInAppMessagesVisibility(IntercomVisibility.gone);
   }
 }
+*/
