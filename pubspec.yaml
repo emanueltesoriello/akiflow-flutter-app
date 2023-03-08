@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 0.33.4+263
+version: 0.33.4+267
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -11,7 +11,7 @@ dependencies:
   async: ^2.9.0 
   equatable: ^2.0.3
   flutter:
-    sdk: flutter
+    sdk: flutter 
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter

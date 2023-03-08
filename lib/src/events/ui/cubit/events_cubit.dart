@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
@@ -12,8 +13,10 @@ import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
+import 'package:mobile/src/events/ui/widgets/event_edit_modal.dart';
 import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/calendar/calendar.dart';
 import 'package:models/contact/contact.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
@@ -716,5 +719,45 @@ class EventsCubit extends Cubit<EventsCubitState> {
       endTime: Nullable(TzUtils.toUtcStringIfNotNull(startTime.add(duration))),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
+  }
+
+  Future<void> addEventToDb(Event event) async {
+    await _eventsRepository.add([event]);
+  }
+
+  Future<void> createEvent(BuildContext context) async {
+    CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
+    var id = const Uuid().v4();
+    DateTime now = DateTime.now();
+    DateTime startTimeRounded =
+        DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()]);
+    String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    Event event = Event(
+      id: id,
+      creatorId: calendar.originId,
+      organizerId: calendar.originId,
+      calendarId: calendar.id,
+      originCalendarId: calendar.originId,
+      connectorId: calendar.connectorId,
+      akiflowAccountId: calendar.akiflowAccountId,
+      originAccountId: calendar.originAccountId,
+      calendarColor: calendar.color,
+      content: {"transparency": "opaque", "visibility": "default", "location": null},
+      startDatetimeTz: currentTimeZone,
+      startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
+      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(const Duration(minutes: 30))),
+      createdAt: TzUtils.toUtcStringIfNotNull(now),
+    );
+
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => EventEditModal(
+        event: event,
+        tappedDate: now,
+        originalStartTime: now.toIso8601String(),
+        createingEvent: true,
+      ),
+    ).whenComplete(() => refreshAllEvents(context));
   }
 }

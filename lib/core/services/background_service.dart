@@ -75,7 +75,7 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
 
     final SyncControllerService syncControllerService = locator<SyncControllerService>();
     if ((locator<PreferencesRepository>().lastTasksSyncAt != null &&
-            DateTime.now().toUtc().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
+            DateTime.now().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
         task == backgroundSyncFromNotification) {
       await syncControllerService.sync();
     }
