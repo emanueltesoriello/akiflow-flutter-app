@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -78,11 +79,7 @@ class CalendarEvent extends Appointment {
       startTime: startTime,
       endTime: endTime,
       subject: event.title ?? '',
-      color: event.color != null
-          ? ColorsExt.fromHex(event.color!)
-          : event.calendarColor != null
-              ? ColorsExt.fromHex(event.calendarColor!)
-              : ColorsExt.cyan(context),
+      color: ColorsExt.fromHex(EventExt.computeColor(event)),
       isAllDay: event.startTime == null && event.endTime == null,
       recurrenceId: isRecurringException ? [event.recurringId] : null,
       recurrenceRule: formatedRrule,

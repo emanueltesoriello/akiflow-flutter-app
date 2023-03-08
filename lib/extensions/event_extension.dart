@@ -1,3 +1,4 @@
+import 'package:mobile/common/style/colors.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
@@ -139,5 +140,55 @@ extension EventExt on Event {
     return params.entries
         .map((MapEntry<String, String> e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
         .join('&');
+  }
+
+  static Map<String, String> eventColor = {
+    '#a4bdfc': '#7986cb',
+    '#7ae7bf': '#33b679',
+    '#dbadff': '#8e24aa',
+    '#ff887c': '#e67c73',
+    '#fbd75b': '#f6bf26',
+    '#ffb878': '#f4511e',
+    '#46d6db': '#039be5',
+    '#e1e1e1': '#616161',
+    '#5484ed': '#3f51b5',
+    '#51b749': '#0b8043',
+    '#dc2127': '#d50000',
+  };
+
+  static Map<String, String> calendarColor = {
+    '#ac725e': '#795548',
+    '#d06b64': '#e67c73',
+    '#f83a22': '#d50000',
+    '#fa573c': '#f4511e',
+    '#ff7537': '#ef6c00',
+    '#ffad46': '#f09300',
+    '#42d692': '#009688',
+    '#16a765': '#0b8043',
+    '#7bd148': '#7cb342',
+    '#b3dc6c': '#c0ca33',
+    '#fbe983': '#e4c441',
+    '#fad165': '#f6bf26',
+    '#92e1c0': '#33b679',
+    '#9fe1e7': '#039be5',
+    '#9fc6e7': '#4285f4',
+    '#4986e7': '#3f51b5',
+    '#9a9cff': '#7986cb',
+    '#b99aff': '#b39ddb',
+    '#c2c2c2': '#616161',
+    '#cabdbf': '#a79b8e',
+    '#cca6ac': '#ad1457',
+    '#f691b2': '#d81b60',
+    '#cd74e6': '#8e24aa',
+    '#a47ae2': '#9e69af'
+  };
+
+  static String computeColor(Event event) {
+    if (event.color != null) {
+      return eventColor[event.color] ?? event.color!;
+    } else if (event.calendarColor != null) {
+      return calendarColor[event.calendarColor] ?? event.calendarColor!;
+    }
+    return ColorsLight.akiflow.value.toRadixString(16);
   }
 }

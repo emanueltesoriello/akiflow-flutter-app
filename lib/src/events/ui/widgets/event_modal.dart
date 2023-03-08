@@ -122,11 +122,7 @@ class _EventModalState extends State<EventModal> {
                               height: 20,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.squareFillSVG,
-                                color: selectedEvent.color != null
-                                    ? ColorsExt.fromHex(selectedEvent.color!)
-                                    : selectedEvent.calendarColor != null
-                                        ? ColorsExt.fromHex(selectedEvent.calendarColor!)
-                                        : null,
+                                color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
                               ),
                             ),
                             const SizedBox(width: 16.0),
