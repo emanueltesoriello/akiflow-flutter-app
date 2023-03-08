@@ -6,10 +6,15 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "tsc src/index.ts --outDir dist --declaration"
+    "build-webpack": "webpack --config webpack.config.js",
+    "build-tsc": "tsc src/index.ts --outDir dist --declaration --esModuleInterop",
+    "build": "npm run build-tsc && npm run build-webpack"
   },
   "devDependencies": {
-    "typescript": "^4.9.5"
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.5",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "dependencies": {
     "chrono-node": "^2.5.1"

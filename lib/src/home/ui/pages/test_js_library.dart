@@ -26,10 +26,10 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
     var chronoIsLoaded = jsRuntime.evaluate("""var chronoIsLoaded = (typeof chrono == 'undefined') ? 
           "0" : "1"; chronoIsLoaded;
         """).stringResult;
-    print("Chrono is Loaded $chronoIsLoaded");
+    print("Chrono is Loaded $chronoIsLoaded"); //console.log(typeof customChrono);
     if (chronoIsLoaded == "0") {
       try {
-        String chrono = await rootBundle.loadString("assets/js/chrono-custom-rules-master/dist/index.js");
+        String chrono = await rootBundle.loadString("assets/js/chrono-custom-rules-master/dist/index.umd.js");
 
         jsRuntime.evaluate("""var window = global = globalThis;""");
 
@@ -48,8 +48,8 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
           customChrono.parsers.push(customParsers.tmr)
           customChrono.parsers.push(customParsers.addMinutes)
         """);
-        /* 
-        jsRuntime.evaluate(chrono + "");
+
+        // jsRuntime.evaluate(chrono + "");
         jsRuntime.evaluate(""" 
          export function extractDateAndText (text, options) {
             // forwardDate expect a date in the format yyyy-mm-dd
@@ -60,16 +60,16 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
             return customExtractor(customChrono as any, text, options)
           }
         """);
-        var a = 0; 
+        var a = 0;
         /*jsRuntime.evaluate("""
 const text = 'Do laundry =1h30m, clean room';
 const result = extractDurationAndText(text);
 
 console.log(result.duration); // outputs: 5400 (duration in seconds) 
 console.log(result.textWithoutDuration); // outputs: 'Do laundry, clean room' 
-""");*/*/
+""");*/
 
-        jsRuntime.evaluate(chrono + "");
+        //jsRuntime.evaluate(chrono + "");
         jsRuntime.evaluate(""" 
           const extractDurationAndText = function (text) {
             try { 
@@ -81,7 +81,7 @@ console.log(result.textWithoutDuration); // outputs: 'Do laundry, clean room'
             return { duration: "2", textWithoutDuration: "ciao!" }; 
           };
         """);
-        var a = 0;
+        var b = 0;
         /*jsRuntime.evaluate("""
 const text = 'Do laundry =1h30m, clean room';
 const result = extractDurationAndText(text);
