@@ -71,7 +71,6 @@ class TimePickerUtils {
       context: context,
       initialTime: initialTime,
       borderRadius: 8,
-      locale: const Locale("it", "IT"),
       theme: ThemeData(
         fontFamily: "Inter",
         primaryColor: Colors.white,

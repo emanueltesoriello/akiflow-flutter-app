@@ -31,7 +31,7 @@ class TaskInfo extends StatelessWidget {
 
   Widget _overdue(BuildContext context) {
     if (task.isOverdue && task.datetime != null && task.datetime!.isNotEmpty) {
-      var formattedDate = DateTime.tryParse(task.datetime!);
+      var formattedDate = DateTime.tryParse(task.datetime!)!.toLocal();
       if (formattedDate == null) {
         return const SizedBox();
       }
