@@ -50,14 +50,13 @@ class CalendarEvent extends Appointment {
     if (isRecurringParent && exceptions != null) {
       for (var element in exceptions) {
         if (element.recurringId == event.id) {
-          if (element.startTime != null || element.startDate != null) {
-            exceptionDates.add(
-                element.startTime != null ? DateTime.parse(element.startTime!) : DateTime.parse(element.startDate!));
-          }
           if (element.originalStartTime != null || element.originalStartDate != null) {
             exceptionDates.add(element.originalStartTime != null
                 ? DateTime.parse(element.originalStartTime!)
                 : DateTime.parse(element.originalStartDate!));
+          } else if (element.startTime != null || element.startDate != null) {
+            exceptionDates.add(
+                element.startTime != null ? DateTime.parse(element.startTime!) : DateTime.parse(element.startDate!));
           }
         }
       }
