@@ -53,7 +53,8 @@ class CalendarEvent extends Appointment {
           if (element.startTime != null || element.startDate != null) {
             exceptionDates.add(
                 element.startTime != null ? DateTime.parse(element.startTime!) : DateTime.parse(element.startDate!));
-          } else if (element.originalStartTime != null || element.originalStartDate != null) {
+          }
+          if (element.originalStartTime != null || element.originalStartDate != null) {
             exceptionDates.add(element.originalStartTime != null
                 ? DateTime.parse(element.originalStartTime!)
                 : DateTime.parse(element.originalStartDate!));
