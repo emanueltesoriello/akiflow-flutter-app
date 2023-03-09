@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:models/nlp/nlp_date_time.dart';
 
 import 'package:flutter_js/flutter_js.dart';
 
@@ -15,6 +14,7 @@ class TestJsLibrary extends StatefulWidget {
 class _TestJsLibraryState extends State<TestJsLibrary> {
   final JavascriptRuntime jsRuntime = getJavascriptRuntime();
   Future<dynamic>? _loadingFuture;
+  TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -47,7 +47,9 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
     if (!mounted) return;
   }
 
-  test() {
+  NLPDateTime runNlp(
+    String text,
+  ) {
     jsRuntime.evaluate("""  
       try {
 
@@ -66,13 +68,25 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
       }  
 
     """);
-    String text = "Ciao today at 17:00 make";
+
     String expression = """ChronoHelper.extractDateAndText("$text");""";
 
     JsEvalResult jsResult = jsRuntime.evaluate(expression);
 
     var map = jsResult.rawResult as Map;
-    print(map.toString());
+
+    NLPDateTime? nlpDateTime;
+
+    try {
+      nlpDateTime = NLPDateTime.fromMap(map);
+
+      print(nlpDateTime.toMap().toString());
+      print("Date: ${nlpDateTime.getDate().toString()} time: ${nlpDateTime.getTime().toString()}");
+      return nlpDateTime;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 
   @override
@@ -87,10 +101,15 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      decoration: const InputDecoration(hintText: 'Insert text..'),
+                      controller: textEditingController,
+                      onChanged: (text) => runNlp(text),
+                      decoration: const InputDecoration(
+                          hintText: 'Insert text..',
+                          hintStyle: TextStyle(color: Colors.black),
+                          labelStyle: TextStyle(color: Colors.black)),
                     ),
                   ),
-                  ElevatedButton(onPressed: test, child: Text('Teeest JS'))
+                  //ElevatedButton(onPressed: test, child: Text('Teeest JS'))
                 ],
               ),
             ),
