@@ -31,7 +31,20 @@ class CalendarTask extends Appointment {
 
   static CalendarTask taskToCalendarTask(BuildContext context, Task task) {
     DateTime startTime = DateTime.parse(task.datetime!).toLocal();
-    DateTime endTime = DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!));
+    DateTime endTime;
+
+    /**
+     * task longer than 24h will be shown until midnight of the starting day
+     */
+    if (task.duration! > 86399) {
+      DateTime startTimeMidnight = DateTime(startTime.year, startTime.month, startTime.day, 23, 59, 59);
+      endTime = DateTime.parse(task.datetime!)
+          .toLocal()
+          .add(Duration(minutes: startTimeMidnight.difference(startTime).inMinutes));
+    } else {
+      endTime = DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!));
+    }
+
     return CalendarTask(
         startTime: startTime,
         endTime: endTime,
