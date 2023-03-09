@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/expandable_fab.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
@@ -87,6 +88,23 @@ class FloatingButton extends StatelessWidget {
     }
     DateTime date = context.read<TodayCubit>().state.selectedDate;
 
+    String? startTimeRounded;
+    int duration = 1800;
+    if (homeViewType == HomeViewType.calendar) {
+      DateTime now = DateTime.now();
+      startTimeRounded =
+          DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()])
+              .toUtc()
+              .toIso8601String();
+
+      AuthCubit authCubit = context.read<AuthCubit>();
+      if (authCubit.state.user != null &&
+          authCubit.state.user?.settings != null &&
+          authCubit.state.user?.settings?['tasks'] != null) {
+        duration = authCubit.state.user?.settings?['tasks']?['defaultTasksDuration'] ?? 1800;
+      }
+    }
+
     Label? label = context.read<LabelsCubit>().state.selectedLabel;
 
     EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
@@ -96,6 +114,8 @@ class FloatingButton extends StatelessWidget {
       date: (taskStatusType == TaskStatusType.inbox || homeViewType == HomeViewType.label)
           ? Nullable(null)
           : Nullable(date.toIso8601String()),
+      datetime: homeViewType == HomeViewType.calendar ? Nullable(startTimeRounded) : Nullable(null),
+      duration: homeViewType == HomeViewType.calendar ? Nullable(duration) : Nullable(null),
       listId: Nullable(label?.id),
     );
 
