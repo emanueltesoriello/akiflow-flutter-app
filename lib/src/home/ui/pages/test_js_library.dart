@@ -66,8 +66,11 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
       }  
 
     """);
+    String text = "Ciao today at 17:00 make";
+    String expression = """ChronoHelper.extractDateAndText("$text");""";
 
-    JsEvalResult jsResult = jsRuntime.evaluate("""ChronoHelper.extractDateAndText("Ciao today at 17:00");""");
+    JsEvalResult jsResult = jsRuntime.evaluate(expression);
+
     var map = jsResult.rawResult as Map;
     print(map.toString());
   }
