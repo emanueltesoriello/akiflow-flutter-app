@@ -194,7 +194,6 @@ class CalendarBody extends StatelessWidget {
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
       Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
       eventsCubit.refetchEvent(event);
-      print(calendarTapDetails.appointments!.first.recurrenceExceptionDates);
       showCupertinoModalBottomSheet(
         context: context,
         builder: (context) => EventModal(

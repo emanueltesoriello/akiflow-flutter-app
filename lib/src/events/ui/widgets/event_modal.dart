@@ -468,7 +468,10 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       if (descriptionController.text.isNotEmpty &&
-                          !descriptionController.text.startsWith('<br \/><br \/>Scheduled with <a href'))
+                          !descriptionController.text
+                              .startsWith('<br /><br />Scheduled with <a href="https://app.akiflow') &&
+                          !descriptionController.text
+                              .startsWith('<p><br></p><p><br></p><p>Scheduled with <a href="https://app.akiflow'))
                         Column(
                           children: [
                             const Separator(),
