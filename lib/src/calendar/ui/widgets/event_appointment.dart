@@ -49,7 +49,7 @@ class EventAppointment extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appointment.subject.isEmpty ? t.event.noTitle : appointment.subject,
+                  appointment.subject.isEmpty ? t.noTitle : appointment.subject,
                   overflow: TextOverflow.ellipsis,
                   maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
                   style: TextStyle(

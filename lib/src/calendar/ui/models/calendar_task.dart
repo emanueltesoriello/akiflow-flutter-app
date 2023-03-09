@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
@@ -48,7 +49,7 @@ class CalendarTask extends Appointment {
     return CalendarTask(
         startTime: startTime,
         endTime: endTime,
-        subject: task.title!,
+        subject: task.title != null ? (task.title!.isEmpty ? t.noTitle : task.title!) : t.noTitle,
         done: task.done!,
         id: task.id,
         listId: task.listId,
