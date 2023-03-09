@@ -118,6 +118,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   Future<void> refreshAllFromRepository() async {
+    String startDateCalendarTasks = DateTime.now().toUtc().subtract(const Duration(days: 7)).toIso8601String();
+    String endDateCalendarTasks = DateTime.now().toUtc().add(const Duration(days: 7)).toIso8601String();
     await Future.wait([
       fetchInbox().then((_) => print('fetched inbox')),
       fetchTodayTasks().then((_) => print('fetched today tasks')),
@@ -125,7 +127,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
           .then((_) => print('fetched selected day tasks')),
       _labelsCubit?.state.selectedLabel != null
           ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!)
-          : Future.value().then((_) => print('fetched label tasks'))
+          : Future.value().then((_) => print('fetched label tasks')),
+      fetchTasksBetweenDates(startDateCalendarTasks, endDateCalendarTasks)
+          .then((value) => print('fetched calendar tasks'))
     ]);
 
     emit(state.copyWith(tasksLoaded: true));

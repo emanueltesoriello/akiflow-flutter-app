@@ -125,8 +125,8 @@ class TaskAppointment extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(
-                              height: boxHeight < 15 ? 1.1 : 1.3,
-                              fontSize: boxHeight < 12.0 ? 9.0 : 13.0,
+                              height: 1.3,
+                              fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
                               fontWeight: FontWeight.w500,
                               color: ColorsExt.grey1(context),
                             ),
