@@ -792,7 +792,8 @@ extension TaskExt on Task {
       editTaskCubit.onListIdOrSectionIdChanges(original: original, updated: updated);
     }
 
-    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated) || hasEditedListIdOrSectionId) {
+    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated) ||
+        (hasEditedListIdOrSectionId && updated.recurringId != null)) {
       try {
         await showCupertinoModalBottomSheet(
             context: context,

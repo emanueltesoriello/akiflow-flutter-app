@@ -1,9 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
+//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
@@ -31,10 +32,10 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          //if (kDebugMode)
-          FutureBuilder(
-              future: FirebaseMessaging.instance.getToken(),
-              builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
+          if (kDebugMode)
+            FutureBuilder(
+                future: FirebaseMessaging.instance.getToken(),
+                builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
           ButtonList(
             title: t.settings.myAccount.title,
             position: ButtonListPosition.single,
@@ -147,7 +148,7 @@ class SettingsPage extends StatelessWidget {
               launchUrl(Uri.parse("https://akiflow-community.slack.com"), mode: LaunchMode.externalApplication);
             },
           ),
-          ButtonList(
+          /*ButtonList(
             title: t.settings.chatWithUs,
             leading: "assets/images/icons/_common/chat_bubble.svg",
             trailingWidget: FutureBuilder<dynamic>(
@@ -164,7 +165,7 @@ class SettingsPage extends StatelessWidget {
             onPressed: () async {
               await context.read<SettingsCubit>().launchIntercom();
             },
-          ),
+          ),*/
           ButtonList(
             title: t.settings.sendUsAnEmail,
             leading: Assets.images.icons.common.envelopeSVG,

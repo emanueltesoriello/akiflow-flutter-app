@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/nullable.dart';
@@ -80,33 +81,39 @@ class _CalendarItemState extends State<CalendarItem> {
                           onTap: () {
                             dynamic settings = widget.calendars[index].settings;
                             if (settings != null) {
-                              bool isVisible = widget.calendars[index].settings["visible"] ?? false;
+                              bool isVisible = widget.calendars[index].settings["visibleMobile"] ??
+                                  widget.calendars[index].settings["visible"] ??
+                                  false;
 
-                              settings["visible"] = !isVisible;
-                              settings["visible"]
-                                  ? settings["notificationsEnabled"] = true
-                                  : settings["notificationsEnabled"] = false;
+                              settings["visibleMobile"] = !isVisible;
+                              settings["visibleMobile"]
+                                  ? settings["notificationsEnabledMobile"] = true
+                                  : settings["notificationsEnabledMobile"] = false;
                             } else {
-                              settings = {"visible": true, "notificationsEnabled": true};
+                              settings = {
+                                "visible": true,
+                                "notificationsEnabled": true,
+                                "visibleMobile": true,
+                                "notificationsEnabledMobile": true
+                              };
                             }
 
-                            Calendar updatedCalendar = widget.calendars[index].copyWith(
+                            widget.calendars[index] = widget.calendars[index].copyWith(
                                 settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
-                            context.read<CalendarCubit>().updateCalendar(updatedCalendar);
-
-                            print(updatedCalendar.settings);
+                            context.read<CalendarCubit>().updateCalendar(widget.calendars[index]);
                           },
                           child: Row(
                             children: [
                               SvgPicture.asset(
-                                widget.calendars[index].settings != null &&
-                                        widget.calendars[index].settings["visible"] != null &&
-                                        widget.calendars[index].settings["visible"] == true
+                                widget.calendars[index].settings["visibleMobile"] ??
+                                        widget.calendars[index].settings["visible"] ??
+                                        false
                                     ? Assets.images.icons.common.checkDoneSVG
                                     : Assets.images.icons.common.checkEmptySVG,
                                 width: 22,
                                 height: 22,
-                                color: Color(int.parse(widget.calendars[index].color!.replaceAll('#', '0xff'))),
+                                color: ColorsExt.fromHex(EventExt.calendarColor[widget.calendars[index].color!] ??
+                                    widget.calendars[index].color!),
                               ),
                               Text(
                                 "${widget.calendars[index].title}",

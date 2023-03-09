@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 311 
+ * Strings: 312 
  *
- * Built on 2023-03-03 at 16:40 UTC
+ * Built on 2023-03-08 at 08:15 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -627,6 +627,7 @@ class _StringsEventEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
+	String get noTitle => '(No title)';
 	String get googleMeet => 'Google Meet';
 	String get zoom => 'Zoom';
 	String get join => 'Join';
@@ -1281,6 +1282,7 @@ extension on _StringsEn {
 			'label.deleteDialog.justDeleteTheLabel': 'Just delete the label',
 			'label.deleteDialog.markAllTasksAsDone': 'Mark all tasks as Done',
 			'label.sortComingSoon': 'Sort (Coming soon)',
+			'event.noTitle': '(No title)',
 			'event.googleMeet': 'Google Meet',
 			'event.zoom': 'Zoom',
 			'event.join': 'Join',

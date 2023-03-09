@@ -92,6 +92,13 @@ class _TodayViewState extends State<TodayView> {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
+    todos.sort((a, b) {
+      try {
+        return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
+      } catch (_) {}
+      return 0;
+    });
+
     pinned.sort((a, b) {
       try {
         return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());

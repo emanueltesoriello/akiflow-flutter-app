@@ -129,7 +129,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       await cubit.create();
                                       print('created complete');
 
-                                      tasksCubit.refreshAllFromRepository().timeout(const Duration(seconds: 6),
+                                      await tasksCubit.refreshAllFromRepository().timeout(const Duration(seconds: 6),
                                           onTimeout: () {
                                         print('timeout on refreshAllFromRepository - stopped after 5 seconds');
                                       });

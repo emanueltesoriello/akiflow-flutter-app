@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -49,13 +50,13 @@ class CalendarEvent extends Appointment {
     if (isRecurringParent && exceptions != null) {
       for (var element in exceptions) {
         if (element.recurringId == event.id) {
-          if (element.startTime != null || element.startDate != null) {
-            exceptionDates.add(
-                element.startTime != null ? DateTime.parse(element.startTime!) : DateTime.parse(element.startDate!));
-          } else if (element.originalStartTime != null || element.originalStartDate != null) {
+          if (element.originalStartTime != null || element.originalStartDate != null) {
             exceptionDates.add(element.originalStartTime != null
                 ? DateTime.parse(element.originalStartTime!)
                 : DateTime.parse(element.originalStartDate!));
+          } else if (element.startTime != null || element.startDate != null) {
+            exceptionDates.add(
+                element.startTime != null ? DateTime.parse(element.startTime!) : DateTime.parse(element.startDate!));
           }
         }
       }
@@ -78,11 +79,7 @@ class CalendarEvent extends Appointment {
       startTime: startTime,
       endTime: endTime,
       subject: event.title ?? '',
-      color: event.color != null
-          ? ColorsExt.fromHex(event.color!)
-          : event.calendarColor != null
-              ? ColorsExt.fromHex(event.calendarColor!)
-              : ColorsExt.cyan(context),
+      color: ColorsExt.fromHex(EventExt.computeColor(event)),
       isAllDay: event.startTime == null && event.endTime == null,
       recurrenceId: isRecurringException ? [event.recurringId] : null,
       recurrenceRule: formatedRrule,

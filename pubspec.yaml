@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 0.33.4+267
+version: 2.33.5+269
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -26,11 +26,11 @@ dependencies:
   http: ^0.13.4
   i18n:
     path: ./packages/i18n
-  intercom_flutter: ^7.6.2
+  #intercom_flutter: ^7.6.2
   intl: ^0.17.0 
   modal_bottom_sheet: ^2.1.0
   models:
-    path: ./packages/models
+    path: ./packages/models 
   package_info_plus: ^1.4.2
   rrule: ^0.2.8
   sentry_flutter: ^6.13.1
