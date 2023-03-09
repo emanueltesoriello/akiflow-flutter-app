@@ -26,8 +26,11 @@ class CalendarView extends StatelessWidget {
         tasks = List.from(tasks.where((element) => element.deletedAt == null && element.datetime != null));
 
         List<Calendar> calendars = context.watch<CalendarCubit>().state.calendars;
-        calendars =
-            calendars.where((element) => element.settings["visibleMobile"] ?? element.settings["visible"] ?? false).toList();
+        calendars = calendars
+            .where((element) =>
+                element.settings != null &&
+                ((element.settings["visibleMobile"] ?? element.settings["visible"] ?? false) == true))
+            .toList();
         List<String> visibleCalendarIds = [];
         for (var calendar in calendars) {
           visibleCalendarIds.add(calendar.id!);
