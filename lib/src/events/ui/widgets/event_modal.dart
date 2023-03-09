@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
@@ -128,7 +129,7 @@ class _EventModalState extends State<EventModal> {
                             const SizedBox(width: 16.0),
                             Expanded(
                               child: Text(
-                                selectedEvent.title ?? t.event.noTitle,
+                                selectedEvent.title ?? t.noTitle,
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -468,7 +469,7 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       if (descriptionController.text.isNotEmpty &&
-                          !descriptionController.text.startsWith('<br \/><br \/>Scheduled with <a href'))
+                          parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
                         Column(
                           children: [
                             const Separator(),
