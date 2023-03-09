@@ -9,6 +9,7 @@ import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/asana.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/clickup.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/gmail.dart';
+import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/jira.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/notion.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/slack.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/todoist.dart';
@@ -17,6 +18,7 @@ import 'package:models/account/account.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/gmail_doc.dart';
+import 'package:models/doc/jira_doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
 import 'package:models/doc/todoist_doc.dart';
@@ -98,6 +100,8 @@ class LinkedContentModal extends StatelessWidget {
                             return ClickupLinkedContent(doc: doc as ClickupDoc, task: task, itemBuilder: _item);
                           } else if (doc is NotionDoc) {
                             return NotionLinkedContent(doc: doc as NotionDoc, task: task, itemBuilder: _item);
+                          } else if (doc is JiraDoc) {
+                            return JiraLinkedContent(doc: doc as JiraDoc, task: task, itemBuilder: _item);
                           }
                           return const SizedBox();
                         },

@@ -219,9 +219,9 @@
     "calendars": "Calendars"
   },
   "linkedContent": {
-    "subject": "Subject:",
-    "from": "From:",
-    "date": "Date:",
+    "subject": "Subject",
+    "from": "From",
+    "date": "Date",
     "open": "Open",
     "parentTask": "Parent task",
     "project": "Project",
@@ -244,7 +244,8 @@
     "toDo": "To do",
     "section": "Section",
     "scheduledDate": "Scheduled Date",
-    "duration": "Duration"
+    "duration": "Duration",
+    "team": "Team"
   },
   "editTask": {
     "add": "Add",

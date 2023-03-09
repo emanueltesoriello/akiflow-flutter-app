@@ -21,6 +21,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
 import 'package:models/doc/gmail_doc.dart';
+import 'package:models/doc/jira_doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
 import 'package:models/doc/todoist_doc.dart';
@@ -752,6 +753,8 @@ extension TaskExt on Task {
         return ClickupDoc.fromMap(doc)..setTitle(title);
       case "gmail":
         return GmailDoc.fromMap(doc)..setTitle(title);
+      case "jira":
+        return JiraDoc.fromMap(doc)..setTitle(title);
       case "notion":
         return NotionDoc.fromMap(doc)..setTitle(title);
       case "slack":

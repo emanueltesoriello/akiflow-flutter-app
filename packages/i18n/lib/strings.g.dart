@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 312 
+ * Strings: 313 
  *
- * Built on 2023-03-08 at 08:15 UTC
+ * Built on 2023-03-09 at 15:37 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -521,9 +521,9 @@ class _StringsLinkedContentEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	String get subject => 'Subject:';
-	String get from => 'From:';
-	String get date => 'Date:';
+	String get subject => 'Subject';
+	String get from => 'From';
+	String get date => 'Date';
 	String get open => 'Open';
 	String get parentTask => 'Parent task';
 	String get project => 'Project';
@@ -547,6 +547,7 @@ class _StringsLinkedContentEn {
 	String get section => 'Section';
 	String get scheduledDate => 'Scheduled Date';
 	String get duration => 'Duration';
+	String get team => 'Team';
 }
 
 // Path: editTask
@@ -1188,9 +1189,9 @@ extension on _StringsEn {
 			'calendar.view.month': 'Month',
 			'calendar.hideWeekends': 'Hide Weekends',
 			'calendar.calendars': 'Calendars',
-			'linkedContent.subject': 'Subject:',
-			'linkedContent.from': 'From:',
-			'linkedContent.date': 'Date:',
+			'linkedContent.subject': 'Subject',
+			'linkedContent.from': 'From',
+			'linkedContent.date': 'Date',
 			'linkedContent.open': 'Open',
 			'linkedContent.parentTask': 'Parent task',
 			'linkedContent.project': 'Project',
@@ -1214,6 +1215,7 @@ extension on _StringsEn {
 			'linkedContent.section': 'Section',
 			'linkedContent.scheduledDate': 'Scheduled Date',
 			'linkedContent.duration': 'Duration',
+			'linkedContent.team': 'Team',
 			'editTask.add': 'Add',
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.searchALabel': 'Search a label',
