@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +28,7 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
     var chronoIsLoaded = jsRuntime.evaluate("""var chronoIsLoaded = (typeof chrono == 'undefined') ? 
           "0" : "1"; chronoIsLoaded;
         """).stringResult;
-    print("Chrono is Loaded $chronoIsLoaded"); //console.log(typeof customChrono);
+    print("Chrono is Loaded $chronoIsLoaded");
     if (chronoIsLoaded == "0") {
       try {
         String chrono = await rootBundle.loadString("assets/js/chrono-custom-rules-master/dist/index.umd.js");
@@ -35,60 +37,6 @@ class _TestJsLibraryState extends State<TestJsLibrary> {
 
         // ignore: prefer_interpolation_to_compose_strings
         jsRuntime.evaluate(chrono + "");
-
-        jsRuntime.evaluate(""" 
-          console.log('GLOBAL', global);
-          const customChrono = chrono.casual.clone()
-
-          customChrono.parsers.push(customParsers.tod)
-          customChrono.parsers.push(customParsers.toda)
-          customChrono.parsers.push(customParsers.tom)
-          customChrono.parsers.push(customParsers.tmrw)
-          customChrono.parsers.push(customParsers.tmw)
-          customChrono.parsers.push(customParsers.tmr)
-          customChrono.parsers.push(customParsers.addMinutes)
-        """);
-
-        // jsRuntime.evaluate(chrono + "");
-        jsRuntime.evaluate(""" 
-         export function extractDateAndText (text, options) {
-            // forwardDate expect a date in the format yyyy-mm-dd
-            if(options.forwardFrom) {
-              const dateString = options.forwardFrom + ' 00:00:00';
-              options.forwardFrom = new Date(dateString)
-            } 
-            return customExtractor(customChrono as any, text, options)
-          }
-        """);
-        var a = 0;
-        /*jsRuntime.evaluate("""
-const text = 'Do laundry =1h30m, clean room';
-const result = extractDurationAndText(text);
-
-console.log(result.duration); // outputs: 5400 (duration in seconds) 
-console.log(result.textWithoutDuration); // outputs: 'Do laundry, clean room' 
-""");*/
-
-        //jsRuntime.evaluate(chrono + "");
-        jsRuntime.evaluate(""" 
-          const extractDurationAndText = function (text) {
-            try { 
-              console.log("GLOBAL 2");
-            } catch (e) {
-              console.log("error", e);
-            }
-            // const parse = customExtractor(customChrono as any, "ciao", { forwardDate: true, forwardFrom: new Date(), startDayHour: 9 });
-            return { duration: "2", textWithoutDuration: "ciao!" }; 
-          };
-        """);
-        var b = 0;
-        /*jsRuntime.evaluate("""
-const text = 'Do laundry =1h30m, clean room';
-const result = extractDurationAndText(text);
- 
-console.log(result.duration); // outputs: 5400 (duration in seconds)
-console.log(result.textWithoutDuration); // outputs: 'Do laundry, clean room' 
-""");*/
       } on PlatformException catch (e) {
         print('Failed to init js engine: ${e.details}');
       } catch (e) {
@@ -97,6 +45,31 @@ console.log(result.textWithoutDuration); // outputs: 'Do laundry, clean room'
     }
 
     if (!mounted) return;
+  }
+
+  test() {
+    jsRuntime.evaluate("""  
+      try {
+
+        var extractDateAndTextWrapper = (text, forwardDate, forwardFromAsIsoString, startFromDateAsIsoString, startDayHour, startFromDateTimeAsIsoString) => {
+          var options = {
+            forwardDate: forwardDate,
+            forwardFrom: forwardFromAsIsoString,
+            startFromDate: startFromDateAsIsoString, 
+            startDayHour: startDayHour, 
+            startFromDateTime: startFromDateTimeAsIsoString, 
+          } 
+          return ChronoHelper.extractDateAndText(text, options);
+        }     
+      } catch(e) { 
+        console.log(e);  
+      }  
+
+    """);
+
+    JsEvalResult jsResult = jsRuntime.evaluate("""ChronoHelper.extractDateAndText("Ciao today at 17:00");""");
+    var map = jsResult.rawResult as Map;
+    print(map.toString());
   }
 
   @override
@@ -113,7 +86,8 @@ console.log(result.textWithoutDuration); // outputs: 'Do laundry, clean room'
                     child: TextFormField(
                       decoration: const InputDecoration(hintText: 'Insert text..'),
                     ),
-                  )
+                  ),
+                  ElevatedButton(onPressed: test, child: Text('Teeest JS'))
                 ],
               ),
             ),
