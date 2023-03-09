@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
@@ -468,10 +469,7 @@ class _EventModalState extends State<EventModal> {
                           ],
                         ),
                       if (descriptionController.text.isNotEmpty &&
-                          !descriptionController.text
-                              .startsWith('<br /><br />Scheduled with <a href="https://app.akiflow') &&
-                          !descriptionController.text
-                              .startsWith('<p><br></p><p><br></p><p>Scheduled with <a href="https://app.akiflow'))
+                          parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
                         Column(
                           children: [
                             const Separator(),

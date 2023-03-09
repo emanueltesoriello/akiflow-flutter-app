@@ -54,6 +54,8 @@ extension TaskStatusTypeExt on AtendeeResponseStatus {
 }
 
 extension EventExt on Event {
+  static String akiflowSignature = 'Scheduled with Akiflow';
+
   AtendeeResponseStatus get isLoggedUserAttndingEvent {
     String? response;
     try {
