@@ -55,15 +55,16 @@ class AnalyticsService {
     Segment.reset();
   }
 
-  static void track(String event) {
+  static void track(String event, {Map<String, dynamic>? properties = const {"mobile": true}}) {
     try {
       if (Config.development) {
         print("*** AnalyticsService track: $event ***");
+        print(properties);
       }
     } catch (e) {
       print(e);
     }
 
-    Segment.track(eventName: event, properties: {"mobile": true});
+    Segment.track(eventName: event, properties: properties);
   }
 }

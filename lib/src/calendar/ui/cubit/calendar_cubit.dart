@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
+import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
@@ -70,25 +71,35 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   void changeCalendarView(CalendarView calendarView) {
     emit(state.copyWith(calendarView: calendarView));
+    String? trackView;
 
     switch (calendarView) {
       case CalendarView.schedule:
         _preferencesRepository.setCalendarView(CalendarViewMode.agenda);
+        trackView = 'agenda';
         break;
       case CalendarView.day:
         _preferencesRepository.setCalendarView(CalendarViewMode.day);
+        trackView = 'day';
         break;
       case CalendarView.workWeek:
         _preferencesRepository.setCalendarView(CalendarViewMode.workWeek);
+        trackView = 'week';
         break;
       case CalendarView.week:
         _preferencesRepository.setCalendarView(CalendarViewMode.week);
+        trackView = 'week';
         break;
       case CalendarView.month:
         _preferencesRepository.setCalendarView(CalendarViewMode.month);
+        trackView = 'month';
         break;
       default:
     }
+    AnalyticsService.track("Changed calendar view", properties: {
+      "mobile": true,
+      "calendarView": state.isCalendarThreeDays ? "3-custom" : trackView,
+    });
   }
 
   void setCalendarViewThreeDays(bool isCalendarThreeDays) {
@@ -114,6 +125,13 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     await fetchCalendars();
 
     _syncCubit.sync(entities: [Entity.calendars, Entity.events]);
+    if (calendar.settings["visibleMobile"] != null) {
+      AnalyticsService.track(calendar.settings["visibleMobile"] ? "Calendar shown" : "Calendar hidden", properties: {
+        "mobile": true,
+        "mode": "click",
+        "origin": "calendar",
+      });
+    }
   }
 
   void setVisibleDates(List<DateTime> visibleDates) {
