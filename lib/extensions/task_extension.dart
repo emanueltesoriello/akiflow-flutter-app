@@ -829,7 +829,8 @@ extension TaskExt on Task {
   }
 
   Future<void> openLinkedContentUrl([dynamic doc]) async {
-    String? localUrl = doc is GmailDoc || doc is TrelloDoc ? doc.url : doc.localUrl;
+    String? localUrl =
+        doc is GmailDoc || doc is TrelloDoc || doc is JiraDoc || doc is GithubDoc ? doc.url : doc.localUrl;
 
     Uri uri = Uri.parse(localUrl ?? '');
 
