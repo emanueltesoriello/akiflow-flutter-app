@@ -14,6 +14,7 @@ extension AccountExt on Account {
     "trello",
     "zoom",
     "jira",
+    "github",
   ];
 
   static const List<String> v3Accounts = ["gmail"];
