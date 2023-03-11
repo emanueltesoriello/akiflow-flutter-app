@@ -35,14 +35,14 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
 
       if (sentryId != null) {
         launchUrl(
-          Uri.parse("mailto:support@akiflow.com?subject=Mobile%20Request%20${sentryId.toString()}"),
+          Uri.parse("https://app.akiflow.com/en/dashboard/support"),
           mode: LaunchMode.externalApplication,
         );
       } else {
-        launchUrl(Uri.parse("mailto:support@akiflow.com"), mode: LaunchMode.externalApplication);
+        launchUrl(Uri.parse("https://app.akiflow.com/en/dashboard/support"), mode: LaunchMode.externalApplication);
       }
     } catch (_) {
-      launchUrl(Uri.parse("mailto:support@akiflow.com"), mode: LaunchMode.externalApplication);
+      launchUrl(Uri.parse("https://app.akiflow.com/en/dashboard/support"), mode: LaunchMode.externalApplication);
     }
   }
 
