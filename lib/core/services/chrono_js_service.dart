@@ -6,6 +6,10 @@ import 'package:flutter_js/flutter_js.dart';
 class ChronoJsLibrary {
   JavascriptRuntime jsRuntime = getJavascriptRuntime();
 
+  dispose() {
+    jsRuntime.dispose();
+  }
+
   // Platform messages are asynchronous, so we have to initialize in an async method.
   Future<bool> initJsEngine() async {
     // loads ajv only once into the jsRuntime

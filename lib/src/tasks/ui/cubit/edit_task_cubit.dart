@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart' hide Entity;
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -21,7 +18,6 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 
 import '../../../../common/style/colors.dart';
@@ -39,7 +35,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   List<Task> recurrenceTasksToUpdate = [];
   List<Task> recurrenceTasksToCreate = [];
 
-  final EntityExtractor extractor = EntityExtractor(language: EntityExtractorLanguage.english);
   late StylableTextEditingController simpleTitleController;
 
   EditTaskCubit(this._tasksCubit, this._syncCubit) : super(const EditTaskCubitState()) {
@@ -73,10 +68,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
   undoChanges() {
     emit(state.copyWith(updatedTask: state.originalTask));
-  }
-
-  EntityExtractor getExtractor() {
-    return extractor;
   }
 
   void attachTask(Task task) {
@@ -698,16 +689,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   void planWithNLP(NLPDateTime nlpDateTime) async {
-    DateTime date = DateTime(
-            nlpDateTime.year!, nlpDateTime.month!, nlpDateTime.day!, nlpDateTime.hour ?? 0, nlpDateTime.minute ?? 0)
-        .toLocal();
-    if (nlpDateTime.hasTime! && !nlpDateTime.hasDate!) {
-      date.copyWith(
-        year: DateTime.now().toLocal().year,
-        month: DateTime.now().toLocal().month,
-        day: DateTime.now().toLocal().year,
-      );
+    late DateTime date;
+    if (nlpDateTime.getDate() == null) {
+      DateTime now = DateTime.now().toLocal();
+      date = DateTime(now.year, now.month, now.day, nlpDateTime.hour ?? 0, nlpDateTime.minute ?? 0);
+    } else {
+      date = DateTime(nlpDateTime.year ?? 1, nlpDateTime.month ?? 1, nlpDateTime.day ?? 1, nlpDateTime.hour ?? 0,
+          nlpDateTime.minute ?? 0);
     }
+
     await planFor(date,
         dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
   }

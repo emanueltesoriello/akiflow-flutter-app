@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
@@ -8,14 +7,12 @@ import 'package:models/nlp/nlp_date_time.dart';
 
 class TitleNlpTextField extends StatefulWidget {
   final StylableTextEditingController stylableController;
-  final EntityExtractor entityExtractor;
   final FocusNode titleFocus;
   final Function(String, {String? textWithoutDate}) onChanged;
   final Function(NLPDateTime) onDateDetected;
 
   const TitleNlpTextField(
       {super.key,
-      required this.entityExtractor,
       required this.stylableController,
       required this.titleFocus,
       required this.onChanged,
@@ -36,6 +33,12 @@ class _TestJsLibraryState extends State<TitleNlpTextField> {
     super.initState();
     chronoJsLibrary = ChronoJsLibrary();
     isLoaded = chronoJsLibrary.initJsEngine();
+  }
+
+  @override
+  void dispose() {
+    chronoJsLibrary.dispose();
+    super.dispose();
   }
 
   @override

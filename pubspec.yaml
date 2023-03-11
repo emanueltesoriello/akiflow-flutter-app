@@ -55,7 +55,6 @@ dependencies:
   firebase_core: ^2.5.0
   flutter_displaymode: ^0.5.0
   platform_device_id: ^1.0.1 
-  google_mlkit_entity_extraction: ^0.6.0
   extended_text_field: ^10.2.0
   flutter_native_timezone: ^2.0.0
   flutter_js: ^0.6.0

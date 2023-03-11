@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/title_nlp_text_field.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -16,10 +13,7 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/label_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
-import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
 import 'package:models/nlp/nlp_date_time.dart';
-
-import '../../../../label/ui/cubit/labels_cubit.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
@@ -92,7 +86,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                         children: [
                           TitleNlpTextField(
                             stylableController: simpleTitleController,
-                            entityExtractor: context.read<EditTaskCubit>().getExtractor(),
                             titleFocus: titleFocus,
                             onChanged: (String value, {String? textWithoutDate}) async {
                               context.read<EditTaskCubit>().updateTitle(value,
@@ -129,7 +122,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       await cubit.create();
                                       print('created complete');
 
-                                      await tasksCubit.refreshAllFromRepository().timeout(const Duration(seconds: 6),
+                                      tasksCubit.refreshAllFromRepository().timeout(const Duration(seconds: 6),
                                           onTimeout: () {
                                         print('timeout on refreshAllFromRepository - stopped after 5 seconds');
                                       });
