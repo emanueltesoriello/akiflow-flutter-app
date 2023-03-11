@@ -20,7 +20,9 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurr
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
+import 'package:models/doc/github_doc.dart';
 import 'package:models/doc/gmail_doc.dart';
+import 'package:models/doc/jira_doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
 import 'package:models/doc/todoist_doc.dart';
@@ -29,6 +31,7 @@ import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:timezone/timezone.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:mobile/core/preferences.dart';
@@ -462,6 +465,8 @@ extension TaskExt on Task {
         return Assets.images.icons.clickup.clickupSVG;
       case "dropbox":
         return Assets.images.icons.dropbox.dropboxSVG;
+      case "github":
+        return Assets.images.icons.github.githubSVG;
       case "google":
         return Assets.images.icons.google.googleSVG;
       case "gmail":
@@ -750,8 +755,12 @@ extension TaskExt on Task {
         return AsanaDoc.fromMap(doc)..setTitle(title);
       case "clickup":
         return ClickupDoc.fromMap(doc)..setTitle(title);
+      case "github":
+        return GithubDoc.fromMap(doc)..setTitle(title);
       case "gmail":
         return GmailDoc.fromMap(doc)..setTitle(title);
+      case "jira":
+        return JiraDoc.fromMap(doc)..setTitle(title);
       case "notion":
         return NotionDoc.fromMap(doc)..setTitle(title);
       case "slack":
@@ -820,7 +829,8 @@ extension TaskExt on Task {
   }
 
   Future<void> openLinkedContentUrl([dynamic doc]) async {
-    String? localUrl = doc is GmailDoc || doc is TrelloDoc ? doc.url : doc.localUrl;
+    String? localUrl =
+        doc is GmailDoc || doc is TrelloDoc || doc is JiraDoc || doc is GithubDoc ? doc.url : doc.localUrl;
 
     Uri uri = Uri.parse(localUrl ?? '');
 

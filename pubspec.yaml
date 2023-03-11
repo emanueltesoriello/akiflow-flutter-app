@@ -96,6 +96,7 @@ flutter:
     - assets/images/icons/asana/
     - assets/images/icons/clickup/
     - assets/images/icons/dropbox/
+    - assets/images/icons/github/
     - assets/images/icons/google/
     - assets/images/icons/jira/
     - assets/images/icons/notion/

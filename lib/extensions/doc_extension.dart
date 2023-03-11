@@ -11,6 +11,8 @@ class DocExt {
         return "Google";
       case "gmail":
         return "Gmail";
+      case "github":
+        return "GitHub";
       case "jira":
         return "Jira";
       case "skype":

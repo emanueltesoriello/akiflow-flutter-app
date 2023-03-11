@@ -76,6 +76,7 @@ class _AssetsImagesIcons {
   final asana = _AssetsImagesIconsAsana._();
   final clickup = _AssetsImagesIconsClickup._();
   final dropbox = _AssetsImagesIconsDropbox._();
+  final github = _AssetsImagesIconsGithub._();
   final google = _AssetsImagesIconsGoogle._();
   final jira = _AssetsImagesIconsJira._();
   final notion = _AssetsImagesIconsNotion._();
@@ -225,6 +226,12 @@ class _AssetsImagesIconsDropbox {
   _AssetsImagesIconsDropbox._();
 
   final dropboxSVG = 'assets/images/icons/dropbox/dropbox.svg';
+}
+
+class _AssetsImagesIconsGithub {
+  _AssetsImagesIconsGithub._();
+
+  final githubSVG = 'assets/images/icons/github/github.svg';
 }
 
 class _AssetsImagesIconsGoogle {
