@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NLPDateTime {
+  String? textWithDate;
   String? textWithoutDate;
   bool? hasTime;
   bool? hasDate;
@@ -12,7 +13,8 @@ class NLPDateTime {
   int? minute;
 
   NLPDateTime(
-      {this.textWithoutDate,
+      {this.textWithDate,
+      this.textWithoutDate,
       this.hasTime,
       this.hasDate,
       this.hasMeridiem,
@@ -23,6 +25,7 @@ class NLPDateTime {
       this.minute});
 
   factory NLPDateTime.fromMap(Map<dynamic, dynamic> json) => NLPDateTime(
+        textWithDate: json['parseResult']?['text'],
         textWithoutDate: json['textWithoutDate'] as String?,
         hasTime: json['hasTime'] as bool?,
         hasDate: json['hasDate'] as bool?,
@@ -35,6 +38,7 @@ class NLPDateTime {
       );
 
   Map<dynamic, dynamic> toMap() => {
+        'textWithDate': textWithDate,
         'textWithoutDate': textWithoutDate,
         'hasTime': hasTime,
         'hasDate': hasDate,
@@ -71,6 +75,7 @@ class NLPDateTime {
   }
 
   NLPDateTime copyWith({
+    String? textWithDate,
     String? textWithoutDate,
     bool? hasTime,
     bool? hasDate,
@@ -82,6 +87,7 @@ class NLPDateTime {
     int? minute,
   }) {
     return NLPDateTime(
+        textWithDate: textWithDate ?? this.textWithDate,
         textWithoutDate: textWithoutDate ?? this.textWithoutDate,
         day: day ?? this.day,
         hasDate: hasDate ?? this.hasDate,

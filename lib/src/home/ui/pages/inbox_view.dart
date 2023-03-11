@@ -15,7 +15,7 @@ import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/notice.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/inbox/inbox_view_cubit.dart';
-import 'package:mobile/src/home/ui/pages/test_js_library.dart';
+import 'package:mobile/src/base/ui/widgets/task/components/title_nlp_text_field.dart';
 import 'package:mobile/src/home/ui/pages/views/empty_home_view.dart';
 import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
@@ -104,7 +104,7 @@ class _ViewState extends State<_View> {
                     );
                   }
 
-                  return const TestJsLibrary(); /*TaskList(
+                  return TaskList(
                     tasks: tasks,
                     hideInboxLabel: true,
                     scrollController: scrollController,
@@ -132,7 +132,7 @@ class _ViewState extends State<_View> {
                         ),
                       );
                     }(),
-                  );*/
+                  );
                 },
               ),
               tasksState.loading ? const FirstSyncProgressToday() : const SizedBox()

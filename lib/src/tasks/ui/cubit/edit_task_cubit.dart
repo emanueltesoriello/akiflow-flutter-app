@@ -15,6 +15,7 @@ import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:models/label/label.dart';
+import 'package:models/nlp/nlp_date_time.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
@@ -673,11 +674,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task");
   }
 
-  void updateTitle(String value, {Map<String, MapType>? mapping, Set<String>? recognized}) {
+  void updateTitle(String value, {Map<String, MapType>? mapping, String? textWithoutDate}) {
     Task updated = state.updatedTask.copyWith(
       title: value,
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
+    if (textWithoutDate != null && textWithoutDate.isNotEmpty) {
+      updated = state.updatedTask.copyWith(title: textWithoutDate);
+    }
     emit(state.copyWith(updatedTask: updated));
 
     if (mapping != null) {
@@ -693,41 +697,42 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
   }
 
-  void planWithNLP(int dateToBeParsed) async {
-    DateTime? date;
-    if (Platform.isIOS) {
-      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed * 1000, isUtc: false);
-    } else {
-      date = DateTime.fromMillisecondsSinceEpoch(dateToBeParsed, isUtc: false);
+  void planWithNLP(NLPDateTime nlpDateTime) async {
+    DateTime date = DateTime(
+            nlpDateTime.year!, nlpDateTime.month!, nlpDateTime.day!, nlpDateTime.hour ?? 0, nlpDateTime.minute ?? 0)
+        .toLocal();
+    if (nlpDateTime.hasTime! && !nlpDateTime.hasDate!) {
+      date.copyWith(
+        year: DateTime.now().toLocal().year,
+        month: DateTime.now().toLocal().month,
+        day: DateTime.now().toLocal().year,
+      );
     }
-
     await planFor(date,
         dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
   }
 
-  onDateDetected(BuildContext context, DateTimeEntity detected, String value, int start, int end) {
-    if (simpleTitleController.hasParsedDate() && !simpleTitleController.isRemoved(value)) {
+  onDateDetected(BuildContext context, NLPDateTime nlpDateTime) {
+    if (nlpDateTime.hasDate! || nlpDateTime.hasTime! && !simpleTitleController.isRemoved(nlpDateTime.textWithDate!)) {
       simpleTitleController.removeMapping(0);
       simpleTitleController.addMapping({
-        value: MapType(
+        nlpDateTime.textWithDate!: MapType(
             0,
             TextStyle(
               color: ColorsExt.akiflow20(context),
             )),
       });
 
-      print(detected.timestamp);
-
-      planWithNLP(detected.timestamp);
-    } else if (!simpleTitleController.isRemoved(value)) {
+      planWithNLP(nlpDateTime);
+    } else if (!simpleTitleController.isRemoved(nlpDateTime.textWithDate!)) {
       simpleTitleController.addMapping({
-        value: MapType(
+        nlpDateTime.textWithDate!: MapType(
             0,
             TextStyle(
               color: ColorsExt.akiflow20(context),
             )),
       });
-      planWithNLP(detected.timestamp);
+      planWithNLP(nlpDateTime);
     }
   }
 
