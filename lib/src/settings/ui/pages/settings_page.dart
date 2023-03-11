@@ -167,6 +167,16 @@ class SettingsPage extends StatelessWidget {
             },
           ),*/
           ButtonList(
+            title: t.settings.chatWithUs,
+            leading: "assets/images/icons/_common/chat_bubble.svg",
+            position: ButtonListPosition.mid,
+            showShevron: false,
+            useSvgColor: true,
+            onPressed: () async {
+              context.read<SettingsCubit>().openIntercomPage();
+            },
+          ),
+          ButtonList(
             title: t.settings.sendUsAnEmail,
             leading: Assets.images.icons.common.envelopeSVG,
             position: ButtonListPosition.bottom,

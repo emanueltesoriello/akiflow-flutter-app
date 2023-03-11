@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/src/base/ui/widgets/task/components/title_nlp_text_field.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
@@ -15,9 +13,7 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/label_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
-import 'package:mobile/src/tasks/ui/widgets/create_tasks/title_field.dart';
-
-import '../../../../label/ui/cubit/labels_cubit.dart';
+import 'package:models/nlp/nlp_date_time.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
@@ -88,20 +84,17 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TitleField(
-                              entityExtractor: context.read<EditTaskCubit>().getExtractor(),
-                              labels: context.read<LabelsCubit>().state.labels,
-                              stylableController: simpleTitleController,
-                              isTitleEditing: isTitleEditing,
-                              onChanged: (String value) async {
-                                context.read<EditTaskCubit>().updateTitle(value,
-                                    recognized: simpleTitleController.recognizedButRemoved,
-                                    mapping: simpleTitleController.mapping);
-                              },
-                              onDateDetected: (DateTimeEntity detected, String value, int start, int end) {
-                                context.read<EditTaskCubit>().onDateDetected(context, detected, value, start, end);
-                              },
-                              titleFocus: titleFocus),
+                          TitleNlpTextField(
+                            stylableController: simpleTitleController,
+                            titleFocus: titleFocus,
+                            onChanged: (String value, {String? textWithoutDate}) async {
+                              context.read<EditTaskCubit>().updateTitle(value,
+                                  mapping: simpleTitleController.mapping, textWithoutDate: textWithoutDate);
+                            },
+                            onDateDetected: (NLPDateTime nlpDateTime) {
+                              context.read<EditTaskCubit>().onDateDetected(context, nlpDateTime);
+                            },
+                          ),
                           const SizedBox(height: 8),
                           DescriptionField(descriptionController: descriptionController),
                           const SizedBox(height: 8),
@@ -129,7 +122,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       await cubit.create();
                                       print('created complete');
 
-                                      await tasksCubit.refreshAllFromRepository().timeout(const Duration(seconds: 6),
+                                      tasksCubit.refreshAllFromRepository().timeout(const Duration(seconds: 6),
                                           onTimeout: () {
                                         print('timeout on refreshAllFromRepository - stopped after 5 seconds');
                                       });
