@@ -153,21 +153,20 @@ class SyncService {
         partitionItemsToUpsert, PartitioneItemModel(remoteItems: remoteItems, existingItems: existingModels));
 
     List changedModels = result[0];
-    // var unchangedModels = result[1];
+    List unchangedModels = result[1];
     List nonExistingModels = result[2];
     List valToBeDeleted = [];
 
     if (apiType == "TaskApi") {
-      print('started to updating the scheduling of tasks notifications');
+      print('started to update the scheduling of tasks notifications');
 
       List<Task> changedTasks = changedModels.cast<Task>().toList();
       List<Task> notExistingTasks = nonExistingModels.cast<Task>().toList();
+      List<Task> unchangedTasks = unchangedModels.cast<Task>().toList();
 
-      NotificationsService.planTasksNotifications(
-        locator<PreferencesRepository>(),
-        changedTasks: changedTasks,
-        notExistingTasks: notExistingTasks,
-      );
+      NotificationsService.planTasksNotifications(locator<PreferencesRepository>(),
+          changedTasks: changedTasks, notExistingTasks: notExistingTasks, unchangedTasks: unchangedTasks);
+      print('finished to update the scheduling of tasks notifications');
     }
 
     addBreadcrumb("${api.runtimeType} changedModels length: ${changedModels.length}");

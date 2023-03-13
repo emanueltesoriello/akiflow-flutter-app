@@ -29,6 +29,23 @@ class SettingsCubit extends Cubit<SettingsCubitState> {
     await Intercom.instance.displayMessenger();
   }*/
 
+  Future<void> openIntercomPage() async {
+    try {
+      SentryId? sentryId = await _sentryService.captureException(Exception('Bug report'));
+
+      if (sentryId != null) {
+        launchUrl(
+          Uri.parse("https://app.akiflow.com/en/dashboard/support"),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        launchUrl(Uri.parse("https://app.akiflow.com/en/dashboard/support"), mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {
+      launchUrl(Uri.parse("https://app.akiflow.com/en/dashboard/support"), mode: LaunchMode.externalApplication);
+    }
+  }
+
   Future<void> sendEmail() async {
     try {
       SentryId? sentryId = await _sentryService.captureException(Exception('Bug report'));

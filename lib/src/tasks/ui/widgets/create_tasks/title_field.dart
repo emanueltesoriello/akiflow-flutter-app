@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:models/label/label.dart';
@@ -12,8 +11,6 @@ class TitleField extends StatelessWidget {
       {Key? key,
       required this.stylableController,
       required this.isTitleEditing,
-      required this.entityExtractor,
-      required this.onDateDetected,
       this.onLabelDetected,
       this.onDurationDetected,
       this.onPriorityDetected,
@@ -24,8 +21,6 @@ class TitleField extends StatelessWidget {
   final StylableTextEditingController stylableController;
   final ValueListenable<bool> isTitleEditing;
   final List<Label> labels;
-  final EntityExtractor entityExtractor;
-  final Function(DateTimeEntity, String, int, int) onDateDetected;
   final Function(Label, String)? onLabelDetected;
   final Function(Duration, String)? onDurationDetected;
   final Function(int, String)? onPriorityDetected;
@@ -56,18 +51,6 @@ class TitleField extends StatelessWidget {
             ),
             onTap: () {
               print('On tap');
-            },
-            onChanged: (String value) async {
-              onChanged(value);
-              if (value.isNotEmpty) {
-                final result = await entityExtractor.annotateText(value, entityTypesFilter: [EntityType.dateTime]);
-                if (result.isNotEmpty) {
-                  onDateDetected(result.last.entities.first as DateTimeEntity, result.last.text, result.last.start,
-                      result.last.end);
-                }
-              } else {
-                stylableController.removeMapping(0);
-              }
             },
             style: TextStyle(
               color: ColorsExt.grey2(context),

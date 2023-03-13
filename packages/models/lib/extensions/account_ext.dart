@@ -12,7 +12,9 @@ extension AccountExt on Account {
     "notion",
     "asana",
     "trello",
-    "zoom"
+    "zoom",
+    "jira",
+    "github",
   ];
 
   static const List<String> v3Accounts = ["gmail"];

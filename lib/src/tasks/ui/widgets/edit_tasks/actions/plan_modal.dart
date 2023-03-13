@@ -203,7 +203,8 @@ class _PlanModalState extends State<PlanModal> {
                             },
                           );
                         } else {
-                          DateTime laterTodayMore3Hours = DateTime(now.year, now.month, now.day, now.hour + 3).toUtc();
+                          DateTime laterTodayMore3Hours =
+                              DateTime(now.year, now.month, now.day, now.hour + 3).toLocal();
 
                           return _predefinedDateItem(
                             context,

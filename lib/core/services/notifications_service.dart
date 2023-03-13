@@ -98,7 +98,7 @@ class NotificationsService {
   /// This method schedule all the planned notifications for tasks
   /// It automatically schedule the new one and also update the existing ones and removes the deleted/done/trashed tasks
   static planTasksNotifications(PreferencesRepository preferencesRepository,
-      {List<Task>? changedTasks, List<Task>? notExistingTasks}) async {
+      {List<Task>? changedTasks, List<Task>? notExistingTasks, List<Task>? unchangedTasks}) async {
     if (preferencesRepository.nextTaskNotificationSettingEnabled) {
       List<Task> toBeScheduled = [];
       List<Task> toBeRemoved = [];
@@ -108,7 +108,7 @@ class NotificationsService {
       tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
       DateTime date = DateTime.now().toUtc();
-      DateTime endTime = date.add(const Duration(days: 1));
+      DateTime endTime = date.add(const Duration(days: 60));
 
       if (notExistingTasks != null && notExistingTasks.isNotEmpty) {
         toBeScheduled.addAll(notExistingTasks
@@ -117,30 +117,39 @@ class NotificationsService {
                 task.trashedAt == null &&
                 task.datetime != null &&
                 task.status == TaskStatusType.planned.id &&
-                (DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())) &&
-                    DateTime.parse(task.datetime!).isBefore(DateTime.parse(endTime.toUtc().toIso8601String()))))
+                (DateTime.parse(task.datetime!).toUtc().isAfter(date.toUtc())) &&
+                DateTime.parse(task.datetime!).toUtc().isBefore(endTime.toUtc()))
             .toList());
       }
 
       if (changedTasks != null && changedTasks.isNotEmpty) {
         toBeScheduled.addAll(changedTasks
             .where((task) =>
-                task.deletedAt == null &&
-                task.trashedAt == null &&
                 task.datetime != null &&
-                task.status == TaskStatusType.planned.id &&
-                (DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String())) &&
-                    DateTime.parse(task.datetime!).isBefore(DateTime.parse(endTime.toUtc().toIso8601String()))))
+                (task.deletedAt == null &&
+                    task.trashedAt == null &&
+                    task.status == TaskStatusType.planned.id &&
+                    (DateTime.parse(task.datetime!).toUtc().isAfter(date.toUtc()) &&
+                        DateTime.parse(task.datetime!).toUtc().isBefore(endTime.toUtc()))))
             .toList());
-      }
-
-      if (changedTasks != null && changedTasks.isNotEmpty) {
         toBeRemoved.addAll(changedTasks
             .where((task) =>
                 task.datetime != null &&
                 (task.done == true ||
                     ((task.deletedAt != null || task.trashedAt != null) || task.status != TaskStatusType.planned.id) &&
-                        DateTime.parse(task.datetime!).isAfter(DateTime.parse(date.toUtc().toIso8601String()))))
+                        DateTime.parse(task.datetime!).toUtc().isAfter(date.toUtc())))
+            .toList());
+      }
+
+      if (unchangedTasks != null && unchangedTasks.isNotEmpty) {
+        toBeScheduled.addAll(unchangedTasks
+            .where((task) =>
+                task.datetime != null &&
+                (task.deletedAt == null &&
+                    task.trashedAt == null &&
+                    task.status == TaskStatusType.planned.id &&
+                    DateTime.parse(task.datetime!).toUtc().isAfter(date.toUtc()) &&
+                    DateTime.parse(task.datetime!).toUtc().isBefore(endTime.toUtc())))
             .toList());
       }
 
@@ -158,7 +167,7 @@ class NotificationsService {
           NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
 
           try {
-            String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
+            String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toLocal());
 
             NotificationsService.scheduleNotifications(task.title ?? '', "Start at $startTime",
                 notificationId: notificationsId,
