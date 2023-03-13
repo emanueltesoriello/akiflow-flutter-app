@@ -49,6 +49,8 @@ class _AssetsImagesAkiflow {
   final thatsItnothingSVG = 'assets/images/akiflow/Thats-itnothing.svg';
   final calendarPlaceholderSVG = 'assets/images/akiflow/calendar-placeholder.svg';
   final inboxNiceSVG = 'assets/images/akiflow/inbox-nice.svg';
+  final inboxZeroSVG = 'assets/images/akiflow/inbox-zero.svg';
+  final tasksDoneSVG = 'assets/images/akiflow/tasks-done.svg';
   final plannerEmptyEngageSVG = 'assets/images/akiflow/planner-empty-engage.svg';
   final searchSVG = 'assets/images/akiflow/search.svg';
 }
