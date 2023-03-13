@@ -22,8 +22,7 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
           children: [
             SvgPicture.asset(
               Assets.images.akiflow.inboxZeroSVG,
-              width: 80.81,
-              height: 97.72,
+              height: 80,
             ),
             const SizedBox(height: 24),
             Row(
