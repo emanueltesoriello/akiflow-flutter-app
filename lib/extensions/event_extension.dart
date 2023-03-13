@@ -1,4 +1,5 @@
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
@@ -113,14 +114,31 @@ extension EventExt on Event {
     return computedEndTime.toIso8601String();
   }
 
-  Future<void> openUrl(String? url) async {
+  Future<void> joinConference() async {
+    openUrl(meetingUrl).then(
+      (urlOpened) {
+        if (urlOpened != null && urlOpened) {
+          AnalyticsService.track("Join call", properties: {
+            "mobile": true,
+            "mode": "click",
+            "origin": "eventModal",
+          });
+        }
+      },
+    );
+  }
+
+  Future<bool?> openUrl(String? url) async {
     Uri uri = Uri.parse(url ?? '');
+    bool urlOpened = false;
 
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+      urlOpened = true;
     } catch (e) {
       print(e);
     }
+    return urlOpened;
   }
 
   Future<void> sendEmail() async {

@@ -293,9 +293,13 @@ class _EventEditModalState extends State<EventEditModal> {
                                             endDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate)));
                                       } else {
                                         updatedEvent = updatedEvent.copyWith(
-                                          startTime: Nullable(widget.tappedDate.toIso8601String()),
-                                          endTime: Nullable(
-                                              widget.tappedDate.add(const Duration(minutes: 30)).toIso8601String()),
+                                          startTime: widget.event.startTime != null
+                                              ? Nullable(widget.event.startTime)
+                                              : Nullable(widget.tappedDate.toIso8601String()),
+                                          endTime: widget.event.endTime != null
+                                              ? Nullable(widget.event.endTime)
+                                              : Nullable(
+                                                  widget.tappedDate.add(const Duration(minutes: 30)).toIso8601String()),
                                           startDate: Nullable(null),
                                           endDate: Nullable(null),
                                         );
@@ -352,7 +356,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                             InkWell(
                                               onTap: () {
                                                 if (updatedEvent.meetingUrl != null) {
-                                                  updatedEvent.openUrl(updatedEvent.meetingUrl);
+                                                  updatedEvent.joinConference();
                                                 }
                                               },
                                               child: Text(
@@ -829,8 +833,12 @@ class _EventEditModalState extends State<EventEditModal> {
                                                   addingMeeting: addingMeeting,
                                                   removingMeeting: removingMeeting);
                                             } else {
-                                              context.read<EventsCubit>().updateThisAndFuture(
-                                                  tappedDate: widget.tappedDate, selectedEvent: updatedEvent);
+                                              context
+                                                  .read<EventsCubit>()
+                                                  .updateThisAndFuture(
+                                                      tappedDate: widget.tappedDate, selectedEvent: updatedEvent)
+                                                  .then(
+                                                      (value) => context.read<EventsCubit>().refreshAllEvents(context));
                                             }
                                           },
                                           allTap: () {
@@ -847,12 +855,22 @@ class _EventEditModalState extends State<EventEditModal> {
                               } else {
                                 if (mounted) {
                                   Navigator.of(context).pop();
-                                  await context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                      event: updatedEvent,
-                                      atendeesToAdd: atendeesToAdd,
-                                      atendeesToRemove: atendeesToRemove,
-                                      addMeeting: addingMeeting,
-                                      removeMeeting: removingMeeting);
+                                  await context
+                                      .read<EventsCubit>()
+                                      .updateEventAndCreateModifiers(
+                                          event: updatedEvent,
+                                          atendeesToAdd: atendeesToAdd,
+                                          atendeesToRemove: atendeesToRemove,
+                                          addMeeting: addingMeeting,
+                                          removeMeeting: removingMeeting,
+                                          createingEvent: widget.createingEvent ?? false)
+                                      .then(
+                                    (value) {
+                                      if (widget.createingEvent ?? false) {
+                                        context.read<EventsCubit>().refreshAllEvents(context);
+                                      }
+                                    },
+                                  );
                                 }
                               }
                             },
