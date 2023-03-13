@@ -59,7 +59,6 @@ class AnalyticsService {
     try {
       if (Config.development) {
         print("*** AnalyticsService track: $event ***");
-        print(properties);
       }
     } catch (e) {
       print(e);

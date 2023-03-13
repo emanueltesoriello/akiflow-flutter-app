@@ -352,7 +352,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                             InkWell(
                                               onTap: () {
                                                 if (updatedEvent.meetingUrl != null) {
-                                                  updatedEvent.openUrl(updatedEvent.meetingUrl);
+                                                  updatedEvent.joinConference();
                                                 }
                                               },
                                               child: Text(
@@ -829,8 +829,12 @@ class _EventEditModalState extends State<EventEditModal> {
                                                   addingMeeting: addingMeeting,
                                                   removingMeeting: removingMeeting);
                                             } else {
-                                              context.read<EventsCubit>().updateThisAndFuture(
-                                                  tappedDate: widget.tappedDate, selectedEvent: updatedEvent);
+                                              context
+                                                  .read<EventsCubit>()
+                                                  .updateThisAndFuture(
+                                                      tappedDate: widget.tappedDate, selectedEvent: updatedEvent)
+                                                  .then(
+                                                      (value) => context.read<EventsCubit>().refreshAllEvents(context));
                                             }
                                           },
                                           allTap: () {
@@ -852,7 +856,8 @@ class _EventEditModalState extends State<EventEditModal> {
                                       atendeesToAdd: atendeesToAdd,
                                       atendeesToRemove: atendeesToRemove,
                                       addMeeting: addingMeeting,
-                                      removeMeeting: removingMeeting);
+                                      removeMeeting: removingMeeting,
+                                      createingEvent: widget.createingEvent ?? false);
                                 }
                               }
                             },

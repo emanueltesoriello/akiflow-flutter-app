@@ -193,7 +193,6 @@ class CalendarBody extends StatelessWidget {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
       Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
-      eventsCubit.refetchEvent(event);
       showCupertinoModalBottomSheet(
         context: context,
         builder: (context) => EventModal(
@@ -203,7 +202,6 @@ class CalendarBody extends StatelessWidget {
       ).whenComplete(
         () async {
           await eventsCubit.fetchUnprocessedEventModifiers();
-          eventsCubit.saveToStatePatchedEvent(eventsCubit.patchEventWithEventModifier(event));
         },
       );
     }
@@ -238,7 +236,7 @@ class CalendarBody extends StatelessWidget {
             event.endTime != null &&
             DateTime.parse(event.startTime!).difference(droppingTime.toUtc()).inMinutes.abs() > 4) {
           if (event.recurringId != null) {
-            eventsCubit.showRecurrenceEditModal(context: context, event: event, droppedTimeRounded: droppedTimeRounded);
+            eventsCubit.showRecurrenceEditModalDragAndDrop(context: context, event: event, droppedTimeRounded: droppedTimeRounded);
           } else {
             eventsCubit.updateEventFromCalendarDragAndDrop(event: event, droppedTimeRounded: droppedTimeRounded);
           }
@@ -254,7 +252,7 @@ class CalendarBody extends StatelessWidget {
         if (parentEvent.startTime != null &&
             parentEvent.endTime != null &&
             DateTime.parse(parentEvent.startTime!).difference(droppingTime.toUtc()).inMinutes.abs() > 4) {
-          eventsCubit.showRecurrenceEditModal(
+          eventsCubit.showRecurrenceEditModalDragAndDrop(
               context: context, event: parentEvent, droppedTimeRounded: droppedTimeRounded);
         } else {
           eventsCubit.refreshAllEvents(context);

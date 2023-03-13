@@ -9,6 +9,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/contacts_repository.dart';
 import 'package:mobile/core/repository/event_modifiers_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
+import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -39,6 +40,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
   _init() async {
     await fetchUnprocessedEventModifiers();
+
+    _syncCubit.syncCompletedStream.listen((_) async {
+      await fetchUnprocessedEventModifiers();
+    });
   }
 
   Future<void> fetchEvents() async {
@@ -150,6 +155,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
     refetchEvent(event);
+
+    AnalyticsService.track("Edit Event", properties: {
+      "mobile": true,
+      "mode": "click",
+      "origin": "eventModal",
+      "eventId": event.id,
+      "eventRecurringId": event.recurringId,
+    });
   }
 
   Future<void> updateEventAndCreateModifiers({
@@ -158,6 +171,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required List<String> atendeesToRemove,
     required bool addMeeting,
     required bool removeMeeting,
+    bool createingEvent = false,
+    bool dragAndDrop = false,
   }) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
       await _eventModifiersRepository.add([
@@ -174,6 +189,20 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
     refetchEvent(event);
+
+    AnalyticsService.track(
+        createingEvent == true
+            ? 'New Event'
+            : dragAndDrop
+                ? "Event Rescheduled"
+                : 'Edit Event',
+        properties: {
+          "mobile": true,
+          "mode": dragAndDrop ? "DragAndDrop" : "click",
+          "origin": dragAndDrop ? "calendar" : "eventModal",
+          "eventId": event.id,
+          "eventRecurringId": event.recurringId,
+        });
   }
 
   Future<void> updateParentAndExceptions({
@@ -182,6 +211,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required List<String> atendeesToRemove,
     required bool addMeeting,
     required bool removeMeeting,
+    bool dragAndDrop = false,
   }) async {
     Event parentEvent = await _eventsRepository.getById(exceptionEvent.recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
@@ -226,13 +256,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToAdd: atendeesToAdd,
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
-        removeMeeting: removeMeeting);
+        removeMeeting: removeMeeting,
+        dragAndDrop: dragAndDrop);
     updateEventAndCreateModifiers(
         event: exceptionEvent.copyWith(updatedAt: Nullable(now)),
         atendeesToAdd: atendeesToAdd,
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
-        removeMeeting: removeMeeting);
+        removeMeeting: removeMeeting,
+        dragAndDrop: dragAndDrop);
   }
 
   EventModifier updateAtendeesEventModifier({
@@ -406,7 +438,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
   //create event exception
 
-  Future<void> createEventException(
+  Future<Event?> createEventException(
       {required BuildContext context,
       required DateTime tappedDate,
       required Event parentEvent,
@@ -419,6 +451,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
       required bool rsvpChanged,
       String? rsvpResponse,
       bool deleteEvent = false,
+      bool dragAndDrop = false,
       String? originalStartTime}) async {
     String now = DateTime.now().toUtc().toIso8601String();
 
@@ -488,12 +521,24 @@ class EventsCubit extends Cubit<EventsCubitState> {
               atendeesToAdd: atendeesToAdd,
               atendeesToRemove: atendeesToRemove,
               addMeeting: addMeeting,
-              removeMeeting: removeMeeting)
+              removeMeeting: removeMeeting,
+              createingEvent: true,
+              dragAndDrop: dragAndDrop)
           .then((value) => refreshAllEvents(context));
     }
+    AnalyticsService.track("Edit Event", properties: {
+      "mobile": true,
+      "mode": "click",
+      "origin": "eventModal",
+      "eventId": parentEvent.id,
+      "eventRecurringId": parentEvent.recurringId,
+    });
+
+    return recurringException;
   }
 
-  Future<void> updateThisAndFuture({required DateTime tappedDate, required Event selectedEvent}) async {
+  Future<Event?> updateThisAndFuture(
+      {required DateTime tappedDate, required Event selectedEvent, String? response}) async {
     var id = const Uuid().v4();
     String now = DateTime.now().toUtc().toIso8601String();
 
@@ -535,8 +580,30 @@ class EventsCubit extends Cubit<EventsCubitState> {
     if (newParent.meetingUrl != null && newParent.meetingSolution != null) {
       _eventModifiersRepository.add([newParentMeetingEventModifier(newParent)]);
     }
+    if (response != null) {
+      EventModifier eventModifier = EventModifier(
+          id: const Uuid().v4(),
+          akiflowAccountId: newParent.akiflowAccountId,
+          eventId: newParent.id,
+          calendarId: newParent.calendarId,
+          action: 'attendees/updateRsvp',
+          content: {"responseStatus": response},
+          createdAt: DateTime.now().toUtc().toIso8601String());
+
+      await _eventModifiersRepository.add([eventModifier]);
+    }
 
     endParentAtSelectedEvent(tappedDate: tappedDate, selectedEvent: selectedEvent);
+
+    AnalyticsService.track("New Event", properties: {
+      "mobile": true,
+      "mode": "click",
+      "origin": "eventModal",
+      "eventId": newParent.id,
+      "eventRecurringId": newParent.recurringId,
+    });
+
+    return newParent;
   }
 
   Future<void> endParentAtSelectedEvent({required DateTime tappedDate, required Event selectedEvent}) async {
@@ -566,6 +633,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
     deleteExceptionsByRecurringId(parentEvent.recurringId!, startingFrom: tappedDate.add(const Duration(days: 1)));
     await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
+
+    AnalyticsService.track("Edit Event", properties: {
+      "mobile": true,
+      "mode": "click",
+      "origin": "eventModal",
+      "eventId": parentEvent.id,
+      "eventRecurringId": parentEvent.recurringId,
+    });
   }
 
   Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false, DateTime? startingFrom}) async {
@@ -613,6 +688,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
     entitiesToSync.add(Entity.events);
 
     _syncCubit.sync(entities: entitiesToSync);
+
+    AnalyticsService.track("Event deleted", properties: {
+      "mobile": true,
+      "mode": "click",
+      "origin": "eventModal",
+      "eventId": event.id,
+      "eventRecurringId": event.recurringId,
+    });
   }
 
   Event prepareEventToDelete(Event event) {
@@ -631,7 +714,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     );
   }
 
-  Future<void> showRecurrenceEditModal(
+  Future<void> showRecurrenceEditModalDragAndDrop(
       {required BuildContext context, required Event event, required DateTime droppedTimeRounded}) async {
     DateTime? eventStartTime = event.startTime != null ? DateTime.parse(event.startTime!).toLocal() : null;
     String? originalStartTime = eventStartTime != null
@@ -664,7 +747,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
                       atendeesToRemove: [],
                       addMeeting: false,
                       removeMeeting: false,
-                      rsvpChanged: false);
+                      rsvpChanged: false,
+                      dragAndDrop: true);
                 } else {
                   updateEventFromCalendarDragAndDrop(event: event, droppedTimeRounded: droppedTimeRounded);
                 }
@@ -673,7 +757,12 @@ class EventsCubit extends Cubit<EventsCubitState> {
                 event = prepareEventForDragAndDrop(event, droppedTimeRounded);
                 if (event.startTime == originalStartTime) {
                   updateEventAndCreateModifiers(
-                      event: event, atendeesToAdd: [], atendeesToRemove: [], addMeeting: false, removeMeeting: false);
+                      event: event,
+                      atendeesToAdd: [],
+                      atendeesToRemove: [],
+                      addMeeting: false,
+                      removeMeeting: false,
+                      dragAndDrop: true);
                 } else {
                   context.read<EventsCubit>().updateThisAndFuture(tappedDate: droppedTimeRounded, selectedEvent: event);
                 }
@@ -682,14 +771,20 @@ class EventsCubit extends Cubit<EventsCubitState> {
                 event = prepareEventForDragAndDrop(event, droppedTimeRounded);
                 if (event.recurringId == event.id) {
                   updateEventAndCreateModifiers(
-                      event: event, atendeesToAdd: [], atendeesToRemove: [], addMeeting: false, removeMeeting: false);
+                      event: event,
+                      atendeesToAdd: [],
+                      atendeesToRemove: [],
+                      addMeeting: false,
+                      removeMeeting: false,
+                      dragAndDrop: true);
                 } else {
                   updateParentAndExceptions(
                       exceptionEvent: event,
                       atendeesToAdd: [],
                       atendeesToRemove: [],
                       addMeeting: false,
-                      removeMeeting: false);
+                      removeMeeting: false,
+                      dragAndDrop: true);
                 }
               },
             )).whenComplete(() => refreshAllEvents(context));
@@ -706,6 +801,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _eventsRepository.updateById(event.id, data: event);
     refetchEvent(event);
     await _syncCubit.sync(entities: [Entity.events]);
+
+    AnalyticsService.track("Event Rescheduled", properties: {
+      "mobile": true,
+      "mode": "DragAndDrop",
+      "origin": "calendar",
+      "eventId": event.id,
+      "eventRecurringId": event.recurringId,
+    });
   }
 
   Event prepareEventForDragAndDrop(Event event, DateTime droppedTimeRounded) {
