@@ -293,9 +293,13 @@ class _EventEditModalState extends State<EventEditModal> {
                                             endDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate)));
                                       } else {
                                         updatedEvent = updatedEvent.copyWith(
-                                          startTime: Nullable(widget.tappedDate.toIso8601String()),
-                                          endTime: Nullable(
-                                              widget.tappedDate.add(const Duration(minutes: 30)).toIso8601String()),
+                                          startTime: widget.event.startTime != null
+                                              ? Nullable(widget.event.startTime)
+                                              : Nullable(widget.tappedDate.toIso8601String()),
+                                          endTime: widget.event.endTime != null
+                                              ? Nullable(widget.event.endTime)
+                                              : Nullable(
+                                                  widget.tappedDate.add(const Duration(minutes: 30)).toIso8601String()),
                                           startDate: Nullable(null),
                                           endDate: Nullable(null),
                                         );
