@@ -148,7 +148,7 @@ class TasksRepository extends DatabaseRepository {
 
   Future<List<Task>> getTasksForScheduledNotifications<Task>() async {
     DateTime date = DateTime.now().toUtc();
-    DateTime endTime = date.add(const Duration(days: 1));
+    DateTime endTime = date.add(const Duration(days: 30));
 
     List<Map<String, Object?>> items;
 
