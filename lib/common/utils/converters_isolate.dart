@@ -61,13 +61,18 @@ List<dynamic> fromObjToMapList<T>(List<T> items) {
 }
 
 List<dynamic> fromObjToSqlList<T>(List<T> items) {
-  List<dynamic> result = [];
+  try {
+    List<dynamic> result = [];
 
-  for (T item in items) {
-    result.add((item as Base).toSql());
+    for (T item in items) {
+      result.add((item as Base).toSql());
+    }
+
+    return result;
+  } catch (e) {
+    print(e);
+    rethrow;
   }
-
-  return result;
 }
 
 DateTime? getMaxUpdatedAt(List<dynamic> items) {
