@@ -855,13 +855,22 @@ class _EventEditModalState extends State<EventEditModal> {
                               } else {
                                 if (mounted) {
                                   Navigator.of(context).pop();
-                                  await context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                      event: updatedEvent,
-                                      atendeesToAdd: atendeesToAdd,
-                                      atendeesToRemove: atendeesToRemove,
-                                      addMeeting: addingMeeting,
-                                      removeMeeting: removingMeeting,
-                                      createingEvent: widget.createingEvent ?? false);
+                                  await context
+                                      .read<EventsCubit>()
+                                      .updateEventAndCreateModifiers(
+                                          event: updatedEvent,
+                                          atendeesToAdd: atendeesToAdd,
+                                          atendeesToRemove: atendeesToRemove,
+                                          addMeeting: addingMeeting,
+                                          removeMeeting: removingMeeting,
+                                          createingEvent: widget.createingEvent ?? false)
+                                      .then(
+                                    (value) {
+                                      if (widget.createingEvent ?? false) {
+                                        context.read<EventsCubit>().refreshAllEvents(context);
+                                      }
+                                    },
+                                  );
                                 }
                               }
                             },
