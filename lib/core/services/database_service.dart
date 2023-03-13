@@ -28,7 +28,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 8,
+        version: 9,
         singleInstance: true,
         onCreate: (db, version) async {
           print('Creating database version $version');
@@ -37,7 +37,12 @@ class DatabaseService {
 
           await _setup(batch);
 
-          List<Function(sql.Batch)> migrations = [addTasksDocField, _addIndexes, deleteDocsTable];
+          List<Function(sql.Batch)> migrations = [
+            addTasksDocField,
+            _addIndexes,
+            deleteDocsTable,
+            _addIndexesForListIdUpdatedAt
+          ];
 
           for (var migration in migrations) {
             migration(batch);
@@ -50,6 +55,9 @@ class DatabaseService {
         onUpgrade: (db, oldVersion, newVersion) async {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
+          if (oldVersion < 9) {
+            _addIndexesForListIdUpdatedAt(batch);
+          }
           if (oldVersion < 8) {
             batch.execute('ALTER TABLE tasks ADD COLUMN calendar_id VARCHAR(255)');
           }
@@ -397,6 +405,11 @@ CREATE TABLE IF NOT EXISTS tasks(
     batch.execute('CREATE INDEX IF NOT EXISTS tasks_done ON tasks(`done`)');
     batch.execute('CREATE INDEX IF NOT EXISTS tasks_trashed_at ON tasks(`trashed_at`)');
     batch.execute('CREATE INDEX IF NOT EXISTS doc ON tasks(`doc`)');
+  }
+
+  void _addIndexesForListIdUpdatedAt(Batch batch) {
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_remote_list_id_updated_at ON tasks(`remote_list_id_updated_at`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_global_list_id_updated_at ON tasks(`global_list_id_updated_at`)');
   }
 
   void _addListIdToTask(Batch batch) {
