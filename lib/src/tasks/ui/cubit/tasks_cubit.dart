@@ -68,9 +68,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     emit(state.copyWith(loading: firstTimeLoaded == false));
     _syncCubit.emit(_syncCubit.state.copyWith(loading: firstTimeLoaded == false));
-
-    await refreshAllFromRepository();
-
+    User? user = _preferencesRepository.user;
+    if (user != null) {
+      await refreshAllFromRepository();
+    }
     _syncCubit.syncCompletedStream.listen((_) async {
       User? user = _preferencesRepository.user;
 

@@ -131,93 +131,101 @@ Batch prepareBatchInsert(BatchInsertModel batchInsertModel) {
 }
 
 Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partitioneItemModel) async {
-  List<dynamic> allRemoteModels = partitioneItemModel.remoteItems;
-  List<dynamic> existingLocalModels = partitioneItemModel.existingItems;
-  List<dynamic> changedModels = [];
-  List<dynamic> unchangedModels = [];
-  List<dynamic> nonExistingModels = [];
+  try {
+    List<dynamic> allRemoteModels = partitioneItemModel.remoteItems;
+    List<dynamic> existingLocalModels = partitioneItemModel.existingItems;
+    List<dynamic> changedModels = [];
+    List<dynamic> unchangedModels = [];
+    List<dynamic> nonExistingModels = [];
 
-  Map<String, dynamic> existingModelsById = Map.fromIterable(existingLocalModels, key: (model) => model.id);
+    Map<String, dynamic> existingModelsById = Map.fromIterable(existingLocalModels, key: (model) => model.id);
 
-  for (var remoteModel in allRemoteModels) {
-    int remoteGlobalUpdateAtMillis = 0;
-    int localUpdatedAtMillis = 0;
+    for (var remoteModel in allRemoteModels) {
+      int remoteGlobalUpdateAtMillis = 0;
+      int localUpdatedAtMillis = 0;
 
-    if (remoteModel.globalUpdatedAt != null) {
-      remoteGlobalUpdateAtMillis = DateTime.parse(remoteModel.globalUpdatedAt!).millisecondsSinceEpoch;
-    }
-
-    if (existingModelsById[remoteModel.id]?.updatedAt != null) {
-      localUpdatedAtMillis = DateTime.parse(existingModelsById[remoteModel.id]!.updatedAt!).millisecondsSinceEpoch;
-    }
-
-    Nullable<String?>? remoteUpdatedAt = Nullable(remoteModel.globalUpdatedAt);
-
-    remoteModel = remoteModel.copyWith(
-        updatedAt: remoteUpdatedAt,
-        createdAt: remoteModel.globalCreatedAt,
-        deletedAt: remoteModel.deletedAt,
-        remoteUpdatedAt: remoteUpdatedAt);
-
-    if (existingModelsById.containsKey(remoteModel.id)) {
-      int globalListIdUpdatedAtAtMillis = 0;
-      int localListIdUpdatedAtAtMillis = 0;
-
-      if (remoteModel.runtimeType == Task) {
-        var remoteListIdUpdatedAt = remoteModel.globalListIdUpdatedAt;
-
-        remoteModel = remoteModel.copyWith(remoteListIdUpdatedAt: remoteListIdUpdatedAt);
-
-        if (remoteModel.globalListIdUpdatedAt != null) {
-          globalListIdUpdatedAtAtMillis = DateTime.parse(remoteModel.globalListIdUpdatedAt).millisecondsSinceEpoch;
-        }
-        if (existingModelsById[remoteModel.id] != null &&
-            existingModelsById[remoteModel.id].globalListIdUpdatedAt != null) {
-          localListIdUpdatedAtAtMillis =
-              DateTime.parse(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt).millisecondsSinceEpoch;
-        }
+      if (remoteModel.globalUpdatedAt != null) {
+        remoteGlobalUpdateAtMillis = DateTime.parse(remoteModel.globalUpdatedAt!).millisecondsSinceEpoch;
       }
 
-      if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
-        if (remoteModel.runtimeType == Task) {
-          if (globalListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
-            Nullable<String?>? globalListIdUpdatedAt =
-                Nullable(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt);
-            Nullable<String?>? listId = Nullable(existingModelsById[remoteModel.id]?.listId);
-            Nullable<String?>? sectionId = Nullable(existingModelsById[remoteModel.id]?.sectionId);
+      if (existingModelsById[remoteModel.id]?.updatedAt != null) {
+        localUpdatedAtMillis = DateTime.parse(existingModelsById[remoteModel.id]!.updatedAt!).millisecondsSinceEpoch;
+      }
 
-            remoteModel = (remoteModel as Task).copyWith(
-                listId: listId,
-                sectionId: sectionId,
-                globalListIdUpdatedAt: globalListIdUpdatedAt,
-                remoteListIdUpdatedAt: existingModelsById[remoteModel.id]?.remoteListIdUpdatedAt);
+      Nullable<String?>? remoteUpdatedAt = Nullable(remoteModel.globalUpdatedAt);
+
+      remoteModel = remoteModel.copyWith(
+          updatedAt: remoteUpdatedAt,
+          createdAt: remoteModel.globalCreatedAt,
+          deletedAt: remoteModel.deletedAt,
+          remoteUpdatedAt: remoteUpdatedAt);
+
+      if (existingModelsById.containsKey(remoteModel.id)) {
+        int globalListIdUpdatedAtAtMillis = 0;
+        int localListIdUpdatedAtAtMillis = 0;
+
+        if (remoteModel.runtimeType == Task) {
+          var remoteListIdUpdatedAt = remoteModel.globalListIdUpdatedAt;
+
+          remoteModel = remoteModel.copyWith(remoteListIdUpdatedAt: remoteListIdUpdatedAt);
+
+          if (remoteModel.globalListIdUpdatedAt != null) {
+            globalListIdUpdatedAtAtMillis = DateTime.parse(remoteModel.globalListIdUpdatedAt).millisecondsSinceEpoch;
+          }
+          if (existingModelsById[remoteModel.id] != null &&
+              existingModelsById[remoteModel.id].globalListIdUpdatedAt != null) {
+            localListIdUpdatedAtAtMillis =
+                DateTime.parse(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt).millisecondsSinceEpoch;
           }
         }
 
-        changedModels.add(remoteModel);
+        if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
+          if (remoteModel.runtimeType == Task) {
+            if (globalListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
+              Nullable<String?>? globalListIdUpdatedAt =
+                  Nullable(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt);
+              Nullable<String?>? listId = Nullable(existingModelsById[remoteModel.id]?.listId);
+              Nullable<String?>? sectionId = Nullable(existingModelsById[remoteModel.id]?.sectionId);
+
+              remoteModel = (remoteModel as Task).copyWith(
+                  listId: listId,
+                  sectionId: sectionId,
+                  globalListIdUpdatedAt: globalListIdUpdatedAt,
+                  remoteListIdUpdatedAt: existingModelsById[remoteModel.id]?.remoteListIdUpdatedAt);
+            }
+          }
+
+          changedModels.add(remoteModel);
+        } else {
+          if (remoteModel.runtimeType == Task) {
+            if (globalListIdUpdatedAtAtMillis > localListIdUpdatedAtAtMillis) {
+              Nullable<String?>? globalListIdUpdatedAt = Nullable(remoteModel.globalListIdUpdatedAt);
+              existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id].copyWith(
+                  listId: remoteModel.listId,
+                  sectionId: remoteModel.sectionId,
+                  globalListIdUpdatedAt: globalListIdUpdatedAt,
+                  remoteListIdUpdatedAt: remoteModel.remoteListIdUpdatedAt);
+
+              changedModels.add(existingModelsById[remoteModel.id]);
+            } else {
+              unchangedModels.add(existingModelsById[remoteModel.id]);
+            }
+          } else {
+            unchangedModels.add(remoteModel);
+          }
+        }
       } else {
         if (remoteModel.runtimeType == Task) {
-          if (globalListIdUpdatedAtAtMillis > localListIdUpdatedAtAtMillis) {
-            Nullable<String?>? globalListIdUpdatedAt = Nullable(remoteModel.globalListIdUpdatedAt);
-            existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id].copyWith(
-                listId: remoteModel.listId,
-                sectionId: remoteModel.sectionId,
-                globalListIdUpdatedAt: globalListIdUpdatedAt,
-                remoteListIdUpdatedAt: remoteModel.remoteListIdUpdatedAt);
-
-            changedModels.add(existingModelsById[remoteModel.id]);
-          } else {
-            unchangedModels.add(existingModelsById[remoteModel.id]);
-          }
-        } else {
-          unchangedModels.add(remoteModel);
+          remoteModel = remoteModel.copyWith(remoteListIdUpdatedAt: remoteModel.globalListIdUpdatedAt);
         }
+        nonExistingModels.add(remoteModel);
       }
-    } else {
-      nonExistingModels.add(remoteModel);
     }
+    return [changedModels, unchangedModels, nonExistingModels];
+  } catch (e) {
+    print(e);
+    rethrow;
   }
-  return [changedModels, unchangedModels, nonExistingModels];
 }
 
 class DocsFromGmailDataModel {
