@@ -30,9 +30,12 @@ class NLPDateTime {
         hasTime: json['hasTime'] as bool?,
         hasDate: json['hasDate'] as bool?,
         hasMeridiem: json['hasMeridiem'] as bool?,
-        day: json['parseResult']?['start']?['impliedValues']?['day'] as int?,
-        month: json['parseResult']?['start']?['impliedValues']?['month'] as int?,
-        year: json['parseResult']?['start']?['impliedValues']?['year'] as int?,
+        day: json['parseResult']?['start']?['knownValues']?['day'] ??
+            json['parseResult']?['start']?['impliedValues']?['day'] as int?,
+        month: json['parseResult']?['start']?['knownValues']?['month'] ??
+            json['parseResult']?['start']?['impliedValues']?['month'] as int?,
+        year: json['parseResult']?['start']?['knownValues']?['year'] ??
+            json['parseResult']?['start']?['impliedValues']?['year'] as int?,
         hour: json['parseResult']?['start']?['knownValues']?['hour'] as int?,
         minute: json['parseResult']?['start']?['knownValues']?['minute'] as int?,
       );

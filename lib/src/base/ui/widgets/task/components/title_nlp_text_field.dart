@@ -29,6 +29,7 @@ class _TestJsLibraryState extends State<TitleNlpTextField> {
   late ChronoJsLibrary chronoJsLibrary;
   Future<bool>? isLoaded;
   NLPDateTime? nlpDateTime;
+  String? lastTextWithoutDate;
 
   @override
   void initState() {
@@ -75,9 +76,11 @@ class _TestJsLibraryState extends State<TitleNlpTextField> {
                     (nlpDateTime!.hasTime != null && nlpDateTime!.hasTime!))) {
               widget.onDateDetected(nlpDateTime!);
               widget.onChanged(text, textWithoutDate: nlpDateTime!.textWithoutDate!);
+              lastTextWithoutDate = nlpDateTime?.textWithDate;
             } else {
+              print(nlpDateTime!.toMap().toString());
               widget.stylableController.removeMapping(0);
-              widget.setToInbox();
+              if (lastTextWithoutDate != null && nlpDateTime?.textWithDate == null) widget.setToInbox();
             }
           } else {
             widget.stylableController.removeMapping(0);

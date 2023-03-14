@@ -120,15 +120,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       HapticFeedback.mediumImpact();
 
                                       var cubit = context.read<EditTaskCubit>();
-                                      var tasksCubit = context.read<TasksCubit>();
 
                                       await cubit.create();
                                       print('created complete');
-
-                                      tasksCubit.refreshAllFromRepository().timeout(const Duration(seconds: 6),
-                                          onTimeout: () {
-                                        print('timeout on refreshAllFromRepository - stopped after 5 seconds');
-                                      });
 
                                       setState(() {
                                         showRefresh = false;

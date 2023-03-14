@@ -710,12 +710,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   }
 
   setToInbox() {
+    print('called setToInbox');
     Task task = state.updatedTask;
 
     Task updated = task.copyWith(
-      date: Nullable(null),
-      datetime: Nullable(null),
-      status: Nullable(TaskStatusType.inbox.id),
+      date: Nullable(state.originalTask.date),
+      datetime: Nullable(state.originalTask.datetime),
+      status: Nullable(state.originalTask.status),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
