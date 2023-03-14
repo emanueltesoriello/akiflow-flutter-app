@@ -841,7 +841,7 @@ class _EventModalState extends State<EventModal> {
         },
       );
       setState(() {
-        selectedEvent = selectedEvent.setLoggedUserAttendingResponse(response);
+        selectedEvent.setLoggedUserAttendingResponse(response);
       });
     }
   }

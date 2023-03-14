@@ -128,7 +128,7 @@ class EventModifier extends Equatable implements Base {
       "content": content != null ? jsonEncode(content) : null,
       "processed_at": processedAt,
       "failed_at": failedAt,
-      "result": result,
+      "result": result != null ? jsonEncode(result) : null,
       "attempts": attempts,
       "remote_updated_at": remoteUpdatedAt,
       "created_at": createdAt,

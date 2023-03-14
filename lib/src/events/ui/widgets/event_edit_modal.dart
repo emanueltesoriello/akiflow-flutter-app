@@ -616,7 +616,10 @@ class _EventEditModalState extends State<EventEditModal> {
                                       EventAtendee newAtendee = EventAtendee(
                                         displayName: contact.name,
                                         email: contact.identifier,
-                                        responseStatus: AtendeeResponseStatus.needsAction.id,
+                                        responseStatus: contact.identifier == updatedEvent.originCalendarId
+                                            ? AtendeeResponseStatus.accepted.id
+                                            : AtendeeResponseStatus.needsAction.id,
+                                        organizer: contact.identifier == updatedEvent.originCalendarId ? true : false,
                                       );
                                       atendeesToAdd.add(newAtendee.email!);
                                       if (attendees == null) {
