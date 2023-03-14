@@ -113,7 +113,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksRepository.add([updated]);
       print('completed add');
       //show a toast for the just created task for 3 seconds
+      updated.statusType == TaskStatusType.someday;
       _tasksCubit.setJustCreatedTask(updated);
+
+      //refresh only the interested section
+      _tasksCubit.refreshAllFromRepository(statusType: updated.statusType).timeout(const Duration(seconds: 6),
+          onTimeout: () {
+        print('timeout on refreshAllFromRepository - stopped after 5 seconds');
+      });
 
       emit(const EditTaskCubitState());
 
