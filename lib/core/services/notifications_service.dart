@@ -10,6 +10,8 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
+import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/home/ui/pages/home_page.dart';
 import 'package:models/task/task.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
@@ -17,6 +19,7 @@ import 'package:mobile/core/preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:mobile/core/repository/tasks_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NotificationsService {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -64,17 +67,6 @@ class NotificationsService {
     print("FCM Token: ${(await FirebaseMessaging.instance.getToken()).toString()}");
     // *********************************
     // **********************************/
-  }
-
-  static Future<void> handlerForNotificationsClickForTerminatedApp() async {
-    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    var details = await localNotificationsPlugin.getNotificationAppLaunchDetails();
-    if (details != null && details.didNotificationLaunchApp) {
-      print(details.notificationResponse);
-      print('runned handlerForNotificationsClickForTerminatedApp');
-      handleNotificationClick(details.notificationResponse!);
-    }
   }
 
   Future<void> setupLocalNotificationsPlugin() async {
@@ -203,6 +195,19 @@ class NotificationsService {
     }
   }
 
+  static Future<void> handlerForNotificationsClickForTerminatedApp() async {
+    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    print('handlerForNotificationsClickForTerminatedApp');
+    var details = await localNotificationsPlugin.getNotificationAppLaunchDetails();
+
+    if (details != null && details.didNotificationLaunchApp) {
+      print(details.notificationResponse);
+      print('runned handlerForNotificationsClickForTerminatedApp');
+      handleNotificationClick(details.notificationResponse!);
+    }
+    return;
+  }
+
   static handleNotificationClick(NotificationResponse payload) async {
     //payload.payload;
     if (payload.payload != '') {
@@ -210,10 +215,21 @@ class NotificationsService {
       print('notification clicked');
       BuildContext? context = NavigationService.navigatorKey.currentContext;
       if (context != null) {
-        print('NavigationService.navigatorKey.currentContext');
-        await TaskExt.editTask(NavigationService.navigatorKey.currentContext!, task);
-      } else {
-        print('NO NavigationService.navigatorKey.currentContext');
+        print('handleNotificationClick: task pressed');
+        context.read<MainCubit>().changeHomeView(HomeViewType.today);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+
+        await TaskExt.editTask(context, task);
+      }
+    } else if (payload.id == dailyReminderTaskId) {
+      BuildContext? context = NavigationService.navigatorKey.currentContext;
+      if (context != null) {
+        print('handleNotificationClick: daily reminder pressed');
+
+        context.read<MainCubit>().changeHomeView(HomeViewType.today);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
       }
     }
   }

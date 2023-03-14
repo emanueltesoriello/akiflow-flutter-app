@@ -127,6 +127,7 @@ class Application extends StatelessWidget {
                 context.read<MainCubit>().onFocusLost();
               },
               child: MaterialApp(
+                  key: GlobalKey(),
                   navigatorKey: NavigationService.navigatorKey,
                   title: t.appName,
                   localizationsDelegates: const [
