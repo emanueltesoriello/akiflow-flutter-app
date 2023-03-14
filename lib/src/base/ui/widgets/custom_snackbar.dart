@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 
-enum CustomSnackbarType { success, error }
+enum CustomSnackbarType { success, error, eventCreated, eventEdited, eventDeleted }
 
 class CustomSnackbar extends SnackBar {
   const CustomSnackbar({super.key, required super.content});
@@ -23,7 +23,7 @@ class CustomSnackbar extends SnackBar {
               width: double.infinity,
               padding: const EdgeInsets.only(left: 16),
               decoration: BoxDecoration(
-                color: type == CustomSnackbarType.success ? ColorsExt.green20(context) : ColorsExt.orange20(context),
+                color: color(context, type),
                 border: Border.all(
                   color: ColorsExt.grey4(context),
                   width: 1,
@@ -35,11 +35,7 @@ class CustomSnackbar extends SnackBar {
                   SizedBox(
                     height: 17,
                     width: 17,
-                    child: SvgPicture.asset(
-                        type == CustomSnackbarType.success
-                            ? Assets.images.icons.common.checkDoneOutlineSVG
-                            : Assets.images.icons.common.xmarkCircleSVG,
-                        color: ColorsExt.grey2(context)),
+                    child: SvgPicture.asset(icon(type), color: ColorsExt.grey2(context)),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -55,5 +51,35 @@ class CustomSnackbar extends SnackBar {
         ),
       ),
     );
+  }
+
+  static Color color(BuildContext context, CustomSnackbarType type) {
+    switch (type) {
+      case CustomSnackbarType.success:
+        return ColorsExt.green20(context);
+      case CustomSnackbarType.error:
+        return ColorsExt.orange20(context);
+      case CustomSnackbarType.eventCreated:
+        return ColorsExt.grey6(context);
+      case CustomSnackbarType.eventDeleted:
+        return ColorsExt.cyan25(context);
+      case CustomSnackbarType.eventEdited:
+        return ColorsExt.green20(context);
+    }
+  }
+
+  static String icon(CustomSnackbarType type) {
+    switch (type) {
+      case CustomSnackbarType.success:
+        return Assets.images.icons.common.checkDoneOutlineSVG;
+      case CustomSnackbarType.error:
+        return Assets.images.icons.common.xmarkCircleSVG;
+      case CustomSnackbarType.eventCreated:
+        return Assets.images.icons.common.calendarBadgePlus1SVG;
+      case CustomSnackbarType.eventDeleted:
+        return Assets.images.icons.common.trashSVG;
+      case CustomSnackbarType.eventEdited:
+        return Assets.images.icons.common.calendarBadgePlus1SVG;
+    }
   }
 }

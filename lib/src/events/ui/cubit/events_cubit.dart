@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/contacts_repository.dart';
 import 'package:mobile/core/repository/event_modifiers_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
@@ -32,6 +33,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
   final EventsRepository _eventsRepository = locator<EventsRepository>();
   final EventModifiersRepository _eventModifiersRepository = locator<EventModifiersRepository>();
   final ContactsRepository _contactsRepository = locator<ContactsRepository>();
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final SyncCubit _syncCubit;
 
   EventsCubit(this._syncCubit) : super(const EventsCubitState()) {
@@ -99,7 +101,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   Future<void> scheduleEventsSync() async {
-    Future.delayed(const Duration(seconds: 4))
+    Future.delayed(const Duration(seconds: 5))
         .whenComplete(() => _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]));
     Future.delayed(const Duration(seconds: 10))
         .whenComplete(() => _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]));
@@ -344,7 +346,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   Future<void> fetchUnprocessedEventModifiers() async {
-    List<EventModifier> unprocessed = await _eventModifiersRepository.getUnprocessedEventModifiers();
+    DateTime? maxProcessedAtEvents = _preferencesRepository.lastEventsSyncAt;
+    maxProcessedAtEvents ??= DateTime.now().toUtc();
+    List<EventModifier> unprocessed =
+        await _eventModifiersRepository.getUnprocessedEventModifiers(maxProcessedAtEvents.toIso8601String());
     emit(state.copyWith(unprocessedEventModifiers: unprocessed));
   }
 

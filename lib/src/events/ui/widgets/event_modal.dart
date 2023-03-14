@@ -12,6 +12,7 @@ import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
@@ -651,22 +652,31 @@ class _EventModalState extends State<EventModal> {
                                                     rsvpChanged: false,
                                                     deleteEvent: true);
                                               } else {
-                                                context.read<EventsCubit>().deleteEvent(selectedEvent).then(
-                                                    (value) => context.read<EventsCubit>().refreshAllEvents(context));
+                                                context.read<EventsCubit>().deleteEvent(selectedEvent).then((value) {
+                                                  context.read<EventsCubit>().refreshAllEvents(context);
+                                                  _showEventDeletedSnackbar();
+                                                });
                                               }
                                             },
                                             thisAndFutureTap: () {
                                               Navigator.of(context).pop();
-                                              context.read<EventsCubit>().endParentAtSelectedEvent(
-                                                  tappedDate: widget.tappedDate!, selectedEvent: selectedEvent);
+                                              context
+                                                  .read<EventsCubit>()
+                                                  .endParentAtSelectedEvent(
+                                                      tappedDate: widget.tappedDate!, selectedEvent: selectedEvent)
+                                                  .then((value) {
+                                                _showEventDeletedSnackbar();
+                                              });
                                             },
                                             allTap: () {
                                               Navigator.of(context).pop();
                                               context
                                                   .read<EventsCubit>()
                                                   .deleteEvent(selectedEvent, deleteExceptions: true)
-                                                  .then(
-                                                      (value) => context.read<EventsCubit>().refreshAllEvents(context));
+                                                  .then((value) {
+                                                context.read<EventsCubit>().refreshAllEvents(context);
+                                                _showEventDeletedSnackbar();
+                                              });
                                             },
                                           ),
                                         );
@@ -677,8 +687,10 @@ class _EventModalState extends State<EventModal> {
                                             eventName: selectedEvent.title ?? '',
                                             onTapDelete: () {
                                               Navigator.of(context).pop();
-                                              context.read<EventsCubit>().deleteEvent(selectedEvent).then(
-                                                  (value) => context.read<EventsCubit>().refreshAllEvents(context));
+                                              context.read<EventsCubit>().deleteEvent(selectedEvent).then((value) {
+                                                context.read<EventsCubit>().refreshAllEvents(context);
+                                                _showEventDeletedSnackbar();
+                                              });
                                             },
                                           ),
                                         );
@@ -784,6 +796,7 @@ class _EventModalState extends State<EventModal> {
                     if (exceptionEvent != null) {
                       _processPatchEventModifier(eventsCubit, exceptionEvent);
                       eventsCubit.refreshAllEvents(context);
+                      _showEventEditedSnackbar();
                     }
                   },
                 );
@@ -791,6 +804,7 @@ class _EventModalState extends State<EventModal> {
                 eventsCubit.updateAtend(event: selectedEvent, response: response.id).then(
                   (value) async {
                     _processPatchEventModifier(eventsCubit, selectedEvent);
+                    _showEventEditedSnackbar();
                   },
                 );
               }
@@ -805,6 +819,7 @@ class _EventModalState extends State<EventModal> {
                   if (newParent != null) {
                     _processPatchEventModifier(eventsCubit, newParent);
                     eventsCubit.refreshAllEvents(context);
+                    _showEventEditedSnackbar();
                   }
                 },
               );
@@ -820,12 +835,14 @@ class _EventModalState extends State<EventModal> {
                 eventsCubit.updateAtend(event: selectedEvent, response: response.id).then(
                   (value) async {
                     _processPatchEventModifier(eventsCubit, selectedEvent);
+                    _showEventEditedSnackbar();
                   },
                 );
               } else {
                 eventsCubit.updateAtend(event: selectedEvent, response: response.id, updateParent: true).then(
                   (value) async {
                     _processPatchEventModifier(eventsCubit, selectedEvent);
+                    _showEventEditedSnackbar();
                   },
                 );
               }
@@ -838,10 +855,11 @@ class _EventModalState extends State<EventModal> {
         (value) async {
           EventsCubit eventsCubit = context.read<EventsCubit>();
           _processPatchEventModifier(eventsCubit, selectedEvent);
+          _showEventEditedSnackbar();
         },
       );
       setState(() {
-        selectedEvent = selectedEvent.setLoggedUserAttendingResponse(response);
+        selectedEvent.setLoggedUserAttendingResponse(response);
       });
     }
   }
@@ -849,5 +867,15 @@ class _EventModalState extends State<EventModal> {
   _processPatchEventModifier(EventsCubit eventsCubit, Event selectedEvent) async {
     await eventsCubit.fetchUnprocessedEventModifiers();
     eventsCubit.saveToStatePatchedEvent(eventsCubit.patchEventWithEventModifier(selectedEvent));
+  }
+
+  _showEventEditedSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackbar.get(context: context, type: CustomSnackbarType.eventEdited, message: t.event.snackbar.edited));
+  }
+
+  _showEventDeletedSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackbar.get(context: context, type: CustomSnackbarType.eventDeleted, message: t.event.snackbar.deleted));
   }
 }

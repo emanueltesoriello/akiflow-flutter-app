@@ -118,6 +118,7 @@ class _AssetsImagesIconsCommon {
   final bellSVG = 'assets/images/icons/_common/bell.svg';
   final briefcaseSVG = 'assets/images/icons/_common/briefcase.svg';
   final calendarSVG = 'assets/images/icons/_common/calendar.svg';
+  final calendarBadgePlus1SVG = 'assets/images/icons/_common/calendar_badge_plus.svg';
   final chatBubbleSVG = 'assets/images/icons/_common/chat_bubble.svg';
   final checkDoneGoalSVG = 'assets/images/icons/_common/check_done_goal.svg';
   final checkmarkAltCircleFillSVG = 'assets/images/icons/_common/checkmark_alt_circle_fill.svg';
