@@ -284,22 +284,24 @@ class _EventEditModalState extends State<EventEditModal> {
                                   onToggle: (value) {
                                     setState(() {
                                       isAllDay = !isAllDay;
-
                                       if (value) {
                                         updatedEvent = updatedEvent.copyWith(
                                             startTime: Nullable(null),
                                             endTime: Nullable(null),
-                                            startDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate)),
-                                            endDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate)));
+                                            startDate:
+                                                Nullable(DateFormat("y-MM-dd").format(widget.tappedDate.toUtc())),
+                                            endDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate.toUtc())));
                                       } else {
                                         updatedEvent = updatedEvent.copyWith(
                                           startTime: widget.event.startTime != null
                                               ? Nullable(widget.event.startTime)
-                                              : Nullable(widget.tappedDate.toIso8601String()),
+                                              : Nullable(widget.tappedDate.toUtc().toIso8601String()),
                                           endTime: widget.event.endTime != null
                                               ? Nullable(widget.event.endTime)
-                                              : Nullable(
-                                                  widget.tappedDate.add(const Duration(minutes: 30)).toIso8601String()),
+                                              : Nullable(widget.tappedDate
+                                                  .toUtc()
+                                                  .add(const Duration(minutes: 30))
+                                                  .toIso8601String()),
                                           startDate: Nullable(null),
                                           endDate: Nullable(null),
                                         );
