@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 311 
+ * Strings: 315 
  *
- * Built on 2023-03-09 at 13:00 UTC
+ * Built on 2023-03-14 at 17:54 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -644,6 +644,7 @@ class _StringsEventEn {
 	String get edit => 'Edit';
 	String get delete => 'Delete';
 	late final _StringsEventEditEventEn editEvent = _StringsEventEditEventEn._(_root);
+	late final _StringsEventSnackbarEn snackbar = _StringsEventSnackbarEn._(_root);
 }
 
 // Path: availability
@@ -902,6 +903,18 @@ class _StringsEventEditEventEn {
 	String get saveChanges => 'Save Changes';
 	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
 	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
+}
+
+// Path: event.snackbar
+class _StringsEventSnackbarEn {
+	_StringsEventSnackbarEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get created => 'Event created successfully';
+	String get edited => 'Event updated successfully';
+	String get deleted => 'Event has been deleted';
 }
 
 // Path: settings.integrations.gmail
@@ -1315,6 +1328,9 @@ extension on _StringsEn {
 			'event.editEvent.repeatingEditModal.allEvents': 'All events',
 			'event.editEvent.deleteModal.title': ({required Object eventName}) => 'Are you sure you want to delete ${eventName}',
 			'event.editEvent.deleteModal.description': 'You can\'t undo this action!',
+			'event.snackbar.created': 'Event created successfully',
+			'event.snackbar.edited': 'Event updated successfully',
+			'event.snackbar.deleted': 'Event has been deleted',
 			'availability.availabilities': 'Availabilities',
 			'availability.activeRecurrentSlots': 'Active recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',

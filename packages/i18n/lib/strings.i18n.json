@@ -365,6 +365,11 @@
         "title": "Are you sure you want to delete ${eventName}",
         "description": "You can't undo this action!"
       }
+    },
+    "snackbar": {
+      "created": "Event created successfully",
+      "edited": "Event updated successfully",
+      "deleted": "Event has been deleted"
     }
   },
   "availability": {

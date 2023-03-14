@@ -12,6 +12,7 @@ import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/add_guests_modal.dart';
@@ -806,25 +807,35 @@ class _EventEditModalState extends State<EventEditModal> {
                                           onlyThisTap: () {
                                             Navigator.of(context).pop();
                                             if (updatedEvent.recurringId == updatedEvent.id) {
-                                              context.read<EventsCubit>().createEventException(
-                                                  context: context,
-                                                  tappedDate: widget.tappedDate,
-                                                  dateChanged: dateChanged,
-                                                  originalStartTime: widget.originalStartTime,
-                                                  timeChanged: timeChanged,
-                                                  parentEvent: updatedEvent,
-                                                  atendeesToAdd: atendeesToAdd,
-                                                  atendeesToRemove: atendeesToRemove,
-                                                  addMeeting: addingMeeting,
-                                                  removeMeeting: removingMeeting,
-                                                  rsvpChanged: false);
+                                              context
+                                                  .read<EventsCubit>()
+                                                  .createEventException(
+                                                      context: context,
+                                                      tappedDate: widget.tappedDate,
+                                                      dateChanged: dateChanged,
+                                                      originalStartTime: widget.originalStartTime,
+                                                      timeChanged: timeChanged,
+                                                      parentEvent: updatedEvent,
+                                                      atendeesToAdd: atendeesToAdd,
+                                                      atendeesToRemove: atendeesToRemove,
+                                                      addMeeting: addingMeeting,
+                                                      removeMeeting: removingMeeting,
+                                                      rsvpChanged: false)
+                                                  .then((value) {
+                                                _showEventEditedSnackbar();
+                                              });
                                             } else {
-                                              context.read<EventsCubit>().updateEventAndCreateModifiers(
-                                                  event: updatedEvent,
-                                                  atendeesToAdd: atendeesToAdd,
-                                                  atendeesToRemove: atendeesToRemove,
-                                                  addMeeting: addingMeeting,
-                                                  removeMeeting: removingMeeting);
+                                              context
+                                                  .read<EventsCubit>()
+                                                  .updateEventAndCreateModifiers(
+                                                      event: updatedEvent,
+                                                      atendeesToAdd: atendeesToAdd,
+                                                      atendeesToRemove: atendeesToRemove,
+                                                      addMeeting: addingMeeting,
+                                                      removeMeeting: removingMeeting)
+                                                  .then((value) {
+                                                _showEventEditedSnackbar();
+                                              });
                                             }
                                           },
                                           thisAndFutureTap: () {
@@ -842,8 +853,10 @@ class _EventEditModalState extends State<EventEditModal> {
                                                   .read<EventsCubit>()
                                                   .updateThisAndFuture(
                                                       tappedDate: widget.tappedDate, selectedEvent: updatedEvent)
-                                                  .then(
-                                                      (value) => context.read<EventsCubit>().refreshAllEvents(context));
+                                                  .then((value) {
+                                                context.read<EventsCubit>().refreshAllEvents(context);
+                                                _showEventEditedSnackbar();
+                                              });
                                             }
                                           },
                                           allTap: () {
@@ -871,8 +884,15 @@ class _EventEditModalState extends State<EventEditModal> {
                                           createingEvent: widget.createingEvent ?? false)
                                       .then(
                                     (value) {
-                                      if (widget.createingEvent ?? false) {
+                                      bool createdEvent = widget.createingEvent ?? false;
+                                      if (createdEvent) {
                                         context.read<EventsCubit>().refreshAllEvents(context);
+                                        ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
+                                            context: context,
+                                            type: CustomSnackbarType.eventCreated,
+                                            message: t.event.snackbar.created));
+                                      } else {
+                                        _showEventEditedSnackbar();
                                       }
                                     },
                                   );
@@ -894,6 +914,11 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
+  _showEventEditedSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackbar.get(context: context, type: CustomSnackbarType.eventEdited, message: t.event.snackbar.edited));
+  }
+
   _allTap(
       {required BuildContext context,
       required Event updatedEvent,
@@ -911,19 +936,25 @@ class _EventEditModalState extends State<EventEditModal> {
             startTime: Nullable(widget.event.computeStartTimeForParent(updatedEvent)),
             endTime: Nullable(widget.event.computeEndTimeForParent(updatedEvent)));
       }
-      context.read<EventsCubit>().updateEventAndCreateModifiers(
-          event: updatedEvent,
-          atendeesToAdd: atendeesToAdd,
-          atendeesToRemove: atendeesToRemove,
-          addMeeting: addingMeeting,
-          removeMeeting: removingMeeting);
+      context
+          .read<EventsCubit>()
+          .updateEventAndCreateModifiers(
+              event: updatedEvent,
+              atendeesToAdd: atendeesToAdd,
+              atendeesToRemove: atendeesToRemove,
+              addMeeting: addingMeeting,
+              removeMeeting: removingMeeting)
+          .then((value) => _showEventEditedSnackbar());
     } else {
-      context.read<EventsCubit>().updateParentAndExceptions(
-          exceptionEvent: updatedEvent,
-          atendeesToAdd: atendeesToAdd,
-          atendeesToRemove: atendeesToRemove,
-          addMeeting: addingMeeting,
-          removeMeeting: removingMeeting);
+      context
+          .read<EventsCubit>()
+          .updateParentAndExceptions(
+              exceptionEvent: updatedEvent,
+              atendeesToAdd: atendeesToAdd,
+              atendeesToRemove: atendeesToRemove,
+              addMeeting: addingMeeting,
+              removeMeeting: removingMeeting)
+          .then((value) => _showEventEditedSnackbar());
     }
   }
 
