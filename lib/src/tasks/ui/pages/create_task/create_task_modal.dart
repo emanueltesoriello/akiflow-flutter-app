@@ -91,6 +91,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               context.read<EditTaskCubit>().updateTitle(value,
                                   mapping: simpleTitleController.mapping, textWithoutDate: textWithoutDate);
                             },
+                            setToInbox: () {
+                              context.read<EditTaskCubit>().setToInbox();
+                            },
                             onDateDetected: (NLPDateTime nlpDateTime) {
                               context.read<EditTaskCubit>().onDateDetected(context, nlpDateTime);
                             },

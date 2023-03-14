@@ -702,6 +702,21 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         dateTime: (date.minute > 0 || date.hour > 0) ? date : null, statusType: TaskStatusType.planned, fromNlp: true);
   }
 
+  setToInbox() {
+    Task task = state.updatedTask;
+
+    Task updated = task.copyWith(
+      date: Nullable(null),
+      datetime: Nullable(null),
+      status: Nullable(TaskStatusType.inbox.id),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+
+    emit(state.copyWith(updatedTask: updated));
+
+    _tasksCubit.refreshTasksUi(updated);
+  }
+
   onDateDetected(BuildContext context, NLPDateTime nlpDateTime) {
     if (nlpDateTime.hasDate! || nlpDateTime.hasTime! && !simpleTitleController.isRemoved(nlpDateTime.textWithDate!)) {
       simpleTitleController.removeMapping(0);

@@ -10,12 +10,14 @@ class TitleNlpTextField extends StatefulWidget {
   final FocusNode titleFocus;
   final Function(String, {String? textWithoutDate}) onChanged;
   final Function(NLPDateTime) onDateDetected;
+  final Function() setToInbox;
 
   const TitleNlpTextField(
       {super.key,
       required this.stylableController,
       required this.titleFocus,
       required this.onChanged,
+      required this.setToInbox,
       required this.onDateDetected});
 
   @override
@@ -68,9 +70,14 @@ class _TestJsLibraryState extends State<TitleNlpTextField> {
           widget.onChanged(text);
           if (text.isNotEmpty) {
             nlpDateTime = chronoJsLibrary.runNlp(text);
-            if (nlpDateTime != null && (nlpDateTime!.hasDate! || nlpDateTime!.hasTime!)) {
+            if (nlpDateTime != null &&
+                ((nlpDateTime!.hasDate != null && nlpDateTime!.hasDate!) ||
+                    (nlpDateTime!.hasTime != null && nlpDateTime!.hasTime!))) {
               widget.onDateDetected(nlpDateTime!);
               widget.onChanged(text, textWithoutDate: nlpDateTime!.textWithoutDate!);
+            } else {
+              widget.stylableController.removeMapping(0);
+              widget.setToInbox();
             }
           } else {
             widget.stylableController.removeMapping(0);
