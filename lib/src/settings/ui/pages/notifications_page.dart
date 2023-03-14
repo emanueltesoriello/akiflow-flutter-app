@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
@@ -12,6 +13,7 @@ import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -28,6 +30,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   NextTaskNotificationsModel selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
   bool nextTaskNotificationSettingEnabled = false;
   bool dailyOverviewNotificationTimeEnabled = false;
+  bool taskCompletedSoundEnabled = true;
 
   @override
   void initState() {
@@ -36,6 +39,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     nextTaskNotificationSettingEnabled = service.nextTaskNotificationSettingEnabled;
     dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
     dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
+    taskCompletedSoundEnabled = service.taskCompletedSoundEnabledMobile;
   }
 
   mainItem(String switchTitle, String mainButtonListTitle, String selectedButtonListItem, Function onTap,
@@ -209,6 +213,58 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   }
                   NotificationsService.setDailyReminder(locator<PreferencesRepository>());
                 }, isEnabled: dailyOverviewNotificationTimeEnabled),
+                const SizedBox(height: 20),
+                Text(
+                  "sounds".toUpperCase(),
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                ),
+                const SizedBox(height: 5),
+                Container(
+                  height: 58,
+                  margin: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(radius),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ColorsExt.grey5(context),
+                          offset: const Offset(0, 2),
+                          blurRadius: 1,
+                        ),
+                      ],
+                      color: Colors.white),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Task completed",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: ColorsExt.grey2(context),
+                          ),
+                        ),
+                        FlutterSwitch(
+                          width: 48,
+                          height: 24,
+                          toggleSize: 20,
+                          activeColor: ColorsExt.akiflow(context),
+                          inactiveColor: ColorsExt.grey5(context),
+                          value: taskCompletedSoundEnabled,
+                          borderRadius: 24,
+                          padding: 2,
+                          onToggle: (value) {
+                            setState(() {
+                              taskCompletedSoundEnabled = value;
+                            });
+                            service.setTaskCompletedSoundEnabledMobile(value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

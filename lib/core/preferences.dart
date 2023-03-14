@@ -90,6 +90,9 @@ abstract class PreferencesRepository {
   bool get dailyOverviewNotificationTimeEnabled;
   Future<void> seDailyOverviewNotificationTime(bool value);
 
+  bool get taskCompletedSoundEnabledMobile;
+  Future<void> setTaskCompletedSoundEnabledMobile(bool value);
+
   String get deviceUUID;
   Future<void> setDeviceUUID(String value);
 
@@ -428,6 +431,16 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> seDailyOverviewNotificationTime(bool value) async {
     await _prefs.setBool("dailyOverviewNotificationTimeEnabled", value);
+  }
+
+  @override
+  Future<void> setTaskCompletedSoundEnabledMobile(bool value) async {
+    await _prefs.setBool("taskCompletedSoundEnabledMobile", value);
+  }
+
+  @override
+  bool get taskCompletedSoundEnabledMobile {
+    return _prefs.getBool("taskCompletedSoundEnabledMobile") ?? true;
   }
 
   @override
