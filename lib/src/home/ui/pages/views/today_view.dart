@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -155,6 +157,15 @@ class _TodayViewState extends State<TodayView> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.zero,
                           children: [
+                            if (todos.isEmpty && pinned.isEmpty)
+                              Container(
+                                padding: const EdgeInsets.only(top: 100, bottom: 10),
+                                child: SvgPicture.asset(
+                                  Assets.images.akiflow.tasksDoneSVG,
+                                  width: 80.81,
+                                  height: 97.72,
+                                ),
+                              ),
                             TaskList(
                               key: const ObjectKey("todos"),
                               shrinkWrap: true,
