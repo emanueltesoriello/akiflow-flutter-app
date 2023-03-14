@@ -5,6 +5,7 @@ class Assets {
   static final fonts = _AssetsFonts._();
   static final html = _AssetsHtml._();
   static final images = _AssetsImages._();
+  static final sounds = _AssetsSounds._();
 }
 
 class _AssetsConfig {
@@ -28,6 +29,12 @@ class _AssetsHtml {
   _AssetsHtml._();
 
   final indexHTML = 'assets/html/index.html';
+}
+
+class _AssetsSounds {
+  _AssetsSounds._();
+
+  final taskCompletedMP3 = 'sounds/taskCompleted.mp3';
 }
 
 class _AssetsImages {

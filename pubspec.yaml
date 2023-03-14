@@ -58,6 +58,7 @@ dependencies:
   extended_text_field: ^10.2.0
   flutter_native_timezone: ^2.0.0
   flutter_js: ^0.6.0
+  audioplayers: ^3.0.1
 
   
 dev_dependencies:
@@ -111,6 +112,7 @@ flutter:
     - assets/html/
     - assets/js/chrono-custom-rules-master/
     - assets/js/chrono-custom-rules-master/dist/
+    - assets/sounds/
 
   fonts:
     - family: Inter
