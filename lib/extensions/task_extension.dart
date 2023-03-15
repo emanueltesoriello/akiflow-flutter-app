@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
@@ -850,6 +851,16 @@ extension TaskExt on Task {
       launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication).catchError((e) {
         print(e);
       });
+    }
+  }
+
+  playTaskDoneSound() {
+    if (!(done ?? false)) {
+      PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+      if (preferencesRepository.taskCompletedSoundEnabledMobile) {
+        final audioPlayer = AudioPlayer();
+        audioPlayer.play(AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
+      }
     }
   }
 }

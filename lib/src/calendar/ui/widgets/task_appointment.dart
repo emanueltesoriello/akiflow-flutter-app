@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
@@ -94,6 +95,7 @@ class TaskAppointment extends StatelessWidget {
                                     calendarController.view == CalendarView.schedule)
                             ? GestureDetector(
                                 onTap: () {
+                                  task.playTaskDoneSound();
                                   checkboxController?.completedClick();
                                 },
                                 child: Row(

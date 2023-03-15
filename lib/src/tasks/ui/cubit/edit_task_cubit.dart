@@ -31,8 +31,6 @@ part 'edit_task_state.dart';
 
 class EditTaskCubit extends Cubit<EditTaskCubitState> {
   final TasksRepository _tasksRepository = locator<TasksRepository>();
-  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
-
   final TasksCubit _tasksCubit;
   final SyncCubit _syncCubit;
 
@@ -349,10 +347,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     if (updated.isCompletedComputed) {
       AnalyticsService.track("Task Done");
-      if (_preferencesRepository.taskCompletedSoundEnabledMobile) {
-        final audioPlayer = AudioPlayer();
-        audioPlayer.play(AssetSource(Assets.sounds.taskCompletedMP3));
-      }
     } else {
       AnalyticsService.track("Task Undone");
     }
