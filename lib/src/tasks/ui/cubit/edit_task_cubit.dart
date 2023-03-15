@@ -351,7 +351,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       AnalyticsService.track("Task Done");
       if (_preferencesRepository.taskCompletedSoundEnabledMobile) {
         final audioPlayer = AudioPlayer();
-        audioPlayer.play(AssetSource(Assets.sounds.taskCompletedMP3));
+        audioPlayer.play(AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
       }
     } else {
       AnalyticsService.track("Task Undone");
