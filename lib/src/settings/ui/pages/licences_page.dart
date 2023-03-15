@@ -20,6 +20,7 @@ class LicencesPage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: const [
+                _LicenseItem(name: "audioplayers", type: "MIT"),
                 _LicenseItem(name: "async", type: "MIT"),
                 _LicenseItem(name: "dio", type: "MIT"),
                 _LicenseItem(name: "equatable", type: "MIT"),
@@ -29,6 +30,7 @@ class LicencesPage extends StatelessWidget {
                 _LicenseItem(name: "flutter_appauth", type: "MIT"),
                 _LicenseItem(name: "flutter_bloc", type: "MIT"),
                 _LicenseItem(name: "flutter_displaymode", type: "MIT"),
+                _LicenseItem(name: "flutter_js", type: "MIT"),
                 _LicenseItem(name: "flutter_localizations", type: "MIT"),
                 _LicenseItem(name: "flutter_local_notifications", type: "MIT"),
                 _LicenseItem(name: "flutter_native_timezone", type: "MIT"),
@@ -39,7 +41,6 @@ class LicencesPage extends StatelessWidget {
                 _LicenseItem(name: "flutter_switch", type: "MIT"),
                 _LicenseItem(name: "flutter_quill", type: "MIT"),
                 _LicenseItem(name: "get_it", type: "MIT"),
-                _LicenseItem(name: "google_mlkit_entity_extraction", type: "MIT"),
                 _LicenseItem(name: "html", type: "MIT"),
                 _LicenseItem(name: "http", type: "MIT"),
                 _LicenseItem(name: "i18n", type: "MIT"),
