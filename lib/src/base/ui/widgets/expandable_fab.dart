@@ -173,14 +173,7 @@ class _ExpandingActionButton extends StatelessWidget {
           directionInDegrees * (math.pi / 180.0),
           progress.value * maxDistance,
         );
-        return Positioned(
-          right: 4.0 + offset.dx,
-          bottom: 4.0 + offset.dy,
-          child: Transform.rotate(
-            angle: 180 * math.pi / 2,
-            child: child!,
-          ),
-        );
+        return Positioned(right: 4.0 + offset.dx, bottom: 4.0 + offset.dy, child: child!);
       },
       child: FadeTransition(
         opacity: progress,
