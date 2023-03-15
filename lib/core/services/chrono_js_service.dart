@@ -40,7 +40,7 @@ class ChronoJsLibrary {
   NLPDateTime runNlp(
     String text,
   ) {
-    jsRuntime.evaluate("""  
+    /*jsRuntime.evaluate("""  
       try {
 
         var extractDateAndTextWrapper = (text, forwardDate, forwardFromAsIsoString, startFromDateAsIsoString, startDayHour, startFromDateTimeAsIsoString) => {
@@ -57,9 +57,9 @@ class ChronoJsLibrary {
         console.log(e);  
       }  
 
-    """);
+    """);*/
 
-    String expression = """ChronoHelper.extractDateAndText("$text");""";
+    String expression = """ChronoHelper.extractDateAndText("$text",{forwardDate: true});""";
 
     JsEvalResult jsResult = jsRuntime.evaluate(expression);
 
