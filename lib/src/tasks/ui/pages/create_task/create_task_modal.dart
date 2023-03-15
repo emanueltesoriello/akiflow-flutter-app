@@ -106,41 +106,44 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               titleController: simpleTitleController,
                               titleFocus: titleFocus,
                             ),
-                            showRefresh
-                                ? const Center(
-                                    child: Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: CircularProgressIndicator(),
-                                  ))
-                                : SendTaskButton(onTap: () async {
-                                    try {
-                                      setState(() {
-                                        showRefresh = true;
-                                      });
-                                      HapticFeedback.mediumImpact();
+                            GestureDetector(
+                              onVerticalDragUpdate: (_) {},
+                              child: showRefresh
+                                  ? const Center(
+                                      child: Padding(
+                                      padding: EdgeInsets.all(2.0),
+                                      child: CircularProgressIndicator(),
+                                    ))
+                                  : SendTaskButton(onTap: () async {
+                                      try {
+                                        setState(() {
+                                          showRefresh = true;
+                                        });
+                                        HapticFeedback.mediumImpact();
 
-                                      var cubit = context.read<EditTaskCubit>();
+                                        var cubit = context.read<EditTaskCubit>();
 
-                                      await cubit.create();
-                                      print('created complete');
+                                        await cubit.create();
+                                        print('created complete');
 
-                                      setState(() {
-                                        showRefresh = false;
+                                        setState(() {
+                                          showRefresh = false;
+                                          Navigator.pop(context);
+                                        });
+
+                                        await cubit.forceSync();
+                                      } catch (e) {
+                                        setState(() {
+                                          showRefresh = false;
+                                        });
                                         Navigator.pop(context);
-                                      });
-
-                                      await cubit.forceSync();
-                                    } catch (e) {
-                                      setState(() {
-                                        showRefresh = false;
-                                      });
-                                      Navigator.pop(context);
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        content: Text(e.toString()),
-                                      ));
-                                      locator<SentryService>().captureException(Exception(e.toString()));
-                                    }
-                                  }),
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                          content: Text(e.toString()),
+                                        ));
+                                        locator<SentryService>().captureException(Exception(e.toString()));
+                                      }
+                                    }),
+                            ),
                           ]),
                           const SizedBox(height: 16),
                         ],
