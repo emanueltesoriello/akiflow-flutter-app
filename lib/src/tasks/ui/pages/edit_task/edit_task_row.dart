@@ -168,6 +168,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           ? null
           : () {
               HapticFeedback.heavyImpact();
+              task.playTaskDoneSound();
               context.read<EditTaskCubit>().markAsDone();
               Navigator.of(context).pop();
             },
