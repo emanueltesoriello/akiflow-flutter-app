@@ -320,7 +320,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated, showLabelsList: false));
 
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);
