@@ -15,12 +15,7 @@ abstract class PreferencesRepository {
   User? get user;
 
   bool get inboxNoticeHidden;
-
-  bool get availabilitiesNoticeHidden;
-
   Future<void> setInboxNoticeHidden(bool value);
-
-  Future<void> setAvailabilitiesNoticeHidden(bool value);
 
   DateTime? get lastAccountsSyncAt;
   Future<void> setLastAccountsSyncAt(DateTime? value);

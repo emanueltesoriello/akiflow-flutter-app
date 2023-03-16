@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 315 
+ * Strings: 313 
  *
- * Built on 2023-03-14 at 17:54 UTC
+ * Built on 2023-03-16 at 09:11 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -657,8 +657,6 @@ class _StringsAvailabilityEn {
 	String get availabilities => 'Availabilities';
 	String get activeRecurrentSlots => 'Active recurrent slots';
 	String get activeManualSlots => 'Active manual slots';
-	String get comingSoon => 'Coming Soon';
-	String get fullCalendarExperienceInFuture => 'The full calendar experience is coming in the near future';
 	String get noActiveLinksToShow => 'No active links to show';
 	String get toCreateLinkUseDesktop => 'To create a link use the desktop app';
 	String get linkCopiedToClipboard => 'Link copied to clipboard!';
@@ -1334,8 +1332,6 @@ extension on _StringsEn {
 			'availability.availabilities': 'Availabilities',
 			'availability.activeRecurrentSlots': 'Active recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',
-			'availability.comingSoon': 'Coming Soon',
-			'availability.fullCalendarExperienceInFuture': 'The full calendar experience is coming in the near future',
 			'availability.noActiveLinksToShow': 'No active links to show',
 			'availability.toCreateLinkUseDesktop': 'To create a link use the desktop app',
 			'availability.linkCopiedToClipboard': 'Link copied to clipboard!',
