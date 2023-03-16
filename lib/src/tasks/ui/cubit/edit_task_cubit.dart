@@ -97,7 +97,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     simpleTitleController.text = state.originalTask.title ?? '';
   }
 
-  Future<void> create() async {
+  Future<void> create({Function? afterCreation}) async {
     try {
       if (TaskExt.hasData(state.updatedTask) == false) {
         return;
@@ -118,13 +118,17 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updated.statusType == TaskStatusType.someday;
       _tasksCubit.setJustCreatedTask(updated);
 
+      if (afterCreation != null) {
+        afterCreation();
+      }
+
+      emit(const EditTaskCubitState());
+
       //refresh only the interested section
-      _tasksCubit.refreshAllFromRepository(statusType: updated.statusType).timeout(const Duration(seconds: 6),
+      await _tasksCubit.refreshAllFromRepository(statusType: updated.statusType).timeout(const Duration(seconds: 6),
           onTimeout: () {
         print('timeout on refreshAllFromRepository - stopped after 5 seconds');
       });
-
-      emit(const EditTaskCubitState());
 
       AnalyticsService.track("New Task");
     } catch (e) {
