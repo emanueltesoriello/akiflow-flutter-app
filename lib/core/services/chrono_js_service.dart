@@ -14,7 +14,7 @@ class ChronoJsLibrary {
   Future<bool> initJsEngine() async {
     // loads ajv only once into the jsRuntime
     var chronoIsLoaded = jsRuntime.evaluate("""var chronoIsLoaded = (typeof chrono == 'undefined') ? 
-          "0" : "1"; chronoIsLoaded;
+          "0" : "1"; chronoIsLoaded; 
         """).stringResult;
     print("Chrono is Loaded $chronoIsLoaded");
     if (chronoIsLoaded == "0") {
