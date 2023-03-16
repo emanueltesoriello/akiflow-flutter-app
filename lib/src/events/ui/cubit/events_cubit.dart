@@ -57,9 +57,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
   }
 
-  Future<void> fetchEventsBetweenDates(String startDate, String endDate) async {
+  Future<void> fetchEventsBetweenDates(DateTime start, DateTime end) async {
     try {
-      List<Event> events = await _eventsRepository.getEventsBetweenDates(startDate, endDate);
+      List<Event> events = await _eventsRepository.getEventsBetweenDates(start, end);
       emit(state.copyWith(events: events));
     } catch (e) {
       print(e);
@@ -87,9 +87,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     Future.delayed(
       const Duration(milliseconds: 1200),
       () {
-        fetchEventsBetweenDates(
-            calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)).toIso8601String(),
-            calendarCubit.state.visibleDates.last.add(const Duration(days: 1)).toIso8601String());
+        fetchEventsBetweenDates(calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)),
+            calendarCubit.state.visibleDates.last.add(const Duration(days: 1)));
       },
     );
   }
