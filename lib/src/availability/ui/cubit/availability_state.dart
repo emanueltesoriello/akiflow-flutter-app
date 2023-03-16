@@ -2,14 +2,12 @@ part of 'availability_cubit.dart';
 
 class AvailabilityCubitState extends Equatable {
   final AvailabilityNavigationState navigationState;
-  final bool isNoticeDismissed;
   final bool isManualOpen;
   final bool isRecurrentOpen;
   final List<AvailabilityConfig>? availabilities;
 
   const AvailabilityCubitState({
     this.navigationState = AvailabilityNavigationState.loading,
-    this.isNoticeDismissed = true,
     this.availabilities,
     this.isManualOpen = true,
     this.isRecurrentOpen = true,
@@ -17,14 +15,12 @@ class AvailabilityCubitState extends Equatable {
 
   AvailabilityCubitState copyWith({
     AvailabilityNavigationState? navigationState,
-    bool? isNoticeDismissed,
     List<AvailabilityConfig>? availabilities,
     bool? isManualOpen,
     bool? isRecurrentOpen,
   }) {
     return AvailabilityCubitState(
       navigationState: navigationState ?? this.navigationState,
-      isNoticeDismissed: isNoticeDismissed ?? this.isNoticeDismissed,
       availabilities: availabilities ?? this.availabilities,
       isManualOpen: isManualOpen ?? this.isManualOpen,
       isRecurrentOpen: isRecurrentOpen ?? this.isRecurrentOpen,
@@ -32,5 +28,5 @@ class AvailabilityCubitState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [navigationState, isNoticeDismissed, availabilities, isManualOpen, isRecurrentOpen];
+  List<Object?> get props => [navigationState, availabilities, isManualOpen, isRecurrentOpen];
 }

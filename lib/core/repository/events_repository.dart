@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
@@ -29,7 +30,11 @@ class EventsRepository extends DatabaseRepository {
     return objects;
   }
 
-  Future<List<Event>> getEventsBetweenDates<Event>(String startDate, String endDate) async {
+  Future<List<Event>> getEventsBetweenDates<Event>(DateTime start, DateTime end) async {
+    String startTime = start.toIso8601String();
+    String endTime = end.toIso8601String();
+    String startDate = DateFormat("y-MM-dd").format(start);
+    String endDate = DateFormat("y-MM-dd").format(end);
     List<Map<String, Object?>> items;
     try {
       items = await _databaseService.database!.rawQuery("""
@@ -38,15 +43,14 @@ class EventsRepository extends DatabaseRepository {
         WHERE task_id IS NULL         
         AND ( 
           (recurring_id IS NULL
-          AND ((start_time >= ? AND end_time <= ?) OR (start_date >= ? AND end_date <= ?)))
+          AND ((start_time >= ? AND end_time <= ?) 
+          OR (start_date >= ? AND start_date <= ?) OR (start_date <= ? AND end_date >= ?)))
           OR (recurring_id IS NOT NULL AND (until_datetime IS NULL OR until_datetime >= ?)) 
         )    
       """, [
-        startDate,
-        endDate,
-        startDate,
-        endDate,
-        startDate,
+        startTime, endTime, 
+        startDate, endDate, startDate, startDate,
+        startTime,
       ]);
     } catch (e) {
       print('Error retrieving events between dates: $e');

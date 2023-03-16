@@ -8,7 +8,6 @@ import 'package:mobile/src/availability/ui/widgets/availability_view_placeholder
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
 
 import 'package:models/task/availability_config.dart';
-import 'availability_notice.dart';
 import 'expandable_panel.dart';
 import 'slot_list.dart';
 
@@ -42,7 +41,6 @@ class AvailabilitiesView extends StatelessWidget {
         onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
         child: ListView(
           children: [
-            const AvailabilityNotice(),
             ExpandablePanelList(
               elevation: 0,
               expansionCallback: (panelIndex, isExpanded) {

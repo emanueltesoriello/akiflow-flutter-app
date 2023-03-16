@@ -95,13 +95,13 @@ class CalendarBody extends StatelessWidget {
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
-              String start = details.visibleDates.first.subtract(const Duration(days: 1)).toIso8601String();
-              String end = details.visibleDates.last.add(const Duration(days: 1)).toIso8601String();
+              DateTime start = details.visibleDates.first.subtract(const Duration(days: 1));
+              DateTime end = details.visibleDates.last.add(const Duration(days: 1));
               if (calendarController.view == CalendarView.schedule) {
                 tasksCubit.fetchCalendarTasks();
                 eventsCubit.fetchEvents();
               } else {
-                tasksCubit.fetchTasksBetweenDates(start, end);
+                tasksCubit.fetchTasksBetweenDates(start.toIso8601String(), end.toIso8601String());
                 eventsCubit.fetchEventsBetweenDates(start, end);
               }
             },
@@ -161,7 +161,7 @@ class CalendarBody extends StatelessWidget {
             task: task,
             context: context);
       } catch (e) {
-        print(e);
+        print('calendar_body find task error: $e');
       }
       return const SizedBox();
     } else if (appointment.notes == 'deleted') {
@@ -176,7 +176,7 @@ class CalendarBody extends StatelessWidget {
             event: event,
             context: context);
       } catch (e) {
-        print(e);
+        print('calendar_body find event error: $e');
       }
       return const SizedBox();
     }
