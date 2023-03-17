@@ -68,7 +68,7 @@ class EventRecurrenceModal extends StatelessWidget {
             _item(
               context,
               active: selectedRecurrence == EventRecurrenceModalType.none,
-              text: t.editTask.noRepeat,
+              text: t.event.editEvent.recurrence.noRepeat,
               click: () {
                 onChange(null);
                 onRecurrenceType(EventRecurrenceModalType.none);
@@ -78,7 +78,7 @@ class EventRecurrenceModal extends StatelessWidget {
             _item(
               context,
               active: selectedRecurrence == EventRecurrenceModalType.daily,
-              text: t.editTask.everyDay,
+              text: t.event.editEvent.recurrence.everyDay,
               click: () {
                 var rule = RecurrenceRule(
                   frequency: Frequency.daily,
@@ -130,7 +130,7 @@ class EventRecurrenceModal extends StatelessWidget {
             _item(
               context,
               active: selectedRecurrence == EventRecurrenceModalType.everyWeekday,
-              text: t.editTask.everyWeekday,
+              text: t.event.editEvent.recurrence.everyWeekday,
               click: () {
                 var rule = RecurrenceRule(
                   frequency: Frequency.weekly,
