@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:models/nlp/nlp_date_time.dart';
 
@@ -40,31 +43,21 @@ class ChronoJsLibrary {
   NLPDateTime runNlp(
     String text,
   ) {
-    /*jsRuntime.evaluate("""  
-      try {
+    late Map map;
 
-        var extractDateAndTextWrapper = (text, forwardDate, forwardFromAsIsoString, startFromDateAsIsoString, startDayHour, startFromDateTimeAsIsoString) => {
-          var options = {
-            forwardDate: forwardDate,
-            forwardFrom: forwardFromAsIsoString,
-            startFromDate: startFromDateAsIsoString, 
-            startDayHour: startDayHour, 
-            startFromDateTime: startFromDateTimeAsIsoString, 
-          } 
-          return ChronoHelper.extractDateAndText(text, options);
-        }     
-      } catch(e) { 
-        console.log(e);  
-      }  
+    if (Platform.isAndroid) {
+      String expression = """ChronoHelper.extractDateAndText("$text",{forwardDate: true});""";
+      JsEvalResult jsResult = jsRuntime.evaluate(expression);
 
-    """);*/
+      map = jsResult.rawResult as Map;
+    } else if (Platform.isIOS) {
+      String expression = """var result = ChronoHelper.extractDateAndText("$text",{forwardDate: true});
+    var b = JSON.stringify(result)""";
+      jsRuntime.evaluate(expression);
 
-    String expression = """ChronoHelper.extractDateAndText("$text",{forwardDate: true});""";
-
-    JsEvalResult jsResult = jsRuntime.evaluate(expression);
-
-    var map = jsResult.rawResult as Map;
-
+      JsEvalResult result = jsRuntime.evaluate("""b""");
+      map = json.decode(result.stringResult) as Map;
+    }
     NLPDateTime? nlpDateTime;
 
     try {
