@@ -124,14 +124,13 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
 
                                         var cubit = context.read<EditTaskCubit>();
 
-                                        await cubit.create(
-                                            afterCreation: () => setState(() {
-                                                  showRefresh = false;
-                                                  Navigator.pop(context);
-                                                }));
+                                        await cubit.create();
                                         print('created complete');
 
-                                        await cubit.forceSync();
+                                        setState(() {
+                                          showRefresh = false;
+                                          Navigator.pop(context);
+                                        });
                                       } catch (e) {
                                         setState(() {
                                           showRefresh = false;

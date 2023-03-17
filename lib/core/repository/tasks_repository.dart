@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
@@ -117,7 +118,7 @@ class TasksRepository extends DatabaseRepository {
         WHERE deleted_at IS NULL
         AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
-        AND ((date > ? AND date < ?) OR (datetime > ? AND datetime < ?))
+        AND ((date > ? AND date < ?) OR (datetime > ? AND datetime < ?)) 
         ORDER BY
           CASE
             WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?

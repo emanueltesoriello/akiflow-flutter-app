@@ -118,35 +118,25 @@ class TasksCubit extends Cubit<TasksCubitState> {
     ));
   }
 
-  Future<void> refreshAllFromRepository({TaskStatusType? statusType}) async {
-    String startDateCalendarTasks = DateTime.now().toUtc().subtract(const Duration(days: 7)).toIso8601String();
-    String endDateCalendarTasks = DateTime.now().toUtc().add(const Duration(days: 7)).toIso8601String();
-    if (statusType != null) {
-      if (statusType == TaskStatusType.inbox) {
-        await fetchInbox().then((_) => print('fetched inbox'));
-      } else {
-        await Future.wait([
-          fetchTodayTasks().then((_) => print('fetched today tasks')),
-          (_todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value())
-              .then((_) => print('fetched selected day tasks')),
-          _labelsCubit?.state.selectedLabel != null
-              ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!)
-              : Future.value().then((_) => print('fetched label tasks')),
-        ]);
-      }
-    } else {
+  Future<void> refreshAllFromRepository() async {
+    try {
+      String startDateCalendarTasks = DateTime.now().toUtc().subtract(const Duration(days: 7)).toIso8601String();
+      String endDateCalendarTasks = DateTime.now().toUtc().add(const Duration(days: 7)).toIso8601String();
+
       await Future.wait([
         fetchInbox().then((_) => print('fetched inbox')),
         fetchTodayTasks().then((_) => print('fetched today tasks')),
-        (_todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value())
-            .then((_) => print('fetched selected day tasks')),
-        _labelsCubit?.state.selectedLabel != null
-            ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!)
-            : Future.value().then((_) => print('fetched label tasks')),
+        fetchSelectedDayTasks(_todayCubit!.state.selectedDate).then((_) => print('fetched selected day tasks')),
+        _labelsCubit != null
+            ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!).then((_) => print('fetched label tasks'))
+            : Future.value(),
+        fetchTasksBetweenDates(startDateCalendarTasks, endDateCalendarTasks)
+            .then((value) => print('fetched calendar tasks'))
       ]);
+    } catch (e) {
+      print(e);
     }
-    await fetchTasksBetweenDates(startDateCalendarTasks, endDateCalendarTasks)
-        .then((value) => print('fetched calendar tasks'));
+
     emit(state.copyWith(tasksLoaded: true));
   }
 
