@@ -595,8 +595,7 @@ class _EventModalState extends State<EventModal> {
                       const Separator(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: selectedEvent.creatorId == selectedEvent.originCalendarId ||
-                                (selectedEvent.content["guestsCanModify"] ?? false)
+                        child: selectedEvent.canModify()
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [

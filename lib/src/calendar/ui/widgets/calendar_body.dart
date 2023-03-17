@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
@@ -230,7 +231,7 @@ class CalendarBody extends StatelessWidget {
       }
     } else if (events.any((event) => event.id == appointment.id)) {
       Event event = events.firstWhere((event) => event.id == appointment.id);
-      if (event.creatorId != event.originCalendarId) {
+      if (!event.canModify()) {
         _noPermissionToEditEvent(context, calendarCubit);
       } else {
         if (event.startTime != null &&
@@ -248,7 +249,7 @@ class CalendarBody extends StatelessWidget {
       }
     } else if (events.any((event) => event.recurringId == appointment.recurrenceId)) {
       Event parentEvent = events.firstWhere((event) => event.recurringId == appointment.recurrenceId);
-      if (parentEvent.creatorId != parentEvent.originCalendarId) {
+      if (!parentEvent.canModify()) {
         _noPermissionToEditEvent(context, calendarCubit);
       } else {
         if (parentEvent.startTime != null &&
