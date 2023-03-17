@@ -57,6 +57,13 @@ extension TaskStatusTypeExt on AtendeeResponseStatus {
 extension EventExt on Event {
   static String akiflowSignature = 'Scheduled with Akiflow';
 
+  bool canModify() {
+    return !(readOnly ?? false) &&
+        (creatorId == originCalendarId ||
+            organizerId == originCalendarId ||
+            (organizerId != originCalendarId && (content["guestsCanModify"] ?? false)));
+  }
+
   AtendeeResponseStatus get isLoggedUserAttndingEvent {
     String? response;
     try {

@@ -265,7 +265,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                     ),
                                     const SizedBox(width: 16.0),
                                     Text(
-                                      "All day",
+                                      t.event.editEvent.allDay,
                                       style: TextStyle(
                                           fontSize: 17.0,
                                           fontWeight: FontWeight.w400,
@@ -411,7 +411,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                         ),
                                         const SizedBox(width: 16.0),
                                         Text(
-                                          'Add conference',
+                                          t.event.editEvent.addConference,
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.w400,
@@ -441,7 +441,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                   child: TextField(
                                     controller: locationController,
                                     decoration: InputDecoration(
-                                      hintText: 'Add location',
+                                      hintText: t.event.editEvent.addLocation,
                                       hintStyle: TextStyle(
                                           fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
                                       border: InputBorder.none,
@@ -532,7 +532,8 @@ class _EventEditModalState extends State<EventEditModal> {
                                     children: [
                                       Row(
                                         children: [
-                                          updatedEvent.attendees![index].responseStatus == 'accepted'
+                                          updatedEvent.attendees![index].responseStatus ==
+                                                  AtendeeResponseStatus.accepted.id
                                               ? SizedBox(
                                                   width: 19,
                                                   height: 19,
@@ -541,7 +542,8 @@ class _EventEditModalState extends State<EventEditModal> {
                                                     color: ColorsExt.green(context),
                                                   ),
                                                 )
-                                              : updatedEvent.attendees![index].responseStatus == 'declined'
+                                              : updatedEvent.attendees![index].responseStatus ==
+                                                      AtendeeResponseStatus.declined.id
                                                   ? SizedBox(
                                                       width: 19,
                                                       height: 19,
@@ -650,7 +652,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                       width: 20, height: 20, color: ColorsExt.grey3(context)),
                                   const SizedBox(width: 16.0),
                                   Text(
-                                    'Add guests',
+                                    t.event.editEvent.addGuests,
                                     style: TextStyle(
                                         fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
                                   ),
@@ -692,7 +694,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                 ),
                                 const SizedBox(width: 16.0),
                                 Text(
-                                  'Default color',
+                                  t.event.editEvent.defaultColor,
                                   style: TextStyle(
                                       fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                                 ),
@@ -725,7 +727,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                             ),
                                             const SizedBox(width: 16.0),
                                             Text(
-                                              'View on Google Calendar',
+                                              t.event.editEvent.viewOnGoogleCalendar,
                                               style: TextStyle(
                                                   fontSize: 17.0,
                                                   fontWeight: FontWeight.w400,
@@ -780,7 +782,9 @@ class _EventEditModalState extends State<EventEditModal> {
                                 Navigator.of(context).pop();
                               }),
                           BottomButton(
-                            title: widget.createingEvent ?? false ? 'Create event' : 'Save changes',
+                            title: widget.createingEvent ?? false
+                                ? t.event.editEvent.createEvent
+                                : t.event.editEvent.saveChanges,
                             image: Assets.images.icons.common.checkmarkAltSVG,
                             containerColor: ColorsExt.green20(context),
                             iconColor: ColorsExt.green(context),
@@ -1160,26 +1164,26 @@ class _EventEditModalState extends State<EventEditModal> {
 
   String _recurrence(EventRecurrenceModalType? selectedRecurrence) {
     if (selectedRecurrence == null) {
-      return 'Set Repeat';
+      return t.event.editEvent.recurrence.setRepeat;
     }
 
     switch (selectedRecurrence) {
       case EventRecurrenceModalType.none:
-        return 'Set Repeat';
+        return t.event.editEvent.recurrence.setRepeat;
       case EventRecurrenceModalType.daily:
-        return 'Every Day';
+        return t.event.editEvent.recurrence.everyDay;
       case EventRecurrenceModalType.everyCurrentDay:
         return t.editTask.everyCurrentDay(day: DateFormat("EEEE").format(widget.tappedDate));
       case EventRecurrenceModalType.everyWeekday:
-        return 'Every weekday';
+        return t.event.editEvent.recurrence.everyWeekday;
       case EventRecurrenceModalType.everyYearOnThisDay:
         return t.editTask.everyYearOn(
           date: DateFormat("MMM dd").format(widget.tappedDate),
         );
       case EventRecurrenceModalType.custom:
-        return 'Custom';
+        return t.event.editEvent.recurrence.custom;
       default:
-        return 'Set Repeat';
+        return t.event.editEvent.recurrence.setRepeat;
     }
   }
 }

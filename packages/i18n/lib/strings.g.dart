@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 313 
+ * Strings: 320 
  *
- * Built on 2023-03-16 at 09:11 UTC
+ * Built on 2023-03-17 at 15:25 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -632,6 +632,7 @@ class _StringsEventEn {
 	String get zoom => 'Zoom';
 	String get join => 'Join';
 	String get busy => 'Busy';
+	String get conference => 'Conference';
 	String get guests => 'Guests';
 	String get organizer => 'Organizer';
 	String get going => 'Going?';
@@ -891,16 +892,18 @@ class _StringsEventEditEventEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	String get setRepeat => 'Set Repeat';
 	String get allDay => 'All Day';
 	String get addConference => 'Add Conference';
 	String get addLocation => 'Add Location';
+	String get addGuests => 'Add guests';
 	String get addDescription => 'Add Description';
 	String get defaultColor => 'Default Color';
 	String get viewOnGoogleCalendar => 'View on Google Calendar';
+	String get createEvent => 'Create event';
 	String get saveChanges => 'Save Changes';
 	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
 	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
+	late final _StringsEventEditEventRecurrenceEn recurrence = _StringsEventEditEventRecurrenceEn._(_root);
 }
 
 // Path: event.snackbar
@@ -983,6 +986,20 @@ class _StringsEventEditEventDeleteModalEn {
 	// Translations
 	String title({required Object eventName}) => 'Are you sure you want to delete ${eventName}';
 	String get description => 'You can\'t undo this action!';
+}
+
+// Path: event.editEvent.recurrence
+class _StringsEventEditEventRecurrenceEn {
+	_StringsEventEditEventRecurrenceEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get noRepeat => 'No repeat';
+	String get setRepeat => 'Set Repeat';
+	String get everyDay => 'Every day';
+	String get everyWeekday => 'Every weekday';
+	String get custom => 'Custom';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1298,6 +1315,7 @@ extension on _StringsEn {
 			'event.zoom': 'Zoom',
 			'event.join': 'Join',
 			'event.busy': 'Busy',
+			'event.conference': 'Conference',
 			'event.guests': 'Guests',
 			'event.organizer': 'Organizer',
 			'event.going': 'Going?',
@@ -1309,13 +1327,14 @@ extension on _StringsEn {
 			'event.mailGuests': 'Mail Guests',
 			'event.edit': 'Edit',
 			'event.delete': 'Delete',
-			'event.editEvent.setRepeat': 'Set Repeat',
 			'event.editEvent.allDay': 'All Day',
 			'event.editEvent.addConference': 'Add Conference',
 			'event.editEvent.addLocation': 'Add Location',
+			'event.editEvent.addGuests': 'Add guests',
 			'event.editEvent.addDescription': 'Add Description',
 			'event.editEvent.defaultColor': 'Default Color',
 			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
+			'event.editEvent.createEvent': 'Create event',
 			'event.editEvent.saveChanges': 'Save Changes',
 			'event.editEvent.repeatingEditModal.title': 'Editing repeating event',
 			'event.editEvent.repeatingEditModal.deleteTitle': 'You are deleting a recurrent event',
@@ -1326,6 +1345,11 @@ extension on _StringsEn {
 			'event.editEvent.repeatingEditModal.allEvents': 'All events',
 			'event.editEvent.deleteModal.title': ({required Object eventName}) => 'Are you sure you want to delete ${eventName}',
 			'event.editEvent.deleteModal.description': 'You can\'t undo this action!',
+			'event.editEvent.recurrence.noRepeat': 'No repeat',
+			'event.editEvent.recurrence.setRepeat': 'Set Repeat',
+			'event.editEvent.recurrence.everyDay': 'Every day',
+			'event.editEvent.recurrence.everyWeekday': 'Every weekday',
+			'event.editEvent.recurrence.custom': 'Custom',
 			'event.snackbar.created': 'Event created successfully',
 			'event.snackbar.edited': 'Event updated successfully',
 			'event.snackbar.deleted': 'Event has been deleted',
