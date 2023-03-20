@@ -17,7 +17,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
   SyncCubit() : super(const SyncCubitState(loading: true));
 
-  Future sync({List<Entity>? entities, bool loading = false}) async {
+  Future sync({List<Entity>? entities, bool loading = true}) async {
     print("start sync $entities");
 
     try {

@@ -7,20 +7,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/notice.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/inbox/inbox_view_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/task/components/title_nlp_text_field.dart';
 import 'package:mobile/src/home/ui/pages/views/empty_home_view.dart';
 import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
-import 'package:mobile/core/preferences.dart';
 
 class InboxView extends StatelessWidget {
   const InboxView({Key? key}) : super(key: key);
