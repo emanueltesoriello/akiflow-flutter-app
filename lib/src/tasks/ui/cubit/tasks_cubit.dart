@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
@@ -143,13 +144,17 @@ class TasksCubit extends Cubit<TasksCubitState> {
   // This method allows to modify a list of task, updating only the selected field
   // In this way we can keep the selection of tasks during a sync or update runned from the refreshAllFromRepository method
   List<Task> updateSelectedTasks(List<Task> originalList, List<Task> updatedList) {
+    if (kDebugMode) {
+      print('originalList: ${originalList.length}');
+      print('updatedList: ${updatedList.length}');
+    }
     if (originalList.isEmpty) {
       return updatedList;
     }
 
-    final selectedTaskIds = updatedList.where((task) => task.selected ?? false).map((task) => task.id).toSet();
+    final selectedTaskIds = originalList.where((task) => task.selected ?? false).map((task) => task.id).toSet();
 
-    final updatedTasks = originalList.map((task) {
+    final updatedTasks = updatedList.map((task) {
       if (selectedTaskIds.contains(task.id)) {
         return task.copyWith(selected: true);
       }
