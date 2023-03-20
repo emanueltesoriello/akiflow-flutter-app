@@ -144,24 +144,29 @@ class TasksCubit extends Cubit<TasksCubitState> {
   // This method allows to modify a list of task, updating only the selected field
   // In this way we can keep the selection of tasks during a sync or update runned from the refreshAllFromRepository method
   List<Task> updateSelectedTasks(List<Task> originalList, List<Task> updatedList) {
-    if (kDebugMode) {
-      print('originalList: ${originalList.length}');
-      print('updatedList: ${updatedList.length}');
-    }
-    if (originalList.isEmpty) {
+    try {
+      if (kDebugMode) {
+        print('originalList: ${originalList.length}');
+        print('updatedList: ${updatedList.length}');
+      }
+      if (originalList.isEmpty) {
+        return updatedList;
+      }
+
+      final selectedTaskIds = originalList.where((task) => task.selected ?? false).map((task) => task.id).toSet();
+
+      final updatedTasks = updatedList.map((task) {
+        if (selectedTaskIds.contains(task.id)) {
+          return task.copyWith(selected: true);
+        }
+        return task;
+      }).toList();
+
+      return updatedTasks;
+    } catch (e) {
+      print(e);
       return updatedList;
     }
-
-    final selectedTaskIds = originalList.where((task) => task.selected ?? false).map((task) => task.id).toSet();
-
-    final updatedTasks = updatedList.map((task) {
-      if (selectedTaskIds.contains(task.id)) {
-        return task.copyWith(selected: true);
-      }
-      return task;
-    }).toList();
-
-    return updatedTasks;
   }
 
   Future fetchInbox() async {
