@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
@@ -127,7 +128,7 @@ class _PlanModalState extends State<PlanModal> {
                   CreateTaskTopActionItem(
                     text: t.addTask.plan,
                     color: ColorsExt.grey5(context),
-                    leadingIconAsset: "assets/images/icons/_common/calendar.svg",
+                    leadingIconAsset: Assets.images.icons.common.calendarSVG,
                     active: status == TaskStatusType.planned,
                     onPressed: () {
                       _selectedStatus.value = TaskStatusType.planned;
@@ -137,7 +138,7 @@ class _PlanModalState extends State<PlanModal> {
                   CreateTaskTopActionItem(
                     text: t.addTask.snooze,
                     color: ColorsExt.pink30(context),
-                    leadingIconAsset: "assets/images/icons/_common/clock.svg",
+                    leadingIconAsset: Assets.images.icons.common.clockSVG,
                     active: status == TaskStatusType.snoozed,
                     onPressed: () {
                       _selectedStatus.value = TaskStatusType.snoozed;
@@ -202,18 +203,20 @@ class _PlanModalState extends State<PlanModal> {
                             },
                           );
                         } else {
-                          DateTime laterToday = DateTime(now.year, now.month, now.day, now.hour);
-                          DateTime laterTodayMore3Hours = DateTime(now.year, now.month, now.day, now.hour + 3);
+                          DateTime laterTodayMore3Hours =
+                              DateTime(now.year, now.month, now.day, now.hour + 3).toLocal();
 
                           return _predefinedDateItem(
                             context,
-                            iconAsset: "assets/images/icons/_common/clock.svg",
+                            iconAsset: Assets.images.icons.common.clockSVG,
                             text: t.addTask.laterToday,
                             trailingText:
-                                '${DateFormat("EEE").format(laterToday)} - ${DateFormat("HH:mm").format(laterToday)}',
+                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat("HH:mm").format(laterTodayMore3Hours)}',
                             onPressed: () {
                               widget.onSelectDate(
-                                  date: laterToday, datetime: laterTodayMore3Hours, statusType: TaskStatusType.snoozed);
+                                  date: laterTodayMore3Hours,
+                                  datetime: laterTodayMore3Hours,
+                                  statusType: TaskStatusType.snoozed);
                               Navigator.pop(context);
                             },
                           );
@@ -298,7 +301,7 @@ class _PlanModalState extends State<PlanModal> {
 
                           return _predefinedDateItem(
                             context,
-                            iconAsset: "assets/images/icons/_common/slash_circle.svg",
+                            iconAsset: Assets.images.icons.common.slashCircleSVG,
                             text: t.addTask.remove,
                             trailingText: t.bottomBar.inbox,
                             onPressed: () {
@@ -309,7 +312,7 @@ class _PlanModalState extends State<PlanModal> {
                         } else {
                           return _predefinedDateItem(
                             context,
-                            iconAsset: "assets/images/icons/_common/archivebox.svg",
+                            iconAsset: Assets.images.icons.common.archiveboxSVG,
                             text: t.task.someday,
                             trailingText: t.addTask.noDate,
                             onPressed: () {

@@ -17,9 +17,13 @@ class LabelsRepository extends DatabaseRepository {
   Future<List<Label>> getLabels() async {
     String query = """SELECT * FROM lists WHERE deleted_at IS NULL ORDER BY sorting ASC;""";
 
-    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery(query).catchError((e) {
-      print(e);
-    });
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.rawQuery(query);
+    } catch (e) {
+      print('Error retrieving labels: $e');
+      return [];
+    }
 
     return await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
   }

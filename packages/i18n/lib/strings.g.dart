@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 258 
+ * Strings: 320 
  *
- * Built on 2023-01-16 at 09:23 UTC
+ * Built on 2023-03-17 at 15:25 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -321,6 +321,9 @@ class _StringsEn {
 	String get comingSoon => 'Coming soon';
 	String get allTasks => 'All tasks';
 	late final _StringsLabelEn label = _StringsLabelEn._(_root);
+	late final _StringsEventEn event = _StringsEventEn._(_root);
+	late final _StringsAvailabilityEn availability = _StringsAvailabilityEn._(_root);
+	late final _StringsSnackbarEn snackbar = _StringsSnackbarEn._(_root);
 	String get confirm => 'Confirm';
 	String get cancel => 'Cancel';
 	String get noTitle => '(No title)';
@@ -505,6 +508,10 @@ class _StringsCalendarEn {
 	// Translations
 	String get comingSoon => 'Calendar is coming in the near future!';
 	String get goToToday => 'Go to Today';
+	String get calendarView => 'Calendar View';
+	late final _StringsCalendarViewEn view = _StringsCalendarViewEn._(_root);
+	String get hideWeekends => 'Hide Weekends';
+	String get calendars => 'Calendars';
 }
 
 // Path: linkedContent
@@ -514,9 +521,9 @@ class _StringsLinkedContentEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	String get subject => 'Subject:';
-	String get from => 'From:';
-	String get date => 'Date:';
+	String get subject => 'Subject';
+	String get from => 'From';
+	String get date => 'Date';
 	String get open => 'Open';
 	String get parentTask => 'Parent task';
 	String get project => 'Project';
@@ -537,6 +544,10 @@ class _StringsLinkedContentEn {
 	String get status => 'Status';
 	String get done => 'Done';
 	String get toDo => 'To do';
+	String get section => 'Section';
+	String get scheduledDate => 'Scheduled Date';
+	String get duration => 'Duration';
+	String get team => 'Team';
 }
 
 // Path: editTask
@@ -608,6 +619,59 @@ class _StringsLabelEn {
 	String get hideSomeday => 'Hide Someday';
 	late final _StringsLabelDeleteDialogEn deleteDialog = _StringsLabelDeleteDialogEn._(_root);
 	String get sortComingSoon => 'Sort (Coming soon)';
+}
+
+// Path: event
+class _StringsEventEn {
+	_StringsEventEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get googleMeet => 'Google Meet';
+	String get zoom => 'Zoom';
+	String get join => 'Join';
+	String get busy => 'Busy';
+	String get conference => 'Conference';
+	String get guests => 'Guests';
+	String get organizer => 'Organizer';
+	String get going => 'Going?';
+	String get yes => 'Yes';
+	String get no => 'No';
+	String get maybe => 'Maybe';
+	String get copy => 'Copy';
+	String get share => 'Share';
+	String get mailGuests => 'Mail Guests';
+	String get edit => 'Edit';
+	String get delete => 'Delete';
+	late final _StringsEventEditEventEn editEvent = _StringsEventEditEventEn._(_root);
+	late final _StringsEventSnackbarEn snackbar = _StringsEventSnackbarEn._(_root);
+}
+
+// Path: availability
+class _StringsAvailabilityEn {
+	_StringsAvailabilityEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get availabilities => 'Availabilities';
+	String get activeRecurrentSlots => 'Active recurrent slots';
+	String get activeManualSlots => 'Active manual slots';
+	String get noActiveLinksToShow => 'No active links to show';
+	String get toCreateLinkUseDesktop => 'To create a link use the desktop app';
+	String get linkCopiedToClipboard => 'Link copied to clipboard!';
+}
+
+// Path: snackbar
+class _StringsSnackbarEn {
+	_StringsSnackbarEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get connectedSuccesfully => 'Connected successfully!';
+	String get cannotMoveThisEvent => 'You cannot move this event!';
 }
 
 // Path: integrations
@@ -755,6 +819,20 @@ class _StringsTaskGmailEn {
 	String get unlabelTheEmail => 'Unlabel the email';
 }
 
+// Path: calendar.view
+class _StringsCalendarViewEn {
+	_StringsCalendarViewEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get agenda => 'Agenda';
+	String get oneDay => '1 Day';
+	String get threeDays => '3 Days';
+	String get week => 'Week';
+	String get month => 'Month';
+}
+
 // Path: editTask.repeatingEditDialog
 class _StringsEditTaskRepeatingEditDialogEn {
 	_StringsEditTaskRepeatingEditDialogEn._(this._root);
@@ -807,6 +885,39 @@ class _StringsLabelDeleteDialogEn {
 	String get markAllTasksAsDone => 'Mark all tasks as Done';
 }
 
+// Path: event.editEvent
+class _StringsEventEditEventEn {
+	_StringsEventEditEventEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get allDay => 'All Day';
+	String get addConference => 'Add Conference';
+	String get addLocation => 'Add Location';
+	String get addGuests => 'Add guests';
+	String get addDescription => 'Add Description';
+	String get defaultColor => 'Default Color';
+	String get viewOnGoogleCalendar => 'View on Google Calendar';
+	String get createEvent => 'Create event';
+	String get saveChanges => 'Save Changes';
+	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
+	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
+	late final _StringsEventEditEventRecurrenceEn recurrence = _StringsEventEditEventRecurrenceEn._(_root);
+}
+
+// Path: event.snackbar
+class _StringsEventSnackbarEn {
+	_StringsEventSnackbarEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get created => 'Event created successfully';
+	String get edited => 'Event updated successfully';
+	String get deleted => 'Event has been deleted';
+}
+
 // Path: settings.integrations.gmail
 class _StringsSettingsIntegrationsGmailEn {
 	_StringsSettingsIntegrationsGmailEn._(this._root);
@@ -848,6 +959,47 @@ class _StringsSettingsIntegrationsCalendarEn {
 
 	// Translations
 	String get title => 'Google Calendar';
+}
+
+// Path: event.editEvent.repeatingEditModal
+class _StringsEventEditEventRepeatingEditModalEn {
+	_StringsEventEditEventRepeatingEditModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Editing repeating event';
+	String get deleteTitle => 'You are deleting a recurrent event';
+	String get description => 'Do you want to change only this occurrence or change this and all future occurrences?';
+	String get deleteDescription => 'Do you want to delete only this occurrence or delete this and all future occurrences?';
+	String get onlyThis => 'Only this event';
+	String get thisAndAllFuture => 'This and all future events';
+	String get allEvents => 'All events';
+}
+
+// Path: event.editEvent.deleteModal
+class _StringsEventEditEventDeleteModalEn {
+	_StringsEventEditEventDeleteModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String title({required Object eventName}) => 'Are you sure you want to delete ${eventName}';
+	String get description => 'You can\'t undo this action!';
+}
+
+// Path: event.editEvent.recurrence
+class _StringsEventEditEventRecurrenceEn {
+	_StringsEventEditEventRecurrenceEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get noRepeat => 'No repeat';
+	String get setRepeat => 'Set Repeat';
+	String get everyDay => 'Every day';
+	String get everyWeekday => 'Every weekday';
+	String get custom => 'Custom';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1056,9 +1208,17 @@ extension on _StringsEn {
 			'errors.noAccountsFound': 'No accounts found',
 			'calendar.comingSoon': 'Calendar is coming in the near future!',
 			'calendar.goToToday': 'Go to Today',
-			'linkedContent.subject': 'Subject:',
-			'linkedContent.from': 'From:',
-			'linkedContent.date': 'Date:',
+			'calendar.calendarView': 'Calendar View',
+			'calendar.view.agenda': 'Agenda',
+			'calendar.view.oneDay': '1 Day',
+			'calendar.view.threeDays': '3 Days',
+			'calendar.view.week': 'Week',
+			'calendar.view.month': 'Month',
+			'calendar.hideWeekends': 'Hide Weekends',
+			'calendar.calendars': 'Calendars',
+			'linkedContent.subject': 'Subject',
+			'linkedContent.from': 'From',
+			'linkedContent.date': 'Date',
 			'linkedContent.open': 'Open',
 			'linkedContent.parentTask': 'Parent task',
 			'linkedContent.project': 'Project',
@@ -1079,6 +1239,10 @@ extension on _StringsEn {
 			'linkedContent.status': 'Status',
 			'linkedContent.done': 'Done',
 			'linkedContent.toDo': 'To do',
+			'linkedContent.section': 'Section',
+			'linkedContent.scheduledDate': 'Scheduled Date',
+			'linkedContent.duration': 'Duration',
+			'linkedContent.team': 'Team',
 			'editTask.add': 'Add',
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.searchALabel': 'Search a label',
@@ -1147,6 +1311,56 @@ extension on _StringsEn {
 			'label.deleteDialog.justDeleteTheLabel': 'Just delete the label',
 			'label.deleteDialog.markAllTasksAsDone': 'Mark all tasks as Done',
 			'label.sortComingSoon': 'Sort (Coming soon)',
+			'event.googleMeet': 'Google Meet',
+			'event.zoom': 'Zoom',
+			'event.join': 'Join',
+			'event.busy': 'Busy',
+			'event.conference': 'Conference',
+			'event.guests': 'Guests',
+			'event.organizer': 'Organizer',
+			'event.going': 'Going?',
+			'event.yes': 'Yes',
+			'event.no': 'No',
+			'event.maybe': 'Maybe',
+			'event.copy': 'Copy',
+			'event.share': 'Share',
+			'event.mailGuests': 'Mail Guests',
+			'event.edit': 'Edit',
+			'event.delete': 'Delete',
+			'event.editEvent.allDay': 'All Day',
+			'event.editEvent.addConference': 'Add Conference',
+			'event.editEvent.addLocation': 'Add Location',
+			'event.editEvent.addGuests': 'Add guests',
+			'event.editEvent.addDescription': 'Add Description',
+			'event.editEvent.defaultColor': 'Default Color',
+			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
+			'event.editEvent.createEvent': 'Create event',
+			'event.editEvent.saveChanges': 'Save Changes',
+			'event.editEvent.repeatingEditModal.title': 'Editing repeating event',
+			'event.editEvent.repeatingEditModal.deleteTitle': 'You are deleting a recurrent event',
+			'event.editEvent.repeatingEditModal.description': 'Do you want to change only this occurrence or change this and all future occurrences?',
+			'event.editEvent.repeatingEditModal.deleteDescription': 'Do you want to delete only this occurrence or delete this and all future occurrences?',
+			'event.editEvent.repeatingEditModal.onlyThis': 'Only this event',
+			'event.editEvent.repeatingEditModal.thisAndAllFuture': 'This and all future events',
+			'event.editEvent.repeatingEditModal.allEvents': 'All events',
+			'event.editEvent.deleteModal.title': ({required Object eventName}) => 'Are you sure you want to delete ${eventName}',
+			'event.editEvent.deleteModal.description': 'You can\'t undo this action!',
+			'event.editEvent.recurrence.noRepeat': 'No repeat',
+			'event.editEvent.recurrence.setRepeat': 'Set Repeat',
+			'event.editEvent.recurrence.everyDay': 'Every day',
+			'event.editEvent.recurrence.everyWeekday': 'Every weekday',
+			'event.editEvent.recurrence.custom': 'Custom',
+			'event.snackbar.created': 'Event created successfully',
+			'event.snackbar.edited': 'Event updated successfully',
+			'event.snackbar.deleted': 'Event has been deleted',
+			'availability.availabilities': 'Availabilities',
+			'availability.activeRecurrentSlots': 'Active recurrent slots',
+			'availability.activeManualSlots': 'Active manual slots',
+			'availability.noActiveLinksToShow': 'No active links to show',
+			'availability.toCreateLinkUseDesktop': 'To create a link use the desktop app',
+			'availability.linkCopiedToClipboard': 'Link copied to clipboard!',
+			'snackbar.connectedSuccesfully': 'Connected successfully!',
+			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',

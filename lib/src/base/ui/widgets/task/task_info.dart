@@ -31,7 +31,7 @@ class TaskInfo extends StatelessWidget {
 
   Widget _overdue(BuildContext context) {
     if (task.isOverdue && task.datetime != null && task.datetime!.isNotEmpty) {
-      var formattedDate = DateTime.tryParse(task.datetime!);
+      var formattedDate = DateTime.tryParse(task.datetime!)!.toLocal();
       if (formattedDate == null) {
         return const SizedBox();
       }
@@ -129,7 +129,7 @@ class TaskInfo extends StatelessWidget {
       }
 
       return TagBox(
-        icon: "assets/images/icons/_common/clock.svg",
+        icon: Assets.images.icons.common.clockSVG,
         backgroundColor: ColorsExt.akiflow10(context),
         text: text ?? t.task.snoozed,
         active: true,

@@ -18,4 +18,5 @@ class IntercomService {
     await _intercom.loginIdentifiedUser(email: email);
     _intercom.setInAppMessagesVisibility(IntercomVisibility.gone);
   }
-}*/
+}
+*/

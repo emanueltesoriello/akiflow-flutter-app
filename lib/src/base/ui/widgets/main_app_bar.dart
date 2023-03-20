@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list_menu.dart';
@@ -29,7 +30,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         return AppBarComp(
           title: t.bottomBar.inbox,
           leading: SvgPicture.asset(
-            "assets/images/icons/_common/tray.svg",
+            Assets.images.icons.common.traySVG,
             width: 30,
             height: 30,
           ),

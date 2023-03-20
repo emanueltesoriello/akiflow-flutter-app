@@ -1,29 +1,39 @@
 import 'package:models/account/account.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/doc/doc_base.dart';
 
-class SlackDoc extends Doc implements DocBase {
-  SlackDoc(Doc doc)
-      : super(
-          id: doc.id,
-          taskId: doc.taskId,
-          title: doc.title,
-          description: doc.description,
-          connectorId: doc.connectorId,
-          originId: doc.originId,
-          accountId: doc.accountId,
-          url: doc.url,
-          localUrl: doc.localUrl,
-          type: doc.type,
-          icon: doc.icon,
-          createdAt: doc.createdAt,
-          updatedAt: doc.updatedAt,
-          deletedAt: doc.deletedAt,
-          globalUpdatedAt: doc.globalUpdatedAt,
-          globalCreatedAt: doc.globalCreatedAt,
-          remoteUpdatedAt: doc.remoteUpdatedAt,
-          content: doc.content,
-        );
+class SlackDoc extends DocBase {
+  final String? url;
+  final String? localUrl;
+  final String? type;
+  final String? userImage;
+  final String? userName;
+  final int? starredAt;
+  final String? channel;
+  final String? channelName;
+  final String? messageTimestamp;
+
+  SlackDoc(
+      {this.url,
+      this.localUrl,
+      this.type,
+      this.userImage,
+      this.userName,
+      this.starredAt,
+      this.channel,
+      this.channelName,
+      this.messageTimestamp});
+
+  factory SlackDoc.fromMap(Map<String, dynamic> json) => SlackDoc(
+        url: json['url'] as String?,
+        localUrl: json['local_url'] as String?,
+        type: json['type'] as String?,
+        userImage: json['user_image'] as String?,
+        userName: json['user_name'] as String?,
+        starredAt: json['starred_at'] as int?,
+        channel: json['channel'] as String?,
+        channelName: json['channel_name'] as String?,
+        messageTimestamp: json['message_timestamp'] as String?,
+      );
 
   @override
   String getLinkedContentSummary([Account? account]) {
@@ -38,21 +48,19 @@ class SlackDoc extends Doc implements DocBase {
     } catch (_) {}
 
     try {
-      if (content?["channelName"] != null) {
-        summaryPieces.add(content?["channelName"]);
+      if (channelName != null && channelName!.isNotEmpty) {
+        summaryPieces.add(channelName);
       }
     } catch (_) {}
 
     try {
-      if (content?["userName"] != null) {
-        summaryPieces.add(content?["userName"]);
-      } else if (content?["user_name"] != null) {
-        summaryPieces.add(content?["user_name"]);
+      if (userName != null && userName!.isNotEmpty) {
+        summaryPieces.add(userName);
       }
     } catch (_) {}
 
     if (summaryPieces.isEmpty) {
-      return super.getLinkedContentSummary();
+      return url ?? '';
     } else {
       return "Slack: ${summaryPieces.join(' - ')}";
     }
@@ -67,6 +75,21 @@ class SlackDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return content?["userName"] ?? content?["user_name"] ?? super.getSummary;
+    return userName ?? url ?? '';
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      url,
+      localUrl,
+      type,
+      userImage,
+      userName,
+      starredAt,
+      channel,
+      channelName,
+      messageTimestamp,
+    ];
   }
 }

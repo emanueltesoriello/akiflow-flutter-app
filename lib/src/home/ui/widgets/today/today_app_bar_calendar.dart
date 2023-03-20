@@ -23,6 +23,21 @@ class TodayAppBarCalendar extends StatefulWidget {
 
 class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
   PageController? _pageController;
+  int firstDayOfWeek = DateTime.monday;
+
+  @override
+  void initState() {
+    if (context.read<AuthCubit>().state.user?.settings?["calendar"] != null &&
+        context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] != null) {
+      var firstDayFromDb = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"];
+      if (firstDayFromDb is String) {
+        firstDayOfWeek = int.parse(firstDayFromDb);
+      } else if (firstDayFromDb is int) {
+        firstDayOfWeek = firstDayFromDb;
+      }
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +48,6 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
             DateTime now = DateTime.now();
-            int firstDayOfWeek = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] ?? 1;
             return Column(
               children: [
                 TableCalendar(

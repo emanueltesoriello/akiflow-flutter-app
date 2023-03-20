@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
@@ -91,7 +92,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             }
 
             return TagBox(
-              icon: "assets/images/icons/_common/hourglass.svg",
+              icon: Assets.images.icons.common.hourglassSVG,
               backgroundColor:
                   task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
               active: task.duration != null && task.duration != 0,
@@ -109,7 +110,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               bool enabled = updatedTask.recurrence != null && updatedTask.recurrence!.isNotEmpty;
 
               return TagBox(
-                icon: "assets/images/icons/_common/repeat.svg",
+                icon: Assets.images.icons.common.repeatSVG,
                 backgroundColor: enabled ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
                 active: enabled,
                 isBig: true,

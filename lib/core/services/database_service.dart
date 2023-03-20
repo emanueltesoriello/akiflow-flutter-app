@@ -28,7 +28,8 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 4,
+        version: 9,
+        singleInstance: true,
         onCreate: (db, version) async {
           print('Creating database version $version');
 
@@ -36,7 +37,12 @@ class DatabaseService {
 
           await _setup(batch);
 
-          List<Function(sql.Batch)> migrations = [addTasksDocField, deleteDocsTable];
+          List<Function(sql.Batch)> migrations = [
+            addTasksDocField,
+            _addIndexes,
+            deleteDocsTable,
+            _addIndexesForListIdUpdatedAt
+          ];
 
           for (var migration in migrations) {
             migration(batch);
@@ -49,7 +55,26 @@ class DatabaseService {
         onUpgrade: (db, oldVersion, newVersion) async {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
+          if (oldVersion < 9) {
+            _addIndexesForListIdUpdatedAt(batch);
+          }
+          if (oldVersion < 8) {
+            batch.execute('ALTER TABLE tasks ADD COLUMN calendar_id VARCHAR(255)');
+          }
+          if (oldVersion < 7) {
+            _addListIdToTask(batch);
+          }
+          if (oldVersion < 6) {
+            _addIndexes(batch);
+          }
+          if (oldVersion < 5) {
+            batch.execute('DROP TABLE IF EXISTS events');
+            _setupEvents(batch);
 
+            batch.execute('ALTER TABLE calendars ADD COLUMN timezone VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_identifier VARCHAR(255)');
+            batch.execute('ALTER TABLE calendars ADD COLUMN account_picture VARCHAR(255)');
+          }
           if (oldVersion < 4) {
             _setupAvailabilities(batch);
           }
@@ -172,13 +197,16 @@ CREATE TABLE IF NOT EXISTS calendars(
   `icon` VARCHAR(255),
   `akiflow_primary` INTEGER,
   `is_akiflow_calendar` INTEGER,
+  `timezone` VARCHAR(255),
   `settings` TEXT,
   `etag` VARCHAR(255),
   `sync_status` VARCHAR(255),
   `remote_updated_at` TEXT,
   `created_at` TEXT,
   `updated_at` TEXT,
-  `deleted_at` TEXT
+  `deleted_at` TEXT,
+  `account_identifier` VARCHAR(255),
+  `account_picture` VARCHAR(255)
 )
     ''');
     batch.execute('''
@@ -241,15 +269,15 @@ CREATE TABLE IF NOT EXISTS event_modifiers(
 CREATE TABLE IF NOT EXISTS events(
   `id` UUID PRIMARY KEY,
   `customorigin_id` VARCHAR(255),
-  `connector_id` VARCHAR(50),
+  `connector_id` VARCHAR(255),
   `account_id` VARCHAR(100),
   `akiflow_account_id` UUID,
-  `origin_id` VARCHAR(255),
+  `origin_id` VARCHAR(2048),
   `origin_account_id` VARCHAR(50),
   `origin_calendar_id` TEXT,
   `recurring_id` UUID,
-  `custom_origin_id` UUID,
-  `origin_recurring_id` VARCHAR(255),
+  `custom_origin_id` VARCHAR(2048),
+  `origin_recurring_id` VARCHAR(2048),
   `calendar_id` VARCHAR(255),
   `origincalendar_id` VARCHAR(255),
   `creator_id` VARCHAR(255),
@@ -260,8 +288,8 @@ CREATE TABLE IF NOT EXISTS events(
   `end_time` TEXT,
   `start_date` VARCHAR(10),
   `end_date` VARCHAR(10),
-  `start_date_time_tz` VARCHAR(255),
-  `end_date_time_tz` VARCHAR(255),
+  `start_datetime_tz` VARCHAR(255),
+  `end_datetime_tz` VARCHAR(255),
   `origin_updated_at` TEXT,
   `etag` VARCHAR(255),
   `title` VARCHAR(255),
@@ -273,10 +301,10 @@ CREATE TABLE IF NOT EXISTS events(
   `declined` INTEGER,
   `read_only` INTEGER,
   `hidden` INTEGER,
-  `url` VARCHAR(255),
+  `url` VARCHAR(2048),
   `meeting_status` VARCHAR(255),
-  `meeting_url` VARCHAR(255),
-  `meeting_icon` VARCHAR(255),
+  `meeting_url` VARCHAR(2048),
+  `meeting_icon` VARCHAR(2048),
   `meeting_solution` VARCHAR(100),
   `color` VARCHAR(10),
   `calendar_color` VARCHAR(10),
@@ -286,9 +314,10 @@ CREATE TABLE IF NOT EXISTS events(
   `created_at` TEXT,
   `updated_at` TEXT,
   `deleted_at` TEXT,
-  `until_date_time` TEXT,
+  `until_datetime` TEXT,
   `recurrence_exception_delete` INTEGER,
-  `recurrence_sync_retry` INTEGER
+  `recurrence_sync_retry` INTEGER,
+  `status` VARCHAR(255)
 )
     ''');
     batch.execute('CREATE INDEX IF NOT EXISTS events_end_date ON events(`end_date`)');
@@ -354,15 +383,39 @@ CREATE TABLE IF NOT EXISTS tasks(
   `updated_at` TEXT,
   `deleted_at` TEXT,
   `trashed_at` TEXT,
+  `remote_list_id_updated_at` TEXT,
+  `global_list_id_updated_at` TEXT,
   `daily_goal` INTEGER,
   `origin` TEXT,
   `remote_updated_at` TEXT,
   `section_id` UUID,
   `sorting` INTEGER,
   `sorting_label` INTEGER,
+  `calendar_id` VARCHAR(255),
   `due_date` TEXT
 )
     ''');
+  }
+
+  void _addIndexes(Batch batch) {
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_deleted_at ON tasks(`deleted_at`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_updated_at ON tasks(`updated_at`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_date ON tasks(`date`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_datetime ON tasks(`datetime`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_done ON tasks(`done`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_trashed_at ON tasks(`trashed_at`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS doc ON tasks(`doc`)');
+  }
+
+  void _addIndexesForListIdUpdatedAt(Batch batch) {
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_remote_list_id_updated_at ON tasks(`remote_list_id_updated_at`)');
+    batch.execute('CREATE INDEX IF NOT EXISTS tasks_global_list_id_updated_at ON tasks(`global_list_id_updated_at`)');
+  }
+
+  void _addListIdToTask(Batch batch) {
+    print('processing _addListIdToTask...');
+    batch.execute('ALTER TABLE tasks ADD COLUMN remote_list_id_updated_at TEXT');
+    batch.execute('ALTER TABLE tasks ADD COLUMN global_list_id_updated_at TEXT');
   }
 
   void addTasksDocField(Batch batch) {

@@ -11,7 +11,10 @@ import workmanager
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         GeneratedPluginRegistrant.register(with: self)
-        UNUserNotificationCenter.current().delegate = self
+        //UNUserNotificationCenter.current().delegate = self
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        }
 
         WorkmanagerPlugin.setPluginRegistrantCallback { registry in
             // Registry in this case is the FlutterEngine that is created in Workmanager's

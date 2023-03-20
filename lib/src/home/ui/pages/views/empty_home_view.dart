@@ -21,9 +21,8 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              Assets.images.akiflow.inboxNiceSVG,
-              width: 80.81,
-              height: 97.72,
+              Assets.images.akiflow.inboxZeroSVG,
+              height: 80,
             ),
             const SizedBox(height: 24),
             Row(

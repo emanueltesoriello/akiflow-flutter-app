@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/task/task.dart';
 
 class Subtitle extends StatelessWidget {
@@ -14,7 +14,10 @@ class Subtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Doc? doc = task.doc?.value;
+    dynamic doc;
+    if (task.doc != null) {
+      doc = task.computedDoc();
+    }
 
     List<String> links = task.links ?? [];
 
@@ -28,7 +31,7 @@ class Subtitle extends StatelessWidget {
               return Row(
                 children: [
                   SvgPicture.asset(
-                    "assets/images/icons/_common/arrow_turn_down_right.svg",
+                    Assets.images.icons.common.arrowTurnDownRightSVG,
                     color: ColorsExt.grey3(context),
                     width: 16,
                     height: 16,
@@ -36,13 +39,13 @@ class Subtitle extends StatelessWidget {
                   const SizedBox(width: 4.5),
                   ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 16, maxHeight: 16),
-                      child: SvgPicture.asset(task.computedIcon(doc), width: 16, height: 16)),
+                      child: SvgPicture.asset(task.computedIcon(), width: 16, height: 16)),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Builder(
                       builder: (context) {
                         return Text(
-                          doc.getSummary.parseHtmlString ?? '',
+                          doc!.getLinkedContentSummary().toString().parseHtmlString ?? doc.url ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -63,7 +66,7 @@ class Subtitle extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      "assets/images/icons/_common/arrow_turn_down_right.svg",
+                      Assets.images.icons.common.arrowTurnDownRightSVG,
                       color: ColorsExt.grey3(context),
                       width: 16,
                       height: 16,
@@ -96,7 +99,7 @@ class Subtitle extends StatelessWidget {
 
               return Row(children: [
                 SvgPicture.asset(
-                  "assets/images/icons/_common/arrow_turn_down_right.svg",
+                  Assets.images.icons.common.arrowTurnDownRightSVG,
                   color: ColorsExt.grey3(context),
                   width: 16,
                   height: 16,
@@ -123,7 +126,7 @@ class Subtitle extends StatelessWidget {
                                 width: 16,
                                 height: 16,
                                 errorBuilder: (context, error, stacktrace) => Image.asset(
-                                  "assets/images/icons/web/faviconV2.png",
+                                  Assets.images.icons.web.faviconV2PNG,
                                   width: 16,
                                   height: 16,
                                 ),

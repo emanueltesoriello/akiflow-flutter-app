@@ -6,8 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:models/base.dart';
 import 'package:models/nullable.dart';
 
-import '../doc/doc.dart';
-
 class Task extends Equatable implements Base {
   final String? id;
   final String? title;
@@ -19,6 +17,8 @@ class Task extends Equatable implements Base {
   final String? updatedAt;
   final String? deletedAt;
   final String? trashedAt;
+  final String? remoteListIdUpdatedAt;
+  final String? globalListIdUpdatedAt;
   final bool? done;
   final String? doneAt;
   final String? datetime;
@@ -44,7 +44,8 @@ class Task extends Equatable implements Base {
   final Nullable<String?>? originId;
   final Nullable<String?>? originAccountId;
   final String? akiflowAccountId;
-  final Nullable<Doc?>? doc; // TODO: change to built_in_doc interface
+  final String? calendarId;
+  final dynamic doc;
 
   const Task({
     this.id,
@@ -57,6 +58,8 @@ class Task extends Equatable implements Base {
     this.updatedAt,
     this.deletedAt,
     this.trashedAt,
+    this.remoteListIdUpdatedAt,
+    this.globalListIdUpdatedAt,
     this.done,
     this.doneAt,
     this.datetime,
@@ -82,6 +85,7 @@ class Task extends Equatable implements Base {
     this.originId,
     this.originAccountId,
     this.akiflowAccountId,
+    this.calendarId,
     this.doc,
   });
 
@@ -95,6 +99,8 @@ class Task extends Equatable implements Base {
     String? createdAt,
     String? deletedAt,
     String? trashedAt,
+    String? remoteListIdUpdatedAt,
+    Nullable<String?>? globalListIdUpdatedAt,
     bool? done,
     Nullable<String?>? doneAt,
     Nullable<String?>? datetime,
@@ -121,7 +127,8 @@ class Task extends Equatable implements Base {
     Nullable<String?>? originId,
     Nullable<String?>? originAccountId,
     String? akiflowAccountId,
-    Nullable<Doc?>? doc,
+    String? calendarId,
+    dynamic doc,
   }) {
     return Task(
       id: id ?? this.id,
@@ -133,6 +140,8 @@ class Task extends Equatable implements Base {
       createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
       trashedAt: trashedAt ?? this.trashedAt,
+      remoteListIdUpdatedAt: remoteListIdUpdatedAt ?? this.remoteListIdUpdatedAt,
+      globalListIdUpdatedAt: globalListIdUpdatedAt == null ? this.globalListIdUpdatedAt : globalListIdUpdatedAt.value,
       done: done ?? this.done,
       doneAt: doneAt == null ? this.doneAt : doneAt.value,
       datetime: datetime == null ? this.datetime : datetime.value,
@@ -159,6 +168,7 @@ class Task extends Equatable implements Base {
       originId: originId ?? this.originId,
       originAccountId: originAccountId ?? this.originAccountId,
       akiflowAccountId: akiflowAccountId ?? this.akiflowAccountId,
+      calendarId: calendarId ?? this.calendarId,
       doc: doc ?? this.doc,
     );
   }
@@ -175,6 +185,8 @@ class Task extends Equatable implements Base {
       'created_at': createdAt,
       'updated_at': updatedAt,
       'deleted_at': deletedAt,
+      'remote_list_id_updated_at': remoteListIdUpdatedAt,
+      'global_list_id_updated_at': globalListIdUpdatedAt,
       'done': done,
       'done_at': doneAt,
       'datetime': datetime,
@@ -201,7 +213,8 @@ class Task extends Equatable implements Base {
       'origin_id': originId?.value,
       'origin_account_id': originAccountId?.value,
       'akiflow_account_id': akiflowAccountId,
-      'doc': doc?.value?.toMap(),
+      'calendar_id': calendarId,
+      'doc': doc,
     };
   }
 
@@ -215,6 +228,10 @@ class Task extends Equatable implements Base {
       status: map['status'] != null ? map['status'] as int : 1,
       createdAt: map['created_at'] != null ? map['created_at'] as String : null,
       updatedAt: map['updated_at'] != null ? map['updated_at'] as String : null,
+      remoteListIdUpdatedAt:
+          map['remote_list_id_updated_at'] != null ? map['remote_list_id_updated_at'] as String : null,
+      globalListIdUpdatedAt:
+          map['global_list_id_updated_at'] != null ? map['global_list_id_updated_at'] as String : null,
       deletedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
       done: map['done'] != null ? map['done'] as bool : null,
       doneAt: map['done_at'] != null ? map['done_at'] as String : null,
@@ -241,7 +258,8 @@ class Task extends Equatable implements Base {
       originId: map['origin_id'] != null ? Nullable(map['origin_id'] as String?) : null,
       originAccountId: map['origin_account_id'] != null ? Nullable(map['origin_account_id'] as String?) : null,
       akiflowAccountId: map['akiflow_account_id'] != null ? map['akiflow_account_id'] as String? : null,
-      doc: map['doc'] != null ? Nullable(Doc.fromMap(map['doc'])) as dynamic : null,
+      calendarId: map['calendar_id'] != null ? map['calendar_id'] as String? : null,
+      doc: map['doc'] != null ? map['doc'] as dynamic : null,
       trashedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
     );
   }
@@ -268,6 +286,8 @@ class Task extends Equatable implements Base {
       "created_at": createdAt,
       "deleted_at": deletedAt,
       "trashed_at": trashedAt,
+      "remote_list_id_updated_at": remoteListIdUpdatedAt,
+      "global_list_id_updated_at": globalListIdUpdatedAt,
       "origin": origin,
       "remote_updated_at": remoteUpdatedAt,
       "sorting": sorting,
@@ -280,7 +300,12 @@ class Task extends Equatable implements Base {
       "origin_id": originId?.value,
       "origin_account_id": originAccountId?.value,
       "akiflow_account_id": akiflowAccountId,
-      "doc": doc != null ? jsonEncode(doc?.value?.toSql()) : null,
+      "calendar_id": calendarId,
+      "doc": doc != null
+          ? doc.runtimeType.toString() != "Nullable<Null>"
+              ? jsonEncode(doc)
+              : null
+          : null,
     };
   }
 
@@ -355,6 +380,7 @@ class Task extends Equatable implements Base {
       updatedAt,
       deletedAt,
       trashedAt,
+      remoteListIdUpdatedAt,
       done,
       doneAt,
       datetime,
@@ -364,6 +390,7 @@ class Task extends Equatable implements Base {
       activationDatetime,
       dueDate,
       remoteUpdatedAt,
+      globalListIdUpdatedAt,
       recurringId,
       priority,
       listId,
@@ -380,6 +407,7 @@ class Task extends Equatable implements Base {
       originId,
       originAccountId,
       akiflowAccountId,
+      calendarId,
       doc,
     ];
   }

@@ -293,6 +293,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                               if (widget.selectMode) {
                                 widget.selectTask();
                               } else {
+                                widget.task.playTaskDoneSound();
                                 _checkboxController!.completedClick();
                               }
                             },

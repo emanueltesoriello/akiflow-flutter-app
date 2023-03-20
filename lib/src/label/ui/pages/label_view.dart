@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/label/ui/widgets/create_edit_section_modal.dart';
@@ -90,7 +90,6 @@ class _LabelViewState extends State<LabelView> {
             backgroundColor: ColorsExt.background(context),
             onRefresh: () async {
               context.read<SyncCubit>().sync();
-              NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
             },
             child: SlidableAutoCloseBehavior(
               child: ListView(
@@ -174,7 +173,7 @@ class _LabelViewState extends State<LabelView> {
 
                             if (!labelState.showSnoozed) {
                               text = "$snoozedCount ${t.task.snoozed}";
-                              iconAsset = "assets/images/icons/_common/clock.svg";
+                              iconAsset = Assets.images.icons.common.clockSVG;
                             } else {
                               text = t.label.hideSnoozed;
                             }
@@ -202,7 +201,7 @@ class _LabelViewState extends State<LabelView> {
 
                             if (!labelState.showSomeday) {
                               text = "$somedayCount ${t.task.someday}";
-                              iconAsset = "assets/images/icons/_common/archivebox.svg";
+                              iconAsset = Assets.images.icons.common.archiveboxSVG;
                             } else {
                               text = t.label.hideSomeday;
                             }

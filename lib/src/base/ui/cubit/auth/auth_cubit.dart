@@ -3,19 +3,20 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/api/auth_api.dart';
+import 'package:mobile/core/api/client_api.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:models/client/client.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -70,7 +71,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
         _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
         //_intercomService.authenticate(
-        //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+        //    email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
       }
     } else {
       emit(AuthCubitState(hasValidPlan: false, user: user));
@@ -120,7 +121,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           try {
             _syncCubit.sync();
-            NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
           } catch (e) {
             print(e);
           }
@@ -143,8 +143,26 @@ class AuthCubit extends Cubit<AuthCubitState> {
     }
   }
 
+  Future _onLogoutPostClient() async {
+    try {
+      ApiClient api = ClientApi();
+      String id = _preferencesRepository.deviceUUID;
+      int userId = _preferencesRepository.user!.id ?? 0;
+
+      Client client = Client(id: id, userId: userId, notificationsToken: null);
+
+      await api.postClient(client: client.toMap(), keepFCMTokenToNull: true);
+
+      return;
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
   Future<void> logout() async {
     _sentryService.addBreadcrumb(category: "action", message: "logout");
+
+    _onLogoutPostClient();
 
     _preferencesRepository.clear();
 
