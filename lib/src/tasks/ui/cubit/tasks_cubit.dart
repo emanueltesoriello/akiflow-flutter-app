@@ -140,10 +140,25 @@ class TasksCubit extends Cubit<TasksCubitState> {
     emit(state.copyWith(tasksLoaded: true));
   }
 
+  // This method allows to modify a list of task, updating only the selected field
+  // In this way we can keep the selection of tasks during a sync or update runned from the refreshAllFromRepository method
+  List<Task> updateSelectedTasks(List<Task> originalList, List<Task> updatedList) {
+    final selectedTaskIds = updatedList.where((task) => task.selected ?? false).map((task) => task.id).toSet();
+
+    final updatedTasks = originalList.map((task) {
+      if (selectedTaskIds.contains(task.id)) {
+        return task.copyWith(selected: true);
+      }
+      return task;
+    }).toList();
+
+    return updatedTasks;
+  }
+
   Future fetchInbox() async {
     try {
       List<Task> inboxTasks = await _tasksRepository.getInbox();
-      emit(state.copyWith(inboxTasks: inboxTasks));
+      emit(state.copyWith(inboxTasks: updateSelectedTasks(state.inboxTasks, inboxTasks)));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -152,7 +167,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future fetchTodayTasks() async {
     try {
       List<Task> fixedTodayTasks = await _tasksRepository.getTodayTasks(date: DateTime.now());
-      emit(state.copyWith(fixedTodayTasks: fixedTodayTasks));
+      emit(state.copyWith(fixedTodayTasks: updateSelectedTasks(state.fixedTodayTasks, fixedTodayTasks)));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -171,7 +186,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future fetchSelectedDayTasks(DateTime date) async {
     try {
       List<Task> todayTasks = await fromCancelable(_tasksRepository.getTodayTasks(date: date));
-      emit(state.copyWith(selectedDayTasks: todayTasks));
+      emit(state.copyWith(selectedDayTasks: updateSelectedTasks(state.selectedDayTasks, todayTasks)));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -180,7 +195,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> fetchLabelTasks(Label selectedLabel) async {
     try {
       List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
-      emit(state.copyWith(labelTasks: tasks));
+      emit(state.copyWith(labelTasks: updateSelectedTasks(state.labelTasks, tasks)));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
