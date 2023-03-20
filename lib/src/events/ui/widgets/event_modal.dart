@@ -771,6 +771,7 @@ class _EventModalState extends State<EventModal> {
         builder: (context) {
           EventsCubit eventsCubit = context.read<EventsCubit>();
           return RecurrentEventEditModal(
+            showThisAndFutureButton: selectedEvent.canModify(),
             onlyThisTap: () {
               setState(() {
                 selectedEvent.setLoggedUserAttendingResponse(response);
