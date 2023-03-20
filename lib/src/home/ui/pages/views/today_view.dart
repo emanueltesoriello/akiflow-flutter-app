@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
@@ -93,11 +94,38 @@ class _TodayViewState extends State<TodayView> {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
+    try {
+      todos.sort((a, b) {
+        try {
+          return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
+        } catch (_) {}
+        return 0;
+      });
+    } catch (e) {
+      print(e);
+    }
+
     pinned.sort((a, b) {
       try {
-        return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
-      } catch (_) {}
-      return 0;
+        DateTime parsedAUTC = DateTime.parse(a.datetime!);
+        DateTime parsedALocal = parsedAUTC.toLocal();
+        DateTime fixedA = parsedALocal != null
+            ? DateTime(parsedAUTC.year, parsedAUTC.month, parsedAUTC.day, parsedALocal.hour, parsedALocal.minute,
+                parsedALocal.second)
+            : DateTime.now();
+
+        DateTime parsedBUTC = DateTime.parse(b.datetime!);
+        DateTime parsedBLocal = parsedBUTC.toLocal();
+        DateTime fixedB = parsedBLocal != null
+            ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
+                parsedBLocal.second)
+            : DateTime.now();
+
+        return fixedA.compareTo(fixedB);
+      } catch (e) {
+        print("Error sorting pinned items: ${e.toString()}");
+        return 0;
+      }
     });
 
     return BlocProvider(
@@ -141,7 +169,7 @@ class _TodayViewState extends State<TodayView> {
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
+                        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: SlidableAutoCloseBehavior(
                         child: ListView(
@@ -149,6 +177,15 @@ class _TodayViewState extends State<TodayView> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.zero,
                           children: [
+                            if (todos.isEmpty && pinned.isEmpty)
+                              Container(
+                                padding: const EdgeInsets.only(top: 100, bottom: 10),
+                                child: SvgPicture.asset(
+                                  Assets.images.akiflow.tasksDoneSVG,
+                                  width: 80.81,
+                                  height: 97.72,
+                                ),
+                              ),
                             TaskList(
                               key: const ObjectKey("todos"),
                               shrinkWrap: true,

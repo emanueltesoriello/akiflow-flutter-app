@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -103,7 +104,7 @@ class AboutPage extends StatelessWidget {
                     showShevron: false,
                     textMainAxisAlignment: MainAxisAlignment.start,
                     trailingWidget: SvgPicture.asset(
-                      "assets/images/icons/_common/arrow_up_right_square.svg",
+                      Assets.images.icons.common.arrowUpRightSquareSVG,
                       width: 22,
                       height: 22,
                     ),

@@ -25,22 +25,9 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
   }
 
   _init() async {
-    if (_preferencesRepository.availabilitiesNoticeHidden == true) {
-      print(_preferencesRepository.availabilitiesNoticeHidden);
-      emit(state.copyWith(isNoticeDismissed: true));
-    }
     if (_preferencesRepository.user != null) {
       await getAvailabilities();
     }
-  }
-
-  Future<bool> getNoticeStatus() async {
-    return _preferencesRepository.availabilitiesNoticeHidden;
-  }
-
-  Future<void> noticeClosed() async {
-    await _preferencesRepository.setAvailabilitiesNoticeHidden(true);
-    emit(state.copyWith(isNoticeDismissed: true));
   }
 
   String getAbbreviatedTimezone(String? timezone, String? minTime) {

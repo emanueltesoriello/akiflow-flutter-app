@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:models/doc/doc.dart';
+import 'package:mobile/extensions/task_extension.dart';
+import 'package:models/doc/asana_doc.dart';
 import 'package:models/task/task.dart';
 
 class AsanaLinkedContent extends StatelessWidget {
   final Task task;
-  final Doc doc;
+  final AsanaDoc doc;
   final Function itemBuilder;
 
   const AsanaLinkedContent({
@@ -22,22 +23,27 @@ class AsanaLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.workspace,
-          value: doc.content?["workspaceName"] ?? '',
+          value: doc.workspaceName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.project,
-          value: doc.content?["projectName"] ?? '',
+          value: doc.projectName ?? '',
         ),
         itemBuilder(
           context,
-          title: t.linkedContent.parentTask,
-          value: task.title ?? '',
+          title: t.linkedContent.section,
+          value: doc.sectionName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.title,
-          value: doc.title ?? '',
+          value: task.title ?? '',
+        ),
+        itemBuilder(
+          context,
+          title: t.linkedContent.scheduledDate,
+          value: task.dueDateFormatted,
         ),
       ],
     );

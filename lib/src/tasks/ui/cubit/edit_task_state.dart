@@ -10,6 +10,9 @@ class EditTaskCubitState extends Equatable {
   final double? selectedDuration;
   final bool showDuration;
   final bool showPriority;
+  final bool openedDurationfromNLP;
+  final bool openedPrirorityfromNLP;
+  final bool openedLabelfromNLP;
   final bool showLabelsList;
   final bool hasFocusOnTitleOrDescription;
 
@@ -21,6 +24,9 @@ class EditTaskCubitState extends Equatable {
     this.selectedDuration,
     this.showDuration = false,
     this.showLabelsList = false,
+    this.openedDurationfromNLP = false,
+    this.openedPrirorityfromNLP = false,
+    this.openedLabelfromNLP = false,
     this.showPriority = false,
     this.hasFocusOnTitleOrDescription = false,
   });
@@ -32,6 +38,9 @@ class EditTaskCubitState extends Equatable {
       DateTime? selectedDate,
       double? selectedDuration,
       bool? showDuration,
+      bool? openedDurationfromNLP,
+      bool? openedPrirorityfromNLP,
+      bool? openedLabelfromNLP,
       bool? showLabelsList,
       bool? showPriority,
       bool? hasFocusOnTitleOrDescription}) {
@@ -42,6 +51,9 @@ class EditTaskCubitState extends Equatable {
         selectedDate: selectedDate ?? this.selectedDate,
         selectedDuration: selectedDuration ?? this.selectedDuration,
         showDuration: showDuration ?? this.showDuration,
+        openedDurationfromNLP: openedDurationfromNLP ?? this.openedDurationfromNLP,
+        openedPrirorityfromNLP: openedPrirorityfromNLP ?? this.openedPrirorityfromNLP,
+        openedLabelfromNLP: openedLabelfromNLP ?? this.openedLabelfromNLP,
         showLabelsList: showLabelsList ?? this.showLabelsList,
         showPriority: showPriority ?? this.showPriority,
         hasFocusOnTitleOrDescription: hasFocusOnTitleOrDescription ?? this.hasFocusOnTitleOrDescription);
@@ -54,6 +66,9 @@ class EditTaskCubitState extends Equatable {
         updatedTask,
         selectedDate,
         selectedDuration,
+        openedDurationfromNLP,
+        openedPrirorityfromNLP,
+        openedLabelfromNLP,
         showDuration,
         showLabelsList,
         showPriority,

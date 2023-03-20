@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/core/api/integrations/gmail_api.dart';
@@ -11,14 +11,13 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
@@ -28,7 +27,6 @@ import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
@@ -61,22 +59,33 @@ class TasksCubit extends Cubit<TasksCubitState> {
   TodayCubit? _todayCubit;
 
   TasksCubit(this._syncCubit) : super(const TasksCubitState()) {
+    init();
+  }
+
+  init() async {
     print("listen tasks sync");
 
     bool firstTimeLoaded = _preferencesRepository.firstTimeLoaded;
+
     emit(state.copyWith(loading: firstTimeLoaded == false));
-
-    refreshAllFromRepository();
-
-    _syncCubit.syncCompletedStream.listen((_) async {
+    _syncCubit.emit(_syncCubit.state.copyWith(loading: firstTimeLoaded == false));
+    User? user = _preferencesRepository.user;
+    if (user != null) {
       await refreshAllFromRepository();
+    }
+    _syncCubit.syncCompletedStream.listen((_) async {
+      User? user = _preferencesRepository.user;
 
-      if (firstTimeLoaded == false) {
-        _preferencesRepository.setFirstTimeLoaded(true);
-        emit(state.copyWith(loading: false));
+      if (user != null) {
+        await refreshAllFromRepository();
+
+        if (firstTimeLoaded == false) {
+          _preferencesRepository.setFirstTimeLoaded(true);
+          emit(state.copyWith(loading: false));
+        }
+
+        _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
       }
-
-      _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
     });
   }
 
@@ -97,34 +106,73 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     if (user != null) {
       await _syncCubit.sync(entities: [Entity.tasks]);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
     }
   }
 
-  void refreshTasksUi(Task task) {
+  void refreshTasksUi(Task updatedTask) {
     emit(state.copyWith(
-      inboxTasks: state.inboxTasks.map((task) => task.id == task.id ? task : task).toList(),
-      selectedDayTasks: state.selectedDayTasks.map((task) => task.id == task.id ? task : task).toList(),
-      labelTasks: state.labelTasks.map((task) => task.id == task.id ? task : task).toList(),
-      fixedTodayTasks: state.fixedTodayTasks.map((task) => task.id == task.id ? task : task).toList(),
+      inboxTasks: state.inboxTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      selectedDayTasks: state.selectedDayTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      labelTasks: state.labelTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      fixedTodayTasks: state.fixedTodayTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
+      calendarTasks: state.calendarTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
     ));
   }
 
-  Future refreshAllFromRepository() async {
-    await Future.wait([
-      fetchInbox(),
-      fetchTodayTasks(),
-      _todayCubit != null ? fetchSelectedDayTasks(_todayCubit!.state.selectedDate) : Future.value(),
-      _labelsCubit?.state.selectedLabel != null ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!) : Future.value(),
-    ]);
+  Future<void> refreshAllFromRepository() async {
+    try {
+      String startDateCalendarTasks = DateTime.now().toUtc().subtract(const Duration(days: 7)).toIso8601String();
+      String endDateCalendarTasks = DateTime.now().toUtc().add(const Duration(days: 7)).toIso8601String();
+
+      await Future.wait([
+        fetchInbox().then((_) => print('fetched inbox')),
+        fetchTodayTasks().then((_) => print('fetched today tasks')),
+        fetchSelectedDayTasks(_todayCubit!.state.selectedDate).then((_) => print('fetched selected day tasks')),
+        _labelsCubit != null
+            ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!).then((_) => print('fetched label tasks'))
+            : Future.value(),
+        fetchTasksBetweenDates(startDateCalendarTasks, endDateCalendarTasks)
+            .then((value) => print('fetched calendar tasks'))
+      ]);
+    } catch (e) {
+      print(e);
+    }
 
     emit(state.copyWith(tasksLoaded: true));
+  }
+
+  // This method allows to modify a list of task, updating only the selected field
+  // In this way we can keep the selection of tasks during a sync or update runned from the refreshAllFromRepository method
+  List<Task> updateSelectedTasks(List<Task> originalList, List<Task> updatedList) {
+    try {
+      if (kDebugMode) {
+        print('originalList: ${originalList.length}');
+        print('updatedList: ${updatedList.length}');
+      }
+      if (originalList.isEmpty) {
+        return updatedList;
+      }
+
+      final selectedTaskIds = originalList.where((task) => task.selected ?? false).map((task) => task.id).toSet();
+
+      final updatedTasks = updatedList.map((task) {
+        if (selectedTaskIds.contains(task.id)) {
+          return task.copyWith(selected: true);
+        }
+        return task;
+      }).toList();
+
+      return updatedTasks;
+    } catch (e) {
+      print(e);
+      return updatedList;
+    }
   }
 
   Future fetchInbox() async {
     try {
       List<Task> inboxTasks = await _tasksRepository.getInbox();
-      emit(state.copyWith(inboxTasks: inboxTasks));
+      emit(state.copyWith(inboxTasks: updateSelectedTasks(state.inboxTasks, inboxTasks)));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -133,7 +181,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future fetchTodayTasks() async {
     try {
       List<Task> fixedTodayTasks = await _tasksRepository.getTodayTasks(date: DateTime.now());
-      emit(state.copyWith(fixedTodayTasks: fixedTodayTasks));
+      emit(state.copyWith(fixedTodayTasks: updateSelectedTasks(state.fixedTodayTasks, fixedTodayTasks)));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -152,7 +200,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future fetchSelectedDayTasks(DateTime date) async {
     try {
       List<Task> todayTasks = await fromCancelable(_tasksRepository.getTodayTasks(date: date));
-      emit(state.copyWith(selectedDayTasks: todayTasks));
+      emit(state.copyWith(selectedDayTasks: updateSelectedTasks(state.selectedDayTasks, todayTasks)));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -161,7 +209,25 @@ class TasksCubit extends Cubit<TasksCubitState> {
   Future<void> fetchLabelTasks(Label selectedLabel) async {
     try {
       List<Task> tasks = await _tasksRepository.getLabelTasks(selectedLabel);
-      emit(state.copyWith(labelTasks: tasks));
+      emit(state.copyWith(labelTasks: updateSelectedTasks(state.labelTasks, tasks)));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> fetchCalendarTasks() async {
+    try {
+      List<Task> tasks = await _tasksRepository.getCalendarTasks();
+      emit(state.copyWith(calendarTasks: tasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> fetchTasksBetweenDates(String startDate, String endDate) async {
+    try {
+      List<Task> tasks = await _tasksRepository.getTasksBetweenDates(startDate, endDate);
+      emit(state.copyWith(calendarTasks: tasks));
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
@@ -230,7 +296,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync(entities: [Entity.tasks]);
 
     handleDocAction(tasksChanged);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> duplicate() async {
@@ -266,7 +331,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> delete() async {
@@ -424,7 +488,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 
   Future<void> setDeadline(DateTime? date) async {
@@ -595,7 +658,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
     if (statusType == TaskStatusType.inbox && date == null && dateTime == null) {
       AnalyticsService.track("Tasks unplanned");
@@ -626,7 +688,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     });
   }
 
-  setJustCreatedTask(Task task) {
+  void setJustCreatedTask(Task task) {
     _scrollListStreamController.add(null);
 
     emit(state.copyWith(justCreatedTask: Nullable(task)));
@@ -656,7 +718,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     refreshAllFromRepository();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
     switch (queue.first.type) {
       case UndoType.restore:
@@ -682,7 +743,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
     clearSelected();
 
     _syncCubit.sync(entities: [Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
 
     emit(state.copyWith(labelTasks: []));
   }
@@ -714,12 +774,11 @@ class TasksCubit extends Cubit<TasksCubitState> {
       GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
 
       List<Account> accounts = await _accountsRepository.get();
-      Account account = accounts.firstWhere((a) => a.originAccountId == task.originAccountId!.value!);
+      Account account = accounts.firstWhere((a) => a.originAccountId == task.originAccountId?.value!);
 
       switch (gmailMarkAsDoneType) {
         case GmailMarkAsDoneType.unstarTheEmail:
           docActions.add(GmailDocAction(
-            doc: task.doc!.value!,
             markAsDoneType: GmailMarkAsDoneType.unstarTheEmail,
             task: task,
             account: account,
@@ -727,7 +786,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
           break;
         case GmailMarkAsDoneType.goToGmail:
           docActions.add(GmailDocAction(
-            doc: task.doc!.value!,
             markAsDoneType: GmailMarkAsDoneType.goToGmail,
             task: task,
             account: account,
@@ -735,7 +793,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
           break;
         case GmailMarkAsDoneType.askMeEveryTime:
           docActions.add(GmailDocAction(
-            doc: task.doc!.value!,
             markAsDoneType: GmailMarkAsDoneType.askMeEveryTime,
             task: task,
             account: account,
@@ -757,7 +814,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         break;
       case GmailMarkAsDoneType.goToGmail:
         for (GmailDocAction docAction in docActions) {
-          await launchUrl(Uri.parse(docAction.doc.url!), mode: LaunchMode.externalApplication);
+          await launchUrl(Uri.parse(docAction.task.doc!.value!.url!), mode: LaunchMode.externalApplication);
         }
         break;
       case GmailMarkAsDoneType.askMeEveryTime:
@@ -771,16 +828,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   Future<void> unstarGmail(GmailDocAction action) async {
     Account account = action.account;
-    Doc doc = action.doc.copyWith(originId: action.task.originId!.value);
     AccountToken? accountToken =
         _preferencesRepository.getAccountToken(account.accountId!.replaceAll("google", "gmail"))!;
 
     GmailApi gmailApi = GmailApi(account, accountToken: accountToken, saveAkiflowLabelId: (String labelId) {});
 
-    await gmailApi.unstar(doc);
+    await gmailApi.unstar(action.task.originId!.value!);
   }
 
-  Future<void> goToGmail(Doc doc) async {
-    await launchUrl(Uri.parse(doc.url!), mode: LaunchMode.externalApplication);
+  Future<void> goToGmail(String url) async {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
 }

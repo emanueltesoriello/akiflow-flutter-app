@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:mobile/src/availability/ui/models/navigation_state.dart';
@@ -7,7 +8,6 @@ import 'package:mobile/src/availability/ui/widgets/availability_view_placeholder
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
 
 import 'package:models/task/availability_config.dart';
-import 'availability_notice.dart';
 import 'expandable_panel.dart';
 import 'slot_list.dart';
 
@@ -41,7 +41,6 @@ class AvailabilitiesView extends StatelessWidget {
         onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
         child: ListView(
           children: [
-            const AvailabilityNotice(),
             ExpandablePanelList(
               elevation: 0,
               expansionCallback: (panelIndex, isExpanded) {
@@ -60,7 +59,7 @@ class AvailabilitiesView extends StatelessWidget {
                           child: SlotsHeader(
                               type: AvailabililtyConfigSlotsType.recurrent,
                               asset: Assets.images.icons.common.recurrentSVG,
-                              text: 'Active recurrent slots',
+                              text: t.availability.activeRecurrentSlots,
                               isOpen: isExpanded));
                     },
                     body:
@@ -72,7 +71,7 @@ class AvailabilitiesView extends StatelessWidget {
                     return SlotsHeader(
                         type: AvailabililtyConfigSlotsType.manual,
                         asset: Assets.images.icons.common.handDrawSVG,
-                        text: 'Active manual slots',
+                        text: t.availability.activeManualSlots,
                         isOpen: isExpanded);
                   },
                   body: SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),

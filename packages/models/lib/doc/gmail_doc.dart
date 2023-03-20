@@ -1,46 +1,52 @@
 import 'package:models/account/account.dart';
-import 'package:models/doc/doc.dart';
+import 'package:models/base.dart';
 import 'package:models/doc/doc_base.dart';
 
-class GmailDoc extends Doc implements DocBase {
-  GmailDoc(Doc doc)
-      : super(
-          id: doc.id,
-          taskId: doc.taskId,
-          title: doc.title,
-          description: doc.description,
-          connectorId: doc.connectorId,
-          originId: doc.originId,
-          accountId: doc.accountId,
-          url: doc.url,
-          localUrl: doc.localUrl,
-          type: doc.type,
-          icon: doc.icon,
-          createdAt: doc.createdAt,
-          updatedAt: doc.updatedAt,
-          deletedAt: doc.deletedAt,
-          globalUpdatedAt: doc.globalUpdatedAt,
-          globalCreatedAt: doc.globalCreatedAt,
-          remoteUpdatedAt: doc.remoteUpdatedAt,
-          content: doc.content,
-        );
+class GmailDoc extends Base implements DocBase {
+  late final String? title;
+  final String? connectorId;
+  final String? originId;
+  final String? url;
+  final String? from;
+  final String? subject;
+  final String? internalDate;
+  final String? messageId;
+  final String? threadId;
+  final String? hash;
+
+  GmailDoc({
+    this.connectorId,
+    this.originId,
+    this.url,
+    this.from,
+    this.subject,
+    this.internalDate,
+    this.messageId,
+    this.threadId,
+    this.hash,
+  });
+
+  factory GmailDoc.fromMap(Map<String, dynamic> json) => GmailDoc(
+        connectorId: json['commector_id'] as String?,
+        originId: json['origin_id'] as String?,
+        url: json['url'] as String?,
+        from: json['from'] as String?,
+        subject: json['subject'] as String?,
+        internalDate: json['internal_date'] as String?,
+        messageId: json['message_id'] as String?,
+        threadId: json['thread_id'] as String?,
+        hash: json['hash'] as String?,
+      );
+
+  setTitle(String? title) {
+    this.title = title;
+  }
 
   @override
   String getLinkedContentSummary([Account? account]) {
     final summaryPieces = [];
-    if (content?["from"] != null && content!["from"].isNotEmpty) {
-      final matches = RegExp(r'^(.*?)\s*<(.*?)>').allMatches(content!["from"]);
-
-      String? name =
-          matches.isEmpty ? content!["from"] : matches.first.group(1);
-      String? email =
-          matches.isEmpty ? content!["from"] : matches.first.group(2);
-
-      if (name != null && name.isNotEmpty) {
-        summaryPieces.add(name);
-      } else if (email != null && email.isNotEmpty) {
-        summaryPieces.add(email);
-      }
+    if (from != null && from!.isNotEmpty) {
+      summaryPieces.add(from);
     }
     if (title != null && title!.isNotEmpty) {
       summaryPieces.add(title);
@@ -51,6 +57,43 @@ class GmailDoc extends Doc implements DocBase {
 
   @override
   String get getSummary {
-    return content?["from"] ?? super.getSummary;
+    return from ?? url ?? '';
   }
+
+  @override
+  List<Object?> get props {
+    return [
+      title,
+      connectorId,
+      originId,
+      url,
+      from,
+      subject,
+      internalDate,
+      messageId,
+      threadId,
+      hash,
+    ];
+  }
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'url': url,
+        'from': from,
+        'subject': subject,
+        'internal_date': internalDate,
+        'message_id': messageId,
+        'thread_id': threadId,
+        'hash': hash,
+        'connector_id': connectorId,
+        'origin_id': originId,
+      };
+
+  @override
+  Map<String, Object?> toSql() {
+    return {};
+  }
+
+  @override
+  bool? get stringify => throw UnimplementedError();
 }

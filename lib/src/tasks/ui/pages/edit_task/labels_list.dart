@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/label/label_item.dart';
@@ -204,9 +205,7 @@ class _LabelsListState extends State<LabelsList> {
                   return GestureDetector(
                     onTap: () => toggleFolder(folder),
                     child: SvgPicture.asset(
-                      open
-                          ? "assets/images/icons/_common/chevron_up.svg"
-                          : "assets/images/icons/_common/chevron_down.svg",
+                      open ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
                       width: 16,
                       height: 16,
                       color: ColorsExt.grey3(context),

@@ -37,7 +37,7 @@ class TasksCubitState extends Equatable {
   final List<Task> selectedDayTasks;
   final List<Task> labelTasks;
   final List<Task> fixedTodayTasks;
-  final List<Doc> docs;
+  final List<Task> calendarTasks;
   final List<UndoTask> queue;
   final Task? justCreatedTask;
   final bool tasksLoaded;
@@ -51,7 +51,7 @@ class TasksCubitState extends Equatable {
     this.selectedDayTasks = const [],
     this.labelTasks = const [],
     this.fixedTodayTasks = const [],
-    this.docs = const [],
+    this.calendarTasks = const [],
     this.queue = const [],
     this.justCreatedTask,
     this.tasksLoaded = false,
@@ -63,7 +63,7 @@ class TasksCubitState extends Equatable {
     List<Task>? selectedDayTasks,
     List<Task>? labelTasks,
     List<Task>? fixedTodayTasks,
-    List<Doc>? docs,
+    List<Task>? calendarTasks,
     List<UndoTask>? queue,
     Nullable<Task?>? justCreatedTask,
     bool? tasksLoaded,
@@ -74,7 +74,7 @@ class TasksCubitState extends Equatable {
       selectedDayTasks: selectedDayTasks ?? this.selectedDayTasks,
       labelTasks: labelTasks ?? this.labelTasks,
       fixedTodayTasks: fixedTodayTasks ?? this.fixedTodayTasks,
-      docs: docs ?? this.docs,
+      calendarTasks: calendarTasks ?? this.calendarTasks,
       queue: queue ?? this.queue,
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
       tasksLoaded: tasksLoaded ?? this.tasksLoaded,
@@ -88,7 +88,7 @@ class TasksCubitState extends Equatable {
         selectedDayTasks,
         labelTasks,
         fixedTodayTasks,
-        docs,
+        calendarTasks,
         queue,
         justCreatedTask,
         tasksLoaded,

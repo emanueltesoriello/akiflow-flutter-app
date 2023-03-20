@@ -40,7 +40,10 @@ class _LabelsModalState extends State<LabelsModal> {
               padding: const EdgeInsets.all(12),
               child: LabelsList(
                 showHeaders: true,
-                onSelect: widget.selectLabel,
+                onSelect: (label) {
+                  widget.selectLabel(label);
+                  Navigator.pop(context);
+                },
                 showNoLabel: widget.showNoLabel,
               ),
             )

@@ -24,18 +24,6 @@ class HomeBody extends StatelessWidget {
   final double bottomBarHeight;
   final int homeViewType;
 
-  init() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    DatabaseService databaseService = DatabaseService();
-    await databaseService.open();
-    try {
-      setupLocator(preferences: preferences, databaseService: databaseService);
-    } catch (e) {
-      print(e);
-    }
-    print("environment: ${Config.development ? "dev" : "prod"}");
-    await AnalyticsService.config();
-  }
 
   @override
   Widget build(BuildContext context) {

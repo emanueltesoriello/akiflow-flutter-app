@@ -206,12 +206,22 @@
   },
   "calendar": {
     "comingSoon": "Calendar is coming in the near future!",
-    "goToToday": "Go to Today"
+    "goToToday": "Go to Today",
+    "calendarView": "Calendar View",
+    "view": {
+      "agenda": "Agenda",
+      "oneDay": "1 Day",
+      "threeDays": "3 Days",
+      "week": "Week",
+      "month": "Month"
+    },
+    "hideWeekends": "Hide Weekends",
+    "calendars": "Calendars"
   },
   "linkedContent": {
-    "subject": "Subject:",
-    "from": "From:",
-    "date": "Date:",
+    "subject": "Subject",
+    "from": "From",
+    "date": "Date",
     "open": "Open",
     "parentTask": "Parent task",
     "project": "Project",
@@ -231,7 +241,11 @@
     "savedOn": "Saved on",
     "status": "Status",
     "done": "Done",
-    "toDo": "To do"
+    "toDo": "To do",
+    "section": "Section",
+    "scheduledDate": "Scheduled Date",
+    "duration": "Duration",
+    "team": "Team"
   },
   "editTask": {
     "add": "Add",
@@ -312,6 +326,72 @@
       "markAllTasksAsDone": "Mark all tasks as Done"
     },
     "sortComingSoon": "Sort (Coming soon)"
+  },
+  "event": {
+    "googleMeet": "Google Meet",
+    "zoom": "Zoom",
+    "join": "Join",
+    "busy": "Busy",
+    "conference": "Conference",
+    "guests": "Guests",
+    "organizer": "Organizer",
+    "going": "Going?",
+    "yes": "Yes",
+    "no": "No",
+    "maybe": "Maybe",
+    "copy": "Copy",
+    "share": "Share",
+    "mailGuests": "Mail Guests",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editEvent": {
+      "allDay": "All Day",
+      "addConference": "Add Conference",
+      "addLocation": "Add Location",
+      "addGuests": "Add guests",
+      "addDescription": "Add Description",
+      "defaultColor": "Default Color",
+      "viewOnGoogleCalendar": "View on Google Calendar",
+      "createEvent": "Create event",
+      "saveChanges": "Save Changes",
+      "repeatingEditModal": {
+        "title": "Editing repeating event",
+        "deleteTitle": "You are deleting a recurrent event",
+        "description": "Do you want to change only this occurrence or change this and all future occurrences?",
+        "deleteDescription": "Do you want to delete only this occurrence or delete this and all future occurrences?",
+        "onlyThis": "Only this event",
+        "thisAndAllFuture": "This and all future events",
+        "allEvents": "All events"
+      },
+      "deleteModal": {
+        "title": "Are you sure you want to delete ${eventName}",
+        "description": "You can't undo this action!"
+      },
+      "recurrence": {
+        "noRepeat":"No repeat",
+        "setRepeat": "Set Repeat",
+        "everyDay": "Every day",
+        "everyWeekday": "Every weekday",
+        "custom": "Custom"
+      }
+    },
+    "snackbar": {
+      "created": "Event created successfully",
+      "edited": "Event updated successfully",
+      "deleted": "Event has been deleted"
+    }
+  },
+  "availability": {
+    "availabilities": "Availabilities",
+    "activeRecurrentSlots": "Active recurrent slots",
+    "activeManualSlots": "Active manual slots",
+    "noActiveLinksToShow": "No active links to show",
+    "toCreateLinkUseDesktop": "To create a link use the desktop app",
+    "linkCopiedToClipboard": "Link copied to clipboard!"
+  },
+  "snackbar": {
+    "connectedSuccesfully": "Connected successfully!",
+    "cannotMoveThisEvent": "You cannot move this event!"
   },
   "confirm": "Confirm",
   "cancel": "Cancel",

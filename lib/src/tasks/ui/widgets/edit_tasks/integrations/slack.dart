@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/extensions/doc_extension.dart';
+import 'package:intl/intl.dart';
 import 'package:models/account/account.dart';
 import 'package:models/doc/slack_doc.dart';
 import 'package:models/task/task.dart';
@@ -31,17 +31,17 @@ class SlackLinkedContent extends StatelessWidget {
         itemBuilder(
           context,
           title: t.linkedContent.channel,
-          value: task.doc?.value?.channelName ?? ''
+          value: doc.channelName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.user,
-          value: task.doc?.value?.userName ?? ''
+          value: doc.userName ?? '',
         ),
         itemBuilder(
           context,
           title: t.linkedContent.savedOn,
-          value: task.doc?.value?.starredAtFormatted ?? '',
+          value: starredAtFormatted ?? '',
         ),
         itemBuilder(
           context,
@@ -51,5 +51,25 @@ class SlackLinkedContent extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String? get starredAtFormatted {
+    DateTime? starredAtDate;
+
+    if (doc.starredAt != null) {
+      starredAtDate = DateTime.fromMillisecondsSinceEpoch(doc.starredAt! * 1000).toLocal();
+    }
+
+    if (starredAtDate != null) {
+      if (starredAtDate.toLocal().day == DateTime.now().day &&
+          starredAtDate.toLocal().month == DateTime.now().month &&
+          starredAtDate.toLocal().year == DateTime.now().year) {
+        return t.task.today;
+      } else {
+        return DateFormat("dd MMM yyyy").format(starredAtDate.toLocal());
+      }
+    } else {
+      return null;
+    }
   }
 }
