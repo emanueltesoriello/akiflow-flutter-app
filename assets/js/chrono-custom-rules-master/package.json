@@ -17,6 +17,6 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
-    "chrono-node": "^2.5.1"
+    "chrono-node": "^2.6.1"
   }
 }

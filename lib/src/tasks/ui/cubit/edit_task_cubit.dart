@@ -115,17 +115,13 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       await _tasksRepository.add([updated]);
       print('completed add');
       //show a toast for the just created task for 3 seconds
-      updated.statusType == TaskStatusType.someday;
       _tasksCubit.setJustCreatedTask(updated);
 
-      //refresh only the interested section
-      _tasksCubit.refreshAllFromRepository(statusType: updated.statusType).timeout(const Duration(seconds: 6),
-          onTimeout: () {
-        print('timeout on refreshAllFromRepository - stopped after 5 seconds');
-      });
+      _tasksCubit.refreshAllFromRepository();
 
       emit(const EditTaskCubitState());
 
+      _syncCubit.sync(entities: [Entity.tasks]);
       AnalyticsService.track("New Task");
     } catch (e) {
       print(e.toString());
@@ -316,7 +312,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
 
-    emit(state.copyWith(updatedTask: updated));
+    emit(state.copyWith(updatedTask: updated, showLabelsList: false));
 
     if (forceUpdate) {
       await _tasksRepository.updateById(updated.id!, data: updated);

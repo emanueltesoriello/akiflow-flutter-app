@@ -14,6 +14,7 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/label_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:models/nlp/nlp_date_time.dart';
+import 'package:mobile/extensions/task_extension.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
@@ -130,8 +131,6 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                           showRefresh = false;
                                           Navigator.pop(context);
                                         });
-
-                                        await cubit.forceSync();
                                       } catch (e) {
                                         setState(() {
                                           showRefresh = false;
