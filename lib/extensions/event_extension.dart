@@ -61,7 +61,7 @@ extension EventExt on Event {
     return !(readOnly ?? false) &&
         (creatorId == originCalendarId ||
             organizerId == originCalendarId ||
-            (organizerId != originCalendarId && (content["guestsCanModify"] ?? false)));
+            (organizerId != originCalendarId && content != null && (content["guestsCanModify"] ?? false)));
   }
 
   AtendeeResponseStatus get isLoggedUserAttndingEvent {

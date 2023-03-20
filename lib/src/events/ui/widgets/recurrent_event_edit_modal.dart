@@ -10,12 +10,14 @@ class RecurrentEventEditModal extends StatelessWidget {
   final Function() thisAndFutureTap;
   final Function() allTap;
   final bool deleteEvent;
+  final bool showThisAndFutureButton;
   const RecurrentEventEditModal({
     super.key,
     required this.onlyThisTap,
     required this.thisAndFutureTap,
     required this.allTap,
     this.deleteEvent = false,
+    this.showThisAndFutureButton = true,
   });
 
   @override
@@ -89,30 +91,36 @@ class RecurrentEventEditModal extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              InkWell(
-                onTap: () {
-                  thisAndFutureTap();
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  constraints: const BoxConstraints(
-                    minHeight: 46,
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
-                  child: Center(
-                    child: Text(
-                      t.event.editEvent.repeatingEditModal.thisAndAllFuture,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: ColorsExt.grey2(context),
+              if (showThisAndFutureButton)
+                Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    InkWell(
+                      onTap: () {
+                        thisAndFutureTap();
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          minHeight: 46,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(color: ColorsExt.grey4(context))),
+                        child: Center(
+                          child: Text(
+                            t.event.editEvent.repeatingEditModal.thisAndAllFuture,
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                              color: ColorsExt.grey2(context),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
               const SizedBox(height: 12),
               InkWell(
                 onTap: () {
