@@ -94,18 +94,38 @@ class _TodayViewState extends State<TodayView> {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
-    todos.sort((a, b) {
-      try {
-        return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
-      } catch (_) {}
-      return 0;
-    });
+    try {
+      todos.sort((a, b) {
+        try {
+          return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
+        } catch (_) {}
+        return 0;
+      });
+    } catch (e) {
+      print(e);
+    }
 
     pinned.sort((a, b) {
       try {
-        return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
-      } catch (_) {}
-      return 0;
+        DateTime parsedAUTC = DateTime.parse(a.datetime!);
+        DateTime parsedALocal = parsedAUTC.toLocal();
+        DateTime fixedA = parsedALocal != null
+            ? DateTime(parsedAUTC.year, parsedAUTC.month, parsedAUTC.day, parsedALocal.hour, parsedALocal.minute,
+                parsedALocal.second)
+            : DateTime.now();
+
+        DateTime parsedBUTC = DateTime.parse(b.datetime!);
+        DateTime parsedBLocal = parsedBUTC.toLocal();
+        DateTime fixedB = parsedBLocal != null
+            ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
+                parsedBLocal.second)
+            : DateTime.now();
+
+        return fixedA.compareTo(fixedB);
+      } catch (e) {
+        print("Error sorting pinned items: ${e.toString()}");
+        return 0;
+      }
     });
 
     return BlocProvider(
