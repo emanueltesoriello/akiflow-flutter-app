@@ -10,7 +10,7 @@ class FirstSyncProgressToday extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height - toolbarHeight - bottomBarHeight,
+      height: MediaQuery.of(context).size.height - Dimension.toolbarHeight - Dimension.bottomBarHeight,
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Center(
         child: Stack(

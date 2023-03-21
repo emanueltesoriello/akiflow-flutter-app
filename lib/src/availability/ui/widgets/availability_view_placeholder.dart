@@ -89,7 +89,7 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: bottomBarHeight),
+              const SizedBox(height: Dimension.bottomBarHeight),
             ],
           ),
         ],

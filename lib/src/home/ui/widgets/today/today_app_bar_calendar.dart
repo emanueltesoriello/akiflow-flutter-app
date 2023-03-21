@@ -56,7 +56,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                   onPageChanged: (page) {
                     BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
                   },
-                  rowHeight: todayCalendarMinHeight,
+                  rowHeight: Dimension.todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   calendarFormat: widget.calendarFormat != null
                       ? (widget.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month)

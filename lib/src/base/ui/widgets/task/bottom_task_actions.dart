@@ -34,7 +34,7 @@ class BottomTaskActions extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: bottomBarHeight,
+            height: Dimension.bottomBarHeight,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
