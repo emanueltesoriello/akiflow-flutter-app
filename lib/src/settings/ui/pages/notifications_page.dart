@@ -1,22 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
-import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:workmanager/workmanager.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);

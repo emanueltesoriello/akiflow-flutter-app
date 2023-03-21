@@ -1,20 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
-
-/// Styles
-const double cardRadius = 10.0;
-const double cardElevation = 0.0;
-const double titleFontSize = 34.0;
-const double subtitleFontSize = 16.0;
-const double buttonFontSize = 18.0;
-const double buttonSubtitleFontSize = 16.0;
-const double buttonHeight = 60;
-
-/// Sizes
-const double maxWidth = 600;
-const double radius = 8;
-const double noticeRadius = 4;
-const double border = 1;
+import 'package:mobile/common/style/sizes.dart';
 
 /// Light Theme
 final ThemeData lightTheme = ThemeData.light().copyWith(
@@ -57,7 +43,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(Dimension.radius),
       ),
       primary: ColorsLight.akiflow,
       textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.akiflow),

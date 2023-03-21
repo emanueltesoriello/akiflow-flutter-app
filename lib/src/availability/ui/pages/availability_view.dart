@@ -13,13 +13,13 @@ class AvailabilityView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         appBar: AppBarComp(
           title: t.availability.availabilities,
           leading: SvgPicture.asset(
             Assets.images.icons.common.availabilitySVG,
-            width: 26,
-            height: 26,
+            width: 50,
+            height: 50,
             color: ColorsExt.grey1(context),
           ),
           showSyncButton: true,
