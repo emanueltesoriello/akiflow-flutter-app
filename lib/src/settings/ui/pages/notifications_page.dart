@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
@@ -48,7 +49,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       margin: const EdgeInsets.all(1),
       //padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(Dimension.radius),
           boxShadow: [
             BoxShadow(
               color: ColorsExt.grey5(context),
@@ -223,7 +224,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   height: 58,
                   margin: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(radius),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
                       boxShadow: [
                         BoxShadow(
                           color: ColorsExt.grey5(context),
