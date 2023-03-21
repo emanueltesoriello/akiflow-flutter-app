@@ -133,14 +133,15 @@ class _TodayViewState extends State<TodayView> {
         create: (BuildContext context) => ViewedMonthCubit(),
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const TodayAppBar(preferredSizeHeight: toolbarHeight, calendarTopMargin: toolbarHeight),
+          appBar: const TodayAppBar(
+              preferredSizeHeight: Dimension.toolbarHeight, calendarTopMargin: Dimension.toolbarHeight),
           body: LayoutBuilder(builder: (context, constraints) {
             return SlidingUpPanel(
               bodyHeight: constraints.maxHeight,
               slideDirection: SlideDirection.down,
               controller: panelController,
               maxHeight: 280,
-              minHeight: todayViewTopMargin,
+              minHeight: Dimension.todayViewTopMargin,
               defaultPanelState: PanelState.closed,
               panel: ValueListenableBuilder(
                 valueListenable: calendarOffsetNotifier,
@@ -162,7 +163,7 @@ class _TodayViewState extends State<TodayView> {
                 child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
               ),
               body: Container(
-                margin: const EdgeInsets.only(top: todayViewTopMargin),
+                margin: const EdgeInsets.only(top: Dimension.todayViewTopMargin),
                 child: Stack(
                   children: [
                     RefreshIndicator(
