@@ -49,6 +49,17 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.akiflow),
     ),
   ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+    textStyle: ThemeData().primaryTextTheme.button!.copyWith(fontSize: 17, color: ColorsLight.grey2),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimension.outlineBorderRadius)),
+    backgroundColor: ColorsLight.grey6,
+    side: const BorderSide(color: ColorsLight.grey4, width: 1),
+    minimumSize: const Size(
+      Dimension.minButtonWidth,
+      Dimension.minButtonHeight,
+    ),
+  )),
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: ZoomPageTransitionsBuilder(),
