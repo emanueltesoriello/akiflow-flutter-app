@@ -9,6 +9,7 @@ import 'package:mobile/src/availability/ui/widgets/imported_from_material/expand
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
 
 import 'package:models/task/availability_config.dart';
+import 'imported_from_material/expandable_panel.dart';
 import 'slot_list.dart';
 
 class AvailabilitiesView extends StatelessWidget {
