@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 320 
+ * Strings: 322 
  *
- * Built on 2023-03-17 at 15:25 UTC
+ * Built on 2023-03-21 at 10:44 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -898,6 +898,8 @@ class _StringsEventEditEventEn {
 	String get addGuests => 'Add guests';
 	String get addDescription => 'Add Description';
 	String get defaultColor => 'Default Color';
+	String get customColor => 'Custom color';
+	String get eventColor => 'Event color';
 	String get viewOnGoogleCalendar => 'View on Google Calendar';
 	String get createEvent => 'Create event';
 	String get saveChanges => 'Save Changes';
@@ -1333,6 +1335,8 @@ extension on _StringsEn {
 			'event.editEvent.addGuests': 'Add guests',
 			'event.editEvent.addDescription': 'Add Description',
 			'event.editEvent.defaultColor': 'Default Color',
+			'event.editEvent.customColor': 'Custom color',
+			'event.editEvent.eventColor': 'Event color',
 			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
 			'event.editEvent.createEvent': 'Create event',
 			'event.editEvent.saveChanges': 'Save Changes',

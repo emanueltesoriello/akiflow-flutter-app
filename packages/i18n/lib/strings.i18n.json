@@ -351,6 +351,8 @@
       "addGuests": "Add guests",
       "addDescription": "Add Description",
       "defaultColor": "Default Color",
+      "customColor": "Custom color",
+      "eventColor": "Event color",
       "viewOnGoogleCalendar": "View on Google Calendar",
       "createEvent": "Create event",
       "saveChanges": "Save Changes",
@@ -368,7 +370,7 @@
         "description": "You can't undo this action!"
       },
       "recurrence": {
-        "noRepeat":"No repeat",
+        "noRepeat": "No repeat",
         "setRepeat": "Set Repeat",
         "everyDay": "Every day",
         "everyWeekday": "Every weekday",
