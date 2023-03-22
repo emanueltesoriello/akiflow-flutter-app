@@ -9,7 +9,15 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/custom
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rrule/rrule.dart';
 
-enum EventRecurrenceModalType { none, daily, everyCurrentDay, everyYearOnThisDay, everyWeekday, custom }
+enum EventRecurrenceModalType {
+  none,
+  daily,
+  everyCurrentDay,
+  everyYearOnThisDay,
+  everyMonthOnThisDay,
+  everyWeekday,
+  custom
+}
 
 class EventRecurrenceModal extends StatelessWidget {
   final Function(RecurrenceRule?) onChange;
@@ -29,6 +37,7 @@ class EventRecurrenceModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime lastDayOfMonth = DateTime(eventStartTime.year, eventStartTime.month + 1, 0);
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Container(
@@ -38,8 +47,8 @@ class EventRecurrenceModal extends StatelessWidget {
             topRight: Radius.circular(16.0),
           ),
         ),
-        height: MediaQuery.of(context).size.height * 0.5,
         child: ListView(
+          shrinkWrap: true,
           children: [
             const SizedBox(height: 12),
             const ScrollChip(),
@@ -129,6 +138,23 @@ class EventRecurrenceModal extends StatelessWidget {
             ),
             _item(
               context,
+              active: selectedRecurrence == EventRecurrenceModalType.everyMonthOnThisDay,
+              text: t.editTask.everyMonthOn(
+                date: DateFormat("MMM dd").format(eventStartTime),
+              ),
+              click: () {
+                var rule = RecurrenceRule(
+                  frequency: Frequency.monthly,
+                  byMonthDays: {eventStartTime.day},
+                  until: eventStartTime.toUtc().add(const Duration(days: 365 * 2)),
+                );
+                onChange(rule);
+                onRecurrenceType(EventRecurrenceModalType.everyMonthOnThisDay);
+                Navigator.pop(context);
+              },
+            ),
+            _item(
+              context,
               active: selectedRecurrence == EventRecurrenceModalType.everyWeekday,
               text: t.event.editEvent.recurrence.everyWeekday,
               click: () {
@@ -175,7 +201,8 @@ class EventRecurrenceModal extends StatelessWidget {
                       color: ColorsExt.grey2(context),
                     ),
                   ),
-                ))
+                )),
+            const SizedBox(height: 48),
           ],
         ),
       ),
