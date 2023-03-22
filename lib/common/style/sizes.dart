@@ -6,6 +6,9 @@ class Dimension {
   static const availabilityCircleAvatar = 32.0;
   static const availabilityLinkIconSize = 30.0;
   static const arrowUpRightSquareSize = 18.0;
+  static const firstSyncProgressInboxSize = 66.0;
+  static const calendarElementHeight = 24.0;
+  static const chevronIconSize = 20.0;
 
   /// Styles
   static const outlineBorderRadius = 4.0;

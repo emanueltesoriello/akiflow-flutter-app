@@ -6,12 +6,15 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/availability/ui/widgets/imported_from_material/chevron_icon.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list_menu.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -50,10 +53,15 @@ class TodayAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _TodayAppBarState extends State<TodayAppBar> {
   bool isPanelOpen = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   void initState() {
     TodayCubit todayCubit = context.read<TodayCubit>();
-
     todayCubit.panelStateStream.listen((PanelState panelState) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         switch (panelState) {
@@ -83,7 +91,9 @@ class _TodayAppBarState extends State<TodayAppBar> {
   Widget _buildTitle(BuildContext context) {
     return InkWell(
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-      onTap: () => context.read<TodayCubit>().tapAppBarTextDate(),
+      onTap: () {
+        context.read<TodayCubit>().tapAppBarTextDate();
+      },
       child: Row(
         children: [
           BlocBuilder<ViewedMonthCubit, ViewedMonthState>(
@@ -131,17 +141,10 @@ class _TodayAppBarState extends State<TodayAppBar> {
               );
             },
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: Dimension.paddingS),
           BlocBuilder<TodayCubit, TodayCubitState>(
             builder: (context, state) {
-              return SvgPicture.asset(
-                state.calendarFormat == CalendarFormatState.month
-                    ? Assets.images.icons.common.chevronUpSVG
-                    : Assets.images.icons.common.chevronDownSVG,
-                width: 16,
-                height: 16,
-                color: ColorsExt.grey3(context),
-              );
+              return AnimatedChevron(iconUp: !isPanelOpen);
             },
           )
         ],
@@ -152,15 +155,15 @@ class _TodayAppBarState extends State<TodayAppBar> {
   Widget? _leading(BuildContext context) {
     if (TaskExt.isSelectMode(context.watch<TasksCubit>().state)) {
       return InkWell(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimension.radius),
         onTap: () {
           context.read<TasksCubit>().clearSelected();
         },
         child: Center(
           child: SvgPicture.asset(
             Assets.images.icons.common.arrowLeftSVG,
-            width: 26,
-            height: 26,
+            width: Dimension.appBarLeadingIcon,
+            height: Dimension.appBarLeadingIcon,
             color: ColorsExt.grey2(context),
           ),
         ),

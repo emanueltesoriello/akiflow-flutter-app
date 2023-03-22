@@ -12,7 +12,7 @@ import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
-import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
+import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -249,7 +249,7 @@ class _TodayViewState extends State<TodayView> {
                     Builder(
                       builder: (context) {
                         if (tasksCubit.state.loading) {
-                          return const FirstSyncProgressToday();
+                          return const FirstSyncProgress();
                         } else {
                           return const SizedBox();
                         }

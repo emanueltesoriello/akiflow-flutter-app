@@ -18,7 +18,6 @@ class _SlotListState extends State<SlotList> {
       return const SizedBox();
     }
     return SizedBox(
-      //height: (58 * widget.configs.length).toDouble(),
       child: ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),

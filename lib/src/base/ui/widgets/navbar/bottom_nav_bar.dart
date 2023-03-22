@@ -14,13 +14,9 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({
     Key? key,
-    required this.labelStyle,
-    required this.bottomBarIconSize,
     required this.topPadding,
   }) : super(key: key);
 
-  final TextStyle labelStyle;
-  final double bottomBarIconSize;
   final double topPadding;
 
   @override
