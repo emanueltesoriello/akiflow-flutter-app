@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 322 
+ * Strings: 324 
  *
- * Built on 2023-03-21 at 10:44 UTC
+ * Built on 2023-03-22 at 13:55 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -511,6 +511,8 @@ class _StringsCalendarEn {
 	String get calendarView => 'Calendar View';
 	late final _StringsCalendarViewEn view = _StringsCalendarViewEn._(_root);
 	String get hideWeekends => 'Hide Weekends';
+	String get hideDeclinedEvents => 'Hide Declined events';
+	String get hideTasksFromCalendar => 'Hide Tasks from calendar';
 	String get calendars => 'Calendars';
 }
 
@@ -1217,6 +1219,8 @@ extension on _StringsEn {
 			'calendar.view.week': 'Week',
 			'calendar.view.month': 'Month',
 			'calendar.hideWeekends': 'Hide Weekends',
+			'calendar.hideDeclinedEvents': 'Hide Declined events',
+			'calendar.hideTasksFromCalendar': 'Hide Tasks from calendar',
 			'calendar.calendars': 'Calendars',
 			'linkedContent.subject': 'Subject',
 			'linkedContent.from': 'From',

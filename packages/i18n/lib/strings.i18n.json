@@ -216,6 +216,8 @@
       "month": "Month"
     },
     "hideWeekends": "Hide Weekends",
+    "hideDeclinedEvents": "Hide Declined events",
+    "hideTasksFromCalendar": "Hide Tasks from calendar",
     "calendars": "Calendars"
   },
   "linkedContent": {

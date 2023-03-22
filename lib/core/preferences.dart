@@ -73,6 +73,13 @@ abstract class PreferencesRepository {
 
   bool get isCalendarWeekendHidden;
   Future<void> setIsCalendarWeekendHidden(bool isCalendarWeekendHidden);
+
+  bool get areDeclinedEventsHidden;
+  Future<void> setAreDeclinedEventsHidden(bool areDeclinedEventsHidden);
+
+  bool get areCalendarTasksHidden;
+  Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden);
+
   NextTaskNotificationsModel get nextTaskNotificationSetting;
   Future<void> setNextTaskNotificationSetting(NextTaskNotificationsModel value);
 
@@ -376,6 +383,26 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setIsCalendarWeekendHidden(bool isCalendarWeekendHidden) async {
     await _prefs.setBool("isCalendarWeekendHidden", isCalendarWeekendHidden);
+  }
+
+  @override
+  bool get areDeclinedEventsHidden {
+    return _prefs.getBool("areDeclinedEventsHidden") ?? false;
+  }
+
+  @override
+  Future<void> setAreDeclinedEventsHidden(bool areDeclinedEventsHidden) async {
+    await _prefs.setBool("areDeclinedEventsHidden", areDeclinedEventsHidden);
+  }
+
+  @override
+  bool get areCalendarTasksHidden {
+    return _prefs.getBool("areCalendarTasksHidden") ?? false;
+  }
+
+  @override
+  Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden) async {
+    await _prefs.setBool("areCalendarTasksHidden", areCalendarTasksHidden);
   }
 
   NextTaskNotificationsModel get nextTaskNotificationSetting {
