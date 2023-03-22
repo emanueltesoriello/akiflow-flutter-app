@@ -6,10 +6,13 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
+import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/widgets/calendar_settings_item.dart';
+import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/settings/ui/widgets/button_selectable.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -176,7 +179,17 @@ class CalendarSettingsModal extends StatelessWidget {
                       const SizedBox(height: 12),
                       const Separator(),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                          context
+                              .read<SyncCubit>()
+                              .sync(entities: [Entity.tasks, Entity.eventModifiers, Entity.events]).then((value) {
+                            context
+                                .read<EventsCubit>()
+                                .refreshAllEvents(context)
+                                .then((value) => context.read<SyncCubit>().showLoadingIcon(true));
+                          });
+                        },
                         child: Padding(
                           padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
                           child: Row(

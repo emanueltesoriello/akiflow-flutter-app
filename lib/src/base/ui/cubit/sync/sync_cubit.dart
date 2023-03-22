@@ -59,6 +59,10 @@ class SyncCubit extends Cubit<SyncCubitState> {
     }
   }
 
+  void showLoadingIcon(bool loading) {
+    emit(state.copyWith(loading: loading));
+  }
+
   @override
   Future<void> close() async {
     await _syncControllerService.syncCompletedController.close();
