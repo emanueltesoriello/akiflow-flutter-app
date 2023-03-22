@@ -135,7 +135,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
                     textAlign: TextAlign.start,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: color),
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w500, color: color),
                   );
                 },
               );
@@ -187,7 +187,10 @@ class _TodayAppBarState extends State<TodayAppBar> {
             onTap: () => context.read<TodayCubit>().todayClick(),
             child: Center(
               child: Text(t.bottomBar.today,
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: ColorsExt.akiflow(context))),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(fontWeight: FontWeight.w600, color: ColorsExt.akiflow(context))),
             ),
           );
         },

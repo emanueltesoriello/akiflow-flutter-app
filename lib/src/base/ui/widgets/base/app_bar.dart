@@ -122,11 +122,10 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     if (tasksSelected != 0) {
       return Text(
         t.task.nSelected(count: tasksSelected),
-        style: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w500,
-          color: ColorsExt.grey2(context),
-        ),
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey2(context),
+            ),
       );
     }
 

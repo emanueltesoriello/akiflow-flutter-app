@@ -9,6 +9,7 @@ class Dimension {
   static const firstSyncProgressInboxSize = 66.0;
   static const calendarElementHeight = 24.0;
   static const chevronIconSize = 20.0;
+  static const pagesImageSize = 80.0;
 
   /// Styles
   static const outlineBorderRadius = 4.0;

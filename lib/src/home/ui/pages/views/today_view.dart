@@ -180,12 +180,9 @@ class _TodayViewState extends State<TodayView> {
                           children: [
                             if (todos.isEmpty && pinned.isEmpty)
                               Container(
-                                padding: const EdgeInsets.only(top: 100, bottom: 10),
-                                child: SvgPicture.asset(
-                                  Assets.images.akiflow.tasksDoneSVG,
-                                  width: 80.81,
-                                  height: 97.72,
-                                ),
+                                padding: const EdgeInsets.only(top: Dimension.paddingXXL, bottom: Dimension.paddingS),
+                                child: SvgPicture.asset(Assets.images.akiflow.tasksDoneSVG,
+                                    width: Dimension.pagesImageSize, height: Dimension.pagesImageSize),
                               ),
                             TaskList(
                               key: const ObjectKey("todos"),
@@ -241,7 +238,7 @@ class _TodayViewState extends State<TodayView> {
                                 listOpened: context.watch<TodayCubit>().state.completedListOpen,
                               ),
                             ),
-                            const SizedBox(height: 100)
+                            const SizedBox(height: Dimension.paddingXXL)
                           ],
                         ),
                       ),
