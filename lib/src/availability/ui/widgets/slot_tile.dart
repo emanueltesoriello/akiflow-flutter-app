@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:models/task/availability_config.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -16,12 +17,11 @@ class SlotTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52,
       child: ListTile(
-        horizontalTitleGap: 10,
-        contentPadding: const EdgeInsets.only(left: 10),
+        horizontalTitleGap: Dimension.paddingS,
+        contentPadding: const EdgeInsets.only(left: Dimension.paddingS),
         title: Container(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(Dimension.paddingS),
           decoration: BoxDecoration(
               color: ColorsExt.grey7(context),
               borderRadius: BorderRadius.circular(6),
@@ -32,34 +32,42 @@ class SlotTile extends StatelessWidget {
           child: Row(
             children: [
               config.settings != null && config.settings?['hostPicture'] != null
-                  ? CircleAvatar(
-                      backgroundImage: NetworkImage(config.settings?['hostPicture']),
+                  ? SizedBox(
+                      height: Dimension.availabilityCircleAvatar,
+                      width: Dimension.availabilityCircleAvatar,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(config.settings?['hostPicture']),
+                      ),
                     )
-                  : CircleAvatar(
-                      child: Text(config.title?.characters.first ?? ''),
+                  : SizedBox(
+                      height: Dimension.availabilityCircleAvatar,
+                      width: Dimension.availabilityCircleAvatar,
+                      child: CircleAvatar(
+                        child: Text(config.title?.characters.first ?? ''),
+                      ),
                     ),
               const SizedBox(width: 8),
               Expanded(
                   child: Text(
                 config.title ?? '',
                 maxLines: 1,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: ColorsExt.grey1(context),
-                  fontWeight: FontWeight.w600,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: ColorsExt.grey1(context),
+                      fontWeight: FontWeight.w700,
+                      overflow: TextOverflow.ellipsis,
+                    ),
               )),
               const SizedBox(width: 5),
-              Text(config.durationString,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: ColorsExt.grey3(context),
-                    fontWeight: FontWeight.w600,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-              const SizedBox(width: 6),
+              Text(
+                config.durationString,
+                maxLines: 1,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: ColorsExt.grey3(context),
+                      fontWeight: FontWeight.w700,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+              ),
+              const SizedBox(width: Dimension.paddingS),
               InkWell(
                   onTap: () {
                     launchUrlString("https://booking.akiflow.com/${config.url_path}",
@@ -67,7 +75,7 @@ class SlotTile extends StatelessWidget {
                   },
                   child: SvgPicture.asset(
                     Assets.images.icons.common.arrowUpRightSquareSVG,
-                    height: 18,
+                    height: Dimension.arrowUpRightSquareSize,
                   )),
             ],
           ),
@@ -92,26 +100,26 @@ class SlotTile extends StatelessWidget {
                   child: Row(
                     children: [
                       SvgPicture.asset(Assets.images.icons.common.squareOnSquareSVG),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: Dimension.paddingS),
                       Text(
                         t.availability.linkCopiedToClipboard,
-                        style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: ColorsExt.grey2(context),
+                              fontWeight: FontWeight.w600,
+                            ),
                       ),
                     ],
                   ),
                 )));
           },
           child: Container(
-            margin: const EdgeInsets.only(right: 5.0),
+            margin: const EdgeInsets.only(right: Dimension.paddingXS),
             child: SizedBox(
-              height: 30,
-              width: 30,
+              height: Dimension.availabilityLinkIconSize,
+              width: Dimension.availabilityLinkIconSize,
               child: Center(
                 child: SizedBox(
-                  child: SvgPicture.asset(
-                    Assets.images.icons.common.linkSVG,
-                    height: 17.79,
-                  ),
+                  child: SvgPicture.asset(Assets.images.icons.common.linkSVG, height: 18),
                 ),
               ),
             ),

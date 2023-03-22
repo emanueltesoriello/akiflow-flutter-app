@@ -3,6 +3,9 @@ class Dimension {
   static const toolbarHeight = 56.0;
   static const todayViewTopMargin = 80.0;
   static const todayCalendarMinHeight = 40.0;
+  static const availabilityCircleAvatar = 32.0;
+  static const availabilityLinkIconSize = 30.0;
+  static const arrowUpRightSquareSize = 18.0;
 
   /// Styles
   static const outlineBorderRadius = 4.0;
