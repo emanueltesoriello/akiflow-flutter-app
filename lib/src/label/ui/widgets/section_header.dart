@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 
 enum SectionActionType { addTask, rename, delete }
@@ -34,9 +36,8 @@ class SectionHeaderItem extends StatelessWidget {
     return InkWell(
       onTap: onClick,
       child: Container(
-        height: 42,
         width: double.infinity,
-        padding: const EdgeInsets.only(left: 16),
+        padding: const EdgeInsets.only(left: Dimension.padding, top: Dimension.padding),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -45,13 +46,17 @@ class SectionHeaderItem extends StatelessWidget {
             Text("($taskCount)",
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.grey2_5(context))),
             const Spacer(),
+            AnimatedChevron(
+              iconUp: listOpened,
+              key: GlobalKey(),
+            ),
             SvgPicture.asset(
               listOpened ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
               color: ColorsExt.grey3(context),
-              width: 20,
-              height: 20,
+              width: Dimension.chevronIconSize,
+              height: Dimension.chevronIconSize,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: Dimension.paddingS),
             Builder(builder: (context) {
               if (!showActionsMenu) {
                 return const SizedBox();
