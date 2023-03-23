@@ -30,6 +30,8 @@ class Dimension {
   static const noticeRadius = 4.0;
   static const border = 1.0;
   static const appBarLeadingIcon = 26.0;
+  static const defaultIconSize = 22.0;
+
   static const defaultIllustrationSize = 130.0;
 
   ///Paddings

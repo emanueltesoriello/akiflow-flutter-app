@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,7 +19,7 @@ class LicencesPage extends StatelessWidget {
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               children: const [
                 _LicenseItem(name: "audioplayers", type: "MIT"),
                 _LicenseItem(name: "async", type: "MIT"),
@@ -63,7 +64,7 @@ class LicencesPage extends StatelessWidget {
                 _LicenseItem(name: "visibility_detector", type: "MIT"),
                 _LicenseItem(name: "webview_flutter", type: "MIT"),
                 _LicenseItem(name: "workmanager", type: "MIT"),
-                SizedBox(height: 16),
+                SizedBox(height: Dimension.padding),
               ],
             ),
           ),
@@ -88,15 +89,13 @@ class _LicenseItem extends StatelessWidget {
     return InkWell(
       onTap: () => launchUrl(Uri.parse("https://pub.dev/packages/$name"), mode: LaunchMode.externalApplication),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          name,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: ColorsExt.grey3(context),
-            decoration: TextDecoration.underline,
-          ),
-        ),
+        padding: const EdgeInsets.all(Dimension.paddingS),
+        child: Text(name,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey3(context),
+                  decoration: TextDecoration.underline,
+                )),
       ),
     );
   }
