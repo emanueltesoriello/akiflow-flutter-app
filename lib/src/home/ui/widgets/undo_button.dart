@@ -45,24 +45,27 @@ class UndoBottomView extends StatelessWidget {
                       icon(context, task.type),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: Text(
-                          text(task.type),
-                          style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
-                        ),
+                        child: Text(text(task.type),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
                       ),
                       TextButton(
                           onPressed: () {
                             context.read<TasksCubit>().undo();
                           },
                           child: Text(t.task.undo.toUpperCase(),
-                              style: TextStyle(
-                                  color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500))),
                     ],
                   ),
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + Dimension.bottomBarHeight + 16),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + Dimension.bottomBarHeight + Dimension.padding),
           ],
         );
       },

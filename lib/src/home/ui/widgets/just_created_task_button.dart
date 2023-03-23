@@ -44,11 +44,11 @@ class JustCreatedTaskView extends StatelessWidget {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            t.task.taskCreatedSuccessfully,
-                            style:
-                                TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
-                          ),
+                          child: Text(t.task.taskCreatedSuccessfully,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
                         ),
                         TextButton(
                             onPressed: () {
@@ -72,15 +72,17 @@ class JustCreatedTaskView extends StatelessWidget {
                               TaskExt.editTask(context, task);
                             },
                             child: Text(t.view.toUpperCase(),
-                                style: TextStyle(
-                                    color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500, fontSize: 15))),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500))),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + Dimension.bottomBarHeight + 16),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + Dimension.bottomBarHeight + Dimension.padding),
           ],
         );
       },
