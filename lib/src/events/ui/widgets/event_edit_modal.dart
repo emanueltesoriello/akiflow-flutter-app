@@ -1192,12 +1192,12 @@ class _EventEditModalState extends State<EventEditModal> {
         return t.event.editEvent.recurrence.everyDay;
       case EventRecurrenceModalType.everyCurrentDay:
         return t.editTask.everyCurrentDay(day: DateFormat("EEEE").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyYearOnThisDay:
+        return t.editTask.everyYearOn(date: DateFormat("MMM dd").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyMonthOnThisDay:
+        return t.editTask.everyMonthOn(date: DateFormat("MMM dd").format(widget.tappedDate));
       case EventRecurrenceModalType.everyWeekday:
         return t.event.editEvent.recurrence.everyWeekday;
-      case EventRecurrenceModalType.everyYearOnThisDay:
-        return t.editTask.everyYearOn(
-          date: DateFormat("MMM dd").format(widget.tappedDate),
-        );
       case EventRecurrenceModalType.custom:
         return t.event.editEvent.recurrence.custom;
       default:

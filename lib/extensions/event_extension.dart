@@ -258,6 +258,8 @@ extension EventExt on Event {
           return EventRecurrenceModalType.everyWeekday;
         } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
           return EventRecurrenceModalType.everyYearOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && rule.interval == null && rule.hasByMonthDays) {
+          return EventRecurrenceModalType.everyMonthOnThisDay;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return EventRecurrenceModalType.everyCurrentDay;
         } else if (rule.interval != null || rule.byWeekDays.length > 1) {

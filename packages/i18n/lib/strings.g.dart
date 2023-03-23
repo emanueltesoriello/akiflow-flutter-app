@@ -571,6 +571,8 @@ class _StringsEditTaskEn {
 	String everyCurrentDay({required Object day}) => 'Every ${day}';
 	String everyFirstCurrentDayOfTheMonth({required Object day}) => 'Every first ${day} of the month';
 	String everyYearOn({required Object date}) => 'Every year on ${date}';
+	String everyMonthOn({required Object date}) => 'Every month on ${date}';
+	String get everyLastDayOfTheMonth => 'Every last day of the month';
 	String get everyWeekday => 'Every weekday';
 	String get custom => 'Custom';
 	String get comingSoon => 'Coming soon';
@@ -1261,6 +1263,8 @@ extension on _StringsEn {
 			'editTask.everyCurrentDay': ({required Object day}) => 'Every ${day}',
 			'editTask.everyFirstCurrentDayOfTheMonth': ({required Object day}) => 'Every first ${day} of the month',
 			'editTask.everyYearOn': ({required Object date}) => 'Every year on ${date}',
+			'editTask.everyMonthOn': ({required Object date}) => 'Every month on ${date}',
+			'editTask.everyLastDayOfTheMonth': 'Every last day of the month',
 			'editTask.everyWeekday': 'Every weekday',
 			'editTask.custom': 'Custom',
 			'editTask.comingSoon': 'Coming soon',

@@ -298,6 +298,10 @@ extension TaskExt on Task {
           return RecurrenceModalType.everyWeekday;
         } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
           return RecurrenceModalType.everyYearOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && rule.interval == null && !rule.hasByMonthDays) {
+          return RecurrenceModalType.everyMonthOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && (rule.hasByMonthDays || rule.hasBySetPositions)) {
+          return RecurrenceModalType.everyLastDayOfTheMonth;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return RecurrenceModalType.everyCurrentDay;
         } else if (rule.interval != null || rule.byWeekDays.length > 1) {
