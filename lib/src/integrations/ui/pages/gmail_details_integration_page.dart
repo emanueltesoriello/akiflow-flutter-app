@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
@@ -284,7 +284,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
           title: DocExt.titleFromConnectorId("gmail"),
           identifier: gmailAccount.identifier ?? '',
           insets: const EdgeInsets.all(1),
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(Dimension.radius),
           trailing: const SizedBox(),
           onPressed: () {},
           active: context.read<IntegrationsCubit>().isLocalActive(gmailAccount),

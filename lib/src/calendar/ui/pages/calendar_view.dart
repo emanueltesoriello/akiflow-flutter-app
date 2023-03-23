@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:mobile/src/calendar/ui/widgets/calendar_appbar.dart';
+import 'package:mobile/src/calendar/ui/widgets/appbar/calendar_appbar.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/calendar/calendar.dart';

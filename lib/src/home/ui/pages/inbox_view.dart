@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -14,7 +15,7 @@ import 'package:mobile/src/base/ui/widgets/task/notice.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/inbox/inbox_view_cubit.dart';
 import 'package:mobile/src/home/ui/pages/views/empty_home_view.dart';
-import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
+import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 
@@ -77,10 +78,9 @@ class _ViewState extends State<_View> {
             title: t.bottomBar.inbox,
             leading: SvgPicture.asset(
               Assets.images.icons.common.traySVG,
-              width: 26,
-              height: 26,
+              width: Dimension.appBarLeadingIcon,
+              height: Dimension.appBarLeadingIcon,
             ),
-            //actions: const [TaskListMenu()],
             showSyncButton: true,
           ),
           body: Stack(
@@ -92,12 +92,11 @@ class _ViewState extends State<_View> {
                   tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
                   if (tasksState.tasksLoaded && tasks.isEmpty) {
                     return RefreshIndicator(
-                      backgroundColor: ColorsExt.background(context),
-                      onRefresh: () async {
-                        context.read<SyncCubit>().sync();
-                      },
-                      child: const EmptyHomeViewPlaceholder(),
-                    );
+                        backgroundColor: ColorsExt.background(context),
+                        onRefresh: () async {
+                          context.read<SyncCubit>().sync();
+                        },
+                        child: const EmptyHomeViewPlaceholder());
                   }
 
                   return TaskList(
@@ -116,7 +115,7 @@ class _ViewState extends State<_View> {
                       return GestureDetector(
                         onLongPress: () {},
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(Dimension.padding),
                           child: Notice(
                             title: t.notice.inboxTitle,
                             subtitle: t.notice.inboxSubtitle,
@@ -131,7 +130,7 @@ class _ViewState extends State<_View> {
                   );
                 },
               ),
-              tasksState.loading ? const FirstSyncProgressToday() : const SizedBox()
+              tasksState.loading ? const FirstSyncProgress() : const SizedBox()
             ],
           ),
         );

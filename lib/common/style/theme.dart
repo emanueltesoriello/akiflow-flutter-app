@@ -1,20 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
-
-/// Styles
-const double cardRadius = 10.0;
-const double cardElevation = 0.0;
-const double titleFontSize = 34.0;
-const double subtitleFontSize = 16.0;
-const double buttonFontSize = 18.0;
-const double buttonSubtitleFontSize = 16.0;
-const double buttonHeight = 60;
-
-/// Sizes
-const double maxWidth = 600;
-const double radius = 8;
-const double noticeRadius = 4;
-const double border = 1;
+import 'package:mobile/common/style/sizes.dart';
 
 /// Light Theme
 final ThemeData lightTheme = ThemeData.light().copyWith(
@@ -57,12 +43,23 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(Dimension.radius),
       ),
       primary: ColorsLight.akiflow,
       textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.akiflow),
     ),
   ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+    textStyle: ThemeData().primaryTextTheme.button!.copyWith(fontSize: 17, color: ColorsLight.grey2),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimension.outlineBorderRadius)),
+    backgroundColor: ColorsLight.grey6,
+    side: const BorderSide(color: ColorsLight.grey4, width: 1),
+    minimumSize: const Size(
+      Dimension.minButtonWidth,
+      Dimension.minButtonHeight,
+    ),
+  )),
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: ZoomPageTransitionsBuilder(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 
 class IntegrationDetailsHeader extends StatelessWidget {
@@ -22,7 +22,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: 62, maxHeight: 70),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(Dimension.radius),
         border: Border.all(color: ColorsExt.grey5(context)),
         color: ColorsExt.background(context),
       ),

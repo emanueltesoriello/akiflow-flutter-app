@@ -80,7 +80,7 @@ class JustCreatedTaskView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + bottomBarHeight + 16),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + Dimension.bottomBarHeight + 16),
           ],
         );
       },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class ActionButton extends StatefulWidget {
   final Widget child;
@@ -81,10 +81,10 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
             builder: (_, child) => Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius),
+                borderRadius: BorderRadius.circular(Dimension.radius),
                 border: Border.all(
                   color: widget.borderColor ?? Theme.of(context).primaryColor,
-                  width: border,
+                  width: Dimension.border,
                 ),
                 color: _animation!.value,
               ),
