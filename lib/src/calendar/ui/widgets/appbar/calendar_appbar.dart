@@ -8,7 +8,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:mobile/src/calendar/ui/widgets/calendar_settings_modal.dart';
+import 'package:mobile/src/calendar/ui/widgets/settings/calendar_settings_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 

@@ -9,7 +9,7 @@ import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:mobile/src/calendar/ui/widgets/calendar_settings_item.dart';
+import 'package:mobile/src/calendar/ui/widgets/settings/calendar_item.dart';
 import 'package:mobile/src/settings/ui/widgets/button_selectable.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
