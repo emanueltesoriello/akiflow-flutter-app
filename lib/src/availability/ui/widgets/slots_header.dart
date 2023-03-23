@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:models/task/availability_config.dart';
 
@@ -21,16 +22,18 @@ class SlotsHeader extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          const SizedBox(width: 16),
+          const SizedBox(width: Dimension.padding),
           SvgPicture.asset(asset),
-          const SizedBox(width: 16),
+          const SizedBox(width: Dimension.padding),
           Text(
             text,
-            style: TextStyle(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500),
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1!
+                .copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500),
           ),
         ],
       ),
-      //const Separator(),
     );
   }
 }

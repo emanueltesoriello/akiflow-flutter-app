@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/style/theme.dart';
 
 class IntegrationSetting extends StatefulWidget {
@@ -82,7 +83,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                     margin: const EdgeInsets.all(1),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(radius),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
                       boxShadow: [
                         BoxShadow(
                           color: ColorsExt.grey5(context),

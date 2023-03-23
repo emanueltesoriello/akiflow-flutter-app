@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/style/theme.dart';
 
 enum ButtonListPosition { single, top, center, mid, bottom, onlyHorizontalPadding }
@@ -91,84 +92,83 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
             }
 
             return AnimatedBuilder(
-              animation: _animation!,
-              builder: (_, child) =>  AnimatedBuilder(
-                    animation: _animation!,
-                    builder: (_, child) => Container(
-                      margin: margin(context),
-                      padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: ColorsExt.grey5(context),
-                            blurRadius: 5,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                        borderRadius: borderRadius(context),
-                        color: _animation!.value,
-                      ),
-                      child: Row(
-                        children: [
-                          _buildLeadingIcon(),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: widget.textMainAxisAlignment ??
-                                  (widget.leading == null ? MainAxisAlignment.center : MainAxisAlignment.start),
-                              children: [
-                                _buildLeadingTextIcon(),
-                                Flexible(
-                                  child: Text(
-                                    widget.title,
-                                    textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+                animation: _animation!,
+                builder: (_, child) => AnimatedBuilder(
+                      animation: _animation!,
+                      builder: (_, child) => Container(
+                        margin: margin(context),
+                        padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: ColorsExt.grey5(context),
+                              blurRadius: 5,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                          borderRadius: borderRadius(context),
+                          color: _animation!.value,
+                        ),
+                        child: Row(
+                          children: [
+                            _buildLeadingIcon(),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: widget.textMainAxisAlignment ??
+                                    (widget.leading == null ? MainAxisAlignment.center : MainAxisAlignment.start),
+                                children: [
+                                  _buildLeadingTextIcon(),
+                                  Flexible(
+                                    child: Text(
+                                      widget.title,
+                                      textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Builder(
-                            builder: (_) {
-                              if (widget.preTrailing != null) {
-                                return Row(
-                                  children: [
-                                    widget.preTrailing!,
-                                    const SizedBox(width: 7),
-                                  ],
-                                );
+                            Builder(
+                              builder: (_) {
+                                if (widget.preTrailing != null) {
+                                  return Row(
+                                    children: [
+                                      widget.preTrailing!,
+                                      const SizedBox(width: 7),
+                                    ],
+                                  );
+                                }
+
+                                return const SizedBox();
+                              },
+                            ),
+                            Builder(builder: (context) {
+                              if (widget.trailingWidget != null) {
+                                return widget.trailingWidget!;
                               }
 
-                              return const SizedBox();
-                            },
-                          ),
-                          Builder(builder: (context) {
-                            if (widget.trailingWidget != null) {
-                              return widget.trailingWidget!;
-                            }
+                              if (widget.leading == null) {
+                                return const SizedBox();
+                              }
 
-                            if (widget.leading == null) {
-                              return const SizedBox();
-                            }
+                              if (widget.showShevron == false) {
+                                return const SizedBox();
+                              }
 
-                            if (widget.showShevron == false) {
-                              return const SizedBox();
-                            }
-
-                            return SvgPicture.asset(
-                              Assets.images.icons.common.chevronRightSVG,
-                              width: 20,
-                              height: 20,
-                              color: ColorsExt.grey3(context),
-                            );
-                          }),
-                        ],
+                              return SvgPicture.asset(
+                                Assets.images.icons.common.chevronRightSVG,
+                                width: 20,
+                                height: 20,
+                                color: ColorsExt.grey3(context),
+                              );
+                            }),
+                          ],
+                        ),
                       ),
-                    ),
-              )
-            );
+                    ));
           }),
     );
   }
@@ -232,12 +232,12 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
     switch (widget.position) {
       case ButtonListPosition.single:
         return const BorderRadius.all(
-          Radius.circular(radius),
+          Radius.circular(Dimension.radius),
         );
       case ButtonListPosition.top:
         return const BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          topRight: Radius.circular(radius),
+          topLeft: Radius.circular(Dimension.radius),
+          topRight: Radius.circular(Dimension.radius),
         );
       case ButtonListPosition.center:
         return BorderRadius.zero;
@@ -245,8 +245,8 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
         return BorderRadius.zero;
       case ButtonListPosition.bottom:
         return const BorderRadius.only(
-          bottomLeft: Radius.circular(radius),
-          bottomRight: Radius.circular(radius),
+          bottomLeft: Radius.circular(Dimension.radius),
+          bottomRight: Radius.circular(Dimension.radius),
         );
       case ButtonListPosition.onlyHorizontalPadding:
         return const BorderRadius.all(Radius.zero);

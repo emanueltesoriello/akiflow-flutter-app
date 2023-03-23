@@ -59,7 +59,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                   startingDayOfWeek: firstDayOfWeek == -1 || firstDayOfWeek == DateTime.monday
                       ? StartingDayOfWeek.monday
                       : StartingDayOfWeek.sunday,
-                  rowHeight: todayCalendarMinHeight,
+                  rowHeight: Dimension.todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   calendarFormat: CalendarFormat.month,
                   sixWeekMonthsEnforced: true,

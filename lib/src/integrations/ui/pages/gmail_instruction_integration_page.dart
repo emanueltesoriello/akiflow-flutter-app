@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/action_button.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
@@ -85,14 +85,14 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
     return Container(
       height: 86,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(Dimension.radius),
         color: ColorsExt.background(context),
         border: Border.all(color: ColorsExt.grey7(context), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
             offset: const Offset(0, -1),
-            blurRadius: radius,
+            blurRadius: Dimension.radius,
           ),
         ],
       ),
@@ -167,7 +167,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                           BoxShadow(
                             color: Color(0x37404A40),
                             offset: Offset(0, 5),
-                            blurRadius: radius,
+                            blurRadius: Dimension.radius,
                           ),
                         ],
                       ),

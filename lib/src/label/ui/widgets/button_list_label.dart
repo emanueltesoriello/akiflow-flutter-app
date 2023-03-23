@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
 
@@ -168,12 +169,12 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
     switch (widget.position) {
       case ButtonListPosition.single:
         return const BorderRadius.all(
-          Radius.circular(radius),
+          Radius.circular(Dimension.radius),
         );
       case ButtonListPosition.top:
         return const BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          topRight: Radius.circular(radius),
+          topLeft: Radius.circular(Dimension.radius),
+          topRight: Radius.circular(Dimension.radius),
         );
       case ButtonListPosition.center:
         return BorderRadius.zero;
@@ -181,8 +182,8 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
         return BorderRadius.zero;
       case ButtonListPosition.bottom:
         return const BorderRadius.only(
-          bottomLeft: Radius.circular(radius),
-          bottomRight: Radius.circular(radius),
+          bottomLeft: Radius.circular(Dimension.radius),
+          bottomRight: Radius.circular(Dimension.radius),
         );
       case ButtonListPosition.onlyHorizontalPadding:
         return const BorderRadius.all(Radius.zero);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/doc_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
@@ -68,9 +68,11 @@ class IntegrationsList extends StatelessWidget {
 
   BorderRadius _getBorderRadius(int index, int accountsLength) {
     if (index == 0) {
-      return const BorderRadius.only(topLeft: Radius.circular(radius), topRight: Radius.circular(radius));
+      return const BorderRadius.only(
+          topLeft: Radius.circular(Dimension.radius), topRight: Radius.circular(Dimension.radius));
     } else if (index == accountsLength - 1) {
-      return const BorderRadius.only(bottomLeft: Radius.circular(radius), bottomRight: Radius.circular(radius));
+      return const BorderRadius.only(
+          bottomLeft: Radius.circular(Dimension.radius), bottomRight: Radius.circular(Dimension.radius));
     } else {
       return BorderRadius.zero;
     }

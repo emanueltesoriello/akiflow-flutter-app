@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class Notice extends StatelessWidget {
   final String title;
@@ -24,7 +24,7 @@ class Notice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: background ?? ColorsExt.green20(context),
-      borderRadius: BorderRadius.circular(noticeRadius),
+      borderRadius: BorderRadius.circular(Dimension.noticeRadius),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(

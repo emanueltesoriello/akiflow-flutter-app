@@ -48,7 +48,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
               color: Theme.of(context).scaffoldBackgroundColor,
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.only(top: toolbarHeight, bottom: bottomBarHeight),
+              margin: const EdgeInsets.only(top: Dimension.toolbarHeight, bottom: Dimension.bottomBarHeight),
             ),
           ),
           GestureDetector(
@@ -73,7 +73,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
                   builder: (context, state) => Stack(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: toolbarHeight + 10),
+                        padding: const EdgeInsets.only(top: Dimension.toolbarHeight + 10),
                         child: Column(children: [
                           _task(context, state.page),
                           _boxInfoAndImage(context, state.page),
