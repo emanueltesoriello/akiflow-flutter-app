@@ -29,7 +29,7 @@ class JustCreatedTaskView extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 51,
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: ColorsExt.grey6(context),

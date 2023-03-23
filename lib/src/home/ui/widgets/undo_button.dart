@@ -29,9 +29,9 @@ class UndoBottomView extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 51,
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                   width: double.infinity,
-                  padding: const EdgeInsets.only(left: 16),
+                  padding: const EdgeInsets.only(left: Dimension.padding),
                   decoration: BoxDecoration(
                     color: color(context, task.type),
                     border: Border.all(
@@ -118,36 +118,37 @@ class UndoBottomView extends StatelessWidget {
   }
 
   SvgPicture icon(BuildContext context, UndoType type) {
+    var iconSize = 25.0;
     switch (type) {
       case UndoType.delete:
         return SvgPicture.asset(
           Assets.images.icons.common.trashSVG,
-          height: 20,
+          height: iconSize,
         );
 
       case UndoType.markDone:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneSVG,
           color: ColorsExt.green(context),
-          height: 25,
+          height: iconSize,
         );
       case UndoType.plan:
         return SvgPicture.asset(
           Assets.images.icons.common.calendarSVG,
           color: ColorsExt.cyan(context),
-          height: 25,
+          height: iconSize,
         );
       case UndoType.snooze:
         return SvgPicture.asset(
           Assets.images.icons.common.clockSVG,
           color: ColorsExt.akiflow(context),
-          height: 25,
+          height: iconSize,
         );
       case UndoType.markUndone:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneSVG,
           color: ColorsExt.cyan25(context),
-          height: 25,
+          height: iconSize,
         );
       case UndoType.restore:
         // TODO: Handle this case.
@@ -156,19 +157,19 @@ class UndoBottomView extends StatelessWidget {
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneOutlineSVG,
           color: ColorsExt.grey2_5(context),
-          height: 20,
+          height: iconSize,
         );
       case UndoType.updated:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneOutlineSVG,
           color: ColorsExt.grey2_5(context),
-          height: 20,
+          height: iconSize,
         );
     }
     return SvgPicture.asset(
       Assets.images.icons.common.calendarSVG,
       color: ColorsExt.akiflow10(context),
-      height: 30,
+      height: iconSize,
     );
   }
 }

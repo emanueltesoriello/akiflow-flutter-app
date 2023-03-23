@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
@@ -14,7 +15,7 @@ import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/label/ui/widgets/create_edit_label_modal.dart';
 import 'package:mobile/src/label/ui/widgets/create_folder_modal.dart';
-import 'package:mobile/src/settings/ui/widgets/button_selectable.dart';
+import 'package:mobile/src/base/ui/widgets/base/button_selectable.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/labels_list.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -36,22 +37,22 @@ class SettingsModal extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(16.0),
-        topRight: Radius.circular(16.0),
+        topLeft: Radius.circular(Dimension.padding),
+        topRight: Radius.circular(Dimension.padding),
       ),
       child: ScrollConfiguration(
         behavior: NoScrollBehav(),
         child: Column(
           children: [
-            const SizedBox(height: 16),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
-            const SizedBox(height: 19),
+            const SizedBox(height: Dimension.padding),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
               child: Column(
                 children: const [
                   Header(),
-                  SizedBox(height: 19),
+                  SizedBox(height: Dimension.padding),
                   Separator(),
                 ],
               ),
@@ -59,7 +60,7 @@ class SettingsModal extends StatelessWidget {
             Expanded(
               child: ListView(
                 physics: const ClampingScrollPhysics(),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(Dimension.padding),
                 children: [
                   BlocBuilder<MainCubit, MainCubitState>(
                     builder: (context, state) {
@@ -68,8 +69,8 @@ class SettingsModal extends StatelessWidget {
                       return ButtonSelectable(
                         title: t.bottomBar.inbox,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: Dimension.defaultIconSize,
+                          width: Dimension.defaultIconSize,
                           child: SvgPicture.asset(
                             Assets.images.icons.common.traySVG,
                             color: ColorsExt.grey2(context),
@@ -79,14 +80,11 @@ class SettingsModal extends StatelessWidget {
                         trailing: Builder(builder: (context) {
                           List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
-                          return Text(
-                            tasks.length.toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2_5(context),
-                            ),
-                          );
+                          return Text(tasks.length.toString(),
+                              style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorsExt.grey2_5(context),
+                                  ));
                         }),
                         onPressed: () {
                           context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
@@ -95,7 +93,6 @@ class SettingsModal extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(height: 2),
                   BlocBuilder<MainCubit, MainCubitState>(
                     builder: (context, state) {
                       HomeViewType homeViewType = state.homeViewType;
@@ -116,14 +113,11 @@ class SettingsModal extends StatelessWidget {
                           List<Task> fixedTodoTodayTasks = List.from(fixedTodayTasks
                               .where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
-                          return Text(
-                            fixedTodoTodayTasks.length.toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2_5(context),
-                            ),
-                          );
+                          return Text(fixedTodoTodayTasks.length.toString(),
+                              style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorsExt.grey2_5(context),
+                                  ));
                         }),
                         onPressed: () {
                           context.read<MainCubit>().changeHomeView(HomeViewType.today);
@@ -132,7 +126,6 @@ class SettingsModal extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(height: 2),
                   BlocBuilder<MainCubit, MainCubitState>(
                     builder: (context, state) {
                       HomeViewType homeViewType = state.homeViewType;
@@ -140,28 +133,24 @@ class SettingsModal extends StatelessWidget {
                       return ButtonSelectable(
                         title: t.task.someday,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: Dimension.defaultIconSize,
+                          width: Dimension.defaultIconSize,
                           child: SvgPicture.asset(
                             Assets.images.icons.common.archiveboxSVG,
                             color: ColorsExt.grey3(context),
                           ),
                         ),
                         selected: homeViewType == HomeViewType.someday,
-                        trailing: Text(
-                          t.comingSoon,
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
+                        trailing: Text(t.comingSoon,
+                            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                  color: ColorsExt.grey3(context),
+                                )),
                         onPressed: () {
                           // TODO someday list
                         },
                       );
                     },
                   ),
-                  const SizedBox(height: 2),
                   BlocBuilder<MainCubit, MainCubitState>(
                     builder: (context, state) {
                       HomeViewType homeViewType = state.homeViewType;
@@ -169,8 +158,8 @@ class SettingsModal extends StatelessWidget {
                       return ButtonSelectable(
                         title: t.allTasks,
                         leading: SizedBox(
-                          height: 22,
-                          width: 22,
+                          height: Dimension.defaultIconSize,
+                          width: Dimension.defaultIconSize,
                           child: SvgPicture.asset(
                             Assets.images.icons.common.rectangleGrid1X2SVG,
                             height: 19,
@@ -180,10 +169,7 @@ class SettingsModal extends StatelessWidget {
                         selected: homeViewType == HomeViewType.someday,
                         trailing: Text(
                           t.comingSoon,
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: ColorsExt.grey3(context),
-                          ),
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey3(context)),
                         ),
                         onPressed: () {
                           // TODO all tasks list
@@ -191,18 +177,20 @@ class SettingsModal extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: Dimension.paddingS),
                   const Separator(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: Dimension.paddingS),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: Dimension.paddingS),
                     child: Row(
                       children: [
                         Expanded(
                           child: Text(
                             t.settings.labels.toUpperCase(),
-                            style:
-                                TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
                           ),
                         ),
                         Theme(
@@ -211,8 +199,8 @@ class SettingsModal extends StatelessWidget {
                           child: PopupMenuButton<AddListType>(
                             icon: SvgPicture.asset(
                               Assets.images.icons.common.plusSVG,
-                              width: 22,
-                              height: 22,
+                              width: Dimension.defaultIconSize,
+                              height: Dimension.defaultIconSize,
                               color: ColorsExt.grey3(context),
                             ),
                             onSelected: (AddListType result) async {
@@ -276,7 +264,7 @@ class SettingsModal extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 7.5),
+                  const SizedBox(height: Dimension.paddingS),
                   LabelsList(
                     showHeaders: false,
                     showNoLabel: false,
@@ -286,7 +274,7 @@ class SettingsModal extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: Dimension.paddingM),
                 ],
               ),
             ),
