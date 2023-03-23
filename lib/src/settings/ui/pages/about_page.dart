@@ -35,7 +35,7 @@ class AboutPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(Dimension.padding),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
                       color: ColorsExt.background(context),
                       border: Border.all(color: ColorsExt.grey5(context), width: 1),
                     ),
