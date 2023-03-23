@@ -12,6 +12,7 @@ import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_view_mode.dart';
 import 'package:mobile/src/calendar/ui/models/navigation_state.dart';
 import 'package:models/calendar/calendar.dart';
+import 'package:models/nullable.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 part 'calendar_state.dart';
@@ -157,5 +158,28 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   void panelOpened() {
     emit(state.copyWith(panelState: PanelState.opened));
+  }
+
+  Calendar changeCalendarVisibility(Calendar calendar) {
+    dynamic settings = calendar.settings;
+    if (settings != null) {
+      bool isVisible = calendar.settings["visibleMobile"] ?? calendar.settings["visible"] ?? false;
+
+      settings["visibleMobile"] = !isVisible;
+      settings["visibleMobile"]
+          ? settings["notificationsEnabledMobile"] = true
+          : settings["notificationsEnabledMobile"] = false;
+    } else {
+      settings = {
+        "visible": true,
+        "notificationsEnabled": true,
+        "visibleMobile": true,
+        "notificationsEnabledMobile": true
+      };
+    }
+
+    calendar = calendar.copyWith(settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+    return calendar;
   }
 }
