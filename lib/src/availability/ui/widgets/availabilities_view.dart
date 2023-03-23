@@ -9,7 +9,6 @@ import 'package:mobile/src/availability/ui/widgets/imported_from_material/expand
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
 
 import 'package:models/task/availability_config.dart';
-import 'imported_from_material/expandable_panel.dart';
 import 'slot_list.dart';
 
 class AvailabilitiesView extends StatelessWidget {
@@ -20,6 +19,8 @@ class AvailabilitiesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AvailabilityCubit, AvailabilityCubitState>(builder: (context, state) {
+      AvailabilityCubitState cubitState = context.watch<AvailabilityCubit>().state;
+
       if (state.navigationState == AvailabilityNavigationState.loading) {
         return const Center(child: Text('Loading..'));
       }
@@ -50,7 +51,7 @@ class AvailabilitiesView extends StatelessWidget {
               },
               children: [
                 ExpandablePanel(
-                    isExpanded: context.watch<AvailabilityCubit>().state.isRecurrentOpen,
+                    isExpanded: cubitState.isRecurrentOpen,
                     isHeaderVisible: recurrent.isNotEmpty ? true : false,
                     headerBuilder: (context, isExpanded) {
                       return GestureDetector(
@@ -63,10 +64,9 @@ class AvailabilitiesView extends StatelessWidget {
                               text: t.availability.activeRecurrentSlots,
                               isOpen: isExpanded));
                     },
-                    body:
-                        SlotList(isOpen: context.watch<AvailabilityCubit>().state.isRecurrentOpen, configs: recurrent)),
+                    body: SlotList(isOpen: cubitState.isRecurrentOpen, configs: recurrent)),
                 ExpandablePanel(
-                  isExpanded: context.watch<AvailabilityCubit>().state.isManualOpen,
+                  isExpanded: cubitState.isManualOpen,
                   isHeaderVisible: manual.isNotEmpty ? true : false,
                   headerBuilder: (context, isExpanded) {
                     return SlotsHeader(
@@ -75,7 +75,7 @@ class AvailabilitiesView extends StatelessWidget {
                         text: t.availability.activeManualSlots,
                         isOpen: isExpanded);
                   },
-                  body: SlotList(isOpen: context.watch<AvailabilityCubit>().state.isManualOpen, configs: manual),
+                  body: SlotList(isOpen: cubitState.isManualOpen, configs: manual),
                 ),
               ],
             ),
