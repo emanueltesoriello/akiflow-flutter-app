@@ -43,7 +43,7 @@ class BottomTaskActions extends StatelessWidget {
                   child: ButtonAction(
                     backColor: ColorsExt.cyan25(context),
                     topColor: ColorsExt.cyan(context),
-                    icon: 'assets/images/icons/_common/calendar.svg',
+                    icon: Assets.images.icons.common.calendarSVG,
                     bottomLabel: t.task.plan,
                     click: () {
                       showCupertinoModalBottomSheet(
@@ -77,7 +77,7 @@ class BottomTaskActions extends StatelessWidget {
                   child: ButtonAction(
                     backColor: ColorsExt.pink30(context),
                     topColor: ColorsExt.pink(context),
-                    icon: 'assets/images/icons/_common/clock.svg',
+                    icon: Assets.images.icons.common.clockSVG,
                     bottomLabel: t.task.snooze,
                     click: () {
                       showCupertinoModalBottomSheet(
@@ -112,7 +112,7 @@ class BottomTaskActions extends StatelessWidget {
                   child: ButtonAction(
                     backColor: ColorsExt.grey5(context),
                     topColor: ColorsExt.grey3(context),
-                    icon: 'assets/images/icons/_common/number.svg',
+                    icon: Assets.images.icons.common.numberSVG,
                     bottomLabel: 'Label',
                     click: () {
                       var cubit = context.read<TasksCubit>();
@@ -134,7 +134,7 @@ class BottomTaskActions extends StatelessWidget {
                   child: ButtonAction(
                     backColor: ColorsExt.grey5(context),
                     topColor: ColorsExt.grey3(context),
-                    icon: 'assets/images/icons/_common/exclamationmark.svg',
+                    icon: Assets.images.icons.common.exclamationmarkSVG,
                     bottomLabel: t.task.priority.title,
                     click: () async {
                       TasksCubit cubit = context.read<TasksCubit>();
