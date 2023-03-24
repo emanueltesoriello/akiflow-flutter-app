@@ -15,11 +15,11 @@ import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
-import 'package:mobile/src/events/ui/widgets/add_guests_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
-import 'package:mobile/src/events/ui/widgets/event_edit_time_modal.dart';
-import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
-import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
+import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
@@ -967,7 +967,7 @@ class _EventEditModalState extends State<EventEditModal> {
       onTap: () {
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             showTime: false,
             initialDate: updatedEvent.startDate != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.startDate!).toLocal()
@@ -1009,7 +1009,7 @@ class _EventEditModalState extends State<EventEditModal> {
         }
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             initialDate: widget.tappedDate,
             initialDatetime: updatedEvent.startTime != null ? DateTime.parse(updatedEvent.startTime!).toLocal() : null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
@@ -1052,7 +1052,7 @@ class _EventEditModalState extends State<EventEditModal> {
       onTap: () {
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             showTime: false,
             initialDate: updatedEvent.endDate != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endDate!).toLocal()
@@ -1087,7 +1087,7 @@ class _EventEditModalState extends State<EventEditModal> {
       onTap: () {
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             initialDate: updatedEvent.endTime != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endTime!).toLocal()
                 : widget.tappedDate,
