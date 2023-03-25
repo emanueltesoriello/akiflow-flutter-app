@@ -6,7 +6,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
-import 'package:mobile/src/events/ui/widgets/contact_row.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/contact_row.dart';
 import 'package:models/contact/contact.dart';
 
 class AddGuestsModal extends StatefulWidget {

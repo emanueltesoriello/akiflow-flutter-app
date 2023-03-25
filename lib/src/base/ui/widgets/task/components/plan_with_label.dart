@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 
@@ -16,7 +17,7 @@ class PlanWithLabel extends StatelessWidget {
           child: SlidableButtonAction(
             backColor: ColorsExt.cyan25(context),
             topColor: ColorsExt.cyan(context),
-            icon: 'assets/images/icons/_common/calendar.svg',
+            icon: Assets.images.icons.common.calendarSVG,
             label: t.task.plan.toUpperCase(),
             leftToRight: false,
             click: () {

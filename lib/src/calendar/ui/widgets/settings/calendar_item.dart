@@ -97,7 +97,6 @@ class _CalendarItemState extends State<CalendarItem> {
                                 color: ColorsExt.fromHex(EventExt.calendarColor[widget.calendars[index].color!] ??
                                     widget.calendars[index].color!),
                               ),
-                              const SizedBox(width: 8),
                               Text(
                                 "${widget.calendars[index].title}",
                                 style: TextStyle(
