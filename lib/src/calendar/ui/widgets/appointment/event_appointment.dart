@@ -53,7 +53,7 @@ class EventAppointment extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
                   style: TextStyle(
-                    height: 1.3,
+                    height: event.attendees != null && responseStatus == AtendeeResponseStatus.needsAction ? 1.1 : 1.3,
                     fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined

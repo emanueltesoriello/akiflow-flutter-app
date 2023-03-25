@@ -11,6 +11,7 @@ import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -298,6 +299,10 @@ extension TaskExt on Task {
           return RecurrenceModalType.everyWeekday;
         } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
           return RecurrenceModalType.everyYearOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && rule.interval == null && !rule.hasByMonthDays) {
+          return RecurrenceModalType.everyMonthOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && (rule.hasByMonthDays || rule.hasBySetPositions)) {
+          return RecurrenceModalType.everyLastDayOfTheMonth;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return RecurrenceModalType.everyCurrentDay;
         } else if (rule.interval != null || rule.byWeekDays.length > 1) {
@@ -750,28 +755,32 @@ extension TaskExt on Task {
     if (connectorId == null) {
       return null;
     }
-
-    switch (connectorId) {
-      case "asana":
-        return AsanaDoc.fromMap(doc)..setTitle(title);
-      case "clickup":
-        return ClickupDoc.fromMap(doc)..setTitle(title);
-      case "github":
-        return GithubDoc.fromMap(doc)..setTitle(title);
-      case "gmail":
-        return GmailDoc.fromMap(doc)..setTitle(title);
-      case "jira":
-        return JiraDoc.fromMap(doc)..setTitle(title);
-      case "notion":
-        return NotionDoc.fromMap(doc)..setTitle(title);
-      case "slack":
-        return SlackDoc.fromMap(doc);
-      case "todoist":
-        return TodoistDoc.fromMap(doc)..setTitle(title);
-      case "trello":
-        return TrelloDoc.fromMap(doc)..setTitle(title);
-      default:
-        return null;
+    try {
+      switch (connectorId) {
+        case "asana":
+          return AsanaDoc.fromMap(doc)..setTitle(title);
+        case "clickup":
+          return ClickupDoc.fromMap(doc)..setTitle(title);
+        case "github":
+          return GithubDoc.fromMap(doc)..setTitle(title);
+        case "gmail":
+          return GmailDoc.fromMap(doc)..setTitle(title);
+        case "jira":
+          return JiraDoc.fromMap(doc)..setTitle(title);
+        case "notion":
+          return NotionDoc.fromMap(doc)..setTitle(title);
+        case "slack":
+          return SlackDoc.fromMap(doc);
+        case "todoist":
+          return TodoistDoc.fromMap(doc)..setTitle(title);
+        case "trello":
+          return TrelloDoc.fromMap(doc)..setTitle(title);
+        default:
+          return null;
+      }
+    } catch (e) {
+      locator<SentryService>()
+          .addBreadcrumb(category: 'doc', message: 'Error computing doc for task: $id - message: $e');
     }
   }
 

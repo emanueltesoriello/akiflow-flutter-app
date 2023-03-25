@@ -127,6 +127,9 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                       },
                       selectedRecurrence: updatedTask.recurrenceComputed,
                       rule: updatedTask.ruleFromStringList,
+                      taskDatetime: updatedTask.datetime != null
+                          ? DateTime.parse(updatedTask.datetime!)
+                          : DateTime.parse(updatedTask.date!),
                     ),
                   );
                 },

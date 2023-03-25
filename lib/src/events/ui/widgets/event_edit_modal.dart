@@ -17,6 +17,7 @@ import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
+import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
 import 'package:mobile/src/events/ui/widgets/event_edit_time_modal.dart';
 import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
@@ -680,25 +681,42 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           ),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.squareFillSVG,
-                                    color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
+                          InkWell(
+                            onTap: () {
+                              showCupertinoModalBottomSheet(
+                                context: context,
+                                builder: (context) => ChangeColorModal(
+                                  selectedColor: updatedEvent.color ?? updatedEvent.calendarColor ?? '',
+                                  onChange: (newColor) {
+                                    setState(() {
+                                      updatedEvent = updatedEvent.copyWith(color: newColor);
+                                    });
+                                  },
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(
+                                      Assets.images.icons.common.squareFillSVG,
+                                      color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Text(
-                                  t.event.editEvent.defaultColor,
-                                  style: TextStyle(
-                                      fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                ),
-                              ],
+                                  const SizedBox(width: 16.0),
+                                  Text(
+                                    updatedEvent.color != null
+                                        ? t.event.editEvent.customColor
+                                        : t.event.editEvent.defaultColor,
+                                    style: TextStyle(
+                                        fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           if (updatedEvent.url != null)
@@ -1174,12 +1192,12 @@ class _EventEditModalState extends State<EventEditModal> {
         return t.event.editEvent.recurrence.everyDay;
       case EventRecurrenceModalType.everyCurrentDay:
         return t.editTask.everyCurrentDay(day: DateFormat("EEEE").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyYearOnThisDay:
+        return t.editTask.everyYearOn(date: DateFormat("MMM dd").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyMonthOnThisDay:
+        return t.editTask.everyMonthOn(date: DateFormat("MMM dd").format(widget.tappedDate));
       case EventRecurrenceModalType.everyWeekday:
         return t.event.editEvent.recurrence.everyWeekday;
-      case EventRecurrenceModalType.everyYearOnThisDay:
-        return t.editTask.everyYearOn(
-          date: DateFormat("MMM dd").format(widget.tappedDate),
-        );
       case EventRecurrenceModalType.custom:
         return t.event.editEvent.recurrence.custom;
       default:

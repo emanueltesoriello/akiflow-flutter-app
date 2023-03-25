@@ -5,6 +5,8 @@ class CalendarCubitState extends Equatable {
   final CalendarView calendarView;
   final bool isCalendarThreeDays;
   final bool isCalendarWeekendHidden;
+  final bool areDeclinedEventsHidden;
+  final bool areCalendarTasksHidden;
   final List<Calendar> calendars;
   final List<DateTime> visibleDates;
   final PanelState panelState;
@@ -14,6 +16,8 @@ class CalendarCubitState extends Equatable {
     this.calendarView = CalendarView.week,
     this.isCalendarThreeDays = false,
     this.isCalendarWeekendHidden = false,
+    this.areDeclinedEventsHidden = false,
+    this.areCalendarTasksHidden = false,
     this.calendars = const [],
     this.visibleDates = const [],
     this.panelState = PanelState.closed,
@@ -24,6 +28,8 @@ class CalendarCubitState extends Equatable {
     CalendarView? calendarView,
     bool? isCalendarThreeDays,
     bool? isCalendarWeekendHidden,
+    bool? areDeclinedEventsHidden,
+    bool? areCalendarTasksHidden,
     List<Calendar>? calendars,
     List<DateTime>? visibleDates,
     PanelState? panelState,
@@ -33,6 +39,8 @@ class CalendarCubitState extends Equatable {
       calendarView: calendarView ?? this.calendarView,
       isCalendarThreeDays: isCalendarThreeDays ?? this.isCalendarThreeDays,
       isCalendarWeekendHidden: isCalendarWeekendHidden ?? this.isCalendarWeekendHidden,
+      areDeclinedEventsHidden: areDeclinedEventsHidden ?? this.areDeclinedEventsHidden,
+      areCalendarTasksHidden: areCalendarTasksHidden ?? this.areCalendarTasksHidden,
       calendars: calendars ?? this.calendars,
       visibleDates: visibleDates ?? this.visibleDates,
       panelState: panelState ?? this.panelState,
@@ -45,6 +53,8 @@ class CalendarCubitState extends Equatable {
         calendarView,
         isCalendarThreeDays,
         isCalendarWeekendHidden,
+        areDeclinedEventsHidden,
+        areCalendarTasksHidden,
         calendars,
         visibleDates,
         panelState,

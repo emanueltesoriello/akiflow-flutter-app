@@ -12,6 +12,7 @@ import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_view_mode.dart';
 import 'package:mobile/src/calendar/ui/models/navigation_state.dart';
 import 'package:models/calendar/calendar.dart';
+import 'package:models/nullable.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 part 'calendar_state.dart';
@@ -39,8 +40,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   fetchFromPreferences() {
     int calendarViewInt = _preferencesRepository.calendarView;
-    bool isCalendarThreeDays = _preferencesRepository.isCalendarThreeDays;
-    bool isCalendarWeekendHidden = _preferencesRepository.isCalendarWeekendHidden;
+
     switch (calendarViewInt) {
       case CalendarViewMode.agenda:
         emit(state.copyWith(calendarView: CalendarView.schedule));
@@ -60,13 +60,17 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
       default:
     }
 
-    if (isCalendarThreeDays) {
-      emit(state.copyWith(isCalendarThreeDays: isCalendarThreeDays));
-    }
+    bool isCalendarThreeDays = _preferencesRepository.isCalendarThreeDays;
+    emit(state.copyWith(isCalendarThreeDays: isCalendarThreeDays));
 
-    if (isCalendarWeekendHidden) {
-      emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden));
-    }
+    bool isCalendarWeekendHidden = _preferencesRepository.isCalendarWeekendHidden;
+    emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden));
+
+    bool areDeclinedEventsHidden = _preferencesRepository.areDeclinedEventsHidden;
+    emit(state.copyWith(areDeclinedEventsHidden: areDeclinedEventsHidden));
+
+    bool areCalendarTasksHidden = _preferencesRepository.areCalendarTasksHidden;
+    emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden));
   }
 
   void changeCalendarView(CalendarView calendarView) {
@@ -110,6 +114,16 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   void setCalendarWeekendHidden(bool isCalendarWeekendHidden) {
     emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden));
     _preferencesRepository.setIsCalendarWeekendHidden(isCalendarWeekendHidden);
+  }
+
+  void setDeclinedEventsHidden(bool areDeclinedEventsHidden) {
+    emit(state.copyWith(areDeclinedEventsHidden: areDeclinedEventsHidden));
+    _preferencesRepository.setAreDeclinedEventsHidden(areDeclinedEventsHidden);
+  }
+
+  void setCalendarTasksHidden(bool areCalendarTasksHidden) {
+    emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden));
+    _preferencesRepository.setAreCalendarTasksHidden(areCalendarTasksHidden);
   }
 
   Future<void> fetchCalendars() async {
@@ -157,5 +171,28 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   void panelOpened() {
     emit(state.copyWith(panelState: PanelState.opened));
+  }
+
+  Calendar changeCalendarVisibility(Calendar calendar) {
+    dynamic settings = calendar.settings;
+    if (settings != null) {
+      bool isVisible = calendar.settings["visibleMobile"] ?? calendar.settings["visible"] ?? false;
+
+      settings["visibleMobile"] = !isVisible;
+      settings["visibleMobile"]
+          ? settings["notificationsEnabledMobile"] = true
+          : settings["notificationsEnabledMobile"] = false;
+    } else {
+      settings = {
+        "visible": true,
+        "notificationsEnabled": true,
+        "visibleMobile": true,
+        "notificationsEnabledMobile": true
+      };
+    }
+
+    calendar = calendar.copyWith(settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+    return calendar;
   }
 }

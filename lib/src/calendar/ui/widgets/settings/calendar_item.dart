@@ -6,7 +6,6 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/calendar/calendar.dart';
-import 'package:models/nullable.dart';
 
 class CalendarItem extends StatefulWidget {
   const CalendarItem({super.key, required this.calendars, required this.title});
@@ -79,27 +78,8 @@ class _CalendarItemState extends State<CalendarItem> {
                       children: [
                         InkWell(
                           onTap: () {
-                            dynamic settings = widget.calendars[index].settings;
-                            if (settings != null) {
-                              bool isVisible = widget.calendars[index].settings["visibleMobile"] ??
-                                  widget.calendars[index].settings["visible"] ??
-                                  false;
-
-                              settings["visibleMobile"] = !isVisible;
-                              settings["visibleMobile"]
-                                  ? settings["notificationsEnabledMobile"] = true
-                                  : settings["notificationsEnabledMobile"] = false;
-                            } else {
-                              settings = {
-                                "visible": true,
-                                "notificationsEnabled": true,
-                                "visibleMobile": true,
-                                "notificationsEnabledMobile": true
-                              };
-                            }
-
-                            widget.calendars[index] = widget.calendars[index].copyWith(
-                                settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+                            widget.calendars[index] =
+                                context.read<CalendarCubit>().changeCalendarVisibility(widget.calendars[index]);
                             context.read<CalendarCubit>().updateCalendar(widget.calendars[index]);
                           },
                           child: Row(
@@ -117,6 +97,7 @@ class _CalendarItemState extends State<CalendarItem> {
                                 color: ColorsExt.fromHex(EventExt.calendarColor[widget.calendars[index].color!] ??
                                     widget.calendars[index].color!),
                               ),
+                              const SizedBox(width: 8),
                               Text(
                                 "${widget.calendars[index].title}",
                                 style: TextStyle(
