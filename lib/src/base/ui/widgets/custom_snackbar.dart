@@ -34,8 +34,8 @@ class CustomSnackbar extends SnackBar {
               child: Row(
                 children: [
                   SizedBox(
-                    height: 17,
-                    width: 17,
+                    height: Dimension.smallconSize,
+                    width: Dimension.smallconSize,
                     child: SvgPicture.asset(icon(type), color: ColorsExt.grey2(context)),
                   ),
                   const SizedBox(width: Dimension.paddingS),

@@ -100,10 +100,7 @@ class FrequencySelectionModal extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 17,
-            color: ColorsExt.grey2(context),
-          ),
+          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context)),
         ),
       ),
     );

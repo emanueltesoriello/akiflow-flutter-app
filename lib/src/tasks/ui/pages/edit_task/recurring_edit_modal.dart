@@ -47,8 +47,13 @@ class RecurringEditModal extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
-                child: Text(t.editTask.repeatingEditDialog.description,
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                child: Text(
+                  t.editTask.repeatingEditDialog.description,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                ),
               ),
               const SizedBox(height: 24),
               InkWell(

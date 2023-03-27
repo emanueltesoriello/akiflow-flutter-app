@@ -79,8 +79,10 @@ class LinkedContentModal extends StatelessWidget {
                                 doc.getLinkedContentSummary(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                               ),
                             ),
                           ],
@@ -149,13 +151,16 @@ class LinkedContentModal extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title.isEmpty ? '-' : title, style: TextStyle(fontSize: 17, color: ColorsExt.grey3(context))),
-            const SizedBox(width: 8),
+            Text(
+              title.isEmpty ? '-' : title,
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey3(context)),
+            ),
+            const SizedBox(width: Dimension.paddingS),
             Expanded(
               child: Text(value.isEmpty ? '-' : value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context))),
+                  style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context))),
             ),
             syncing
                 ? SvgPicture.asset(

@@ -356,11 +356,10 @@ class _PlanModalState extends State<PlanModal> {
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
               ),
             ),
             const SizedBox(width: 8),
@@ -372,11 +371,10 @@ class _PlanModalState extends State<PlanModal> {
                     child: Text(
                       trailingText,
                       textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey3(context),
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                     ),
                   ),
                 ],

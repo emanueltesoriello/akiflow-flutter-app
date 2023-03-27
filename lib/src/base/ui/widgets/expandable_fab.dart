@@ -236,22 +236,23 @@ class FabActionButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(Dimension.paddingS),
           child: Row(
             children: [
               SizedBox(
-                height: 20,
-                width: 20,
+                height: Dimension.defaultIconSize,
+                width: Dimension.defaultIconSize,
                 child: SvgPicture.asset(
                   icon,
                   color: ColorsExt.background(context),
                 ),
               ),
-              const SizedBox(width: 5),
-              Text(
-                title,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ColorsExt.background(context)),
-              ),
+              const SizedBox(width: Dimension.paddingS),
+              Text(title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.background(context))),
             ],
           ),
         ),
