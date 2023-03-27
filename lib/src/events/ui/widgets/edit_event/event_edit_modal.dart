@@ -15,12 +15,11 @@ import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
-import 'package:mobile/src/events/ui/widgets/add_guests_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
-import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
-import 'package:mobile/src/events/ui/widgets/event_edit_time_modal.dart';
-import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
-import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
+import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
@@ -198,30 +197,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           ),
                           InkWell(
                             onTap: () {
-                              showCupertinoModalBottomSheet(
-                                context: context,
-                                builder: (context) => EventRecurrenceModal(
-                                  onChange: (RecurrenceRule? rule) {
-                                    if (rule != null) {
-                                      updatedEvent = updatedEvent.copyWith(
-                                          recurringId: updatedEvent.recurringId ?? updatedEvent.id,
-                                          recurrence: Nullable([updatedEvent.recurrenceRuleComputed(rule)]));
-                                    } else {
-                                      updatedEvent = updatedEvent.copyWith(recurrence: Nullable(null));
-                                    }
-                                  },
-                                  onRecurrenceType: (EventRecurrenceModalType type) {
-                                    setState(() {
-                                      selectedRecurrence = type;
-                                    });
-                                  },
-                                  selectedRecurrence: updatedEvent.recurrenceComputed,
-                                  rule: updatedEvent.ruleFromStringList,
-                                  eventStartTime: updatedEvent.startTime != null
-                                      ? DateTime.parse(updatedEvent.startTime!)
-                                      : DateTime.parse(updatedEvent.startDate!),
-                                ),
-                              );
+                              _recurrenceTap();
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
@@ -612,40 +588,7 @@ class _EventEditModalState extends State<EventEditModal> {
                             padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                             child: InkWell(
                               onTap: () {
-                                showCupertinoModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => AddGuestsModal(
-                                    updateAtendeesUi: (contact) {
-                                      List<EventAtendee>? attendees = updatedEvent.attendees;
-                                      EventAtendee newAtendee = EventAtendee(
-                                        displayName: contact.name,
-                                        email: contact.identifier,
-                                        responseStatus: contact.identifier == updatedEvent.originCalendarId
-                                            ? AtendeeResponseStatus.accepted.id
-                                            : AtendeeResponseStatus.needsAction.id,
-                                        organizer: contact.identifier == updatedEvent.originCalendarId ? true : false,
-                                      );
-                                      atendeesToAdd.add(newAtendee.email!);
-                                      if (attendees == null) {
-                                        attendees = List.from([newAtendee]);
-                                        if (newAtendee.email! != updatedEvent.originCalendarId) {
-                                          EventAtendee loggedInUserAtendee = EventAtendee(
-                                            organizer: true,
-                                            displayName: updatedEvent.originCalendarId,
-                                            email: updatedEvent.originCalendarId,
-                                            responseStatus: AtendeeResponseStatus.accepted.id,
-                                          );
-                                          atendeesToAdd.add(loggedInUserAtendee.email!);
-                                          attendees.add(loggedInUserAtendee);
-                                        }
-                                      } else {
-                                        attendees.add(newAtendee);
-                                      }
-
-                                      updatedEvent = updatedEvent.copyWith(attendees: Nullable(attendees));
-                                    },
-                                  ),
-                                );
+                                _addGuestsTap();
                               },
                               child: Row(
                                 children: [
@@ -793,11 +736,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               title: t.cancel,
                               image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
                               onTap: () {
-                                if (widget.createingEvent ?? false) {
-                                } else {
-                                  context.read<EventsCubit>().refetchEvent(updatedEvent);
-                                }
-                                Navigator.of(context).pop();
+                                _onCancelTap();
                               }),
                           BottomButton(
                             title: widget.createingEvent ?? false
@@ -807,119 +746,7 @@ class _EventEditModalState extends State<EventEditModal> {
                             containerColor: ColorsExt.green20(context),
                             iconColor: ColorsExt.green(context),
                             onTap: () async {
-                              dynamic content = updatedEvent.content;
-                              content['location'] = locationController.text;
-
-                              updatedEvent = updatedEvent.copyWith(
-                                  title: Nullable(titleController.text),
-                                  description: Nullable(descriptionController.text),
-                                  content: content,
-                                  updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
-
-                              print(updatedEvent.content);
-
-                              if (widget.createingEvent ?? false) {
-                                await context.read<EventsCubit>().addEventToDb(updatedEvent);
-                              }
-
-                              if (updatedEvent.recurringId != null && widget.event.recurringId != null) {
-                                await showCupertinoModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => RecurrentEventEditModal(
-                                          onlyThisTap: () {
-                                            Navigator.of(context).pop();
-                                            if (updatedEvent.recurringId == updatedEvent.id) {
-                                              context
-                                                  .read<EventsCubit>()
-                                                  .createEventException(
-                                                      context: context,
-                                                      tappedDate: widget.tappedDate,
-                                                      dateChanged: dateChanged,
-                                                      originalStartTime: widget.originalStartTime,
-                                                      timeChanged: timeChanged,
-                                                      parentEvent: updatedEvent,
-                                                      atendeesToAdd: atendeesToAdd,
-                                                      atendeesToRemove: atendeesToRemove,
-                                                      addMeeting: addingMeeting,
-                                                      removeMeeting: removingMeeting,
-                                                      rsvpChanged: false)
-                                                  .then((value) {
-                                                _showEventEditedSnackbar();
-                                              });
-                                            } else {
-                                              context
-                                                  .read<EventsCubit>()
-                                                  .updateEventAndCreateModifiers(
-                                                      event: updatedEvent,
-                                                      atendeesToAdd: atendeesToAdd,
-                                                      atendeesToRemove: atendeesToRemove,
-                                                      addMeeting: addingMeeting,
-                                                      removeMeeting: removingMeeting)
-                                                  .then((value) {
-                                                _showEventEditedSnackbar();
-                                              });
-                                            }
-                                          },
-                                          thisAndFutureTap: () {
-                                            Navigator.of(context).pop();
-                                            if (widget.event.startTime == widget.originalStartTime) {
-                                              _allTap(
-                                                  context: context,
-                                                  updatedEvent: updatedEvent,
-                                                  atendeesToAdd: atendeesToAdd,
-                                                  atendeesToRemove: atendeesToRemove,
-                                                  addingMeeting: addingMeeting,
-                                                  removingMeeting: removingMeeting);
-                                            } else {
-                                              context
-                                                  .read<EventsCubit>()
-                                                  .updateThisAndFuture(
-                                                      tappedDate: widget.tappedDate, selectedEvent: updatedEvent)
-                                                  .then((value) {
-                                                context.read<EventsCubit>().refreshAllEvents(context);
-                                                _showEventEditedSnackbar();
-                                              });
-                                            }
-                                          },
-                                          allTap: () {
-                                            Navigator.of(context).pop();
-                                            _allTap(
-                                                context: context,
-                                                updatedEvent: updatedEvent,
-                                                atendeesToAdd: atendeesToAdd,
-                                                atendeesToRemove: atendeesToRemove,
-                                                addingMeeting: addingMeeting,
-                                                removingMeeting: removingMeeting);
-                                          },
-                                        ));
-                              } else {
-                                if (mounted) {
-                                  Navigator.of(context).pop();
-                                  await context
-                                      .read<EventsCubit>()
-                                      .updateEventAndCreateModifiers(
-                                          event: updatedEvent,
-                                          atendeesToAdd: atendeesToAdd,
-                                          atendeesToRemove: atendeesToRemove,
-                                          addMeeting: addingMeeting,
-                                          removeMeeting: removingMeeting,
-                                          createingEvent: widget.createingEvent ?? false)
-                                      .then(
-                                    (value) {
-                                      bool createdEvent = widget.createingEvent ?? false;
-                                      if (createdEvent) {
-                                        context.read<EventsCubit>().refreshAllEvents(context);
-                                        ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
-                                            context: context,
-                                            type: CustomSnackbarType.eventCreated,
-                                            message: t.event.snackbar.created));
-                                      } else {
-                                        _showEventEditedSnackbar();
-                                      }
-                                    },
-                                  );
-                                }
-                              }
+                              _onSaveTap();
                             },
                           ),
                         ],
@@ -985,7 +812,7 @@ class _EventEditModalState extends State<EventEditModal> {
       onTap: () {
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             showTime: false,
             initialDate: updatedEvent.startDate != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.startDate!).toLocal()
@@ -1027,7 +854,7 @@ class _EventEditModalState extends State<EventEditModal> {
         }
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             initialDate: widget.tappedDate,
             initialDatetime: updatedEvent.startTime != null ? DateTime.parse(updatedEvent.startTime!).toLocal() : null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
@@ -1070,7 +897,7 @@ class _EventEditModalState extends State<EventEditModal> {
       onTap: () {
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             showTime: false,
             initialDate: updatedEvent.endDate != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endDate!).toLocal()
@@ -1105,7 +932,7 @@ class _EventEditModalState extends State<EventEditModal> {
       onTap: () {
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => EventEditTimeModal(
+          builder: (context) => EditTimeModal(
             initialDate: updatedEvent.endTime != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endTime!).toLocal()
                 : widget.tappedDate,
@@ -1180,6 +1007,70 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
+  _addGuestsTap() {
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => AddGuestsModal(
+        updateAtendeesUi: (contact) {
+          List<EventAtendee>? attendees = updatedEvent.attendees;
+          EventAtendee newAtendee = EventAtendee(
+            displayName: contact.name,
+            email: contact.identifier,
+            responseStatus: contact.identifier == updatedEvent.originCalendarId
+                ? AtendeeResponseStatus.accepted.id
+                : AtendeeResponseStatus.needsAction.id,
+            organizer: contact.identifier == updatedEvent.originCalendarId ? true : false,
+          );
+          atendeesToAdd.add(newAtendee.email!);
+          if (attendees == null) {
+            attendees = List.from([newAtendee]);
+            if (newAtendee.email! != updatedEvent.originCalendarId) {
+              EventAtendee loggedInUserAtendee = EventAtendee(
+                organizer: true,
+                displayName: updatedEvent.originCalendarId,
+                email: updatedEvent.originCalendarId,
+                responseStatus: AtendeeResponseStatus.accepted.id,
+              );
+              atendeesToAdd.add(loggedInUserAtendee.email!);
+              attendees.add(loggedInUserAtendee);
+            }
+          } else {
+            attendees.add(newAtendee);
+          }
+
+          updatedEvent = updatedEvent.copyWith(attendees: Nullable(attendees));
+        },
+      ),
+    );
+  }
+
+  _recurrenceTap() {
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => EventRecurrenceModal(
+        onChange: (RecurrenceRule? rule) {
+          if (rule != null) {
+            updatedEvent = updatedEvent.copyWith(
+                recurringId: updatedEvent.recurringId ?? updatedEvent.id,
+                recurrence: Nullable([updatedEvent.recurrenceRuleComputed(rule)]));
+          } else {
+            updatedEvent = updatedEvent.copyWith(recurrence: Nullable(null));
+          }
+        },
+        onRecurrenceType: (EventRecurrenceModalType type) {
+          setState(() {
+            selectedRecurrence = type;
+          });
+        },
+        selectedRecurrence: updatedEvent.recurrenceComputed,
+        rule: updatedEvent.ruleFromStringList,
+        eventStartTime: updatedEvent.startTime != null
+            ? DateTime.parse(updatedEvent.startTime!)
+            : DateTime.parse(updatedEvent.startDate!),
+      ),
+    );
+  }
+
   String _recurrence(EventRecurrenceModalType? selectedRecurrence) {
     if (selectedRecurrence == null) {
       return t.event.editEvent.recurrence.setRepeat;
@@ -1202,6 +1093,125 @@ class _EventEditModalState extends State<EventEditModal> {
         return t.event.editEvent.recurrence.custom;
       default:
         return t.event.editEvent.recurrence.setRepeat;
+    }
+  }
+
+  _onCancelTap() {
+    if (widget.createingEvent ?? false) {
+    } else {
+      context.read<EventsCubit>().refetchEvent(updatedEvent);
+    }
+    Navigator.of(context).pop();
+  }
+
+  _onSaveTap() async {
+    dynamic content = updatedEvent.content;
+    content['location'] = locationController.text;
+
+    updatedEvent = updatedEvent.copyWith(
+        title: Nullable(titleController.text),
+        description: Nullable(descriptionController.text),
+        content: content,
+        updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+    if (widget.createingEvent ?? false) {
+      await context.read<EventsCubit>().addEventToDb(updatedEvent);
+    }
+
+    if (updatedEvent.recurringId != null && widget.event.recurringId != null) {
+      await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => RecurrentEventEditModal(
+                onlyThisTap: () {
+                  Navigator.of(context).pop();
+                  if (updatedEvent.recurringId == updatedEvent.id) {
+                    context
+                        .read<EventsCubit>()
+                        .createEventException(
+                            context: context,
+                            tappedDate: widget.tappedDate,
+                            dateChanged: dateChanged,
+                            originalStartTime: widget.originalStartTime,
+                            timeChanged: timeChanged,
+                            parentEvent: updatedEvent,
+                            atendeesToAdd: atendeesToAdd,
+                            atendeesToRemove: atendeesToRemove,
+                            addMeeting: addingMeeting,
+                            removeMeeting: removingMeeting,
+                            rsvpChanged: false)
+                        .then((value) {
+                      _showEventEditedSnackbar();
+                    });
+                  } else {
+                    context
+                        .read<EventsCubit>()
+                        .updateEventAndCreateModifiers(
+                            event: updatedEvent,
+                            atendeesToAdd: atendeesToAdd,
+                            atendeesToRemove: atendeesToRemove,
+                            addMeeting: addingMeeting,
+                            removeMeeting: removingMeeting)
+                        .then((value) {
+                      _showEventEditedSnackbar();
+                    });
+                  }
+                },
+                thisAndFutureTap: () {
+                  Navigator.of(context).pop();
+                  if (widget.event.startTime == widget.originalStartTime) {
+                    _allTap(
+                        context: context,
+                        updatedEvent: updatedEvent,
+                        atendeesToAdd: atendeesToAdd,
+                        atendeesToRemove: atendeesToRemove,
+                        addingMeeting: addingMeeting,
+                        removingMeeting: removingMeeting);
+                  } else {
+                    context
+                        .read<EventsCubit>()
+                        .updateThisAndFuture(tappedDate: widget.tappedDate, selectedEvent: updatedEvent)
+                        .then((value) {
+                      context.read<EventsCubit>().refreshAllEvents(context);
+                      _showEventEditedSnackbar();
+                    });
+                  }
+                },
+                allTap: () {
+                  Navigator.of(context).pop();
+                  _allTap(
+                      context: context,
+                      updatedEvent: updatedEvent,
+                      atendeesToAdd: atendeesToAdd,
+                      atendeesToRemove: atendeesToRemove,
+                      addingMeeting: addingMeeting,
+                      removingMeeting: removingMeeting);
+                },
+              ));
+    } else {
+      if (mounted) {
+        Navigator.of(context).pop();
+        await context
+            .read<EventsCubit>()
+            .updateEventAndCreateModifiers(
+                event: updatedEvent,
+                atendeesToAdd: atendeesToAdd,
+                atendeesToRemove: atendeesToRemove,
+                addMeeting: addingMeeting,
+                removeMeeting: removingMeeting,
+                createingEvent: widget.createingEvent ?? false)
+            .then(
+          (value) {
+            bool createdEvent = widget.createingEvent ?? false;
+            if (createdEvent) {
+              context.read<EventsCubit>().refreshAllEvents(context);
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
+                  context: context, type: CustomSnackbarType.eventCreated, message: t.event.snackbar.created));
+            } else {
+              _showEventEditedSnackbar();
+            }
+          },
+        );
+      }
     }
   }
 }

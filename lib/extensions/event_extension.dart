@@ -1,6 +1,6 @@
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';

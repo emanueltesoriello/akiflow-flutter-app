@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 
@@ -17,7 +18,7 @@ class DoneWithLabel extends StatelessWidget {
           child: SlidableButtonAction(
             backColor: ColorsExt.green20(context),
             topColor: ColorsExt.green(context),
-            icon: 'assets/images/icons/_common/Check-done.svg',
+            icon: Assets.images.icons.common.checkDoneSVG,
             label: withLabel ? t.task.done.toUpperCase() : null,
             size: 28,
             leftToRight: true,

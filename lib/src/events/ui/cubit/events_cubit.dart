@@ -15,8 +15,8 @@ import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:mobile/src/events/ui/widgets/event_edit_modal.dart';
-import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/contact/contact.dart';
@@ -127,31 +127,56 @@ class EventsCubit extends Cubit<EventsCubitState> {
     return Assets.images.icons.google.meetSVG;
   }
 
-  //EventModifiers
+  //START create Event section
+  Future<void> addEventToDb(Event event) async {
+    await _eventsRepository.add([event]);
+  }
 
+  Future<void> createEvent(BuildContext context) async {
+    CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
+    var id = const Uuid().v4();
+    DateTime now = DateTime.now();
+    DateTime startTimeRounded =
+        DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()]);
+    String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    Event event = Event(
+      id: id,
+      creatorId: calendar.originId,
+      organizerId: calendar.originId,
+      calendarId: calendar.id,
+      originCalendarId: calendar.originId,
+      connectorId: calendar.connectorId,
+      akiflowAccountId: calendar.akiflowAccountId,
+      originAccountId: calendar.originAccountId,
+      calendarColor: calendar.color,
+      content: {"transparency": "opaque", "visibility": "default", "location": null},
+      startDatetimeTz: currentTimeZone,
+      startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
+      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(const Duration(minutes: 30))),
+      createdAt: TzUtils.toUtcStringIfNotNull(now),
+    );
+
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => EventEditModal(
+        event: event,
+        tappedDate: now,
+        originalStartTime: now.toIso8601String(),
+        createingEvent: true,
+      ),
+    ).whenComplete(() => refreshAllEvents(context));
+  }
+  //END create Event section
+
+  //START update Event section
+
+  ///updates response status of the user
   Future<void> updateAtend({required Event event, required String response, bool updateParent = false}) async {
-    EventModifier eventModifier = EventModifier(
-        id: const Uuid().v4(),
-        akiflowAccountId: event.akiflowAccountId,
-        eventId: event.id,
-        calendarId: event.calendarId,
-        action: 'attendees/updateRsvp',
-        content: {"responseStatus": response},
-        createdAt: DateTime.now().toUtc().toIso8601String());
-
-    await _eventModifiersRepository.add([eventModifier]);
+    await _eventModifiersRepository.add([responseStatusEventModifier(event, response)]);
 
     if (updateParent) {
-      EventModifier parentEventModifier = EventModifier(
-          id: const Uuid().v4(),
-          akiflowAccountId: event.akiflowAccountId,
-          eventId: event.recurringId,
-          calendarId: event.calendarId,
-          action: 'attendees/updateRsvp',
-          content: {"responseStatus": response},
-          createdAt: DateTime.now().toUtc().toIso8601String());
-
-      await _eventModifiersRepository.add([parentEventModifier]);
+      await _eventModifiersRepository.add([responseStatusEventModifier(event, response, updateParent: true)]);
     }
     await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
     await scheduleEventsSync();
@@ -166,6 +191,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     });
   }
 
+  ///main method for updateing Event
   Future<void> updateEventAndCreateModifiers({
     required Event event,
     required List<String> atendeesToAdd,
@@ -206,6 +232,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
         });
   }
 
+  ///update method for case user selects "All Events" from an exception-event
   Future<void> updateParentAndExceptions({
     required Event exceptionEvent,
     required List<String> atendeesToAdd,
@@ -268,180 +295,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
         dragAndDrop: dragAndDrop);
   }
 
-  EventModifier updateAtendeesEventModifier({
-    required Event event,
-    required List<String> atendeesToAdd,
-    required List<String> atendeesToRemove,
-  }) {
-    EventModifier eventModifier = EventModifier(
-        id: const Uuid().v4(),
-        akiflowAccountId: event.akiflowAccountId,
-        eventId: event.id,
-        calendarId: event.calendarId,
-        action: 'attendees/updateList',
-        content: {
-          "attendeeEmailsToAdd": atendeesToAdd,
-          "attendeeEmailsToRemove": atendeesToRemove,
-        },
-        createdAt: DateTime.now().toUtc().toIso8601String());
-    return eventModifier;
-  }
-
-  EventModifier newParentMeetingEventModifier(Event newParent) {
-    EventModifier eventModifier = EventModifier(
-        id: const Uuid().v4(),
-        akiflowAccountId: newParent.akiflowAccountId,
-        eventId: newParent.id,
-        calendarId: newParent.calendarId,
-        action: 'meeting/add',
-        content: {
-          "meetingSolution": newParent.meetingSolution,
-          "conferenceData": newParent.content["conferenceData"],
-        },
-        createdAt: DateTime.now().toUtc().toIso8601String());
-    return eventModifier;
-  }
-
-  EventModifier addMeetingEventModifier(Event event) {
-    String meetingSolution = getDefaultConferenceSolution();
-    AuthCubit authCubit = locator<AuthCubit>();
-
-    dynamic content;
-    if (meetingSolution == 'zoom') {
-      String? conferenceAccountId;
-      if (authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
-        conferenceAccountId = authCubit.state.user?.settings?['calendar']['conferenceAccountId'];
-      }
-      if (conferenceAccountId != null) {
-        content = {"meetingSolution": meetingSolution, "akiflowAccountId": conferenceAccountId};
-      }
-    } else {
-      content = {
-        "meetingSolution": meetingSolution,
-      };
-    }
-
-    EventModifier eventModifier = EventModifier(
-        id: const Uuid().v4(),
-        akiflowAccountId: event.akiflowAccountId,
-        eventId: event.id,
-        calendarId: event.calendarId,
-        action: 'meeting/add',
-        content: content,
-        createdAt: DateTime.now().toUtc().toIso8601String());
-    return eventModifier;
-  }
-
-  EventModifier removeMeetingEventModifier(Event event) {
-    EventModifier eventModifier = EventModifier(
-        id: const Uuid().v4(),
-        akiflowAccountId: event.akiflowAccountId,
-        eventId: event.id,
-        calendarId: event.calendarId,
-        action: 'meeting/remove',
-        content: const {},
-        createdAt: DateTime.now().toUtc().toIso8601String());
-    return eventModifier;
-  }
-
-  Future<void> fetchUnprocessedEventModifiers() async {
-    DateTime? maxProcessedAtEvents = _preferencesRepository.lastEventsSyncAt;
-    maxProcessedAtEvents ??= DateTime.now().toUtc();
-    List<EventModifier> unprocessed =
-        await _eventModifiersRepository.getUnprocessedEventModifiers(maxProcessedAtEvents.toIso8601String());
-    emit(state.copyWith(unprocessedEventModifiers: unprocessed));
-  }
-
-  Event patchEventWithEventModifier(Event event) {
-    List<EventModifier> eventModifiers = state.unprocessedEventModifiers
-        .where((modifier) => modifier.eventId == event.id && modifier.attempts == null)
-        .toList();
-
-    if (eventModifiers.isEmpty) {
-      return event;
-    }
-
-    //patch atendees
-    EventModifier? atendeesModifier;
-    try {
-      atendeesModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'attendees/updateList');
-    } catch (e) {
-      print('No unprocessed EventModifier with attendees/updateList');
-    }
-    if (atendeesModifier != null) {
-      List<EventAtendee>? updatedAtendees = event.attendees;
-
-      List<dynamic> attendeeEmailsToAdd = atendeesModifier.content['attendeeEmailsToAdd'];
-      List<dynamic> attendeeEmailsToRemove = atendeesModifier.content['attendeeEmailsToRemove'];
-
-      if (attendeeEmailsToAdd.isNotEmpty) {
-        if (updatedAtendees == null || updatedAtendees.isEmpty) {
-          updatedAtendees = List.empty(growable: true);
-        }
-        for (var emailToAdd in attendeeEmailsToAdd) {
-          updatedAtendees.add(EventAtendee(email: emailToAdd));
-        }
-      }
-      if (attendeeEmailsToRemove.isNotEmpty && updatedAtendees != null) {
-        for (var emailToRemove in attendeeEmailsToRemove) {
-          updatedAtendees.removeWhere((atendee) => atendee.email == emailToRemove);
-        }
-      }
-      event = event.copyWith(attendees: Nullable(updatedAtendees));
-    }
-
-    //patch rsvp
-    EventModifier? rsvpModifier;
-    try {
-      rsvpModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'attendees/updateRsvp');
-    } catch (e) {
-      print('No unprocessed EventModifier with updateRsvp');
-    }
-
-    if (rsvpModifier != null) {
-      List<EventAtendee> updatedAtendees = event.attendees!;
-      EventAtendee loggedUser = event.attendees!.firstWhere((atendee) => atendee.email == event.originCalendarId);
-      loggedUser = loggedUser.copyWith(responseStatus: rsvpModifier.content['responseStatus']);
-      updatedAtendees.removeWhere((attendee) => attendee.email == event.originCalendarId);
-      updatedAtendees.add(loggedUser);
-      event = event.copyWith(attendees: Nullable(updatedAtendees));
-    }
-
-    //patch conference
-    EventModifier? removeConferenceModifier;
-    EventModifier? addConferenceModifier;
-    try {
-      removeConferenceModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'meeting/remove');
-    } catch (e) {
-      print('No unprocessed EventModifier with meeting/remove');
-    }
-    try {
-      addConferenceModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'meeting/add');
-    } catch (e) {
-      print('No unprocessed EventModifier with meeintg/add');
-    }
-    if (removeConferenceModifier != null && addConferenceModifier != null) {
-      DateTime removeCreatedAt = DateTime.parse(removeConferenceModifier.createdAt!);
-      DateTime addCreatedAt = DateTime.parse(addConferenceModifier.createdAt!);
-      if (removeCreatedAt.isBefore(addCreatedAt)) {
-        removeConferenceModifier = null;
-      } else if (addCreatedAt.isBefore(removeCreatedAt)) {
-        addConferenceModifier = null;
-      }
-    }
-    if (removeConferenceModifier != null) {
-      event = event.copyWith(meetingSolution: Nullable(null));
-    }
-    if (addConferenceModifier != null) {
-      String meetingSolution = addConferenceModifier.content['meetingSolution'];
-      event = event.copyWith(meetingSolution: Nullable(meetingSolution));
-    }
-
-    return event;
-  }
-
-  //create event exception
-
+  ///creates exception-Event for "Only this" option. Used to create and delete exception.
   Future<Event?> createEventException(
       {required BuildContext context,
       required DateTime tappedDate,
@@ -541,6 +395,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     return recurringException;
   }
 
+  ///update method for "This and future" option
   Future<Event?> updateThisAndFuture(
       {required DateTime tappedDate, required Event selectedEvent, String? response}) async {
     var id = const Uuid().v4();
@@ -610,6 +465,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     return newParent;
   }
 
+  ///Used for "This and future" option. It ends the original parent at the selected date
   Future<void> endParentAtSelectedEvent({required DateTime tappedDate, required Event selectedEvent}) async {
     Event parentEvent = await _eventsRepository.getById(selectedEvent.recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
@@ -647,6 +503,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     });
   }
 
+  ///deletes all exception-events by recurrindId
   Future<void> deleteExceptionsByRecurringId(String recurringId, {bool sync = false, DateTime? startingFrom}) async {
     List<Event> exceptions = await _eventsRepository.getExceptionsByRecurringId(recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
@@ -669,7 +526,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
       await _syncCubit.sync(entities: [Entity.events]);
     }
   }
+  //END update Event section
 
+  //START delete Event section
   Future<void> deleteEvent(Event event, {bool deleteExceptions = false}) async {
     String now = DateTime.now().toUtc().toIso8601String();
     List<Entity> entitiesToSync = List.empty(growable: true);
@@ -717,7 +576,11 @@ class EventsCubit extends Cubit<EventsCubitState> {
       status: 'cancelled',
     );
   }
+  //END delete Event section
 
+  //START drag and drop section
+
+  ///handle drag&drop for a recurring Event
   Future<void> showRecurrenceEditModalDragAndDrop(
       {required BuildContext context, required Event event, required DateTime droppedTimeRounded}) async {
     DateTime? eventStartTime = event.startTime != null ? DateTime.parse(event.startTime!).toLocal() : null;
@@ -827,44 +690,198 @@ class EventsCubit extends Cubit<EventsCubitState> {
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );
   }
+  //END drag and drop Event section
 
-  Future<void> addEventToDb(Event event) async {
-    await _eventsRepository.add([event]);
+  //START event modifiers section
+
+  ///creates EventModifier with responseStatus
+  EventModifier responseStatusEventModifier(Event event, String response, {bool updateParent = false}) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: updateParent ? event.recurringId : event.id,
+        calendarId: event.calendarId,
+        action: 'attendees/updateRsvp',
+        content: {"responseStatus": response},
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
   }
 
-  Future<void> createEvent(BuildContext context) async {
-    CalendarCubit calendarCubit = context.read<CalendarCubit>();
-    Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
-    var id = const Uuid().v4();
-    DateTime now = DateTime.now();
-    DateTime startTimeRounded =
-        DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()]);
-    String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
-    Event event = Event(
-      id: id,
-      creatorId: calendar.originId,
-      organizerId: calendar.originId,
-      calendarId: calendar.id,
-      originCalendarId: calendar.originId,
-      connectorId: calendar.connectorId,
-      akiflowAccountId: calendar.akiflowAccountId,
-      originAccountId: calendar.originAccountId,
-      calendarColor: calendar.color,
-      content: {"transparency": "opaque", "visibility": "default", "location": null},
-      startDatetimeTz: currentTimeZone,
-      startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
-      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(const Duration(minutes: 30))),
-      createdAt: TzUtils.toUtcStringIfNotNull(now),
-    );
-
-    showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => EventEditModal(
-        event: event,
-        tappedDate: now,
-        originalStartTime: now.toIso8601String(),
-        createingEvent: true,
-      ),
-    ).whenComplete(() => refreshAllEvents(context));
+  ///creates EventModifier for updating atendees
+  EventModifier updateAtendeesEventModifier({
+    required Event event,
+    required List<String> atendeesToAdd,
+    required List<String> atendeesToRemove,
+  }) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: event.id,
+        calendarId: event.calendarId,
+        action: 'attendees/updateList',
+        content: {
+          "attendeeEmailsToAdd": atendeesToAdd,
+          "attendeeEmailsToRemove": atendeesToRemove,
+        },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
   }
+
+  ///creates EventModifier for new parent. For "This and future"-case
+  EventModifier newParentMeetingEventModifier(Event newParent) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: newParent.akiflowAccountId,
+        eventId: newParent.id,
+        calendarId: newParent.calendarId,
+        action: 'meeting/add',
+        content: {
+          "meetingSolution": newParent.meetingSolution,
+          "conferenceData": newParent.content["conferenceData"],
+        },
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
+  }
+
+  ///creates EventModifier for adding meeting
+  EventModifier addMeetingEventModifier(Event event) {
+    String meetingSolution = getDefaultConferenceSolution();
+    AuthCubit authCubit = locator<AuthCubit>();
+
+    dynamic content;
+    if (meetingSolution == 'zoom') {
+      String? conferenceAccountId;
+      if (authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
+        conferenceAccountId = authCubit.state.user?.settings?['calendar']['conferenceAccountId'];
+      }
+      if (conferenceAccountId != null) {
+        content = {"meetingSolution": meetingSolution, "akiflowAccountId": conferenceAccountId};
+      }
+    } else {
+      content = {
+        "meetingSolution": meetingSolution,
+      };
+    }
+
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: event.id,
+        calendarId: event.calendarId,
+        action: 'meeting/add',
+        content: content,
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
+  }
+
+  ///creates EventModifier for removing meeting
+  EventModifier removeMeetingEventModifier(Event event) {
+    EventModifier eventModifier = EventModifier(
+        id: const Uuid().v4(),
+        akiflowAccountId: event.akiflowAccountId,
+        eventId: event.id,
+        calendarId: event.calendarId,
+        action: 'meeting/remove',
+        content: const {},
+        createdAt: DateTime.now().toUtc().toIso8601String());
+    return eventModifier;
+  }
+
+  Future<void> fetchUnprocessedEventModifiers() async {
+    DateTime? maxProcessedAtEvents = _preferencesRepository.lastEventsSyncAt;
+    maxProcessedAtEvents ??= DateTime.now().toUtc();
+    List<EventModifier> unprocessed =
+        await _eventModifiersRepository.getUnprocessedEventModifiers(maxProcessedAtEvents.toIso8601String());
+    emit(state.copyWith(unprocessedEventModifiers: unprocessed));
+  }
+
+  ///patches EventModifier data to Event
+  Event patchEventWithEventModifier(Event event) {
+    List<EventModifier> eventModifiers = state.unprocessedEventModifiers
+        .where((modifier) => modifier.eventId == event.id && modifier.attempts == null)
+        .toList();
+
+    if (eventModifiers.isEmpty) {
+      return event;
+    }
+
+    //patch atendees
+    EventModifier? atendeesModifier;
+    try {
+      atendeesModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'attendees/updateList');
+    } catch (e) {
+      print('No unprocessed EventModifier with attendees/updateList');
+    }
+    if (atendeesModifier != null) {
+      List<EventAtendee>? updatedAtendees = event.attendees;
+
+      List<dynamic> attendeeEmailsToAdd = atendeesModifier.content['attendeeEmailsToAdd'];
+      List<dynamic> attendeeEmailsToRemove = atendeesModifier.content['attendeeEmailsToRemove'];
+
+      if (attendeeEmailsToAdd.isNotEmpty) {
+        if (updatedAtendees == null || updatedAtendees.isEmpty) {
+          updatedAtendees = List.empty(growable: true);
+        }
+        for (var emailToAdd in attendeeEmailsToAdd) {
+          updatedAtendees.add(EventAtendee(email: emailToAdd));
+        }
+      }
+      if (attendeeEmailsToRemove.isNotEmpty && updatedAtendees != null) {
+        for (var emailToRemove in attendeeEmailsToRemove) {
+          updatedAtendees.removeWhere((atendee) => atendee.email == emailToRemove);
+        }
+      }
+      event = event.copyWith(attendees: Nullable(updatedAtendees));
+    }
+
+    //patch rsvp
+    EventModifier? rsvpModifier;
+    try {
+      rsvpModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'attendees/updateRsvp');
+    } catch (e) {
+      print('No unprocessed EventModifier with updateRsvp');
+    }
+
+    if (rsvpModifier != null) {
+      List<EventAtendee> updatedAtendees = event.attendees!;
+      EventAtendee loggedUser = event.attendees!.firstWhere((atendee) => atendee.email == event.originCalendarId);
+      loggedUser = loggedUser.copyWith(responseStatus: rsvpModifier.content['responseStatus']);
+      updatedAtendees.removeWhere((attendee) => attendee.email == event.originCalendarId);
+      updatedAtendees.add(loggedUser);
+      event = event.copyWith(attendees: Nullable(updatedAtendees));
+    }
+
+    //patch conference
+    EventModifier? removeConferenceModifier;
+    EventModifier? addConferenceModifier;
+    try {
+      removeConferenceModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'meeting/remove');
+    } catch (e) {
+      print('No unprocessed EventModifier with meeting/remove');
+    }
+    try {
+      addConferenceModifier = eventModifiers.firstWhere((modifier) => modifier.action == 'meeting/add');
+    } catch (e) {
+      print('No unprocessed EventModifier with meeintg/add');
+    }
+    if (removeConferenceModifier != null && addConferenceModifier != null) {
+      DateTime removeCreatedAt = DateTime.parse(removeConferenceModifier.createdAt!);
+      DateTime addCreatedAt = DateTime.parse(addConferenceModifier.createdAt!);
+      if (removeCreatedAt.isBefore(addCreatedAt)) {
+        removeConferenceModifier = null;
+      } else if (addCreatedAt.isBefore(removeCreatedAt)) {
+        addConferenceModifier = null;
+      }
+    }
+    if (removeConferenceModifier != null) {
+      event = event.copyWith(meetingSolution: Nullable(null));
+    }
+    if (addConferenceModifier != null) {
+      String meetingSolution = addConferenceModifier.content['meetingSolution'];
+      event = event.copyWith(meetingSolution: Nullable(meetingSolution));
+    }
+
+    return event;
+  }
+  //END event modifiers section
 }
