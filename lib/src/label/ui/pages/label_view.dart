@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -236,7 +237,7 @@ class _LabelViewState extends State<LabelView> {
                         sorting: TaskListSorting.sortingLabelAscending,
                       );
                     }).toList(),
-                    const SizedBox(height: 100)
+                    const SizedBox(height: Dimension.paddingXXL)
                   ]),
             ),
           );

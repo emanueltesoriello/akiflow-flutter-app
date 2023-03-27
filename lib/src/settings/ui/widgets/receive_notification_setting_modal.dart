@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
-import 'package:workmanager/workmanager.dart';
 
 class ReceiveNotificationSettingModal extends StatefulWidget {
   final NextTaskNotificationsModel selectedNextTaskNotificationsModel;

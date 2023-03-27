@@ -15,6 +15,7 @@ import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
+import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';

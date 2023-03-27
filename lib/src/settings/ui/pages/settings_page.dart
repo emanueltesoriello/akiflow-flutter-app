@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
-import 'package:mobile/src/base/ui/widgets/base/notification_count_icon.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/pages/integrations_page.dart';
 import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
 import 'package:mobile/src/settings/ui/pages/about_page.dart';
 import 'package:mobile/src/settings/ui/pages/my_account_page.dart';
 import 'package:mobile/src/settings/ui/pages/notifications_page.dart';
-import 'package:mobile/src/settings/ui/widgets/settings_header_text.dart';
+import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
 import 'package:models/account/account.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +29,7 @@ class SettingsPage extends StatelessWidget {
         showBack: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(Dimension.padding),
         children: [
           if (kDebugMode)
             FutureBuilder(
@@ -44,7 +43,7 @@ class SettingsPage extends StatelessWidget {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAccountPage()));
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
           SettingHeaderText(text: t.comingSoon),
           ButtonList(
             title: t.settings.general,
@@ -69,7 +68,7 @@ class SettingsPage extends StatelessWidget {
             enabled: false,
             onPressed: () {},
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
           ButtonList(
             title: t.settings.integrations.title,
             leading: Assets.images.icons.common.puzzleSVG,
@@ -87,7 +86,7 @@ class SettingsPage extends StatelessWidget {
 
                 return CircleAvatar(
                   backgroundColor: ColorsExt.orange(context),
-                  radius: 9,
+                  radius: Dimension.radius,
                   child: Text(
                     count.toString(),
                     style: TextStyle(color: ColorsExt.background(context), fontSize: 13, fontWeight: FontWeight.w500),
@@ -99,7 +98,7 @@ class SettingsPage extends StatelessWidget {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const IntegrationsPage()));
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
           ButtonList(
             title: t.settings.about.title,
             leading: Assets.images.icons.common.infoCircleSVG,
@@ -127,7 +126,7 @@ class SettingsPage extends StatelessWidget {
               launchUrl(Uri.parse("https://product.akiflow.com/changelog"), mode: LaunchMode.externalApplication);
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
           ButtonList(
             title: t.settings.followUsOnTwitter,
             leading: Assets.images.icons.twitter.logoTwitterSVG,
@@ -148,24 +147,6 @@ class SettingsPage extends StatelessWidget {
               launchUrl(Uri.parse("https://akiflow-community.slack.com"), mode: LaunchMode.externalApplication);
             },
           ),
-          /*ButtonList(
-            title: t.settings.chatWithUs,
-            leading: "assets/images/icons/_common/chat_bubble.svg",
-            trailingWidget: FutureBuilder<dynamic>(
-                future: Intercom.instance.unreadConversationCount(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return NotifcationCountIcon(snapshot.data);
-                  }
-                  return const SizedBox();
-                }),
-            position: ButtonListPosition.mid,
-            showShevron: false,
-            useSvgColor: true,
-            onPressed: () async {
-              await context.read<SettingsCubit>().launchIntercom();
-            },
-          ),*/
           ButtonList(
             title: t.settings.chatWithUs,
             leading: "assets/images/icons/_common/chat_bubble.svg",
@@ -186,7 +167,7 @@ class SettingsPage extends StatelessWidget {
               context.read<SettingsCubit>().sendEmail();
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
         ],
       ),
     );

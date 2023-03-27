@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/integrations/gmail.dart';
 
@@ -24,18 +25,18 @@ class GmailActionDialog extends StatelessWidget {
         color: Colors.transparent,
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
           child: Material(
             color: Theme.of(context).backgroundColor,
             child: ListView(
               shrinkWrap: true,
               children: [
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimension.paddingS),
                 const ScrollChip(),
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(Dimension.padding),
                   child: Text(
                     t.task.gmail.doYouAlsoWantTo,
                     style: const TextStyle(
@@ -44,7 +45,7 @@ class GmailActionDialog extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                   child: Column(
                     children: [
                       Builder(builder: (context) {
@@ -70,7 +71,7 @@ class GmailActionDialog extends StatelessWidget {
                           );
                         }
                       }),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: Dimension.paddingS),
                       _item(
                         context,
                         active: true,
@@ -80,7 +81,7 @@ class GmailActionDialog extends StatelessWidget {
                           Navigator.pop(context);
                         },
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: Dimension.paddingS),
                       _item(
                         context,
                         active: true,
@@ -89,7 +90,7 @@ class GmailActionDialog extends StatelessWidget {
                           Navigator.pop(context);
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: Dimension.padding),
                     ],
                   ),
                 ),

@@ -25,10 +25,15 @@ class Dimension {
 
   /// Sizes
   static const maxWidth = 600.0;
+  static const radiusS = 4.0;
   static const radius = 8.0;
+  static const radiusM = 16.0;
   static const noticeRadius = 4.0;
   static const border = 1.0;
   static const appBarLeadingIcon = 26.0;
+  static const defaultIconSize = 22.0;
+  static const mediumIconSize = 35.0;
+  static const bigIconSize = 50.0;
   static const defaultIllustrationSize = 130.0;
 
   ///Paddings

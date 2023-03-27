@@ -16,7 +16,7 @@ import 'package:mobile/src/integrations/ui/widgets/gmail/gmail_import_task_modal
 import 'package:mobile/src/integrations/ui/widgets/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/src/integrations/ui/widgets/integration_list_item.dart';
 import 'package:mobile/src/integrations/ui/widgets/integration_setting.dart';
-import 'package:mobile/src/settings/ui/widgets/settings_header_text.dart';
+import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/integrations/gmail.dart';

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -50,8 +51,8 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
             color: Colors.transparent,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.padding),
+                topRight: Radius.circular(Dimension.padding),
               ),
               child: Container(
                 color: Theme.of(context).backgroundColor,
@@ -59,19 +60,19 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                 child: SafeArea(
                   bottom: true,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                     child: Column(
                       children: [
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimension.padding),
                         const ScrollChip(),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimension.padding),
                         Row(
                           children: [
                             colorSelector(context),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: Dimension.paddingS),
                             Expanded(
                               child: SizedBox(
-                                height: 50,
+                                height: Dimension.bigIconSize,
                                 child: BorderedInputView(
                                   focus: titleFocus,
                                   initialValue: widget.label.title ?? "",
@@ -84,7 +85,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: Dimension.paddingM),
                         ValueListenableBuilder(
                           valueListenable: _labelUpdated,
                           builder: (context, Label value, child) {
@@ -100,18 +101,14 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                             return ButtonListLabel(
                               title: folder?.title ?? t.label.noFolder,
                               position: ButtonListPosition.single,
-                              leading: SizedBox(
-                                height: 26,
-                                width: 26,
-                                child: Center(
-                                  child: SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: SvgPicture.asset(
-                                        Assets.images.icons.common.folderSVG,
-                                        color: ColorsExt.grey2(context),
-                                      )),
-                                ),
+                              leading: Center(
+                                child: SizedBox(
+                                    height: Dimension.defaultIconSize,
+                                    width: Dimension.defaultIconSize,
+                                    child: SvgPicture.asset(
+                                      Assets.images.icons.common.folderSVG,
+                                      color: ColorsExt.grey2(context),
+                                    )),
                               ),
                               onPressed: () async {
                                 List<Label> foldersWithNoFolderItem = List.from(widget.folders);
@@ -130,56 +127,48 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                             );
                           },
                         ),
-                        const SizedBox(height: 24),
-                        InkWell(
-                          onTap: () {
+                        const SizedBox(height: Dimension.paddingM),
+                        OutlinedButton(
+                          style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+                              backgroundColor: MaterialStateProperty.all((Colors.transparent)),
+                              minimumSize: MaterialStateProperty.all(const Size(double.infinity, 45))),
+                          onPressed: () {
                             Navigator.pop(context, _labelUpdated.value);
                           },
-                          child: Container(
-                            width: double.infinity,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: ColorsExt.grey4(context),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
-                                        color: ColorsExt.grey1(context)),
-                                  ),
-                                  const SizedBox(width: 11),
-                                  ValueListenableBuilder(
-                                    valueListenable: _labelUpdated,
-                                    builder: (context, Label value, child) {
-                                      String text;
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
+                                      color: ColorsExt.grey1(context)),
+                                ),
+                                const SizedBox(width: 11),
+                                ValueListenableBuilder(
+                                  valueListenable: _labelUpdated,
+                                  builder: (context, Label value, child) {
+                                    String text;
 
-                                      if (value.id == null) {
-                                        text = t.label.createLabel;
-                                      } else {
-                                        text = t.label.save;
-                                      }
+                                    if (value.id == null) {
+                                      text = t.label.createLabel;
+                                    } else {
+                                      text = t.label.save;
+                                    }
 
-                                      return Text(
-                                        text,
-                                        style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
-                                        textAlign: TextAlign.center,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
+                                    return Text(
+                                      text,
+                                      style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
+                                      textAlign: TextAlign.center,
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimension.padding),
                       ],
                     ),
                   ),
@@ -219,14 +208,14 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
             }
           },
           child: Container(
-            width: 50,
-            height: 50,
+            width: Dimension.bigIconSize,
+            height: Dimension.bigIconSize,
             decoration: BoxDecoration(
               border: Border.all(
                 color: ColorsExt.grey4(context),
                 width: 1,
               ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(Dimension.radius),
             ),
             child: Center(
               child: Container(
@@ -234,14 +223,14 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                   borderRadius: BorderRadius.circular(4),
                   color: iconBackground,
                 ),
-                height: 26,
-                width: 26,
+                height: Dimension.mediumIconSize,
+                width: Dimension.mediumIconSize,
                 child: Center(
                   child: SvgPicture.asset(
                     Assets.images.icons.common.numberSVG,
                     color: iconForeground,
-                    height: 20,
-                    width: 20,
+                    height: Dimension.defaultIconSize,
+                    width: Dimension.defaultIconSize,
                   ),
                 ),
               ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/src/settings/ui/widgets/leading_icon.dart';
+import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/src/base/ui/widgets/base/leading_icon.dart';
 
 class ButtonSelectable extends StatefulWidget {
   final String title;
@@ -81,7 +82,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
               child: AnimatedBuilder(
                 animation: _animation!,
                 builder: (_, child) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                   child: Material(
                     color: _animation!.value,
                     child: Material(

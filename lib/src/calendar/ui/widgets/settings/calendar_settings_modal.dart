@@ -11,9 +11,9 @@ import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/button_selectable.dart';
 import 'package:mobile/src/calendar/ui/widgets/settings/calendar_item.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
-import 'package:mobile/src/settings/ui/widgets/button_selectable.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 

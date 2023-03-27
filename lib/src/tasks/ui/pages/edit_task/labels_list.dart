@@ -7,7 +7,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/label/label_item.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
-import 'package:mobile/src/settings/ui/widgets/folder_item.dart';
+import 'package:mobile/src/base/ui/widgets/base/folder_item.dart';
 import 'package:models/label/label.dart';
 
 class LabelsList extends StatefulWidget {

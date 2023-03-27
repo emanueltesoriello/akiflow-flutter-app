@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
@@ -68,8 +69,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               decoration: BoxDecoration(
                 color: Theme.of(context).backgroundColor,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
+                  topLeft: Radius.circular(Dimension.radiusM),
+                  topRight: Radius.circular(Dimension.radiusM),
                 ),
               ),
               margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -79,9 +80,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                     const DurationWidget(),
                     const PriorityWidget(),
                     const LabelWidget(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: Dimension.padding),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -99,9 +100,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                               context.read<EditTaskCubit>().onDateDetected(context, nlpDateTime);
                             },
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: Dimension.paddingS),
                           DescriptionField(descriptionController: descriptionController),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: Dimension.paddingS),
                           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                             CreateTaskActions(
                               titleController: simpleTitleController,
@@ -144,7 +145,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                     }),
                             ),
                           ]),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: Dimension.padding),
                         ],
                       ),
                     ),
