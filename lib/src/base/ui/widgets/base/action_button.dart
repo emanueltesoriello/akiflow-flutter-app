@@ -89,7 +89,7 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
                 color: _animation!.value,
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS, vertical: Dimension.paddingSM),
                 child: Center(child: widget.child),
               ),
             ),

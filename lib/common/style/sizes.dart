@@ -39,6 +39,7 @@ class Dimension {
   ///Paddings
   static const paddingXS = 4.0;
   static const paddingS = 8.0;
+  static const paddingSM = 12.0;
   static const padding = 16.0;
   static const paddingM = 24.0;
   static const paddingL = 42.0;

@@ -80,11 +80,10 @@ class AuthPage extends StatelessWidget {
                   ActionButton(
                     child: Text(
                       t.onboarding.login,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: ColorsExt.akiflow(context),
+                            fontWeight: FontWeight.w400,
+                          ),
                     ),
                     onPressed: () {
                       context.read<AuthCubit>().loginClick();

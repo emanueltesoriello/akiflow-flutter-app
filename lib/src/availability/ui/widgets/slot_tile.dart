@@ -22,7 +22,7 @@ class SlotTile extends StatelessWidget {
           padding: const EdgeInsets.all(Dimension.paddingS),
           decoration: BoxDecoration(
               color: ColorsExt.grey7(context),
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(Dimension.radius),
               border: Border.all(
                 color: ColorsExt.grey5(context),
                 width: 1,
@@ -44,7 +44,7 @@ class SlotTile extends StatelessWidget {
                         child: Text(config.title?.characters.first ?? ''),
                       ),
                     ),
-              const SizedBox(width: 8),
+              const SizedBox(width: Dimension.paddingS),
               Expanded(
                   child: Text(
                 config.title ?? '',
@@ -55,7 +55,7 @@ class SlotTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
               )),
-              const SizedBox(width: 5),
+              const SizedBox(width: Dimension.paddingS),
               Text(
                 config.durationString,
                 maxLines: 1,
@@ -106,14 +106,14 @@ class SlotTile extends StatelessWidget {
       SnackBar(
           backgroundColor: Colors.transparent,
           content: Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(Dimension.padding),
             decoration: BoxDecoration(
               color: ColorsExt.green20(context),
               border: Border.all(
                 color: ColorsExt.grey5(context),
                 width: 1,
               ),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(Dimension.radiusS),
             ),
             child: Row(
               children: [
