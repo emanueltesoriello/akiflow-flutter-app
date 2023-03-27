@@ -82,7 +82,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
               child: AnimatedBuilder(
                 animation: _animation!,
                 builder: (_, child) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: Material(
                     color: _animation!.value,
                     child: Material(

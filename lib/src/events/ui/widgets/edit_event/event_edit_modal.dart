@@ -8,6 +8,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -118,12 +119,12 @@ class _EventEditModalState extends State<EventEditModal> {
         return Material(
           color: Colors.white,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
           child: Column(
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimension.padding),
               const ScrollChip(),
               Expanded(
                 child: SingleChildScrollView(
@@ -133,629 +134,38 @@ class _EventEditModalState extends State<EventEditModal> {
                     children: [
                       ListView(
                         physics: const ClampingScrollPhysics(),
-                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        padding: const EdgeInsets.only(left: Dimension.padding, right: Dimension.padding),
                         shrinkWrap: true,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.squareFillSVG,
-                                    color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Expanded(
-                                  child: TextField(
-                                    autofocus: widget.createingEvent ?? false,
-                                    controller: titleController,
-                                    decoration: const InputDecoration(border: InputBorder.none, hintText: 'Add title'),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorsExt.grey1(context),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          _titleRow(context),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.calendarSVG,
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      if (!isAllDay) _startTime(context),
-                                      if (isAllDay) _startDate(context),
-                                      SvgPicture.asset(
-                                        Assets.images.icons.common.chevronRightSVG,
-                                        width: 22,
-                                        height: 22,
-                                      ),
-                                      if (!isAllDay) _endTime(context),
-                                      if (isAllDay) _endDate(context),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              _recurrenceTap();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: SvgPicture.asset(
-                                      Assets.images.icons.common.recurrentSVG,
-                                      color: selectedRecurrence == EventRecurrenceModalType.none
-                                          ? ColorsExt.grey3(context)
-                                          : ColorsExt.grey2(context),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16.0),
-                                  Text(
-                                    _recurrence(selectedRecurrence),
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: selectedRecurrence == EventRecurrenceModalType.none
-                                            ? ColorsExt.grey3(context)
-                                            : ColorsExt.grey2(context)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: SvgPicture.asset(Assets.images.icons.common.daySVG,
-                                          color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-                                    ),
-                                    const SizedBox(width: 16.0),
-                                    Text(
-                                      t.event.editEvent.allDay,
-                                      style: TextStyle(
-                                          fontSize: 17.0,
-                                          fontWeight: FontWeight.w400,
-                                          color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-                                    ),
-                                  ],
-                                ),
-                                FlutterSwitch(
-                                  width: 48,
-                                  height: 24,
-                                  toggleSize: 20,
-                                  activeColor: ColorsExt.akiflow(context),
-                                  inactiveColor: ColorsExt.grey5(context),
-                                  value: isAllDay,
-                                  borderRadius: 24,
-                                  padding: 2,
-                                  onToggle: (value) {
-                                    setState(() {
-                                      isAllDay = !isAllDay;
-                                      if (value) {
-                                        updatedEvent = updatedEvent.copyWith(
-                                            startTime: Nullable(null),
-                                            endTime: Nullable(null),
-                                            startDate:
-                                                Nullable(DateFormat("y-MM-dd").format(widget.tappedDate.toUtc())),
-                                            endDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate.toUtc())));
-                                      } else {
-                                        updatedEvent = updatedEvent.copyWith(
-                                          startTime: widget.event.startTime != null
-                                              ? Nullable(widget.event.startTime)
-                                              : Nullable(widget.tappedDate.toUtc().toIso8601String()),
-                                          endTime: widget.event.endTime != null
-                                              ? Nullable(widget.event.endTime)
-                                              : Nullable(widget.tappedDate
-                                                  .toUtc()
-                                                  .add(const Duration(minutes: 30))
-                                                  .toIso8601String()),
-                                          startDate: Nullable(null),
-                                          endDate: Nullable(null),
-                                        );
-                                      }
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+                          _datetimeRow(context),
+                          _recurrenceRow(context),
+                          _allDayRow(context),
                           const Separator(),
                           (updatedEvent.meetingSolution != null || addingMeeting) && !removingMeeting
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: SvgPicture.asset(
-                                              updatedEvent.meetingSolution == 'meet' && !addingMeeting
-                                                  ? Assets.images.icons.google.meetSVG
-                                                  : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
-                                                      ? Assets.images.icons.zoom.zoomSVG
-                                                      : context.read<EventsCubit>().getDefaultConferenceIcon(),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 16.0),
-                                          Text(
-                                            updatedEvent.meetingSolution == 'meet' && !addingMeeting
-                                                ? t.event.googleMeet
-                                                : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
-                                                    ? t.event.zoom
-                                                    : context.read<EventsCubit>().getDefaultConferenceSolution() ==
-                                                            'meet'
-                                                        ? t.event.googleMeet
-                                                        : context
-                                                            .read<EventsCubit>()
-                                                            .getDefaultConferenceSolution()
-                                                            .capitalizeFirstCharacter(),
-                                            style: TextStyle(
-                                                fontSize: 17.0,
-                                                fontWeight: FontWeight.w500,
-                                                color: ColorsExt.grey2(context)),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          if (!addingMeeting)
-                                            InkWell(
-                                              onTap: () {
-                                                if (updatedEvent.meetingUrl != null) {
-                                                  updatedEvent.joinConference();
-                                                }
-                                              },
-                                              child: Text(
-                                                t.event.join.toUpperCase(),
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: ColorsExt.akiflow(context)),
-                                              ),
-                                            ),
-                                          const SizedBox(width: 24),
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                removingMeeting = true;
-                                                addingMeeting = false;
-                                              });
-                                            },
-                                            child: SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                              child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG,
-                                                  color: ColorsExt.grey3(context)),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      addingMeeting = true;
-                                      removingMeeting = false;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: SvgPicture.asset(
-                                            Assets.images.icons.common.videocamSVG,
-                                            color: ColorsExt.grey3(context),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16.0),
-                                        Text(
-                                          t.event.editEvent.addConference,
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey3(context)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                              ? _conferenceRow(context)
+                              : _addConferenceRow(context),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.mapSVG,
-                                    color: locationController.text.isEmpty
-                                        ? ColorsExt.grey3(context)
-                                        : ColorsExt.grey2(context),
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Expanded(
-                                  child: TextField(
-                                    controller: locationController,
-                                    decoration: InputDecoration(
-                                      hintText: t.event.editEvent.addLocation,
-                                      hintStyle: TextStyle(
-                                          fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                        fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          _locationRow(context),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.briefcaseSVG,
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Text(
-                                  t.event.busy,
-                                  style: TextStyle(
-                                      fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                ),
-                              ],
-                            ),
-                          ),
+                          _busyRow(context),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: SvgPicture.asset(
-                                        Assets.images.icons.common.personCropCircleSVG,
-                                        color: updatedEvent.attendees != null
-                                            ? ColorsExt.grey2(context)
-                                            : ColorsExt.grey3(context),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16.0),
-                                    Text(
-                                      t.event.guests,
-                                      style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: updatedEvent.attendees != null
-                                            ? ColorsExt.grey2(context)
-                                            : ColorsExt.grey3(context),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                if (updatedEvent.attendees != null)
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: SvgPicture.asset(
-                                      Assets.images.icons.common.envelopeSVG,
-                                      color: updatedEvent.attendees != null
-                                          ? ColorsExt.grey2(context)
-                                          : ColorsExt.grey3(context),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          if (updatedEvent.attendees != null)
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: updatedEvent.attendees?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          updatedEvent.attendees![index].responseStatus ==
-                                                  AtendeeResponseStatus.accepted.id
-                                              ? SizedBox(
-                                                  width: 19,
-                                                  height: 19,
-                                                  child: SvgPicture.asset(
-                                                    Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                                                    color: ColorsExt.green(context),
-                                                  ),
-                                                )
-                                              : updatedEvent.attendees![index].responseStatus ==
-                                                      AtendeeResponseStatus.declined.id
-                                                  ? SizedBox(
-                                                      width: 19,
-                                                      height: 19,
-                                                      child: SvgPicture.asset(
-                                                        Assets.images.icons.common.xmarkCircleFillSVG,
-                                                        color: ColorsExt.red(context),
-                                                      ),
-                                                    )
-                                                  : SizedBox(
-                                                      width: 19,
-                                                      height: 19,
-                                                      child: SvgPicture.asset(
-                                                        Assets.images.icons.common.questionCircleFillSVG,
-                                                        color: ColorsExt.grey3(context),
-                                                      ),
-                                                    ),
-                                          const SizedBox(width: 16.0),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                updatedEvent.attendees![index].email!.contains('group')
-                                                    ? '${updatedEvent.attendees![index].displayName}'
-                                                    : '${updatedEvent.attendees![index].email}',
-                                                style: TextStyle(
-                                                    fontSize: 17.0,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: ColorsExt.grey2(context)),
-                                              ),
-                                              if (updatedEvent.attendees![index].organizer ?? false)
-                                                Text(
-                                                  ' - ${t.event.organizer}',
-                                                  style: TextStyle(
-                                                      fontSize: 17.0,
-                                                      fontWeight: FontWeight.w400,
-                                                      color: ColorsExt.grey3(context)),
-                                                ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          atendeesToRemove.add(updatedEvent.attendees![index].email!);
-                                          List<EventAtendee>? atendees = updatedEvent.attendees;
-                                          atendees!.removeAt(index);
-                                          setState(() {
-                                            updatedEvent.copyWith(attendees: Nullable(atendees));
-                                          });
-                                        },
-                                        child: SizedBox(
-                                          width: 19,
-                                          height: 19,
-                                          child: SvgPicture.asset(
-                                            Assets.images.icons.common.xmarkSVG,
-                                            color: ColorsExt.grey3(context),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: InkWell(
-                              onTap: () {
-                                _addGuestsTap();
-                              },
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(Assets.images.icons.common.plusCircleSVG,
-                                      width: 20, height: 20, color: ColorsExt.grey3(context)),
-                                  const SizedBox(width: 16.0),
-                                  Text(
-                                    t.event.editEvent.addGuests,
-                                    style: TextStyle(
-                                        fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          _guestsRow(context),
+                          if (updatedEvent.attendees != null) _attendeesList(),
+                          _addGuestsRow(context),
                           const Separator(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: SvgPicture.asset(
-                                    Assets.images.icons.common.textJustifyLeftSVG,
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Expanded(
-                                  child: _description(context),
-                                ),
-                              ],
-                            ),
-                          ),
+                          _descriptionRow(context),
                           const Separator(),
-                          InkWell(
-                            onTap: () {
-                              showCupertinoModalBottomSheet(
-                                context: context,
-                                builder: (context) => ChangeColorModal(
-                                  selectedColor: updatedEvent.color ?? updatedEvent.calendarColor ?? '',
-                                  onChange: (newColor) {
-                                    setState(() {
-                                      updatedEvent = updatedEvent.copyWith(color: newColor);
-                                    });
-                                  },
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: SvgPicture.asset(
-                                      Assets.images.icons.common.squareFillSVG,
-                                      color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16.0),
-                                  Text(
-                                    updatedEvent.color != null
-                                        ? t.event.editEvent.customColor
-                                        : t.event.editEvent.defaultColor,
-                                    style: TextStyle(
-                                        fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          if (updatedEvent.url != null)
-                            Column(
-                              children: [
-                                const Separator(),
-                                InkWell(
-                                  onTap: () {
-                                    if (updatedEvent.url != null) {
-                                      updatedEvent.openUrl(updatedEvent.url);
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 22,
-                                              height: 22,
-                                              child: SvgPicture.asset(
-                                                Assets.images.icons.google.calendarSVG,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 16.0),
-                                            Text(
-                                              t.event.editEvent.viewOnGoogleCalendar,
-                                              style: TextStyle(
-                                                  fontSize: 17.0,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: ColorsExt.grey2(context)),
-                                            ),
-                                          ],
-                                        ),
-                                        SvgPicture.asset(
-                                          Assets.images.icons.common.arrowUpRightSquareSVG,
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          _changeColorRow(context),
+                          if (updatedEvent.url != null) _viewOnGoogleCalendarRow(context),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: const Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          BottomButton(
-                              title: t.cancel,
-                              image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
-                              onTap: () {
-                                _onCancelTap();
-                              }),
-                          BottomButton(
-                            title: widget.createingEvent ?? false
-                                ? t.event.editEvent.createEvent
-                                : t.event.editEvent.saveChanges,
-                            image: Assets.images.icons.common.checkmarkAltSVG,
-                            containerColor: ColorsExt.green20(context),
-                            iconColor: ColorsExt.green(context),
-                            onTap: () async {
-                              _onSaveTap();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _bottomActionButtonsRow(context),
               SizedBox(height: _descriptionFocusNode.hasFocus && space > 36 ? space - 36 : 0),
             ],
           ),
@@ -764,48 +174,66 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  _showEventEditedSnackbar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-        CustomSnackbar.get(context: context, type: CustomSnackbarType.eventEdited, message: t.event.snackbar.edited));
+  Padding _titleRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        children: [
+          SizedBox(
+            width: Dimension.defaultIconSize + 2,
+            height: Dimension.defaultIconSize + 2,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.squareFillSVG,
+              color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
+            ),
+          ),
+          const SizedBox(width: Dimension.padding),
+          Expanded(
+            child: TextField(
+              autofocus: widget.createingEvent ?? false,
+              controller: titleController,
+              decoration: const InputDecoration(border: InputBorder.none, hintText: 'Add title'),
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey1(context),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  _allTap(
-      {required BuildContext context,
-      required Event updatedEvent,
-      required List<String> atendeesToAdd,
-      required List<String> atendeesToRemove,
-      required bool addingMeeting,
-      required bool removingMeeting}) {
-    if (updatedEvent.recurringId == updatedEvent.id) {
-      if (timeChanged &&
-          widget.event.startTime != null &&
-          widget.event.endTime != null &&
-          updatedEvent.startTime != null &&
-          updatedEvent.endTime != null) {
-        updatedEvent = updatedEvent.copyWith(
-            startTime: Nullable(widget.event.computeStartTimeForParent(updatedEvent)),
-            endTime: Nullable(widget.event.computeEndTimeForParent(updatedEvent)));
-      }
-      context
-          .read<EventsCubit>()
-          .updateEventAndCreateModifiers(
-              event: updatedEvent,
-              atendeesToAdd: atendeesToAdd,
-              atendeesToRemove: atendeesToRemove,
-              addMeeting: addingMeeting,
-              removeMeeting: removingMeeting)
-          .then((value) => _showEventEditedSnackbar());
-    } else {
-      context
-          .read<EventsCubit>()
-          .updateParentAndExceptions(
-              exceptionEvent: updatedEvent,
-              atendeesToAdd: atendeesToAdd,
-              atendeesToRemove: atendeesToRemove,
-              addMeeting: addingMeeting,
-              removeMeeting: removingMeeting)
-          .then((value) => _showEventEditedSnackbar());
-    }
+  Padding _datetimeRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        children: [
+          SizedBox(
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.calendarSVG,
+            ),
+          ),
+          const SizedBox(width: Dimension.padding),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (!isAllDay) _startTime(context),
+                if (isAllDay) _startDate(context),
+                SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
+                    width: 22, height: 22, color: ColorsExt.grey3(context)),
+                if (!isAllDay) _endTime(context),
+                if (isAllDay) _endDate(context),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   InkWell _startDate(BuildContext context) {
@@ -883,7 +311,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 : DateFormat("EEE dd MMM").format(widget.tappedDate),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
           ),
-          const SizedBox(height: 12.0),
+          const SizedBox(height: Dimension.padding),
           Text(
             DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600, color: ColorsExt.grey2(context)),
@@ -962,7 +390,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 : DateFormat("EEE dd MMM").format(widget.tappedDate),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
           ),
-          const SizedBox(height: 12.0),
+          const SizedBox(height: Dimension.padding),
           Text(
             DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600, color: ColorsExt.grey2(context)),
@@ -972,37 +400,450 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  Widget _description(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: quillController,
-      builder: (context, quill.QuillController value, child) => Theme(
-        data: Theme.of(context).copyWith(
-          textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
-          ),
+  InkWell _recurrenceRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        _recurrenceTap();
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.repeatSVG,
+                color: selectedRecurrence == EventRecurrenceModalType.none
+                    ? ColorsExt.grey3(context)
+                    : ColorsExt.grey2(context),
+              ),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(
+              _recurrenceText(selectedRecurrence),
+              style: TextStyle(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w400,
+                  color: selectedRecurrence == EventRecurrenceModalType.none
+                      ? ColorsExt.grey3(context)
+                      : ColorsExt.grey2(context)),
+            ),
+          ],
         ),
-        child: quill.QuillEditor(
-          controller: value,
-          readOnly: false,
-          scrollController: ScrollController(),
-          scrollable: true,
-          focusNode: _descriptionFocusNode,
-          autoFocus: false,
-          expands: false,
-          padding: EdgeInsets.zero,
-          placeholder: t.task.description,
-          linkActionPickerDelegate: (BuildContext context, String link, node) async {
-            launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-            return quill.LinkMenuAction.none;
-          },
-          customStyles: quill.DefaultStyles(
-            placeHolder: quill.DefaultTextBlockStyle(
-              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-              const tuple.Tuple2(0, 0),
-              const tuple.Tuple2(0, 0),
-              null,
+      ),
+    );
+  }
+
+  _recurrenceTap() {
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => EventRecurrenceModal(
+        onChange: (RecurrenceRule? rule) {
+          if (rule != null) {
+            updatedEvent = updatedEvent.copyWith(
+                recurringId: updatedEvent.recurringId ?? updatedEvent.id,
+                recurrence: Nullable([updatedEvent.recurrenceRuleComputed(rule)]));
+          } else {
+            updatedEvent = updatedEvent.copyWith(recurrence: Nullable(null));
+          }
+        },
+        onRecurrenceType: (EventRecurrenceModalType type) {
+          setState(() {
+            selectedRecurrence = type;
+          });
+        },
+        selectedRecurrence: updatedEvent.recurrenceComputed,
+        rule: updatedEvent.ruleFromStringList,
+        eventStartTime: updatedEvent.startTime != null
+            ? DateTime.parse(updatedEvent.startTime!)
+            : DateTime.parse(updatedEvent.startDate!),
+      ),
+    );
+  }
+
+  String _recurrenceText(EventRecurrenceModalType? selectedRecurrence) {
+    if (selectedRecurrence == null) {
+      return t.event.editEvent.recurrence.setRepeat;
+    }
+
+    switch (selectedRecurrence) {
+      case EventRecurrenceModalType.none:
+        return t.event.editEvent.recurrence.setRepeat;
+      case EventRecurrenceModalType.daily:
+        return t.event.editEvent.recurrence.everyDay;
+      case EventRecurrenceModalType.everyCurrentDay:
+        return t.editTask.everyCurrentDay(day: DateFormat("EEEE").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyYearOnThisDay:
+        return t.editTask.everyYearOn(date: DateFormat("MMM dd").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyMonthOnThisDay:
+        return t.editTask.everyMonthOn(date: DateFormat("MMM dd").format(widget.tappedDate));
+      case EventRecurrenceModalType.everyWeekday:
+        return t.event.editEvent.recurrence.everyWeekday;
+      case EventRecurrenceModalType.custom:
+        return t.event.editEvent.recurrence.custom;
+      default:
+        return t.event.editEvent.recurrence.setRepeat;
+    }
+  }
+
+  Padding _allDayRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: Dimension.defaultIconSize,
+                height: Dimension.defaultIconSize,
+                child: SvgPicture.asset(Assets.images.icons.common.daySVG,
+                    color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+              ),
+              const SizedBox(width: Dimension.padding),
+              Text(
+                t.event.editEvent.allDay,
+                style: TextStyle(
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w400,
+                    color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+              ),
+            ],
+          ),
+          FlutterSwitch(
+            width: 48,
+            height: 24,
+            toggleSize: 20,
+            activeColor: ColorsExt.akiflow(context),
+            inactiveColor: ColorsExt.grey5(context),
+            value: isAllDay,
+            borderRadius: 24,
+            padding: 2,
+            onToggle: (value) {
+              setState(() {
+                isAllDay = !isAllDay;
+                if (value) {
+                  updatedEvent = updatedEvent.copyWith(
+                      startTime: Nullable(null),
+                      endTime: Nullable(null),
+                      startDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate.toUtc())),
+                      endDate: Nullable(DateFormat("y-MM-dd").format(widget.tappedDate.toUtc())));
+                } else {
+                  updatedEvent = updatedEvent.copyWith(
+                    startTime: widget.event.startTime != null
+                        ? Nullable(widget.event.startTime)
+                        : Nullable(widget.tappedDate.toUtc().toIso8601String()),
+                    endTime: widget.event.endTime != null
+                        ? Nullable(widget.event.endTime)
+                        : Nullable(widget.tappedDate.toUtc().add(const Duration(minutes: 30)).toIso8601String()),
+                    startDate: Nullable(null),
+                    endDate: Nullable(null),
+                  );
+                }
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _conferenceRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: Dimension.defaultIconSize,
+                height: Dimension.defaultIconSize,
+                child: SvgPicture.asset(
+                  updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                      ? Assets.images.icons.google.meetSVG
+                      : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                          ? Assets.images.icons.zoom.zoomSVG
+                          : context.read<EventsCubit>().getDefaultConferenceIcon(),
+                ),
+              ),
+              const SizedBox(width: Dimension.padding),
+              Text(
+                updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                    ? t.event.googleMeet
+                    : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                        ? t.event.zoom
+                        : context.read<EventsCubit>().getDefaultConferenceSolution() == 'meet'
+                            ? t.event.googleMeet
+                            : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
+                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              if (!addingMeeting)
+                InkWell(
+                  onTap: () {
+                    if (updatedEvent.meetingUrl != null) {
+                      updatedEvent.joinConference();
+                    }
+                  },
+                  child: Text(
+                    t.event.join.toUpperCase(),
+                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
+                  ),
+                ),
+              const SizedBox(width: Dimension.paddingM),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    removingMeeting = true;
+                    addingMeeting = false;
+                  });
+                },
+                child: SizedBox(
+                  width: Dimension.defaultIconSize,
+                  height: Dimension.defaultIconSize,
+                  child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG, color: ColorsExt.grey3(context)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  InkWell _addConferenceRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          addingMeeting = true;
+          removingMeeting = false;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.videocamSVG,
+                color: ColorsExt.grey3(context),
+              ),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(
+              t.event.editEvent.addConference,
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding _locationRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.paddingXS),
+      child: Row(
+        children: [
+          SizedBox(
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.mapSVG,
+              color: locationController.text.isEmpty ? ColorsExt.grey3(context) : ColorsExt.grey2(context),
             ),
           ),
+          const SizedBox(width: Dimension.padding),
+          Expanded(
+            child: TextField(
+              controller: locationController,
+              decoration: InputDecoration(
+                hintText: t.event.editEvent.addLocation,
+                hintStyle: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                border: InputBorder.none,
+              ),
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _busyRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        children: [
+          SizedBox(
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.briefcaseSVG,
+            ),
+          ),
+          const SizedBox(width: Dimension.padding),
+          Text(
+            t.event.busy,
+            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _guestsRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: Dimension.defaultIconSize,
+                height: Dimension.defaultIconSize,
+                child: SvgPicture.asset(
+                  Assets.images.icons.common.personCropCircleSVG,
+                  color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                ),
+              ),
+              const SizedBox(width: Dimension.padding),
+              Text(
+                t.event.guests,
+                style: TextStyle(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w400,
+                  color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                ),
+              ),
+            ],
+          ),
+          if (updatedEvent.attendees != null)
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.envelopeSVG,
+                color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  ListView _attendeesList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      itemCount: updatedEvent.attendees?.length ?? 0,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  updatedEvent.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
+                      ? SizedBox(
+                          width: Dimension.defaultIconSize,
+                          height: Dimension.defaultIconSize,
+                          child: SvgPicture.asset(
+                            Assets.images.icons.common.checkmarkAltCircleFillSVG,
+                            color: ColorsExt.green(context),
+                          ),
+                        )
+                      : updatedEvent.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
+                          ? SizedBox(
+                              width: Dimension.defaultIconSize,
+                              height: Dimension.defaultIconSize,
+                              child: SvgPicture.asset(
+                                Assets.images.icons.common.xmarkCircleFillSVG,
+                                color: ColorsExt.red(context),
+                              ),
+                            )
+                          : SizedBox(
+                              width: Dimension.defaultIconSize,
+                              height: Dimension.defaultIconSize,
+                              child: SvgPicture.asset(
+                                Assets.images.icons.common.questionCircleFillSVG,
+                                color: ColorsExt.grey3(context),
+                              ),
+                            ),
+                  const SizedBox(width: Dimension.padding),
+                  Row(
+                    children: [
+                      Text(
+                        updatedEvent.attendees![index].email!.contains('group')
+                            ? '${updatedEvent.attendees![index].displayName}'
+                            : '${updatedEvent.attendees![index].email}',
+                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                      ),
+                      if (updatedEvent.attendees![index].organizer ?? false)
+                        Text(
+                          ' - ${t.event.organizer}',
+                          style:
+                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+              InkWell(
+                onTap: () {
+                  atendeesToRemove.add(updatedEvent.attendees![index].email!);
+                  List<EventAtendee>? atendees = updatedEvent.attendees;
+                  atendees!.removeAt(index);
+                  setState(() {
+                    updatedEvent.copyWith(attendees: Nullable(atendees));
+                  });
+                },
+                child: SizedBox(
+                  width: Dimension.defaultIconSize,
+                  height: Dimension.defaultIconSize,
+                  child: SvgPicture.asset(
+                    Assets.images.icons.common.xmarkSVG,
+                    color: ColorsExt.grey3(context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Padding _addGuestsRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: InkWell(
+        onTap: () {
+          _addGuestsTap();
+        },
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              Assets.images.icons.common.plusCircleSVG,
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              color: ColorsExt.grey3(context),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(
+              t.event.editEvent.addGuests,
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+            ),
+          ],
         ),
       ),
     );
@@ -1045,56 +886,186 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  _recurrenceTap() {
-    showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => EventRecurrenceModal(
-        onChange: (RecurrenceRule? rule) {
-          if (rule != null) {
-            updatedEvent = updatedEvent.copyWith(
-                recurringId: updatedEvent.recurringId ?? updatedEvent.id,
-                recurrence: Nullable([updatedEvent.recurrenceRuleComputed(rule)]));
-          } else {
-            updatedEvent = updatedEvent.copyWith(recurrence: Nullable(null));
-          }
-        },
-        onRecurrenceType: (EventRecurrenceModalType type) {
-          setState(() {
-            selectedRecurrence = type;
-          });
-        },
-        selectedRecurrence: updatedEvent.recurrenceComputed,
-        rule: updatedEvent.ruleFromStringList,
-        eventStartTime: updatedEvent.startTime != null
-            ? DateTime.parse(updatedEvent.startTime!)
-            : DateTime.parse(updatedEvent.startDate!),
+  Padding _descriptionRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        children: [
+          SizedBox(
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.textJustifyLeftSVG,
+            ),
+          ),
+          const SizedBox(width: Dimension.padding),
+          Expanded(
+            child: _descriptionContent(context),
+          ),
+        ],
       ),
     );
   }
 
-  String _recurrence(EventRecurrenceModalType? selectedRecurrence) {
-    if (selectedRecurrence == null) {
-      return t.event.editEvent.recurrence.setRepeat;
-    }
+  Widget _descriptionContent(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: quillController,
+      builder: (context, quill.QuillController value, child) => Theme(
+        data: Theme.of(context).copyWith(
+          textSelectionTheme: TextSelectionThemeData(
+            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+          ),
+        ),
+        child: quill.QuillEditor(
+          controller: value,
+          readOnly: false,
+          scrollController: ScrollController(),
+          scrollable: true,
+          focusNode: _descriptionFocusNode,
+          autoFocus: false,
+          expands: false,
+          padding: EdgeInsets.zero,
+          placeholder: t.task.description,
+          linkActionPickerDelegate: (BuildContext context, String link, node) async {
+            launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+            return quill.LinkMenuAction.none;
+          },
+          customStyles: quill.DefaultStyles(
+            placeHolder: quill.DefaultTextBlockStyle(
+              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+              const tuple.Tuple2(0, 0),
+              const tuple.Tuple2(0, 0),
+              null,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-    switch (selectedRecurrence) {
-      case EventRecurrenceModalType.none:
-        return t.event.editEvent.recurrence.setRepeat;
-      case EventRecurrenceModalType.daily:
-        return t.event.editEvent.recurrence.everyDay;
-      case EventRecurrenceModalType.everyCurrentDay:
-        return t.editTask.everyCurrentDay(day: DateFormat("EEEE").format(widget.tappedDate));
-      case EventRecurrenceModalType.everyYearOnThisDay:
-        return t.editTask.everyYearOn(date: DateFormat("MMM dd").format(widget.tappedDate));
-      case EventRecurrenceModalType.everyMonthOnThisDay:
-        return t.editTask.everyMonthOn(date: DateFormat("MMM dd").format(widget.tappedDate));
-      case EventRecurrenceModalType.everyWeekday:
-        return t.event.editEvent.recurrence.everyWeekday;
-      case EventRecurrenceModalType.custom:
-        return t.event.editEvent.recurrence.custom;
-      default:
-        return t.event.editEvent.recurrence.setRepeat;
-    }
+  InkWell _changeColorRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => ChangeColorModal(
+            selectedColor: updatedEvent.color ?? updatedEvent.calendarColor ?? '',
+            onChange: (newColor) {
+              setState(() {
+                updatedEvent = updatedEvent.copyWith(color: newColor);
+              });
+            },
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.squareFillSVG,
+                color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
+              ),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(
+              updatedEvent.color != null ? t.event.editEvent.customColor : t.event.editEvent.defaultColor,
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Column _viewOnGoogleCalendarRow(BuildContext context) {
+    return Column(
+      children: [
+        const Separator(),
+        InkWell(
+          onTap: () {
+            if (updatedEvent.url != null) {
+              updatedEvent.openUrl(updatedEvent.url);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: Dimension.defaultIconSize,
+                      height: Dimension.defaultIconSize,
+                      child: SvgPicture.asset(
+                        Assets.images.icons.google.calendarSVG,
+                      ),
+                    ),
+                    const SizedBox(width: Dimension.padding),
+                    Text(
+                      t.event.editEvent.viewOnGoogleCalendar,
+                      style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                    ),
+                  ],
+                ),
+                SvgPicture.asset(
+                  Assets.images.icons.common.arrowUpRightSquareSVG,
+                  width: Dimension.defaultIconSize,
+                  height: Dimension.defaultIconSize,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Container _bottomActionButtonsRow(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(Dimension.padding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                BottomButton(
+                    title: t.cancel,
+                    image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
+                    onTap: () {
+                      _onCancelTap();
+                    }),
+                BottomButton(
+                  title: widget.createingEvent ?? false ? t.event.editEvent.createEvent : t.event.editEvent.saveChanges,
+                  image: Assets.images.icons.common.checkmarkAltSVG,
+                  containerColor: ColorsExt.green20(context),
+                  iconColor: ColorsExt.green(context),
+                  onTap: () async {
+                    _onSaveTap();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   _onCancelTap() {
@@ -1214,5 +1185,49 @@ class _EventEditModalState extends State<EventEditModal> {
         );
       }
     }
+  }
+
+  _allTap(
+      {required BuildContext context,
+      required Event updatedEvent,
+      required List<String> atendeesToAdd,
+      required List<String> atendeesToRemove,
+      required bool addingMeeting,
+      required bool removingMeeting}) {
+    if (updatedEvent.recurringId == updatedEvent.id) {
+      if (timeChanged &&
+          widget.event.startTime != null &&
+          widget.event.endTime != null &&
+          updatedEvent.startTime != null &&
+          updatedEvent.endTime != null) {
+        updatedEvent = updatedEvent.copyWith(
+            startTime: Nullable(widget.event.computeStartTimeForParent(updatedEvent)),
+            endTime: Nullable(widget.event.computeEndTimeForParent(updatedEvent)));
+      }
+      context
+          .read<EventsCubit>()
+          .updateEventAndCreateModifiers(
+              event: updatedEvent,
+              atendeesToAdd: atendeesToAdd,
+              atendeesToRemove: atendeesToRemove,
+              addMeeting: addingMeeting,
+              removeMeeting: removingMeeting)
+          .then((value) => _showEventEditedSnackbar());
+    } else {
+      context
+          .read<EventsCubit>()
+          .updateParentAndExceptions(
+              exceptionEvent: updatedEvent,
+              atendeesToAdd: atendeesToAdd,
+              atendeesToRemove: atendeesToRemove,
+              addMeeting: addingMeeting,
+              removeMeeting: removingMeeting)
+          .then((value) => _showEventEditedSnackbar());
+    }
+  }
+
+  _showEventEditedSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackbar.get(context: context, type: CustomSnackbarType.eventEdited, message: t.event.snackbar.edited));
   }
 }

@@ -47,8 +47,6 @@ class CalendarView extends StatelessWidget {
           events = events.where((event) => event.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined).toList();
         }
 
-        print(events.length);
-
         return Scaffold(
           appBar: CalendarAppBar(
             calendarController: calendarController,

@@ -115,6 +115,7 @@ class _AssetsImagesIconsCommon {
   final archiveboxSVG = 'assets/images/icons/_common/archivebox.svg';
   final arrow2CirclepathSVG = 'assets/images/icons/_common/arrow_2_circlepath.svg';
   final arrowLeftSVG = 'assets/images/icons/_common/arrow_left.svg';
+  final arrowRightSVG = 'assets/images/icons/_common/arrow_right.svg';
   final arrowTurnDownRightSVG = 'assets/images/icons/_common/arrow_turn_down_right.svg';
   final arrowUpSVG = 'assets/images/icons/_common/arrow_up.svg';
   final arrowUpArrowDownSVG = 'assets/images/icons/_common/arrow_up_arrow_down.svg';
