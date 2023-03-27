@@ -69,7 +69,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
         title: _buildTitle(context),
-        titleSpacing: leading != null || showBack == true ? 0 : Dimension().padding,
+        titleSpacing: leading != null || showBack == true ? 0 : Dimension.padding,
         leading: _buildLeading(context),
         actions: _buildActions(context),
       ),
