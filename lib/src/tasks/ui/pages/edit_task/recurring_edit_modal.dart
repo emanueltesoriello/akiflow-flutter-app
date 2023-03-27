@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 class RecurringEditModal extends StatelessWidget {
@@ -18,8 +19,8 @@ class RecurringEditModal extends StatelessWidget {
         decoration: const BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -31,7 +32,7 @@ class RecurringEditModal extends StatelessWidget {
               const ScrollChip(),
               const SizedBox(height: 8.0),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Row(
                   children: [
                     SvgPicture.asset(Assets.images.icons.common.pencilSVG,
@@ -45,7 +46,7 @@ class RecurringEditModal extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Text(t.editTask.repeatingEditDialog.description,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
@@ -97,7 +98,7 @@ class RecurringEditModal extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimension.padding),
             ],
           ),
         ),

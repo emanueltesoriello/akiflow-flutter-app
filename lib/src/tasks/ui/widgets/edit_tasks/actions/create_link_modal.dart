@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class CreateLinkModal extends StatefulWidget {
   const CreateLinkModal({Key? key}) : super(key: key);
@@ -31,18 +32,18 @@ class _CreateLinkModalState extends State<CreateLinkModal> {
             decoration: const BoxDecoration(
               color: Colors.transparent,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.radiusM),
+                topRight: Radius.circular(Dimension.radiusM),
               ),
             ),
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.1),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                 child: Column(
                   children: [
-                    const SizedBox(height: 16),
+                    const SizedBox(height: Dimension.padding),
                     Row(
                       children: [
                         Expanded(
@@ -99,7 +100,7 @@ class _CreateLinkModalState extends State<CreateLinkModal> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: Dimension.padding),
                   ],
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/create_task/create_task_calendar.dart';
 import 'package:models/extensions/user_ext.dart';
@@ -44,8 +45,8 @@ class _EditTimeModalState extends State<EditTimeModal> {
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.radius),
+                topRight: Radius.circular(Dimension.radius),
               ),
             ),
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -85,7 +86,7 @@ class _EditTimeModalState extends State<EditTimeModal> {
                       }
                     }(),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Dimension.padding),
                 ],
               ),
             ),

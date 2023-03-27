@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -61,8 +62,8 @@ class _PlanModalState extends State<PlanModal> {
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.radiusM),
+                topRight: Radius.circular(Dimension.radiusM),
               ),
             ),
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -102,7 +103,7 @@ class _PlanModalState extends State<PlanModal> {
                       }
                     }(),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Dimension.padding),
                 ],
               ),
             ),

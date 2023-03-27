@@ -4,6 +4,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/custom_recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -43,18 +44,18 @@ class EventRecurrenceModal extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radius),
+            topRight: Radius.circular(Dimension.radius),
           ),
         ),
         child: ListView(
           shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   SvgPicture.asset(
@@ -62,7 +63,7 @@ class EventRecurrenceModal extends StatelessWidget {
                     width: 28,
                     height: 28,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.repeat,
                     style: TextStyle(

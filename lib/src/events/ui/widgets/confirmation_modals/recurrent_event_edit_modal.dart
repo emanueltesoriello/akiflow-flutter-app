@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 class RecurrentEventEditModal extends StatelessWidget {
@@ -28,20 +29,20 @@ class RecurrentEventEditModal extends StatelessWidget {
         decoration: const BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.padding),
+            topRight: Radius.circular(Dimension.padding),
           ),
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 16.0),
+          padding: const EdgeInsets.all(Dimension.padding),
           child: ListView(
             shrinkWrap: true,
             children: [
               const ScrollChip(),
-              const SizedBox(height: 8.0),
+              const SizedBox(height: Dimension.paddingS),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Row(
                   children: [
                     SvgPicture.asset(
@@ -49,7 +50,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                         width: 28,
                         height: 28,
                         color: ColorsExt.grey2(context)),
-                    const SizedBox(width: 8.0),
+                    const SizedBox(width: Dimension.paddingS),
                     Text(
                       deleteEvent
                           ? t.event.editEvent.repeatingEditModal.deleteTitle
@@ -60,7 +61,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Text(
                     deleteEvent
                         ? t.event.editEvent.repeatingEditModal.deleteDescription
@@ -94,7 +95,7 @@ class RecurrentEventEditModal extends StatelessWidget {
               if (showThisAndFutureButton)
                 Column(
                   children: [
-                    const SizedBox(height: 12),
+                    const SizedBox(height: Dimension.padding),
                     InkWell(
                       onTap: () {
                         thisAndFutureTap();
@@ -105,7 +106,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                           minHeight: 46,
                         ),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(Dimension.radius),
                             border: Border.all(color: ColorsExt.grey4(context))),
                         child: Center(
                           child: Text(
@@ -121,7 +122,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                     ),
                   ],
                 ),
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               InkWell(
                 onTap: () {
                   allTap();
@@ -145,7 +146,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimension.padding),
             ],
           ),
         ),

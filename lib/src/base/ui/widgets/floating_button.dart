@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/expandable_fab.dart';
@@ -65,7 +66,7 @@ class FloatingButton extends StatelessWidget {
                   _onTapTask(context: context, homeViewType: homeViewType);
                 },
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(Dimension.radiusM),
                 ),
                 child: SvgPicture.asset(
                   Assets.images.icons.common.plusSVG,

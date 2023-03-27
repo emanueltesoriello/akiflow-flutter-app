@@ -8,6 +8,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -101,22 +102,22 @@ class _EventModalState extends State<EventModal> {
         return Material(
           color: Colors.white,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.padding),
+            topRight: Radius.circular(Dimension.padding),
           ),
           child: ScrollConfiguration(
             behavior: NoScrollBehav(),
             child: Column(
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimension.padding),
                 const ScrollChip(),
                 Expanded(
                   child: ListView(
                     physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(Dimension.padding),
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                        padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                         child: Row(
                           children: [
                             SizedBox(
@@ -127,7 +128,7 @@ class _EventModalState extends State<EventModal> {
                                 color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
                               ),
                             ),
-                            const SizedBox(width: 16.0),
+                            const SizedBox(width: Dimension.padding),
                             Expanded(
                               child: Text(
                                 selectedEvent.title ?? t.noTitle,
@@ -142,7 +143,7 @@ class _EventModalState extends State<EventModal> {
                       ),
                       const Separator(),
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                        padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                         child: Row(
                           children: [
                             SizedBox(
@@ -152,7 +153,7 @@ class _EventModalState extends State<EventModal> {
                                 Assets.images.icons.common.calendarSVG,
                               ),
                             ),
-                            const SizedBox(width: 16.0),
+                            const SizedBox(width: Dimension.padding),
                             Expanded(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,7 +253,7 @@ class _EventModalState extends State<EventModal> {
                           children: [
                             const Separator(),
                             Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -269,7 +270,7 @@ class _EventModalState extends State<EventModal> {
                                                   : Assets.images.icons.common.videocamSVG,
                                         ),
                                       ),
-                                      const SizedBox(width: 16.0),
+                                      const SizedBox(width: Dimension.padding),
                                       Text(
                                         selectedEvent.meetingSolution == 'meet'
                                             ? t.event.googleMeet
@@ -311,7 +312,7 @@ class _EventModalState extends State<EventModal> {
                         ),
                       const Separator(),
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                        padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                         child: Row(
                           children: [
                             SizedBox(
@@ -321,7 +322,7 @@ class _EventModalState extends State<EventModal> {
                                 Assets.images.icons.common.briefcaseSVG,
                               ),
                             ),
-                            const SizedBox(width: 16.0),
+                            const SizedBox(width: Dimension.padding),
                             Text(
                               t.event.busy,
                               style: TextStyle(
@@ -335,7 +336,7 @@ class _EventModalState extends State<EventModal> {
                           children: [
                             const Separator(),
                             Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -344,7 +345,7 @@ class _EventModalState extends State<EventModal> {
                                     child: SvgPicture.asset(Assets.images.icons.common.mapSVG,
                                         color: ColorsExt.grey2(context)),
                                   ),
-                                  const SizedBox(width: 16.0),
+                                  const SizedBox(width: Dimension.padding),
                                   Expanded(
                                     child: Text(
                                       '${selectedEvent.content?["location"]}',
@@ -364,7 +365,7 @@ class _EventModalState extends State<EventModal> {
                           children: [
                             const Separator(),
                             Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -378,7 +379,7 @@ class _EventModalState extends State<EventModal> {
                                           color: ColorsExt.grey2(context),
                                         ),
                                       ),
-                                      const SizedBox(width: 16.0),
+                                      const SizedBox(width: Dimension.padding),
                                       Text(
                                         t.event.guests,
                                         style: TextStyle(
@@ -439,7 +440,7 @@ class _EventModalState extends State<EventModal> {
                                                       color: ColorsExt.grey3(context),
                                                     ),
                                                   ),
-                                        const SizedBox(width: 16.0),
+                                        const SizedBox(width: Dimension.padding),
                                         Row(
                                           children: [
                                             Text(
@@ -475,7 +476,7 @@ class _EventModalState extends State<EventModal> {
                           children: [
                             const Separator(),
                             Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -484,7 +485,7 @@ class _EventModalState extends State<EventModal> {
                                     child: SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG,
                                         color: ColorsExt.grey2(context)),
                                   ),
-                                  const SizedBox(width: 16.0),
+                                  const SizedBox(width: Dimension.padding),
                                   Expanded(
                                     child: _description(context),
                                   ),
@@ -512,7 +513,7 @@ class _EventModalState extends State<EventModal> {
                     children: [
                       if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          padding: const EdgeInsets.only(left: Dimension.padding, right: Dimension.padding),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -594,7 +595,7 @@ class _EventModalState extends State<EventModal> {
                         ),
                       const Separator(),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(Dimension.padding),
                         child: selectedEvent.canModify()
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,

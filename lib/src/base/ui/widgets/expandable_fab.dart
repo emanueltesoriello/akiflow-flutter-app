@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({
@@ -228,7 +229,7 @@ class FabActionButton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       color: ColorsExt.akiflow(context),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimension.radiusM),
       ),
       shadowColor: Colors.black,
       elevation: 4,

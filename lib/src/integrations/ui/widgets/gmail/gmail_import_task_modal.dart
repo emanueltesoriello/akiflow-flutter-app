@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/integrations/gmail.dart';
 
@@ -30,8 +31,8 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
         decoration: BoxDecoration(
           color: Theme.of(context).backgroundColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         child: ValueListenableBuilder(
@@ -39,10 +40,10 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
           builder: (context, GmailSyncMode type, child) => ListView(
             shrinkWrap: true,
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               const ScrollChip(),
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(Dimension.padding),
                 child: Row(
                   children: [
                     Expanded(
@@ -114,7 +115,7 @@ Widget _predefinedDateItem(
     onTap: onPressed,
     child: Container(
       color: selected ? ColorsExt.grey6(context) : Colors.transparent,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
       height: 40,
       child: Row(
         children: [

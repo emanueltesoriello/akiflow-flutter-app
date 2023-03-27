@@ -10,6 +10,8 @@ class Dimension {
   static const calendarElementHeight = 24.0;
   static const chevronIconSize = 20.0;
   static const pagesImageSize = 80.0;
+  static const logoAuthPage = 56.0;
+  static const authIllustrationSize = 128.0;
 
   /// Styles
   static const outlineBorderRadius = 4.0;

@@ -131,7 +131,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
         Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: const EdgeInsets.only(top: 90, right: 16),
+            padding: const EdgeInsets.only(top: 90, right: Dimension.padding),
             child: TextButton(
                 onPressed: () {
                   context.read<OnboardingCubit>().skipAll();
