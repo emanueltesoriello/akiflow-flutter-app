@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 328 
+ * Strings: 330 
  *
- * Built on 2023-03-28 at 07:03 UTC
+ * Built on 2023-03-28 at 13:04 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -514,6 +514,7 @@ class _StringsCalendarEn {
 	String get hideDeclinedEvents => 'Hide Declined events';
 	String get hideTasksFromCalendar => 'Hide Tasks from calendar';
 	String get calendars => 'Calendars';
+	String get refresh => 'Refresh';
 }
 
 // Path: linkedContent
@@ -896,6 +897,7 @@ class _StringsEventEditEventEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
+	String get addTitle => 'Add title';
 	String get allDay => 'All Day';
 	String get addConference => 'Add Conference';
 	String get addLocation => 'Add Location';
@@ -1236,6 +1238,7 @@ extension on _StringsEn {
 			'calendar.hideDeclinedEvents': 'Hide Declined events',
 			'calendar.hideTasksFromCalendar': 'Hide Tasks from calendar',
 			'calendar.calendars': 'Calendars',
+			'calendar.refresh': 'Refresh',
 			'linkedContent.subject': 'Subject',
 			'linkedContent.from': 'From',
 			'linkedContent.date': 'Date',
@@ -1349,6 +1352,7 @@ extension on _StringsEn {
 			'event.mailGuests': 'Mail Guests',
 			'event.edit': 'Edit',
 			'event.delete': 'Delete',
+			'event.editEvent.addTitle': 'Add title',
 			'event.editEvent.allDay': 'All Day',
 			'event.editEvent.addConference': 'Add Conference',
 			'event.editEvent.addLocation': 'Add Location',

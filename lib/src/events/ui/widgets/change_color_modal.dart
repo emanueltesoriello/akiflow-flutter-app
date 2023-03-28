@@ -36,7 +36,7 @@ class ChangeColorModal extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: Dimension.paddingM),
                 child: Row(
                   children: [
-                    const SizedBox(width: 8),
+                    const SizedBox(width: Dimension.paddingS),
                     Text(
                       t.event.editEvent.eventColor,
                       style: TextStyle(
@@ -170,7 +170,7 @@ class ChangeColorModal extends StatelessWidget {
                   const SizedBox(height: 50, width: 50),
                 ],
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: Dimension.paddingL),
             ],
           ),
         ),
@@ -185,7 +185,7 @@ class ChangeColorModal extends StatelessWidget {
     required Function() click,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(Dimension.paddingXS),
       child: SizedBox(
         height: 42,
         width: 42,
@@ -203,8 +203,8 @@ class ChangeColorModal extends StatelessWidget {
               if (active)
                 Center(
                   child: SizedBox(
-                    height: 24,
-                    width: 24,
+                    height: Dimension.defaultIconSize,
+                    width: Dimension.defaultIconSize,
                     child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG, color: Colors.white),
                   ),
                 ),

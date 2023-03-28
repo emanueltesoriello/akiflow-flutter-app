@@ -54,286 +54,14 @@ class CalendarSettingsModal extends StatelessWidget {
                     physics: const ClampingScrollPhysics(),
                     padding: const EdgeInsets.all(Dimension.padding),
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.paddingS),
-                        child: Text(
-                          t.calendar.calendarView.toUpperCase(),
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
-                        ),
-                      ),
-                      ButtonSelectable(
-                        title: t.calendar.view.agenda,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.agendaSVG,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        trailing: const SizedBox(),
-                        selected: calendarController.view == CalendarView.schedule && !isThreeDays,
-                        onPressed: () {
-                          context.read<CalendarCubit>().setCalendarViewThreeDays(false);
-                          context.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
-                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                          calendarController.view = CalendarView.schedule;
-                          Navigator.pop(context);
-                        },
-                      ),
-                      const SizedBox(height: 2),
-                      ButtonSelectable(
-                        title: t.calendar.view.oneDay,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.daySVG,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        trailing: const SizedBox(),
-                        selected: calendarController.view == CalendarView.day && !isThreeDays,
-                        onPressed: () {
-                          context.read<CalendarCubit>().setCalendarViewThreeDays(false);
-                          context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
-                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                          calendarController.view = CalendarView.day;
-                          Navigator.pop(context);
-                        },
-                      ),
-                      const SizedBox(height: 2),
-                      ButtonSelectable(
-                        title: t.calendar.view.threeDays,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.threeDaysSVG,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        trailing: const SizedBox(),
-                        selected: isThreeDays,
-                        onPressed: () {
-                          context.read<CalendarCubit>().setCalendarViewThreeDays(true);
-                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                          if (isWeekendHidden) {
-                            context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
-                            calendarController.view = CalendarView.workWeek;
-                          } else {
-                            context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
-                            calendarController.view = CalendarView.week;
-                          }
-                          Navigator.pop(context);
-                        },
-                      ),
-                      const SizedBox(height: 2),
-                      ButtonSelectable(
-                        title: t.calendar.view.week,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.weekSVG,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        trailing: const SizedBox(),
-                        selected: (calendarController.view == CalendarView.week ||
-                                calendarController.view == CalendarView.workWeek) &&
-                            !isThreeDays,
-                        onPressed: () {
-                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                          if (isWeekendHidden) {
-                            context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
-                            calendarController.view = CalendarView.workWeek;
-                          } else {
-                            context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
-                            calendarController.view = CalendarView.week;
-                          }
-                          context.read<CalendarCubit>().setCalendarViewThreeDays(false);
-                          Navigator.pop(context);
-                        },
-                      ),
-                      const SizedBox(height: 2),
-                      ButtonSelectable(
-                        title: t.calendar.view.month,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.monthSVG,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        trailing: const SizedBox(),
-                        selected: calendarController.view == CalendarView.month && !isThreeDays,
-                        onPressed: () {
-                          context.read<CalendarCubit>().setCalendarViewThreeDays(false);
-                          context.read<CalendarCubit>().changeCalendarView(CalendarView.month);
-                          calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                          calendarController.view = CalendarView.month;
-                          Navigator.pop(context);
-                        },
-                      ),
-                      const SizedBox(height: Dimension.paddingS),
+                      _calendarView(context, isThreeDays, now, isWeekendHidden),
                       const Separator(),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          context
-                              .read<SyncCubit>()
-                              .sync(entities: [Entity.tasks, Entity.eventModifiers, Entity.events]).then((value) {
-                            context
-                                .read<EventsCubit>()
-                                .refreshAllEvents(context)
-                                .then((value) => context.read<SyncCubit>().showLoadingIcon(true));
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: Dimension.paddingS, top: Dimension.padding, bottom: Dimension.padding),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                height: Dimension.defaultIconSize,
-                                width: Dimension.defaultIconSize,
-                                child: SvgPicture.asset(
-                                  Assets.images.icons.common.arrow2CirclepathSVG,
-                                  color: ColorsExt.grey2(context),
-                                ),
-                              ),
-                              const SizedBox(width: Dimension.padding),
-                              Text(
-                                'Refresh',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: ColorsExt.grey2(context),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      _refreshRow(context),
                       const Separator(),
                       const SizedBox(height: Dimension.padding),
-                      Padding(
-                        padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.padding),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  t.calendar.hideWeekends,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: ColorsExt.grey2(context),
-                                  ),
-                                ),
-                                FlutterSwitch(
-                                  width: 48,
-                                  height: 24,
-                                  toggleSize: 20,
-                                  activeColor: ColorsExt.akiflow(context),
-                                  inactiveColor: ColorsExt.grey5(context),
-                                  value: isWeekendHidden,
-                                  borderRadius: 24,
-                                  padding: 2,
-                                  onToggle: (value) {
-                                    context.read<CalendarCubit>().setCalendarWeekendHidden(value);
-                                    if (calendarController.view == CalendarView.week ||
-                                        calendarController.view == CalendarView.workWeek) {
-                                      if (value) {
-                                        context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
-                                        calendarController.view = CalendarView.workWeek;
-                                      } else {
-                                        context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
-                                        calendarController.view = CalendarView.week;
-                                      }
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: Dimension.paddingM),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  t.calendar.hideDeclinedEvents,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: ColorsExt.grey2(context),
-                                  ),
-                                ),
-                                FlutterSwitch(
-                                  width: 48,
-                                  height: 24,
-                                  toggleSize: 20,
-                                  activeColor: ColorsExt.akiflow(context),
-                                  inactiveColor: ColorsExt.grey5(context),
-                                  value: areDeclinedEventsHidden,
-                                  borderRadius: 24,
-                                  padding: 2,
-                                  onToggle: (value) {
-                                    context.read<CalendarCubit>().setDeclinedEventsHidden(value);
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: Dimension.paddingM),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  t.calendar.hideTasksFromCalendar,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: ColorsExt.grey2(context),
-                                  ),
-                                ),
-                                FlutterSwitch(
-                                  width: 48,
-                                  height: 24,
-                                  toggleSize: 20,
-                                  activeColor: ColorsExt.akiflow(context),
-                                  inactiveColor: ColorsExt.grey5(context),
-                                  value: areCalendarTasksHidden,
-                                  borderRadius: 24,
-                                  padding: 2,
-                                  onToggle: (value) {
-                                    context.read<CalendarCubit>().setCalendarTasksHidden(value);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      _switchButtons(context, isWeekendHidden, areDeclinedEventsHidden, areCalendarTasksHidden),
                       const Separator(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: Dimension.paddingS, top: Dimension.padding),
-                        child: Text(
-                          t.calendar.calendars.toUpperCase(),
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
-                        ),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: primaryCalendars.length,
-                        itemBuilder: (context, index) {
-                          return CalendarItem(
-                            title: primaryCalendars[index].originId!,
-                            calendars: calendars
-                                .where(
-                                    (calendar) => calendar.originAccountId == primaryCalendars[index].originAccountId)
-                                .toList(),
-                          );
-                        },
-                      ),
+                      _calendars(context, primaryCalendars, calendars),
                     ],
                   ),
                 ),
@@ -342,6 +70,320 @@ class CalendarSettingsModal extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Column _calendarView(BuildContext context, bool isThreeDays, DateTime now, bool isWeekendHidden) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.paddingS),
+          child: Text(
+            t.calendar.calendarView.toUpperCase(),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+          ),
+        ),
+        _agenda(context, isThreeDays, now),
+        const SizedBox(height: 2),
+        _oneDay(context, isThreeDays, now),
+        const SizedBox(height: 2),
+        _threeDays(context, isThreeDays, now, isWeekendHidden),
+        const SizedBox(height: 2),
+        _week(context, isThreeDays, now, isWeekendHidden),
+        const SizedBox(height: 2),
+        _month(context, isThreeDays, now),
+        const SizedBox(height: Dimension.paddingS),
+      ],
+    );
+  }
+
+  ButtonSelectable _agenda(BuildContext context, bool isThreeDays, DateTime now) {
+    return ButtonSelectable(
+      title: t.calendar.view.agenda,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.agendaSVG,
+          color: ColorsExt.grey2(context),
+        ),
+      ),
+      trailing: const SizedBox(),
+      selected: calendarController.view == CalendarView.schedule && !isThreeDays,
+      onPressed: () {
+        context.read<CalendarCubit>().setCalendarViewThreeDays(false);
+        context.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
+        calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+        calendarController.view = CalendarView.schedule;
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  ButtonSelectable _oneDay(BuildContext context, bool isThreeDays, DateTime now) {
+    return ButtonSelectable(
+      title: t.calendar.view.oneDay,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.daySVG,
+          color: ColorsExt.grey2(context),
+        ),
+      ),
+      trailing: const SizedBox(),
+      selected: calendarController.view == CalendarView.day && !isThreeDays,
+      onPressed: () {
+        context.read<CalendarCubit>().setCalendarViewThreeDays(false);
+        context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
+        calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+        calendarController.view = CalendarView.day;
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  ButtonSelectable _threeDays(BuildContext context, bool isThreeDays, DateTime now, bool isWeekendHidden) {
+    return ButtonSelectable(
+      title: t.calendar.view.threeDays,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.threeDaysSVG,
+          color: ColorsExt.grey2(context),
+        ),
+      ),
+      trailing: const SizedBox(),
+      selected: isThreeDays,
+      onPressed: () {
+        context.read<CalendarCubit>().setCalendarViewThreeDays(true);
+        calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+        if (isWeekendHidden) {
+          context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
+          calendarController.view = CalendarView.workWeek;
+        } else {
+          context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
+          calendarController.view = CalendarView.week;
+        }
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  ButtonSelectable _week(BuildContext context, bool isThreeDays, DateTime now, bool isWeekendHidden) {
+    return ButtonSelectable(
+      title: t.calendar.view.week,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.weekSVG,
+          color: ColorsExt.grey2(context),
+        ),
+      ),
+      trailing: const SizedBox(),
+      selected: (calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
+          !isThreeDays,
+      onPressed: () {
+        calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+        if (isWeekendHidden) {
+          context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
+          calendarController.view = CalendarView.workWeek;
+        } else {
+          context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
+          calendarController.view = CalendarView.week;
+        }
+        context.read<CalendarCubit>().setCalendarViewThreeDays(false);
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  ButtonSelectable _month(BuildContext context, bool isThreeDays, DateTime now) {
+    return ButtonSelectable(
+      title: t.calendar.view.month,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.monthSVG,
+          color: ColorsExt.grey2(context),
+        ),
+      ),
+      trailing: const SizedBox(),
+      selected: calendarController.view == CalendarView.month && !isThreeDays,
+      onPressed: () {
+        context.read<CalendarCubit>().setCalendarViewThreeDays(false);
+        context.read<CalendarCubit>().changeCalendarView(CalendarView.month);
+        calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+        calendarController.view = CalendarView.month;
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  InkWell _refreshRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        context.read<SyncCubit>().sync(entities: [Entity.tasks, Entity.eventModifiers, Entity.events]).then((value) {
+          context
+              .read<EventsCubit>()
+              .refreshAllEvents(context)
+              .then((value) => context.read<SyncCubit>().showLoadingIcon(true));
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: Dimension.paddingS, top: Dimension.padding, bottom: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              height: Dimension.defaultIconSize,
+              width: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.arrow2CirclepathSVG,
+                color: ColorsExt.grey2(context),
+              ),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(
+              t.calendar.refresh,
+              style: TextStyle(
+                fontSize: 17,
+                color: ColorsExt.grey2(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding _switchButtons(
+      BuildContext context, bool isWeekendHidden, bool areDeclinedEventsHidden, bool areCalendarTasksHidden) {
+    return Padding(
+      padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.padding),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                t.calendar.hideWeekends,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: ColorsExt.grey2(context),
+                ),
+              ),
+              FlutterSwitch(
+                width: 48,
+                height: 24,
+                toggleSize: 20,
+                activeColor: ColorsExt.akiflow(context),
+                inactiveColor: ColorsExt.grey5(context),
+                value: isWeekendHidden,
+                borderRadius: 24,
+                padding: 2,
+                onToggle: (value) {
+                  context.read<CalendarCubit>().setCalendarWeekendHidden(value);
+                  if (calendarController.view == CalendarView.week ||
+                      calendarController.view == CalendarView.workWeek) {
+                    if (value) {
+                      context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
+                      calendarController.view = CalendarView.workWeek;
+                    } else {
+                      context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
+                      calendarController.view = CalendarView.week;
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.paddingM),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                t.calendar.hideDeclinedEvents,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: ColorsExt.grey2(context),
+                ),
+              ),
+              FlutterSwitch(
+                width: 48,
+                height: 24,
+                toggleSize: 20,
+                activeColor: ColorsExt.akiflow(context),
+                inactiveColor: ColorsExt.grey5(context),
+                value: areDeclinedEventsHidden,
+                borderRadius: 24,
+                padding: 2,
+                onToggle: (value) {
+                  context.read<CalendarCubit>().setDeclinedEventsHidden(value);
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.paddingM),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                t.calendar.hideTasksFromCalendar,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: ColorsExt.grey2(context),
+                ),
+              ),
+              FlutterSwitch(
+                width: 48,
+                height: 24,
+                toggleSize: 20,
+                activeColor: ColorsExt.akiflow(context),
+                inactiveColor: ColorsExt.grey5(context),
+                value: areCalendarTasksHidden,
+                borderRadius: 24,
+                padding: 2,
+                onToggle: (value) {
+                  context.read<CalendarCubit>().setCalendarTasksHidden(value);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Column _calendars(BuildContext context, List<Calendar> primaryCalendars, List<Calendar> calendars) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: Dimension.paddingS, top: Dimension.padding),
+          child: Text(
+            t.calendar.calendars.toUpperCase(),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+          ),
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: primaryCalendars.length,
+          itemBuilder: (context, index) {
+            return CalendarItem(
+              title: primaryCalendars[index].originId!,
+              calendars: calendars
+                  .where((calendar) => calendar.originAccountId == primaryCalendars[index].originAccountId)
+                  .toList(),
+            );
+          },
+        ),
+      ],
     );
   }
 }

@@ -37,7 +37,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                   children: [
                     SvgPicture.asset(Assets.images.icons.common.trashSVG,
                         width: 28, height: 28, color: ColorsExt.grey2(context)),
-                    const SizedBox(width: 8.0),
+                    const SizedBox(width: Dimension.paddingS),
                     Expanded(
                       child: Text(
                         t.event.editEvent.deleteModal.title(eventName: eventName),
@@ -52,7 +52,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                 child: Text(t.event.editEvent.deleteModal.description,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimension.paddingM),
               InkWell(
                 onTap: () {
                   onTapDelete();
@@ -63,7 +63,8 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                     minHeight: 46,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
+                      border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
                       t.event.delete,
