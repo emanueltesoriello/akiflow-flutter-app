@@ -30,14 +30,17 @@ class CalendarView extends StatelessWidget {
         }
 
         List<Calendar> calendars = context.watch<CalendarCubit>().state.calendars;
-        calendars = calendars
-            .where((element) =>
-                element.settings != null &&
-                ((element.settings["visibleMobile"] ?? element.settings["visible"] ?? false) == true))
-            .toList();
         List<String> visibleCalendarIds = [];
-        for (var calendar in calendars) {
-          visibleCalendarIds.add(calendar.id!);
+        if (calendars.isNotEmpty) {
+          calendars = calendars
+              .where((element) =>
+                  element.settings != null &&
+                  ((element.settings["visibleMobile"] ?? element.settings["visible"] ?? false) == true))
+              .toList();
+
+          for (var calendar in calendars) {
+            visibleCalendarIds.add(calendar.id!);
+          }
         }
 
         EventsCubit eventsCubit = context.watch<EventsCubit>();
