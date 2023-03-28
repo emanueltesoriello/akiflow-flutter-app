@@ -284,7 +284,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         ),
                         decoration: BoxDecoration(
                             color: ColorsExt.grey7(context),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(Dimension.radiusS),
                             border: Border.all(color: ColorsExt.grey4(context))),
                         child: Center(
                           child: Text(
