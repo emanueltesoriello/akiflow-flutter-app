@@ -220,7 +220,7 @@ class _LabelViewState extends State<LabelView> {
                           }());
                         }
                         footer = Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                           child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
                         );
                       }
@@ -283,7 +283,7 @@ class CompactInfo extends StatelessWidget {
               return Row(
                 children: [
                   SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey2(context))),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: Dimension.paddingXS),
                 ],
               );
             }),

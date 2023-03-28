@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/notifications_service.dart';
@@ -69,17 +70,17 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
               decoration: const BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
+                  topLeft: Radius.circular(Dimension.radiusM),
+                  topRight: Radius.circular(Dimension.radius),
                 ),
               ),
               margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  const SizedBox(height: 12),
+                  const SizedBox(height: Dimension.padding),
                   const ScrollChip(),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: Dimension.padding),
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
                     child: Column(
@@ -90,7 +91,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                           child: Text('Send notifications ...',
                               style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey2(context))),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimension.padding),
                         ...List.generate(
                           NextTaskNotificationsModel.values.length,
                           (index) => _predefinedDateItem(context, text: NextTaskNotificationsModel.values[index].title,

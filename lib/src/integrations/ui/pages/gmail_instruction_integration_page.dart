@@ -43,20 +43,20 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                 children: [
                   ListView(
                     shrinkWrap: true,
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(Dimension.padding),
                     children: [
                       IntegrationDetailsHeader(
                         isActive: account != null && context.read<IntegrationsCubit>().isLocalActive(account!),
                         identifier: t.settings.integrations.gmail.communication,
                         connectorId: 'gmail',
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: Dimension.padding * 2),
                       _step1(context),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: Dimension.padding),
                       _mailPlaceholder(context),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: Dimension.padding * 2),
                       _step2(context),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: Dimension.padding),
                     ],
                   ),
                   const Spacer(),

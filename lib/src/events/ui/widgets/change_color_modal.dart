@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
@@ -18,21 +19,21 @@ class ChangeColorModal extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(Dimension.padding),
           child: ListView(
             shrinkWrap: true,
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               const ScrollChip(),
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               Padding(
-                padding: const EdgeInsets.only(bottom: 24),
+                padding: const EdgeInsets.only(bottom: Dimension.paddingM),
                 child: Row(
                   children: [
                     const SizedBox(width: 8),

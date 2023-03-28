@@ -4,8 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 //import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/base/badged_icon.dart';
-import 'package:mobile/src/base/ui/widgets/base/icon_badge.dart';
 import 'package:mobile/src/settings/ui/pages/settings_page.dart';
 import 'package:mobile/src/settings/ui/widgets/search_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -74,20 +72,10 @@ class Header extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         InkWell(
-          child: BadgedIcon(
-            icon: Assets.images.icons.common.gearAltSVG,
-            color: Colors.transparent,
-            badge: FutureBuilder<dynamic>(
-                //future: Intercom.instance.unreadConversationCount(),
-                builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return IconBadge(
-                  snapshot.data,
-                  offset: const Offset(12, -9),
-                );
-              }
-              return const SizedBox();
-            }),
+          child: SizedBox(
+            width: 25,
+            height: 25,
+            child: SvgPicture.asset(Assets.images.icons.common.gearAltSVG),
           ),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));

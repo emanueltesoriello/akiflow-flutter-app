@@ -7,7 +7,6 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/title_nlp_text_field.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
-import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/create_task_actions.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/description_field.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_widget.dart';
@@ -15,7 +14,6 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/label_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:models/nlp/nlp_date_time.dart';
-import 'package:mobile/extensions/task_extension.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);

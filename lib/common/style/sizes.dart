@@ -10,6 +10,8 @@ class Dimension {
   static const calendarElementHeight = 24.0;
   static const chevronIconSize = 20.0;
   static const pagesImageSize = 80.0;
+  static const logoAuthPage = 56.0;
+  static const authIllustrationSize = 128.0;
 
   /// Styles
   static const outlineBorderRadius = 4.0;
@@ -32,6 +34,7 @@ class Dimension {
   static const border = 1.0;
   static const appBarLeadingIcon = 26.0;
   static const defaultIconSize = 22.0;
+  static const smallconSize = 17.0;
   static const mediumIconSize = 35.0;
   static const bigIconSize = 50.0;
   static const defaultIllustrationSize = 130.0;
@@ -39,6 +42,7 @@ class Dimension {
   ///Paddings
   static const paddingXS = 4.0;
   static const paddingS = 8.0;
+  static const paddingSM = 12.0;
   static const padding = 16.0;
   static const paddingM = 24.0;
   static const paddingL = 42.0;

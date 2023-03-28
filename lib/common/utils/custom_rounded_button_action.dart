@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 
 class CustomFlutterRoundedButtonAction extends StatelessWidget {
@@ -64,7 +65,7 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
           color: ColorsExt.akiflow(context),
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimension.paddingS),
       ),
       child: InkWell(
         onTap: onTapButtonPositive,

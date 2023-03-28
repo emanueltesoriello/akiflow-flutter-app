@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/labels_list.dart';
 import 'package:models/label/label.dart';
@@ -26,18 +27,18 @@ class _LabelsModalState extends State<LabelsModal> {
         decoration: const BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ListView(
           shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: LabelsList(
                 showHeaders: true,
                 onSelect: (label) {

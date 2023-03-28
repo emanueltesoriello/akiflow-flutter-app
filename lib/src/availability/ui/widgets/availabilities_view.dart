@@ -16,6 +16,39 @@ class AvailabilitiesView extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  _buildRecurrentEvents(AvailabilityCubitState cubitState, List<AvailabilityConfig> recurrent) {
+    return ExpandablePanel(
+        isExpanded: cubitState.isRecurrentOpen,
+        isHeaderVisible: recurrent.isNotEmpty ? true : false,
+        headerBuilder: (context, isExpanded) {
+          return GestureDetector(
+              onTap: () {
+                context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.recurrent);
+              },
+              child: SlotsHeader(
+                  type: AvailabililtyConfigSlotsType.recurrent,
+                  asset: Assets.images.icons.common.recurrentSVG,
+                  text: t.availability.activeRecurrentSlots,
+                  isOpen: isExpanded));
+        },
+        body: SlotList(isOpen: cubitState.isRecurrentOpen, configs: recurrent));
+  }
+
+  _buildManualEvents(AvailabilityCubitState cubitState, List<AvailabilityConfig> manual) {
+    return ExpandablePanel(
+      isExpanded: cubitState.isManualOpen,
+      isHeaderVisible: manual.isNotEmpty ? true : false,
+      headerBuilder: (context, isExpanded) {
+        return SlotsHeader(
+            type: AvailabililtyConfigSlotsType.manual,
+            asset: Assets.images.icons.common.handDrawSVG,
+            text: t.availability.activeManualSlots,
+            isOpen: isExpanded);
+      },
+      body: SlotList(isOpen: cubitState.isManualOpen, configs: manual),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AvailabilityCubit, AvailabilityCubitState>(builder: (context, state) {
@@ -50,33 +83,8 @@ class AvailabilitiesView extends StatelessWidget {
                     panelIndex == 1 ? AvailabililtyConfigSlotsType.manual : AvailabililtyConfigSlotsType.recurrent);
               },
               children: [
-                ExpandablePanel(
-                    isExpanded: cubitState.isRecurrentOpen,
-                    isHeaderVisible: recurrent.isNotEmpty ? true : false,
-                    headerBuilder: (context, isExpanded) {
-                      return GestureDetector(
-                          onTap: () {
-                            context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.recurrent);
-                          },
-                          child: SlotsHeader(
-                              type: AvailabililtyConfigSlotsType.recurrent,
-                              asset: Assets.images.icons.common.recurrentSVG,
-                              text: t.availability.activeRecurrentSlots,
-                              isOpen: isExpanded));
-                    },
-                    body: SlotList(isOpen: cubitState.isRecurrentOpen, configs: recurrent)),
-                ExpandablePanel(
-                  isExpanded: cubitState.isManualOpen,
-                  isHeaderVisible: manual.isNotEmpty ? true : false,
-                  headerBuilder: (context, isExpanded) {
-                    return SlotsHeader(
-                        type: AvailabililtyConfigSlotsType.manual,
-                        asset: Assets.images.icons.common.handDrawSVG,
-                        text: t.availability.activeManualSlots,
-                        isOpen: isExpanded);
-                  },
-                  body: SlotList(isOpen: cubitState.isManualOpen, configs: manual),
-                ),
+                _buildRecurrentEvents(cubitState, recurrent),
+                _buildManualEvents(cubitState, manual),
               ],
             ),
           ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class ButtonAction extends StatelessWidget {
   final Color backColor;
   final Color topColor;
   final String icon;
-  final String? label;
   final String? bottomLabel;
   final Function() click;
 
@@ -15,7 +15,6 @@ class ButtonAction extends StatelessWidget {
     required this.backColor,
     required this.topColor,
     required this.icon,
-    this.label,
     this.bottomLabel,
     required this.click,
   }) : super(key: key);
@@ -30,14 +29,14 @@ class ButtonAction extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: label == null || label!.isEmpty ? 40 : 86,
+              width: 40,
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 color: backColor,
               ),
               child: AspectRatio(
-                aspectRatio: label == null || label!.isEmpty ? 1 : 2,
+                aspectRatio: 1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -45,32 +44,9 @@ class ButtonAction extends StatelessWidget {
                       child: SvgPicture.asset(
                         icon,
                         color: topColor,
-                        width: 21,
-                        height: 21,
+                        width: Dimension.defaultIconSize,
+                        height: Dimension.defaultIconSize,
                       ),
-                    ),
-                    Flexible(
-                      child: Builder(builder: (context) {
-                        if (label == null || label!.isEmpty) {
-                          return const SizedBox();
-                        }
-
-                        return Row(
-                          children: [
-                            const SizedBox(width: 4.5),
-                            Flexible(
-                              child: Text(
-                                label!,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: topColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
                     ),
                   ],
                 ),

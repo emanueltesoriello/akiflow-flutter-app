@@ -207,13 +207,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void setDuration(int? seconds, {bool fromModal = false}) {
     if (seconds != null) {
       emit(state.copyWith(selectedDuration: seconds.toDouble()));
-      Duration duration = Duration(seconds: seconds);
-
-      String text = "${duration.inHours}:${duration.inMinutes.remainder(60)}";
-
-      if (state.openedDurationfromNLP && fromModal == true) {
-        onDurationDetected(Duration(seconds: seconds), text);
-      }
 
       Task task = state.updatedTask;
 
@@ -262,47 +255,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
-  }
-
-  onLabelDetected(Label label, String value) {
-    simpleTitleController.text = simpleTitleController.text + (label.title ?? "");
-    Color bg = ColorsExt.getFromName(label.color!).withOpacity(0.2);
-    if (simpleTitleController.hasParsedLabel() && !simpleTitleController.isRemoved(value)) {
-      simpleTitleController.removeMapping(1);
-      simpleTitleController.addMapping({
-        "#$value": MapType(1, TextStyle(backgroundColor: bg)),
-      });
-    } else if (!simpleTitleController.isRemoved(value)) {
-      simpleTitleController.addMapping({
-        "#$value": MapType(
-            1,
-            TextStyle(
-              backgroundColor: bg,
-            )),
-      });
-    }
-  }
-
-  onDurationDetected(Duration duration, String value) {
-    simpleTitleController.text = simpleTitleController.text + value;
-    if (simpleTitleController.hasParsedDuration() && !simpleTitleController.isRemoved(value)) {
-      simpleTitleController.removeMapping(3);
-      simpleTitleController.addMapping({
-        "=$value": const MapType(
-            3,
-            TextStyle(
-              backgroundColor: ColorsLight.cyan25,
-            )),
-      });
-    } else if (!simpleTitleController.isRemoved(value)) {
-      simpleTitleController.addMapping({
-        "=$value": const MapType(
-            3,
-            TextStyle(
-              backgroundColor: ColorsLight.cyan25,
-            )),
-      });
-    }
   }
 
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {

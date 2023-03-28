@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class IntegrationListItem extends StatefulWidget {
   final String title;
@@ -27,8 +28,8 @@ class IntegrationListItem extends StatefulWidget {
     this.textMainAxisAlignment,
     required this.leading,
     this.identifier,
-    this.insets = const EdgeInsets.symmetric(horizontal: 16),
-    this.borderRadius = const BorderRadius.all(Radius.circular(8)),
+    this.insets = const EdgeInsets.symmetric(horizontal: Dimension.padding),
+    this.borderRadius = const BorderRadius.all(Radius.circular(Dimension.radius)),
     required this.active,
   }) : super(key: key);
 
@@ -185,9 +186,9 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
   Widget _buildLeadingIcon() {
     return Row(
       children: [
-        const SizedBox(width: 16),
+        const SizedBox(width: Dimension.padding),
         widget.leading,
-        const SizedBox(width: 16),
+        const SizedBox(width: Dimension.padding),
       ],
     );
   }

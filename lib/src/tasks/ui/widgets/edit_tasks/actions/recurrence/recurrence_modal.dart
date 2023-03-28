@@ -4,6 +4,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/custom_recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -42,18 +43,18 @@ class RecurrenceModal extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         child: ListView(
           shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   SvgPicture.asset(
@@ -61,7 +62,7 @@ class RecurrenceModal extends StatelessWidget {
                     width: 28,
                     height: 28,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.repeat,
                     style: TextStyle(
@@ -202,13 +203,10 @@ class RecurrenceModal extends StatelessWidget {
                   },
                   child: Text(
                     t.editTask.custom,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context)),
                   ),
                 )),
-            const SizedBox(height: 48),
+            const SizedBox(height: Dimension.paddingL),
           ],
         ),
       ),
@@ -228,10 +226,7 @@ class RecurrenceModal extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 17,
-            color: ColorsExt.grey2(context),
-          ),
+          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context)),
         ),
       ),
     );
