@@ -29,9 +29,9 @@ class IntegrationDetailsHeader extends StatelessWidget {
       margin: const EdgeInsets.all(1),
       child: Row(
         children: [
-          const SizedBox(width: 16),
+          const SizedBox(width: Dimension.padding),
           SizedBox(width: 32, height: 32, child: SvgPicture.asset(TaskExt.iconFromConnectorId(connectorId))),
-          const SizedBox(width: 16),
+          const SizedBox(width: Dimension.padding),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +54,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
                       visible: isActive,
                       replacement: const SizedBox(),
                       child: CircleAvatar(
-                        radius: 5,
+                        radius: Dimension.radiusS,
                         backgroundColor: ColorsExt.green(context),
                       ),
                     ),

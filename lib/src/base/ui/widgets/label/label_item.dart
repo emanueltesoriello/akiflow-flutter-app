@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:models/label/label.dart';
 
 import 'label_title.dart';
@@ -44,18 +45,19 @@ class LabelItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(Dimension.radius),
         child: Row(
           children: [
             Container(
               height: 26,
               width: 26,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(Dimension.radiusS),
                 color: iconBackground,
               ),
               child: Center(
-                child: SvgPicture.asset(iconAsset, width: 16, height: 16, color: iconForeground),
+                child: SvgPicture.asset(iconAsset,
+                    width: Dimension.padding, height: Dimension.padding, color: iconForeground),
               ),
             ),
             Expanded(child: LabelTitle(label: label, folder: folder)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 enum CustomSnackbarType { success, error, eventCreated, eventEdited, eventDeleted }
 
@@ -19,25 +20,25 @@ class CustomSnackbar extends SnackBar {
             alignment: Alignment.bottomCenter,
             child: Container(
               height: 51,
-              margin: const EdgeInsets.symmetric(horizontal: 16),
+              margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 16),
+              padding: const EdgeInsets.only(left: Dimension.padding),
               decoration: BoxDecoration(
                 color: color(context, type),
                 border: Border.all(
                   color: ColorsExt.grey4(context),
                   width: 1,
                 ),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(Dimension.radiusS),
               ),
               child: Row(
                 children: [
                   SizedBox(
-                    height: 17,
-                    width: 17,
+                    height: Dimension.smallconSize,
+                    width: Dimension.smallconSize,
                     child: SvgPicture.asset(icon(type), color: ColorsExt.grey2(context)),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: Dimension.paddingS),
                   Expanded(
                     child: Text(
                       message,

@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
@@ -96,7 +97,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: ColorsExt.grey2(context)),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: Dimension.padding),
           SizedBox(
             width: 16,
             height: 16,

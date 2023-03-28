@@ -54,7 +54,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
               children: [
                 Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(Dimension.padding),
                     children: [
                       _header(),
                       IgnorePointer(
@@ -108,7 +108,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                   const Spacer(),
                   Center(
                     child: Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(Dimension.padding),
                       width: MediaQuery.of(context).size.width,
                       child: Builder(builder: (context) {
                         return (isConnected)

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({
@@ -228,29 +229,30 @@ class FabActionButton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       color: ColorsExt.akiflow(context),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Dimension.radiusM),
       ),
       shadowColor: Colors.black,
       elevation: 4,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(Dimension.paddingS),
           child: Row(
             children: [
               SizedBox(
-                height: 20,
-                width: 20,
+                height: Dimension.defaultIconSize,
+                width: Dimension.defaultIconSize,
                 child: SvgPicture.asset(
                   icon,
                   color: ColorsExt.background(context),
                 ),
               ),
-              const SizedBox(width: 5),
-              Text(
-                title,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ColorsExt.background(context)),
-              ),
+              const SizedBox(width: Dimension.paddingS),
+              Text(title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.background(context))),
             ],
           ),
         ),

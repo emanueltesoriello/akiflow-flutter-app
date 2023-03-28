@@ -5,6 +5,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -39,22 +40,22 @@ class CalendarSettingsModal extends StatelessWidget {
         return Material(
           color: Colors.transparent,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radius),
           ),
           child: ScrollConfiguration(
             behavior: NoScrollBehav(),
             child: Column(
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: Dimension.padding),
                 const ScrollChip(),
                 Expanded(
                   child: ListView(
                     physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(Dimension.padding),
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8, bottom: 10),
+                        padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.paddingS),
                         child: Text(
                           t.calendar.calendarView.toUpperCase(),
                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),

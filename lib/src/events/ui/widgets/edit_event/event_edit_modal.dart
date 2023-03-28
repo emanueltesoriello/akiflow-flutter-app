@@ -8,6 +8,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -118,12 +119,12 @@ class _EventEditModalState extends State<EventEditModal> {
         return Material(
           color: Colors.white,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
           child: Column(
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimension.padding),
               const ScrollChip(),
               Expanded(
                 child: SingleChildScrollView(
@@ -133,11 +134,11 @@ class _EventEditModalState extends State<EventEditModal> {
                     children: [
                       ListView(
                         physics: const ClampingScrollPhysics(),
-                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        padding: const EdgeInsets.only(left: Dimension.padding, right: Dimension.padding),
                         shrinkWrap: true,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                             child: Row(
                               children: [
                                 SizedBox(
@@ -148,7 +149,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                     color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
                                   ),
                                 ),
-                                const SizedBox(width: 16.0),
+                                const SizedBox(width: Dimension.padding),
                                 Expanded(
                                   child: TextField(
                                     autofocus: widget.createingEvent ?? false,
@@ -166,7 +167,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           ),
                           const Separator(),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                             child: Row(
                               children: [
                                 SizedBox(
@@ -176,7 +177,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                     Assets.images.icons.common.calendarSVG,
                                   ),
                                 ),
-                                const SizedBox(width: 16.0),
+                                const SizedBox(width: Dimension.padding),
                                 Expanded(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,7 +202,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               _recurrenceTap();
                             },
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -214,7 +215,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                           : ColorsExt.grey2(context),
                                     ),
                                   ),
-                                  const SizedBox(width: 16.0),
+                                  const SizedBox(width: Dimension.padding),
                                   Text(
                                     _recurrence(selectedRecurrence),
                                     style: TextStyle(
@@ -229,7 +230,7 @@ class _EventEditModalState extends State<EventEditModal> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -241,7 +242,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                       child: SvgPicture.asset(Assets.images.icons.common.daySVG,
                                           color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
                                     ),
-                                    const SizedBox(width: 16.0),
+                                    const SizedBox(width: Dimension.padding),
                                     Text(
                                       t.event.editEvent.allDay,
                                       style: TextStyle(
@@ -294,7 +295,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           const Separator(),
                           (updatedEvent.meetingSolution != null || addingMeeting) && !removingMeeting
                               ? Padding(
-                                  padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                  padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -311,7 +312,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                                       : context.read<EventsCubit>().getDefaultConferenceIcon(),
                                             ),
                                           ),
-                                          const SizedBox(width: 16.0),
+                                          const SizedBox(width: Dimension.padding),
                                           Text(
                                             updatedEvent.meetingSolution == 'meet' && !addingMeeting
                                                 ? t.event.googleMeet
@@ -376,7 +377,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                     });
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                    padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                                     child: Row(
                                       children: [
                                         SizedBox(
@@ -387,7 +388,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                             color: ColorsExt.grey3(context),
                                           ),
                                         ),
-                                        const SizedBox(width: 16.0),
+                                        const SizedBox(width: Dimension.padding),
                                         Text(
                                           t.event.editEvent.addConference,
                                           style: TextStyle(
@@ -414,7 +415,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                         : ColorsExt.grey2(context),
                                   ),
                                 ),
-                                const SizedBox(width: 16.0),
+                                const SizedBox(width: Dimension.padding),
                                 Expanded(
                                   child: TextField(
                                     controller: locationController,
@@ -433,7 +434,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           ),
                           const Separator(),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                             child: Row(
                               children: [
                                 SizedBox(
@@ -443,7 +444,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                     Assets.images.icons.common.briefcaseSVG,
                                   ),
                                 ),
-                                const SizedBox(width: 16.0),
+                                const SizedBox(width: Dimension.padding),
                                 Text(
                                   t.event.busy,
                                   style: TextStyle(
@@ -454,7 +455,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           ),
                           const Separator(),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -470,7 +471,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                             : ColorsExt.grey3(context),
                                       ),
                                     ),
-                                    const SizedBox(width: 16.0),
+                                    const SizedBox(width: Dimension.padding),
                                     Text(
                                       t.event.guests,
                                       style: TextStyle(
@@ -538,7 +539,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                                         color: ColorsExt.grey3(context),
                                                       ),
                                                     ),
-                                          const SizedBox(width: 16.0),
+                                          const SizedBox(width: Dimension.padding),
                                           Row(
                                             children: [
                                               Text(
@@ -586,7 +587,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               },
                             ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                             child: InkWell(
                               onTap: () {
                                 _addGuestsTap();
@@ -595,7 +596,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                 children: [
                                   SvgPicture.asset(Assets.images.icons.common.plusCircleSVG,
                                       width: 20, height: 20, color: ColorsExt.grey3(context)),
-                                  const SizedBox(width: 16.0),
+                                  const SizedBox(width: Dimension.padding),
                                   Text(
                                     t.event.editEvent.addGuests,
                                     style: TextStyle(
@@ -607,7 +608,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           ),
                           const Separator(),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                             child: Row(
                               children: [
                                 SizedBox(
@@ -617,7 +618,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                     Assets.images.icons.common.textJustifyLeftSVG,
                                   ),
                                 ),
-                                const SizedBox(width: 16.0),
+                                const SizedBox(width: Dimension.padding),
                                 Expanded(
                                   child: _description(context),
                                 ),
@@ -640,7 +641,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               );
                             },
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                              padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -651,7 +652,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                       color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
                                     ),
                                   ),
-                                  const SizedBox(width: 16.0),
+                                  const SizedBox(width: Dimension.padding),
                                   Text(
                                     updatedEvent.color != null
                                         ? t.event.editEvent.customColor
@@ -674,7 +675,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                     }
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                    padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -687,7 +688,7 @@ class _EventEditModalState extends State<EventEditModal> {
                                                 Assets.images.icons.google.calendarSVG,
                                               ),
                                             ),
-                                            const SizedBox(width: 16.0),
+                                            const SizedBox(width: Dimension.padding),
                                             Text(
                                               t.event.editEvent.viewOnGoogleCalendar,
                                               style: TextStyle(
@@ -729,7 +730,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(Dimension.padding),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

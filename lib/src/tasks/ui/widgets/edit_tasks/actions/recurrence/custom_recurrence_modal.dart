@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/end_selection_modal.dart';
@@ -67,8 +68,8 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
         decoration: const BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -101,7 +102,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 height: 12.0,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -114,7 +115,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+                      padding: const EdgeInsets.only(left: Dimension.padding, right: Dimension.paddingS),
                       child: Container(
                         constraints: const BoxConstraints(
                           minHeight: 40,
@@ -186,7 +187,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
               ),
               const Separator(),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.paddingS),
                 child: Text(
                   t.editTask.recurrence.selectedDays,
                   style: TextStyle(
@@ -209,7 +210,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 ],
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Separator(),
               ),
               Row(
@@ -224,7 +225,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+                    padding: const EdgeInsets.only(left: Dimension.padding, right: Dimension.paddingS),
                     child: InkWell(
                       onTap: () {
                         showCupertinoModalBottomSheet(
@@ -346,7 +347,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 ],
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Separator(),
               ),
               Row(

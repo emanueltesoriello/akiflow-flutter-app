@@ -49,7 +49,6 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
               child: Text(
                 t.calendar.goToToday,
                 style: TextStyle(
-                  fontSize: 17,
                   color: ColorsExt.grey2(context),
                 ),
               ),
