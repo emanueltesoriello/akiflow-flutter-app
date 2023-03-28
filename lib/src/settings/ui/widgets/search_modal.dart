@@ -84,7 +84,7 @@ class _SearchModalState extends State<SearchModal> {
                                   .titleMedium
                                   ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey1(context))),
                         ),
-                        const SizedBox(height: 100),
+                        const SizedBox(height: Dimension.paddingXXL),
                       ],
                     ),
                   ),

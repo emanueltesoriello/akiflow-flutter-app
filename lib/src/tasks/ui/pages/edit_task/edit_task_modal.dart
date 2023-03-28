@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -96,7 +97,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
 
     return Container(
-      padding: const EdgeInsets.only(left: 8, right: 8),
+      padding: const EdgeInsets.only(left: Dimension.paddingS, right: Dimension.paddingS),
       height: 30,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,7 +146,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                         .textTheme
                         .subtitle1
                         ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
-                const SizedBox(height: 10),
+                const SizedBox(height: Dimension.paddingS),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -162,7 +163,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             onPrimary: ColorsExt.grey5(context),
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(Dimension.radiusS),
                             ),
                           ),
                           child: Text('Cancel',
@@ -170,7 +171,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: Dimension.padding),
                     TextButton(
                       onPressed: () async {
                         streamSubscription?.cancel();
@@ -218,8 +219,8 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   decoration: const BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.0),
-                      topRight: Radius.circular(16.0),
+                      topLeft: Radius.circular(Dimension.radiusM),
+                      topRight: Radius.circular(Dimension.radiusM),
                     ),
                   ),
                   margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -228,7 +229,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                     child: ListView(
                       shrinkWrap: true,
                       children: [
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimension.padding),
                         animatedChild(!state.hasFocusOnTitleOrDescription, const ScrollChip()),
                         animatedChild(!state.hasFocusOnTitleOrDescription, const SizedBox(height: 12)),
                         animatedChild(!state.hasFocusOnTitleOrDescription,

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 enum PriorityEnum {
@@ -48,10 +49,10 @@ class PriorityModal extends StatelessWidget {
         child: ListView(
           shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   Text(
@@ -105,7 +106,7 @@ class PriorityModal extends StatelessWidget {
               },
               icon: Assets.images.icons.common.exclamationmark3SVG,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: Dimension.paddingL),
           ],
         ),
       ),

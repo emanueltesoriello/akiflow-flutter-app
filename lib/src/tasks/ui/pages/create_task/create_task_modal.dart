@@ -54,6 +54,34 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     simpleTitleController.done();
   }
 
+  _onCreateClick() async {
+    try {
+      setState(() {
+        showRefresh = true;
+      });
+      HapticFeedback.mediumImpact();
+
+      var cubit = context.read<EditTaskCubit>();
+
+      await cubit.create();
+      print('created complete');
+
+      setState(() {
+        showRefresh = false;
+        Navigator.pop(context);
+      });
+    } catch (e) {
+      setState(() {
+        showRefresh = false;
+      });
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+      locator<SentryService>().captureException(Exception(e.toString()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -114,32 +142,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                                       padding: EdgeInsets.all(2.0),
                                       child: CircularProgressIndicator(),
                                     ))
-                                  : SendTaskButton(onTap: () async {
-                                      try {
-                                        setState(() {
-                                          showRefresh = true;
-                                        });
-                                        HapticFeedback.mediumImpact();
-
-                                        var cubit = context.read<EditTaskCubit>();
-
-                                        await cubit.create();
-                                        print('created complete');
-
-                                        setState(() {
-                                          showRefresh = false;
-                                          Navigator.pop(context);
-                                        });
-                                      } catch (e) {
-                                        setState(() {
-                                          showRefresh = false;
-                                        });
-                                        Navigator.pop(context);
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          content: Text(e.toString()),
-                                        ));
-                                        locator<SentryService>().captureException(Exception(e.toString()));
-                                      }
+                                  : SendTaskButton(onTap: () {
+                                      _onCreateClick();
                                     }),
                             ),
                           ]),

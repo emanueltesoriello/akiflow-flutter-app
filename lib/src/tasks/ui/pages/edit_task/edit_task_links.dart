@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -28,7 +29,7 @@ class EditTaskLinks extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               itemCount: links.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
+              separatorBuilder: (context, index) => const SizedBox(height: Dimension.paddingS),
               itemBuilder: (context, index) {
                 String link = links[index];
 
@@ -79,7 +80,7 @@ class EditTaskLinks extends StatelessWidget {
                                   return const SizedBox();
                                 }
                               }),
-                              const SizedBox(width: 9),
+                              const SizedBox(width: Dimension.paddingS),
                               Flexible(
                                 child: Text(
                                   link,
@@ -96,7 +97,7 @@ class EditTaskLinks extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: Dimension.paddingS),
                     InkWell(
                       onTap: () => context.read<EditTaskCubit>().removeLink(link),
                       child: SvgPicture.asset(

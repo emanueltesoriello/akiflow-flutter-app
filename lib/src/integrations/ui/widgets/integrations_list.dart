@@ -43,7 +43,7 @@ class IntegrationsList extends StatelessWidget {
               return const SizedBox();
             } else if (isReconnectPage && isLocalActive == true) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                 child: Text(
                   t.onboarding.reconnect.toUpperCase(),
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: ColorsExt.akiflow(context)),

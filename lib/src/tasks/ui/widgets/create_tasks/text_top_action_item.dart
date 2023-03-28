@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 import '../../../../../common/style/colors.dart';
 
@@ -14,7 +15,7 @@ class TextTopActionItem extends StatelessWidget {
 
     return Row(
       children: [
-        const SizedBox(width: 6),
+        const SizedBox(width: Dimension.paddingS),
         Text(
           text!,
           style: TextStyle(

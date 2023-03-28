@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
@@ -123,7 +124,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                 );
               },
             ),
-            const SizedBox(width: 11),
+            const SizedBox(width: Dimension.paddingS),
             Builder(builder: (context) {
               bool active = false;
 
@@ -162,7 +163,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             }),
           ]),
           Padding(
-            padding: const EdgeInsets.only(right: 4.0),
+            padding: const EdgeInsets.only(right: Dimension.paddingXS),
             child: _menu(context),
           ),
         ],

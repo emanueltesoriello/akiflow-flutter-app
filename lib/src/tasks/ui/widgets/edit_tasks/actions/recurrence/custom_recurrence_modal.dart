@@ -87,7 +87,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                     width: 28,
                     height: 28,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimension.paddingS),
                   Text(
                     '${t.editTask.custom} ${t.editTask.repeat}',
                     style: TextStyle(
@@ -99,7 +99,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 ],
               ),
               const SizedBox(
-                height: 12.0,
+                height: Dimension.padding,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
@@ -125,7 +125,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         ),
                         decoration: BoxDecoration(
                             color: ColorsExt.grey7(context),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(Dimension.radiusS),
                             border: Border.all(color: ColorsExt.grey4(context))),
                         child: TextField(
                           controller: intervalController,
@@ -302,7 +302,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
+                          padding: const EdgeInsets.only(right: Dimension.paddingS),
                           child: Container(
                             constraints: const BoxConstraints(
                               minHeight: 40,
@@ -312,7 +312,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                             ),
                             decoration: BoxDecoration(
                                 color: ColorsExt.grey7(context),
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(Dimension.radius),
                                 border: Border.all(color: ColorsExt.grey4(context))),
                             child: TextField(
                               controller: countController,

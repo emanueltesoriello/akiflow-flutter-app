@@ -40,7 +40,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
       onTap: onPressed,
       child: Container(
         color: selected ? ColorsExt.grey6(context) : Colors.transparent,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
         height: 40,
         child: Row(
           children: [

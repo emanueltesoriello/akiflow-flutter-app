@@ -74,6 +74,7 @@ class _ViewState extends State<_View> {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, tasksState) {
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBarComp(
             title: t.bottomBar.inbox,
             leading: SvgPicture.asset(
@@ -90,13 +91,13 @@ class _ViewState extends State<_View> {
                   List<Task> tasks = List.from(tasksState.inboxTasks);
 
                   tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
-                   if (tasksState.tasksLoaded && tasks.isEmpty) {
-                  return RefreshIndicator(
-                      backgroundColor: ColorsExt.background(context),
-                      onRefresh: () async {
-                        context.read<SyncCubit>().sync();
-                      },
-                      child: const EmptyHomeViewPlaceholder());
+                  if (tasksState.tasksLoaded && tasks.isEmpty) {
+                    return RefreshIndicator(
+                        backgroundColor: ColorsExt.background(context),
+                        onRefresh: () async {
+                          context.read<SyncCubit>().sync();
+                        },
+                        child: const EmptyHomeViewPlaceholder());
                   }
 
                   return TaskList(

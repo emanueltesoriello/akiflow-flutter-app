@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/label/label_item.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -110,12 +111,12 @@ class _LabelsListState extends State<LabelsList> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: count,
-      separatorBuilder: (context, index) => const SizedBox(height: 4),
+      separatorBuilder: (context, index) => const SizedBox(height: Dimension.paddingXS),
       itemBuilder: (context, index) {
         if (widget.showHeaders) {
           if (index == 0) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: Dimension.padding),
               child: Text(
                 t.editTask.assignLabel,
                 style: TextStyle(
@@ -129,7 +130,7 @@ class _LabelsListState extends State<LabelsList> {
 
           if (index == 1) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: Dimension.padding),
               child: BorderedInputView(
                 hint: t.editTask.searchALabel,
                 onChanged: (value) {

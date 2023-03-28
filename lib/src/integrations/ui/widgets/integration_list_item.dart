@@ -67,6 +67,16 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
     _controller.dispose();
   }
 
+  Widget _buildLeadingIcon() {
+    return Row(
+      children: [
+        const SizedBox(width: Dimension.padding),
+        widget.leading,
+        const SizedBox(width: Dimension.padding),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -135,15 +145,15 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
 
                                 return Column(
                                   children: [
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: Dimension.paddingXS),
                                     Row(
                                       children: [
                                         CircleAvatar(
-                                          radius: 5,
+                                          radius: Dimension.radiusS,
                                           backgroundColor:
                                               widget.active ? ColorsExt.green(context) : ColorsExt.orange(context),
                                         ),
-                                        const SizedBox(width: 4),
+                                        const SizedBox(width: Dimension.paddingXS),
                                         Flexible(
                                             child: Text(
                                           widget.identifier!,
@@ -180,16 +190,6 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
               );
             }),
       ),
-    );
-  }
-
-  Widget _buildLeadingIcon() {
-    return Row(
-      children: [
-        const SizedBox(width: Dimension.padding),
-        widget.leading,
-        const SizedBox(width: Dimension.padding),
-      ],
     );
   }
 }

@@ -135,8 +135,8 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
 
                           return SvgPicture.asset(
                             Assets.images.icons.common.chevronRightSVG,
-                            width: 20,
-                            height: 20,
+                            width: Dimension.chevronIconSize,
+                            height: Dimension.chevronIconSize,
                             color: ColorsExt.grey3(context),
                           );
                         }),

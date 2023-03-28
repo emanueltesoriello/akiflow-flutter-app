@@ -55,7 +55,7 @@ class RecurringEditModal extends StatelessWidget {
                       ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimension.paddingM),
               InkWell(
                 onTap: () {
                   onlyThisTap();
@@ -66,7 +66,8 @@ class RecurringEditModal extends StatelessWidget {
                     minHeight: 46,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey5(context))),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
+                      border: Border.all(color: ColorsExt.grey5(context))),
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.onlyThis,
@@ -79,7 +80,7 @@ class RecurringEditModal extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               InkWell(
                 onTap: () {
                   allTap();
@@ -90,7 +91,8 @@ class RecurringEditModal extends StatelessWidget {
                     minHeight: 46,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
+                      border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.thisAndAllFuture,

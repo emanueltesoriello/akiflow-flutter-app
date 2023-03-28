@@ -91,7 +91,7 @@ class MyAccountPage extends StatelessWidget {
                         .bodySmall
                         ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.paddingXS),
                   ButtonList(
                     title: t.settings.myAccount.manageAccount,
                     position: ButtonListPosition.single,
