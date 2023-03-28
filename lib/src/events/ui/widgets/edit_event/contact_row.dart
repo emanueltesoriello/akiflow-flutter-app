@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:models/contact/contact.dart';
 
 class ContactRow extends StatelessWidget {
   final Contact contact;
-  //final Function() onTap;
   const ContactRow({
     super.key,
     required this.contact,
@@ -15,7 +15,7 @@ class ContactRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.only(top: Dimension.paddingXS),
       child: SizedBox(
         height: 45,
         child: Row(
@@ -37,7 +37,7 @@ class ContactRow extends StatelessWidget {
                       color: ColorsExt.grey2(context),
                     ),
                   ),
-            const SizedBox(width: 8),
+            const SizedBox(width: Dimension.paddingS),
             Expanded(
               child: Row(
                 children: [
