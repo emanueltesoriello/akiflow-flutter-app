@@ -63,12 +63,16 @@ class RecurrentEventEditModal extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Text(
-                    deleteEvent
-                        ? t.event.editEvent.repeatingEditModal.deleteDescription
-                        : t.event.editEvent.repeatingEditModal.description,
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                  deleteEvent
+                      ? t.event.editEvent.repeatingEditModal.deleteDescription
+                      : t.event.editEvent.repeatingEditModal.description,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimension.paddingM),
               InkWell(
                 onTap: () {
                   onlyThisTap();
@@ -79,15 +83,15 @@ class RecurrentEventEditModal extends StatelessWidget {
                     minHeight: 46,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
+                      border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
                       t.event.editEvent.repeatingEditModal.onlyThis,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: ColorsExt.grey2(context),
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                     ),
                   ),
                 ),
@@ -111,11 +115,10 @@ class RecurrentEventEditModal extends StatelessWidget {
                         child: Center(
                           child: Text(
                             t.event.editEvent.repeatingEditModal.thisAndAllFuture,
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400,
-                              color: ColorsExt.grey2(context),
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                           ),
                         ),
                       ),
@@ -133,15 +136,15 @@ class RecurrentEventEditModal extends StatelessWidget {
                     minHeight: 46,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), border: Border.all(color: ColorsExt.grey4(context))),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
+                      border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
                     child: Text(
                       t.event.editEvent.repeatingEditModal.allEvents,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: ColorsExt.grey2(context),
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                     ),
                   ),
                 ),

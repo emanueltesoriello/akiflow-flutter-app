@@ -192,7 +192,7 @@ class _EventEditModalState extends State<EventEditModal> {
             child: TextField(
               autofocus: widget.createingEvent ?? false,
               controller: titleController,
-              decoration: const InputDecoration(border: InputBorder.none, hintText: 'Add title'),
+              decoration: InputDecoration(border: InputBorder.none, hintText: t.event.editEvent.addTitle),
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w500,

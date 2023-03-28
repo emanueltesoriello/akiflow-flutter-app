@@ -218,7 +218,8 @@
     "hideWeekends": "Hide Weekends",
     "hideDeclinedEvents": "Hide Declined events",
     "hideTasksFromCalendar": "Hide Tasks from calendar",
-    "calendars": "Calendars"
+    "calendars": "Calendars",
+    "refresh": "Refresh"
   },
   "linkedContent": {
     "subject": "Subject",
@@ -349,6 +350,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "editEvent": {
+      "addTitle": "Add title",
       "allDay": "All Day",
       "addConference": "Add Conference",
       "addLocation": "Add Location",
