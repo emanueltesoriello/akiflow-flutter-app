@@ -45,8 +45,8 @@ class _EditTimeModalState extends State<EditTimeModal> {
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(Dimension.radius),
-                topRight: Radius.circular(Dimension.radius),
+                topLeft: Radius.circular(Dimension.radiusM),
+                topRight: Radius.circular(Dimension.radiusM),
               ),
             ),
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),

@@ -35,129 +35,6 @@ class GmailDetailsIntegrationsPage extends StatefulWidget {
 class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsPage> {
   bool isConnected = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarComp(
-        title: t.settings.integrations.gmail.title,
-        showBack: true,
-      ),
-      body: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, state) {
-        Account gmailAccount = state.accounts.firstWhere(
-            (element) => element.connectorId == "gmail" && element.originAccountId == widget.account!.originAccountId);
-        bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
-        Account user = state.accounts.firstWhere((account) => account.accountId == widget.account?.accountId);
-        isConnected = context.read<IntegrationsCubit>().isLocalActive(user) && user.connectorId == 'gmail';
-        return Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.all(Dimension.padding),
-                    children: [
-                      _header(),
-                      IgnorePointer(
-                        ignoring: !isConnected,
-                        child: Opacity(
-                          opacity: isConnected ? 1 : 0.5,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 32),
-                              SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
-                              _importOptions(),
-                              const SizedBox(height: 20),
-                              SettingHeaderText(text: t.settings.integrations.gmail.behavior),
-                              _behaviour(),
-                              const SizedBox(height: 20),
-                              SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
-                              IntegrationSetting(
-                                title: t.settings.integrations.gmail.useSuperhuman,
-                                subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
-                                trailingWidget: FlutterSwitch(
-                                  width: 48,
-                                  height: 24,
-                                  toggleSize: 20,
-                                  activeColor: ColorsExt.akiflow(context),
-                                  inactiveColor: ColorsExt.grey5(context),
-                                  value: isSuperhumanEnabled ?? false,
-                                  borderRadius: 24,
-                                  padding: 2,
-                                  onToggle: (value) {
-                                    context
-                                        .read<IntegrationsCubit>()
-                                        .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
-                                  },
-                                ),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Spacer(),
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(Dimension.padding),
-                      width: MediaQuery.of(context).size.width,
-                      child: Builder(builder: (context) {
-                        return (isConnected)
-                            ? ActionButton(
-                                key: const Key('Disconnect'),
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                  await context.read<IntegrationsCubit>().disconnectGmail(user);
-                                  if (widget.onDisconnect != null) widget.onDisconnect!;
-                                },
-                                color: Colors.transparent,
-                                splashColor: ColorsExt.grey3(context),
-                                borderColor: ColorsExt.grey2_5(context),
-                                child: Text(
-                                  'Disconnect',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w400,
-                                    color: ColorsExt.grey2_5(context),
-                                  ),
-                                ))
-                            : ActionButton(
-                                key: const Key('Reconnect'),
-                                onPressed: () async {
-                                  context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
-                                },
-                                color: ColorsExt.orange20(context),
-                                splashColor: ColorsExt.orange(context),
-                                borderColor: ColorsExt.orange(context),
-                                child: const Text(
-                                  'Reconnect',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ));
-                      }),
-                    ),
-                  ),
-                  const SizedBox(height: 32)
-                ],
-              ),
-            )
-          ],
-        );
-      }),
-    );
-  }
-
   Widget _behaviour() {
     return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
@@ -290,6 +167,133 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
           active: context.read<IntegrationsCubit>().isLocalActive(gmailAccount),
         );
       },
+    );
+  }
+
+  _buildBottomPart(Account user) {
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Spacer(),
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(Dimension.padding),
+              width: MediaQuery.of(context).size.width,
+              child: Builder(builder: (context) {
+                return (isConnected)
+                    ? ActionButton(
+                        key: const Key('Disconnect'),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await context.read<IntegrationsCubit>().disconnectGmail(user);
+                          if (widget.onDisconnect != null) widget.onDisconnect!;
+                        },
+                        color: Colors.transparent,
+                        splashColor: ColorsExt.grey3(context),
+                        borderColor: ColorsExt.grey2_5(context),
+                        child: Text(
+                          'Disconnect',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w400,
+                            color: ColorsExt.grey2_5(context),
+                          ),
+                        ))
+                    : ActionButton(
+                        key: const Key('Reconnect'),
+                        onPressed: () async {
+                          context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
+                        },
+                        color: ColorsExt.orange20(context),
+                        splashColor: ColorsExt.orange(context),
+                        borderColor: ColorsExt.orange(context),
+                        child: const Text(
+                          'Reconnect',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ));
+              }),
+            ),
+          ),
+          const SizedBox(height: Dimension.paddingM)
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBarComp(
+        title: t.settings.integrations.gmail.title,
+        showBack: true,
+      ),
+      body: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, state) {
+        Account gmailAccount = state.accounts.firstWhere(
+            (element) => element.connectorId == "gmail" && element.originAccountId == widget.account!.originAccountId);
+        bool? isSuperhumanEnabled = gmailAccount.details?['isSuperhumanEnabled'];
+        Account user = state.accounts.firstWhere((account) => account.accountId == widget.account?.accountId);
+        isConnected = context.read<IntegrationsCubit>().isLocalActive(user) && user.connectorId == 'gmail';
+        return Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(Dimension.padding),
+                    children: [
+                      _header(),
+                      IgnorePointer(
+                        ignoring: !isConnected,
+                        child: Opacity(
+                          opacity: isConnected ? 1 : 0.5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 32),
+                              SettingHeaderText(text: t.settings.integrations.gmail.importOptions),
+                              _importOptions(),
+                              const SizedBox(height: 20),
+                              SettingHeaderText(text: t.settings.integrations.gmail.behavior),
+                              _behaviour(),
+                              const SizedBox(height: 20),
+                              SettingHeaderText(text: t.settings.integrations.gmail.clientSettings),
+                              IntegrationSetting(
+                                title: t.settings.integrations.gmail.useSuperhuman,
+                                subtitle: t.settings.integrations.gmail.openYourEmailsInSuperhumanInsteadOfGmail,
+                                trailingWidget: FlutterSwitch(
+                                  width: 48,
+                                  height: 24,
+                                  toggleSize: 20,
+                                  activeColor: ColorsExt.akiflow(context),
+                                  inactiveColor: ColorsExt.grey5(context),
+                                  value: isSuperhumanEnabled ?? false,
+                                  borderRadius: 24,
+                                  padding: 2,
+                                  onToggle: (value) {
+                                    context
+                                        .read<IntegrationsCubit>()
+                                        .updateGmailSuperHumanEnabled(gmailAccount, isSuperhumanEnabled: value);
+                                  },
+                                ),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            _buildBottomPart(user),
+          ],
+        );
+      }),
     );
   }
 }

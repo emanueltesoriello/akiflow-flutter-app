@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 324 
+ * Strings: 328 
  *
- * Built on 2023-03-22 at 13:55 UTC
+ * Built on 2023-03-28 at 07:03 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -910,6 +910,7 @@ class _StringsEventEditEventEn {
 	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
 	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
 	late final _StringsEventEditEventRecurrenceEn recurrence = _StringsEventEditEventRecurrenceEn._(_root);
+	late final _StringsEventEditEventAddGuestModalEn addGuestModal = _StringsEventEditEventAddGuestModalEn._(_root);
 }
 
 // Path: event.snackbar
@@ -1006,6 +1007,17 @@ class _StringsEventEditEventRecurrenceEn {
 	String get everyDay => 'Every day';
 	String get everyWeekday => 'Every weekday';
 	String get custom => 'Custom';
+}
+
+// Path: event.editEvent.addGuestModal
+class _StringsEventEditEventAddGuestModalEn {
+	_StringsEventEditEventAddGuestModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get addGuest => 'Add guest';
+	String get searchContact => 'Search contact';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1362,6 +1374,8 @@ extension on _StringsEn {
 			'event.editEvent.recurrence.everyDay': 'Every day',
 			'event.editEvent.recurrence.everyWeekday': 'Every weekday',
 			'event.editEvent.recurrence.custom': 'Custom',
+			'event.editEvent.addGuestModal.addGuest': 'Add guest',
+			'event.editEvent.addGuestModal.searchContact': 'Search contact',
 			'event.snackbar.created': 'Event created successfully',
 			'event.snackbar.edited': 'Event updated successfully',
 			'event.snackbar.deleted': 'Event has been deleted',

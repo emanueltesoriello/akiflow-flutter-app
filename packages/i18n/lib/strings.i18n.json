@@ -263,7 +263,7 @@
     "everyFirstCurrentDayOfTheMonth": "Every first ${day} of the month",
     "everyYearOn": "Every year on ${date}",
     "everyMonthOn": "Every month on ${date}",
-    "everyLastDayOfTheMonth":"Every last day of the month",
+    "everyLastDayOfTheMonth": "Every last day of the month",
     "everyWeekday": "Every weekday",
     "custom": "Custom",
     "comingSoon": "Coming soon",
@@ -379,6 +379,10 @@
         "everyDay": "Every day",
         "everyWeekday": "Every weekday",
         "custom": "Custom"
+      },
+      "addGuestModal": {
+        "addGuest": "Add guest",
+        "searchContact": "Search contact"
       }
     },
     "snackbar": {

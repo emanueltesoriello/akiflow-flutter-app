@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/sizes.dart';
 //import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/settings/ui/pages/settings_page.dart';
@@ -41,7 +42,7 @@ class Header extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.radiusS),
                   Text(
                     state.user?.email ?? "n/d",
                     style: TextStyle(

@@ -32,6 +32,195 @@ class SettingsModal extends StatelessWidget {
 
   const SettingsModal({Key? key, required this.topPadding}) : super(key: key);
 
+  _buildInbox(HomeViewType homeViewType, BuildContext context) {
+    return ButtonSelectable(
+      title: t.bottomBar.inbox,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.traySVG,
+          color: ColorsExt.grey2(context),
+        ),
+      ),
+      selected: homeViewType == HomeViewType.inbox,
+      trailing: Builder(builder: (context) {
+        List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
+
+        return Text(tasks.length.toString(),
+            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey2_5(context),
+                ));
+      }),
+      onPressed: () {
+        context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  _buildToday(HomeViewType homeViewType, BuildContext context) {
+    return ButtonSelectable(
+      title: t.bottomBar.today,
+      leading: SizedBox(
+        height: 22,
+        width: 22,
+        child: SvgPicture.asset(
+          "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+          color: ColorsExt.grey1(context),
+        ),
+      ),
+      selected: homeViewType == HomeViewType.today,
+      trailing: Builder(builder: (context) {
+        List<Task> fixedTodayTasks = List.from(context.watch<TasksCubit>().state.fixedTodayTasks);
+        List<Task> fixedTodoTodayTasks =
+            List.from(fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
+
+        return Text(fixedTodoTodayTasks.length.toString(),
+            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey2_5(context),
+                ));
+      }),
+      onPressed: () {
+        context.read<MainCubit>().changeHomeView(HomeViewType.today);
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  _buildSomeday(HomeViewType homeViewType, BuildContext context) {
+    return ButtonSelectable(
+      title: t.task.someday,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.archiveboxSVG,
+          color: ColorsExt.grey3(context),
+        ),
+      ),
+      selected: homeViewType == HomeViewType.someday,
+      trailing: Text(t.comingSoon,
+          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                color: ColorsExt.grey3(context),
+              )),
+      onPressed: () {
+        // TODO someday list
+      },
+    );
+  }
+
+  _buildAllTasks(HomeViewType homeViewType, BuildContext context) {
+    return ButtonSelectable(
+      title: t.allTasks,
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.rectangleGrid1X2SVG,
+          height: 19,
+          color: ColorsExt.grey3(context),
+        ),
+      ),
+      selected: homeViewType == HomeViewType.someday,
+      trailing: Text(
+        t.comingSoon,
+        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey3(context)),
+      ),
+      onPressed: () {
+        // TODO all tasks list
+      },
+    );
+  }
+
+  _buildLabelsSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: Dimension.paddingS),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              t.settings.labels.toUpperCase(),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+            ),
+          ),
+          Theme(
+            data:
+                Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
+            child: PopupMenuButton<AddListType>(
+              icon: SvgPicture.asset(
+                Assets.images.icons.common.plusSVG,
+                width: Dimension.defaultIconSize,
+                height: Dimension.defaultIconSize,
+                color: ColorsExt.grey3(context),
+              ),
+              onSelected: (AddListType result) async {
+                switch (result) {
+                  case AddListType.addLabel:
+                    LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                    Label newLabel = Label(id: const Uuid().v4(), color: "palette-red");
+
+                    List<Label> folders =
+                        labelsCubit.state.labels.where((label) => label.isFolder && label.deletedAt == null).toList();
+
+                    Label? newLabelUpdated = await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => CreateEditLabelModal(folders: folders, label: newLabel),
+                    );
+
+                    if (newLabelUpdated != null) {
+                      labelsCubit.addLabel(newLabelUpdated, labelType: LabelType.label);
+
+                      context.read<LabelsCubit>().selectLabel(newLabelUpdated);
+                      context.read<MainCubit>().changeHomeView(HomeViewType.label);
+                      Navigator.pop(context);
+                    }
+                    break;
+                  case AddListType.addFolder:
+                    LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+                    Label newFolderInitial = Label(id: const Uuid().v4(), type: "folder");
+
+                    Label? newFolder = await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => CreateFolderModal(initialFolder: newFolderInitial),
+                    );
+
+                    if (newFolder != null) {
+                      labelsCubit.addLabel(newFolder, labelType: LabelType.folder);
+                    }
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<AddListType>>[
+                PopupMenuItem<AddListType>(
+                  value: AddListType.addLabel,
+                  child: PopupMenuCustomItem(
+                    iconAsset: Assets.images.icons.common.numberSVG,
+                    text: t.label.addLabel,
+                  ),
+                ),
+                PopupMenuItem<AddListType>(
+                  value: AddListType.addFolder,
+                  child: PopupMenuCustomItem(
+                    iconAsset: Assets.images.icons.common.folderSVG,
+                    text: t.label.addFolder,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -65,205 +254,32 @@ class SettingsModal extends StatelessWidget {
                   BlocBuilder<MainCubit, MainCubitState>(
                     builder: (context, state) {
                       HomeViewType homeViewType = state.homeViewType;
-
-                      return ButtonSelectable(
-                        title: t.bottomBar.inbox,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.traySVG,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.inbox,
-                        trailing: Builder(builder: (context) {
-                          List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
-
-                          return Text(tasks.length.toString(),
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorsExt.grey2_5(context),
-                                  ));
-                        }),
-                        onPressed: () {
-                          context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
-                          Navigator.pop(context);
-                        },
-                      );
+                      return _buildInbox(homeViewType, context);
+                    },
+                  ),
+                  BlocBuilder<MainCubit, MainCubitState>(
+                    builder: (context, state) {
+                      HomeViewType homeViewType = state.homeViewType;
+                      return _buildToday(homeViewType, context);
                     },
                   ),
                   BlocBuilder<MainCubit, MainCubitState>(
                     builder: (context, state) {
                       HomeViewType homeViewType = state.homeViewType;
 
-                      return ButtonSelectable(
-                        title: t.bottomBar.today,
-                        leading: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: SvgPicture.asset(
-                            "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-                            color: ColorsExt.grey1(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.today,
-                        trailing: Builder(builder: (context) {
-                          List<Task> fixedTodayTasks = List.from(context.watch<TasksCubit>().state.fixedTodayTasks);
-                          List<Task> fixedTodoTodayTasks = List.from(fixedTodayTasks
-                              .where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
-
-                          return Text(fixedTodoTodayTasks.length.toString(),
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorsExt.grey2_5(context),
-                                  ));
-                        }),
-                        onPressed: () {
-                          context.read<MainCubit>().changeHomeView(HomeViewType.today);
-                          Navigator.pop(context);
-                        },
-                      );
+                      return _buildSomeday(homeViewType, context);
                     },
                   ),
                   BlocBuilder<MainCubit, MainCubitState>(
                     builder: (context, state) {
                       HomeViewType homeViewType = state.homeViewType;
-
-                      return ButtonSelectable(
-                        title: t.task.someday,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.archiveboxSVG,
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.someday,
-                        trailing: Text(t.comingSoon,
-                            style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                  color: ColorsExt.grey3(context),
-                                )),
-                        onPressed: () {
-                          // TODO someday list
-                        },
-                      );
-                    },
-                  ),
-                  BlocBuilder<MainCubit, MainCubitState>(
-                    builder: (context, state) {
-                      HomeViewType homeViewType = state.homeViewType;
-
-                      return ButtonSelectable(
-                        title: t.allTasks,
-                        leading: SizedBox(
-                          height: Dimension.defaultIconSize,
-                          width: Dimension.defaultIconSize,
-                          child: SvgPicture.asset(
-                            Assets.images.icons.common.rectangleGrid1X2SVG,
-                            height: 19,
-                            color: ColorsExt.grey3(context),
-                          ),
-                        ),
-                        selected: homeViewType == HomeViewType.someday,
-                        trailing: Text(
-                          t.comingSoon,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey3(context)),
-                        ),
-                        onPressed: () {
-                          // TODO all tasks list
-                        },
-                      );
+                      return _buildAllTasks(homeViewType, context);
                     },
                   ),
                   const SizedBox(height: Dimension.paddingS),
                   const Separator(),
                   const SizedBox(height: Dimension.paddingS),
-                  Padding(
-                    padding: const EdgeInsets.only(left: Dimension.paddingS),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            t.settings.labels.toUpperCase(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
-                          ),
-                        ),
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
-                          child: PopupMenuButton<AddListType>(
-                            icon: SvgPicture.asset(
-                              Assets.images.icons.common.plusSVG,
-                              width: Dimension.defaultIconSize,
-                              height: Dimension.defaultIconSize,
-                              color: ColorsExt.grey3(context),
-                            ),
-                            onSelected: (AddListType result) async {
-                              switch (result) {
-                                case AddListType.addLabel:
-                                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                                  Label newLabel = Label(id: const Uuid().v4(), color: "palette-red");
-
-                                  List<Label> folders = labelsCubit.state.labels
-                                      .where((label) => label.isFolder && label.deletedAt == null)
-                                      .toList();
-
-                                  Label? newLabelUpdated = await showCupertinoModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => CreateEditLabelModal(folders: folders, label: newLabel),
-                                  );
-
-                                  if (newLabelUpdated != null) {
-                                    labelsCubit.addLabel(newLabelUpdated, labelType: LabelType.label);
-
-                                    context.read<LabelsCubit>().selectLabel(newLabelUpdated);
-                                    context.read<MainCubit>().changeHomeView(HomeViewType.label);
-                                    Navigator.pop(context);
-                                  }
-                                  break;
-                                case AddListType.addFolder:
-                                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                                  Label newFolderInitial = Label(id: const Uuid().v4(), type: "folder");
-
-                                  Label? newFolder = await showCupertinoModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => CreateFolderModal(initialFolder: newFolderInitial),
-                                  );
-
-                                  if (newFolder != null) {
-                                    labelsCubit.addLabel(newFolder, labelType: LabelType.folder);
-                                  }
-                                  break;
-                              }
-                            },
-                            itemBuilder: (BuildContext context) => <PopupMenuEntry<AddListType>>[
-                              PopupMenuItem<AddListType>(
-                                value: AddListType.addLabel,
-                                child: PopupMenuCustomItem(
-                                  iconAsset: Assets.images.icons.common.numberSVG,
-                                  text: t.label.addLabel,
-                                ),
-                              ),
-                              PopupMenuItem<AddListType>(
-                                value: AddListType.addFolder,
-                                child: PopupMenuCustomItem(
-                                  iconAsset: Assets.images.icons.common.folderSVG,
-                                  text: t.label.addFolder,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  _buildLabelsSection(context),
                   const SizedBox(height: Dimension.paddingS),
                   LabelsList(
                     showHeaders: false,

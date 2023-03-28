@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/calendar/calendar.dart';
@@ -22,7 +23,7 @@ class _CalendarItemState extends State<CalendarItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only(top: Dimension.paddingS, left: Dimension.paddingS, right: Dimension.paddingS),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -39,15 +40,13 @@ class _CalendarItemState extends State<CalendarItem> {
                   Row(
                     children: [
                       SizedBox(
-                        height: 22,
-                        width: 22,
+                        height: Dimension.defaultIconSize,
+                        width: Dimension.defaultIconSize,
                         child: SvgPicture.asset(
                           Assets.images.icons.google.calendarSVG,
                         ),
                       ),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
+                      const SizedBox(width: Dimension.paddingS),
                       Text(
                         widget.title,
                         style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
@@ -56,8 +55,8 @@ class _CalendarItemState extends State<CalendarItem> {
                   ),
                   SvgPicture.asset(
                     Assets.images.icons.common.chevronDownSVG,
-                    width: 22,
-                    height: 22,
+                    width: Dimension.defaultIconSize,
+                    height: Dimension.defaultIconSize,
                     color: ColorsExt.grey3(context),
                   ),
                 ],
@@ -66,14 +65,15 @@ class _CalendarItemState extends State<CalendarItem> {
           ),
           if (_isExpanded)
             Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+              padding: const EdgeInsets.only(top: Dimension.paddingS, bottom: Dimension.paddingS),
               child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: widget.calendars.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 10.0, bottom: 10.0),
+                    padding: const EdgeInsets.only(
+                        left: Dimension.paddingS, top: Dimension.paddingS + 2, bottom: Dimension.paddingS + 2),
                     child: Row(
                       children: [
                         InkWell(
@@ -92,12 +92,12 @@ class _CalendarItemState extends State<CalendarItem> {
                                             true)
                                     ? Assets.images.icons.common.checkDoneSVG
                                     : Assets.images.icons.common.checkEmptySVG,
-                                width: 22,
-                                height: 22,
+                                width: Dimension.defaultIconSize,
+                                height: Dimension.defaultIconSize,
                                 color: ColorsExt.fromHex(EventExt.calendarColor[widget.calendars[index].color!] ??
                                     widget.calendars[index].color!),
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: Dimension.paddingS),
                               Text(
                                 "${widget.calendars[index].title}",
                                 style: TextStyle(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
@@ -46,8 +47,8 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
           child: Container(
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(Dimension.radius),
-                topRight: Radius.circular(Dimension.radius),
+                topLeft: Radius.circular(Dimension.radiusM),
+                topRight: Radius.circular(Dimension.radiusM),
               ),
             ),
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -59,7 +60,7 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
                   const ScrollChip(),
                   const SizedBox(height: Dimension.padding),
                   Text(
-                    'Add guest',
+                    t.event.editEvent.addGuestModal.addGuest,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -69,7 +70,7 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
                   const SizedBox(height: Dimension.padding),
                   BorderedInputView(
                     focus: searchFocus,
-                    hint: "Search contact",
+                    hint: t.event.editEvent.addGuestModal.searchContact,
                     onChanged: (value) {
                       if (debounce?.isActive ?? false) debounce?.cancel();
                       debounce = Timer(const Duration(milliseconds: 500), () {

@@ -37,60 +37,6 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        children: [
-          SafeArea(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.only(top: Dimension.toolbarHeight, bottom: Dimension.bottomBarHeight),
-            ),
-          ),
-          GestureDetector(
-            onPanUpdate: (details) {
-              swipeLeftToRight = details.delta.dx < 0 ? false : true;
-            },
-            onPanEnd: (details) {
-              if (swipeLeftToRight == null) {
-                return;
-              } else if (swipeLeftToRight!) {
-                back();
-              } else if (!swipeLeftToRight!) {
-                next();
-              }
-            },
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: SafeArea(
-                child: BlocBuilder<OnboardingCubit, OnboardingCubitState>(
-                  builder: (context, state) => Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: Dimension.toolbarHeight + 10),
-                        child: Column(children: [
-                          _task(context, state.page),
-                          _boxInfoAndImage(context, state.page),
-                        ]),
-                      ),
-                      _controls(state.page, context),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Column _controls(int page, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -276,5 +222,59 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
         context.read<IntegrationsCubit>().reconnectPageVisible(false);
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Stack(
+        children: [
+          SafeArea(
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(top: Dimension.toolbarHeight, bottom: Dimension.bottomBarHeight),
+            ),
+          ),
+          GestureDetector(
+            onPanUpdate: (details) {
+              swipeLeftToRight = details.delta.dx < 0 ? false : true;
+            },
+            onPanEnd: (details) {
+              if (swipeLeftToRight == null) {
+                return;
+              } else if (swipeLeftToRight!) {
+                back();
+              } else if (!swipeLeftToRight!) {
+                next();
+              }
+            },
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: SafeArea(
+                child: BlocBuilder<OnboardingCubit, OnboardingCubitState>(
+                  builder: (context, state) => Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: Dimension.toolbarHeight + 10),
+                        child: Column(children: [
+                          _task(context, state.page),
+                          _boxInfoAndImage(context, state.page),
+                        ]),
+                      ),
+                      _controls(state.page, context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

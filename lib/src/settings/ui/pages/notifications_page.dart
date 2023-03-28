@@ -73,7 +73,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     activeColor: ColorsExt.akiflow(context),
                     inactiveColor: ColorsExt.grey5(context),
                     value: isEnabled,
-                    borderRadius: 24,
+                    borderRadius: Dimension.radiusL,
                     padding: 2,
                     onToggle: (val) => onChanged(val),
                   ),
@@ -88,7 +88,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ignoring: !isEnabled,
               child: ListTile(
                 visualDensity: const VisualDensity(vertical: -4), // to compact
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                contentPadding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                 onTap: () => onTap(),
                 title: Text(
                   mainButtonListTitle,
@@ -192,7 +192,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         color: ColorsExt.grey3(context),
                       ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: Dimension.paddingXS),
                 FutureBuilder(builder: (context, AsyncSnapshot<PreferencesRepository> repo) {
                   return Container();
                 }),
@@ -207,14 +207,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   }
                   NotificationsService.setDailyReminder(locator<PreferencesRepository>());
                 }, isEnabled: dailyOverviewNotificationTimeEnabled),
-                const SizedBox(height: 20),
+                const SizedBox(height: Dimension.padding),
                 Text(
                   "sounds".toUpperCase(),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey3(context),
                       ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: Dimension.paddingXS),
                 Container(
                   height: 58,
                   margin: const EdgeInsets.all(1),
@@ -228,7 +228,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         ),
                       ],
                       color: Colors.white),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

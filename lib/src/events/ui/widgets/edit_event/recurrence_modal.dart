@@ -44,8 +44,8 @@ class EventRecurrenceModal extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(Dimension.radius),
-            topRight: Radius.circular(Dimension.radius),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         child: ListView(
