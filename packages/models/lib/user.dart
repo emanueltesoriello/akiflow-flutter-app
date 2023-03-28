@@ -14,7 +14,7 @@ class User extends Equatable implements Base {
   final String? plan;
   final String? planExpireDate;
   final String? status;
-  final bool? hasPaymentMethod;
+  final int? hasPaymentMethod;
   final String? channel;
   final String? referral;
   final String? referralUrl;
@@ -67,7 +67,7 @@ class User extends Equatable implements Base {
     String? plan,
     String? planExpireDate,
     String? status,
-    bool? hasPaymentMethod,
+    int? hasPaymentMethod,
     String? channel,
     String? referral,
     String? referralUrl,
@@ -153,7 +153,7 @@ class User extends Equatable implements Base {
       plan: map['plan'] != null ? map['plan'] as String : null,
       planExpireDate: map['plan_expire_date'] != null ? map['plan_expire_date'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
-      hasPaymentMethod: map['has_payment_method'] != null ? map['has_payment_method'] as bool : null,
+      hasPaymentMethod: map['has_payment_method'] != null ? map['has_payment_method'] as int : null,
       channel: map['channel'] != null ? map['channel'] as String : null,
       referral: map['referral'] != null ? map['referral'] as String : null,
       referralUrl: map['referral_url'] != null ? map['referral_url'] as String : null,
