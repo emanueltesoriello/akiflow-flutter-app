@@ -32,7 +32,10 @@ class MyAccountPage extends StatelessWidget {
                   const SizedBox(height: Dimension.paddingS),
                   Text(
                     t.settings.myAccount.connectedAs.toUpperCase(),
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey3(context),
+                        ),
                   ),
                   const SizedBox(height: Dimension.paddingXS),
                   Container(

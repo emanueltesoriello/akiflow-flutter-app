@@ -107,7 +107,9 @@ class DeleteLabelDialog extends StatelessWidget {
                         child: Center(
                           child: Text(
                             t.cancel,
-                            style: TextStyle(fontSize: 15, color: ColorsExt.grey3(context)),
+                            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                  color: ColorsExt.grey3(context),
+                                ),
                             textAlign: TextAlign.center,
                           ),
                         ),

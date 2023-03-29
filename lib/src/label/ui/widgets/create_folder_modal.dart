@@ -78,7 +78,9 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
                             const SizedBox(width: Dimension.paddingS),
                             Text(
                               t.label.createFolder,
-                              style: TextStyle(color: ColorsExt.grey2(context)),
+                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    color: ColorsExt.grey2(context),
+                                  ),
                               textAlign: TextAlign.center,
                             ),
                           ],

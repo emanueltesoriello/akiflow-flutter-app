@@ -127,14 +127,13 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Flexible(
-                                    child: Text(
-                                      widget.title,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-                                      ),
-                                    ),
+                                    child: Text(widget.title,
+                                        textAlign: TextAlign.left,
+                                        style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                              color: (widget.enabled
+                                                  ? ColorsExt.grey2(context)
+                                                  : ColorsExt.grey3(context)),
+                                            )),
                                   ),
                                 ],
                               ),
@@ -157,11 +156,10 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                         Flexible(
                                             child: Text(
                                           widget.identifier!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: ColorsExt.grey3(context),
-                                            fontSize: 13,
-                                          ),
+                                          style: Theme.of(context).textTheme.caption?.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: ColorsExt.grey3(context),
+                                              ),
                                         )),
                                       ],
                                     )

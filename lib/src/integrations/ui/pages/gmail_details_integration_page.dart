@@ -192,14 +192,11 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                         color: Colors.transparent,
                         splashColor: ColorsExt.grey3(context),
                         borderColor: ColorsExt.grey2_5(context),
-                        child: Text(
-                          'Disconnect',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400,
-                            color: ColorsExt.grey2_5(context),
-                          ),
-                        ))
+                        child: Text('Disconnect',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2_5(context))))
                     : ActionButton(
                         key: const Key('Reconnect'),
                         onPressed: () async {
@@ -208,13 +205,11 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                         color: ColorsExt.orange20(context),
                         splashColor: ColorsExt.orange(context),
                         borderColor: ColorsExt.orange(context),
-                        child: const Text(
-                          'Reconnect',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ));
+                        child: Text('Reconnect',
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                )),
+                      );
               }),
             ),
           ),

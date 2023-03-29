@@ -21,18 +21,16 @@ class DescriptionField extends StatelessWidget {
         isDense: true,
         hintText: t.addTask.descriptionHint,
         border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 17,
-        ),
+        hintStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
+              color: ColorsExt.grey3(context),
+            ),
       ),
       onChanged: (String text) {
         context.read<EditTaskCubit>().updateDescription(text);
       },
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 17,
-      ),
+      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            color: ColorsExt.grey2(context),
+          ),
     );
   }
 }

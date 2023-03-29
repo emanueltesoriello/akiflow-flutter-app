@@ -34,11 +34,10 @@ class EndSelectionModal extends StatelessWidget {
                   const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.recurrence.repeatEvery,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey2(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),
@@ -90,10 +89,9 @@ class EndSelectionModal extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 17,
-            color: ColorsExt.grey2(context),
-          ),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                color: ColorsExt.grey2(context),
+              ),
         ),
       ),
     );

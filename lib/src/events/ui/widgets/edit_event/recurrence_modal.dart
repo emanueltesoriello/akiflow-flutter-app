@@ -60,18 +60,15 @@ class EventRecurrenceModal extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     Assets.images.icons.common.repeatSVG,
-                    width: 28,
-                    height: 28,
+                    width: Dimension.appBarLeadingIcon,
+                    height: Dimension.appBarLeadingIcon,
                   ),
                   const SizedBox(width: Dimension.paddingS),
-                  Text(
-                    t.editTask.repeat,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
+                  Text(t.editTask.repeat,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
                 ],
               ),
             ),
@@ -195,15 +192,10 @@ class EventRecurrenceModal extends StatelessWidget {
                       ),
                     );
                   },
-                  child: Text(
-                    t.editTask.custom,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
+                  child: Text(t.editTask.custom,
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
                 )),
-            const SizedBox(height: 48),
+            const SizedBox(height: Dimension.paddingL),
           ],
         ),
       ),
@@ -221,13 +213,7 @@ class EventRecurrenceModal extends StatelessWidget {
       child: Container(
         color: active ? ColorsExt.grey6(context) : Colors.transparent,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 17,
-            color: ColorsExt.grey2(context),
-          ),
-        ),
+        child: Text(text, style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
       ),
     );
   }

@@ -49,11 +49,10 @@ class _GmailMarkDoneModalState extends State<GmailMarkDoneModal> {
                     Expanded(
                       child: Text(
                         t.settings.integrations.gmail.onMarkAsDone.title,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: ColorsExt.grey2(context),
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey2(context),
+                            ),
                       ),
                     ),
                   ],
@@ -121,10 +120,9 @@ Widget _predefinedDateItem(
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 17,
-                color: ColorsExt.grey2(context),
-              ),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: ColorsExt.grey2(context),
+                  ),
             ),
           ),
         ],

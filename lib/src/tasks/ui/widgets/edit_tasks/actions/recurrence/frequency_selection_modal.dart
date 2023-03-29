@@ -29,17 +29,16 @@ class FrequencySelectionModal extends StatelessWidget {
             const ScrollChip(),
             const SizedBox(height: Dimension.padding),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.recurrence.repeatEvery,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey2(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),

@@ -119,11 +119,10 @@ class _LabelsListState extends State<LabelsList> {
               padding: const EdgeInsets.only(bottom: Dimension.padding),
               child: Text(
                 t.editTask.assignLabel,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
-                ),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey2(context),
+                    ),
               ),
             );
           }

@@ -45,24 +45,18 @@ class ContactRow extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${contact.name}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        Text(
-                          '${contact.identifier}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
+                        Text('${contact.name}',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsExt.grey2(context),
+                                )),
+                        Text('${contact.identifier}',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.caption?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsExt.grey2(context),
+                                )),
                       ],
                     ),
                   ),

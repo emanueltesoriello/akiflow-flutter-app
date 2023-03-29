@@ -190,15 +190,13 @@ class _EventEditModalState extends State<EventEditModal> {
           const SizedBox(width: Dimension.padding),
           Expanded(
             child: TextField(
-              autofocus: widget.createingEvent ?? false,
-              controller: titleController,
-              decoration: InputDecoration(border: InputBorder.none, hintText: t.event.editEvent.addTitle),
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-                color: ColorsExt.grey1(context),
-              ),
-            ),
+                autofocus: widget.createingEvent ?? false,
+                controller: titleController,
+                decoration: InputDecoration(border: InputBorder.none, hintText: t.event.editEvent.addTitle),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey1(context),
+                    )),
           ),
         ],
       ),
@@ -264,11 +262,13 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            updatedEvent.recurringId == null
-                ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startDate!))
-                : DateFormat("EEE dd MMM").format(widget.tappedDate),
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-          ),
+              updatedEvent.recurringId == null
+                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startDate!))
+                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: ColorsExt.grey2(context),
+                  )),
         ],
       ),
     );
@@ -306,16 +306,19 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            updatedEvent.recurringId == null
-                ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!))
-                : DateFormat("EEE dd MMM").format(widget.tappedDate),
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-          ),
+              updatedEvent.recurringId == null
+                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!))
+                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: ColorsExt.grey2(context),
+                  )),
           const SizedBox(height: Dimension.padding),
-          Text(
-            DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600, color: ColorsExt.grey2(context)),
-          ),
+          Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: ColorsExt.grey2(context),
+                  )),
         ],
       ),
     );
@@ -346,11 +349,13 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            updatedEvent.recurringId == null
-                ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endDate!))
-                : DateFormat("EEE dd MMM").format(widget.tappedDate),
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-          ),
+              updatedEvent.recurringId == null
+                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endDate!))
+                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: ColorsExt.grey2(context),
+                  )),
         ],
       ),
     );
@@ -385,16 +390,19 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            updatedEvent.recurringId == null
-                ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!))
-                : DateFormat("EEE dd MMM").format(widget.tappedDate),
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-          ),
+              updatedEvent.recurringId == null
+                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!))
+                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: ColorsExt.grey2(context),
+                  )),
           const SizedBox(height: Dimension.padding),
-          Text(
-            DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600, color: ColorsExt.grey2(context)),
-          ),
+          Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: ColorsExt.grey2(context),
+                  )),
         ],
       ),
     );
@@ -420,15 +428,13 @@ class _EventEditModalState extends State<EventEditModal> {
               ),
             ),
             const SizedBox(width: Dimension.padding),
-            Text(
-              _recurrenceText(selectedRecurrence),
-              style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w400,
-                  color: selectedRecurrence == EventRecurrenceModalType.none
-                      ? ColorsExt.grey3(context)
-                      : ColorsExt.grey2(context)),
-            ),
+            Text(_recurrenceText(selectedRecurrence),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: selectedRecurrence == EventRecurrenceModalType.none
+                          ? ColorsExt.grey3(context)
+                          : ColorsExt.grey2(context),
+                    )),
           ],
         ),
       ),
@@ -502,13 +508,10 @@ class _EventEditModalState extends State<EventEditModal> {
                     color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
               ),
               const SizedBox(width: Dimension.padding),
-              Text(
-                t.event.editEvent.allDay,
-                style: TextStyle(
-                    fontSize: 17.0,
-                    fontWeight: FontWeight.w400,
-                    color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-              ),
+              Text(t.event.editEvent.allDay,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
             ],
           ),
           FlutterSwitch(
@@ -570,15 +573,16 @@ class _EventEditModalState extends State<EventEditModal> {
               ),
               const SizedBox(width: Dimension.padding),
               Text(
-                updatedEvent.meetingSolution == 'meet' && !addingMeeting
-                    ? t.event.googleMeet
-                    : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
-                        ? t.event.zoom
-                        : context.read<EventsCubit>().getDefaultConferenceSolution() == 'meet'
-                            ? t.event.googleMeet
-                            : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
-                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-              ),
+                  updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                      ? t.event.googleMeet
+                      : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                          ? t.event.zoom
+                          : context.read<EventsCubit>().getDefaultConferenceSolution() == 'meet'
+                              ? t.event.googleMeet
+                              : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
             ],
           ),
           Row(
@@ -590,10 +594,11 @@ class _EventEditModalState extends State<EventEditModal> {
                       updatedEvent.joinConference();
                     }
                   },
-                  child: Text(
-                    t.event.join.toUpperCase(),
-                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
-                  ),
+                  child: Text(t.event.join.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
                 ),
               const SizedBox(width: Dimension.paddingM),
               InkWell(
@@ -637,10 +642,11 @@ class _EventEditModalState extends State<EventEditModal> {
               ),
             ),
             const SizedBox(width: Dimension.padding),
-            Text(
-              t.event.editEvent.addConference,
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-            ),
+            Text(t.event.editEvent.addConference,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
           ],
         ),
       ),
@@ -663,14 +669,19 @@ class _EventEditModalState extends State<EventEditModal> {
           const SizedBox(width: Dimension.padding),
           Expanded(
             child: TextField(
-              controller: locationController,
-              decoration: InputDecoration(
-                hintText: t.event.editEvent.addLocation,
-                hintStyle: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-                border: InputBorder.none,
-              ),
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-            ),
+                controller: locationController,
+                decoration: InputDecoration(
+                  hintText: t.event.editEvent.addLocation,
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                  border: InputBorder.none,
+                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
           ),
         ],
       ),
@@ -690,10 +701,11 @@ class _EventEditModalState extends State<EventEditModal> {
             ),
           ),
           const SizedBox(width: Dimension.padding),
-          Text(
-            t.event.busy,
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-          ),
+          Text(t.event.busy,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
         ],
       ),
     );
@@ -718,11 +730,9 @@ class _EventEditModalState extends State<EventEditModal> {
               const SizedBox(width: Dimension.padding),
               Text(
                 t.event.guests,
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w400,
-                  color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-                ),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
               ),
             ],
           ),
@@ -783,11 +793,13 @@ class _EventEditModalState extends State<EventEditModal> {
                   Row(
                     children: [
                       Text(
-                        updatedEvent.attendees![index].email!.contains('group')
-                            ? '${updatedEvent.attendees![index].displayName}'
-                            : '${updatedEvent.attendees![index].email}',
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                      ),
+                          updatedEvent.attendees![index].email!.contains('group')
+                              ? '${updatedEvent.attendees![index].displayName}'
+                              : '${updatedEvent.attendees![index].email}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
                       if (updatedEvent.attendees![index].organizer ?? false)
                         Text(
                           ' - ${t.event.organizer}',
@@ -839,10 +851,11 @@ class _EventEditModalState extends State<EventEditModal> {
               color: ColorsExt.grey3(context),
             ),
             const SizedBox(width: Dimension.padding),
-            Text(
-              t.event.editEvent.addGuests,
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-            ),
+            Text(t.event.editEvent.addGuests,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
           ],
         ),
       ),
@@ -971,10 +984,11 @@ class _EventEditModalState extends State<EventEditModal> {
               ),
             ),
             const SizedBox(width: Dimension.padding),
-            Text(
-              updatedEvent.color != null ? t.event.editEvent.customColor : t.event.editEvent.defaultColor,
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-            ),
+            Text(updatedEvent.color != null ? t.event.editEvent.customColor : t.event.editEvent.defaultColor,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
           ],
         ),
       ),
@@ -1006,10 +1020,11 @@ class _EventEditModalState extends State<EventEditModal> {
                       ),
                     ),
                     const SizedBox(width: Dimension.padding),
-                    Text(
-                      t.event.editEvent.viewOnGoogleCalendar,
-                      style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                    ),
+                    Text(t.event.editEvent.viewOnGoogleCalendar,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
                   ],
                 ),
                 SvgPicture.asset(

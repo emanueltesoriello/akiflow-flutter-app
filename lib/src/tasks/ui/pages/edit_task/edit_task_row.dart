@@ -144,17 +144,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
         isDense: true,
         hintText: t.addTask.titleHint,
         border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-        ),
+        hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey3(context),
+            ),
       ),
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: ColorsExt.grey2(context),
+          ),
       onChanged: (value) {
         context.read<EditTaskCubit>().onTitleChanged(value);
       },

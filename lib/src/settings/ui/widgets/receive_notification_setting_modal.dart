@@ -47,10 +47,9 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: ColorsExt.grey2(context),
-                ),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      color: ColorsExt.grey2(context),
+                    ),
               ),
             ),
           ],

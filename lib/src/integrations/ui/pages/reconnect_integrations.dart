@@ -45,10 +45,11 @@ class ReconnectIntegrations extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: Dimension.padding),
-                    Text(
-                      t.onboarding.gmail.reconnectGmailAccount,
-                      style: TextStyle(fontSize: 20, color: ColorsExt.grey1(context), fontWeight: FontWeight.w500),
-                    ),
+                    Text(t.onboarding.gmail.reconnectGmailAccount,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey1(context))),
                     const SizedBox(height: Dimension.paddingL),
                     BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                       builder: (context, state) {
@@ -81,14 +82,13 @@ class ReconnectIntegrations extends StatelessWidget {
                     ),
                     const Spacer(),
                     TextButton(
-                        onPressed: () {
-                          context.read<IntegrationsCubit>().skipForNowTap();
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          t.onboarding.gmail.skipForNow,
-                          style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
-                        )),
+                      onPressed: () {
+                        context.read<IntegrationsCubit>().skipForNowTap();
+                        Navigator.pop(context);
+                      },
+                      child: Text(t.onboarding.gmail.skipForNow,
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context))),
+                    ),
                   ],
                 ),
               ),

@@ -45,10 +45,9 @@ class Header extends StatelessWidget {
                   const SizedBox(height: Dimension.radiusS),
                   Text(
                     state.user?.email ?? "n/d",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: ColorsExt.grey3(context),
-                    ),
+                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          color: ColorsExt.grey3(context),
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

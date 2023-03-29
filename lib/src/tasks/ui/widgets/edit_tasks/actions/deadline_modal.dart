@@ -56,11 +56,10 @@ class _DeadlineModalState extends State<DeadlineModal> {
                   const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.deadline,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey2(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),
@@ -163,21 +162,19 @@ Widget _predefinedDateItem(
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-                color: ColorsExt.grey2(context),
-              ),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: ColorsExt.grey2(context),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
           ),
           const SizedBox(width: Dimension.paddingS),
           Text(
             trailingText,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: ColorsExt.grey3(context),
-            ),
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  color: ColorsExt.grey3(context),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ],
       ),

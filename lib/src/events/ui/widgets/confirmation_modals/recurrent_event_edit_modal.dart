@@ -52,11 +52,13 @@ class RecurrentEventEditModal extends StatelessWidget {
                         color: ColorsExt.grey2(context)),
                     const SizedBox(width: Dimension.paddingS),
                     Text(
-                      deleteEvent
-                          ? t.event.editEvent.repeatingEditModal.deleteTitle
-                          : t.event.editEvent.repeatingEditModal.title,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-                    ),
+                        deleteEvent
+                            ? t.event.editEvent.repeatingEditModal.deleteTitle
+                            : t.event.editEvent.repeatingEditModal.title,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey2(context),
+                            )),
                   ],
                 ),
               ),

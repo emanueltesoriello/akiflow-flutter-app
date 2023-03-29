@@ -106,21 +106,23 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                                       child: Text(
                                     widget.title,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+                                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorsExt.grey2(context),
+                                        ),
                                   )),
                                 ],
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: Dimension.paddingXS),
                               Row(
                                 children: [
                                   Expanded(
                                       child: Text(
                                     widget.subtitle,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorsExt.grey3(context),
-                                      fontSize: 13,
-                                    ),
+                                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorsExt.grey3(context),
+                                        ),
                                   )),
                                 ],
                               ),

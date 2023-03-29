@@ -63,10 +63,8 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.fromLTRB(16, 16, 16, 32),
                     child: ActionButton(
-                      child: Text(
-                        t.connect,
-                        style: TextStyle(fontSize: 17, color: ColorsExt.akiflow(context)),
-                      ),
+                      child: Text(t.connect,
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.akiflow(context))),
                       onPressed: () {
                         context.read<IntegrationsCubit>().connectGmail();
                       },
@@ -200,7 +198,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
             child: RichText(
           text: TextSpan(
             text: t.settings.integrations.gmail.step1.t1,
-            style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
             children: [
               TextSpan(
                   text: t.settings.integrations.gmail.step1.t2, style: const TextStyle(fontWeight: FontWeight.w500)),
@@ -224,9 +222,8 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
         Expanded(
             child: RichText(
           text: TextSpan(
-            text: t.settings.integrations.gmail.step2,
-            style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
-          ),
+              text: t.settings.integrations.gmail.step2,
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
         )),
       ],
     );

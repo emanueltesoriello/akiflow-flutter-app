@@ -47,11 +47,10 @@ class _DeadlineModalState extends State<UntilDateModal> {
                 children: [
                   Text(
                     t.editTask.recurrence.repeatUntil,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey2(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),

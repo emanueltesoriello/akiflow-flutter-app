@@ -40,19 +40,17 @@ class PriorityItem extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: ColorsExt.grey2(context),
-                  ),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                        color: ColorsExt.grey2(context),
+                      ),
                 ),
               ],
             ),
             Text(
               hint,
-              style: TextStyle(
-                fontSize: 17,
-                color: ColorsExt.grey3(context),
-              ),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: ColorsExt.grey3(context),
+                  ),
             ),
           ],
         ),

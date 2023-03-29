@@ -154,12 +154,13 @@ class _EventModalState extends State<EventModal> {
           ),
           const SizedBox(width: Dimension.padding),
           Expanded(
-            child: Text(
-              selectedEvent.title ?? t.noTitle,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: ColorsExt.grey1(context)),
-            ),
+            child: Text(selectedEvent.title ?? t.noTitle,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: ColorsExt.grey1(context), fontWeight: FontWeight.w500)),
           ),
         ],
       ),
@@ -188,16 +189,19 @@ class _EventModalState extends State<EventModal> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        selectedEvent.recurringId == null
-                            ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.startTime!))
-                            : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                      ),
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.startTime!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
-                      Text(
-                        DateFormat("HH:mm").format(DateTime.parse(selectedEvent.startTime!).toLocal()),
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600, color: ColorsExt.grey2(context)),
-                      ),
+                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.startTime!).toLocal()),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
                     ],
                   ),
                 if (selectedEvent.startDate != null)
@@ -205,11 +209,13 @@ class _EventModalState extends State<EventModal> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        selectedEvent.recurringId == null
-                            ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.startDate!))
-                            : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                      ),
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.startDate!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
                 SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
@@ -221,16 +227,19 @@ class _EventModalState extends State<EventModal> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        selectedEvent.recurringId == null
-                            ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endTime!))
-                            : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                      ),
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endTime!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
-                      Text(
-                        DateFormat("HH:mm").format(DateTime.parse(selectedEvent.endTime!).toLocal()),
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600, color: ColorsExt.grey2(context)),
-                      ),
+                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.endTime!).toLocal()),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
                     ],
                   ),
                 if (selectedEvent.endDate != null)
@@ -238,11 +247,13 @@ class _EventModalState extends State<EventModal> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        selectedEvent.recurringId == null
-                            ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endDate!))
-                            : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                      ),
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endDate!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
               ],
@@ -295,10 +306,11 @@ class _EventModalState extends State<EventModal> {
                       selectedEvent.joinConference();
                     }
                   },
-                  child: Text(
-                    t.event.join.toUpperCase(),
-                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
-                  ),
+                  child: Text(t.event.join.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500)),
                 ),
             ],
           ),
@@ -320,10 +332,11 @@ class _EventModalState extends State<EventModal> {
             ),
           ),
           const SizedBox(width: Dimension.padding),
-          Text(
-            t.event.busy,
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-          ),
+          Text(t.event.busy,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
         ],
       ),
     );
@@ -344,12 +357,13 @@ class _EventModalState extends State<EventModal> {
               ),
               const SizedBox(width: Dimension.padding),
               Expanded(
-                child: Text(
-                  '${selectedEvent.content?["location"]}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                ),
+                child: Text('${selectedEvent.content?["location"]}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
               ),
             ],
           ),
@@ -378,14 +392,11 @@ class _EventModalState extends State<EventModal> {
                     ),
                   ),
                   const SizedBox(width: Dimension.padding),
-                  Text(
-                    t.event.guests,
-                    style: TextStyle(
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.w400,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
+                  Text(t.event.guests,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
                 ],
               ),
               SizedBox(
@@ -554,10 +565,11 @@ class _EventModalState extends State<EventModal> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            t.event.going,
-            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-          ),
+          Text(t.event.going,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
           Row(
             children: [
               InkWell(
@@ -568,15 +580,12 @@ class _EventModalState extends State<EventModal> {
                   height: 50,
                   width: 40,
                   child: Center(
-                    child: Text(
-                      t.event.yes,
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                          color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
-                              ? ColorsExt.green(context)
-                              : ColorsExt.grey3(context)),
-                    ),
+                    child: Text(t.event.yes,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
+                                ? ColorsExt.green(context)
+                                : ColorsExt.grey3(context),
+                            fontWeight: FontWeight.w500)),
                   ),
                 ),
               ),
@@ -589,15 +598,12 @@ class _EventModalState extends State<EventModal> {
                   height: 50,
                   width: 40,
                   child: Center(
-                    child: Text(
-                      t.event.no,
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                          color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
-                              ? ColorsExt.red(context)
-                              : ColorsExt.grey3(context)),
-                    ),
+                    child: Text(t.event.no,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
+                                ? ColorsExt.red(context)
+                                : ColorsExt.grey3(context))),
                   ),
                 ),
               ),
@@ -609,15 +615,12 @@ class _EventModalState extends State<EventModal> {
                 child: SizedBox(
                   height: 50,
                   child: Center(
-                    child: Text(
-                      t.event.maybe,
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                          color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
-                              ? ColorsExt.grey2(context)
-                              : ColorsExt.grey3(context)),
-                    ),
+                    child: Text(t.event.maybe,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
+                                ? ColorsExt.grey2(context)
+                                : ColorsExt.grey3(context))),
                   ),
                 ),
               ),

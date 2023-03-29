@@ -40,7 +40,10 @@ class RecurringEditModal extends StatelessWidget {
                     const SizedBox(width: 8.0),
                     Text(
                       t.editTask.repeatingEditDialog.title,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: ColorsExt.grey2(context),
+                          ),
                     ),
                   ],
                 ),
@@ -71,11 +74,10 @@ class RecurringEditModal extends StatelessWidget {
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.onlyThis,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: ColorsExt.grey3(context),
-                      ),
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: ColorsExt.grey3(context),
+                          ),
                     ),
                   ),
                 ),
@@ -96,11 +98,10 @@ class RecurringEditModal extends StatelessWidget {
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.thisAndAllFuture,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: ColorsExt.grey2(context),
-                      ),
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: ColorsExt.grey2(context),
+                          ),
                     ),
                   ),
                 ),

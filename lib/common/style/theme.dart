@@ -21,8 +21,11 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     selectionHandleColor: ColorsLight.akiflow,
   ),
   textTheme: const TextTheme(
-    bodyText1: TextStyle(fontSize: 17.0),
-    bodyText2: TextStyle(),
+    caption: TextStyle(fontSize: 11.5),
+    bodyText1: TextStyle(fontSize: 15.0),
+    bodyText2: TextStyle(fontSize: 15.0),
+    subtitle1: TextStyle(fontSize: 17.0),
+    subtitle2: TextStyle(fontSize: 17.0),
   ).apply(
     fontFamily: "Inter",
     bodyColor: ColorsLight.grey1,

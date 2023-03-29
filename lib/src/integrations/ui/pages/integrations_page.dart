@@ -71,22 +71,14 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                               const SizedBox(height: 200),
                               SvgPicture.asset(Assets.images.akiflow.thatsItnothingSVG),
                               const SizedBox(height: Dimension.padding),
-                              Text(
-                                'Nothing to reconnect',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: ColorsExt.grey2(context),
-                                ),
-                              ),
+                              Text('Nothing to reconnect',
+                                  style:
+                                      Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
                               const SizedBox(height: Dimension.padding),
-                              Text(
-                                'You have no active integrations, check your desktop app to add more',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: ColorsExt.grey3(context),
-                                ),
-                              ),
+                              Text('You have no active integrations, check your desktop app to add more',
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey3(context))),
                             ],
                           ),
                         ),

@@ -66,14 +66,12 @@ class EventAppointment extends StatelessWidget {
                     event.startTime != null &&
                     event.endTime != null)
                   Text(
-                    '${DateFormat("HH:mm").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(event.endTime!).toLocal())}',
-                    style: TextStyle(
-                      height: 1.5,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey3(context),
-                    ),
-                  ),
+                      '${DateFormat("HH:mm").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(event.endTime!).toLocal())}',
+                      style: Theme.of(context).textTheme.caption?.copyWith(
+                            height: 1.5,
+                            fontWeight: FontWeight.w500,
+                            color: ColorsExt.grey3(context),
+                          )),
               ],
             ),
           ),

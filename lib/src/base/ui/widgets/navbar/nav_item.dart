@@ -73,7 +73,7 @@ class NavItem extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .caption
-                              ?.copyWith(fontWeight: FontWeight.w500, color: color(context))),
+                              ?.copyWith(fontSize: 13, fontWeight: FontWeight.w500, color: color(context))),
                     ),
                   ],
                 ),

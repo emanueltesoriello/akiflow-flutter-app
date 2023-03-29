@@ -59,14 +59,11 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
                 children: [
                   const ScrollChip(),
                   const SizedBox(height: Dimension.padding),
-                  Text(
-                    t.event.editEvent.addGuestModal.addGuest,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
+                  Text(t.event.editEvent.addGuestModal.addGuest,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: ColorsExt.grey2(context),
+                          )),
                   const SizedBox(height: Dimension.padding),
                   BorderedInputView(
                     focus: searchFocus,

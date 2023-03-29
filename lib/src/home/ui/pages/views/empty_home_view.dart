@@ -48,9 +48,7 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
               },
               child: Text(
                 t.calendar.goToToday,
-                style: TextStyle(
-                  color: ColorsExt.grey2(context),
-                ),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
               ),
             ),
           ],

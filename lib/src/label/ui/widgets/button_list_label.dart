@@ -101,10 +101,9 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
                               child: Text(
                                 widget.title,
                                 textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: ColorsExt.grey2(context),
-                                ),
+                                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                      color: ColorsExt.grey2(context),
+                                    ),
                               ),
                             ),
                           ],

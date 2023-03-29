@@ -79,10 +79,11 @@ class CalendarSettingsModal extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.paddingS),
-          child: Text(
-            t.calendar.calendarView.toUpperCase(),
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
-          ),
+          child: Text(t.calendar.calendarView.toUpperCase(),
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600)),
         ),
         _agenda(context, isThreeDays, now),
         const SizedBox(height: 2),
@@ -248,13 +249,8 @@ class CalendarSettingsModal extends StatelessWidget {
               ),
             ),
             const SizedBox(width: Dimension.padding),
-            Text(
-              t.calendar.refresh,
-              style: TextStyle(
-                fontSize: 17,
-                color: ColorsExt.grey2(context),
-              ),
-            ),
+            Text(t.calendar.refresh,
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
           ],
         ),
       ),
@@ -270,13 +266,8 @@ class CalendarSettingsModal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                t.calendar.hideWeekends,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: ColorsExt.grey2(context),
-                ),
-              ),
+              Text(t.calendar.hideWeekends,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
               FlutterSwitch(
                 width: 48,
                 height: 24,
@@ -306,13 +297,8 @@ class CalendarSettingsModal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                t.calendar.hideDeclinedEvents,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: ColorsExt.grey2(context),
-                ),
-              ),
+              Text(t.calendar.hideDeclinedEvents,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
               FlutterSwitch(
                 width: 48,
                 height: 24,
@@ -332,13 +318,8 @@ class CalendarSettingsModal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                t.calendar.hideTasksFromCalendar,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: ColorsExt.grey2(context),
-                ),
-              ),
+              Text(t.calendar.hideTasksFromCalendar,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
               FlutterSwitch(
                 width: 48,
                 height: 24,
@@ -365,10 +346,11 @@ class CalendarSettingsModal extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: Dimension.paddingS, top: Dimension.padding),
-          child: Text(
-            t.calendar.calendars.toUpperCase(),
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
-          ),
+          child: Text(t.calendar.calendars.toUpperCase(),
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600)),
         ),
         ListView.builder(
           shrinkWrap: true,

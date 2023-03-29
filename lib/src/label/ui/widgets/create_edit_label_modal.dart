@@ -159,7 +159,9 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
 
                                     return Text(
                                       text,
-                                      style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
+                                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                            color: ColorsExt.grey2(context),
+                                          ),
                                       textAlign: TextAlign.center,
                                     );
                                   },

@@ -48,7 +48,10 @@ class FolderModal extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
                         child: Text(
                           t.label.folder,
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: ColorsExt.grey2(context),
+                              ),
                         ),
                       );
                     }
@@ -68,7 +71,9 @@ class FolderModal extends StatelessWidget {
                             Expanded(
                                 child: Text(
                               folder.title ?? t.noTitle,
-                              style: TextStyle(color: ColorsExt.grey2(context), fontSize: 17),
+                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    color: ColorsExt.grey2(context),
+                                  ),
                             )),
                           ],
                         ),

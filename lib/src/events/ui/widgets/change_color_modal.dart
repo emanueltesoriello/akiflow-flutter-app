@@ -37,14 +37,11 @@ class ChangeColorModal extends StatelessWidget {
                 child: Row(
                   children: [
                     const SizedBox(width: Dimension.paddingS),
-                    Text(
-                      t.event.editEvent.eventColor,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey2(context),
-                      ),
-                    ),
+                    Text(t.event.editEvent.eventColor,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
                   ],
                 ),
               ),

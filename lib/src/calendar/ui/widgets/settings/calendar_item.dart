@@ -47,10 +47,11 @@ class _CalendarItemState extends State<CalendarItem> {
                         ),
                       ),
                       const SizedBox(width: Dimension.paddingS),
-                      Text(
-                        widget.title,
-                        style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
-                      ),
+                      Text(widget.title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
                   SvgPicture.asset(
@@ -98,11 +99,11 @@ class _CalendarItemState extends State<CalendarItem> {
                                     widget.calendars[index].color!),
                               ),
                               const SizedBox(width: Dimension.paddingS),
-                              Text(
-                                "${widget.calendars[index].title}",
-                                style: TextStyle(
-                                    fontSize: 17, color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
-                              ),
+                              Text("${widget.calendars[index].title}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
                             ],
                           ),
                         ),

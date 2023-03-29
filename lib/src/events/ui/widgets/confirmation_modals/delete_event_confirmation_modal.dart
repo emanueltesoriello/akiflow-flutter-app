@@ -39,10 +39,11 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                         width: 28, height: 28, color: ColorsExt.grey2(context)),
                     const SizedBox(width: Dimension.paddingS),
                     Expanded(
-                      child: Text(
-                        t.event.editEvent.deleteModal.title(eventName: eventName),
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-                      ),
+                      child: Text(t.event.editEvent.deleteModal.title(eventName: eventName),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
                     ),
                   ],
                 ),
@@ -50,7 +51,10 @@ class DeleteEventConfirmationModal extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Text(t.event.editEvent.deleteModal.description,
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
               const SizedBox(height: Dimension.paddingM),
               InkWell(
@@ -66,14 +70,11 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                       borderRadius: BorderRadius.circular(Dimension.radius),
                       border: Border.all(color: ColorsExt.grey4(context))),
                   child: Center(
-                    child: Text(
-                      t.event.delete,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: ColorsExt.grey2(context),
-                      ),
-                    ),
+                    child: Text(t.event.delete,
+                        style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: ColorsExt.grey2(context),
+                            )),
                   ),
                 ),
               ),

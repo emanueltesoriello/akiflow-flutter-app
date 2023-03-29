@@ -65,11 +65,10 @@ class RecurrenceModal extends StatelessWidget {
                   const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.repeat,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey2(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),

@@ -41,13 +41,10 @@ class IntegrationDetailsHeader extends StatelessWidget {
                   child: Text(
                     t.settings.integrations.gmail.title,
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: Dimension.paddingXS),
                 Row(
                   children: [
                     Visibility(
@@ -59,14 +56,14 @@ class IntegrationDetailsHeader extends StatelessWidget {
                       ),
                     ),
                     Flexible(
-                        child: Text(
-                      identifier,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey3(context),
-                        fontSize: 13,
+                      child: Text(
+                        identifier,
+                        style: Theme.of(context)
+                            .textTheme
+                            .caption
+                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
                       ),
-                    )),
+                    ),
                   ],
                 )
               ],

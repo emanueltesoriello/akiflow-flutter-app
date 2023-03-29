@@ -41,8 +41,14 @@ class SectionHeaderItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
-            const SizedBox(width: 4),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.caption?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: ColorsExt.akiflow(context),
+                  ),
+            ),
+            const SizedBox(width: Dimension.paddingXS),
             Text(
               "($taskCount)",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
