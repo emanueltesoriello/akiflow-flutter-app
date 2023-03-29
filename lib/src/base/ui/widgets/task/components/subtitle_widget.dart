@@ -48,11 +48,10 @@ class Subtitle extends StatelessWidget {
                           doc!.getLinkedContentSummary().toString().parseHtmlString ?? doc.url ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: ColorsExt.grey3(context),
-                            height: 1,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.copyWith(color: ColorsExt.grey3(context), height: 1),
                         );
                       },
                     ),
@@ -76,11 +75,8 @@ class Subtitle extends StatelessWidget {
                         child: Text(
                       task.descriptionParsed,
                       maxLines: 1,
-                      style: TextStyle(
-                        height: 1,
-                        fontSize: 15,
-                        color: ColorsExt.grey3(context),
-                      ),
+                      style:
+                          Theme.of(context).textTheme.bodyText1?.copyWith(height: 1, color: ColorsExt.grey3(context)),
                     )),
                   ],
                 ),
@@ -143,11 +139,10 @@ class Subtitle extends StatelessWidget {
                           text,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            height: 1,
-                            fontSize: 15,
-                            color: ColorsExt.grey3(context),
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.copyWith(height: 1, color: ColorsExt.grey3(context)),
                         ),
                       )
                     ],

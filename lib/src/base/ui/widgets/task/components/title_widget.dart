@@ -31,14 +31,13 @@ class TitleWidget extends StatelessWidget {
                 text,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  height: 1.3,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                      ? ColorsExt.grey3(context)
-                      : ColorsExt.grey1(context),
-                ),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      height: 1.3,
+                      fontWeight: FontWeight.w500,
+                      color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
+                          ? ColorsExt.grey3(context)
+                          : ColorsExt.grey1(context),
+                    ),
               ),
             ),
             isGoal(context),

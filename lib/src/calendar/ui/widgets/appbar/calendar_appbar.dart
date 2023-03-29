@@ -46,11 +46,9 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               child: Text(
                 t.bottomBar.today,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: state.visibleDates.contains(today) ? ColorsExt.grey3(context) : ColorsExt.akiflow(context),
-                ),
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    color: state.visibleDates.contains(today) ? ColorsExt.grey3(context) : ColorsExt.akiflow(context),
+                    fontWeight: FontWeight.w600),
               ),
             ),
             IconButton(
@@ -95,12 +93,15 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
             textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: ColorsExt.grey2(context)),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: Dimension.padding),
           SizedBox(
-            width: 16,
-            height: 16,
+            width: Dimension.chevronIconSize,
+            height: Dimension.chevronIconSize,
             child: SvgPicture.asset(
               state.panelState == PanelState.closed
                   ? Assets.images.icons.common.chevronDownSVG

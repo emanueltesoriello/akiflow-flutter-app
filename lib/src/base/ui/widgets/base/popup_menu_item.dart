@@ -22,13 +22,11 @@ class PopupMenuCustomItem extends StatelessWidget {
             width: 22, height: 22, iconAsset, color: enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
         const SizedBox(width: 8),
         Expanded(
-            child: Text(
-          text,
-          style: TextStyle(
-              color: enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-              fontSize: 15,
-              fontWeight: FontWeight.w500),
-        )),
+            child: Text(text,
+                style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey3(context),
+                    ))),
       ],
     );
   }

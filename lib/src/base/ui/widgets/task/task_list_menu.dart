@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 
 enum TaskListMenuAction { sort, filter }
@@ -39,9 +40,12 @@ class TaskListMenu extends StatelessWidget {
             padding: EdgeInsets.zero,
             height: 30,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
               child: Text(t.comingSoon.toUpperCase(),
-                  style: TextStyle(color: ColorsExt.grey3(context), fontSize: 11, fontWeight: FontWeight.w500)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500)),
             ),
           ),
           PopupMenuItem<TaskListMenuAction>(

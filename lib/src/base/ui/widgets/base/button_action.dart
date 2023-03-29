@@ -67,11 +67,12 @@ class ButtonAction extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 2),
-        Text(
-          bottomLabel!,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 11, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
-        ),
+        Text(bottomLabel!,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.caption?.copyWith(
+                  color: ColorsExt.grey2(context),
+                  fontWeight: FontWeight.w500,
+                )),
       ],
     );
   }

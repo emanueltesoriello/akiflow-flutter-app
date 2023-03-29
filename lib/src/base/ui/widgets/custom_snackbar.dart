@@ -40,10 +40,11 @@ class CustomSnackbar extends SnackBar {
                   ),
                   const SizedBox(width: Dimension.paddingS),
                   Expanded(
-                    child: Text(
-                      message,
-                      style: TextStyle(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500, fontSize: 15),
-                    ),
+                    child: Text(message,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                              color: ColorsExt.grey2(context),
+                              fontWeight: FontWeight.w500,
+                            )),
                   ),
                 ],
               ),

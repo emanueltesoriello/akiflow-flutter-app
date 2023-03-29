@@ -108,21 +108,35 @@ class CalendarBody extends StatelessWidget {
             },
             dataSource: _getCalendarDataSource(context),
             viewHeaderStyle: ViewHeaderStyle(
-              dayTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
-              dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
-            ),
+                dayTextStyle: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                dateTextStyle: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
             timeSlotViewSettings: TimeSlotViewSettings(
               timeIntervalHeight: 60.0,
               minimumAppointmentDuration: const Duration(minutes: 15),
-              timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
+              timeTextStyle: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
             ),
             scheduleViewSettings: ScheduleViewSettings(
                 hideEmptyScheduleWeek: true,
                 dayHeaderSettings: DayHeaderSettings(
-                  dayTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey2(context)),
-                  dateTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
+                  dayTextStyle: Theme.of(context)
+                      .textTheme
+                      .caption
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                  dateTextStyle: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
                 ),
                 weekHeaderSettings: WeekHeaderSettings(
                   startDateFormat: 'dd',
@@ -133,7 +147,10 @@ class CalendarBody extends StatelessWidget {
                 monthHeaderSettings: MonthHeaderSettings(
                   height: 66,
                   backgroundColor: ColorsExt.grey7(context),
-                  monthTextStyle: TextStyle(fontSize: 20, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                  monthTextStyle: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
                 )),
             monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
             onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit),

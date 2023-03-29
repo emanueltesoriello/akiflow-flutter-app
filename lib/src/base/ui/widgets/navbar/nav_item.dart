@@ -68,11 +68,12 @@ class NavItem extends StatelessWidget {
                       ),
                     )),
                     Flexible(
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color(context)),
-                      ),
+                      child: Text(title,
+                          maxLines: 1,
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption
+                              ?.copyWith(fontWeight: FontWeight.w500, color: color(context))),
                     ),
                   ],
                 ),

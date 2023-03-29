@@ -57,11 +57,10 @@ class _TestJsLibraryState extends State<TitleNlpTextField> {
         isDense: true,
         hintText: t.addTask.titleHint,
         border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-        ),
+        hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: ColorsExt.grey3(context),
+              fontWeight: FontWeight.w500,
+            ),
       ),
       onTap: () {
         print('On tap');
@@ -87,11 +86,10 @@ class _TestJsLibraryState extends State<TitleNlpTextField> {
           }
         }
       },
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: ColorsExt.grey2(context),
+            fontWeight: FontWeight.w500,
+          ),
     );
   }
 }

@@ -122,10 +122,9 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                                     child: Text(
                                       widget.title,
                                       textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-                                      ),
+                                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                          color:
+                                              (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
                                     ),
                                   ),
                                 ],

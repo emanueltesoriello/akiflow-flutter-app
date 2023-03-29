@@ -91,13 +91,10 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                         children: [
                           LeadingIcon(leading: widget.leading),
                           Expanded(
-                            child: Text(
-                              widget.title,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: ColorsExt.grey2(context),
-                              ),
-                            ),
+                            child: Text(widget.title,
+                                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                      color: ColorsExt.grey2(context),
+                                    )),
                           ),
                           Visibility(
                             visible: widget.trailing != null,
