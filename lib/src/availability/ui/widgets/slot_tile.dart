@@ -49,9 +49,9 @@ class SlotTile extends StatelessWidget {
                   child: Text(
                 config.title ?? '',
                 maxLines: 1,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       color: ColorsExt.grey1(context),
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       overflow: TextOverflow.ellipsis,
                     ),
               )),
@@ -59,9 +59,9 @@ class SlotTile extends StatelessWidget {
               Text(
                 config.durationString,
                 maxLines: 1,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       color: ColorsExt.grey3(context),
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       overflow: TextOverflow.ellipsis,
                     ),
               ),
