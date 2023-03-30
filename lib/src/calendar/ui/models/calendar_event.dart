@@ -73,14 +73,17 @@ class CalendarEvent extends Appointment {
     }
 
     String? formatedRrule;
+    SentryService sentryService = locator<SentryService>();
     try {
       if (isRecurringParent && event.recurrence != null && event.recurrence!.isNotEmpty) {
         List<String> parts = event.recurrence!.first.replaceFirst('RRULE:', '').split(";");
         formatedRrule = computeRrule(parts, startTime);
+        //TODO: remove this after fixing all possible rrule use cases
+        sentryService.addBreadcrumb(
+            category: "calendar_event", message: 'event id: ${event.id} formattedRrule: $formatedRrule');
       }
     } catch (e) {
       print(e);
-      SentryService sentryService = locator<SentryService>();
       sentryService.addBreadcrumb(category: "calendar_event", message: e.toString());
     }
 
