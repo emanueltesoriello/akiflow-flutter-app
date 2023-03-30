@@ -46,9 +46,6 @@ class CalendarView extends StatelessWidget {
         EventsCubit eventsCubit = context.watch<EventsCubit>();
         List<Event> events = List.from(eventsCubit.state.events);
         events = events.where((element) => visibleCalendarIds.contains(element.calendarId)).toList();
-        if (state.areDeclinedEventsHidden) {
-          events = events.where((event) => event.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined).toList();
-        }
 
         return Scaffold(
           appBar: CalendarAppBar(
