@@ -109,7 +109,6 @@ class _TodayViewState extends State<TodayView> {
             ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
                 parsedBLocal.second)
             : DateTime.now();
-
         return fixedA.compareTo(fixedB);
       } catch (e) {
         print("Error sorting pinned items: ${e.toString()}");
