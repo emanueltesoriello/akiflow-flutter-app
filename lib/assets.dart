@@ -136,6 +136,7 @@ class _AssetsImagesIconsCommon {
   final chevronDownSVG = 'assets/images/icons/_common/chevron_down.svg';
   final chevronRightSVG = 'assets/images/icons/_common/chevron_right.svg';
   final chevronUpSVG = 'assets/images/icons/_common/chevron_up.svg';
+  final circleFillSVG = 'assets/images/icons/_common/circle_fill.svg';
   final circleSVG = 'assets/images/icons/_common/circle.svg';
   final clockSVG = 'assets/images/icons/_common/clock.svg';
   final crownSVG = 'assets/images/icons/_common/crown.svg';
