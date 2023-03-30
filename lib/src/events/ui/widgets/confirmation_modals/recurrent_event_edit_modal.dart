@@ -70,7 +70,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       : t.event.editEvent.repeatingEditModal.description,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .subtitle1
                       ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                 ),
               ),
@@ -92,7 +92,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       t.event.editEvent.repeatingEditModal.onlyThis,
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .subtitle1
                           ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                     ),
                   ),
@@ -119,7 +119,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                             t.event.editEvent.repeatingEditModal.thisAndAllFuture,
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText1
+                                .subtitle1
                                 ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                           ),
                         ),
@@ -145,7 +145,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       t.event.editEvent.repeatingEditModal.allEvents,
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .subtitle1
                           ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
                     ),
                   ),
