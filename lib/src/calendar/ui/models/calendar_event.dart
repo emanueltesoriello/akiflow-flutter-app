@@ -30,11 +30,20 @@ class CalendarEvent extends Appointment {
     required bool isRecurringException,
     required bool isNonRecurring,
     List<Event>? exceptions,
+    bool? areDeclinedEventsHidden,
   }) {
     DateTime startTime = DateTime(DateTime.now().year - 1, 2, 31);
     DateTime endTime = startTime;
 
+    //used to hide deleted events
     if (event.deletedAt != null || (event.status != null && event.status == 'cancelled')) {
+      return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
+    }
+
+    //used to hide declined events (used specially for declined exceptions)
+    if (areDeclinedEventsHidden != null &&
+        areDeclinedEventsHidden &&
+        event.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined) {
       return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
     }
 
@@ -46,6 +55,7 @@ class CalendarEvent extends Appointment {
       endTime = DateTime.parse(event.endDate!).toLocal();
     }
 
+    //gets the exceptions and adds them to the parent's "exceptionDates"
     List<DateTime>? exceptionDates = [];
     if (isRecurringParent && exceptions != null) {
       for (var element in exceptions) {
@@ -87,6 +97,7 @@ class CalendarEvent extends Appointment {
     );
   }
 
+  ///used for making the rrule to be accepted by the calendar package
   static String? computeRrule(List<String> parts, DateTime startTime) {
     parts.removeWhere((part) => part.startsWith('WKST'));
 
