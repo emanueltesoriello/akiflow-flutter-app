@@ -36,21 +36,23 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
             height: 26,
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                context.read<CalendarCubit>().closePanel();
-              },
-              style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+            if (!state.visibleDates.contains(today))
+              TextButton(
+                onPressed: () {
+                  calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+                  context.read<CalendarCubit>().closePanel();
+                },
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                ),
+                child: Text(
+                  t.bottomBar.today,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w600),
+                ),
               ),
-              child: Text(
-                t.bottomBar.today,
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color: state.visibleDates.contains(today) ? ColorsExt.grey3(context) : ColorsExt.akiflow(context),
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
             IconButton(
               icon: SvgPicture.asset(
                 Assets.images.icons.common.ellipsisSVG,
