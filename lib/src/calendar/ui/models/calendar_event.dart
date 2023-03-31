@@ -62,11 +62,12 @@ class CalendarEvent extends Appointment {
         if (element.recurringId == event.id) {
           if (element.originalStartTime != null || element.originalStartDate != null) {
             exceptionDates.add(element.originalStartTime != null
-                ? DateTime.parse(element.originalStartTime!)
-                : DateTime.parse(element.originalStartDate!));
+                ? DateTime.parse(element.originalStartTime!).toLocal()
+                : DateTime.parse(element.originalStartDate!).toLocal());
           } else if (element.startTime != null || element.startDate != null) {
-            exceptionDates.add(
-                element.startTime != null ? DateTime.parse(element.startTime!) : DateTime.parse(element.startDate!));
+            exceptionDates.add(element.startTime != null
+                ? DateTime.parse(element.startTime!).toLocal()
+                : DateTime.parse(element.startDate!).toLocal());
           }
         }
       }
@@ -114,6 +115,13 @@ class CalendarEvent extends Appointment {
           days[i] = days[i].replaceAll(RegExp(r'[0-9]'), '');
         }
       }
+      DateTime startUtc = startTime.toUtc();
+      DateTime startUtcLocal =
+          DateTime(startUtc.year, startUtc.month, startUtc.day, startUtc.hour, startUtc.minute, startUtc.millisecond);
+      if (days.length == 1 && startUtcLocal.day != startTime.day) {
+        days[0] = dayOfWeekComputed(startTime.weekday)!;
+      }
+
       parts.removeWhere((part) => part.startsWith('BYDAY'));
 
       String byDayString = days.join(',');

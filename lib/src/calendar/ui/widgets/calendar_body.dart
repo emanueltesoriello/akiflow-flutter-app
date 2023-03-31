@@ -204,8 +204,8 @@ class CalendarBody extends StatelessWidget {
     context.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
-      context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
-      calendarController.view = CalendarView.day;
+      context.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
+      calendarController.view = CalendarView.schedule;
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
