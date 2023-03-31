@@ -76,9 +76,18 @@ android {
             dimension "default"
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
+            resValue "string", "app_name", "Akiflow_Dev"
+        }
+        preprod {
+            dimension "default"
+            applicationIdSuffix ".dev" 
+            versionNameSuffix "-preprod"
+            resValue "string", "app_name", "Akiflow_Pre-prod"
         }
         prod {
             dimension "default"
+            resValue "string", "app_name", "Akiflow"
+ 
         }
     }
 
