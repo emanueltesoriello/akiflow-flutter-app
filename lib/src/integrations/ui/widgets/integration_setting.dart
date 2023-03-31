@@ -119,7 +119,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                                   Expanded(
                                       child: Text(
                                     widget.subtitle,
-                                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
                                           fontWeight: FontWeight.w500,
                                           color: ColorsExt.grey3(context),
                                         ),

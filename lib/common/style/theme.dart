@@ -23,7 +23,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   textTheme: const TextTheme(
     caption: TextStyle(fontSize: 11.5),
     bodyText1: TextStyle(fontSize: 15.0),
-    bodyText2: TextStyle(fontSize: 15.0),
+    bodyText2: TextStyle(fontSize: 12.5),
     subtitle1: TextStyle(fontSize: 17.0),
     subtitle2: TextStyle(fontSize: 17.0),
   ).apply(

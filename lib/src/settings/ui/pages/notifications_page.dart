@@ -62,7 +62,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Text(
                     switchTitle,
                     textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
                           color: ColorsExt.grey2(context),
                         ),
                   ),
@@ -93,7 +93,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 title: Text(
                   mainButtonListTitle,
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
                         color: ColorsExt.grey2(context),
                       ),
                 ),
@@ -102,10 +102,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle2
+                      .bodyText2
                       ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.normal),
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: Dimension.chevronIconSize,
+                ),
               ),
             ),
           ),
@@ -236,7 +239,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         Text(
                           "Task completed",
                           textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                 color: ColorsExt.grey2(context),
                               ),
                         ),

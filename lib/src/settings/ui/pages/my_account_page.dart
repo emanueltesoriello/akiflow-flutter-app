@@ -67,15 +67,15 @@ class MyAccountPage extends StatelessWidget {
                                     state.user?.name ?? "n/d",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleLarge
+                                        .subtitle1
                                         ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: Dimension.paddingXS),
                                   Text(
                                     state.user?.email ?? "n/d",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .bodySmall
+                                        .bodyText2
                                         ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
                                   ),
                                 ],

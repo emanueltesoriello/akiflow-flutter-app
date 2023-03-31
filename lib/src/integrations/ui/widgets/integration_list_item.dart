@@ -156,7 +156,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                         Flexible(
                                             child: Text(
                                           widget.identifier!,
-                                          style: Theme.of(context).textTheme.caption?.copyWith(
+                                          style: Theme.of(context).textTheme.bodyText2?.copyWith(
                                                 fontWeight: FontWeight.w500,
                                                 color: ColorsExt.grey3(context),
                                               ),
