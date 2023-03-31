@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
@@ -353,6 +354,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 TitleWidget(widget.task),
+                                                const SizedBox(height: Dimension.paddingXS),
                                                 Subtitle(widget.task),
                                                 TaskInfo(
                                                   widget.task,

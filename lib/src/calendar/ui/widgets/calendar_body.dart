@@ -106,7 +106,7 @@ class CalendarBody extends StatelessWidget {
                 eventsCubit.fetchEventsBetweenDates(start, end);
               }
             },
-            dataSource: _getCalendarDataSource(context),
+            dataSource: _getCalendarDataSource(context, state),
             viewHeaderStyle: ViewHeaderStyle(
                 dayTextStyle: Theme.of(context)
                     .textTheme
@@ -204,8 +204,8 @@ class CalendarBody extends StatelessWidget {
     context.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
-      context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
-      calendarController.view = CalendarView.day;
+      context.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
+      calendarController.view = CalendarView.schedule;
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
@@ -281,7 +281,7 @@ class CalendarBody extends StatelessWidget {
     }
   }
 
-  _AppointmentDataSource _getCalendarDataSource(BuildContext context) {
+  _AppointmentDataSource _getCalendarDataSource(BuildContext context, CalendarCubitState state) {
     List<CalendarEvent> calendarNonRecurringEvents = <CalendarEvent>[];
     List<CalendarEvent> calendarParentEvents = <CalendarEvent>[];
     List<CalendarEvent> calendarExceptionEvents = <CalendarEvent>[];
@@ -291,7 +291,17 @@ class CalendarBody extends StatelessWidget {
     List<Event> recurringParents = <Event>[];
     List<Event> recurringExceptions = <Event>[];
 
-    nonRecurring = events.where((event) => event.recurringId == null).toList();
+    bool areDeclinedEventsHidden = state.areDeclinedEventsHidden;
+
+    if (areDeclinedEventsHidden) {
+      nonRecurring = events
+          .where(
+              (event) => event.recurringId == null && event.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined)
+          .toList();
+    } else {
+      nonRecurring = events.where((event) => event.recurringId == null).toList();
+    }
+
     recurringParents = events.where((event) => event.id == event.recurringId).toList();
     recurringExceptions = events.where((event) => event.recurringId != null && event.recurringId != event.id).toList();
 
@@ -312,6 +322,7 @@ class CalendarBody extends StatelessWidget {
               isRecurringException: false,
               isNonRecurring: false,
               exceptions: recurringExceptions,
+              areDeclinedEventsHidden: areDeclinedEventsHidden,
             ))
         .toList();
     calendarExceptionEvents = recurringExceptions
@@ -321,6 +332,7 @@ class CalendarBody extends StatelessWidget {
               isRecurringParent: false,
               isRecurringException: true,
               isNonRecurring: false,
+              areDeclinedEventsHidden: areDeclinedEventsHidden,
             ))
         .toList();
     calendarTasks = tasks.map((task) => CalendarTask.taskToCalendarTask(context, task)).toList();

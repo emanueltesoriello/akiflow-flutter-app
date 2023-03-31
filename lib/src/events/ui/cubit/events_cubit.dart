@@ -472,7 +472,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     DateTime oldParenUntil = DateTime(tappedDate.year, tappedDate.month, tappedDate.day - 1, 23, 59, 59).toUtc();
 
-    RecurrenceRule parentRrule = RecurrenceRule.fromString(parentEvent.recurrence!.join(';'));
+    List<String> processedRrule = [];
+    for (String rule in parentEvent.recurrence!) {
+      List<String> parts = rule.split(";");
+      parts.removeWhere((part) => part.startsWith('WKST'));
+      processedRrule.add(parts.join(';'));
+    }
+
+    RecurrenceRule parentRrule = RecurrenceRule.fromString(processedRrule.join(';'));
     String newParenRrule = parentRrule.copyWith(clearCount: true, until: oldParenUntil).toString();
 
     List<String> parts = newParenRrule.split(";");

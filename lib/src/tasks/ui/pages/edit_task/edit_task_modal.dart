@@ -98,7 +98,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
     return Container(
       padding: const EdgeInsets.only(left: Dimension.paddingS, right: Dimension.paddingS),
-      height: 30,
+      height: 35,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/assets.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/extensions/task_extension.dart';

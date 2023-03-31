@@ -94,17 +94,6 @@ class _TodayViewState extends State<TodayView> {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
-    try {
-      todos.sort((a, b) {
-        try {
-          return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
-        } catch (_) {}
-        return 0;
-      });
-    } catch (e) {
-      print(e);
-    }
-
     pinned.sort((a, b) {
       try {
         DateTime parsedAUTC = DateTime.parse(a.datetime!);
@@ -120,7 +109,6 @@ class _TodayViewState extends State<TodayView> {
             ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
                 parsedBLocal.second)
             : DateTime.now();
-
         return fixedA.compareTo(fixedB);
       } catch (e) {
         print("Error sorting pinned items: ${e.toString()}");
@@ -189,7 +177,7 @@ class _TodayViewState extends State<TodayView> {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: todos,
-                              sorting: TaskListSorting.dateAscending,
+                              sorting: TaskListSorting.sortingDescending,
                               visible: context.watch<TodayCubit>().state.todosListOpen,
                               showLabel: true,
                               showPlanInfo: false,

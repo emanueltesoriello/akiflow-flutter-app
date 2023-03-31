@@ -159,8 +159,8 @@ class BottomTaskActions extends StatelessWidget {
                         return PopupMenuButton<BottomTaskAdditionalActions>(
                           icon: SvgPicture.asset(
                             Assets.images.icons.common.ellipsisSVG,
-                            width: 26,
-                            height: 26,
+                            width: Dimension.defaultIconSize,
+                            height: Dimension.defaultIconSize,
                             color: ColorsExt.grey2(context),
                           ),
                           onSelected: (BottomTaskAdditionalActions result) {

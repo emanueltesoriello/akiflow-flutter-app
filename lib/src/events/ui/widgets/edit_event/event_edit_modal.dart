@@ -19,6 +19,7 @@ import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/choose_calendar_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
@@ -63,6 +64,8 @@ class _EventEditModalState extends State<EventEditModal> {
   late bool removingMeeting;
   late bool timeChanged;
   late bool dateChanged;
+  late String organizerCalendar;
+  late String organizerCalendarId;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -74,6 +77,8 @@ class _EventEditModalState extends State<EventEditModal> {
 
     locationController = TextEditingController()..text = widget.event.content?['location'] ?? '';
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
+    organizerCalendar = widget.event.organizerId ?? '';
+    organizerCalendarId = widget.event.calendarId ?? '';
 
     atendeesToAdd = List.empty(growable: true);
     atendeesToRemove = List.empty(growable: true);
@@ -148,6 +153,8 @@ class _EventEditModalState extends State<EventEditModal> {
                               : _addConferenceRow(context),
                           const Separator(),
                           _locationRow(context),
+                          const Separator(),
+                          _chooseCalendarRow(context),
                           const Separator(),
                           _busyRow(context),
                           const Separator(),
@@ -688,6 +695,47 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
+  InkWell _chooseCalendarRow(BuildContext context) {
+    return InkWell(
+      splashFactory: widget.createingEvent ?? false ? InkSplash.splashFactory : NoSplash.splashFactory,
+      onTap: () {
+        if (widget.createingEvent ?? false) {
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => ChooseCalendarModal(
+              onChange: (String? choosenCalendar, String? choosenCalendarId) {
+                setState(() {
+                  organizerCalendar = choosenCalendar ?? organizerCalendar;
+                  organizerCalendarId = choosenCalendarId ?? organizerCalendarId;
+                });
+              },
+              initialCalendar: updatedEvent.organizerId,
+            ),
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              Assets.images.icons.common.circleFillSVG,
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(organizerCalendar,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+          ],
+        ),
+      ),
+    );
+  }
+
   Padding _busyRow(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
@@ -1102,6 +1150,12 @@ class _EventEditModalState extends State<EventEditModal> {
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
 
     if (widget.createingEvent ?? false) {
+      updatedEvent = updatedEvent.copyWith(
+        calendarId: organizerCalendarId,
+        creatorId: organizerCalendar,
+        originCalendarId: organizerCalendar,
+        organizerId: organizerCalendar,
+      );
       await context.read<EventsCubit>().addEventToDb(updatedEvent);
     }
 

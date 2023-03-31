@@ -42,7 +42,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                       child: Text(t.event.editEvent.deleteModal.title(eventName: eventName),
                           style: Theme.of(context)
                               .textTheme
-                              .bodyText1
+                              .subtitle1
                               ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
                     ),
                   ],
@@ -53,7 +53,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                 child: Text(t.event.editEvent.deleteModal.description,
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText1
+                        .subtitle1
                         ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
               ),
               const SizedBox(height: Dimension.paddingM),

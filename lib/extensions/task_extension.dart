@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
@@ -33,9 +29,7 @@ import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:timezone/timezone.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:mobile/core/preferences.dart';
 
 enum TaskStatusType {
@@ -864,11 +858,27 @@ extension TaskExt on Task {
   }
 
   playTaskDoneSound() {
+    AudioContext audioContext = const AudioContext(
+      iOS: AudioContextIOS(
+        category: AVAudioSessionCategory.ambient,
+        options: [
+          AVAudioSessionOptions.defaultToSpeaker,
+          AVAudioSessionOptions.mixWithOthers,
+        ],
+      ),
+      android: AudioContextAndroid(
+          contentType: AndroidContentType.sonification,
+          usageType: AndroidUsageType.assistanceSonification,
+          isSpeakerphoneOn: true,
+          audioFocus: null),
+    );
+    AudioPlayer.global.setGlobalAudioContext(audioContext);
+
     if (!(done ?? false)) {
       PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
       if (preferencesRepository.taskCompletedSoundEnabledMobile) {
         final audioPlayer = AudioPlayer();
-        audioPlayer.play(AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
+        audioPlayer.play(ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
       }
     }
   }

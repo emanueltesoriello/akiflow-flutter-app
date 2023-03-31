@@ -54,7 +54,7 @@ class RecurringEditModal extends StatelessWidget {
                   t.editTask.repeatingEditDialog.description,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .subtitle1
                       ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
                 ),
               ),

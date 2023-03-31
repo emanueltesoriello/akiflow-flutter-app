@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 330 
+ * Strings: 331 
  *
- * Built on 2023-03-28 at 13:04 UTC
+ * Built on 2023-03-30 at 16:42 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -901,6 +901,7 @@ class _StringsEventEditEventEn {
 	String get allDay => 'All Day';
 	String get addConference => 'Add Conference';
 	String get addLocation => 'Add Location';
+	String get chooseCalendar => 'Choose Calendar';
 	String get addGuests => 'Add guests';
 	String get addDescription => 'Add Description';
 	String get defaultColor => 'Default Color';
@@ -1356,6 +1357,7 @@ extension on _StringsEn {
 			'event.editEvent.allDay': 'All Day',
 			'event.editEvent.addConference': 'Add Conference',
 			'event.editEvent.addLocation': 'Add Location',
+			'event.editEvent.chooseCalendar': 'Choose Calendar',
 			'event.editEvent.addGuests': 'Add guests',
 			'event.editEvent.addDescription': 'Add Description',
 			'event.editEvent.defaultColor': 'Default Color',

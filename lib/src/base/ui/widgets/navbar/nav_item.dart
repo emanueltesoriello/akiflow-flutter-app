@@ -72,8 +72,8 @@ class NavItem extends StatelessWidget {
                           maxLines: 1,
                           style: Theme.of(context)
                               .textTheme
-                              .caption
-                              ?.copyWith(fontSize: 13, fontWeight: FontWeight.w500, color: color(context))),
+                              .bodyText2
+                              ?.copyWith(fontWeight: FontWeight.w500, color: color(context))),
                     ),
                   ],
                 ),

@@ -25,7 +25,7 @@ class PopupMenuCustomItem extends StatelessWidget {
             child: Text(text,
                 style: Theme.of(context).textTheme.bodyText1?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey2(context),
                     ))),
       ],
     );
