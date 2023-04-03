@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
@@ -101,16 +102,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
                 .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: Dimension.padding),
-          SizedBox(
-            width: Dimension.chevronIconSize,
-            height: Dimension.chevronIconSize,
-            child: SvgPicture.asset(
-              state.panelState == PanelState.closed
-                  ? Assets.images.icons.common.chevronDownSVG
-                  : Assets.images.icons.common.chevronUpSVG,
-              color: ColorsExt.grey3(context),
-            ),
-          ),
+          AnimatedChevron(iconUp: state.panelState == PanelState.opened),
         ],
       ),
     );
