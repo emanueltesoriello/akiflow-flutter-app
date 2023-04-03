@@ -196,6 +196,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           }
         },
         child: HomeBody(
-            bottomBarHeight: bottomBarHeight, homeViewType: context.watch<MainCubit>().state.homeViewType.index));
+            bottomBarHeight: Dimension.bottomBarHeight,
+            homeViewType: context.watch<MainCubit>().state.homeViewType.index));
   }
 }

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:models/contact/contact.dart';
 
 class ContactRow extends StatelessWidget {
   final Contact contact;
-  //final Function() onTap;
   const ContactRow({
     super.key,
     required this.contact,
@@ -15,7 +15,7 @@ class ContactRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.only(top: Dimension.paddingXS),
       child: SizedBox(
         height: 45,
         child: Row(
@@ -37,7 +37,7 @@ class ContactRow extends StatelessWidget {
                       color: ColorsExt.grey2(context),
                     ),
                   ),
-            const SizedBox(width: 8),
+            const SizedBox(width: Dimension.paddingS),
             Expanded(
               child: Row(
                 children: [
@@ -45,24 +45,18 @@ class ContactRow extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${contact.name}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
-                        Text(
-                          '${contact.identifier}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
-                          ),
-                        ),
+                        Text('${contact.name}',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsExt.grey2(context),
+                                )),
+                        Text('${contact.identifier}',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.caption?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsExt.grey2(context),
+                                )),
                       ],
                     ),
                   ),

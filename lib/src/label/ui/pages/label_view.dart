@@ -8,8 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -22,7 +21,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
-import 'package:mobile/core/preferences.dart';
 
 import '../../../base/ui/widgets/task/task_list.dart';
 import '../../../tasks/ui/pages/create_task/create_task_modal.dart';
@@ -222,7 +220,7 @@ class _LabelViewState extends State<LabelView> {
                           }());
                         }
                         footer = Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                           child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
                         );
                       }
@@ -239,7 +237,7 @@ class _LabelViewState extends State<LabelView> {
                         sorting: TaskListSorting.sortingLabelAscending,
                       );
                     }).toList(),
-                    const SizedBox(height: 100)
+                    const SizedBox(height: Dimension.paddingXXL)
                   ]),
             ),
           );
@@ -285,13 +283,15 @@ class CompactInfo extends StatelessWidget {
               return Row(
                 children: [
                   SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey2(context))),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: Dimension.paddingXS),
                 ],
               );
             }),
             Text(
               text,
-              style: TextStyle(fontSize: 13, color: ColorsExt.grey2(context)),
+              style: Theme.of(context).textTheme.caption?.copyWith(
+                    color: ColorsExt.grey2(context),
+                  ),
             ),
           ],
         ),

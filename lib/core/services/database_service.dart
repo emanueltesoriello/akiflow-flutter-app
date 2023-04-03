@@ -55,18 +55,19 @@ class DatabaseService {
         onUpgrade: (db, oldVersion, newVersion) async {
           print('onUpgrade: $oldVersion -> $newVersion');
           var batch = db.batch();
-          if (oldVersion < 9) {
-            _addIndexesForListIdUpdatedAt(batch);
+
+          if (oldVersion < 2) {
+            addTasksDocField(batch);
           }
-          if (oldVersion < 8) {
-            batch.execute('ALTER TABLE tasks ADD COLUMN calendar_id VARCHAR(255)');
+
+          if (oldVersion < 3) {
+            batch.execute('ALTER TABLE tasks ADD COLUMN trashed_at TEXT');
           }
-          if (oldVersion < 7) {
-            _addListIdToTask(batch);
+
+          if (oldVersion < 4) {
+            _setupAvailabilities(batch);
           }
-          if (oldVersion < 6) {
-            _addIndexes(batch);
-          }
+
           if (oldVersion < 5) {
             batch.execute('DROP TABLE IF EXISTS events');
             _setupEvents(batch);
@@ -75,15 +76,21 @@ class DatabaseService {
             batch.execute('ALTER TABLE calendars ADD COLUMN account_identifier VARCHAR(255)');
             batch.execute('ALTER TABLE calendars ADD COLUMN account_picture VARCHAR(255)');
           }
-          if (oldVersion < 4) {
-            _setupAvailabilities(batch);
-          }
-          if (oldVersion < 3) {
-            batch.execute('ALTER TABLE tasks ADD COLUMN trashed_at TEXT');
+
+          if (oldVersion < 6) {
+            _addIndexes(batch);
           }
 
-          if (oldVersion < 2) {
-            addTasksDocField(batch);
+          if (oldVersion < 7) {
+            _addListIdToTask(batch);
+          }
+
+          if (oldVersion < 8) {
+            batch.execute('ALTER TABLE tasks ADD COLUMN calendar_id VARCHAR(255)');
+          }
+
+          if (oldVersion < 9) {
+            _addIndexesForListIdUpdatedAt(batch);
           }
 
           await batch.commit();

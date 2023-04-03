@@ -115,6 +115,7 @@ class _AssetsImagesIconsCommon {
   final archiveboxSVG = 'assets/images/icons/_common/archivebox.svg';
   final arrow2CirclepathSVG = 'assets/images/icons/_common/arrow_2_circlepath.svg';
   final arrowLeftSVG = 'assets/images/icons/_common/arrow_left.svg';
+  final arrowRightSVG = 'assets/images/icons/_common/arrow_right.svg';
   final arrowTurnDownRightSVG = 'assets/images/icons/_common/arrow_turn_down_right.svg';
   final arrowUpSVG = 'assets/images/icons/_common/arrow_up.svg';
   final arrowUpArrowDownSVG = 'assets/images/icons/_common/arrow_up_arrow_down.svg';
@@ -135,6 +136,7 @@ class _AssetsImagesIconsCommon {
   final chevronDownSVG = 'assets/images/icons/_common/chevron_down.svg';
   final chevronRightSVG = 'assets/images/icons/_common/chevron_right.svg';
   final chevronUpSVG = 'assets/images/icons/_common/chevron_up.svg';
+  final circleFillSVG = 'assets/images/icons/_common/circle_fill.svg';
   final circleSVG = 'assets/images/icons/_common/circle.svg';
   final clockSVG = 'assets/images/icons/_common/clock.svg';
   final crownSVG = 'assets/images/icons/_common/crown.svg';

@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class IntegrationListItem extends StatefulWidget {
   final String title;
@@ -27,8 +28,8 @@ class IntegrationListItem extends StatefulWidget {
     this.textMainAxisAlignment,
     required this.leading,
     this.identifier,
-    this.insets = const EdgeInsets.symmetric(horizontal: 16),
-    this.borderRadius = const BorderRadius.all(Radius.circular(8)),
+    this.insets = const EdgeInsets.symmetric(horizontal: Dimension.padding),
+    this.borderRadius = const BorderRadius.all(Radius.circular(Dimension.radius)),
     required this.active,
   }) : super(key: key);
 
@@ -64,6 +65,16 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
   void dispose() {
     super.dispose();
     _controller.dispose();
+  }
+
+  Widget _buildLeadingIcon() {
+    return Row(
+      children: [
+        const SizedBox(width: Dimension.padding),
+        widget.leading,
+        const SizedBox(width: Dimension.padding),
+      ],
+    );
   }
 
   @override
@@ -116,14 +127,13 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Flexible(
-                                    child: Text(
-                                      widget.title,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-                                      ),
-                                    ),
+                                    child: Text(widget.title,
+                                        textAlign: TextAlign.left,
+                                        style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                              color: (widget.enabled
+                                                  ? ColorsExt.grey2(context)
+                                                  : ColorsExt.grey3(context)),
+                                            )),
                                   ),
                                 ],
                               ),
@@ -134,23 +144,22 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
 
                                 return Column(
                                   children: [
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: Dimension.paddingXS),
                                     Row(
                                       children: [
                                         CircleAvatar(
-                                          radius: 5,
+                                          radius: Dimension.radiusS,
                                           backgroundColor:
                                               widget.active ? ColorsExt.green(context) : ColorsExt.orange(context),
                                         ),
-                                        const SizedBox(width: 4),
+                                        const SizedBox(width: Dimension.paddingXS),
                                         Flexible(
                                             child: Text(
                                           widget.identifier!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: ColorsExt.grey3(context),
-                                            fontSize: 13,
-                                          ),
+                                          style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: ColorsExt.grey3(context),
+                                              ),
                                         )),
                                       ],
                                     )
@@ -179,16 +188,6 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
               );
             }),
       ),
-    );
-  }
-
-  Widget _buildLeadingIcon() {
-    return Row(
-      children: [
-        const SizedBox(width: 16),
-        widget.leading,
-        const SizedBox(width: 16),
-      ],
     );
   }
 }

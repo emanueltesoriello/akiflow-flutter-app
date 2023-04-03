@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/src/base/ui/widgets/task/plan_for_action.dart';
@@ -30,7 +31,7 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Wrap(
-        runSpacing: 8,
+        runSpacing: Dimension.paddingS,
         children: [
           PlanForAction(
             task: context.watch<EditTaskCubit>().state.updatedTask,
@@ -101,7 +102,7 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
               );
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: Dimension.paddingS),
           BlocBuilder<EditTaskCubit, EditTaskCubitState>(
             builder: (context, state) {
               Task task = state.updatedTask;
@@ -139,7 +140,7 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
               );
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: Dimension.paddingS),
           Builder(builder: (context) {
             HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
             if (homeViewType != HomeViewType.label && isFirstSet) {

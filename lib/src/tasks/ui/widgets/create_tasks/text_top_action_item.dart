@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 import '../../../../../common/style/colors.dart';
 
@@ -14,15 +15,12 @@ class TextTopActionItem extends StatelessWidget {
 
     return Row(
       children: [
-        const SizedBox(width: 6),
-        Text(
-          text!,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-            color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-          ),
-        ),
+        const SizedBox(width: Dimension.paddingS),
+        Text(text!,
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                )),
       ],
     );
   }

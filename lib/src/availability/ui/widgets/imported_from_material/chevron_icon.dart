@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 
-import '../../../../common/style/colors.dart';
+import '../../../../../common/style/colors.dart';
 
 /// A widget representing a rotating expand/collapse button. The icon rotates
 /// 180 degrees when pressed, then reverts the animation on a second press.

@@ -1,6 +1,6 @@
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/src/events/ui/widgets/recurrence_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
@@ -258,6 +258,8 @@ extension EventExt on Event {
           return EventRecurrenceModalType.everyWeekday;
         } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
           return EventRecurrenceModalType.everyYearOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && rule.interval == null && rule.hasByMonthDays) {
+          return EventRecurrenceModalType.everyMonthOnThisDay;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return EventRecurrenceModalType.everyCurrentDay;
         } else if (rule.interval != null || rule.byWeekDays.length > 1) {

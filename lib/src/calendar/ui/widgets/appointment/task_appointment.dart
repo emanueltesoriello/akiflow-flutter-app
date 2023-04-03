@@ -122,17 +122,19 @@ class TaskAppointment extends StatelessWidget {
                               )
                             : const SizedBox(width: 3),
                         Expanded(
-                          child: Text(
-                            appointment.subject,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                              height: 1.3,
-                              fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey1(context),
-                            ),
-                          ),
+                          child: Text(appointment.subject,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: Theme.of(context).textTheme.caption?.copyWith(
+                                    height: 1.3,
+                                    fontSize: calendarController.view == CalendarView.schedule
+                                        ? 15.0
+                                        : boxHeight < 15.0
+                                            ? 11.0
+                                            : 13.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorsExt.grey1(context),
+                                  )),
                         ),
                       ],
                     ),
@@ -141,14 +143,13 @@ class TaskAppointment extends StatelessWidget {
                         children: [
                           const SizedBox(width: 5),
                           Text(
-                            DateFormat("HH:mm").format(DateTime.parse(task.datetime!).toLocal()),
-                            style: TextStyle(
-                              height: 1.3,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey3(context),
-                            ),
-                          ),
+                              '${DateFormat("HH:mm").format(DateTime.parse(task.datetime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!)))}',
+                              style: Theme.of(context).textTheme.caption?.copyWith(
+                                    height: 1.3,
+                                    fontSize: 11.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorsExt.grey3(context),
+                                  )),
                         ],
                       ),
                   ],

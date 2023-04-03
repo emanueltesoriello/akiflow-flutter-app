@@ -4,12 +4,21 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/custom_recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rrule/rrule.dart';
 
-enum EventRecurrenceModalType { none, daily, everyCurrentDay, everyYearOnThisDay, everyWeekday, custom }
+enum EventRecurrenceModalType {
+  none,
+  daily,
+  everyCurrentDay,
+  everyYearOnThisDay,
+  everyMonthOnThisDay,
+  everyWeekday,
+  custom
+}
 
 class EventRecurrenceModal extends StatelessWidget {
   final Function(RecurrenceRule?) onChange;
@@ -29,39 +38,37 @@ class EventRecurrenceModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime lastDayOfMonth = DateTime(eventStartTime.year, eventStartTime.month + 1, 0);
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
-        height: MediaQuery.of(context).size.height * 0.5,
         child: ListView(
+          shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   SvgPicture.asset(
                     Assets.images.icons.common.repeatSVG,
-                    width: 28,
-                    height: 28,
+                    width: Dimension.appBarLeadingIcon,
+                    height: Dimension.appBarLeadingIcon,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    t.editTask.repeat,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
+                  const SizedBox(width: Dimension.paddingS),
+                  Text(t.editTask.repeat,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
                 ],
               ),
             ),
@@ -129,6 +136,23 @@ class EventRecurrenceModal extends StatelessWidget {
             ),
             _item(
               context,
+              active: selectedRecurrence == EventRecurrenceModalType.everyMonthOnThisDay,
+              text: t.editTask.everyMonthOn(
+                date: DateFormat("MMM dd").format(eventStartTime),
+              ),
+              click: () {
+                var rule = RecurrenceRule(
+                  frequency: Frequency.monthly,
+                  byMonthDays: {eventStartTime.day},
+                  until: eventStartTime.toUtc().add(const Duration(days: 365 * 2)),
+                );
+                onChange(rule);
+                onRecurrenceType(EventRecurrenceModalType.everyMonthOnThisDay);
+                Navigator.pop(context);
+              },
+            ),
+            _item(
+              context,
               active: selectedRecurrence == EventRecurrenceModalType.everyWeekday,
               text: t.event.editEvent.recurrence.everyWeekday,
               click: () {
@@ -168,14 +192,10 @@ class EventRecurrenceModal extends StatelessWidget {
                       ),
                     );
                   },
-                  child: Text(
-                    t.editTask.custom,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
-                ))
+                  child: Text(t.editTask.custom,
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                )),
+            const SizedBox(height: Dimension.paddingL),
           ],
         ),
       ),
@@ -193,13 +213,7 @@ class EventRecurrenceModal extends StatelessWidget {
       child: Container(
         color: active ? ColorsExt.grey6(context) : Colors.transparent,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 17,
-            color: ColorsExt.grey2(context),
-          ),
-        ),
+        child: Text(text, style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
       ),
     );
   }

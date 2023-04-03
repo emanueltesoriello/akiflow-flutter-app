@@ -45,10 +45,11 @@ class BottomButton extends StatelessWidget {
             ],
           ),
         ),
-        Text(
-          title,
-          style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-        ),
+        Text(title,
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
       ],
     );
   }

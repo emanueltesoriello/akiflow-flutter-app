@@ -12,7 +12,7 @@ import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
-import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
+import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -94,17 +94,6 @@ class _TodayViewState extends State<TodayView> {
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
 
-    try {
-      todos.sort((a, b) {
-        try {
-          return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
-        } catch (_) {}
-        return 0;
-      });
-    } catch (e) {
-      print(e);
-    }
-
     pinned.sort((a, b) {
       try {
         DateTime parsedAUTC = DateTime.parse(a.datetime!);
@@ -120,7 +109,6 @@ class _TodayViewState extends State<TodayView> {
             ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
                 parsedBLocal.second)
             : DateTime.now();
-
         return fixedA.compareTo(fixedB);
       } catch (e) {
         print("Error sorting pinned items: ${e.toString()}");
@@ -133,14 +121,15 @@ class _TodayViewState extends State<TodayView> {
         create: (BuildContext context) => ViewedMonthCubit(),
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const TodayAppBar(preferredSizeHeight: toolbarHeight, calendarTopMargin: toolbarHeight),
+          appBar: const TodayAppBar(
+              preferredSizeHeight: Dimension.toolbarHeight, calendarTopMargin: Dimension.toolbarHeight),
           body: LayoutBuilder(builder: (context, constraints) {
             return SlidingUpPanel(
               bodyHeight: constraints.maxHeight,
               slideDirection: SlideDirection.down,
               controller: panelController,
               maxHeight: 280,
-              minHeight: todayViewTopMargin,
+              minHeight: Dimension.todayViewTopMargin,
               defaultPanelState: PanelState.closed,
               panel: ValueListenableBuilder(
                 valueListenable: calendarOffsetNotifier,
@@ -162,7 +151,7 @@ class _TodayViewState extends State<TodayView> {
                 child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
               ),
               body: Container(
-                margin: const EdgeInsets.only(top: todayViewTopMargin),
+                margin: const EdgeInsets.only(top: Dimension.todayViewTopMargin),
                 child: Stack(
                   children: [
                     RefreshIndicator(
@@ -179,19 +168,16 @@ class _TodayViewState extends State<TodayView> {
                           children: [
                             if (todos.isEmpty && pinned.isEmpty)
                               Container(
-                                padding: const EdgeInsets.only(top: 100, bottom: 10),
-                                child: SvgPicture.asset(
-                                  Assets.images.akiflow.tasksDoneSVG,
-                                  width: 80.81,
-                                  height: 97.72,
-                                ),
+                                padding: const EdgeInsets.only(top: Dimension.paddingXXL, bottom: Dimension.paddingS),
+                                child: SvgPicture.asset(Assets.images.akiflow.tasksDoneSVG,
+                                    width: Dimension.pagesImageSize, height: Dimension.pagesImageSize),
                               ),
                             TaskList(
                               key: const ObjectKey("todos"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: todos,
-                              sorting: TaskListSorting.dateAscending,
+                              sorting: TaskListSorting.sortingDescending,
                               visible: context.watch<TodayCubit>().state.todosListOpen,
                               showLabel: true,
                               showPlanInfo: false,
@@ -240,7 +226,7 @@ class _TodayViewState extends State<TodayView> {
                                 listOpened: context.watch<TodayCubit>().state.completedListOpen,
                               ),
                             ),
-                            const SizedBox(height: 100)
+                            const SizedBox(height: Dimension.paddingXXL)
                           ],
                         ),
                       ),
@@ -248,7 +234,7 @@ class _TodayViewState extends State<TodayView> {
                     Builder(
                       builder: (context) {
                         if (tasksCubit.state.loading) {
-                          return const FirstSyncProgressToday();
+                          return const FirstSyncProgress();
                         } else {
                           return const SizedBox();
                         }

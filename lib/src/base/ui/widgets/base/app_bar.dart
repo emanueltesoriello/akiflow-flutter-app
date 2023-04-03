@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/sync_progress.dart';
@@ -68,7 +69,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
         title: _buildTitle(context),
-        titleSpacing: leading != null || showBack == true ? 0 : 16,
+        titleSpacing: leading != null || showBack == true ? 0 : Dimension.padding,
         leading: _buildLeading(context),
         actions: _buildActions(context),
       ),
@@ -122,11 +123,10 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     if (tasksSelected != 0) {
       return Text(
         t.task.nSelected(count: tasksSelected),
-        style: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w500,
-          color: ColorsExt.grey2(context),
-        ),
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey2(context),
+            ),
       );
     }
 
@@ -142,13 +142,14 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
       return const SizedBox();
     }
 
-    return Text(
-      title!,
-      textAlign: TextAlign.start,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: ColorsExt.grey2(context)),
-    );
+    return Text(title!,
+        textAlign: TextAlign.start,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context)
+            .textTheme
+            .titleLarge!
+            .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)));
   }
 
   List<Widget> _buildActions(BuildContext context) {
@@ -165,8 +166,8 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         builder: (context, state) {
           if (state.networkError) {
             return SizedBox(
-              height: 24,
-              width: 24,
+              height: Dimension.defaultIconSize,
+              width: Dimension.defaultIconSize,
               child: SvgPicture.asset(
                 Assets.images.icons.common.wifiSlashSVG,
                 color: ColorsExt.yellow(context),
@@ -180,7 +181,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
           return const SyncProgress();
         },
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: Dimension.paddingS),
       ...actions,
     ];
   }

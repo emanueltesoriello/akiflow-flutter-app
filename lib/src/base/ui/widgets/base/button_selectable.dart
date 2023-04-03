@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/src/settings/ui/widgets/leading_icon.dart';
+import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/src/base/ui/widgets/base/leading_icon.dart';
 
 class ButtonSelectable extends StatefulWidget {
   final String title;
@@ -81,7 +82,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
               child: AnimatedBuilder(
                 animation: _animation!,
                 builder: (_, child) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: Material(
                     color: _animation!.value,
                     child: Material(
@@ -90,13 +91,10 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                         children: [
                           LeadingIcon(leading: widget.leading),
                           Expanded(
-                            child: Text(
-                              widget.title,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: ColorsExt.grey2(context),
-                              ),
-                            ),
+                            child: Text(widget.title,
+                                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                      color: ColorsExt.grey2(context),
+                                    )),
                           ),
                           Visibility(
                             visible: widget.trailing != null,

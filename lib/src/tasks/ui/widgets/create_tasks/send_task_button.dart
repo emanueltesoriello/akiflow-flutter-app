@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
-
+import 'package:mobile/common/style/sizes.dart';
 
 class SendTaskButton extends StatelessWidget {
   const SendTaskButton({Key? key, required this.onTap}) : super(key: key);
@@ -13,10 +13,10 @@ class SendTaskButton extends StatelessWidget {
       onTap: () {
         onTap.call();
       },
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(Dimension.radius),
       child: Material(
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimension.radius),
         child: SizedBox(
           height: 36,
           width: 36,

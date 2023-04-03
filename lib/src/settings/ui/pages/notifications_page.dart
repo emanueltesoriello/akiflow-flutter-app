@@ -1,21 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
-import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:workmanager/workmanager.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -46,9 +40,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
       {required Function(bool) onChanged, required bool isEnabled}) {
     return Container(
       margin: const EdgeInsets.all(1),
-      //padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(Dimension.radius),
           boxShadow: [
             BoxShadow(
               color: ColorsExt.grey5(context),
@@ -61,8 +54,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         shrinkWrap: true,
         children: [
           Container(
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.all(Dimension.paddingS),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,10 +62,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Text(
                     switchTitle,
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          color: ColorsExt.grey2(context),
+                        ),
                   ),
                   FlutterSwitch(
                     width: 48,
@@ -82,7 +73,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     activeColor: ColorsExt.akiflow(context),
                     inactiveColor: ColorsExt.grey5(context),
                     value: isEnabled,
-                    borderRadius: 24,
+                    borderRadius: Dimension.radiusL,
                     padding: 2,
                     onToggle: (val) => onChanged(val),
                   ),
@@ -97,25 +88,27 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ignoring: !isEnabled,
               child: ListTile(
                 visualDensity: const VisualDensity(vertical: -4), // to compact
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                contentPadding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                 onTap: () => onTap(),
                 title: Text(
                   mainButtonListTitle,
                   textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: ColorsExt.grey2(context),
-                  ),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                        color: ColorsExt.grey2(context),
+                      ),
                 ),
                 subtitle: Text(
                   selectedButtonListItem,
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle2
+                      .bodyText2
                       ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.normal),
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: Dimension.chevronIconSize,
+                ),
               ),
             ),
           ),
@@ -173,14 +166,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: Dimension.padding),
                 Text(
                   "TASKS IN CALENDAR".toUpperCase(),
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey3(context),
+                      ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: Dimension.paddingXS),
                 mainItem("Next tasks", "Receive notification", selectedNextTaskNotificationsModel.title,
                     () => onReceiveNotificationNextTaskClick(), onChanged: (newVal) async {
                   service.setNextTaskNotificationSettingEnabled(newVal);
@@ -193,12 +188,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),
-                const SizedBox(height: 20),
+                const SizedBox(height: Dimension.padding),
                 Text(
                   "DAILY OVERVIEW".toUpperCase(),
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey3(context),
+                      ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: Dimension.paddingXS),
                 FutureBuilder(builder: (context, AsyncSnapshot<PreferencesRepository> repo) {
                   return Container();
                 }),
@@ -213,17 +210,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   }
                   NotificationsService.setDailyReminder(locator<PreferencesRepository>());
                 }, isEnabled: dailyOverviewNotificationTimeEnabled),
-                const SizedBox(height: 20),
+                const SizedBox(height: Dimension.padding),
                 Text(
                   "sounds".toUpperCase(),
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey3(context),
+                      ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: Dimension.paddingXS),
                 Container(
                   height: 58,
                   margin: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(radius),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
                       boxShadow: [
                         BoxShadow(
                           color: ColorsExt.grey5(context),
@@ -232,7 +231,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         ),
                       ],
                       color: Colors.white),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -240,10 +239,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         Text(
                           "Task completed",
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: ColorsExt.grey2(context),
-                          ),
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                color: ColorsExt.grey2(context),
+                              ),
                         ),
                         FlutterSwitch(
                           width: 48,

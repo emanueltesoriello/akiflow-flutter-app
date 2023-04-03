@@ -216,7 +216,10 @@
       "month": "Month"
     },
     "hideWeekends": "Hide Weekends",
-    "calendars": "Calendars"
+    "hideDeclinedEvents": "Hide Declined events",
+    "hideTasksFromCalendar": "Hide Tasks from calendar",
+    "calendars": "Calendars",
+    "refresh": "Refresh"
   },
   "linkedContent": {
     "subject": "Subject",
@@ -260,6 +263,8 @@
     "everyCurrentDay": "Every ${day}",
     "everyFirstCurrentDayOfTheMonth": "Every first ${day} of the month",
     "everyYearOn": "Every year on ${date}",
+    "everyMonthOn": "Every month on ${date}",
+    "everyLastDayOfTheMonth": "Every last day of the month",
     "everyWeekday": "Every weekday",
     "custom": "Custom",
     "comingSoon": "Coming soon",
@@ -345,12 +350,16 @@
     "edit": "Edit",
     "delete": "Delete",
     "editEvent": {
+      "addTitle": "Add title",
       "allDay": "All Day",
       "addConference": "Add Conference",
       "addLocation": "Add Location",
+      "chooseCalendar": "Choose Calendar",
       "addGuests": "Add guests",
       "addDescription": "Add Description",
       "defaultColor": "Default Color",
+      "customColor": "Custom color",
+      "eventColor": "Event color",
       "viewOnGoogleCalendar": "View on Google Calendar",
       "createEvent": "Create event",
       "saveChanges": "Save Changes",
@@ -368,11 +377,15 @@
         "description": "You can't undo this action!"
       },
       "recurrence": {
-        "noRepeat":"No repeat",
+        "noRepeat": "No repeat",
         "setRepeat": "Set Repeat",
         "everyDay": "Every day",
         "everyWeekday": "Every weekday",
         "custom": "Custom"
+      },
+      "addGuestModal": {
+        "addGuest": "Add guest",
+        "searchContact": "Search contact"
       }
     },
     "snackbar": {

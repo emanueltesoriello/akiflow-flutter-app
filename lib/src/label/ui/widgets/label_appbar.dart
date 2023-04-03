@@ -4,16 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
-import 'package:mobile/src/label/ui/widgets/create_edit_label_modal.dart';
-import 'package:mobile/src/label/ui/widgets/create_edit_section_modal.dart';
-import 'package:mobile/src/label/ui/widgets/delete_label_dialog.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 import 'package:models/label/label.dart';
-import 'package:uuid/uuid.dart';
 
 enum LabelActions { edit, order, newSection, showDone, delete }
 
@@ -50,14 +47,15 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
           borderRadius: BorderRadius.circular(4),
           color: iconBackground,
         ),
-        height: 26,
-        width: 26,
-        child: Center(
-          child: SvgPicture.asset(
-            Assets.images.icons.common.numberSVG,
-            width: 15,
-            height: 15,
-            color: iconForeground,
+        height: Dimension.appBarLeadingIcon,
+        width: Dimension.appBarLeadingIcon,
+        child: Padding(
+          padding: const EdgeInsets.all(Dimension.paddingXS),
+          child: Center(
+            child: SvgPicture.asset(
+              Assets.images.icons.common.numberSVG,
+              color: iconForeground,
+            ),
           ),
         ),
       ),
@@ -69,91 +67,35 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.all(0),
             icon: SvgPicture.asset(
               Assets.images.icons.common.ellipsisSVG,
-              width: 22,
-              height: 22,
+              width: Dimension.appBarLeadingIcon,
+              height: Dimension.appBarLeadingIcon,
               color: ColorsExt.grey3(context),
             ),
             onSelected: (LabelActions result) async {
               switch (result) {
                 case LabelActions.edit:
-                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                  List<Label> folders =
-                      labelsCubit.state.labels.where((label) => label.isFolder && label.deletedAt == null).toList();
-
-                  Label? updated = await showCupertinoModalBottomSheet(
-                    context: context,
-                    builder: (context) => CreateEditLabelModal(
-                      label: labelsCubit.state.selectedLabel!,
-                      folders: folders,
-                    ),
-                  );
-
-                  if (updated != null) {
-                    labelsCubit.saveLabel(updated);
-                  }
+                  context.read<LabelsCubit>().appbarActionEditLabel(context);
                   break;
                 case LabelActions.order:
                   // context.read<LabelCubit>().toggleSorting();
                   break;
                 case LabelActions.newSection:
-                  Label currentLabel = context.read<LabelsCubit>().state.selectedLabel!;
-                  Label newSection = Label(id: const Uuid().v4(), parentId: currentLabel.id!, type: "section");
-
-                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-
-                  Label? section = await showCupertinoModalBottomSheet(
-                    context: context,
-                    builder: (context) => CreateEditSectionModal(initialSection: newSection),
-                  );
-
-                  if (section != null) {
-                    labelsCubit.addSectionToLocalUi(section);
-                    labelsCubit.addLabel(section, labelType: LabelType.section);
-                  }
-
+                  context.read<LabelsCubit>().appbarActionNewSection(context);
                   break;
                 case LabelActions.showDone:
                   context.read<LabelsCubit>().toggleShowDone();
                   break;
                 case LabelActions.delete:
-                  LabelsCubit labelsCubit = context.read<LabelsCubit>();
-                  MainCubit mainCubit = context.read<MainCubit>();
-
-                  Label labelToDelete = labelsCubit.state.selectedLabel!;
-
-                  showDialog(
-                      context: context,
-                      builder: (context) => DeleteLabelDialog(
-                            labelToDelete,
-                            justDeleteTheLabelClick: () {
-                              labelsCubit.delete();
-
-                              Label deletedLabel = labelsCubit.state.selectedLabel!;
-                              labelsCubit.updateLabel(deletedLabel);
-
-                              mainCubit.changeHomeView(HomeViewType.inbox);
-                            },
-                            markAllTasksAsDoneClick: () {
-                              labelsCubit.delete(markTasksAsDone: true);
-
-                              Label deletedLabel = labelsCubit.state.selectedLabel!;
-                              labelsCubit.updateLabel(deletedLabel);
-
-                              mainCubit.changeHomeView(HomeViewType.inbox);
-                            },
-                          ));
-
+                  context.read<LabelsCubit>().appbarActionDeleteLabel(context);
                   break;
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<LabelActions>>[
               PopupMenuItem<LabelActions>(
                 value: LabelActions.edit,
-                height: 40,
                 padding: EdgeInsets.zero,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: PopupMenuCustomItem(
                     iconAsset: Assets.images.icons.common.pencilSVG,
                     text: t.label.editLabel,
@@ -163,10 +105,9 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               PopupMenuItem<LabelActions>(
                 value: LabelActions.order,
                 enabled: false,
-                height: 40,
                 padding: EdgeInsets.zero,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: PopupMenuCustomItem(
                     iconAsset: Assets.images.icons.common.arrowUpArrowDownSVG,
                     text: t.label.sortComingSoon,
@@ -176,10 +117,9 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               PopupMenuItem<LabelActions>(
                 value: LabelActions.newSection,
-                height: 40,
                 padding: EdgeInsets.zero,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: PopupMenuCustomItem(
                     iconAsset: Assets.images.icons.common.plusSVG,
                     text: t.label.newSection,
@@ -188,10 +128,9 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               PopupMenuItem<LabelActions>(
                 value: LabelActions.showDone,
-                height: 40,
                 padding: EdgeInsets.zero,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: PopupMenuCustomItem(
                     iconAsset: Assets.images.icons.common.checkDoneOutlineSVG,
                     text: showDone ? t.label.hideDone : t.label.showDone,
@@ -200,10 +139,9 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               PopupMenuItem<LabelActions>(
                 value: LabelActions.delete,
-                height: 40,
                 padding: EdgeInsets.zero,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: PopupMenuCustomItem(
                     iconAsset: Assets.images.icons.common.trashSVG,
                     text: t.label.deleteLabel,

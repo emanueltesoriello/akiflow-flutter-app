@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class SettingHeaderText extends StatelessWidget {
   final String text;
@@ -11,11 +12,12 @@ class SettingHeaderText extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          text.toUpperCase(),
-          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-        ),
-        const SizedBox(height: 4),
+        Text(text.toUpperCase(),
+            style: Theme.of(context).textTheme.caption?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey3(context),
+                )),
+        const SizedBox(height: Dimension.paddingXS),
       ],
     );
   }

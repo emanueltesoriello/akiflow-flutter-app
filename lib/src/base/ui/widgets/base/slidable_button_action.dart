@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class SlidableButtonAction extends StatelessWidget {
   final Color backColor;
@@ -47,14 +48,14 @@ class SlidableButtonAction extends StatelessWidget {
           color: Colors.transparent,
           child: Align(
             alignment: Alignment.centerRight,
-            child: _content(),
+            child: _content(context),
           ),
         ),
       );
     }
   }
 
-  Row _content() {
+  Row _content(BuildContext context) {
     if (leftToRight) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -62,19 +63,16 @@ class SlidableButtonAction extends StatelessWidget {
           SvgPicture.asset(
             icon,
             color: topColor,
-            width: size ?? 24,
-            height: size ?? 24,
+            width: size ?? Dimension.defaultIconSize,
+            height: size ?? Dimension.defaultIconSize,
           ),
-          const SizedBox(width: 4.5),
-          Text(
-            label!,
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: topColor,
-            ),
-          ),
+          const SizedBox(width: Dimension.paddingXS),
+          Text(label!,
+              textAlign: TextAlign.end,
+              style: Theme.of(context).textTheme.caption?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: topColor,
+                  )),
           const Spacer(),
         ],
       );
@@ -83,21 +81,15 @@ class SlidableButtonAction extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          Text(
-            label!,
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: topColor,
-            ),
-          ),
-          const SizedBox(width: 4.5),
+          Text(label!,
+              textAlign: TextAlign.end,
+              style: Theme.of(context).textTheme.caption?.copyWith(fontWeight: FontWeight.w500, color: topColor)),
+          const SizedBox(width: Dimension.paddingXS),
           SvgPicture.asset(
             icon,
             color: topColor,
-            width: 24,
-            height: 24,
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
           ),
         ],
       );

@@ -32,18 +32,6 @@ class StylableTextEditingController extends TextEditingController {
     return mapping.keys.any((element) => mapping[element]?.type == 0);
   }
 
-  bool hasParsedLabel() {
-    return mapping.keys.any((element) => mapping[element]?.type == 1);
-  }
-
-  bool hasParsedPriority() {
-    return mapping.keys.any((element) => mapping[element]?.type == 2);
-  }
-
-  bool hasParsedDuration() {
-    return mapping.keys.any((element) => mapping[element]?.type == 3);
-  }
-
   Color? getColorFromValue(String? match) {
     return mapping.entries.where((element) => element.key == match).first.value.style.backgroundColor;
   }
@@ -87,12 +75,8 @@ class StylableTextEditingController extends TextEditingController {
   }
 
   bool isRemoved(String value) {
-    return false; //recognizedButRemoved.any((element) => element.contains(value));
+    return false;
   }
-
-  /*onTap(int type) {
-    removeMapping(type);
-  }*/
 
   @override
   TextSpan buildTextSpan({required BuildContext context, TextStyle? style, required bool withComposing}) {

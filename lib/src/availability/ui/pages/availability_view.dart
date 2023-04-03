@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 
 import '../widgets/availabilities_view.dart';
@@ -13,13 +14,13 @@ class AvailabilityView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         appBar: AppBarComp(
           title: t.availability.availabilities,
           leading: SvgPicture.asset(
             Assets.images.icons.common.availabilitySVG,
-            width: 26,
-            height: 26,
+            width: Dimension.appBarLeadingIcon,
+            height: Dimension.appBarLeadingIcon,
             color: ColorsExt.grey1(context),
           ),
           showSyncButton: true,

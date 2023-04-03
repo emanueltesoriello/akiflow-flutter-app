@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
@@ -33,8 +34,8 @@ class _SearchModalState extends State<SearchModal> {
             ),
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.radiusM),
+                topRight: Radius.circular(Dimension.radiusM),
               ),
               child: Container(
                 color: Theme.of(context).backgroundColor,
@@ -44,12 +45,12 @@ class _SearchModalState extends State<SearchModal> {
                 margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                     child: Column(
                       children: [
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimension.padding),
                         const ScrollChip(),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimension.padding),
                         BorderedInputView(
                           focus: titleFocus,
                           onChanged: (value) {},
@@ -64,7 +65,7 @@ class _SearchModalState extends State<SearchModal> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 100),
+                        const SizedBox(height: Dimension.paddingXXL),
                         SizedBox(
                           height: 120,
                           width: 120,
@@ -73,15 +74,17 @@ class _SearchModalState extends State<SearchModal> {
                             alignment: Alignment.center,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: Dimension.padding),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                           child: Text(t.settings.searchComingSoon,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey1(context))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey1(context))),
                         ),
-                        const SizedBox(height: 100),
+                        const SizedBox(height: Dimension.paddingXXL),
                       ],
                     ),
                   ),

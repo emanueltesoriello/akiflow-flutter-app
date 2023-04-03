@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
@@ -148,7 +150,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 child: SlidableButtonAction(
                   backColor: ColorsExt.green20(context),
                   topColor: ColorsExt.green(context),
-                  icon: 'assets/images/icons/_common/Check-done.svg',
+                  icon: Assets.images.icons.common.checkDoneSVG,
                   leftToRight: true,
                   click: () {
                     Slidable.of(context)?.close();
@@ -219,7 +221,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 child: SlidableButtonAction(
                   backColor: ColorsExt.grey5(context),
                   topColor: ColorsExt.grey3(context),
-                  icon: 'assets/images/icons/_common/number.svg',
+                  icon: Assets.images.icons.common.numberSVG,
                   leftToRight: false,
                   click: () {
                     Slidable.of(context)?.close();
@@ -238,7 +240,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 child: SlidableButtonAction(
                   backColor: ColorsExt.pink30(context),
                   topColor: ColorsExt.pink(context),
-                  icon: 'assets/images/icons/_common/clock.svg',
+                  icon: Assets.images.icons.common.clockSVG,
                   leftToRight: false,
                   click: () {
                     Slidable.of(context)?.close();
@@ -257,7 +259,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 child: SlidableButtonAction(
                   backColor: ColorsExt.cyan25(context),
                   topColor: ColorsExt.cyan(context),
-                  icon: 'assets/images/icons/_common/calendar.svg',
+                  icon: Assets.images.icons.common.calendarSVG,
                   leftToRight: false,
                   click: () {
                     Slidable.of(context)?.close();
@@ -352,6 +354,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 TitleWidget(widget.task),
+                                                const SizedBox(height: Dimension.paddingXS),
                                                 Subtitle(widget.task),
                                                 TaskInfo(
                                                   widget.task,

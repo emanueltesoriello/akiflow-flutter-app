@@ -53,8 +53,12 @@ class EventAppointment extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
                   style: TextStyle(
-                    height: 1.3,
-                    fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
+                    height: event.attendees != null && responseStatus == AtendeeResponseStatus.needsAction ? 1.1 : 1.3,
+                    fontSize: calendarController.view == CalendarView.schedule
+                        ? 15.0
+                        : boxHeight < 15.0
+                            ? 11.0
+                            : 13.0,
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined
                         ? ColorsExt.grey3(context)
@@ -66,14 +70,13 @@ class EventAppointment extends StatelessWidget {
                     event.startTime != null &&
                     event.endTime != null)
                   Text(
-                    '${DateFormat("HH:mm").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(event.endTime!).toLocal())}',
-                    style: TextStyle(
-                      height: 1.5,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey3(context),
-                    ),
-                  ),
+                      '${DateFormat("HH:mm").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(event.endTime!).toLocal())}',
+                      style: Theme.of(context).textTheme.caption?.copyWith(
+                            height: 1.3,
+                            fontSize: 11.0,
+                            fontWeight: FontWeight.w500,
+                            color: ColorsExt.grey3(context),
+                          )),
               ],
             ),
           ),

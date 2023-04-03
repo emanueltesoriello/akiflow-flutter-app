@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -42,7 +43,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -50,15 +51,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
                 padding: const EdgeInsets.only(top: 2.0),
                 child: _checkbox(context),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: Dimension.paddingS),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _firstLine(context),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: Dimension.paddingS),
                     _description(context),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: Dimension.paddingM),
                     if (!state.hasFocusOnTitleOrDescription) _thirdLine(context),
                   ],
                 ),
@@ -143,17 +144,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
         isDense: true,
         hintText: t.addTask.titleHint,
         border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-        ),
+        hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey3(context),
+            ),
       ),
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: ColorsExt.grey2(context),
+          ),
       onChanged: (value) {
         context.read<EditTaskCubit>().onTitleChanged(value);
       },

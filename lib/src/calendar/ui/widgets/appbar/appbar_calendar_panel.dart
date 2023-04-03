@@ -59,7 +59,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                   startingDayOfWeek: firstDayOfWeek == -1 || firstDayOfWeek == DateTime.monday
                       ? StartingDayOfWeek.monday
                       : StartingDayOfWeek.sunday,
-                  rowHeight: todayCalendarMinHeight,
+                  rowHeight: Dimension.todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   calendarFormat: CalendarFormat.month,
                   sixWeekMonthsEnforced: true,
@@ -84,16 +84,14 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                     dowTextFormatter: (date, locale) {
                       return DateFormat("E").format(date).substring(0, 1);
                     },
-                    weekdayStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: ColorsExt.grey3(context),
-                    ),
-                    weekendStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: ColorsExt.grey3(context),
-                    ),
+                    weekdayStyle: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600),
+                    weekendStyle: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600),
                   ),
                   calendarBuilders: CalendarBuilders(
                     defaultBuilder: (context, day, focusedDay) {
@@ -102,11 +100,10 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                         child: Center(
                           child: Text(
                             DateFormat("d").format(day),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
                           ),
                         ),
                       );
@@ -123,11 +120,10 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                         child: Center(
                           child: Text(
                             DateFormat("d").format(day),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey3(context),
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
                           ),
                         ),
                       );

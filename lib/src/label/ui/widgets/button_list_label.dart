@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
 
 class ButtonListLabel extends StatefulWidget {
@@ -82,10 +82,11 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
               builder: (_, child) => AnimatedBuilder(
                 animation: _animation!,
                 builder: (_, child) => Container(
-                  margin: margin(context),
-                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                  padding: const EdgeInsets.all(Dimension.padding),
                   decoration: BoxDecoration(
-                    borderRadius: borderRadius(context),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(Dimension.radius),
+                    ),
                     color: _animation!.value,
                   ),
                   child: Row(
@@ -100,10 +101,9 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
                               child: Text(
                                 widget.title,
                                 textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: ColorsExt.grey2(context),
-                                ),
+                                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                      color: ColorsExt.grey2(context),
+                                    ),
                               ),
                             ),
                           ],
@@ -120,8 +120,8 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
 
                         return SvgPicture.asset(
                           Assets.images.icons.common.chevronRightSVG,
-                          width: 20,
-                          height: 20,
+                          width: Dimension.chevronIconSize,
+                          height: Dimension.chevronIconSize,
                           color: ColorsExt.grey3(context),
                         );
                       }),
@@ -142,50 +142,8 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
     return Row(
       children: [
         widget.leading!,
-        const SizedBox(width: 8),
+        const SizedBox(width: Dimension.paddingS),
       ],
     );
-  }
-
-  EdgeInsets margin(BuildContext context) {
-    switch (widget.position) {
-      case ButtonListPosition.single:
-        return const EdgeInsets.all(1);
-      case ButtonListPosition.top:
-        return const EdgeInsets.only(left: 1, top: 1, right: 1);
-      case ButtonListPosition.center:
-        return const EdgeInsets.all(1);
-      case ButtonListPosition.mid:
-        return const EdgeInsets.all(1);
-      case ButtonListPosition.bottom:
-        return const EdgeInsets.only(left: 1, bottom: 1, right: 1);
-      case ButtonListPosition.onlyHorizontalPadding:
-        return const EdgeInsets.only(left: 1, right: 1);
-    }
-  }
-
-  BorderRadius borderRadius(BuildContext context) {
-    switch (widget.position) {
-      case ButtonListPosition.single:
-        return const BorderRadius.all(
-          Radius.circular(radius),
-        );
-      case ButtonListPosition.top:
-        return const BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          topRight: Radius.circular(radius),
-        );
-      case ButtonListPosition.center:
-        return BorderRadius.zero;
-      case ButtonListPosition.mid:
-        return BorderRadius.zero;
-      case ButtonListPosition.bottom:
-        return const BorderRadius.only(
-          bottomLeft: Radius.circular(radius),
-          bottomRight: Radius.circular(radius),
-        );
-      case ButtonListPosition.onlyHorizontalPadding:
-        return const BorderRadius.all(Radius.zero);
-    }
   }
 }

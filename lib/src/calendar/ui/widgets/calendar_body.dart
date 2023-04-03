@@ -12,9 +12,9 @@ import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_event.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
-import 'package:mobile/src/calendar/ui/widgets/appbar_calendar_panel.dart';
-import 'package:mobile/src/calendar/ui/widgets/event_appointment.dart';
-import 'package:mobile/src/calendar/ui/widgets/task_appointment.dart';
+import 'package:mobile/src/calendar/ui/widgets/appbar/appbar_calendar_panel.dart';
+import 'package:mobile/src/calendar/ui/widgets/appointment/event_appointment.dart';
+import 'package:mobile/src/calendar/ui/widgets/appointment/task_appointment.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/event_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -106,23 +106,38 @@ class CalendarBody extends StatelessWidget {
                 eventsCubit.fetchEventsBetweenDates(start, end);
               }
             },
-            dataSource: _getCalendarDataSource(context),
+            dataSource: _getCalendarDataSource(context, state),
             viewHeaderStyle: ViewHeaderStyle(
-              dayTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
-              dateTextStyle: TextStyle(fontSize: 15, color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
-            ),
+                dayTextStyle: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                dateTextStyle: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
             timeSlotViewSettings: TimeSlotViewSettings(
               timeIntervalHeight: 60.0,
               minimumAppointmentDuration: const Duration(minutes: 15),
-              timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ColorsExt.grey2(context)),
+              timeTextStyle: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
+              dayFormat: isThreeDays ? 'EEE' : 'EE', 
             ),
             scheduleViewSettings: ScheduleViewSettings(
                 hideEmptyScheduleWeek: true,
                 dayHeaderSettings: DayHeaderSettings(
-                  dayTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey2(context)),
-                  dateTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
+                  dayTextStyle: Theme.of(context)
+                      .textTheme
+                      .caption
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                  dateTextStyle: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
                 ),
                 weekHeaderSettings: WeekHeaderSettings(
                   startDateFormat: 'dd',
@@ -133,7 +148,10 @@ class CalendarBody extends StatelessWidget {
                 monthHeaderSettings: MonthHeaderSettings(
                   height: 66,
                   backgroundColor: ColorsExt.grey7(context),
-                  monthTextStyle: TextStyle(fontSize: 20, color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                  monthTextStyle: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
                 )),
             monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
             onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit),
@@ -187,8 +205,8 @@ class CalendarBody extends StatelessWidget {
     context.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
-      context.read<CalendarCubit>().changeCalendarView(CalendarView.day);
-      calendarController.view = CalendarView.day;
+      context.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
+      calendarController.view = CalendarView.schedule;
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
@@ -264,7 +282,7 @@ class CalendarBody extends StatelessWidget {
     }
   }
 
-  _AppointmentDataSource _getCalendarDataSource(BuildContext context) {
+  _AppointmentDataSource _getCalendarDataSource(BuildContext context, CalendarCubitState state) {
     List<CalendarEvent> calendarNonRecurringEvents = <CalendarEvent>[];
     List<CalendarEvent> calendarParentEvents = <CalendarEvent>[];
     List<CalendarEvent> calendarExceptionEvents = <CalendarEvent>[];
@@ -274,7 +292,17 @@ class CalendarBody extends StatelessWidget {
     List<Event> recurringParents = <Event>[];
     List<Event> recurringExceptions = <Event>[];
 
-    nonRecurring = events.where((event) => event.recurringId == null).toList();
+    bool areDeclinedEventsHidden = state.areDeclinedEventsHidden;
+
+    if (areDeclinedEventsHidden) {
+      nonRecurring = events
+          .where(
+              (event) => event.recurringId == null && event.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined)
+          .toList();
+    } else {
+      nonRecurring = events.where((event) => event.recurringId == null).toList();
+    }
+
     recurringParents = events.where((event) => event.id == event.recurringId).toList();
     recurringExceptions = events.where((event) => event.recurringId != null && event.recurringId != event.id).toList();
 
@@ -295,6 +323,7 @@ class CalendarBody extends StatelessWidget {
               isRecurringException: false,
               isNonRecurring: false,
               exceptions: recurringExceptions,
+              areDeclinedEventsHidden: areDeclinedEventsHidden,
             ))
         .toList();
     calendarExceptionEvents = recurringExceptions
@@ -304,6 +333,7 @@ class CalendarBody extends StatelessWidget {
               isRecurringParent: false,
               isRecurringException: true,
               isNonRecurring: false,
+              areDeclinedEventsHidden: areDeclinedEventsHidden,
             ))
         .toList();
     calendarTasks = tasks.map((task) => CalendarTask.taskToCalendarTask(context, task)).toList();

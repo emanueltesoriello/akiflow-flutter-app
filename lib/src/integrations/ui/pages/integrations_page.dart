@@ -7,15 +7,13 @@ import 'package:mobile/assets.dart';
 // import 'package:mobile/features/integrations/ui/gmail/gmail_instruction_integration_page.dart';
 // import 'package:mobile/features/integrations/ui/integration_list_item.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/pages/gmail_details_integration_page.dart';
 import 'package:mobile/src/integrations/ui/widgets/integrations_list.dart';
-// import 'package:mobile/style/theme.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
 
@@ -54,7 +52,7 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                 children: [
                   BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                     builder: (context, state) {
@@ -72,30 +70,22 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                             children: [
                               const SizedBox(height: 200),
                               SvgPicture.asset(Assets.images.akiflow.thatsItnothingSVG),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Nothing to reconnect',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: ColorsExt.grey2(context),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'You have no active integrations, check your desktop app to add more',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: ColorsExt.grey3(context),
-                                ),
-                              ),
+                              const SizedBox(height: Dimension.padding),
+                              Text('Nothing to reconnect',
+                                  style:
+                                      Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                              const SizedBox(height: Dimension.padding),
+                              Text('You have no active integrations, check your desktop app to add more',
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey3(context))),
                             ],
                           ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 20),
+                            const SizedBox(height: Dimension.padding),
                             Text(
                               t.settings.integrations.connected.toUpperCase(),
                               style:
@@ -120,7 +110,6 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                                           onDisconnect: () {
                                             rebuildAllChildren(context);
                                           })));
-                                  //context.read<IntegrationsCubit>().connectGmail(email: account.identifier);
                                 }
                               },
                             ),
@@ -129,35 +118,6 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                       );
                     },
                   ),
-                  // const SizedBox(height: 16),
-                  // Text(
-                  //   t.more.toUpperCase(),
-                  //   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                  // ),
-                  // const SizedBox(height: 4),
-                  // IntegrationListItem(
-                  //   leading: Padding(
-                  //     padding: const EdgeInsets.all(2),
-                  //     child: SizedBox(
-                  //       height: 30,
-                  //       width: 30,
-                  //       child: SvgPicture.asset(
-                  //         "assets/images/icons/google/gmail.svg",
-                  //         height: 30,
-                  //         width: 30,
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   title: t.settings.integrations.gmail.title,
-                  //   insets: const EdgeInsets.all(1),
-                  //   borderRadius: BorderRadius.circular(radius),
-                  //   active: true,
-                  //   onPressed: () async {
-                  //     await Navigator.of(context).push(MaterialPageRoute(
-                  //         builder: (context) => const GmailInstructionIntegrationsPage.newConnection()));
-                  //   },
-                  // ),
-                  //const SizedBox(height: 16),
                 ],
               ),
             ),

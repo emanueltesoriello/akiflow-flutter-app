@@ -5,10 +5,12 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:mobile/src/calendar/ui/widgets/calendar_settings_modal.dart';
+import 'package:mobile/src/calendar/ui/widgets/settings/calendar_settings_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -35,23 +37,23 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
             height: 26,
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                context.read<CalendarCubit>().closePanel();
-              },
-              style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-              ),
-              child: Text(
-                t.bottomBar.today,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: state.visibleDates.contains(today) ? ColorsExt.grey3(context) : ColorsExt.akiflow(context),
+            if (!state.visibleDates.contains(today))
+              TextButton(
+                onPressed: () {
+                  calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+                  context.read<CalendarCubit>().closePanel();
+                },
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                ),
+                child: Text(
+                  t.bottomBar.today,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w600),
                 ),
               ),
-            ),
             IconButton(
               icon: SvgPicture.asset(
                 Assets.images.icons.common.ellipsisSVG,
@@ -94,19 +96,13 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
             textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: ColorsExt.grey2(context)),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
           ),
-          const SizedBox(width: 10),
-          SizedBox(
-            width: 16,
-            height: 16,
-            child: SvgPicture.asset(
-              state.panelState == PanelState.closed
-                  ? Assets.images.icons.common.chevronDownSVG
-                  : Assets.images.icons.common.chevronUpSVG,
-              color: ColorsExt.grey3(context),
-            ),
-          ),
+          const SizedBox(width: Dimension.padding),
+          AnimatedChevron(iconUp: state.panelState == PanelState.opened),
         ],
       ),
     );

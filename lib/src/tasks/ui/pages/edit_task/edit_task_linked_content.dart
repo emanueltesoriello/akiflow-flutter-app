@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -45,7 +46,7 @@ class EditTaskLinkedContent extends StatelessWidget {
             },
             child: Column(
               children: [
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimension.padding),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: Row(
@@ -62,13 +63,15 @@ class EditTaskLinkedContent extends StatelessWidget {
                                 width: 18,
                                 height: 18,
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: Dimension.paddingS),
                               Expanded(
                                 child: Text(
                                   doc?.getLinkedContentSummary().toString().parseHtmlString ?? doc?.url ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+                                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                        color: ColorsExt.grey2(context),
+                                      ),
                                 ),
                               ),
                             ],
@@ -91,7 +94,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimension.padding),
                 const Separator(),
               ],
             ),

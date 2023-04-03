@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 
 class EmptyHomeViewPlaceholder extends StatelessWidget {
@@ -22,9 +23,9 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
           children: [
             SvgPicture.asset(
               Assets.images.akiflow.inboxZeroSVG,
-              height: 80,
+              height: Dimension.pagesImageSize,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: Dimension.paddingM),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -32,39 +33,22 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
                   child: Text(
                     t.task.awesomeInboxZero,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-            InkWell(
-              onTap: () {
+            const SizedBox(height: Dimension.padding),
+            OutlinedButton(
+              onPressed: () {
                 context.read<MainCubit>().changeHomeView(HomeViewType.today);
               },
-              child: Container(
-                width: 114,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: ColorsExt.grey6(context),
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: ColorsExt.grey4(context),
-                    width: 1,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    t.calendar.goToToday,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
-                ),
+              child: Text(
+                t.calendar.goToToday,
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
               ),
             ),
           ],

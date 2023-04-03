@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/label/label.dart';
@@ -33,8 +34,8 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
     return Material(
       color: Colors.transparent,
       borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(16.0),
-        topRight: Radius.circular(16.0),
+        topLeft: Radius.circular(Dimension.radiusM),
+        topRight: Radius.circular(Dimension.radiusM),
       ),
       child: Wrap(
         children: [
@@ -43,12 +44,12 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.radiusM),
                 child: Column(
                   children: [
-                    const SizedBox(height: 16),
+                    const SizedBox(height: Dimension.radiusM),
                     const ScrollChip(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: Dimension.radiusM),
                     BorderedInputView(
                       focus: titleFocus,
                       hint: "",
@@ -56,43 +57,37 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
                         folder.value = folder.value.copyWith(title: value);
                       },
                     ),
-                    const SizedBox(height: 24),
-                    InkWell(
-                      onTap: () {
+                    const SizedBox(height: Dimension.paddingM),
+                    OutlinedButton(
+                      onPressed: () {
                         Navigator.pop(context, folder.value);
                       },
-                      child: Container(
-                        width: double.infinity,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: ColorsExt.grey4(context),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
-                                    color: ColorsExt.grey1(context)),
-                              ),
-                              const SizedBox(width: 11),
-                              Text(
-                                t.label.createFolder,
-                                style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
+                      style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+                          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                          minimumSize: MaterialStateProperty.all(const Size(0, 48))),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
+                                  color: ColorsExt.grey1(context)),
+                            ),
+                            const SizedBox(width: Dimension.paddingS),
+                            Text(
+                              t.label.createFolder,
+                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    color: ColorsExt.grey2(context),
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: Dimension.padding),
                   ],
                 ),
               ),

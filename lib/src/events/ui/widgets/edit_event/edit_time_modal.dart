@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/create_task/create_task_calendar.dart';
 import 'package:models/extensions/user_ext.dart';
 
-class EventEditTimeModal extends StatefulWidget {
+class EditTimeModal extends StatefulWidget {
   final Function({required DateTime? date, required DateTime? datetime}) onSelectDate;
   final DateTime initialDate;
   final DateTime? initialDatetime;
   final bool? showTime;
 
-  const EventEditTimeModal({
+  const EditTimeModal({
     Key? key,
     required this.onSelectDate,
     required this.initialDate,
@@ -19,10 +20,10 @@ class EventEditTimeModal extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<EventEditTimeModal> createState() => _EventEditTimeModalState();
+  State<EditTimeModal> createState() => _EditTimeModalState();
 }
 
-class _EventEditTimeModalState extends State<EventEditTimeModal> {
+class _EditTimeModalState extends State<EditTimeModal> {
   final ValueNotifier<DateTime> _selectedDate = ValueNotifier(DateTime.now());
   final ValueNotifier<DateTime?> _selectedDatetime = ValueNotifier(null);
 
@@ -44,8 +45,8 @@ class _EventEditTimeModalState extends State<EventEditTimeModal> {
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.radiusM),
+                topRight: Radius.circular(Dimension.radiusM),
               ),
             ),
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -85,7 +86,7 @@ class _EventEditTimeModalState extends State<EventEditTimeModal> {
                       }
                     }(),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Dimension.padding),
                 ],
               ),
             ),

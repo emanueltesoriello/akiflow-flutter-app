@@ -108,26 +108,22 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
           text,
         );
 
-        _addTextSpanWithBackground(
-          textSpanChildren,
-          textToBeStyled: textPart,
-          isFromAction: styleDefinition?.isFromAction,
-          isLabel: styleDefinition?.isLabel,
-          isDate: styleDefinition?.isDate,
-          isTime: styleDefinition?.isTime,
-          isImportance: styleDefinition?.isImportance,
-          backgroundColor: ColorsExt.cyan25(context),
-          foregroundColor: ColorsExt.grey2(context),
-        );
+        _addTextSpanWithBackground(textSpanChildren,
+            textToBeStyled: textPart,
+            isFromAction: styleDefinition?.isFromAction,
+            isLabel: styleDefinition?.isLabel,
+            isDate: styleDefinition?.isDate,
+            isTime: styleDefinition?.isTime,
+            isImportance: styleDefinition?.isImportance,
+            backgroundColor: ColorsExt.cyan25(context),
+            foregroundColor: ColorsExt.grey2(context),
+            context: context);
 
         return '';
       },
       onNonMatch: (String text) {
-        _addTextSpan(
-          textSpanChildren,
-          textToBeStyled: text,
-          foregroundColor: ColorsExt.grey2(context),
-        );
+        _addTextSpan(textSpanChildren,
+            textToBeStyled: text, foregroundColor: ColorsExt.grey2(context), context: context);
 
         return '';
       },
@@ -136,26 +132,24 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     return TextSpan(style: style, children: textSpanChildren);
   }
 
-  void _addTextSpanWithBackground(
-    List<InlineSpan> textSpanChildren, {
-    required String? textToBeStyled,
-    required bool? isFromAction,
-    required bool? isLabel,
-    required bool? isImportance,
-    required bool? isDate,
-    required bool? isTime,
-    required Color foregroundColor,
-    required Color backgroundColor,
-  }) {
+  void _addTextSpanWithBackground(List<InlineSpan> textSpanChildren,
+      {required String? textToBeStyled,
+      required bool? isFromAction,
+      required bool? isLabel,
+      required bool? isImportance,
+      required bool? isDate,
+      required bool? isTime,
+      required Color foregroundColor,
+      required Color backgroundColor,
+      required BuildContext context}) {
     textSpanChildren.add(
       CustomTextSpan(
         text: textToBeStyled,
-        style: TextStyle(
-          background: Paint()..color = backgroundColor,
-          color: foregroundColor,
-          fontWeight: FontWeight.w500,
-          fontSize: 20,
-        ),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              background: Paint()..color = backgroundColor,
+              color: foregroundColor,
+              fontWeight: FontWeight.w500,
+            ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             parsedTextClick(textToBeStyled!, isFromAction, isLabel, isDate, isTime, isImportance);
@@ -168,16 +162,15 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
     List<InlineSpan> textSpanChildren, {
     required String? textToBeStyled,
     required Color foregroundColor,
+    required BuildContext context,
   }) {
     textSpanChildren.add(
       TextSpan(
-        text: textToBeStyled,
-        style: TextStyle(
-          color: foregroundColor,
-          fontWeight: FontWeight.w500,
-          fontSize: 20,
-        ),
-      ),
+          text: textToBeStyled,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: foregroundColor,
+                fontWeight: FontWeight.w500,
+              )),
     );
   }
 
