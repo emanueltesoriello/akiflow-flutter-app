@@ -163,8 +163,6 @@ class _EventEditModalState extends State<EventEditModal> {
                           _addGuestsRow(context),
                           const Separator(),
                           _descriptionRow(context),
-                          const Separator(),
-                          _changeColorRow(context),
                           if (updatedEvent.url != null) _viewOnGoogleCalendarRow(context),
                         ],
                       ),
@@ -186,15 +184,6 @@ class _EventEditModalState extends State<EventEditModal> {
       padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
       child: Row(
         children: [
-          SizedBox(
-            width: Dimension.defaultIconSize + 2,
-            height: Dimension.defaultIconSize + 2,
-            child: SvgPicture.asset(
-              Assets.images.icons.common.squareFillSVG,
-              color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
-            ),
-          ),
-          const SizedBox(width: Dimension.padding),
           Expanded(
             child: TextField(
                 autofocus: widget.createingEvent ?? false,
@@ -204,6 +193,42 @@ class _EventEditModalState extends State<EventEditModal> {
                       fontWeight: FontWeight.w500,
                       color: ColorsExt.grey1(context),
                     )),
+          ),
+          const SizedBox(width: Dimension.paddingS),
+          InkWell(
+            onTap: () {
+              showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context) => ChangeColorModal(
+                  selectedColor: updatedEvent.color ?? updatedEvent.calendarColor ?? '',
+                  onChange: (newColor) {
+                    setState(() {
+                      updatedEvent = updatedEvent.copyWith(color: newColor);
+                    });
+                  },
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                SizedBox(
+                  width: Dimension.defaultIconSize + 6,
+                  height: Dimension.defaultIconSize + 6,
+                  child: SvgPicture.asset(
+                    Assets.images.icons.common.circleFillSVG,
+                    color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
+                  ),
+                ),
+                SizedBox(
+                  width: Dimension.smallconSize,
+                  height: Dimension.smallconSize,
+                  child: SvgPicture.asset(
+                    Assets.images.icons.common.chevronDownSVG,
+                    color: ColorsExt.grey3(context),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -722,7 +747,8 @@ class _EventEditModalState extends State<EventEditModal> {
               Assets.images.icons.common.circleFillSVG,
               width: Dimension.defaultIconSize,
               height: Dimension.defaultIconSize,
-              color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
+              color:
+                  ColorsExt.fromHex(EventExt.calendarColor[updatedEvent.calendarColor] ?? updatedEvent.calendarColor!),
             ),
             const SizedBox(width: Dimension.padding),
             Text(organizerCalendar,
@@ -985,45 +1011,6 @@ class _EventEditModalState extends State<EventEditModal> {
               null,
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  InkWell _changeColorRow(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => ChangeColorModal(
-            selectedColor: updatedEvent.color ?? updatedEvent.calendarColor ?? '',
-            onChange: (newColor) {
-              setState(() {
-                updatedEvent = updatedEvent.copyWith(color: newColor);
-              });
-            },
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
-        child: Row(
-          children: [
-            SizedBox(
-              width: Dimension.defaultIconSize,
-              height: Dimension.defaultIconSize,
-              child: SvgPicture.asset(
-                Assets.images.icons.common.squareFillSVG,
-                color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
-              ),
-            ),
-            const SizedBox(width: Dimension.padding),
-            Text(updatedEvent.color != null ? t.event.editEvent.customColor : t.event.editEvent.defaultColor,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
-          ],
         ),
       ),
     );
