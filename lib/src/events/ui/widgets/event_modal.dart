@@ -144,15 +144,6 @@ class _EventModalState extends State<EventModal> {
       padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
       child: Row(
         children: [
-          SizedBox(
-            width: Dimension.defaultIconSize + 2,
-            height: Dimension.defaultIconSize + 2,
-            child: SvgPicture.asset(
-              Assets.images.icons.common.squareFillSVG,
-              color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
-            ),
-          ),
-          const SizedBox(width: Dimension.padding),
           Expanded(
             child: Text(selectedEvent.title ?? t.noTitle,
                 maxLines: 4,
@@ -161,6 +152,15 @@ class _EventModalState extends State<EventModal> {
                     .textTheme
                     .titleLarge
                     ?.copyWith(color: ColorsExt.grey1(context), fontWeight: FontWeight.w500)),
+          ),
+          const SizedBox(width: Dimension.paddingS),
+          SizedBox(
+            width: Dimension.defaultIconSize + 6,
+            height: Dimension.defaultIconSize + 6,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.circleFillSVG,
+              color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
+            ),
           ),
         ],
       ),
@@ -379,34 +379,21 @@ class _EventModalState extends State<EventModal> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  SizedBox(
-                    width: Dimension.defaultIconSize,
-                    height: Dimension.defaultIconSize,
-                    child: SvgPicture.asset(
-                      Assets.images.icons.common.personCropCircleSVG,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
-                  const SizedBox(width: Dimension.padding),
-                  Text(t.event.guests,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
-                ],
-              ),
               SizedBox(
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
                 child: SvgPicture.asset(
-                  Assets.images.icons.common.envelopeSVG,
+                  Assets.images.icons.common.personCropCircleSVG,
                   color: ColorsExt.grey2(context),
                 ),
               ),
+              const SizedBox(width: Dimension.padding),
+              Text(t.event.guests,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
             ],
           ),
         ),
