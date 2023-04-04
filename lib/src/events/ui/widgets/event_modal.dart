@@ -379,34 +379,21 @@ class _EventModalState extends State<EventModal> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  SizedBox(
-                    width: Dimension.defaultIconSize,
-                    height: Dimension.defaultIconSize,
-                    child: SvgPicture.asset(
-                      Assets.images.icons.common.personCropCircleSVG,
-                      color: ColorsExt.grey2(context),
-                    ),
-                  ),
-                  const SizedBox(width: Dimension.padding),
-                  Text(t.event.guests,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
-                ],
-              ),
               SizedBox(
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
                 child: SvgPicture.asset(
-                  Assets.images.icons.common.envelopeSVG,
+                  Assets.images.icons.common.personCropCircleSVG,
                   color: ColorsExt.grey2(context),
                 ),
               ),
+              const SizedBox(width: Dimension.padding),
+              Text(t.event.guests,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
             ],
           ),
         ),

@@ -763,36 +763,22 @@ class _EventEditModalState extends State<EventEditModal> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              SizedBox(
-                width: Dimension.defaultIconSize,
-                height: Dimension.defaultIconSize,
-                child: SvgPicture.asset(
-                  Assets.images.icons.common.personCropCircleSVG,
-                  color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-                ),
-              ),
-              const SizedBox(width: Dimension.padding),
-              Text(
-                t.event.guests,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
-              ),
-            ],
-          ),
-          if (updatedEvent.attendees != null)
-            SizedBox(
-              width: Dimension.defaultIconSize,
-              height: Dimension.defaultIconSize,
-              child: SvgPicture.asset(
-                Assets.images.icons.common.envelopeSVG,
-                color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-              ),
+          SizedBox(
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.personCropCircleSVG,
+              color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
             ),
+          ),
+          const SizedBox(width: Dimension.padding),
+          Text(
+            t.event.guests,
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w400,
+                color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+          ),
         ],
       ),
     );
