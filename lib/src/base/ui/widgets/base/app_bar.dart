@@ -75,7 +75,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
                   )
                 : showLinearProgress
                     ? const PreferredSize(
-                        preferredSize: Size.fromHeight(10.0),
+                        preferredSize: Size.fromHeight(Dimension.progressIndicatorSize),
                         child: LinearProgressIndicator(value: null),
                       )
                     : PreferredSize(

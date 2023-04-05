@@ -10,6 +10,7 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_linear_progress_indicator.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
@@ -138,19 +139,9 @@ class _TodayViewState extends State<TodayView> {
                     color: Colors.white,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
-                        // TODO add check
-                        BlocBuilder<SyncCubit, SyncCubitState>(builder: (context, state) {
-                          if (state.loading) {
-                            return const PreferredSize(
-                              preferredSize: Size.fromHeight(10.0),
-                              child: LinearProgressIndicator(value: null),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
+                      children: const [
+                        TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                        AnimatedLinearProgressIndicator(),
                       ],
                     ),
                   );
@@ -166,18 +157,9 @@ class _TodayViewState extends State<TodayView> {
                 color: Colors.white,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
-                    BlocBuilder<SyncCubit, SyncCubitState>(builder: (context, state) {
-                      if (state.loading) {
-                        return const PreferredSize(
-                          preferredSize: Size.fromHeight(10.0),
-                          child: LinearProgressIndicator(value: null),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    }),
+                  children: const [
+                    TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                    AnimatedLinearProgressIndicator()
                   ],
                 ),
               ),

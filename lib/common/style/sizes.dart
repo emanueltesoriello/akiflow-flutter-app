@@ -12,6 +12,7 @@ class Dimension {
   static const pagesImageSize = 80.0;
   static const logoAuthPage = 56.0;
   static const authIllustrationSize = 128.0;
+  static const progressIndicatorSize = 10.0;
 
   /// Styles
   static const outlineBorderRadius = 4.0;
