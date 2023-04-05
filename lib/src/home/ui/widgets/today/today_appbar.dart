@@ -80,6 +80,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBarComp(
+      showLinearProgress: false,
       leading: _leading(context),
       titleWidget: _buildTitle(context),
       actions: _buildActions(context),

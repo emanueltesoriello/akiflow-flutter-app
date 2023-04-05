@@ -136,7 +136,23 @@ class _TodayViewState extends State<TodayView> {
                 builder: (context, value, child) {
                   return Container(
                     color: Colors.white,
-                    child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                        // TODO add check
+                        BlocBuilder<SyncCubit, SyncCubitState>(builder: (context, state) {
+                          if (state.loading) {
+                            return const PreferredSize(
+                              preferredSize: Size.fromHeight(10.0),
+                              child: LinearProgressIndicator(value: null),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -146,9 +162,24 @@ class _TodayViewState extends State<TodayView> {
               onPanelOpened: () {
                 context.read<TodayCubit>().panelOpened();
               },
-              collapsed: const Material(
+              collapsed: Material(
                 color: Colors.white,
-                child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                    BlocBuilder<SyncCubit, SyncCubitState>(builder: (context, state) {
+                      if (state.loading) {
+                        return const PreferredSize(
+                          preferredSize: Size.fromHeight(10.0),
+                          child: LinearProgressIndicator(value: null),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }),
+                  ],
+                ),
               ),
               body: Container(
                 margin: const EdgeInsets.only(top: Dimension.todayViewTopMargin),
