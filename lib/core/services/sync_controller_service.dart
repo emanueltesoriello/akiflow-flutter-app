@@ -25,6 +25,7 @@ import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_integration_service.dart';
 import 'package:mobile/core/services/sync_service.dart';
@@ -125,6 +126,9 @@ class SyncControllerService {
 
   final int _getRecurringNotificationsSyncCounter = _preferencesRepository.recurringNotificationsSyncCounter;
   _setRecurringNotificationsSyncCounter(val) => _preferencesRepository.setRecurringNotificationsSyncCounter(val);
+
+  final String _getLastSavedTimeZone = _preferencesRepository.getLastSavedTimeZone;
+  _setLastSavedTimeZone(val) => _preferencesRepository.setLastSavedTimeZone(val);
 
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
@@ -276,6 +280,7 @@ class SyncControllerService {
 
       int recurringBackgroundSyncCounter = _getRecurringBackgroundSyncCounter;
       int recurringNotificationsSyncCounter = _getRecurringNotificationsSyncCounter;
+      String lastSavedTimeZone = _getLastSavedTimeZone;
 
       String? fcmToken;
       try {
@@ -319,6 +324,7 @@ class SyncControllerService {
 
       if (response != null) {
         //String? deviceIdFromServer = response['id'];
+        String? timezoneFromServer = response['timezone_name'];
         int recurringNotificationsSyncCounterFromServer = response['recurring_notifications_sync_counter'] ?? 0;
         int recurringBackgroundSyncCounterFromServer = response['recurring_background_sync_counter'] ?? 0;
 
@@ -337,6 +343,12 @@ class SyncControllerService {
         if (recurringBackgroundSyncCounterFromServer > client.recurringBackgroundSyncCounter!) {
           _setRecurringBackgroundSyncCounter(recurringBackgroundSyncCounterFromServer);
         }
+
+        if (timezoneFromServer != null && timezoneFromServer != lastSavedTimeZone) {
+          NotificationsService.cancelScheduledNotifications(_preferencesRepository);
+          NotificationsService.scheduleNotificationsService(_preferencesRepository);
+        }
+        _setLastSavedTimeZone(timezoneFromServer);
       }
 
       return;
