@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -33,17 +34,7 @@ class EventAppointment extends StatelessWidget {
       decoration: _boxDecoration(responseStatus: responseStatus, boxWidth: boxWidth),
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2, 2, 3, 2),
-            child: Container(
-              height: boxHeight - 4,
-              width: 2,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                color: appointment.color,
-              ),
-            ),
-          ),
+          const SizedBox(width: Dimension.paddingXS),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
