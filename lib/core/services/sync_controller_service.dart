@@ -176,9 +176,10 @@ class SyncControllerService {
             _sentryService.captureException(e, stackTrace: s);
           }
           try {
-            var eventNotifications = await EventExt.eventNotifications();
-            //TODO schedule this events
-            //NotificationsService.scheduleEvents(eventNotifications);
+            EventExt.eventNotifications().then((eventNotifications) {
+              //TODO schedule this events
+              //NotificationsService.scheduleEvents(eventNotifications);
+            });
           } catch (e, s) {
             _sentryService.captureException(e, stackTrace: s);
           }
