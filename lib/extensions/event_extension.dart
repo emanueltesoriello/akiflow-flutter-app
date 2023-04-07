@@ -301,7 +301,7 @@ extension EventExt on Event {
   }
 
   ///returns all the valid events to be scheduled for the next 20 days
-  Future<Map<String, Event>> eventNotifications() async {
+  static Future<Map<String, Event>> eventNotifications() async {
     DateTime now = DateTime.now().toUtc();
     DateTime endDate = now.add(const Duration(days: 20));
     EventsRepository eventsRepository = locator<EventsRepository>();
@@ -403,7 +403,7 @@ extension EventExt on Event {
     return eventsToSchedule;
   }
 
-  int generateNotificationIdFromEventId(String eventId) {
+  static int generateNotificationIdFromEventId(String eventId) {
     int notificationsId = 0;
 
     try {
