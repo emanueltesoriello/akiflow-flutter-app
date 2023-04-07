@@ -36,6 +36,7 @@ import 'package:models/client/client.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:mobile/extensions/event_extension.dart';
 
 enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers, docs }
 
@@ -171,6 +172,13 @@ class SyncControllerService {
 
           try {
             await postClient();
+          } catch (e, s) {
+            _sentryService.captureException(e, stackTrace: s);
+          }
+          try {
+            var eventNotifications = await EventExt.eventNotifications();
+            //TODO schedule this events
+            //NotificationsService.scheduleEvents(eventNotifications);
           } catch (e, s) {
             _sentryService.captureException(e, stackTrace: s);
           }
