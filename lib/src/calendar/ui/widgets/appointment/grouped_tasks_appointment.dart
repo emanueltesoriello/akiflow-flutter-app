@@ -28,7 +28,7 @@ class GroupedTasksAppointment extends StatelessWidget {
     double boxHeight = calendarAppointmentDetails.bounds.height;
     double boxWidth = calendarAppointmentDetails.bounds.width;
     String? duration;
-    int hours = groupedTasks.endTime.difference(groupedTasks.startTime).inHours;
+    double hours = (groupedTasks.endTime.difference(groupedTasks.startTime).inSeconds) / 3600;
     double minutes = (hours - hours.floor()) * 60;
     if (minutes.floor() == 0) {
       duration = '${hours.floor()}h';

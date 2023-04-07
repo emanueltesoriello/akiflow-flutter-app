@@ -79,8 +79,6 @@ class CalendarView extends StatelessWidget {
 
     tasks.sort((a, b) => DateTime.parse(a.datetime!).compareTo(DateTime.parse(b.datetime!)));
 
-    print(tasks.length);
-
     for (Task task in tasks) {
       DateTime taskStartTime = DateTime.parse(task.datetime!);
       DateTime taskEndTime = DateTime.parse(task.datetime!).add(Duration(seconds: task.duration!));
