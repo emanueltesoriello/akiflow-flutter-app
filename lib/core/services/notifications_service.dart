@@ -20,6 +20,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import './../../../../../extensions/local_notifications_extensions.dart';
 
 class NotificationsService {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -263,7 +264,7 @@ class NotificationsService {
     } catch (e) {
       print(e);
     }
-    await localNotificationsPlugin.cancelAll();
+    await localNotificationsPlugin.cancelAllExt();
 
     setDailyReminder(service);
 
@@ -339,10 +340,10 @@ class NotificationsService {
       {int notificationId = 0,
       NotificationDetails? notificationDetails,
       required TZDateTime scheduledDate,
-      required String? payload}) {
+      required String? payload}) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
-      localNotificationsPlugin.zonedSchedule(
+      await localNotificationsPlugin.zonedScheduleExt(
           notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
           androidAllowWhileIdle: true,
           payload: payload,
@@ -382,8 +383,7 @@ class NotificationsService {
 
       DateTime dt = DateTime(
           now.year, now.month, now.day, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
-
-      await localNotificationsPlugin.zonedSchedule(
+      await localNotificationsPlugin.zonedScheduleExt(
         dailyReminderTaskId,
         "Start your day right by checking your schedule!",
         null,
@@ -396,5 +396,5 @@ class NotificationsService {
     }
   }
 
-  static cancelNotificationById(int id) => FlutterLocalNotificationsPlugin().cancel(id);
+  static cancelNotificationById(int id) => FlutterLocalNotificationsPlugin().cancelExt(id);
 }
