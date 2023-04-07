@@ -103,6 +103,9 @@ abstract class PreferencesRepository {
 
   int get recurringNotificationsSyncCounter;
   Future<void> setRecurringNotificationsSyncCounter(int value);
+
+  String get getLastSavedTimeZone;
+  Future<void> setLastSavedTimeZone(String value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -502,5 +505,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setRecurringNotificationsSyncCounter(int value) async {
     await _prefs.setInt("recurring_notifications_sync_counter", value);
+  }
+
+  @override
+  String get getLastSavedTimeZone {
+    return _prefs.getString("last_saved_time_zone") ?? "";
+  }
+
+  @override
+  Future<void> setLastSavedTimeZone(String value) async {
+    await _prefs.setString("last_saved_time_zone", value);
   }
 }
