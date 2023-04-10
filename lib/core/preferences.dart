@@ -80,6 +80,9 @@ abstract class PreferencesRepository {
   bool get areCalendarTasksHidden;
   Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden);
 
+  bool get groupOverlappingTasks;
+  Future<void> setGroupOverlappingTasks(bool groupOverlappingTasks);
+
   NextTaskNotificationsModel get nextTaskNotificationSetting;
   Future<void> setNextTaskNotificationSetting(NextTaskNotificationsModel value);
 
@@ -403,6 +406,16 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden) async {
     await _prefs.setBool("areCalendarTasksHidden", areCalendarTasksHidden);
+  }
+
+  @override
+  bool get groupOverlappingTasks {
+    return _prefs.getBool("groupOverlappingTasks") ?? false;
+  }
+
+  @override
+  Future<void> setGroupOverlappingTasks(bool groupOverlappingTasks) async {
+    await _prefs.setBool("groupOverlappingTasks", groupOverlappingTasks);
   }
 
   NextTaskNotificationsModel get nextTaskNotificationSetting {

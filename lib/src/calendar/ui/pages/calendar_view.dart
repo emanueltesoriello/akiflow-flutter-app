@@ -30,12 +30,13 @@ class CalendarView extends StatelessWidget {
         if (!state.areCalendarTasksHidden) {
           tasks = List.from(tasksCubit.state.calendarTasks);
 
-          groupedTasks = findOverlappingTasks(tasks);
-
-          // remove tasks that are in a group from the regular task list
-          for (var group in groupedTasks) {
-            for (var task in group.taskList) {
-              tasks.remove(task);
+          if (state.groupOverlappingTasks) {
+            groupedTasks = findOverlappingTasks(tasks);
+            // remove tasks that are in a group from the regular task list
+            for (var group in groupedTasks) {
+              for (var task in group.taskList) {
+                tasks.remove(task);
+              }
             }
           }
         }
