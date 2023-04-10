@@ -133,7 +133,6 @@ class _EventEditModalState extends State<EventEditModal> {
               const ScrollChip(),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: !_descriptionFocusNode.hasFocus && space > 86 ? space - 86 : 0),
                   reverse: _descriptionFocusNode.hasFocus ? true : false,
                   child: Column(
                     children: [
@@ -171,7 +170,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 ),
               ),
               _bottomActionButtonsRow(context),
-              SizedBox(height: _descriptionFocusNode.hasFocus && space > 36 ? space - 36 : 0),
+              SizedBox(height:  space > Dimension.paddingL ? space -  Dimension.paddingL : 0),
             ],
           ),
         );
@@ -1077,7 +1076,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(Dimension.padding),
+            padding: const EdgeInsets.all(Dimension.paddingS),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
