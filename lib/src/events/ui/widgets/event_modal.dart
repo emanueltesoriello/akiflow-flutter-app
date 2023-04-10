@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -118,7 +117,7 @@ class _EventModalState extends State<EventModal> {
                     ListView(
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
-                      padding: const EdgeInsets.all(Dimension.padding),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                       children: [
                         _titleRow(context),
                         const Separator(),
