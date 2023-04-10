@@ -11,22 +11,27 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
 
   // Define a method to retrieve scheduled notifications from SharedPreferences
   Future<List<ScheduledNotification>?> getScheduledNotifications() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? scheduledNotificationsList = prefs.getStringList(scheduledNotificationsConst);
-    List<ScheduledNotification> scheduledNotifications = [];
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String>? scheduledNotificationsList = prefs.getStringList(scheduledNotificationsConst);
+      List<ScheduledNotification> scheduledNotifications = [];
 
-    // Check if there are any scheduled notifications
-    if (scheduledNotificationsList != null && scheduledNotificationsList.isNotEmpty) {
-      // Convert each JSON string to a ScheduledNotification object and add it to the list
-      for (var element in scheduledNotificationsList) {
-        scheduledNotifications.add(ScheduledNotification.fromMap(json.decode(element)));
+      // Check if there are any scheduled notifications
+      if (scheduledNotificationsList != null && scheduledNotificationsList.isNotEmpty) {
+        // Convert each JSON string to a ScheduledNotification object and add it to the list
+        for (var element in scheduledNotificationsList) {
+          scheduledNotifications.add(ScheduledNotification.fromMap(json.decode(element)));
+        }
+        // Remove duplicates and return the list
+
+        // TODO: add check to remove remove already shown notifications based on the date
+        return scheduledNotifications.toSet().toList();
+      } else {
+        // If there are no scheduled notifications, return null
+        return null;
       }
-      // Remove duplicates and return the list
-
-      // TODO: add check to remove remove already shown notifications
-      return scheduledNotifications.toSet().toList();
-    } else {
-      // If there are no scheduled notifications, return null
+    } catch (e) {
+      print(e);
       return null;
     }
   }
@@ -42,6 +47,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     required bool androidAllowWhileIdle,
     String? payload,
     DateTimeComponents? matchDateTimeComponents,
+    required NotificationType notificationType,
   }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,12 +55,13 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
 
       // If there are already scheduled notifications, add the new notification to the list
       if (alreadyScheduledNotifications != null) {
-        alreadyScheduledNotifications
-            .add(ScheduledNotification(notificationId: id, plannedDate: scheduledDate.toIso8601String()));
+        alreadyScheduledNotifications.add(ScheduledNotification(
+            notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType));
       } else {
         // If there are no scheduled notifications, create a new list with the new notification
         alreadyScheduledNotifications = [
-          ScheduledNotification(notificationId: id, plannedDate: scheduledDate.toIso8601String())
+          ScheduledNotification(
+              notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType)
         ];
       }
       List<String> reScheduleNotifications = [];

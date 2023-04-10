@@ -33,6 +33,7 @@ import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/client/client.dart';
+import 'package:models/event/event.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -178,7 +179,7 @@ class SyncControllerService {
           try {
             EventExt.eventNotifications().then((eventNotifications) {
               //TODO schedule this events
-              //NotificationsService.scheduleEvents(eventNotifications);
+              NotificationsService.scheduleEvents(eventNotifications);
             });
           } catch (e, s) {
             _sentryService.captureException(e, stackTrace: s);

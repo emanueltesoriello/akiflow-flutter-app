@@ -1,25 +1,38 @@
 import 'package:equatable/equatable.dart';
 import 'package:models/base.dart';
 
+enum NotificationType { Event, Tasks, Other }
+
 class ScheduledNotification extends Equatable implements Base {
-  const ScheduledNotification({required this.notificationId, required this.plannedDate});
+  const ScheduledNotification({required this.notificationId, required this.plannedDate, required this.type});
 
   final int notificationId;
   final String plannedDate;
+  final NotificationType type;
 
-  factory ScheduledNotification.fromMap(Map<String, dynamic> json) => ScheduledNotification(
-      notificationId: json['notification_id'] as int, plannedDate: json['planned_date'] as String);
+  factory ScheduledNotification.fromMap(Map<String, dynamic> json) {
+    NotificationType _type;
+    try {
+      _type = NotificationType.values[json['type'] as int];
+    } catch (_) {
+      _type = NotificationType.Other;
+    }
+    return ScheduledNotification(
+        notificationId: json['notification_id'] as int, plannedDate: json['planned_date'] as String, type: _type);
+  }
 
   @override
   Map<String, dynamic> toMap() => {
         'notification_id': notificationId,
         'planned_date': plannedDate,
+        'type': type.index,
       };
 
-  ScheduledNotification copyWith({int? notificationId, String? plannedDate}) {
+  ScheduledNotification copyWith({int? notificationId, String? plannedDate, NotificationType? type}) {
     return ScheduledNotification(
       notificationId: notificationId ?? this.notificationId,
       plannedDate: plannedDate ?? this.plannedDate,
+      type: type ?? this.type,
     );
   }
 
@@ -35,6 +48,6 @@ class ScheduledNotification extends Equatable implements Base {
 
   @override
   List<Object?> get props {
-    return [notificationId, plannedDate];
+    return [notificationId, plannedDate, type];
   }
 }

@@ -12,7 +12,10 @@ import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/home/ui/pages/home_page.dart';
+import 'package:models/event/event.dart';
+import 'package:models/notifications/scheduled_notification.dart';
 import 'package:models/task/task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';
@@ -85,6 +88,81 @@ class NotificationsService {
       print('setupPlugin: setup success');
     }).catchError((Object error) {
       print('Error: $error');
+    });
+  }
+
+  static scheduleEvents(Map<String, Event> eventsTobeScheduled) async {
+    List<int> eventsIdsForNotifications = [];
+    if (eventsTobeScheduled.isNotEmpty) {
+      for (var eventId in eventsTobeScheduled.keys) {
+        String eventIdString = eventId.split(';')[0];
+        int notificationsId = 0;
+
+        try {
+          // get the last 8 hex char from the ID and convert them into an int
+          notificationsId = int.parse(eventIdString);
+        } catch (e) {
+          print(e);
+          notificationsId = eventIdString.hashCode;
+        }
+        eventsIdsForNotifications.add(notificationsId);
+      }
+    }
+
+    var scheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
+
+    List<ScheduledNotification> toBeRemoved = [];
+
+    if (scheduledNotifications != null) {
+      // put in toBeRemoved all the events that are in scheduledNotifications but not in eventsToBeScheduled (check only the scheduledNotifications that has type == Event)
+      for (var scheduledNotification in scheduledNotifications) {
+        // Assuming that the 'type' field is available in the notification's payload
+        NotificationType notificationType = scheduledNotification.type;
+
+        if (notificationType == NotificationType.Event) {
+          int eventId = scheduledNotification.notificationId;
+          if (!eventsTobeScheduled.containsKey(eventId)) {
+            toBeRemoved.add(scheduledNotification);
+          }
+        }
+      }
+      if (toBeRemoved.isNotEmpty) {
+        // remove notifications
+        for (var eventToBeRemoved in toBeRemoved) {
+          FlutterLocalNotificationsPlugin().cancelExt(eventToBeRemoved.notificationId);
+        }
+      }
+    }
+
+    // Schedule all the events and update the already set ones
+    eventsTobeScheduled.forEach((id, event) {
+      try {
+        String startTime = DateFormat('kk:mm').format(DateTime.parse(event.startTime!).toLocal());
+        String eventIdString = id.split(';')[0];
+        int notificationsId = 0;
+
+        try {
+          // get the last 8 hex char from the ID and convert them into an int
+          notificationsId = int.parse(eventIdString);
+        } catch (e) {
+          print(e);
+          notificationsId = eventIdString.hashCode;
+        }
+        NotificationsService.scheduleNotifications(event.title ?? '', "Event start at $startTime",
+            notificationId: notificationsId,
+            scheduledDate: tz.TZDateTime.parse(tz.local, event.startTime!)
+                .subtract(const Duration(minutes: 5)), //TODO add a shared preferences var
+            payload: jsonEncode(event.toMap()),
+            notificationDetails: const NotificationDetails(
+              android: AndroidNotificationDetails(
+                "channel_d",
+                "Event Notification",
+                channelDescription: "Reminders that an event is about to start.",
+              ),
+            ));
+      } catch (e) {
+        print(e);
+      }
     });
   }
 
@@ -344,10 +422,16 @@ class NotificationsService {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
       await localNotificationsPlugin.zonedScheduleExt(
-          notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
-          androidAllowWhileIdle: true,
-          payload: payload,
-          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+        notificationId,
+        title,
+        description,
+        scheduledDate,
+        notificationDetails ?? const NotificationDetails(),
+        androidAllowWhileIdle: true,
+        payload: payload,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        notificationType: NotificationType.Tasks,
+      );
     } else {
       print('show immediately this notification');
       localNotificationsPlugin.show(
@@ -392,6 +476,7 @@ class NotificationsService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
+        notificationType: NotificationType.Other,
       );
     }
   }
