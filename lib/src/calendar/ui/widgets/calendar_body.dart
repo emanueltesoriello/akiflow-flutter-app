@@ -18,6 +18,7 @@ import 'package:mobile/src/calendar/ui/widgets/appbar/appbar_calendar_panel.dart
 import 'package:mobile/src/calendar/ui/widgets/appointment/event_appointment.dart';
 import 'package:mobile/src/calendar/ui/widgets/appointment/grouped_tasks_appointment.dart';
 import 'package:mobile/src/calendar/ui/widgets/appointment/task_appointment.dart';
+import 'package:mobile/src/calendar/ui/widgets/grouped_tasks_modal.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/event_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -231,7 +232,10 @@ class CalendarBody extends StatelessWidget {
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarGroupedTasks) {
       GroupedTasks group = groupedTasks.where((group) => group.id == calendarTapDetails.appointments!.first.id).first;
-      print(group);
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => GroupedTasksModal(tasks: group.taskList),
+      );
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
       Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
       eventsCubit.refetchEvent(event);
