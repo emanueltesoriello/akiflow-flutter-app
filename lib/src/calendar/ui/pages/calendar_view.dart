@@ -9,7 +9,7 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
 import 'package:models/task/task.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart' as sf_calendar;
 import 'package:uuid/uuid.dart';
 import '../widgets/calendar_body.dart';
 
@@ -21,7 +21,7 @@ class CalendarView extends StatelessWidget {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(
       builder: (context, state) {
         final PanelController panelController = PanelController();
-        final CalendarController calendarController = CalendarController();
+        final sf_calendar.CalendarController calendarController = sf_calendar.CalendarController();
         calendarController.view = context.watch<CalendarCubit>().state.calendarView;
 
         TasksCubit tasksCubit = context.watch<TasksCubit>();
@@ -30,7 +30,7 @@ class CalendarView extends StatelessWidget {
         if (!state.areCalendarTasksHidden) {
           tasks = List.from(tasksCubit.state.calendarTasks);
 
-          if (state.groupOverlappingTasks) {
+          if (state.groupOverlappingTasks && calendarController.view != sf_calendar.CalendarView.schedule) {
             groupedTasks = findOverlappingTasks(tasks);
             // remove tasks that are in a group from the regular task list
             for (var group in groupedTasks) {
