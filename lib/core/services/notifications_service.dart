@@ -137,10 +137,10 @@ class NotificationsService {
     // Schedule all the events and update the already set ones
     eventsTobeScheduled.forEach((id, event) {
       try {
-        String startTime = DateFormat('kk:mm').format(DateTime.parse(event.startTime!).toLocal());
+        String startTime = DateFormat('kk:mm').format(DateTime.parse(id.split(';')[1]).toLocal());
         String eventIdString = id.split(';')[0];
         int notificationsId = 0;
-
+        String startTimeString = id.split(';')[1];
         try {
           // get the last 8 hex char from the ID and convert them into an int
           notificationsId = int.parse(eventIdString);
@@ -150,9 +150,12 @@ class NotificationsService {
         }
         NotificationsService.scheduleNotifications(event.title ?? '', "Event start at $startTime",
             notificationId: notificationsId,
-            scheduledDate: tz.TZDateTime.parse(tz.local, event.startTime!)
-                .subtract(const Duration(minutes: 5)), //TODO add a shared preferences var
+            scheduledDate: tz.TZDateTime.parse(
+              tz.local,
+              startTimeString,
+            ).subtract(const Duration(minutes: 5)), //TODO add a shared preferences var
             payload: jsonEncode(event.toMap()),
+            notificationType: NotificationType.Event,
             notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails(
                 "channel_d",
@@ -245,6 +248,7 @@ class NotificationsService {
                 scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
                     .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
                 payload: jsonEncode(task.toMap()),
+                notificationType: NotificationType.Tasks,
                 notificationDetails: const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "channel_d",
@@ -400,6 +404,7 @@ class NotificationsService {
               scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
                   .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
               payload: jsonEncode(task.toMap()),
+              notificationType: NotificationType.Tasks,
               notificationDetails: const NotificationDetails(
                 android: AndroidNotificationDetails(
                   "channel_d",
@@ -418,7 +423,8 @@ class NotificationsService {
       {int notificationId = 0,
       NotificationDetails? notificationDetails,
       required TZDateTime scheduledDate,
-      required String? payload}) async {
+      required String? payload,
+      required NotificationType notificationType}) async {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
       await localNotificationsPlugin.zonedScheduleExt(
@@ -430,17 +436,13 @@ class NotificationsService {
         androidAllowWhileIdle: true,
         payload: payload,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        notificationType: NotificationType.Tasks,
+        notificationType: notificationType,
       );
     } else {
       print('show immediately this notification');
-      localNotificationsPlugin.show(
-        notificationId,
-        title,
-        description,
-        notificationDetails ?? const NotificationDetails(),
-        payload: payload,
-      );
+      localNotificationsPlugin.showExt(
+          notificationId, title, description, notificationDetails ?? const NotificationDetails(),
+          payload: payload, scheduledDate: scheduledDate, notificationType: notificationType);
     }
   }
 

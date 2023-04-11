@@ -8,6 +8,7 @@ import 'package:timezone/timezone.dart';
 // Create an extension on FlutterLocalNotificationsPlugin to add custom methods
 extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotificationsPlugin {
   static const scheduledNotificationsConst = "scheduled_notifications";
+  static const shownNotificationsConst = "shown_notifications";
 
   // Define a method to retrieve scheduled notifications from SharedPreferences
   Future<List<ScheduledNotification>?> getScheduledNotifications() async {
@@ -24,8 +25,62 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         }
         // Remove duplicates and return the list
 
-        // TODO: add check to remove remove already shown notifications based on the date
+        // Remove notifications with plannedDate in the past
+        scheduledNotifications.removeWhere((notification) {
+          DateTime plannedDate = DateTime.parse(notification.plannedDate);
+          return plannedDate.isBefore(DateTime.now().toUtc());
+        });
+
+        scheduledNotifications = scheduledNotifications.toSet().toList();
+
+        List<String> stringNotifications = [];
+        // Convert each ScheduledNotification object to a JSON string and add it to the list
+        for (var element in scheduledNotifications) {
+          stringNotifications.add(json.encode(element.toMap()));
+        }
+        prefs.setStringList(scheduledNotificationsConst, stringNotifications);
+
         return scheduledNotifications.toSet().toList();
+      } else {
+        // If there are no scheduled notifications, return null
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  // Define a method to retrieve scheduled notifications, that are immediately shown and not scheduled anymore, from SharedPreferences
+  Future<List<ScheduledNotification>?> getNotificationsScheduledButImmediatelyShown() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String>? shownNotificationsList = prefs.getStringList(shownNotificationsConst);
+      List<ScheduledNotification> shownNotifications = [];
+
+      // Check if there are any notifications
+      if (shownNotificationsList != null && shownNotificationsList.isNotEmpty) {
+        // Convert each JSON string to a ScheduledNotification object and add it to the list
+        for (var element in shownNotificationsList) {
+          shownNotifications.add(ScheduledNotification.fromMap(json.decode(element)));
+        }
+
+        // Remove notifications with plannedDate in the past
+        shownNotifications.removeWhere((notification) {
+          DateTime plannedDate = DateTime.parse(notification.plannedDate);
+          return plannedDate.isBefore(DateTime.now().toUtc());
+        });
+
+        shownNotifications = shownNotifications.toSet().toList();
+
+        List<String> stringNotifications = [];
+        // Convert each ScheduledNotification object to a JSON string and add it to the list
+        for (var element in shownNotifications) {
+          stringNotifications.add(json.encode(element.toMap()));
+        }
+        prefs.setStringList(shownNotificationsConst, stringNotifications);
+
+        return shownNotifications.toSet().toList();
       } else {
         // If there are no scheduled notifications, return null
         return null;
@@ -118,5 +173,45 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     }
     // Cancel all notifications using the FlutterLocalNotificationsPlugin
     return FlutterLocalNotificationsPlugin().cancelAll();
+  }
+
+  bool containsNotificationWithId(List<ScheduledNotification> notifications, int id) {
+    List<ScheduledNotification> filteredList =
+        notifications.where((notification) => notification.notificationId == id).toList();
+    return filteredList.isNotEmpty;
+  }
+
+  showExt(int id, String? title, String? body, NotificationDetails? notificationDetails,
+      {String? payload, required TZDateTime scheduledDate, required NotificationType notificationType}) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<ScheduledNotification>? alreadyShownNotifications = await getNotificationsScheduledButImmediatelyShown();
+
+      // If there are already shown notifications, add the new notification to the list
+      if (alreadyShownNotifications != null) {
+        if (containsNotificationWithId(alreadyShownNotifications, id)) {
+          return;
+        }
+        alreadyShownNotifications.add(ScheduledNotification(
+            notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType));
+      } else {
+        // If there are no shown notifications, create a new list with the new notification
+        alreadyShownNotifications = [
+          ScheduledNotification(
+              notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType)
+        ];
+      }
+      List<String> reScheduleNotifications = [];
+      // Convert each ScheduledNotification object to a JSON string and add it to the list
+      for (var element in alreadyShownNotifications) {
+        reScheduleNotifications.add(json.encode(element.toMap()));
+      }
+      // Save the list of scheduled notifications to SharedPreferences
+      prefs.setStringList(shownNotificationsConst, reScheduleNotifications);
+    } catch (e) {
+      print(e);
+    }
+    // Show the notification using the FlutterLocalNotificationsPlugin
+    return show(id, title, body, notificationDetails, payload: payload);
   }
 }
