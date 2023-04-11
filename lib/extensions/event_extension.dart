@@ -338,8 +338,10 @@ extension EventExt on Event {
     for (Event event in nonRecurring) {
       DateTime eventStartTime =
           event.startTime != null ? DateTime.parse(event.startTime!) : DateTime.parse(event.startDate!);
-      eventsToSchedule
-          .addAll({'${generateNotificationIdFromEventId(event.id!)};${eventStartTime.toIso8601String()}': event});
+      if (eventStartTime.isAfter(now)) {
+        eventsToSchedule
+            .addAll({'${generateNotificationIdFromEventId(event.id!)};${eventStartTime.toIso8601String()}': event});
+      }
     }
 
     //processing parent events
