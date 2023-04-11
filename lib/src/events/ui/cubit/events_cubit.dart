@@ -200,6 +200,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required bool removeMeeting,
     bool createingEvent = false,
     bool dragAndDrop = false,
+    String? selectedMeetingSolution,
+    String? conferenceAccountId,
   }) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
       await _eventModifiersRepository.add([
@@ -207,7 +209,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
       ]);
     }
     if (addMeeting || (event.meetingUrl == null && atendeesToAdd.isNotEmpty)) {
-      await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
+      await _eventModifiersRepository
+          .add([addMeetingEventModifier(event, selectedMeetingSolution, conferenceAccountId)]);
     }
     if (removeMeeting) {
       await _eventModifiersRepository.add([removeMeetingEventModifier(event)]);
@@ -239,6 +242,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required List<String> atendeesToRemove,
     required bool addMeeting,
     required bool removeMeeting,
+    String? selectedMeetingSolution,
+    String? conferenceAccountId,
     bool dragAndDrop = false,
   }) async {
     Event parentEvent = await _eventsRepository.getById(exceptionEvent.recurringId);
@@ -285,6 +290,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting,
+        selectedMeetingSolution: selectedMeetingSolution,
+        conferenceAccountId: conferenceAccountId,
         dragAndDrop: dragAndDrop);
     updateEventAndCreateModifiers(
         event: exceptionEvent.copyWith(updatedAt: Nullable(now)),
@@ -292,6 +299,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting,
+        selectedMeetingSolution: selectedMeetingSolution,
+        conferenceAccountId: conferenceAccountId,
         dragAndDrop: dragAndDrop);
   }
 
@@ -307,6 +316,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
       required bool addMeeting,
       required bool removeMeeting,
       required bool rsvpChanged,
+      String? selectedMeetingSolution,
+      String? conferenceAccountId,
       String? rsvpResponse,
       bool deleteEvent = false,
       bool dragAndDrop = false,
@@ -380,6 +391,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
               atendeesToRemove: atendeesToRemove,
               addMeeting: addMeeting,
               removeMeeting: removeMeeting,
+              selectedMeetingSolution: selectedMeetingSolution,
+              conferenceAccountId: conferenceAccountId,
               createingEvent: true,
               dragAndDrop: dragAndDrop)
           .then((value) => refreshAllEvents(context));
@@ -751,14 +764,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   ///creates EventModifier for adding meeting
-  EventModifier addMeetingEventModifier(Event event) {
-    String meetingSolution = getDefaultConferenceSolution();
+  EventModifier addMeetingEventModifier(Event event, String? selectedMeetingSolution, String? conferenceAccountId) {
+    String meetingSolution = selectedMeetingSolution ?? getDefaultConferenceSolution();
     AuthCubit authCubit = locator<AuthCubit>();
 
     dynamic content;
     if (meetingSolution == 'zoom') {
-      String? conferenceAccountId;
-      if (authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
+      if (((conferenceAccountId != null && conferenceAccountId.isEmpty) || conferenceAccountId == null) &&
+          authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
         conferenceAccountId = authCubit.state.user?.settings?['calendar']['conferenceAccountId'];
       }
       if (conferenceAccountId != null) {
