@@ -28,7 +28,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         // Remove notifications with plannedDate in the past
         scheduledNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          return plannedDate.isBefore(DateTime.now().toUtc());
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 5)).toUtc());
         });
 
         scheduledNotifications = scheduledNotifications.toSet().toList();
@@ -68,7 +68,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         // Remove notifications with plannedDate in the past
         shownNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          return plannedDate.isBefore(DateTime.now().toUtc());
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 5)).toUtc());
         });
 
         shownNotifications = shownNotifications.toSet().toList();
