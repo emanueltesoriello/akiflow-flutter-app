@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -97,7 +98,7 @@ class CalendarBody extends StatelessWidget {
             backgroundColor: ColorsExt.background(context),
             controller: calendarController,
             headerHeight: 0,
-            firstDayOfWeek: DateTime.monday,
+            firstDayOfWeek: CalendarUtils.computeFirstDayOfWeek(context),
             selectionDecoration: const BoxDecoration(),
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
@@ -132,6 +133,7 @@ class CalendarBody extends StatelessWidget {
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
               dayFormat: isThreeDays ? 'EEE' : 'EE',
+              nonWorkingDays: CalendarUtils.computeNonWorkinkDays(context),
             ),
             scheduleViewSettings: ScheduleViewSettings(
                 hideEmptyScheduleWeek: true,

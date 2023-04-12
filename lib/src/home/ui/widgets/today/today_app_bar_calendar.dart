@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
@@ -56,8 +57,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
             return Column(
               children: [
                 TableCalendar(
-                  startingDayOfWeek:
-                      firstDayOfWeek == -1 || firstDayOfWeek == 1 ? StartingDayOfWeek.monday : StartingDayOfWeek.sunday,
+                  startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
                   onPageChanged: (page) {
                     BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
                   },
