@@ -25,6 +25,7 @@ import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
@@ -67,8 +68,8 @@ class _EventEditModalState extends State<EventEditModal> {
   late bool removingMeeting;
   late bool timeChanged;
   late bool dateChanged;
-  late String organizerCalendar;
-  late String organizerCalendarId;
+  late String choosenCalendar;
+  late Calendar choosedCalendar;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -80,8 +81,8 @@ class _EventEditModalState extends State<EventEditModal> {
 
     locationController = TextEditingController()..text = widget.event.content?['location'] ?? '';
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
-    organizerCalendar = widget.event.organizerId ?? '';
-    organizerCalendarId = widget.event.calendarId ?? '';
+    choosenCalendar = widget.event.organizerId ?? '';
+    choosedCalendar = const Calendar();
 
     atendeesToAdd = List.empty(growable: true);
     atendeesToRemove = List.empty(growable: true);
@@ -741,13 +742,22 @@ class _EventEditModalState extends State<EventEditModal> {
           showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => ChooseCalendarModal(
-              onChange: (String? choosenCalendar, String? choosenCalendarId) {
+              onChange: (Calendar calendar) {
                 setState(() {
-                  organizerCalendar = choosenCalendar ?? organizerCalendar;
-                  organizerCalendarId = choosenCalendarId ?? organizerCalendarId;
+                  choosenCalendar = calendar.originId!;
                 });
+                updatedEvent = updatedEvent.copyWith(
+                  creatorId: calendar.originId,
+                  organizerId: calendar.originId,
+                  calendarId: calendar.id,
+                  originCalendarId: calendar.originId,
+                  connectorId: calendar.connectorId,
+                  akiflowAccountId: calendar.akiflowAccountId,
+                  originAccountId: calendar.originAccountId,
+                  calendarColor: calendar.color,
+                );
               },
-              initialCalendar: updatedEvent.organizerId,
+              initialCalendar: choosenCalendar,
             ),
           );
         }
@@ -764,7 +774,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   ColorsExt.fromHex(EventExt.calendarColor[updatedEvent.calendarColor] ?? updatedEvent.calendarColor!),
             ),
             const SizedBox(width: Dimension.padding),
-            Text(organizerCalendar,
+            Text(choosenCalendar,
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
@@ -944,19 +954,19 @@ class _EventEditModalState extends State<EventEditModal> {
           EventAtendee newAtendee = EventAtendee(
             displayName: contact.name,
             email: contact.identifier,
-            responseStatus: contact.identifier == updatedEvent.originCalendarId
+            responseStatus: contact.identifier == choosenCalendar
                 ? AtendeeResponseStatus.accepted.id
                 : AtendeeResponseStatus.needsAction.id,
-            organizer: contact.identifier == updatedEvent.originCalendarId ? true : false,
+            organizer: contact.identifier == choosenCalendar ? true : false,
           );
           atendeesToAdd.add(newAtendee.email!);
           if (attendees == null) {
             attendees = List.from([newAtendee]);
-            if (newAtendee.email! != updatedEvent.originCalendarId) {
+            if (newAtendee.email! != choosenCalendar) {
               EventAtendee loggedInUserAtendee = EventAtendee(
                 organizer: true,
-                displayName: updatedEvent.originCalendarId,
-                email: updatedEvent.originCalendarId,
+                displayName: choosenCalendar,
+                email: choosenCalendar,
                 responseStatus: AtendeeResponseStatus.accepted.id,
               );
               atendeesToAdd.add(loggedInUserAtendee.email!);
@@ -1136,12 +1146,6 @@ class _EventEditModalState extends State<EventEditModal> {
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
 
     if (widget.createingEvent ?? false) {
-      updatedEvent = updatedEvent.copyWith(
-        calendarId: organizerCalendarId,
-        creatorId: organizerCalendar,
-        originCalendarId: organizerCalendar,
-        organizerId: organizerCalendar,
-      );
       await context.read<EventsCubit>().addEventToDb(updatedEvent);
     }
 
