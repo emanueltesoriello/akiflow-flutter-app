@@ -52,7 +52,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
   }
 
   // Define a method to retrieve scheduled notifications, that are immediately shown and not scheduled anymore, from SharedPreferences
-  Future<List<ScheduledNotification>?> getNotificationsScheduledButImmediatelyShown() async {
+  Future<List<ScheduledNotification>?> getNotificationsScheduledButImmediatelyShown(int minuteBeforeToStart) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<String>? shownNotificationsList = prefs.getStringList(shownNotificationsConst);
@@ -68,7 +68,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         // Remove notifications with plannedDate in the past
         shownNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 5)).toUtc());
+          return plannedDate.isBefore(DateTime.now().subtract(Duration(minutes: minuteBeforeToStart)).toUtc());
         });
 
         shownNotifications = shownNotifications.toSet().toList();
@@ -182,10 +182,14 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
   }
 
   showExt(int id, String? title, String? body, NotificationDetails? notificationDetails,
-      {String? payload, required TZDateTime scheduledDate, required NotificationType notificationType}) async {
+      {String? payload,
+      required TZDateTime scheduledDate,
+      required NotificationType notificationType,
+      int minuteBeforeToStart = 5}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<ScheduledNotification>? alreadyShownNotifications = await getNotificationsScheduledButImmediatelyShown();
+      List<ScheduledNotification>? alreadyShownNotifications =
+          await getNotificationsScheduledButImmediatelyShown(minuteBeforeToStart);
 
       // If there are already shown notifications, add the new notification to the list
       if (alreadyShownNotifications != null) {

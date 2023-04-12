@@ -91,88 +91,95 @@ class NotificationsService {
     });
   }
 
-  static scheduleEvents(Map<String, Event> eventsTobeScheduled) async {
-    List<int> eventsIdsForNotifications = [];
-    if (eventsTobeScheduled.isNotEmpty) {
-      for (var eventId in eventsTobeScheduled.keys) {
-        String eventIdString = eventId.split(';')[0];
-        int notificationsId = 0;
+  static scheduleEvents(PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
+    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+      List<int> eventsIdsForNotifications = [];
+      if (eventsTobeScheduled.isNotEmpty) {
+        for (var eventId in eventsTobeScheduled.keys) {
+          String eventIdString = eventId.split(';')[0];
+          int notificationsId = 0;
 
-        try {
-          // get the last 8 hex char from the ID and convert them into an int
-          notificationsId = int.parse(eventIdString);
-        } catch (e) {
-          print(e);
-          notificationsId = eventIdString.hashCode;
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId = int.parse(eventIdString);
+          } catch (e) {
+            print(e);
+            notificationsId = eventIdString.hashCode;
+          }
+          eventsIdsForNotifications.add(notificationsId);
         }
-        eventsIdsForNotifications.add(notificationsId);
       }
-    }
 
-    var scheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
+      var scheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
 
-    List<ScheduledNotification> toBeRemoved = [];
+      List<ScheduledNotification> toBeRemoved = [];
 
-    if (scheduledNotifications != null) {
-      // put in toBeRemoved all the events that are in scheduledNotifications but not in eventsToBeScheduled (check only the scheduledNotifications that has type == Event)
-      for (var scheduledNotification in scheduledNotifications) {
-        // Assuming that the 'type' field is available in the notification's payload
-        NotificationType notificationType = scheduledNotification.type;
+      if (scheduledNotifications != null) {
+        // put in toBeRemoved all the events that are in scheduledNotifications but not in eventsToBeScheduled (check only the scheduledNotifications that has type == Event)
+        for (var scheduledNotification in scheduledNotifications) {
+          // Assuming that the 'type' field is available in the notification's payload
+          NotificationType notificationType = scheduledNotification.type;
 
-        if (notificationType == NotificationType.Event) {
-          int eventId = scheduledNotification.notificationId;
-          if (!eventsTobeScheduled.containsKey(eventId)) {
-            toBeRemoved.add(scheduledNotification);
+          if (notificationType == NotificationType.Event) {
+            int eventId = scheduledNotification.notificationId;
+            if (!eventsTobeScheduled.containsKey(eventId)) {
+              toBeRemoved.add(scheduledNotification);
+            }
+          }
+        }
+        if (toBeRemoved.isNotEmpty) {
+          // remove notifications
+          for (var eventToBeRemoved in toBeRemoved) {
+            FlutterLocalNotificationsPlugin().cancelExt(eventToBeRemoved.notificationId);
           }
         }
       }
-      if (toBeRemoved.isNotEmpty) {
-        // remove notifications
-        for (var eventToBeRemoved in toBeRemoved) {
-          FlutterLocalNotificationsPlugin().cancelExt(eventToBeRemoved.notificationId);
-        }
-      }
-    }
 
-    final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation(currentTimeZone));
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
-    // Schedule all the events and update the already set ones
-    eventsTobeScheduled.forEach((id, event) {
-      try {
-        String startTime = DateFormat('kk:mm').format(DateTime.parse(id.split(';')[1]).toLocal());
-        String eventIdString = id.split(';')[0];
-        int notificationsId = 0;
-        String startTimeString = id.split(';')[1];
+      // Schedule all the events and update the already set ones
+      eventsTobeScheduled.forEach((id, event) {
         try {
-          // get the last 8 hex char from the ID and convert them into an int
-          notificationsId = int.parse(eventIdString);
-        } catch (e) {
-          print(e);
-          notificationsId = eventIdString.hashCode;
-        }
+          String startTime = DateFormat('kk:mm').format(DateTime.parse(id.split(';')[1]).toLocal());
+          String eventIdString = id.split(';')[0];
+          int notificationsId = 0;
+          String startTimeString = id.split(';')[1];
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId = int.parse(eventIdString);
+          } catch (e) {
+            print(e);
+            notificationsId = eventIdString.hashCode;
+          }
+          NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
 
-        scheduleNotifications(event.title ?? '', "Event start at $startTime",
+          scheduleNotifications(
+            event.title ?? '',
+            "Event start at $startTime",
             notificationId: notificationsId,
             scheduledDate: tz.TZDateTime.parse(
               tz.local,
               startTimeString,
-            ).subtract(const Duration(minutes: 5)), //TODO add a shared preferences var
+            ).subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
             payload: jsonEncode(event.toMap()),
             notificationType: NotificationType.Event,
+            minuteBeforeToStart: minutesBefore.minutesBeforeToStart,
             notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails(
                 "channel_d",
                 "Event Notification",
                 channelDescription: "Reminders that an event is about to start.",
               ),
-            ));
-      } catch (e) {
-        print(e);
-      }
-    });
+            ),
+          );
+        } catch (e) {
+          print(e);
+        }
+      });
+    }
   }
 
   /// This method schedule all the planned notifications for tasks
@@ -430,7 +437,8 @@ class NotificationsService {
       NotificationDetails? notificationDetails,
       required TZDateTime scheduledDate,
       required String? payload,
-      required NotificationType notificationType}) async {
+      required NotificationType notificationType,
+      int minuteBeforeToStart = 5}) async {
     //final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
       await FlutterLocalNotificationsPlugin().zonedScheduleExt(
@@ -448,7 +456,10 @@ class NotificationsService {
       print('show immediately this notification');
       FlutterLocalNotificationsPlugin().showExt(
           notificationId, title, description, notificationDetails ?? const NotificationDetails(),
-          payload: payload, scheduledDate: scheduledDate, notificationType: notificationType);
+          payload: payload,
+          scheduledDate: scheduledDate,
+          notificationType: notificationType,
+          minuteBeforeToStart: minuteBeforeToStart);
     }
   }
 
