@@ -195,6 +195,11 @@ export class ChronoHelper {
         results.filter((result) => !result.text.startsWith('any'))
       )
     }, {
+      refine: (_, results) => (
+        // fix: chrono parses "the day" word as "tomorrow" wrongly
+        results.filter((result) => result.text !== 'the day' && result.text !== 'the d')
+      )
+    }, {
       refine: (_, results) => {
         // Check if all these conditions are met:
         //   - there are exactly 2 results

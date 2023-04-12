@@ -100,6 +100,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             closeOnCancel: true,
             dismissThreshold: 0.25,
             confirmDismiss: () async {
+              widget.task.playTaskDoneSound();
               widget.completedClick();
               return false;
             },
@@ -116,6 +117,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                       child: DoneWithLabel(
                           click: () {
                             Slidable.of(context)?.close();
+                            widget.task.playTaskDoneSound();
                             widget.completedClick();
                           },
                           withLabel: true),
@@ -132,6 +134,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                     child: DoneWithLabel(
                         click: () {
                           Slidable.of(context)?.close();
+                          widget.task.playTaskDoneSound();
                           widget.completedClick();
                         },
                         withLabel: false),
