@@ -8,6 +8,7 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/navigation_service.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
@@ -307,16 +308,38 @@ class NotificationsService {
   static handleNotificationClick(NotificationResponse payload) async {
     //payload.payload;
     if (payload.payload != '') {
-      Task task = Task.fromMap(jsonDecode(payload.payload!));
-      print('notification clicked');
-      BuildContext? context = NavigationService.navigatorKey.currentContext;
-      if (context != null) {
-        print('handleNotificationClick: task pressed');
-        context.read<MainCubit>().changeHomeView(HomeViewType.today);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+      bool? isEvent;
+      try {
+        isEvent = jsonDecode(payload.payload!)['creator_id'] != null;
+      } catch (e) {
+        print(e);
+      }
+      if (isEvent != null && !isEvent) {
+        print('Task notification clicked on handleNotificationClick');
+        Task task = Task.fromMap(jsonDecode(payload.payload!));
 
-        await TaskExt.editTask(context, task);
+        BuildContext? context = NavigationService.navigatorKey.currentContext;
+        if (context != null) {
+          context.read<MainCubit>().changeHomeView(HomeViewType.today);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+
+          await TaskExt.editTask(context, task);
+        }
+      } else {
+        try {
+          Event? event = Event.fromMap(jsonDecode(payload.payload!));
+          print('Event notification clicked on handleNotificationClick');
+          BuildContext? context = NavigationService.navigatorKey.currentContext;
+          if (context != null) {
+            // TODO: handle deeplink
+            // TODO 1) redirect user on Calendar page
+            // TODO 2) Select Today as day
+            // TODO 3) Show edit event modal
+          }
+        } catch (e) {
+          print(e);
+        }
       }
     } else if (payload.id == dailyReminderTaskId) {
       BuildContext? context = NavigationService.navigatorKey.currentContext;
