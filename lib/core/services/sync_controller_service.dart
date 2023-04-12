@@ -30,6 +30,7 @@ import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_integration_service.dart';
 import 'package:mobile/core/services/sync_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/client/client.dart';
@@ -59,6 +60,7 @@ class SyncControllerService {
   static final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
+  static final CalendarCubit _calendarCubit = locator<CalendarCubit>();
   static final EventModifiersRepository _eventModifiersRepository = locator<EventModifiersRepository>();
   static final ContactsRepository _contactsRepository = locator<ContactsRepository>();
 
@@ -177,7 +179,7 @@ class SyncControllerService {
             _sentryService.captureException(e, stackTrace: s);
           }
           try {
-            EventExt.eventNotifications().then((eventNotifications) {
+            EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then((eventNotifications) {
               //TODO schedule this events
               NotificationsService.scheduleEvents(eventNotifications);
             });

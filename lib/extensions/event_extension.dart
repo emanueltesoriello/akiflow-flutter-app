@@ -1,8 +1,6 @@
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_event.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:models/calendar/calendar.dart';
@@ -301,11 +299,10 @@ extension EventExt on Event {
   }
 
   ///returns all the valid events to be scheduled for the next 20 days
-  static Future<Map<String, Event>> eventNotifications() async {
+  static Future<Map<String, Event>> eventNotifications(
+      EventsRepository eventsRepository, List<Calendar> calendars) async {
     DateTime now = DateTime.now().toUtc();
     DateTime endDate = now.add(const Duration(days: 20));
-    EventsRepository eventsRepository = locator<EventsRepository>();
-    List<Calendar> calendars = locator<CalendarCubit>().state.calendars;
 
     List<Event> events = await eventsRepository.getEventsBetweenDates(now, endDate);
 

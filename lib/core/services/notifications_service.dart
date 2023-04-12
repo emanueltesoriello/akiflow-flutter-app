@@ -134,6 +134,11 @@ class NotificationsService {
       }
     }
 
+    final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
+
     // Schedule all the events and update the already set ones
     eventsTobeScheduled.forEach((id, event) {
       try {
@@ -148,7 +153,8 @@ class NotificationsService {
           print(e);
           notificationsId = eventIdString.hashCode;
         }
-        NotificationsService.scheduleNotifications(event.title ?? '', "Event start at $startTime",
+
+        scheduleNotifications(event.title ?? '', "Event start at $startTime",
             notificationId: notificationsId,
             scheduledDate: tz.TZDateTime.parse(
               tz.local,
@@ -425,9 +431,9 @@ class NotificationsService {
       required TZDateTime scheduledDate,
       required String? payload,
       required NotificationType notificationType}) async {
-    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    //final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
-      await localNotificationsPlugin.zonedScheduleExt(
+      await FlutterLocalNotificationsPlugin().zonedScheduleExt(
         notificationId,
         title,
         description,
@@ -440,7 +446,7 @@ class NotificationsService {
       );
     } else {
       print('show immediately this notification');
-      localNotificationsPlugin.showExt(
+      FlutterLocalNotificationsPlugin().showExt(
           notificationId, title, description, notificationDetails ?? const NotificationDetails(),
           payload: payload, scheduledDate: scheduledDate, notificationType: notificationType);
     }
