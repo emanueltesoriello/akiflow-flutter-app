@@ -38,6 +38,7 @@ class EventAppointment extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: appointment.isAllDay ? MainAxisAlignment.center : MainAxisAlignment.start,
               children: [
                 Text(
                   appointment.subject.isEmpty ? t.noTitle : appointment.subject,

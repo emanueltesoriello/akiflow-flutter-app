@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -11,10 +12,14 @@ import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_event.dart';
+import 'package:mobile/src/calendar/ui/models/calendar_grouped_tasks.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
+import 'package:mobile/src/calendar/ui/models/grouped_tasks.dart';
 import 'package:mobile/src/calendar/ui/widgets/appbar/appbar_calendar_panel.dart';
 import 'package:mobile/src/calendar/ui/widgets/appointment/event_appointment.dart';
+import 'package:mobile/src/calendar/ui/widgets/appointment/grouped_tasks_appointment.dart';
 import 'package:mobile/src/calendar/ui/widgets/appointment/task_appointment.dart';
+import 'package:mobile/src/calendar/ui/widgets/grouped_tasks_modal.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/event_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -29,12 +34,14 @@ class CalendarBody extends StatelessWidget {
     Key? key,
     required this.calendarController,
     required this.tasks,
+    required this.groupedTasks,
     required this.events,
     required this.panelController,
   }) : super(key: key);
   final CalendarController calendarController;
   final PanelController panelController;
   final List<Task> tasks;
+  final List<GroupedTasks> groupedTasks;
   final List<Event> events;
 
   @override
@@ -91,7 +98,7 @@ class CalendarBody extends StatelessWidget {
             backgroundColor: ColorsExt.background(context),
             controller: calendarController,
             headerHeight: 0,
-            firstDayOfWeek: DateTime.monday,
+            firstDayOfWeek: CalendarUtils.computeFirstDayOfWeek(context),
             selectionDecoration: const BoxDecoration(),
             view: calendarCubit.state.calendarView,
             onViewChanged: (ViewChangedDetails details) {
@@ -125,7 +132,8 @@ class CalendarBody extends StatelessWidget {
                   ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
-              dayFormat: isThreeDays ? 'EEE' : 'EE', 
+              dayFormat: isThreeDays ? 'EEE' : 'EE',
+              nonWorkingDays: CalendarUtils.computeNonWorkinkDays(context),
             ),
             scheduleViewSettings: ScheduleViewSettings(
                 hideEmptyScheduleWeek: true,
@@ -183,6 +191,19 @@ class CalendarBody extends StatelessWidget {
         print('calendar_body find task error: $e');
       }
       return const SizedBox();
+    } else if (appointment is CalendarGroupedTasks) {
+      try {
+        GroupedTasks group = groupedTasks.where((group) => group.id == appointment.id).first;
+        return GroupedTasksAppointment(
+            calendarController: calendarController,
+            appointment: appointment,
+            calendarAppointmentDetails: calendarAppointmentDetails,
+            groupedTasks: group,
+            context: context);
+      } catch (e) {
+        print('calendar_body find grouped task error: $e');
+      }
+      return const SizedBox();
     } else if (appointment.notes == 'deleted') {
       return const SizedBox();
     } else {
@@ -210,6 +231,13 @@ class CalendarBody extends StatelessWidget {
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
       TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
+    } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
+        calendarTapDetails.appointments!.first is CalendarGroupedTasks) {
+      GroupedTasks group = groupedTasks.where((group) => group.id == calendarTapDetails.appointments!.first.id).first;
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => GroupedTasksModal(tasks: group.taskList),
+      );
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
       Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
       eventsCubit.refetchEvent(event);
@@ -287,6 +315,7 @@ class CalendarBody extends StatelessWidget {
     List<CalendarEvent> calendarParentEvents = <CalendarEvent>[];
     List<CalendarEvent> calendarExceptionEvents = <CalendarEvent>[];
     List<CalendarTask> calendarTasks = <CalendarTask>[];
+    List<CalendarGroupedTasks> calendarGroupedTask = <CalendarGroupedTasks>[];
 
     List<Event> nonRecurring = <Event>[];
     List<Event> recurringParents = <Event>[];
@@ -338,11 +367,15 @@ class CalendarBody extends StatelessWidget {
         .toList();
     calendarTasks = tasks.map((task) => CalendarTask.taskToCalendarTask(context, task)).toList();
 
+    calendarGroupedTask =
+        groupedTasks.map((group) => CalendarGroupedTasks.groupToCaalendarGroupedTask(context, group)).toList();
+
     List<Appointment> all = [
       ...calendarNonRecurringEvents,
       ...calendarParentEvents,
       ...calendarExceptionEvents,
-      ...calendarTasks
+      ...calendarTasks,
+      ...calendarGroupedTask
     ];
     return _AppointmentDataSource(all);
   }

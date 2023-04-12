@@ -7,6 +7,7 @@ class CalendarCubitState extends Equatable {
   final bool isCalendarWeekendHidden;
   final bool areDeclinedEventsHidden;
   final bool areCalendarTasksHidden;
+  final bool groupOverlappingTasks;
   final List<Calendar> calendars;
   final List<DateTime> visibleDates;
   final PanelState panelState;
@@ -18,6 +19,7 @@ class CalendarCubitState extends Equatable {
     this.isCalendarWeekendHidden = false,
     this.areDeclinedEventsHidden = false,
     this.areCalendarTasksHidden = false,
+    this.groupOverlappingTasks = false,
     this.calendars = const [],
     this.visibleDates = const [],
     this.panelState = PanelState.closed,
@@ -30,6 +32,7 @@ class CalendarCubitState extends Equatable {
     bool? isCalendarWeekendHidden,
     bool? areDeclinedEventsHidden,
     bool? areCalendarTasksHidden,
+    bool? groupOverlappingTasks,
     List<Calendar>? calendars,
     List<DateTime>? visibleDates,
     PanelState? panelState,
@@ -41,6 +44,7 @@ class CalendarCubitState extends Equatable {
       isCalendarWeekendHidden: isCalendarWeekendHidden ?? this.isCalendarWeekendHidden,
       areDeclinedEventsHidden: areDeclinedEventsHidden ?? this.areDeclinedEventsHidden,
       areCalendarTasksHidden: areCalendarTasksHidden ?? this.areCalendarTasksHidden,
+      groupOverlappingTasks: groupOverlappingTasks ?? this.groupOverlappingTasks,
       calendars: calendars ?? this.calendars,
       visibleDates: visibleDates ?? this.visibleDates,
       panelState: panelState ?? this.panelState,
@@ -55,6 +59,7 @@ class CalendarCubitState extends Equatable {
         isCalendarWeekendHidden,
         areDeclinedEventsHidden,
         areCalendarTasksHidden,
+        groupOverlappingTasks,
         calendars,
         visibleDates,
         panelState,

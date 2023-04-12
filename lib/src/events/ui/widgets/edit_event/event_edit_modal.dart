@@ -20,6 +20,7 @@ import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/choose_calendar_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/choose_conference_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
@@ -60,6 +61,8 @@ class _EventEditModalState extends State<EventEditModal> {
   StreamSubscription? streamSubscription;
   late List<String> atendeesToAdd;
   late List<String> atendeesToRemove;
+  late String meetingSolution;
+  late String conferenceAccountId;
   late bool addingMeeting;
   late bool removingMeeting;
   late bool timeChanged;
@@ -84,6 +87,9 @@ class _EventEditModalState extends State<EventEditModal> {
     atendeesToRemove = List.empty(growable: true);
     addingMeeting = false;
     removingMeeting = false;
+
+    meetingSolution = widget.event.meetingSolution ?? context.read<EventsCubit>().getDefaultConferenceSolution();
+    conferenceAccountId = '';
 
     initDescription().whenComplete(() {
       streamSubscription = quillController.value.changes.listen((change) async {
@@ -133,7 +139,6 @@ class _EventEditModalState extends State<EventEditModal> {
               const ScrollChip(),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: !_descriptionFocusNode.hasFocus && space > 86 ? space - 86 : 0),
                   reverse: _descriptionFocusNode.hasFocus ? true : false,
                   child: Column(
                     children: [
@@ -171,7 +176,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 ),
               ),
               _bottomActionButtonsRow(context),
-              SizedBox(height: _descriptionFocusNode.hasFocus && space > 36 ? space - 36 : 0),
+              SizedBox(height: space > Dimension.paddingL ? space - Dimension.paddingL : 0),
             ],
           ),
         );
@@ -596,25 +601,24 @@ class _EventEditModalState extends State<EventEditModal> {
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
                 child: SvgPicture.asset(
-                  updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                  meetingSolution == 'meet'
                       ? Assets.images.icons.google.meetSVG
-                      : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                      : meetingSolution == 'zoom'
                           ? Assets.images.icons.zoom.zoomSVG
                           : context.read<EventsCubit>().getDefaultConferenceIcon(),
                 ),
               ),
               const SizedBox(width: Dimension.padding),
               Text(
-                  updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                  meetingSolution == 'meet'
                       ? t.event.googleMeet
-                      : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                      : meetingSolution == 'zoom'
                           ? t.event.zoom
-                          : context.read<EventsCubit>().getDefaultConferenceSolution() == 'meet'
-                              ? t.event.googleMeet
-                              : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
+                          : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
             ],
           ),
           Row(
@@ -656,10 +660,19 @@ class _EventEditModalState extends State<EventEditModal> {
   InkWell _addConferenceRow(BuildContext context) {
     return InkWell(
       onTap: () {
-        setState(() {
-          addingMeeting = true;
-          removingMeeting = false;
-        });
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => ChooseConferenceModal(
+            onChange: (String selectedMeetingSolution, String akiflowAccountId) {
+              setState(() {
+                addingMeeting = true;
+                removingMeeting = false;
+                meetingSolution = selectedMeetingSolution;
+                conferenceAccountId = akiflowAccountId;
+              });
+            },
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
@@ -1077,7 +1090,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(Dimension.padding),
+            padding: const EdgeInsets.all(Dimension.paddingS),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -1151,6 +1164,8 @@ class _EventEditModalState extends State<EventEditModal> {
                             atendeesToAdd: atendeesToAdd,
                             atendeesToRemove: atendeesToRemove,
                             addMeeting: addingMeeting,
+                            selectedMeetingSolution: meetingSolution,
+                            conferenceAccountId: conferenceAccountId,
                             removeMeeting: removingMeeting,
                             rsvpChanged: false)
                         .then((value) {
@@ -1160,11 +1175,14 @@ class _EventEditModalState extends State<EventEditModal> {
                     context
                         .read<EventsCubit>()
                         .updateEventAndCreateModifiers(
-                            event: updatedEvent,
-                            atendeesToAdd: atendeesToAdd,
-                            atendeesToRemove: atendeesToRemove,
-                            addMeeting: addingMeeting,
-                            removeMeeting: removingMeeting)
+                          event: updatedEvent,
+                          atendeesToAdd: atendeesToAdd,
+                          atendeesToRemove: atendeesToRemove,
+                          addMeeting: addingMeeting,
+                          removeMeeting: removingMeeting,
+                          selectedMeetingSolution: meetingSolution,
+                          conferenceAccountId: conferenceAccountId,
+                        )
                         .then((value) {
                       _showEventEditedSnackbar();
                     });
@@ -1212,6 +1230,8 @@ class _EventEditModalState extends State<EventEditModal> {
                 atendeesToRemove: atendeesToRemove,
                 addMeeting: addingMeeting,
                 removeMeeting: removingMeeting,
+                selectedMeetingSolution: meetingSolution,
+                conferenceAccountId: conferenceAccountId,
                 createingEvent: widget.createingEvent ?? false)
             .then(
           (value) {
@@ -1249,21 +1269,27 @@ class _EventEditModalState extends State<EventEditModal> {
       context
           .read<EventsCubit>()
           .updateEventAndCreateModifiers(
-              event: updatedEvent,
-              atendeesToAdd: atendeesToAdd,
-              atendeesToRemove: atendeesToRemove,
-              addMeeting: addingMeeting,
-              removeMeeting: removingMeeting)
+            event: updatedEvent,
+            atendeesToAdd: atendeesToAdd,
+            atendeesToRemove: atendeesToRemove,
+            addMeeting: addingMeeting,
+            removeMeeting: removingMeeting,
+            selectedMeetingSolution: meetingSolution,
+            conferenceAccountId: conferenceAccountId,
+          )
           .then((value) => _showEventEditedSnackbar());
     } else {
       context
           .read<EventsCubit>()
           .updateParentAndExceptions(
-              exceptionEvent: updatedEvent,
-              atendeesToAdd: atendeesToAdd,
-              atendeesToRemove: atendeesToRemove,
-              addMeeting: addingMeeting,
-              removeMeeting: removingMeeting)
+            exceptionEvent: updatedEvent,
+            atendeesToAdd: atendeesToAdd,
+            atendeesToRemove: atendeesToRemove,
+            addMeeting: addingMeeting,
+            removeMeeting: removingMeeting,
+            selectedMeetingSolution: meetingSolution,
+            conferenceAccountId: conferenceAccountId,
+          )
           .then((value) => _showEventEditedSnackbar());
     }
   }

@@ -71,6 +71,9 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
     bool areCalendarTasksHidden = _preferencesRepository.areCalendarTasksHidden;
     emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden));
+
+    bool groupOverlappingTasks = _preferencesRepository.groupOverlappingTasks;
+    emit(state.copyWith(groupOverlappingTasks: groupOverlappingTasks));
   }
 
   void changeCalendarView(CalendarView calendarView) {
@@ -124,6 +127,11 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   void setCalendarTasksHidden(bool areCalendarTasksHidden) {
     emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden));
     _preferencesRepository.setAreCalendarTasksHidden(areCalendarTasksHidden);
+  }
+
+  void setGroupOverlappingTasks(bool groupOverlappingTasks) {
+    emit(state.copyWith(groupOverlappingTasks: groupOverlappingTasks));
+    _preferencesRepository.setGroupOverlappingTasks(groupOverlappingTasks);
   }
 
   Future<void> fetchCalendars() async {
