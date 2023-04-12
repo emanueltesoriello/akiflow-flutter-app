@@ -133,6 +133,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   Future<void> createEvent(BuildContext context) async {
+    String description = generateAkiflowSignature(context);
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
     Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
     var id = const Uuid().v4();
@@ -150,6 +151,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
       akiflowAccountId: calendar.akiflowAccountId,
       originAccountId: calendar.originAccountId,
       calendarColor: calendar.color,
+      //description: description,
       content: {"transparency": "opaque", "visibility": "default", "location": null},
       startDatetimeTz: currentTimeZone,
       startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
@@ -166,6 +168,25 @@ class EventsCubit extends Cubit<EventsCubitState> {
         createingEvent: true,
       ),
     ).whenComplete(() => refreshAllEvents(context));
+  }
+
+  String generateAkiflowSignature(BuildContext context) {
+    String akiflowUrl =
+        'https://akiflow.com/?utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
+    bool showAkiflowSignature = true;
+    if (context.read<AuthCubit>().state.user?.settings?["general"] != null &&
+        context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"] != null) {
+      showAkiflowSignature = context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"];
+    }
+
+    if (showAkiflowSignature && context.read<AuthCubit>().state.user?.referralUrl != null) {
+      var referral = context.read<AuthCubit>().state.user?.referralUrl;
+      akiflowUrl = '$referral&utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
+    }
+    if (showAkiflowSignature) {
+      return '<br /><br />Scheduled with <a href="$akiflowUrl" target="_blank">Akiflow</a>';
+    }
+    return '';
   }
   //END create Event section
 
