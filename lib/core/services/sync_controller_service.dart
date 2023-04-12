@@ -25,16 +25,20 @@ import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_integration_service.dart';
 import 'package:mobile/core/services/sync_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/client/client.dart';
+import 'package:models/event/event.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:mobile/extensions/event_extension.dart';
 
 enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers, docs }
 
@@ -56,6 +60,7 @@ class SyncControllerService {
   static final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
   static final LabelsRepository _labelsRepository = locator<LabelsRepository>();
   static final EventsRepository _eventsRepository = locator<EventsRepository>();
+  static final CalendarCubit _calendarCubit = locator<CalendarCubit>();
   static final EventModifiersRepository _eventModifiersRepository = locator<EventModifiersRepository>();
   static final ContactsRepository _contactsRepository = locator<ContactsRepository>();
 
@@ -126,6 +131,9 @@ class SyncControllerService {
   final int _getRecurringNotificationsSyncCounter = _preferencesRepository.recurringNotificationsSyncCounter;
   _setRecurringNotificationsSyncCounter(val) => _preferencesRepository.setRecurringNotificationsSyncCounter(val);
 
+  final String _getLastSavedTimeZone = _preferencesRepository.getLastSavedTimeZone;
+  _setLastSavedTimeZone(val) => _preferencesRepository.setLastSavedTimeZone(val);
+
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
 
@@ -167,6 +175,15 @@ class SyncControllerService {
 
           try {
             await postClient();
+          } catch (e, s) {
+            _sentryService.captureException(e, stackTrace: s);
+          }
+          try {
+            EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then(
+              (eventNotifications) {
+                NotificationsService.scheduleEvents(_preferencesRepository, eventNotifications);
+              },
+            );
           } catch (e, s) {
             _sentryService.captureException(e, stackTrace: s);
           }
@@ -276,6 +293,7 @@ class SyncControllerService {
 
       int recurringBackgroundSyncCounter = _getRecurringBackgroundSyncCounter;
       int recurringNotificationsSyncCounter = _getRecurringNotificationsSyncCounter;
+      String lastSavedTimeZone = _getLastSavedTimeZone;
 
       String? fcmToken;
       try {
@@ -319,6 +337,7 @@ class SyncControllerService {
 
       if (response != null) {
         //String? deviceIdFromServer = response['id'];
+        String? timezoneFromServer = response['timezone_name'];
         int recurringNotificationsSyncCounterFromServer = response['recurring_notifications_sync_counter'] ?? 0;
         int recurringBackgroundSyncCounterFromServer = response['recurring_background_sync_counter'] ?? 0;
 
@@ -337,6 +356,12 @@ class SyncControllerService {
         if (recurringBackgroundSyncCounterFromServer > client.recurringBackgroundSyncCounter!) {
           _setRecurringBackgroundSyncCounter(recurringBackgroundSyncCounterFromServer);
         }
+
+        if (timezoneFromServer != null && timezoneFromServer != lastSavedTimeZone) {
+          NotificationsService.cancelScheduledNotifications(_preferencesRepository);
+          NotificationsService.scheduleNotificationsService(_preferencesRepository);
+        }
+        _setLastSavedTimeZone(timezoneFromServer);
       }
 
       return;

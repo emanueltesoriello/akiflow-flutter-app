@@ -8,7 +8,6 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/base/sync_progress.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
@@ -22,6 +21,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final Widget? customTitle;
   final bool shadow;
   final bool showSyncButton;
+  final bool showLinearProgress;
 
   const AppBarComp({
     Key? key,
@@ -34,6 +34,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.customTitle,
     this.shadow = true,
+    this.showLinearProgress = true,
     this.showSyncButton = false,
   }) : super(key: key);
 
@@ -56,22 +57,40 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
               ]
             : null,
       ),
-      child: AppBar(
-        centerTitle: false,
-        backgroundColor: ColorsExt.background(context),
-        surfaceTintColor: ColorsExt.background(context),
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-        ),
-        elevation: 4,
-        automaticallyImplyLeading: false,
-        shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
-        title: _buildTitle(context),
-        titleSpacing: leading != null || showBack == true ? 0 : Dimension.padding,
-        leading: _buildLeading(context),
-        actions: _buildActions(context),
+      child: BlocBuilder<SyncCubit, SyncCubitState>(
+        builder: (context, state) {
+          return AppBar(
+            centerTitle: false,
+            backgroundColor: ColorsExt.background(context),
+            surfaceTintColor: ColorsExt.background(context),
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+            ),
+            bottom: (showSyncButton == false || state.loading == false)
+                ? PreferredSize(
+                    preferredSize: Size.zero,
+                    child: Container(),
+                  )
+                : showLinearProgress
+                    ? const PreferredSize(
+                        preferredSize: Size.fromHeight(Dimension.progressIndicatorSize),
+                        child: LinearProgressIndicator(value: null),
+                      )
+                    : PreferredSize(
+                        preferredSize: Size.zero,
+                        child: Container(),
+                      ),
+            elevation: 4,
+            automaticallyImplyLeading: false,
+            shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
+            title: _buildTitle(context),
+            titleSpacing: leading != null || showBack == true ? 0 : Dimension.padding,
+            leading: _buildLeading(context),
+            actions: _buildActions(context),
+          );
+        },
       ),
     );
   }
@@ -177,8 +196,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
           if (showSyncButton == false || state.loading == false) {
             return const SizedBox();
           }
-
-          return const SyncProgress();
+          return Container();
         },
       ),
       const SizedBox(width: Dimension.paddingS),

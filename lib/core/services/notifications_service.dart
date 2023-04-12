@@ -8,11 +8,15 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/navigation_service.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/home/ui/pages/home_page.dart';
+import 'package:models/event/event.dart';
+import 'package:models/notifications/scheduled_notification.dart';
 import 'package:models/task/task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';
@@ -20,6 +24,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import './../../../../../extensions/local_notifications_extensions.dart';
 
 class NotificationsService {
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -85,6 +90,97 @@ class NotificationsService {
     }).catchError((Object error) {
       print('Error: $error');
     });
+  }
+
+  static scheduleEvents(PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
+    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+      List<int> eventsIdsForNotifications = [];
+      if (eventsTobeScheduled.isNotEmpty) {
+        for (var eventId in eventsTobeScheduled.keys) {
+          String eventIdString = eventId.split(';')[0];
+          int notificationsId = 0;
+
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId = int.parse(eventIdString);
+          } catch (e) {
+            print(e);
+            notificationsId = eventIdString.hashCode;
+          }
+          eventsIdsForNotifications.add(notificationsId);
+        }
+      }
+
+      var scheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
+
+      List<ScheduledNotification> toBeRemoved = [];
+
+      if (scheduledNotifications != null) {
+        // put in toBeRemoved all the events that are in scheduledNotifications but not in eventsToBeScheduled (check only the scheduledNotifications that has type == Event)
+        for (var scheduledNotification in scheduledNotifications) {
+          // Assuming that the 'type' field is available in the notification's payload
+          NotificationType notificationType = scheduledNotification.type;
+
+          if (notificationType == NotificationType.Event) {
+            int eventId = scheduledNotification.notificationId;
+            if (!eventsTobeScheduled.containsKey(eventId)) {
+              toBeRemoved.add(scheduledNotification);
+            }
+          }
+        }
+        if (toBeRemoved.isNotEmpty) {
+          // remove notifications
+          for (var eventToBeRemoved in toBeRemoved) {
+            FlutterLocalNotificationsPlugin().cancelExt(eventToBeRemoved.notificationId);
+          }
+        }
+      }
+
+      final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
+
+      // Schedule all the events and update the already set ones
+      eventsTobeScheduled.forEach((id, event) {
+        try {
+          String startTime = DateFormat('kk:mm').format(DateTime.parse(id.split(';')[1]).toLocal());
+          String eventIdString = id.split(';')[0];
+          int notificationsId = 0;
+          String startTimeString = id.split(';')[1];
+          try {
+            // get the last 8 hex char from the ID and convert them into an int
+            notificationsId = int.parse(eventIdString);
+          } catch (e) {
+            print(e);
+            notificationsId = eventIdString.hashCode;
+          }
+          NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
+
+          scheduleNotifications(
+            event.title ?? '',
+            "Event start at $startTime",
+            notificationId: notificationsId,
+            scheduledDate: tz.TZDateTime.parse(
+              tz.local,
+              startTimeString,
+            ).subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
+            payload: jsonEncode(event.toMap()),
+            notificationType: NotificationType.Event,
+            minuteBeforeToStart: minutesBefore.minutesBeforeToStart,
+            notificationDetails: const NotificationDetails(
+              android: AndroidNotificationDetails(
+                "channel_d",
+                "Event Notification",
+                channelDescription: "Reminders that an event is about to start.",
+              ),
+            ),
+          );
+        } catch (e) {
+          print(e);
+        }
+      });
+    }
   }
 
   /// This method schedule all the planned notifications for tasks
@@ -166,6 +262,7 @@ class NotificationsService {
                 scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
                     .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
                 payload: jsonEncode(task.toMap()),
+                notificationType: NotificationType.Tasks,
                 notificationDetails: const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "channel_d",
@@ -211,16 +308,38 @@ class NotificationsService {
   static handleNotificationClick(NotificationResponse payload) async {
     //payload.payload;
     if (payload.payload != '') {
-      Task task = Task.fromMap(jsonDecode(payload.payload!));
-      print('notification clicked');
-      BuildContext? context = NavigationService.navigatorKey.currentContext;
-      if (context != null) {
-        print('handleNotificationClick: task pressed');
-        context.read<MainCubit>().changeHomeView(HomeViewType.today);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+      bool? isEvent;
+      try {
+        isEvent = jsonDecode(payload.payload!)['creator_id'] != null;
+      } catch (e) {
+        print(e);
+      }
+      if (isEvent != null && !isEvent) {
+        print('Task notification clicked on handleNotificationClick');
+        Task task = Task.fromMap(jsonDecode(payload.payload!));
 
-        await TaskExt.editTask(context, task);
+        BuildContext? context = NavigationService.navigatorKey.currentContext;
+        if (context != null) {
+          context.read<MainCubit>().changeHomeView(HomeViewType.today);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+
+          await TaskExt.editTask(context, task);
+        }
+      } else {
+        try {
+          Event? event = Event.fromMap(jsonDecode(payload.payload!));
+          print('Event notification clicked on handleNotificationClick');
+          BuildContext? context = NavigationService.navigatorKey.currentContext;
+          if (context != null) {
+            // TODO: handle deeplink
+            // TODO 1) redirect user on Calendar page
+            // TODO 2) Select Today as day
+            // TODO 3) Show edit event modal
+          }
+        } catch (e) {
+          print(e);
+        }
       }
     } else if (payload.id == dailyReminderTaskId) {
       BuildContext? context = NavigationService.navigatorKey.currentContext;
@@ -263,7 +382,7 @@ class NotificationsService {
     } catch (e) {
       print(e);
     }
-    await localNotificationsPlugin.cancelAll();
+    await localNotificationsPlugin.cancelAllExt();
 
     setDailyReminder(service);
 
@@ -321,6 +440,7 @@ class NotificationsService {
               scheduledDate: tz.TZDateTime.parse(tz.local, task.datetime!)
                   .subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
               payload: jsonEncode(task.toMap()),
+              notificationType: NotificationType.Tasks,
               notificationDetails: const NotificationDetails(
                 android: AndroidNotificationDetails(
                   "channel_d",
@@ -339,23 +459,30 @@ class NotificationsService {
       {int notificationId = 0,
       NotificationDetails? notificationDetails,
       required TZDateTime scheduledDate,
-      required String? payload}) {
-    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+      required String? payload,
+      required NotificationType notificationType,
+      int minuteBeforeToStart = 5}) async {
+    //final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
-      localNotificationsPlugin.zonedSchedule(
-          notificationId, title, description, scheduledDate, notificationDetails ?? const NotificationDetails(),
-          androidAllowWhileIdle: true,
-          payload: payload,
-          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
-    } else {
-      print('show immediately this notification');
-      localNotificationsPlugin.show(
+      await FlutterLocalNotificationsPlugin().zonedScheduleExt(
         notificationId,
         title,
         description,
+        scheduledDate,
         notificationDetails ?? const NotificationDetails(),
+        androidAllowWhileIdle: true,
         payload: payload,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        notificationType: notificationType,
       );
+    } else {
+      print('show immediately this notification');
+      FlutterLocalNotificationsPlugin().showExt(
+          notificationId, title, description, notificationDetails ?? const NotificationDetails(),
+          payload: payload,
+          scheduledDate: scheduledDate,
+          notificationType: notificationType,
+          minuteBeforeToStart: minuteBeforeToStart);
     }
   }
 
@@ -382,8 +509,7 @@ class NotificationsService {
 
       DateTime dt = DateTime(
           now.year, now.month, now.day, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
-
-      await localNotificationsPlugin.zonedSchedule(
+      await localNotificationsPlugin.zonedScheduleExt(
         dailyReminderTaskId,
         "Start your day right by checking your schedule!",
         null,
@@ -392,9 +518,10 @@ class NotificationsService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
+        notificationType: NotificationType.Other,
       );
     }
   }
 
-  static cancelNotificationById(int id) => FlutterLocalNotificationsPlugin().cancel(id);
+  static cancelNotificationById(int id) => FlutterLocalNotificationsPlugin().cancelExt(id);
 }
