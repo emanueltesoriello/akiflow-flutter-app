@@ -8,15 +8,15 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/navigation_service.dart';
-import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/events/ui/widgets/event_modal.dart';
 import 'package:mobile/src/home/ui/pages/home_page.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/notifications/scheduled_notification.dart';
 import 'package:models/task/task.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';
@@ -332,10 +332,17 @@ class NotificationsService {
           print('Event notification clicked on handleNotificationClick');
           BuildContext? context = NavigationService.navigatorKey.currentContext;
           if (context != null) {
-            // TODO: handle deeplink
-            // TODO 1) redirect user on Calendar page
-            // TODO 2) Select Today as day
-            // TODO 3) Show edit event modal
+            context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+
+            showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => EventModal(
+                event: event,
+                tappedDate: DateTime.now().toLocal(),
+              ),
+            );
           }
         } catch (e) {
           print(e);
