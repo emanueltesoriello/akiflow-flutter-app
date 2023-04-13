@@ -68,15 +68,15 @@ class GroupedTasksAppointment extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 16,
-                        height: 16,
+                        width: boxHeight < 15.0 && groupedTasks.taskList.length < 10 ? 12.0 : 16.0,
+                        height: boxHeight < 15.0 ? 12.0 : 16.0,
                         decoration: BoxDecoration(
                           color: ColorsExt.grey5(context),
                           borderRadius: const BorderRadius.all(
                             Radius.circular(3.0),
                           ),
                         ),
-                        child: Center(
+                        child: FittedBox(
                           child: Text('${groupedTasks.taskList.length}',
                               style: Theme.of(context).textTheme.caption?.copyWith(
                                     fontSize: calendarController.view == CalendarView.schedule
