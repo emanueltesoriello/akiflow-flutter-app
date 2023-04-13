@@ -311,19 +311,20 @@ extension EventExt on Event {
     List<Event> recurringExceptions = <Event>[];
 
     //gets the visible calendars in order to process only their events
-    List<String> visibleCalendarIds = [];
+    List<String> notificationsEnabledCalendarIds = [];
     if (calendars.isNotEmpty) {
       calendars = calendars
           .where((element) =>
               element.settings != null &&
-              ((element.settings["visibleMobile"] ?? element.settings["visible"] ?? false) == true))
+              ((element.settings["notificationsEnabledMobile"] ?? element.settings["notificationsEnabled"] ?? false) ==
+                  true))
           .toList();
 
       for (var calendar in calendars) {
-        visibleCalendarIds.add(calendar.id!);
+        notificationsEnabledCalendarIds.add(calendar.id!);
       }
     }
-    events = events.where((element) => visibleCalendarIds.contains(element.calendarId)).toList();
+    events = events.where((element) => notificationsEnabledCalendarIds.contains(element.calendarId)).toList();
 
     nonRecurring = events.where((event) => event.recurringId == null).toList();
     recurringParents = events.where((event) => event.id == event.recurringId).toList();
