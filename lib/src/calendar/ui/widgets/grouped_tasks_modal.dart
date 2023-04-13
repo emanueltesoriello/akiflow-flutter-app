@@ -43,13 +43,12 @@ class GroupedTasksModal extends StatelessWidget {
           children: [
             const SizedBox(height: Dimension.padding),
             const ScrollChip(),
-            const SizedBox(height: Dimension.padding),
             Padding(
               padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   Text(
-                    ' ${tasks.length} tasks',
+                    '${tasks.length} tasks',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: ColorsExt.grey2(context),
                           fontWeight: FontWeight.w500,
