@@ -29,6 +29,7 @@ class CalendarView extends StatelessWidget {
         List<GroupedTasks> groupedTasks = [];
         if (!state.areCalendarTasksHidden) {
           tasks = List.from(tasksCubit.state.calendarTasks);
+          tasks = tasks.where((task) => task.datetime != null).toList();
 
           if (state.groupOverlappingTasks && calendarController.view != sf_calendar.CalendarView.schedule) {
             groupedTasks = findOverlappingTasks(tasks);
