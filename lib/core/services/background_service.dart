@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
 const scheduleNotificationsTaskKey = "com.akiflow.mobile.scheduleNotifications";
 const periodicTaskskKey = "com.akiflow.mobile.periodicTask";
@@ -71,15 +72,16 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
     // *********************************************
     if (fromBackground) {
       await initProcesses();
-    }
 
-    final SyncControllerService syncControllerService = locator<SyncControllerService>();
-    if ((locator<PreferencesRepository>().lastTasksSyncAt != null &&
-            DateTime.now().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
-        task == backgroundSyncFromNotification) {
-      await syncControllerService.sync();
+      final SyncControllerService syncControllerService = locator<SyncControllerService>();
+      if ((locator<PreferencesRepository>().lastTasksSyncAt != null &&
+              DateTime.now().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
+          task == backgroundSyncFromNotification) {
+        await syncControllerService.sync();
+      }
+    } else {
+      await locator<SyncCubit>().sync();
     }
-
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {
       NotificationsService.showNotifications("From background!", "Synched successfully");
@@ -124,7 +126,7 @@ class BackgroundService {
     Workmanager().registerPeriodicTask(
       periodicTaskskKey,
       periodicTaskskKey,
-      initialDelay: const Duration(minutes: 1),
+      initialDelay: const Duration(minutes: 15),
       constraints: constraints.Constraints(
         // connected or metered mark the task as requiring internet
         networkType: NetworkType.connected,
