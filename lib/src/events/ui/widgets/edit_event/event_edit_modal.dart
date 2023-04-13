@@ -1241,7 +1241,6 @@ class _EventEditModalState extends State<EventEditModal> {
           (value) {
             bool createdEvent = widget.createingEvent ?? false;
             if (createdEvent) {
-              context.read<EventsCubit>().refreshAllEvents(context);
               ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
                   context: context, type: CustomSnackbarType.eventCreated, message: t.event.snackbar.created));
             } else {
