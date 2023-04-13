@@ -203,4 +203,25 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
     return calendar;
   }
+
+  Calendar changeCalendarNotifications(Calendar calendar) {
+    dynamic settings = calendar.settings;
+    if (settings != null) {
+      bool isEnabled =
+          calendar.settings["notificationsEnabledMobile"] ?? calendar.settings["notificationsEnabled"] ?? false;
+
+      settings["notificationsEnabledMobile"] = !isEnabled;
+    } else {
+      settings = {
+        "visible": true,
+        "notificationsEnabled": true,
+        "visibleMobile": true,
+        "notificationsEnabledMobile": true
+      };
+    }
+
+    calendar = calendar.copyWith(settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+    return calendar;
+  }
 }

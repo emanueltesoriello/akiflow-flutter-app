@@ -124,6 +124,7 @@ class _AssetsImagesIconsCommon {
   final arrowshapeTurnUpRightSVG = 'assets/images/icons/_common/arrowshape_turn_up_right.svg';
   final availabilitySVG = 'assets/images/icons/_common/availability.svg';
   final bellSVG = 'assets/images/icons/_common/bell.svg';
+  final bellSlashedSVG = 'assets/images/icons/_common/bell_slashed.svg';
   final briefcaseSVG = 'assets/images/icons/_common/briefcase.svg';
   final calendarSVG = 'assets/images/icons/_common/calendar.svg';
   final calendarBadgePlus1SVG = 'assets/images/icons/_common/calendar_badge_plus.svg';
