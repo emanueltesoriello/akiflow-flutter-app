@@ -19,7 +19,7 @@ class CalendarCubitState extends Equatable {
     this.isCalendarWeekendHidden = false,
     this.areDeclinedEventsHidden = false,
     this.areCalendarTasksHidden = false,
-    this.groupOverlappingTasks = false,
+    this.groupOverlappingTasks = true,
     this.calendars = const [],
     this.visibleDates = const [],
     this.panelState = PanelState.closed,

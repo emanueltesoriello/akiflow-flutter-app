@@ -413,7 +413,7 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   bool get groupOverlappingTasks {
-    return _prefs.getBool("groupOverlappingTasks") ?? false;
+    return _prefs.getBool("groupOverlappingTasks") ?? true;
   }
 
   @override
