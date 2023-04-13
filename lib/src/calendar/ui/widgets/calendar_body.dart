@@ -230,28 +230,40 @@ class CalendarBody extends StatelessWidget {
       calendarController.view = CalendarView.schedule;
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
-      TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
+      try {
+        TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
+      } catch (e) {
+        print('calendarTapped task error: $e}');
+      }
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarGroupedTasks) {
-      GroupedTasks group = groupedTasks.where((group) => group.id == calendarTapDetails.appointments!.first.id).first;
-      showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context) => GroupedTasksModal(tasks: group.taskList),
-      );
+      try {
+        GroupedTasks group = groupedTasks.where((group) => group.id == calendarTapDetails.appointments!.first.id).first;
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => GroupedTasksModal(tasks: group.taskList),
+        );
+      } catch (e) {
+        print('calendarTapped grouped tasks error: $e}');
+      }
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
-      Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
-      eventsCubit.refetchEvent(event);
-      showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context) => EventModal(
-          event: event,
-          tappedDate: calendarTapDetails.date,
-        ),
-      ).whenComplete(
-        () async {
-          await eventsCubit.fetchUnprocessedEventModifiers();
-        },
-      );
+      try {
+        Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
+        eventsCubit.refetchEvent(event);
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => EventModal(
+            event: event,
+            tappedDate: calendarTapDetails.date,
+          ),
+        ).whenComplete(
+          () async {
+            await eventsCubit.fetchUnprocessedEventModifiers();
+          },
+        );
+      } catch (e) {
+        print('calendarTapped event error: $e}');
+      }
     }
   }
 
