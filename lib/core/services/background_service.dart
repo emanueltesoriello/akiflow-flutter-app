@@ -124,7 +124,7 @@ class BackgroundService {
     Workmanager().registerPeriodicTask(
       periodicTaskskKey,
       periodicTaskskKey,
-      initialDelay: const Duration(minutes: 15),
+      initialDelay: const Duration(minutes: 1),
       constraints: constraints.Constraints(
         // connected or metered mark the task as requiring internet
         networkType: NetworkType.connected,

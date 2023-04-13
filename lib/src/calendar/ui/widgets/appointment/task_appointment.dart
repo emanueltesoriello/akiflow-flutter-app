@@ -88,7 +88,9 @@ class TaskAppointment extends StatelessWidget {
                 child: Column(
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: calendarController.view == CalendarView.schedule
+                          ? CrossAxisAlignment.center
+                          : CrossAxisAlignment.start,
                       children: [
                         boxHeight > 14 &&
                                 (calendarController.view == CalendarView.day ||
@@ -156,7 +158,7 @@ class TaskAppointment extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 2, right: 2),
+                padding: const EdgeInsets.only(top: 4, right: 2),
                 child: Row(
                   children: [
                     if (boxWidth > 92 &&

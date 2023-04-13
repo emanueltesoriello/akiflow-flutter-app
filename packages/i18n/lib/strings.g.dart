@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 331 
+ * Strings: 332 
  *
- * Built on 2023-03-30 at 16:42 UTC
+ * Built on 2023-04-10 at 07:47 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -510,6 +510,7 @@ class _StringsCalendarEn {
 	String get goToToday => 'Go to Today';
 	String get calendarView => 'Calendar View';
 	late final _StringsCalendarViewEn view = _StringsCalendarViewEn._(_root);
+	String get groupOverlappingTasks => 'Group overlapping tasks';
 	String get hideWeekends => 'Hide Weekends';
 	String get hideDeclinedEvents => 'Hide Declined events';
 	String get hideTasksFromCalendar => 'Hide Tasks from calendar';
@@ -1235,6 +1236,7 @@ extension on _StringsEn {
 			'calendar.view.threeDays': '3 Days',
 			'calendar.view.week': 'Week',
 			'calendar.view.month': 'Month',
+			'calendar.groupOverlappingTasks': 'Group overlapping tasks',
 			'calendar.hideWeekends': 'Hide Weekends',
 			'calendar.hideDeclinedEvents': 'Hide Declined events',
 			'calendar.hideTasksFromCalendar': 'Hide Tasks from calendar',

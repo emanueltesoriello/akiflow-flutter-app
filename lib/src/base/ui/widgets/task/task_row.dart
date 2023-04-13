@@ -38,6 +38,7 @@ class TaskRow extends StatefulWidget {
   final bool showPlanInfo;
   final bool enableLongPressToSelect;
   final bool isOnboarding;
+  final bool openedFromCalendarGroupedTasks;
 
   const TaskRow({
     Key? key,
@@ -53,6 +54,7 @@ class TaskRow extends StatefulWidget {
     required this.showPlanInfo,
     this.enableLongPressToSelect = false,
     this.isOnboarding = false,
+    this.openedFromCalendarGroupedTasks = false,
   }) : super(key: key);
 
   @override
@@ -277,6 +279,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
           Widget child = GestureDetector(
             onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
             onTap: () async {
+              if (widget.openedFromCalendarGroupedTasks) {
+                Navigator.pop(context);
+              }
               TaskExt.editTask(context, widget.task);
             },
             child: SizedBox(

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
@@ -56,9 +57,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                   onCalendarCreated: (pageController) {
                     _pageController = pageController;
                   },
-                  startingDayOfWeek: firstDayOfWeek == -1 || firstDayOfWeek == DateTime.monday
-                      ? StartingDayOfWeek.monday
-                      : StartingDayOfWeek.sunday,
+                  startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
                   rowHeight: Dimension.todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   calendarFormat: CalendarFormat.month,
