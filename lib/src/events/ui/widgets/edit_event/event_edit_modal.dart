@@ -177,7 +177,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 ),
               ),
               _bottomActionButtonsRow(context),
-              SizedBox(height: space > Dimension.paddingL ? space - Dimension.paddingL : 0),
+              SizedBox(height: space),
             ],
           ),
         );
