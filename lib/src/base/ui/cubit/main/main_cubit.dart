@@ -89,7 +89,8 @@ class MainCubit extends Cubit<MainCubitState> {
             IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSync");
             port.listen((dynamic data) async {
               print('got $data on UI');
-              await _syncControllerService.sync();
+              //await _syncControllerService.sync();
+              await locator<SyncCubit>().sync();
             });
           } catch (e) {
             print(e);
