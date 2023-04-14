@@ -76,7 +76,7 @@ class TaskAppointment extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 2, bottom: 2),
                   child: Container(
-                    height: boxHeight - 4,
+                    height: boxHeight - 5,
                     width: 2,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3),
@@ -132,7 +132,7 @@ class TaskAppointment extends StatelessWidget {
                                     fontSize: calendarController.view == CalendarView.schedule
                                         ? 15.0
                                         : boxHeight < 15.0
-                                            ? 11.0
+                                            ? 10.5
                                             : 13.0,
                                     fontWeight: FontWeight.w500,
                                     color: ColorsExt.grey1(context),
