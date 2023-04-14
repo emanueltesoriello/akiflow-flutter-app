@@ -544,7 +544,7 @@ class _EventModalState extends State<EventModal> {
         children: [
           if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty) _responseStatusRow(context),
           const Separator(),
-          _eventActionButtonsRow(context),
+          SafeArea(child: _eventActionButtonsRow(context)),
         ],
       ),
     );

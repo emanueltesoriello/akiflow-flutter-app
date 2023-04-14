@@ -1099,27 +1099,37 @@ class _EventEditModalState extends State<EventEditModal> {
       ),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(Dimension.paddingS),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                BottomButton(
-                    title: t.cancel,
-                    image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
-                    onTap: () {
-                      _onCancelTap();
-                    }),
-                BottomButton(
-                  title: widget.createingEvent ?? false ? t.event.editEvent.createEvent : t.event.editEvent.saveChanges,
-                  image: Assets.images.icons.common.checkmarkAltSVG,
-                  containerColor: ColorsExt.green20(context),
-                  iconColor: ColorsExt.green(context),
-                  onTap: () async {
-                    _onSaveTap();
-                  },
-                ),
-              ],
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(Dimension.paddingS),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: BottomButton(
+                        title: t.cancel,
+                        image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
+                        onTap: () {
+                          _onCancelTap();
+                        }),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: BottomButton(
+                      title: widget.createingEvent ?? false
+                          ? t.event.editEvent.createEvent
+                          : t.event.editEvent.saveChanges,
+                      image: Assets.images.icons.common.checkmarkAltSVG,
+                      containerColor: ColorsExt.green20(context),
+                      iconColor: ColorsExt.green(context),
+                      onTap: () async {
+                        _onSaveTap();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
