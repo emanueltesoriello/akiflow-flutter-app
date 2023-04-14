@@ -93,7 +93,7 @@ class NotificationsService {
   }
 
   static scheduleEvents(PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
-    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+    if (preferencesRepository.nextEventNotificationSettingEnabled) {
       List<int> eventsIdsForNotifications = [];
       if (eventsTobeScheduled.isNotEmpty) {
         for (var eventId in eventsTobeScheduled.keys) {

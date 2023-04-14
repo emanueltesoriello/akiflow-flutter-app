@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
@@ -91,6 +92,12 @@ abstract class PreferencesRepository {
 
   bool get nextTaskNotificationSettingEnabled;
   Future<void> setNextTaskNotificationSettingEnabled(bool value);
+
+  NextEventNotificationsModel get nextEventNotificationSetting;
+  Future<void> setNextEventNotificationSetting(NextEventNotificationsModel value);
+
+  bool get nextEventNotificationSettingEnabled;
+  Future<void> setNextEventNotificationSettingEnabled(bool value);
 
   bool get dailyOverviewNotificationTimeEnabled;
   Future<void> seDailyOverviewNotificationTime(bool value);
@@ -421,6 +428,7 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     await _prefs.setBool("groupOverlappingTasks", groupOverlappingTasks);
   }
 
+  @override
   NextTaskNotificationsModel get nextTaskNotificationSetting {
     return NextTaskNotificationsModel.fromMap(
       jsonDecode(_prefs.getString("nextTaskNotificationSettingValue") ?? '{}'),
@@ -459,6 +467,31 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setNextTaskNotificationSettingEnabled(bool value) async {
     await _prefs.setBool("nextTaskNotificationSettingEnabled", value);
+  }
+
+  @override
+  bool get nextEventNotificationSettingEnabled {
+    return _prefs.getBool("nextEventNotificationSettingEnabled") ?? true;
+  }
+
+  @override
+  Future<void> setNextEventNotificationSettingEnabled(bool value) async {
+    await _prefs.setBool("nextEventNotificationSettingEnabled", value);
+  }
+
+  @override
+  NextEventNotificationsModel get nextEventNotificationSetting {
+    return NextEventNotificationsModel.fromMap(
+      jsonDecode(_prefs.getString("nextEventNotificationSettingValue") ?? '{}'),
+    );
+  }
+
+  @override
+  Future<void> setNextEventNotificationSetting(NextEventNotificationsModel value) async {
+    await _prefs.setString(
+      "nextEventNotificationSettingValue",
+      jsonEncode(NextEventNotificationsModel.toMap(value)),
+    );
   }
 
   @override
