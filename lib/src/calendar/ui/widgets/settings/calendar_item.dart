@@ -106,7 +106,7 @@ class _CalendarItemState extends State<CalendarItem> {
                               ),
                               const SizedBox(width: Dimension.paddingS),
                               SizedBox(
-                                width: 270,
+                                width: 220,
                                 child: Text("${widget.calendars[index].title}",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
