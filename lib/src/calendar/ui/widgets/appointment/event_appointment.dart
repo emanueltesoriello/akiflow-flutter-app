@@ -49,7 +49,7 @@ class EventAppointment extends StatelessWidget {
                     fontSize: calendarController.view == CalendarView.schedule
                         ? 15.0
                         : boxHeight < 15.0
-                            ? 11.0
+                            ? 10.5
                             : 13.0,
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined
