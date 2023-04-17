@@ -80,7 +80,7 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
         await syncControllerService.sync();
       }
     } else {
-      await locator<SyncCubit>().sync();
+      await locator<SyncControllerService>().sync();
     }
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {

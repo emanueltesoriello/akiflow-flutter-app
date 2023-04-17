@@ -63,7 +63,9 @@ Future<void> initFunctions() async {
 
   // Init Background Service and register periodic task
   await BackgroundService.initBackgroundService();
-  BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
+  if (Platform.isAndroid) {
+    BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
+  }
 
   try {
     if (Platform.isAndroid) {
@@ -92,7 +94,8 @@ Future<void> mainCom({kDebugMode = false}) async {
     options.tracesSampleRate = 1.0;
   },
       appRunner: () => runApp(
-            DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
+            DevicePreview(
+                enabled: kDebugMode, builder: (context) => RestartWidget(child: Application(userLogged: userLogged))),
           ));
 }
 
@@ -146,5 +149,36 @@ class Application extends StatelessWidget {
                         return BaseNavigator(userLogged: userLogged);
                       })));
         }));
+  }
+}
+
+class RestartWidget extends StatefulWidget {
+  const RestartWidget({required this.child});
+
+  final Widget child;
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
   }
 }
