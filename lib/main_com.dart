@@ -7,9 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:i18n/strings.g.dart';
-//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -93,7 +91,7 @@ Future<void> mainCom({kDebugMode = false}) async {
     options.tracesSampleRate = 1.0;
   },
       appRunner: () => runApp(
-            DevicePreview(enabled: kDebugMode, builder: (context) => Phoenix(child: const Application())),
+            DevicePreview(enabled: kDebugMode, builder: (context) => const RestartWidget(child: Application())),
           ));
 }
 

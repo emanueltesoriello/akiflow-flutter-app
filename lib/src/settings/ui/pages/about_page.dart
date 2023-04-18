@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/main_com.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
@@ -112,6 +113,19 @@ class AboutPage extends StatelessWidget {
                     onPressed: () {
                       launchUrl(Uri.parse("https://www.notion.so/akiflow/Security-6d61cefd8c2349b2b4d5561aa82f1832"),
                           mode: LaunchMode.externalApplication);
+                    },
+                  ),
+                  const SizedBox(height: Dimension.padding),
+                  ButtonList(
+                    title: "Restart the app",
+                    leading: Assets.images.icons.common.repeatSVG,
+                    position: ButtonListPosition.single,
+                    showShevron: false,
+                    useSvgColor: true,
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      await mainCom();
                     },
                   ),
                 ],
