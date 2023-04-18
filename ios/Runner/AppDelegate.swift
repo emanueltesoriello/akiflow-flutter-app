@@ -16,13 +16,11 @@ import workmanager
             UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
 
-        AppDelegate.registerPlugins(with: self) // Register the app's plugins in the context of a normal run
-
         WorkmanagerPlugin.setPluginRegistrantCallback { registry in
             // Registry in this case is the FlutterEngine that is created in Workmanager's
             // performFetchWithCompletionHandler or BGAppRefreshTask.
             // This will make other plugins available during a background operation.
-            AppDelegate.registerPlugins(with: registry)
+            GeneratedPluginRegistrant.register(with: registry)
         }
 
     WorkmanagerPlugin.registerTask(withIdentifier: "com.akiflow.mobile.periodicTask")
