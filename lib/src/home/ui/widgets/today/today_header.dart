@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:models/task/task.dart';
 
 class TodayHeader extends StatelessWidget {

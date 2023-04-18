@@ -24,7 +24,6 @@ import 'package:mobile/src/home/ui/widgets/today/today_header.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
-import 'package:mobile/core/preferences.dart';
 
 class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
