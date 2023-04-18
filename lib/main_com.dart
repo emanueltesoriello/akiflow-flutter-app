@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:i18n/strings.g.dart';
 //import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
@@ -86,25 +87,19 @@ _identifyAnalytics(User user) async {
 Future<void> mainCom({kDebugMode = false}) async {
   await initFunctions();
 
-  bool userLogged =
-      locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   await SentryFlutter.init((options) {
     options.beforeSend = beforeSend;
     options.dsn = Config.sentryDsn;
     options.tracesSampleRate = 1.0;
   },
       appRunner: () => runApp(
-            DevicePreview(
-                enabled: kDebugMode, builder: (context) => RestartWidget(child: Application(userLogged: userLogged))),
+            DevicePreview(enabled: kDebugMode, builder: (context) => Phoenix(child: const Application())),
           ));
 }
 
 class Application extends StatelessWidget {
-  final bool userLogged;
-
   const Application({
     Key? key,
-    required this.userLogged,
   }) : super(key: key);
 
   @override
@@ -122,6 +117,8 @@ class Application extends StatelessWidget {
     return MultiBlocProvider(
         providers: baseProviders,
         child: Builder(builder: (context) {
+          bool userLogged = locator<PreferencesRepository>().user != null &&
+              locator<PreferencesRepository>().user!.accessToken != null;
           return FocusDetector(
               onForegroundGained: () {
                 context.read<MainCubit>().onFocusGained();
@@ -153,12 +150,13 @@ class Application extends StatelessWidget {
 }
 
 class RestartWidget extends StatefulWidget {
-  const RestartWidget({required this.child});
+  const RestartWidget({super.key, required this.child});
 
   final Widget child;
 
-  static void restartApp(BuildContext context) {
+  static Future restartApp(BuildContext context) async {
     context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
+    await initFunctions();
   }
 
   @override
