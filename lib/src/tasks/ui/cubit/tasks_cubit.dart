@@ -774,7 +774,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
       GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
 
       List<Account> accounts = await _accountsRepository.get();
-      Account account = accounts.firstWhere((a) => a.originAccountId == task.originAccountId?.value!);
+      Account account = accounts.firstWhere(
+          (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
 
       switch (gmailMarkAsDoneType) {
         case GmailMarkAsDoneType.unstarTheEmail:
