@@ -11,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:workmanager/src/options.dart' as constraints;
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
 const scheduleNotificationsTaskKey = "com.akiflow.mobile.scheduleNotifications";
 const periodicTaskskKey = "com.akiflow.mobile.periodicTask";
@@ -20,7 +19,7 @@ const backgroundSyncFromNotification = "com.akiflow.mobile.backgroundSyncFromNot
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await initProcesses();
+    //await initProcesses();
 
     await backgroundProcesses(task);
     // listen on this port in order to catch trigger from the background services.
