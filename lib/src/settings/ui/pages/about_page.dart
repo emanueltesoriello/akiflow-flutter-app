@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -116,18 +117,19 @@ class AboutPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: Dimension.padding),
-                  ButtonList(
-                    title: "Restart the app",
-                    leading: Assets.images.icons.common.repeatSVG,
-                    position: ButtonListPosition.single,
-                    showShevron: false,
-                    useSvgColor: true,
-                    onPressed: () async {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      await mainCom();
-                    },
-                  ),
+                  if (kDebugMode)
+                    ButtonList(
+                      title: "Restart the app",
+                      leading: Assets.images.icons.common.repeatSVG,
+                      position: ButtonListPosition.single,
+                      showShevron: false,
+                      useSvgColor: true,
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        await mainCom();
+                      },
+                    ),
                 ],
               ),
             ),
