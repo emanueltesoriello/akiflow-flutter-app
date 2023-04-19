@@ -72,20 +72,6 @@ class CalendarUtils {
     }
   }
 
-  static List<int> computeNonWorkinkDays(BuildContext context) {
-    int firstWorkdayOfWeek = DateTime.monday;
-    if (context.read<AuthCubit>().state.user?.settings?["calendar"] != null &&
-        context.read<AuthCubit>().state.user?.settings?["calendar"]["firstWorkingDayOfWeek"] != null) {
-      var firstWorkdayFromDb = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstWorkingDayOfWeek"];
-      if (firstWorkdayFromDb is String) {
-        firstWorkdayOfWeek = int.parse(firstWorkdayFromDb);
-      } else if (firstWorkdayFromDb is int) {
-        firstWorkdayOfWeek = firstWorkdayFromDb;
-      }
-    }
-    return getNonWorkingDays(firstWorkdayOfWeek);
-  }
-
   /// firstWorkingDayOfWeek where Sunday=0, Monday=1 .. Saturday=6
   /// return last 2 days of week, in another format: Monday=1, Tuesday=2 .. Sunday=7
   static List<int> getNonWorkingDays(int firstWorkingDayOfWeek) {

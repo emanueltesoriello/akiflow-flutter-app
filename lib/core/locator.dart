@@ -98,7 +98,7 @@ void setupLocator(
   NotificationsService notificationsService = NotificationsService(initFirebaseApp: initFirebaseApp);
   TasksCubit tasksCubit = TasksCubit(syncCubit);
   AuthCubit authCubit = AuthCubit(syncCubit);
-  CalendarCubit calendarCubit = CalendarCubit(syncCubit);
+  CalendarCubit calendarCubit = CalendarCubit(syncCubit, authCubit);
   EventsCubit eventsCubit = EventsCubit(syncCubit);
   //BaseCubit exampleCubit = BaseCubit();
 

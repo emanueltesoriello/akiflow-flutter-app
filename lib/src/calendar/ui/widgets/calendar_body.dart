@@ -133,7 +133,7 @@ class CalendarBody extends StatelessWidget {
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
               dayFormat: isThreeDays ? 'EEE' : 'EE',
-              nonWorkingDays: CalendarUtils.computeNonWorkinkDays(context),
+              nonWorkingDays: state.nonWorkingDays,
             ),
             scheduleViewSettings: ScheduleViewSettings(
                 hideEmptyScheduleWeek: true,

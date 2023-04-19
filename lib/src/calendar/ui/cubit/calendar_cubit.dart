@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_view_mode.dart';
@@ -21,17 +23,19 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
   final SyncCubit _syncCubit;
+  final AuthCubit _authCubit;
 
   final StreamController<PanelState> _panelStateStreamController = StreamController<PanelState>.broadcast();
   Stream<PanelState> get panelStateStream => _panelStateStreamController.stream;
 
-  CalendarCubit(this._syncCubit) : super(const CalendarCubitState()) {
+  CalendarCubit(this._syncCubit, this._authCubit) : super(const CalendarCubitState()) {
     _init();
   }
 
   _init() async {
     fetchFromPreferences();
     fetchCalendars();
+    setNonWorkingDays();
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await fetchCalendars();
@@ -134,6 +138,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     _preferencesRepository.setGroupOverlappingTasks(groupOverlappingTasks);
   }
 
+  void setNonWorkingDays() {
+    emit(state.copyWith(nonWorkingDays: computeNonWorkinkDays()));
+  }
+
   Future<void> fetchCalendars() async {
     List<Calendar> calendars = await _calendarsRepository.getCalendars();
     calendars.sort((a, b) => b.primary ?? false ? 1 : -1);
@@ -223,5 +231,19 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     calendar = calendar.copyWith(settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
 
     return calendar;
+  }
+
+  List<int> computeNonWorkinkDays() {
+    int firstWorkdayOfWeek = DateTime.monday;
+    if (_authCubit.state.user?.settings?["calendar"] != null &&
+        _authCubit.state.user?.settings?["calendar"]["firstWorkingDayOfWeek"] != null) {
+      var firstWorkdayFromDb = _authCubit.state.user?.settings?["calendar"]["firstWorkingDayOfWeek"];
+      if (firstWorkdayFromDb is String) {
+        firstWorkdayOfWeek = int.parse(firstWorkdayFromDb);
+      } else if (firstWorkdayFromDb is int) {
+        firstWorkdayOfWeek = firstWorkdayFromDb;
+      }
+    }
+    return CalendarUtils.getNonWorkingDays(firstWorkdayOfWeek);
   }
 }
