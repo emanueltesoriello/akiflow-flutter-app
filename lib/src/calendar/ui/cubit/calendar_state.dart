@@ -11,6 +11,7 @@ class CalendarCubitState extends Equatable {
   final List<Calendar> calendars;
   final List<DateTime> visibleDates;
   final PanelState panelState;
+  final List<int> nonWorkingDays;
 
   const CalendarCubitState({
     this.navigationState = CalendarNavigationState.loading,
@@ -23,6 +24,7 @@ class CalendarCubitState extends Equatable {
     this.calendars = const [],
     this.visibleDates = const [],
     this.panelState = PanelState.closed,
+    this.nonWorkingDays = const [DateTime.saturday, DateTime.sunday],
   });
 
   CalendarCubitState copyWith({
@@ -36,6 +38,7 @@ class CalendarCubitState extends Equatable {
     List<Calendar>? calendars,
     List<DateTime>? visibleDates,
     PanelState? panelState,
+    List<int>? nonWorkingDays,
   }) {
     return CalendarCubitState(
       navigationState: navigationState ?? this.navigationState,
@@ -48,6 +51,7 @@ class CalendarCubitState extends Equatable {
       calendars: calendars ?? this.calendars,
       visibleDates: visibleDates ?? this.visibleDates,
       panelState: panelState ?? this.panelState,
+      nonWorkingDays: nonWorkingDays ?? this.nonWorkingDays,
     );
   }
 
@@ -63,5 +67,6 @@ class CalendarCubitState extends Equatable {
         calendars,
         visibleDates,
         panelState,
+        nonWorkingDays,
       ];
 }

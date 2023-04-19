@@ -62,7 +62,7 @@ List<BlocProvider> baseProviders = [
   ),
   BlocProvider<CalendarCubit>(
     lazy: false,
-    create: (BuildContext context) => CalendarCubit(locator<SyncCubit>()),
+    create: (BuildContext context) => CalendarCubit(locator<SyncCubit>(), locator<AuthCubit>()),
   ),
   BlocProvider<EventsCubit>(
     lazy: false,

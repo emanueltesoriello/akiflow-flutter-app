@@ -300,7 +300,7 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              updatedEvent.recurringId == null
+              updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startDate!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
@@ -322,18 +322,19 @@ class _EventEditModalState extends State<EventEditModal> {
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
-            initialDate: widget.tappedDate,
+            initialDate: updatedEvent.startTime != null && updatedEvent.recurringId == null
+                ? DateTime.parse(updatedEvent.startTime!).toLocal()
+                : widget.tappedDate,
             initialDatetime: updatedEvent.startTime != null ? DateTime.parse(updatedEvent.startTime!).toLocal() : null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
               setState(() {
                 timeChanged = true;
                 datetime == null ? isAllDay = true : isAllDay = false;
                 updatedEvent = updatedEvent.copyWith(
-                  startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
-                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
-                  startTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
-                  endTime:
-                      datetime != null ? Nullable(datetime.toUtc().add(duration).toIso8601String()) : Nullable(null),
+                  startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
+                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
+                  startTime: datetime != null ? Nullable(datetime.toIso8601String()) : Nullable(null),
+                  endTime: datetime != null ? Nullable(datetime.add(duration).toIso8601String()) : Nullable(null),
                 );
               });
             },
@@ -344,7 +345,7 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              updatedEvent.recurringId == null
+              updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
@@ -365,6 +366,9 @@ class _EventEditModalState extends State<EventEditModal> {
   InkWell _endDate(BuildContext context) {
     return InkWell(
       onTap: () {
+        DateTime eventStart = updatedEvent.startDate != null
+            ? DateTime.parse(updatedEvent.startDate!)
+            : DateTime.parse(updatedEvent.startTime!);
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
@@ -377,7 +381,10 @@ class _EventEditModalState extends State<EventEditModal> {
               setState(() {
                 timeChanged = true;
                 isAllDay = true;
-                updatedEvent = updatedEvent.copyWith(endDate: Nullable(DateFormat("y-MM-dd").format(date!.toUtc())));
+                updatedEvent = updatedEvent.copyWith(
+                    endDate: eventStart.isBefore(date!)
+                        ? Nullable(DateFormat("y-MM-dd").format(date))
+                        : Nullable(DateFormat("y-MM-dd").format(eventStart)));
               });
             },
           ),
@@ -387,7 +394,7 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              updatedEvent.recurringId == null
+              updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endDate!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
@@ -402,6 +409,13 @@ class _EventEditModalState extends State<EventEditModal> {
   InkWell _endTime(BuildContext context) {
     return InkWell(
       onTap: () {
+        DateTime eventStart = updatedEvent.startTime != null
+            ? DateTime.parse(updatedEvent.startTime!)
+            : DateTime.parse(updatedEvent.startDate!);
+        Duration duration = const Duration(minutes: 30);
+        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
+          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
+        }
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
@@ -416,8 +430,13 @@ class _EventEditModalState extends State<EventEditModal> {
                   isAllDay = true;
                 }
                 updatedEvent = updatedEvent.copyWith(
-                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
-                  endTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
+                  startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
+                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
+                  endTime: datetime != null
+                      ? eventStart.isBefore(datetime)
+                          ? Nullable(datetime.toUtc().toIso8601String())
+                          : Nullable(eventStart.toUtc().add(duration).toIso8601String())
+                      : Nullable(null),
                 );
               });
             },
@@ -428,7 +447,7 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-              updatedEvent.recurringId == null
+              updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
