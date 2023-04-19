@@ -59,7 +59,6 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   flutter_js: ^0.6.0
   audioplayers: ^3.0.1
-  flutter_phoenix: ^1.0.0
 
   
 dev_dependencies:
