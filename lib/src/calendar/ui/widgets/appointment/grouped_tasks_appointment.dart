@@ -44,7 +44,7 @@ class GroupedTasksAppointment extends StatelessWidget {
       decoration: BoxDecoration(
         color: ColorsExt.grey7(context),
         borderRadius: const BorderRadius.all(
-          Radius.circular(3.0),
+          Radius.circular(4.0),
         ),
         boxShadow: [
           BoxShadow(

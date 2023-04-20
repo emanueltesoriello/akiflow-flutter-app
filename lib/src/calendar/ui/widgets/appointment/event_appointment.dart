@@ -83,7 +83,7 @@ class EventAppointment extends StatelessWidget {
         return BoxDecoration(
             color: ColorsExt.grey6(context),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
       case AtendeeResponseStatus.tentative:
         return BoxDecoration(
@@ -100,7 +100,7 @@ class EventAppointment extends StatelessWidget {
               tileMode: TileMode.repeated,
             ),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
       case AtendeeResponseStatus.needsAction:
         if (event.attendees != null) {
@@ -108,19 +108,19 @@ class EventAppointment extends StatelessWidget {
               color: Colors.white,
               border: Border.all(color: appointment.color),
               borderRadius: const BorderRadius.all(
-                Radius.circular(3.0),
+                Radius.circular(4.0),
               ));
         }
         return BoxDecoration(
             color: HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
       default:
         return BoxDecoration(
             color: HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
     }
   }
