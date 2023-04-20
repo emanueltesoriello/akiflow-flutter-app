@@ -101,6 +101,7 @@ class CalendarBody extends StatelessWidget {
             firstDayOfWeek: CalendarUtils.computeFirstDayOfWeek(context),
             selectionDecoration: const BoxDecoration(),
             view: calendarCubit.state.calendarView,
+            cellBorderColor: ColorsExt.grey5(context),
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
               DateTime start = details.visibleDates.first.subtract(const Duration(days: 1));
