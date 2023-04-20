@@ -6,19 +6,18 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
-import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:models/calendar/calendar.dart';
+import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
+import 'package:models/account/account.dart';
 
-class ChooseCalendarModal extends StatelessWidget {
-  final String? initialCalendar;
-  final Function(Calendar) onChange;
-  const ChooseCalendarModal({super.key, required this.initialCalendar, required this.onChange});
+class ChooseConferenceModal extends StatelessWidget {
+  final Function(String, String) onChange;
+  const ChooseConferenceModal({super.key, required this.onChange});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarCubit, CalendarCubitState>(
+    return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
       builder: (context, state) {
-        List<Calendar> primaryCalendars = state.calendars.where((calendar) => calendar.primary == true).toList();
+        List<Account> zoomAccounts = state.accounts.where((element) => element.connectorId == "zoom").toList();
 
         return Material(
           color: Theme.of(context).backgroundColor,
@@ -40,14 +39,9 @@ class ChooseCalendarModal extends StatelessWidget {
                   padding: const EdgeInsets.all(Dimension.padding),
                   child: Row(
                     children: [
-                      SvgPicture.asset(
-                        Assets.images.icons.google.calendarSVG,
-                        width: Dimension.defaultIconSize,
-                        height: Dimension.defaultIconSize,
-                      ),
                       const SizedBox(width: Dimension.paddingS),
                       Text(
-                        t.event.editEvent.chooseCalendar,
+                        'Choose conference account',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               color: ColorsExt.grey2(context),
                               fontWeight: FontWeight.w500,
@@ -56,16 +50,25 @@ class ChooseCalendarModal extends StatelessWidget {
                     ],
                   ),
                 ),
+                _item(
+                  context,
+                  isZoom: false,
+                  text: t.event.googleMeet,
+                  click: () {
+                    onChange('meet', '');
+                    Navigator.pop(context);
+                  },
+                ),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: primaryCalendars.length,
+                  itemCount: zoomAccounts.length,
                   itemBuilder: (context, index) {
                     return _item(
                       context,
-                      active: initialCalendar == primaryCalendars[index].originId,
-                      text: primaryCalendars[index].originId ?? '',
+                      isZoom: true,
+                      text: 'Zoom: ${zoomAccounts[index].identifier}',
                       click: () {
-                        onChange(primaryCalendars[index]);
+                        onChange(zoomAccounts[index].connectorId ?? '', zoomAccounts[index].id ?? '');
                         Navigator.pop(context);
                       },
                     );
@@ -82,18 +85,29 @@ class ChooseCalendarModal extends StatelessWidget {
 
   Widget _item(
     BuildContext context, {
-    required bool active,
+    required bool isZoom,
     required String text,
     required Function() click,
   }) {
     return InkWell(
       onTap: click,
       child: Container(
-        color: active ? ColorsExt.grey6(context) : Colors.transparent,
         padding: const EdgeInsets.all(Dimension.padding),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(isZoom ? Assets.images.icons.zoom.zoomSVG : Assets.images.icons.google.meetSVG),
+            ),
+            const SizedBox(width: Dimension.paddingXS),
+            Expanded(
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+              ),
+            ),
+          ],
         ),
       ),
     );

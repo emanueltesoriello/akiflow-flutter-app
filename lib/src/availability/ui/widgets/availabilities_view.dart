@@ -7,6 +7,7 @@ import 'package:mobile/src/availability/ui/models/navigation_state.dart';
 import 'package:mobile/src/availability/ui/widgets/availability_view_placeholder.dart';
 import 'package:mobile/src/availability/ui/widgets/imported_from_material/expandable_panel.dart';
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
 import 'package:models/task/availability_config.dart';
 import 'slot_list.dart';
@@ -73,7 +74,10 @@ class AvailabilitiesView extends StatelessWidget {
         return b.updated_at.toString().toLowerCase().compareTo(a.updated_at.toString().toLowerCase());
       });
       return RefreshIndicator(
-        onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
+        onRefresh: () async {
+          context.read<SyncCubit>().sync();
+          context.read<AvailabilityCubit>().getAvailabilities();
+        },
         child: ListView(
           children: [
             ExpandablePanelList(

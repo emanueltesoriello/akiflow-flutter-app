@@ -33,6 +33,7 @@ class CalendarSettingsModal extends StatelessWidget {
         bool isWeekendHidden = state.isCalendarWeekendHidden;
         bool areDeclinedEventsHidden = state.areDeclinedEventsHidden;
         bool areCalendarTasksHidden = state.areCalendarTasksHidden;
+        bool groupOverlappingTasks = state.groupOverlappingTasks;
         List<Calendar> calendars = context.watch<CalendarCubit>().state.calendars;
 
         List<Calendar> primaryCalendars = calendars.where((calendar) => calendar.primary ?? false == true).toList();
@@ -59,7 +60,12 @@ class CalendarSettingsModal extends StatelessWidget {
                       _refreshRow(context),
                       const Separator(),
                       const SizedBox(height: Dimension.padding),
-                      _switchButtons(context, isWeekendHidden, areDeclinedEventsHidden, areCalendarTasksHidden),
+                      _switchButtons(
+                          context: context,
+                          groupOverlappingTasks: groupOverlappingTasks,
+                          isWeekendHidden: isWeekendHidden,
+                          areDeclinedEventsHidden: areDeclinedEventsHidden,
+                          areCalendarTasksHidden: areCalendarTasksHidden),
                       const Separator(),
                       _calendars(context, primaryCalendars, calendars),
                     ],
@@ -258,7 +264,11 @@ class CalendarSettingsModal extends StatelessWidget {
   }
 
   Padding _switchButtons(
-      BuildContext context, bool isWeekendHidden, bool areDeclinedEventsHidden, bool areCalendarTasksHidden) {
+      {required BuildContext context,
+      required bool groupOverlappingTasks,
+      required bool isWeekendHidden,
+      required bool areDeclinedEventsHidden,
+      required bool areCalendarTasksHidden}) {
     return Padding(
       padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.padding),
       child: Column(
@@ -266,17 +276,24 @@ class CalendarSettingsModal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Text(t.calendar.groupOverlappingTasks,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+              SwitchButton(
+                value: groupOverlappingTasks,
+                onToggle: (value) {
+                  context.read<CalendarCubit>().setGroupOverlappingTasks(value);
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.paddingM),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Text(t.calendar.hideWeekends,
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
-              FlutterSwitch(
-                width: 48,
-                height: 24,
-                toggleSize: 20,
-                activeColor: ColorsExt.akiflow(context),
-                inactiveColor: ColorsExt.grey5(context),
+              SwitchButton(
                 value: isWeekendHidden,
-                borderRadius: 24,
-                padding: 2,
                 onToggle: (value) {
                   context.read<CalendarCubit>().setCalendarWeekendHidden(value);
                   if (calendarController.view == CalendarView.week ||
@@ -299,15 +316,8 @@ class CalendarSettingsModal extends StatelessWidget {
             children: [
               Text(t.calendar.hideDeclinedEvents,
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
-              FlutterSwitch(
-                width: 48,
-                height: 24,
-                toggleSize: 20,
-                activeColor: ColorsExt.akiflow(context),
-                inactiveColor: ColorsExt.grey5(context),
+              SwitchButton(
                 value: areDeclinedEventsHidden,
-                borderRadius: 24,
-                padding: 2,
                 onToggle: (value) {
                   context.read<CalendarCubit>().setDeclinedEventsHidden(value);
                 },
@@ -320,15 +330,8 @@ class CalendarSettingsModal extends StatelessWidget {
             children: [
               Text(t.calendar.hideTasksFromCalendar,
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
-              FlutterSwitch(
-                width: 48,
-                height: 24,
-                toggleSize: 20,
-                activeColor: ColorsExt.akiflow(context),
-                inactiveColor: ColorsExt.grey5(context),
+              SwitchButton(
                 value: areCalendarTasksHidden,
-                borderRadius: 24,
-                padding: 2,
                 onToggle: (value) {
                   context.read<CalendarCubit>().setCalendarTasksHidden(value);
                 },
@@ -367,5 +370,29 @@ class CalendarSettingsModal extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class SwitchButton extends StatelessWidget {
+  final bool value;
+  final void Function(bool) onToggle;
+  const SwitchButton({
+    Key? key,
+    required this.value,
+    required this.onToggle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlutterSwitch(
+        width: 48,
+        height: 24,
+        toggleSize: 20,
+        activeColor: ColorsExt.akiflow(context),
+        inactiveColor: ColorsExt.grey5(context),
+        value: value,
+        borderRadius: 24,
+        padding: 2,
+        onToggle: onToggle);
   }
 }

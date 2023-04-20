@@ -38,6 +38,7 @@ class TaskRow extends StatefulWidget {
   final bool showPlanInfo;
   final bool enableLongPressToSelect;
   final bool isOnboarding;
+  final bool openedFromCalendarGroupedTasks;
 
   const TaskRow({
     Key? key,
@@ -53,6 +54,7 @@ class TaskRow extends StatefulWidget {
     required this.showPlanInfo,
     this.enableLongPressToSelect = false,
     this.isOnboarding = false,
+    this.openedFromCalendarGroupedTasks = false,
   }) : super(key: key);
 
   @override
@@ -98,6 +100,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             closeOnCancel: true,
             dismissThreshold: 0.25,
             confirmDismiss: () async {
+              widget.task.playTaskDoneSound();
               widget.completedClick();
               return false;
             },
@@ -114,6 +117,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                       child: DoneWithLabel(
                           click: () {
                             Slidable.of(context)?.close();
+                            widget.task.playTaskDoneSound();
                             widget.completedClick();
                           },
                           withLabel: true),
@@ -130,6 +134,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                     child: DoneWithLabel(
                         click: () {
                           Slidable.of(context)?.close();
+                          widget.task.playTaskDoneSound();
                           widget.completedClick();
                         },
                         withLabel: false),
@@ -274,6 +279,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
           Widget child = GestureDetector(
             onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
             onTap: () async {
+              if (widget.openedFromCalendarGroupedTasks) {
+                Navigator.pop(context);
+              }
               TaskExt.editTask(context, widget.task);
             },
             child: SizedBox(

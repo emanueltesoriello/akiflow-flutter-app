@@ -134,62 +134,57 @@ class _EditTaskModalState extends State<EditTaskModal> {
           context: context,
           builder: (context) {
             return AlertDialog(
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
                 content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('Discard changes?',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
-                const SizedBox(height: 10),
-                Text('The changes you’ve made won’t be saved',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
-                const SizedBox(height: Dimension.paddingS),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      width: 85,
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text('Discard changes?',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
+                    const SizedBox(height: Dimension.paddingM),
+                    Text('The changes you’ve made won’t be saved',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
+                    const SizedBox(height: Dimension.paddingM),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          style: Theme.of(context)
+                              .textButtonTheme
+                              .style
+                              ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                          onPressed: () async {
                             Navigator.of(context).pop();
                           },
-                          style: ElevatedButton.styleFrom(
-                            primary: ColorsExt.grey6(context),
-                            onPrimary: ColorsExt.grey5(context),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(Dimension.radiusS),
-                            ),
-                          ),
-                          child: Text('Cancel',
+                          child: Text('Cancel'.toUpperCase(),
                               style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: Dimension.padding),
-                    TextButton(
-                      onPressed: () async {
-                        streamSubscription?.cancel();
-                        quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
-                            document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
-                        _init();
-                        cubit.undoChanges();
-                        cubit.setHasFocusOnTitleOrDescription(false);
-                        FocusScope.of(context).unfocus();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Discard',
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                        const SizedBox(width: Dimension.padding),
+                        TextButton(
+                          style: Theme.of(context)
+                              .textButtonTheme
+                              .style
+                              ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                          onPressed: () async {
+                            streamSubscription?.cancel();
+                            quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
+                                document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
+                            _init();
+                            cubit.undoChanges();
+                            cubit.setHasFocusOnTitleOrDescription(false);
+                            FocusScope.of(context).unfocus();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Discard'.toUpperCase(),
+                              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ));
+                ));
           });
       return false;
     } else {
@@ -219,7 +214,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   decoration: const BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(Dimension.radiusM),
+                      topLeft: Radius.circular(Dimension.radiusS),
                       topRight: Radius.circular(Dimension.radiusM),
                     ),
                   ),

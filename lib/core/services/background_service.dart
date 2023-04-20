@@ -19,7 +19,7 @@ const backgroundSyncFromNotification = "com.akiflow.mobile.backgroundSyncFromNot
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await initProcesses();
+    //await initProcesses();
 
     await backgroundProcesses(task);
     // listen on this port in order to catch trigger from the background services.
@@ -71,15 +71,23 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
     // *********************************************
     if (fromBackground) {
       await initProcesses();
-    }
 
-    final SyncControllerService syncControllerService = locator<SyncControllerService>();
-    if ((locator<PreferencesRepository>().lastTasksSyncAt != null &&
-            DateTime.now().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
-        task == backgroundSyncFromNotification) {
-      await syncControllerService.sync();
+      final SyncControllerService syncControllerService = locator<SyncControllerService>();
+      DateTime now;
+      if (locator<PreferencesRepository>().lastTasksSyncAt != null &&
+          locator<PreferencesRepository>().lastTasksSyncAt!.isUtc) {
+        now = DateTime.now().toUtc();
+      } else {
+        now = DateTime.now();
+      }
+      if ((locator<PreferencesRepository>().lastTasksSyncAt != null &&
+              now.difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
+          task == backgroundSyncFromNotification) {
+        await syncControllerService.sync();
+      }
+    } else {
+      await locator<SyncControllerService>().sync();
     }
-
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {
       NotificationsService.showNotifications("From background!", "Synched successfully");

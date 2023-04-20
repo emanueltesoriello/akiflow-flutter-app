@@ -8,7 +8,6 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/availability/ui/widgets/imported_from_material/chevron_icon.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list_menu.dart';
@@ -80,6 +79,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBarComp(
+      showLinearProgress: false,
       leading: _leading(context),
       titleWidget: _buildTitle(context),
       actions: _buildActions(context),

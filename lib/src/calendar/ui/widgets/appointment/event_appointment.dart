@@ -38,6 +38,7 @@ class EventAppointment extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: appointment.isAllDay ? MainAxisAlignment.center : MainAxisAlignment.start,
               children: [
                 Text(
                   appointment.subject.isEmpty ? t.noTitle : appointment.subject,
@@ -48,7 +49,7 @@ class EventAppointment extends StatelessWidget {
                     fontSize: calendarController.view == CalendarView.schedule
                         ? 15.0
                         : boxHeight < 15.0
-                            ? 11.0
+                            ? 10.5
                             : 13.0,
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined
@@ -82,7 +83,7 @@ class EventAppointment extends StatelessWidget {
         return BoxDecoration(
             color: ColorsExt.grey6(context),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
       case AtendeeResponseStatus.tentative:
         return BoxDecoration(
@@ -99,7 +100,7 @@ class EventAppointment extends StatelessWidget {
               tileMode: TileMode.repeated,
             ),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
       case AtendeeResponseStatus.needsAction:
         if (event.attendees != null) {
@@ -107,19 +108,19 @@ class EventAppointment extends StatelessWidget {
               color: Colors.white,
               border: Border.all(color: appointment.color),
               borderRadius: const BorderRadius.all(
-                Radius.circular(3.0),
+                Radius.circular(4.0),
               ));
         }
         return BoxDecoration(
             color: HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
       default:
         return BoxDecoration(
             color: HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
             borderRadius: const BorderRadius.all(
-              Radius.circular(3.0),
+              Radius.circular(4.0),
             ));
     }
   }

@@ -10,6 +10,7 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_linear_progress_indicator.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
@@ -23,7 +24,6 @@ import 'package:mobile/src/home/ui/widgets/today/today_header.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
-import 'package:mobile/core/preferences.dart';
 
 class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
@@ -136,7 +136,13 @@ class _TodayViewState extends State<TodayView> {
                 builder: (context, value, child) {
                   return Container(
                     color: Colors.white,
-                    child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                        AnimatedLinearProgressIndicator(),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -146,9 +152,15 @@ class _TodayViewState extends State<TodayView> {
               onPanelOpened: () {
                 context.read<TodayCubit>().panelOpened();
               },
-              collapsed: const Material(
+              collapsed: Material(
                 color: Colors.white,
-                child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                    AnimatedLinearProgressIndicator()
+                  ],
+                ),
               ),
               body: Container(
                 margin: const EdgeInsets.only(top: Dimension.todayViewTopMargin),
@@ -158,7 +170,6 @@ class _TodayViewState extends State<TodayView> {
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: SlidableAutoCloseBehavior(
                         child: ListView(

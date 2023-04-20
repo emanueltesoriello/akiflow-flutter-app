@@ -199,6 +199,10 @@ var ChronoHelper = /** @class */ (function () {
             // fix: chrono parses "any" word as "an year" wrongly
             results.filter(function (result) { return !result.text.startsWith('any'); })); }
         }, {
+            refine: function (_, results) { return (
+            // fix: chrono parses "the day" word as "tomorrow" wrongly
+            results.filter(function (result) { return result.text !== 'the day' && result.text !== 'the d'; })); }
+        }, {
             refine: function (_, results) {
                 var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
                 // Check if all these conditions are met:

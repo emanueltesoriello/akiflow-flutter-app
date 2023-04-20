@@ -24,7 +24,6 @@ import workmanager
         }
 
     WorkmanagerPlugin.registerTask(withIdentifier: "com.akiflow.mobile.periodicTask")
-    WorkmanagerPlugin.registerTask(withIdentifier: "com.akiflow.mobile.scheduleNotifications")
 
     UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
 

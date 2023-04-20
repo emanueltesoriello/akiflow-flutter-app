@@ -36,9 +36,8 @@ class NavItem extends StatelessWidget {
             context.read<MainCubit>().changeHomeView(homeViewType!);
 
             if (homeViewType == HomeViewType.today) {
-              DateTime now = DateTime.now().toUtc();
-              DateTime nowInUtc = DateTime.utc(now.year, now.month, now.day, 0, 0, 1);
-              context.read<TodayCubit>().onDateSelected(nowInUtc);
+              DateTime now = DateTime.now();
+              context.read<TodayCubit>().onDateSelected(now);
             }
           } else {
             showCupertinoModalBottomSheet(
