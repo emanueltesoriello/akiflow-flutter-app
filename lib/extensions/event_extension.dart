@@ -356,25 +356,17 @@ extension EventExt on Event {
           specificStartDate: now, specificEndDate: endDate);
       List<DateTime> hiddenExceptionDates = [];
 
-      //removing deleted and declined event exception dates
+      //removing exception dates from the recurrence list
       for (Event exceptionEvent in recurringExceptions) {
         if (exceptionEvent.recurringId == parentEvent.id) {
           if (exceptionEvent.originalStartTime != null || exceptionEvent.originalStartDate != null) {
-            if (exceptionEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined ||
-                exceptionEvent.deletedAt != null ||
-                (exceptionEvent.status != null && exceptionEvent.status == EventExt.eventStatusCancelled)) {
-              hiddenExceptionDates.add(exceptionEvent.originalStartTime != null
-                  ? DateTime.parse(exceptionEvent.originalStartTime!)
-                  : DateTime.parse(exceptionEvent.originalStartDate!));
-            }
+            hiddenExceptionDates.add(exceptionEvent.originalStartTime != null
+                ? DateTime.parse(exceptionEvent.originalStartTime!)
+                : DateTime.parse(exceptionEvent.originalStartDate!));
           } else if (exceptionEvent.startTime != null || exceptionEvent.startDate != null) {
-            if (exceptionEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined ||
-                exceptionEvent.deletedAt != null ||
-                (exceptionEvent.status != null && exceptionEvent.status == EventExt.eventStatusCancelled)) {
-              hiddenExceptionDates.add(exceptionEvent.startTime != null
-                  ? DateTime.parse(exceptionEvent.startTime!)
-                  : DateTime.parse(exceptionEvent.startDate!));
-            }
+            hiddenExceptionDates.add(exceptionEvent.startTime != null
+                ? DateTime.parse(exceptionEvent.startTime!)
+                : DateTime.parse(exceptionEvent.startDate!));
           }
         }
       }
@@ -394,7 +386,11 @@ extension EventExt on Event {
       if (exception.startTime != null || exception.startDate != null) {
         DateTime eventStartTime =
             exception.startTime != null ? DateTime.parse(exception.startTime!) : DateTime.parse(exception.startDate!);
-        if (eventStartTime.isAfter(now) && exception.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined) {
+        //validating exceptions by not adding deleted and declined ones
+        if (eventStartTime.isAfter(now) &&
+            exception.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined &&
+            exception.deletedAt == null &&
+            exception.status != EventExt.eventStatusCancelled) {
           eventsToSchedule.addAll(
               {'${generateNotificationIdFromEventId(exception.id!)};${eventStartTime.toIso8601String()}': exception});
         }
