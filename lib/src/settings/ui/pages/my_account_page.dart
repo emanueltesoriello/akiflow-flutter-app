@@ -11,8 +11,81 @@ import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MyAccountPage extends StatelessWidget {
+class MyAccountPage extends StatefulWidget {
   const MyAccountPage({Key? key}) : super(key: key);
+
+  @override
+  State<MyAccountPage> createState() => _MyAccountPageState();
+}
+
+class _MyAccountPageState extends State<MyAccountPage> {
+  final TextEditingController deleteAccountController = TextEditingController();
+
+  _alertDialog(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: AlertDialog(
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Delete account?',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
+                const SizedBox(height: Dimension.paddingM),
+                Text("Be careful, this will delete all your data from Akiflow and it cannot be restored.",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
+                const SizedBox(height: Dimension.paddingM),
+                TextField(
+                    controller: deleteAccountController,
+                    decoration: InputDecoration(hintText: 'Insert CONFIRM to continue'),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey1(context),
+                        )),
+                const SizedBox(height: Dimension.paddingM),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      style: Theme.of(context)
+                          .textButtonTheme
+                          .style
+                          ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel'.toUpperCase(),
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                    ),
+                    const SizedBox(width: Dimension.padding),
+                    TextButton(
+                      style: Theme.of(context)
+                          .textButtonTheme
+                          .style
+                          ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                      onPressed: () async {
+                        if (deleteAccountController.text == 'CONFIRM') {
+                          print('call delete apis');
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Wrong text'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text('Continue'.toUpperCase(),
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                    )
+                  ],
+                )
+              ],
+            )));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +180,29 @@ class MyAccountPage extends StatelessWidget {
                     onPressed: () {
                       launchUrl(Uri.parse("https://app.akiflow.com/en/dashboard/profile"),
                           mode: LaunchMode.externalApplication);
+                    },
+                  ),
+                  const SizedBox(height: Dimension.padding),
+                  Text(
+                    'Delete account'.toUpperCase(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: Dimension.paddingXS),
+                  ButtonList(
+                    title: 'Delete account',
+                    position: ButtonListPosition.single,
+                    leading: Assets.images.icons.common.arrowRightSVG,
+                    trailingWidget: SvgPicture.asset(
+                      Assets.images.icons.common.arrowRightSVG,
+                      width: 22,
+                      height: 22,
+                    ),
+                    onPressed: () {
+                      print('delete');
+                      showDialog(context: context, builder: (_) => _alertDialog(context));
                     },
                   ),
                   const SizedBox(height: Dimension.padding),
