@@ -9,6 +9,7 @@ import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/done_with_label.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/plan_with_label.dart';
+import 'package:mobile/src/base/ui/widgets/task/components/subtitle_widget.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/title_widget.dart';
 import 'package:mobile/src/base/ui/widgets/task/slidable_motion.dart';
 import 'package:mobile/src/base/ui/widgets/task/slidable_sender.dart';
@@ -359,7 +360,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                             children: [
                                               TitleWidget(widget.task),
                                               const SizedBox(height: Dimension.paddingXS),
-                                              //Subtitle(widget.task),
+                                              Subtitle(widget.task),
                                               TaskInfo(
                                                 widget.task,
                                                 hideInboxLabel: widget.hideInboxLabel,
