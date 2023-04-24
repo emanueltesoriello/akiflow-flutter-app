@@ -3,25 +3,24 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:models/task/task.dart';
 
 class TodayHeader extends StatelessWidget {
   const TodayHeader(
     this.title, {
     Key? key,
-    required this.tasks,
+    required this.tasksLenght,
     required this.listOpened,
     required this.onClick,
   }) : super(key: key);
 
   final String title;
-  final List<Task> tasks;
+  final int tasksLenght;
   final bool listOpened;
   final Function() onClick;
 
   @override
   Widget build(BuildContext context) {
-    if (tasks.isEmpty) {
+    if (tasksLenght == 0) {
       return const SizedBox();
     }
 
@@ -41,7 +40,7 @@ class TodayHeader extends StatelessWidget {
                     .bodyText1!
                     .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
             const SizedBox(width: 4),
-            Text("(${tasks.length})",
+            Text(tasksLenght.toString(),
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1!

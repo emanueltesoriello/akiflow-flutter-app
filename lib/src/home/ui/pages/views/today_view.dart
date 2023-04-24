@@ -194,7 +194,7 @@ class _TodayViewState extends State<TodayView> {
                               showPlanInfo: false,
                               header: TodayHeader(
                                 t.today.toDos,
-                                tasks: todos,
+                                tasksLenght: todos.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openTodoList();
                                 },
@@ -212,7 +212,7 @@ class _TodayViewState extends State<TodayView> {
                               sorting: TaskListSorting.dateAscending,
                               header: TodayHeader(
                                 t.today.pinnedInCalendar,
-                                tasks: pinned,
+                                tasksLenght: pinned.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openPinnedList();
                                 },
@@ -230,7 +230,7 @@ class _TodayViewState extends State<TodayView> {
                               showPlanInfo: false,
                               header: TodayHeader(
                                 t.today.done,
-                                tasks: completed,
+                                tasksLenght: completed.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openCompletedList();
                                 },

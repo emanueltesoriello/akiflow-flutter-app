@@ -20,9 +20,8 @@ class AvailabilitiesView extends StatelessWidget {
   _buildRecurrentEvents(AvailabilityCubitState cubitState, List<AvailabilityConfig> recurrent) {
     return ExpandablePanel(
         isExpanded: cubitState.isRecurrentOpen,
-        isHeaderVisible: recurrent.isNotEmpty ? true : false,
         headerBuilder: (context, isExpanded) {
-          return GestureDetector(
+          return InkWell(
               onTap: () {
                 context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.recurrent);
               },
@@ -38,13 +37,17 @@ class AvailabilitiesView extends StatelessWidget {
   _buildManualEvents(AvailabilityCubitState cubitState, List<AvailabilityConfig> manual) {
     return ExpandablePanel(
       isExpanded: cubitState.isManualOpen,
-      isHeaderVisible: manual.isNotEmpty ? true : false,
       headerBuilder: (context, isExpanded) {
-        return SlotsHeader(
-            type: AvailabililtyConfigSlotsType.manual,
-            asset: Assets.images.icons.common.handDrawSVG,
-            text: t.availability.activeManualSlots,
-            isOpen: isExpanded);
+        return InkWell(
+          onTap: () {
+            context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.manual);
+          },
+          child: SlotsHeader(
+              type: AvailabililtyConfigSlotsType.manual,
+              asset: Assets.images.icons.common.handDrawSVG,
+              text: t.availability.activeManualSlots,
+              isOpen: isExpanded),
+        );
       },
       body: SlotList(isOpen: cubitState.isManualOpen, configs: manual),
     );

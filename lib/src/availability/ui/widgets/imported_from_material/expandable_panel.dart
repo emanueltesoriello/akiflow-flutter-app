@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/availability/ui/widgets/imported_from_material/chevron_icon.dart';
 
 const double _kPanelHeaderCollapsedHeight = kMinInteractiveDimension;
@@ -338,29 +342,10 @@ class _ExpandablePanelListState extends State<ExpandablePanelList> {
         _isChildExpanded(index),
       );
 
-      Widget expandIconContainer = Container(
-        margin: const EdgeInsetsDirectional.only(end: 0.0),
-        child: ChevronIcon(
-          isExpanded: _isChildExpanded(index),
-          padding: const EdgeInsets.all(0.0),
-          onPressed: !child.canTapOnHeader ? (bool isExpanded) => _handlePressed(isExpanded, index) : null,
-        ),
-      );
-      if (!child.canTapOnHeader) {
-        final MaterialLocalizations localizations = MaterialLocalizations.of(context);
-        expandIconContainer = Semantics(
-          label: _isChildExpanded(index) ? localizations.expandedIconTapHint : localizations.collapsedIconTapHint,
-          container: true,
-          child: expandIconContainer,
-        );
-      }
       Widget header = Row(
         children: <Widget>[
           Expanded(
             child: Container(
-              // AnimatedContainer(
-              //  duration: widget.animationDuration,
-              //  curve: Curves.fastOutSlowIn,
               margin: _isChildExpanded(index) ? widget.expandedHeaderPadding : EdgeInsets.zero,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: _kPanelHeaderCollapsedHeight),
@@ -368,7 +353,6 @@ class _ExpandablePanelListState extends State<ExpandablePanelList> {
               ),
             ),
           ),
-          expandIconContainer,
         ],
       );
       if (child.canTapOnHeader) {
