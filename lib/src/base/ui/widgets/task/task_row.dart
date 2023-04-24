@@ -19,7 +19,6 @@ import 'package:models/task/task.dart';
 import 'components/background_daily_goal.dart';
 import 'components/dot_prefix.dart';
 import 'components/selectable_radio_button.dart';
-import 'components/subtitle_widget.dart';
 
 class TaskRow extends StatefulWidget {
   static const int dailyGoalScaleDurationInMillis = 500;
@@ -284,7 +283,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               }
               TaskExt.editTask(context, widget.task);
             },
-            child: SizedBox(
+            child: Center(
               child: Stack(
                 children: [
                   BackgroundDailyGoal(
@@ -314,7 +313,10 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                   DotPrefix(task: widget.task),
                                   Builder(builder: ((context) {
                                     if (widget.selectMode) {
-                                      return SelectableRadioButton(widget.task);
+                                      return SizedBox(
+                                          width: Dimension.appBarLeadingIcon,
+                                          height: Dimension.appBarLeadingIcon,
+                                          child: Center(child: SelectableRadioButton(widget.task)));
                                     } else {
                                       return CheckboxAnimated(
                                         onControllerReady: (controller) {
@@ -357,7 +359,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                             children: [
                                               TitleWidget(widget.task),
                                               const SizedBox(height: Dimension.paddingXS),
-                                              Subtitle(widget.task),
+                                              //Subtitle(widget.task),
                                               TaskInfo(
                                                 widget.task,
                                                 hideInboxLabel: widget.hideInboxLabel,
