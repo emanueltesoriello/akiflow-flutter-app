@@ -14,16 +14,24 @@ class AccountsRepository extends DatabaseRepository {
   }) : super(tableName: table, fromSql: fromSql);
 
   Future<Account?> getByAccountId(String? accountId) async {
-    var result = await _databaseService.database!.query(
-      tableName,
-      where: 'account_id = ?',
-      whereArgs: [accountId],
-    );
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.query(
+          tableName,
+          where: 'account_id = ?',
+          whereArgs: [accountId],
+        );
+      });
+    } catch (e) {
+      print('Error retrieving account by accountId: $e');
+      return null;
+    }
 
-    if (result.isEmpty) {
+    if (items.isEmpty) {
       throw DatabaseItemNotFoundException('No item found with accountId $accountId');
     }
 
-    return fromSql(result.first);
+    return fromSql(items.first);
   }
 }
