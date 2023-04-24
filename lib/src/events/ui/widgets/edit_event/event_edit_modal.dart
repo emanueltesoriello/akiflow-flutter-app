@@ -333,8 +333,9 @@ class _EventEditModalState extends State<EventEditModal> {
                 updatedEvent = updatedEvent.copyWith(
                   startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
                   endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
-                  startTime: datetime != null ? Nullable(datetime.toIso8601String()) : Nullable(null),
-                  endTime: datetime != null ? Nullable(datetime.add(duration).toIso8601String()) : Nullable(null),
+                  startTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
+                  endTime:
+                      datetime != null ? Nullable(datetime.toUtc().add(duration).toIso8601String()) : Nullable(null),
                 );
               });
             },
