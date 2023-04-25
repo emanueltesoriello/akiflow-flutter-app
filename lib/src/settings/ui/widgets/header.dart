@@ -57,29 +57,42 @@ class Header extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        InkWell(
-          child: SvgPicture.asset(
-            Assets.images.icons.common.searchSVG,
-            height: 25,
-            color: ColorsExt.grey3(context),
+        SizedBox(
+          width: 35,
+          height: 35,
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: SvgPicture.asset(
+              Assets.images.icons.common.searchSVG,
+              height: 25,
+              color: ColorsExt.grey2(context),
+            ),
+            onPressed: () {
+              showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context) => const SearchModal(),
+              );
+            },
           ),
-          onTap: () {
-            showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => const SearchModal(),
-            );
-          },
         ),
-        const SizedBox(width: 12),
-        InkWell(
-          child: SizedBox(
-            width: 25,
-            height: 25,
-            child: SvgPicture.asset(Assets.images.icons.common.gearAltSVG),
+        const SizedBox(width: Dimension.paddingS),
+        SizedBox(
+          width: 35,
+          height: 35,
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: SizedBox(
+              width: 25,
+              height: 25,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.gearAltSVG,
+                color: ColorsExt.grey2(context),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+            },
           ),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
-          },
         ),
       ],
     );

@@ -19,9 +19,9 @@ class TaskListMenu extends StatelessWidget {
         padding: EdgeInsets.zero,
         icon: SvgPicture.asset(
           Assets.images.icons.common.ellipsisSVG,
-          width: 24,
-          height: 24,
-          color: ColorsExt.grey3(context),
+          width: Dimension.defaultIconSize,
+          height: Dimension.defaultIconSize,
+          color: ColorsExt.grey2(context),
         ),
         onSelected: (TaskListMenuAction result) {
           switch (result) {

@@ -157,7 +157,7 @@ class SettingsModal extends StatelessWidget {
                 Assets.images.icons.common.plusSVG,
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey2(context),
               ),
               onSelected: (AddListType result) async {
                 switch (result) {

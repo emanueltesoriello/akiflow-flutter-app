@@ -170,7 +170,7 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                 return TagBox(
                   icon: Assets.images.icons.common.numberSVG,
                   active: state.updatedTask.listId != null,
-                  iconColor: background ?? ColorsExt.grey2(context),
+                  iconColor: background ?? ColorsExt.grey2_5(context),
                   backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey7(context),
                   text: label?.title ?? t.addTask.label,
                   isBig: true,

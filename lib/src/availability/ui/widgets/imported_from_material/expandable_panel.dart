@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:mobile/assets.dart';
-import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/src/availability/ui/widgets/imported_from_material/chevron_icon.dart';
 
 const double _kPanelHeaderCollapsedHeight = kMinInteractiveDimension;
 const EdgeInsets _kPanelHeaderExpandedDefaultPadding = EdgeInsets.symmetric(
