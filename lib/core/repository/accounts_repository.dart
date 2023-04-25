@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/exceptions/database_exception.dart';
 import 'package:mobile/core/repository/database_repository.dart';
@@ -33,5 +35,20 @@ class AccountsRepository extends DatabaseRepository {
     }
 
     return fromSql(items.first);
+  }
+
+  Future<List<Account>> getAccounts<Account>() async {
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.query(table);
+      });
+    } catch (e) {
+      print('Error retrieving accounts: $e');
+      return [];
+    }
+
+    List<Account> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
   }
 }

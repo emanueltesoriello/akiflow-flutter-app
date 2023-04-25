@@ -73,17 +73,20 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
       await initProcesses();
 
       final SyncControllerService syncControllerService = locator<SyncControllerService>();
-      DateTime now;
-      if (locator<PreferencesRepository>().lastTasksSyncAt != null &&
-          locator<PreferencesRepository>().lastTasksSyncAt!.isUtc) {
-        now = DateTime.now().toUtc();
-      } else {
-        now = DateTime.now();
+      DateTime now = DateTime.now().toUtc();
+      List<Entity> entitiesToSync = [];
+
+      for (Entity entity in Entity.values) {
+        print('Background sync check for $entity');
+        DateTime? lastSync = await syncControllerService.getLastSyncFromPreferences[entity]!();
+        if (task == backgroundSyncFromNotification ||
+            (lastSync != null && now.difference(lastSync).inMinutes.abs() > 15)) {
+          print('Start background sync for $entity');
+          entitiesToSync.add(entity);
+        }
       }
-      if ((locator<PreferencesRepository>().lastTasksSyncAt != null &&
-              now.difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
-          task == backgroundSyncFromNotification) {
-        await syncControllerService.sync();
+      if (entitiesToSync.isNotEmpty) {
+        await syncControllerService.sync(entitiesToSync);
       }
     } else {
       await locator<SyncControllerService>().sync();

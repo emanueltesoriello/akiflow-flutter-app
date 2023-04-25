@@ -34,13 +34,12 @@ import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/client/client.dart';
-import 'package:models/event/event.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mobile/extensions/event_extension.dart';
 
-enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers, docs }
+enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers }
 
 enum IntegrationEntity { gmail }
 
@@ -102,7 +101,7 @@ class SyncControllerService {
     ),
   };
 
-  final Map<Entity, Function()> _getLastSyncFromPreferences = {
+  final Map<Entity, Function()> getLastSyncFromPreferences = {
     Entity.accounts: () => _preferencesRepository.lastAccountsSyncAt,
     Entity.calendars: () => _preferencesRepository.lastCalendarsSyncAt,
     Entity.tasks: () => _preferencesRepository.lastTasksSyncAt,
@@ -234,7 +233,7 @@ class SyncControllerService {
 
   /// Return `true` if there are new docs to import
   Future<bool> _syncIntegration() async {
-    List<Account> accounts = await _accountsRepository.get();
+    List<Account> accounts = await _accountsRepository.getAccounts();
 
     if (accounts.isEmpty) {
       print("no accounts to sync");
@@ -287,9 +286,9 @@ class SyncControllerService {
     try {
       ApiClient api = ClientApi();
 
-      DateTime? lastSyncTasks = await _getLastSyncFromPreferences[Entity.tasks]!();
-      DateTime? lastSyncAccounts = await _getLastSyncFromPreferences[Entity.accounts]!();
-      DateTime? lastSyncLabels = await _getLastSyncFromPreferences[Entity.labels]!();
+      DateTime? lastSyncTasks = await getLastSyncFromPreferences[Entity.tasks]!();
+      DateTime? lastSyncAccounts = await getLastSyncFromPreferences[Entity.accounts]!();
+      DateTime? lastSyncLabels = await getLastSyncFromPreferences[Entity.labels]!();
 
       int recurringBackgroundSyncCounter = _getRecurringBackgroundSyncCounter;
       int recurringNotificationsSyncCounter = _getRecurringNotificationsSyncCounter;
@@ -376,7 +375,7 @@ class SyncControllerService {
 
       SyncService syncService = _syncServices[entity]!;
 
-      DateTime? lastSync = await _getLastSyncFromPreferences[entity]!();
+      DateTime? lastSync = await getLastSyncFromPreferences[entity]!();
 
       DateTime? lastSyncUpdated = await syncService.start(lastSync);
 

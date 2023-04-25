@@ -773,7 +773,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
       String? markAsDoneKey = _authCubit!.state.user?.settings?['popups']['gmail.unstar'];
       GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
 
-      List<Account> accounts = await _accountsRepository.get();
+      List<Account> accounts = await _accountsRepository.getAccounts();
       Account account = accounts.firstWhere(
           (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
 
