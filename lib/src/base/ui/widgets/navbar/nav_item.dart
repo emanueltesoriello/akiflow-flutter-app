@@ -41,6 +41,7 @@ class NavItem extends StatelessWidget {
             }
           } else {
             showCupertinoModalBottomSheet(
+              duration: const Duration(milliseconds: 300),
               context: context,
               builder: (context) => SettingsModal(topPadding: topPadding),
             );
