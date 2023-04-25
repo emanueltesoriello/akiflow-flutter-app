@@ -130,62 +130,71 @@ class _EditTaskModalState extends State<EditTaskModal> {
   Future<bool> onBack(EditTaskCubitState state) async {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     if (state.hasFocusOnTitleOrDescription) {
-      await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('Discard changes?',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
-                    const SizedBox(height: Dimension.paddingM),
-                    Text('The changes you’ve made won’t be saved',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
-                    const SizedBox(height: Dimension.paddingM),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
+      if (cubit.state.originalTask == cubit.state.updatedTask) {
+        cubit.setHasFocusOnTitleOrDescription(false);
+        FocusScope.of(context).unfocus();
+      } else {
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  shape:
+                      const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text('Discard changes?',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
+                      const SizedBox(height: Dimension.paddingM),
+                      Text('The changes you’ve made won’t be saved',
                           style: Theme.of(context)
-                              .textButtonTheme
-                              .style
-                              ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Cancel'.toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
-                        ),
-                        const SizedBox(width: Dimension.padding),
-                        TextButton(
-                          style: Theme.of(context)
-                              .textButtonTheme
-                              .style
-                              ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
-                          onPressed: () async {
-                            streamSubscription?.cancel();
-                            quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
-                                document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
-                            _init();
-                            cubit.undoChanges();
-                            cubit.setHasFocusOnTitleOrDescription(false);
-                            FocusScope.of(context).unfocus();
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Discard'.toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
-                        )
-                      ],
-                    )
-                  ],
-                ));
-          });
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
+                      const SizedBox(height: Dimension.paddingM),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            style: Theme.of(context)
+                                .textButtonTheme
+                                .style
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel'.toUpperCase(),
+                                style:
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                          ),
+                          const SizedBox(width: Dimension.padding),
+                          TextButton(
+                            style: Theme.of(context)
+                                .textButtonTheme
+                                .style
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                            onPressed: () async {
+                              streamSubscription?.cancel();
+                              quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
+                                  document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
+                              _init();
+                              cubit.undoChanges();
+                              cubit.setHasFocusOnTitleOrDescription(false);
+                              FocusScope.of(context).unfocus();
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Discard'.toUpperCase(),
+                                style:
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                          )
+                        ],
+                      )
+                    ],
+                  ));
+            });
+      }
+
       return false;
     } else {
       Navigator.of(context).pop(true);
