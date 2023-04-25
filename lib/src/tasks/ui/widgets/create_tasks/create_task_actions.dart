@@ -17,9 +17,17 @@ import '../../../../../common/style/colors.dart';
 import '../../../../../extensions/task_extension.dart';
 
 class CreateTaskActions extends StatefulWidget {
-  const CreateTaskActions({Key? key, required this.titleController, required this.titleFocus}) : super(key: key);
+  const CreateTaskActions(
+      {Key? key,
+      required this.titleController,
+      required this.titleFocus,
+      this.backgroundPlanColor,
+      this.borderPlanColor})
+      : super(key: key);
   final TextEditingController titleController;
   final FocusNode titleFocus;
+  final Color? backgroundPlanColor;
+  final Color? borderPlanColor;
 
   @override
   State<CreateTaskActions> createState() => _CreateTaskActionsState();
@@ -34,6 +42,8 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
         runSpacing: Dimension.paddingS,
         children: [
           PlanForAction(
+            backgroundPlanColor: widget.backgroundPlanColor,
+            borderPlanColor: widget.borderPlanColor,
             task: context.watch<EditTaskCubit>().state.updatedTask,
             onTap: () {
               var editTaskCubit = context.read<EditTaskCubit>();

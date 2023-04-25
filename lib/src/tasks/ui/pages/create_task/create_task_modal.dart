@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/stylable_text_editing_controller.dart';
 import 'package:mobile/core/locator.dart';
@@ -14,6 +15,7 @@ import 'package:mobile/src/tasks/ui/widgets/create_tasks/label_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/priority_widget.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/send_task_button.dart';
 import 'package:models/nlp/nlp_date_time.dart';
+import 'package:models/task/task.dart';
 
 class CreateTaskModal extends StatefulWidget {
   const CreateTaskModal({Key? key, this.sharedText}) : super(key: key);
@@ -31,6 +33,9 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   final ValueNotifier<bool> isTitleEditing = ValueNotifier<bool>(false);
   final ScrollController parentScrollController = ScrollController();
   bool showRefresh = false;
+  Color? backgroundPlanColor;
+  Color? borderPlanColor;
+  Task? previousUpdatedTask;
 
   late final StylableTextEditingController simpleTitleController;
 
@@ -82,6 +87,23 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
     }
   }
 
+  animatePlanDate() {
+    if (previousUpdatedTask?.date != context.read<EditTaskCubit>().state.updatedTask.date ||
+        previousUpdatedTask?.datetime! != context.read<EditTaskCubit>().state.updatedTask.datetime) {
+      setState(() {
+        backgroundPlanColor = Colors.white;
+        borderPlanColor = ColorsExt.cyan(context);
+      });
+      Future.delayed(const Duration(milliseconds: 700), () {
+        setState(() {
+          backgroundPlanColor = null;
+          borderPlanColor = null;
+        });
+      });
+      previousUpdatedTask = context.read<EditTaskCubit>().state.updatedTask;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -124,6 +146,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                             },
                             onDateDetected: (NLPDateTime nlpDateTime) {
                               context.read<EditTaskCubit>().onDateDetected(context, nlpDateTime);
+                              animatePlanDate();
                             },
                           ),
                           const SizedBox(height: Dimension.paddingS),
@@ -131,9 +154,10 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                           const SizedBox(height: Dimension.paddingS),
                           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                             CreateTaskActions(
-                              titleController: simpleTitleController,
-                              titleFocus: titleFocus,
-                            ),
+                                titleController: simpleTitleController,
+                                titleFocus: titleFocus,
+                                backgroundPlanColor: backgroundPlanColor,
+                                borderPlanColor: borderPlanColor),
                             GestureDetector(
                               onVerticalDragUpdate: (_) {},
                               child: showRefresh

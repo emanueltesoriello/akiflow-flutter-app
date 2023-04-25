@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class TagBox extends StatelessWidget {
   final String? icon;
   final double? iconSize;
   final String? text;
   final Color? backgroundColor;
+  final Color? borderColor;
   final Color? foregroundColor;
   final Color? iconColor;
   final Function()? onPressed;
@@ -20,6 +22,7 @@ class TagBox extends StatelessWidget {
     this.iconSize,
     this.text,
     this.backgroundColor,
+    this.borderColor,
     this.foregroundColor,
     this.iconColor,
     this.onPressed,
@@ -39,7 +42,8 @@ class TagBox extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(Dimension.radiusS),
+          border: borderColor != null ? Border.all(color: borderColor!) : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
