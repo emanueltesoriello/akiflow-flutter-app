@@ -21,7 +21,7 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     //await initProcesses();
 
-    await backgroundProcesses(task);
+    // await backgroundProcesses(task);
     // listen on this port in order to catch trigger from the background services.
     // Useful for UI updates based on background sync
     final sendPort = IsolateNameServer.lookupPortByName("backgroundSync");
@@ -132,7 +132,7 @@ class BackgroundService {
     Workmanager().registerPeriodicTask(
       periodicTaskskKey,
       periodicTaskskKey,
-      initialDelay: const Duration(minutes: 15),
+      initialDelay: const Duration(minutes: 3),
       constraints: constraints.Constraints(
         // connected or metered mark the task as requiring internet
         networkType: NetworkType.connected,
