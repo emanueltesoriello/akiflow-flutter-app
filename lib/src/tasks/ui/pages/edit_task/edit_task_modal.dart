@@ -204,7 +204,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
   Widget animatedChild(bool showWidget, Widget child) {
     Widget animatedChild = Container();
-    return AnimatedSwitcher(duration: const Duration(milliseconds: 2000), child: showWidget ? child : animatedChild);
+
+    return AnimatedSwitcher(
+        reverseDuration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
+        child: showWidget ? child : animatedChild);
   }
 
   @override
@@ -217,7 +221,8 @@ class _EditTaskModalState extends State<EditTaskModal> {
               color: Theme.of(context).backgroundColor,
               child: AnimatedSize(
                 curve: Curves.elasticOut,
-                duration: const Duration(milliseconds: 400),
+                duration: const Duration(milliseconds: 750),
+                reverseDuration: const Duration(milliseconds: 750),
                 child: Container(
                   height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height / 2 : null,
                   decoration: const BoxDecoration(
