@@ -177,12 +177,6 @@ class _TodayViewState extends State<TodayView> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.zero,
                           children: [
-                            if (todos.isEmpty && pinned.isEmpty)
-                              Container(
-                                padding: const EdgeInsets.only(top: Dimension.paddingXXL, bottom: Dimension.paddingS),
-                                child: SvgPicture.asset(Assets.images.akiflow.tasksDoneSVG,
-                                    width: Dimension.pagesImageSize, height: Dimension.pagesImageSize),
-                              ),
                             TaskList(
                               key: const ObjectKey("todos"),
                               shrinkWrap: true,
@@ -237,6 +231,26 @@ class _TodayViewState extends State<TodayView> {
                                 listOpened: context.watch<TodayCubit>().state.completedListOpen,
                               ),
                             ),
+                            if (todos.isEmpty && pinned.isEmpty && !context.watch<TodayCubit>().state.completedListOpen)
+                              Column(
+                                children: [
+                                  const SizedBox(height: Dimension.padding),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.only(top: Dimension.paddingXXL, bottom: Dimension.paddingS),
+                                    child: SvgPicture.asset(Assets.images.akiflow.tasksDoneSVG,
+                                        width: Dimension.pagesImageSize, height: Dimension.pagesImageSize),
+                                  ),
+                                  const SizedBox(height: Dimension.paddingS),
+                                  Text(
+                                    'Good job! All done',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        ?.copyWith(color: ColorsExt.grey1(context)),
+                                  )
+                                ],
+                              ),
                             const SizedBox(height: Dimension.paddingXXL)
                           ],
                         ),
