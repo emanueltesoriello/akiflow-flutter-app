@@ -53,7 +53,7 @@ class EventAppointment extends StatelessWidget {
                             : 13.0,
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined
-                        ? ColorsExt.grey3(context)
+                        ? ColorsExt.grey2_5(context)
                         : ColorsExt.grey1(context),
                     decoration: responseStatus == AtendeeResponseStatus.declined ? TextDecoration.lineThrough : null,
                   ),
@@ -81,7 +81,7 @@ class EventAppointment extends StatelessWidget {
     switch (responseStatus) {
       case AtendeeResponseStatus.declined:
         return BoxDecoration(
-            color: ColorsExt.grey6(context),
+            color: HSLColor.fromColor(appointment.color).withLightness(0.89).toColor().withOpacity(0.5),
             borderRadius: const BorderRadius.all(
               Radius.circular(4.0),
             ));
