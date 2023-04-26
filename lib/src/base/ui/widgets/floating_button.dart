@@ -129,6 +129,13 @@ class FloatingButton extends StatelessWidget {
   }
 
   _onTapEvent(BuildContext context) {
-    context.read<EventsCubit>().createEvent(context);
+    int duration = 1800;
+    AuthCubit authCubit = context.read<AuthCubit>();
+    if (authCubit.state.user != null &&
+        authCubit.state.user?.settings != null &&
+        authCubit.state.user?.settings?['calendar'] != null) {
+      duration = authCubit.state.user?.settings?['calendar']?['eventDuration'] ?? 1800;
+    }
+    context.read<EventsCubit>().createEvent(context, duration);
   }
 }

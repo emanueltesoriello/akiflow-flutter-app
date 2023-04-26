@@ -132,8 +132,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _eventsRepository.add([event]);
   }
 
-  Future<void> createEvent(BuildContext context) async {
-    String description = generateAkiflowSignature(context);
+  Future<void> createEvent(BuildContext context, int duration) async {
+    //String description = generateAkiflowSignature(context);
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
     Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
     var id = const Uuid().v4();
@@ -155,7 +155,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
       content: {"transparency": "opaque", "visibility": "default", "location": null},
       startDatetimeTz: currentTimeZone,
       startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
-      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(const Duration(minutes: 30))),
+      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(Duration(seconds: duration))),
       createdAt: TzUtils.toUtcStringIfNotNull(now),
     );
 
