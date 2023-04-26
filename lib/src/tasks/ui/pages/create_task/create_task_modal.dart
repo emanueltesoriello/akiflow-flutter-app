@@ -94,7 +94,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         backgroundPlanColor = Colors.white;
         borderPlanColor = ColorsExt.cyan(context);
       });
-      Future.delayed(const Duration(milliseconds: 700), () {
+      Future.delayed(const Duration(milliseconds: 1000), () {
         setState(() {
           backgroundPlanColor = null;
           borderPlanColor = null;
