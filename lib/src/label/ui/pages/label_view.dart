@@ -248,7 +248,6 @@ class _LabelViewState extends State<LabelView> {
                                 .toList(),
                             visible: labelState.openedSections[section.id] ?? false,
                             showLabel: false,
-                            header: labelState.sections.length > 1 ? header : null,
                             showPlanInfo: true,
                             sorting: TaskListSorting.sortingLabelAscending,
                           ),
