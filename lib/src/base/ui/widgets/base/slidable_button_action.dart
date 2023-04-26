@@ -35,8 +35,8 @@ class SlidableButtonAction extends StatelessWidget {
             child: SvgPicture.asset(
               icon,
               color: topColor,
-              width: size ?? 24,
-              height: size ?? 24,
+              width: size ?? Dimension.defaultIconSize,
+              height: size ?? Dimension.defaultIconSize,
             ),
           ),
         ),
@@ -46,8 +46,7 @@ class SlidableButtonAction extends StatelessWidget {
         onTap: click,
         child: Material(
           color: Colors.transparent,
-          child: Align(
-            alignment: Alignment.centerRight,
+          child: Center(
             child: _content(context),
           ),
         ),
@@ -69,7 +68,7 @@ class SlidableButtonAction extends StatelessWidget {
           const SizedBox(width: Dimension.paddingXS),
           Text(label!,
               textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.caption?.copyWith(
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: topColor,
                   )),
@@ -83,7 +82,7 @@ class SlidableButtonAction extends StatelessWidget {
           const Spacer(),
           Text(label!,
               textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.caption?.copyWith(fontWeight: FontWeight.w500, color: topColor)),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.w500, color: topColor)),
           const SizedBox(width: Dimension.paddingXS),
           SvgPicture.asset(
             icon,

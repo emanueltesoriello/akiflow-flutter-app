@@ -130,7 +130,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 children: [
                   Container(
                     color: ColorsExt.green20(context),
-                    width: MediaQuery.of(context).size.width * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.18,
                     child: DoneWithLabel(
                         click: () {
                           Slidable.of(context)?.close();
