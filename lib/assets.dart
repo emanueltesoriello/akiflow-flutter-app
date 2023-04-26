@@ -188,6 +188,7 @@ class _AssetsImagesIconsCommon {
   final priorityMidSVG = 'assets/images/icons/_common/priority-mid.svg';
   final puzzleSVG = 'assets/images/icons/_common/puzzle.svg';
   final questionCircleFillSVG = 'assets/images/icons/_common/question_circle_fill.svg';
+  final questionSquareFillSVG = 'assets/images/icons/_common/question_square_fill.svg';
   final rectangleGrid1X2SVG = 'assets/images/icons/_common/rectangle_grid_1x2.svg';
   final recurrentJPG = 'assets/images/icons/_common/recurrent.jpg';
   final recurrentSVG = 'assets/images/icons/_common/recurrent.svg';
@@ -211,6 +212,7 @@ class _AssetsImagesIconsCommon {
   final xmarkCircleSVG = 'assets/images/icons/_common/xmark_circle.svg';
   final xmarkCircleFillSVG = 'assets/images/icons/_common/xmark_circle_fill.svg';
   final xmarkSquareSVG = 'assets/images/icons/_common/xmark_square.svg';
+  final xmarkSquareFillSVG = 'assets/images/icons/_common/xmark_square_fill.svg';
 }
 
 class _AssetsImagesIconsAkiflow {

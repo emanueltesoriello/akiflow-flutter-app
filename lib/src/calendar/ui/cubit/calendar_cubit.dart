@@ -142,6 +142,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     emit(state.copyWith(nonWorkingDays: computeNonWorkinkDays()));
   }
 
+  void setAppointmentTapped(bool tapped) {
+    emit(state.copyWith(appointmentTapped: tapped));
+  }
+
   Future<void> fetchCalendars() async {
     List<Calendar> calendars = await _calendarsRepository.getCalendars();
     calendars.sort((a, b) => b.primary ?? false ? 1 : -1);
