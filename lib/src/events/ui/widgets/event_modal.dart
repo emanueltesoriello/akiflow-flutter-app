@@ -361,9 +361,9 @@ class _EventModalState extends State<EventModal> {
               ),
               const SizedBox(width: Dimension.padding),
               Expanded(
-                child: Text('${selectedEvent.content?["location"]}',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                child: SelectableText('${selectedEvent.content?["location"]}',
+                    minLines: 1,
+                    maxLines: 4,
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1
