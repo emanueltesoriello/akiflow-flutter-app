@@ -169,11 +169,10 @@ class NotificationsService {
             notificationType: NotificationType.Event,
             minuteBeforeToStart: minutesBefore.minutesBeforeToStart,
             notificationDetails: const NotificationDetails(
-              android: AndroidNotificationDetails(
-                "channel_d",
-                "Event Notification",
-                channelDescription: "Reminders that an event is about to start.",
-              ),
+              android: AndroidNotificationDetails("channel_d", "Event Notification",
+                  channelDescription: "Reminders that an event is about to start.",
+                  importance: Importance.max,
+                  priority: Priority.high),
             ),
           );
         } catch (e) {
@@ -264,11 +263,10 @@ class NotificationsService {
                 payload: jsonEncode(task.toMap()),
                 notificationType: NotificationType.Tasks,
                 notificationDetails: const NotificationDetails(
-                  android: AndroidNotificationDetails(
-                    "channel_d",
-                    "Task Notification",
-                    channelDescription: "Reminders that a task is about to start.",
-                  ),
+                  android: AndroidNotificationDetails("channel_d", "Task Notification",
+                      channelDescription: "Reminders that a task is about to start.",
+                      importance: Importance.max,
+                      priority: Priority.high),
                 ));
           } catch (e) {
             print(e);
@@ -449,11 +447,10 @@ class NotificationsService {
               payload: jsonEncode(task.toMap()),
               notificationType: NotificationType.Tasks,
               notificationDetails: const NotificationDetails(
-                android: AndroidNotificationDetails(
-                  "channel_d",
-                  "Task Notification",
-                  channelDescription: "Reminders that a task is about to start.",
-                ),
+                android: AndroidNotificationDetails("channel_d", "Task Notification",
+                    channelDescription: "Reminders that a task is about to start.",
+                    importance: Importance.max,
+                    priority: Priority.high),
               ));
         } catch (e) {
           print(e);
