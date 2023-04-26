@@ -22,6 +22,7 @@ import 'package:mobile/src/calendar/ui/widgets/appointment/task_appointment.dart
 import 'package:mobile/src/calendar/ui/widgets/grouped_tasks_modal.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/event_modal.dart';
+import 'package:mobile/src/events/ui/widgets/event_creation_small_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -53,6 +54,7 @@ class CalendarBody extends StatelessWidget {
       EventsCubit eventsCubit = context.read<EventsCubit>();
       TasksCubit tasksCubit = context.read<TasksCubit>();
       bool isThreeDays = calendarCubit.state.isCalendarThreeDays;
+      bool appointmentTapped = calendarCubit.state.appointmentTapped;
 
       calendarCubit.panelStateStream.listen((PanelState panelState) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -99,7 +101,13 @@ class CalendarBody extends StatelessWidget {
             controller: calendarController,
             headerHeight: 0,
             firstDayOfWeek: CalendarUtils.computeFirstDayOfWeek(context),
-            selectionDecoration: const BoxDecoration(),
+            selectionDecoration: appointmentTapped
+                ? const BoxDecoration()
+                : BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(color: ColorsExt.akiflow(context), width: 2),
+                    borderRadius: const BorderRadius.all(Radius.circular(4)),
+                  ),
             view: calendarCubit.state.calendarView,
             cellBorderColor: ColorsExt.grey5(context),
             onViewChanged: (ViewChangedDetails details) {
@@ -163,7 +171,7 @@ class CalendarBody extends StatelessWidget {
                       ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
                 )),
             monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-            onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit),
+            onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),
             appointmentBuilder: (context, calendarAppointmentDetails) =>
                 appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
             allowDragAndDrop: true,
@@ -223,36 +231,56 @@ class CalendarBody extends StatelessWidget {
     }
   }
 
-  void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext context, EventsCubit eventsCubit) {
-    context.read<CalendarCubit>().closePanel();
+  void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext mainContext, EventsCubit eventsCubit,
+      CalendarCubit calendarCubit) {
+    mainContext.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
-      context.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
+      mainContext.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
       calendarController.view = CalendarView.schedule;
+    } else if (calendarController.view != CalendarView.month &&
+        calendarTapDetails.targetElement == CalendarElement.calendarCell) {
+      calendarCubit.setAppointmentTapped(false);
+      showCupertinoModalBottomSheet(
+        context: mainContext,
+        builder: (context) => EventCreationSmallModal(
+          tappedTime: calendarTapDetails.date!,
+          onTap: (tapped) {
+            if (tapped) {
+              calendarCubit.setAppointmentTapped(true);
+              eventsCubit.createEvent(mainContext, 3600, tappedTime: calendarTapDetails.date!);
+            }
+          },
+        ),
+      );
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarTask) {
+      calendarCubit.setAppointmentTapped(true);
       try {
-        TaskExt.editTask(context, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
+        TaskExt.editTask(
+            mainContext, tasks.where((task) => task.id == calendarTapDetails.appointments!.first.id).first);
       } catch (e) {
         print('calendarTapped task error: $e}');
       }
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment &&
         calendarTapDetails.appointments!.first is CalendarGroupedTasks) {
+      calendarCubit.setAppointmentTapped(true);
       try {
         GroupedTasks group = groupedTasks.where((group) => group.id == calendarTapDetails.appointments!.first.id).first;
         showCupertinoModalBottomSheet(
-          context: context,
+          context: mainContext,
           builder: (context) => GroupedTasksModal(tasks: group.taskList),
         );
       } catch (e) {
         print('calendarTapped grouped tasks error: $e}');
       }
     } else if (calendarTapDetails.targetElement == CalendarElement.appointment) {
+      calendarCubit.setAppointmentTapped(true);
       try {
         Event event = events.where((event) => event.id == calendarTapDetails.appointments!.first.id).first;
         eventsCubit.refetchEvent(event);
         showCupertinoModalBottomSheet(
-          context: context,
+          context: mainContext,
           builder: (context) => EventModal(
             event: event,
             tappedDate: calendarTapDetails.date,

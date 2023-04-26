@@ -132,14 +132,19 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _eventsRepository.add([event]);
   }
 
-  Future<void> createEvent(BuildContext context, int duration) async {
+  Future<void> createEvent(BuildContext context, int duration, {DateTime? tappedTime}) async {
     //String description = generateAkiflowSignature(context);
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
     Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
     var id = const Uuid().v4();
+    DateTime startTime;
     DateTime now = DateTime.now();
-    DateTime startTimeRounded =
-        DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()]);
+    if (tappedTime != null) {
+      startTime = tappedTime;
+    } else {
+      startTime = DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
+    }
+
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
     Event event = Event(
       id: id,
@@ -154,8 +159,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
       //description: description,
       content: {"transparency": "opaque", "visibility": "default", "location": null},
       startDatetimeTz: currentTimeZone,
-      startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
-      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(Duration(seconds: duration))),
+      startTime: TzUtils.toUtcStringIfNotNull(startTime),
+      endTime: TzUtils.toUtcStringIfNotNull(startTime.add(Duration(seconds: duration))),
       createdAt: TzUtils.toUtcStringIfNotNull(now),
     );
 
