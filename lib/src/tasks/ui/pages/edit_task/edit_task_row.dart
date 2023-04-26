@@ -82,10 +82,14 @@ class _EditTaskRowState extends State<EditTaskRow> {
         ),
         child: GestureDetector(
           onTap: () async {
-            widget.descriptionFocusNode.unfocus();
-            context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
-            await Future.delayed(const Duration(milliseconds: 500));
-            FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+            if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
+              widget.descriptionFocusNode.unfocus();
+              context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+              await Future.delayed(const Duration(milliseconds: 500));
+              FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+            } else {
+              FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+            }
           },
           child: AbsorbPointer(
             child: QuillEditor(
@@ -146,10 +150,14 @@ class _EditTaskRowState extends State<EditTaskRow> {
   Widget _firstLine(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        widget.titleFocusNode.unfocus();
-        context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
-        await Future.delayed(const Duration(milliseconds: 500));
-        FocusScope.of(context).requestFocus(widget.titleFocusNode);
+        if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
+          widget.titleFocusNode.unfocus();
+          context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+          await Future.delayed(const Duration(milliseconds: 500));
+          FocusScope.of(context).requestFocus(widget.titleFocusNode);
+        } else {
+          FocusScope.of(context).requestFocus(widget.titleFocusNode);
+        }
       },
       child: AbsorbPointer(
         child: TextField(
