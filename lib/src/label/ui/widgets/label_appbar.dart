@@ -10,14 +10,8 @@ import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
-import 'package:mobile/src/label/ui/widgets/create_edit_label_modal.dart';
-import 'package:mobile/src/label/ui/widgets/create_folder_modal.dart';
-import 'package:mobile/src/settings/ui/widgets/settings_modal.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/labels_list.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-
 import 'package:models/label/label.dart';
-import 'package:uuid/uuid.dart';
 
 enum LabelActions { edit, order, newSection, showDone, delete }
 
