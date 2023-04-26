@@ -80,30 +80,40 @@ class _EditTaskRowState extends State<EditTaskRow> {
             selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
           ),
         ),
-        child: QuillEditor(
-          controller: value,
-          readOnly: false,
-          scrollController: ScrollController(),
-          scrollable: true,
-          focusNode: widget.descriptionFocusNode,
-          autoFocus: false,
-          expands: false,
-          padding: EdgeInsets.zero,
-          keyboardAppearance: Brightness.light,
-          placeholder: t.task.description,
-          linkActionPickerDelegate: (BuildContext context, String link, node) async {
-            launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-            return LinkMenuAction.none;
+        child: GestureDetector(
+          onTap: () async {
+            widget.descriptionFocusNode.unfocus();
+            context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+            await Future.delayed(const Duration(milliseconds: 500));
+            FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
           },
-          customStyles: DefaultStyles(
-            placeHolder: DefaultTextBlockStyle(
-              const TextStyle(
-                color: Colors.grey,
-                fontSize: 18,
+          child: AbsorbPointer(
+            child: QuillEditor(
+              controller: value,
+              readOnly: false,
+              scrollController: ScrollController(),
+              scrollable: true,
+              focusNode: widget.descriptionFocusNode,
+              autoFocus: false,
+              expands: false,
+              padding: EdgeInsets.zero,
+              keyboardAppearance: Brightness.light,
+              placeholder: t.task.description,
+              linkActionPickerDelegate: (BuildContext context, String link, node) async {
+                launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                return LinkMenuAction.none;
+              },
+              customStyles: DefaultStyles(
+                placeHolder: DefaultTextBlockStyle(
+                  const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18,
+                  ),
+                  const tuple.Tuple2(0, 0),
+                  const tuple.Tuple2(0, 0),
+                  null,
+                ),
               ),
-              const tuple.Tuple2(0, 0),
-              const tuple.Tuple2(0, 0),
-              null,
             ),
           ),
         ),
@@ -134,28 +144,39 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _firstLine(BuildContext context) {
-    return TextField(
-      controller: widget.titleController,
-      maxLines: null,
-      focusNode: widget.titleFocusNode,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.zero,
-        isDense: true,
-        hintText: t.addTask.titleHint,
-        border: InputBorder.none,
-        hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: ColorsExt.grey3(context),
-            ),
-      ),
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w500,
-            color: ColorsExt.grey2(context),
-          ),
-      onChanged: (value) {
-        context.read<EditTaskCubit>().onTitleChanged(value);
+    return GestureDetector(
+      onTap: () async {
+        widget.titleFocusNode.unfocus();
+        context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+        await Future.delayed(const Duration(milliseconds: 500));
+        FocusScope.of(context).requestFocus(widget.titleFocusNode);
       },
+      child: AbsorbPointer(
+        child: TextField(
+          controller: widget.titleController,
+          maxLines: null,
+          onTap: null,
+          focusNode: widget.titleFocusNode,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.zero,
+            isDense: true,
+            hintText: t.addTask.titleHint,
+            border: InputBorder.none,
+            hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey3(context),
+                ),
+          ),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey2(context),
+              ),
+          onChanged: (value) {
+            context.read<EditTaskCubit>().onTitleChanged(value);
+          },
+        ),
+      ),
     );
   }
 

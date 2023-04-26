@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
@@ -61,15 +62,35 @@ class _EditTaskModalState extends State<EditTaskModal> {
     });
   }
 
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    _titleFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+    super.dispose();
+  }
+
   initFocusNodeListener() {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     _titleFocusNode.addListener(() {
       print('Focus on title');
-      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
+      if (_titleFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 0), () {
+          //SystemChannels.textInput.invokeMethod('TextInput.show');
+
+          cubit.setHasFocusOnTitleOrDescription(true);
+        });
+      }
     });
     _descriptionFocusNode.addListener(() {
       print('Focus on description');
-      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
+      if (_descriptionFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 0), () {
+          //SystemChannels.textInput.invokeMethod('TextInput.show');
+
+          cubit.setHasFocusOnTitleOrDescription(true);
+        });
+      }
     });
   }
 
@@ -85,12 +106,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
     quillController.value =
         quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
     quillController.value.moveCursorToEnd();
-  }
-
-  @override
-  void dispose() {
-    streamSubscription?.cancel();
-    super.dispose();
   }
 
   _actionsForFocusNodes(EditTaskCubitState state) {
