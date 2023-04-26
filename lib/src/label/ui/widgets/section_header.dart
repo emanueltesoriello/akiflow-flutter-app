@@ -75,7 +75,7 @@ class SectionHeaderItem extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     Assets.images.icons.common.ellipsisSVG,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey2(context),
                     width: Dimension.defaultIconSize,
                     height: Dimension.defaultIconSize,
                   ),

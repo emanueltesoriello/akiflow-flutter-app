@@ -59,7 +59,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Assets.images.icons.common.ellipsisSVG,
                 width: 24,
                 height: 24,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey2(context),
               ),
               onPressed: () {
                 showCupertinoModalBottomSheet(
