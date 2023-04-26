@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
@@ -28,13 +29,33 @@ class EventAppointment extends StatelessWidget {
     double boxHeight = calendarAppointmentDetails.bounds.height;
     double boxWidth = calendarAppointmentDetails.bounds.width;
     AtendeeResponseStatus responseStatus = event.isLoggedUserAttndingEvent;
+    String? rsvpIcon = event.getRsvpIcon();
     return Container(
       width: boxWidth,
       height: boxHeight,
       decoration: _boxDecoration(responseStatus: responseStatus, boxWidth: boxWidth),
       child: Row(
         children: [
-          const SizedBox(width: Dimension.paddingXS),
+          rsvpIcon == null
+              ? const SizedBox(width: Dimension.paddingXS)
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: calendarController.view == CalendarView.schedule
+                          ? EdgeInsets.only(left: 2, right: 2, top: appointment.isAllDay ? 4 : 2)
+                          : EdgeInsets.only(left: 2, right: 2, top: boxHeight < 15.0 ? 0 : 2),
+                      child: SizedBox(
+                        height: boxHeight < 15.0 ? 13 : 16,
+                        width: boxHeight < 15.0 ? 13 : 16,
+                        child: SvgPicture.asset(
+                          rsvpIcon,
+                          color: ColorsExt.grey2(context),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

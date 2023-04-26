@@ -1,3 +1,4 @@
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
@@ -409,5 +410,74 @@ extension EventExt on Event {
       notificationsId = eventId.hashCode;
     }
     return notificationsId;
+  }
+
+  bool isOrganizer() {
+    return organizerId == originCalendarId;
+  }
+
+  List<EventAtendee> getGuestsExceptOrganizer() {
+    if (attendees != null && attendees!.isNotEmpty) {
+      return attendees!.where((attendee) => attendee.email != organizerId).toList();
+    }
+    return [];
+  }
+
+  EventAtendee? getOrganizerGuest() {
+    if (attendees != null && attendees!.isNotEmpty) {
+      try {
+        return attendees!.firstWhere((attendee) => attendee.email == organizerId);
+      } catch (e) {
+        print(e);
+      }
+    }
+    return null;
+  }
+
+  bool hasOrganizerAccepted() {
+    return getOrganizerGuest()?.responseStatus == AtendeeResponseStatus.accepted.id;
+  }
+
+  bool hasOrganizerDeclined() {
+    return getOrganizerGuest()?.responseStatus == AtendeeResponseStatus.declined.id;
+  }
+
+  bool hasOrganizerChosenMaybe() {
+    return getOrganizerGuest()?.responseStatus == AtendeeResponseStatus.tentative.id;
+  }
+
+  bool haveAllGuestsResponse(AtendeeResponseStatus responseStatus) {
+    List<EventAtendee> guestsExceptOrganizer = getGuestsExceptOrganizer();
+    if (guestsExceptOrganizer.isEmpty) {
+      return false;
+    }
+    return guestsExceptOrganizer.every((attendee) => attendee.responseStatus == responseStatus.id);
+  }
+
+  String? getRsvpIcon() {
+    if (attendees == null || (isOrganizer() && attendees!.length < 2)) {
+      return null;
+    }
+
+    if (isOrganizer()) {
+      if (haveAllGuestsResponse(AtendeeResponseStatus.needsAction)) {
+        return Assets.images.icons.common.questionSquareFillSVG;
+      } else if (haveAllGuestsResponse(AtendeeResponseStatus.accepted)) {
+        return null;
+      } else if (haveAllGuestsResponse(AtendeeResponseStatus.tentative)) {
+        return Assets.images.icons.common.questionSquareFillSVG;
+      } else if (haveAllGuestsResponse(AtendeeResponseStatus.declined)) {
+        return Assets.images.icons.common.xmarkSquareFillSVG;
+      }
+    } else {
+      if (hasOrganizerAccepted() || haveAllGuestsResponse(AtendeeResponseStatus.accepted)) {
+        return null;
+      } else if (hasOrganizerDeclined() || haveAllGuestsResponse(AtendeeResponseStatus.declined)) {
+        return Assets.images.icons.common.xmarkSquareFillSVG;
+      } else if (hasOrganizerChosenMaybe() || haveAllGuestsResponse(AtendeeResponseStatus.tentative)) {
+        return Assets.images.icons.common.questionSquareFillSVG;
+      }
+    }
+    return null;
   }
 }
