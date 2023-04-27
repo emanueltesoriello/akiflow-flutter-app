@@ -29,46 +29,44 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(56);
 
   _buildTitleAppbarSection(BuildContext context) {
-    return Row(children: [
-      Theme(
-        data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
-        child: PopupMenuButton(
-          child: Row(
-            children: [
-              Text(label.title ?? t.noTitle,
-                  textAlign: TextAlign.start,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
-              const SizedBox(width: Dimension.paddingS),
-              const AnimatedChevron(iconUp: true),
-            ],
-          ),
-          itemBuilder: (BuildContext bc) {
-            return [
-              PopupMenuItem(
-                child: Container(
-                  //height: 200,
-                  width: 200,
-                  child: LabelsList(
-                    showHeaders: false,
-                    showNoLabel: false,
-                    onSelect: (Label selected) {
-                      context.read<LabelsCubit>().selectLabel(selected);
-                      context.read<MainCubit>().changeHomeView(HomeViewType.label);
-                      Navigator.pop(context);
-                    },
-                  ),
+    return Theme(
+      data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
+      child: PopupMenuButton(
+        child: Row(
+          children: [
+            Text(label.title ?? t.noTitle,
+                textAlign: TextAlign.start,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
+            const SizedBox(width: Dimension.paddingS),
+            const AnimatedChevron(iconUp: true),
+          ],
+        ),
+        itemBuilder: (BuildContext bc) {
+          return [
+            PopupMenuItem(
+              child: Container(
+                //height: 200,
+                width: 200,
+                child: LabelsList(
+                  showHeaders: false,
+                  showNoLabel: false,
+                  onSelect: (Label selected) {
+                    context.read<LabelsCubit>().selectLabel(selected);
+                    context.read<MainCubit>().changeHomeView(HomeViewType.label);
+                    Navigator.pop(context);
+                  },
                 ),
               ),
-            ];
-          },
-        ),
+            ),
+          ];
+        },
       ),
-    ]);
+    );
   }
 
   @override

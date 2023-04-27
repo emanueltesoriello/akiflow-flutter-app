@@ -83,7 +83,7 @@ class _HomePageNavigatorState extends State<HomePageNavigator> {
       );
     }
     if (homeViewType == HomeViewType.label) {
-      child = AnimatedOpacity(
+      return AnimatedOpacity(
         key: const Key('LabelView'),
         opacity: visible ? 1 : 0,
         duration: const Duration(milliseconds: 100),
