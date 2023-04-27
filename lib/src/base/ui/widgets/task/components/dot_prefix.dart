@@ -33,7 +33,6 @@ class DotPrefix extends StatelessWidget {
             child: Container(
               width: 6,
               height: 6,
-              margin: const EdgeInsets.only(left: 5, right: 0, top: 22),
               decoration: BoxDecoration(
                 color: color,
                 shape: BoxShape.circle,

@@ -3,31 +3,31 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/notifications_service.dart';
-import 'package:mobile/src/base/models/next_task_notifications_models.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
-class ReceiveNotificationSettingModal extends StatefulWidget {
-  final NextTaskNotificationsModel selectedNextTaskNotificationsModel;
-  final Function(NextTaskNotificationsModel value) onSelectedNextTaskNotificationsModel;
+class ReceiveEventNotificationSettingModal extends StatefulWidget {
+  final NextEventNotificationsModel selectedNextEventNotificationsModel;
+  final Function(NextEventNotificationsModel value) onSelectedNextEventNotificationsModel;
 
-  const ReceiveNotificationSettingModal({
-    required this.selectedNextTaskNotificationsModel,
-    required this.onSelectedNextTaskNotificationsModel,
+  const ReceiveEventNotificationSettingModal({
+    required this.selectedNextEventNotificationsModel,
+    required this.onSelectedNextEventNotificationsModel,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ReceiveNotificationSettingModal> createState() => _ReceiveNotificationSettingModalState();
+  State<ReceiveEventNotificationSettingModal> createState() => _ReceiveEventNotificationSettingModalState();
 }
 
-class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSettingModal> {
-  NextTaskNotificationsModel _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
+class _ReceiveEventNotificationSettingModalState extends State<ReceiveEventNotificationSettingModal> {
+  NextEventNotificationsModel _selectedNextEventNotificationsModel = NextEventNotificationsModel.d;
 
   @override
   void initState() {
     super.initState();
-    _selectedNextTaskNotificationsModel = widget.selectedNextTaskNotificationsModel;
+    _selectedNextEventNotificationsModel = widget.selectedNextEventNotificationsModel;
   }
 
   Widget _predefinedDateItem(
@@ -92,20 +92,20 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                         ),
                         const SizedBox(height: Dimension.padding),
                         ...List.generate(
-                          NextTaskNotificationsModel.values.length,
-                          (index) => _predefinedDateItem(context, text: NextTaskNotificationsModel.values[index].title,
+                          NextEventNotificationsModel.values.length,
+                          (index) => _predefinedDateItem(context, text: NextEventNotificationsModel.values[index].title,
                               onPressed: () {
                             PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
                             preferencesRepository
-                                .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
-                            widget.onSelectedNextTaskNotificationsModel(NextTaskNotificationsModel.values[index]);
+                                .setNextEventNotificationSetting(NextEventNotificationsModel.values[index]);
+                            widget.onSelectedNextEventNotificationsModel(NextEventNotificationsModel.values[index]);
                             setState(() {
-                              _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
+                              _selectedNextEventNotificationsModel = NextEventNotificationsModel.values[index];
                             });
-                            NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
+                            locator<SyncCubit>().sync();
                           },
-                              selected: NextTaskNotificationsModel.values[index].minutesBeforeToStart ==
-                                  _selectedNextTaskNotificationsModel.minutesBeforeToStart),
+                              selected: NextEventNotificationsModel.values[index].minutesBeforeToStart ==
+                                  _selectedNextEventNotificationsModel.minutesBeforeToStart),
                         ).reversed,
                         const SizedBox(height: 50),
                       ],

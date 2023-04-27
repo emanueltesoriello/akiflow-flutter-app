@@ -14,44 +14,37 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        ListView(),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              Assets.images.akiflow.inboxZeroSVG,
-              height: Dimension.pagesImageSize,
+    return ListView(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height / 3.5,
+        ),
+        SvgPicture.asset(
+          Assets.images.akiflow.inboxZeroSVG,
+          height: Dimension.pagesImageSize,
+        ),
+        const SizedBox(height: Dimension.paddingM),
+        Text(
+          t.task.awesomeInboxZero,
+          textAlign: TextAlign.center,
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+        ),
+        const SizedBox(height: Dimension.padding),
+        Center(
+          child: OutlinedButton(
+            onPressed: () {
+              context.read<MainCubit>().changeHomeView(HomeViewType.today);
+            },
+            child: Text(
+              t.calendar.goToToday,
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
             ),
-            const SizedBox(height: Dimension.paddingM),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text(
-                    t.task.awesomeInboxZero,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: Dimension.padding),
-            OutlinedButton(
-              onPressed: () {
-                context.read<MainCubit>().changeHomeView(HomeViewType.today);
-              },
-              child: Text(
-                t.calendar.goToToday,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
-              ),
-            ),
-          ],
+          ),
         ),
       ],
     );

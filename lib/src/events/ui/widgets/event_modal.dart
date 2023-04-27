@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -105,34 +104,39 @@ class _EventModalState extends State<EventModal> {
             topLeft: Radius.circular(Dimension.padding),
             topRight: Radius.circular(Dimension.padding),
           ),
-          child: ScrollConfiguration(
-            behavior: NoScrollBehav(),
-            child: Column(
-              children: [
-                const SizedBox(height: Dimension.padding),
-                const ScrollChip(),
-                Expanded(
-                  child: ListView(
-                    physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.all(Dimension.padding),
-                    children: [
-                      _titleRow(context),
-                      const Separator(),
-                      _datetimeRow(context),
-                      if (selectedEvent.meetingUrl != null) _conferenceRow(context),
-                      const Separator(),
-                      _busyRow(context),
-                      if (location != null && location!.isNotEmpty) _locationRow(context),
-                      if (selectedEvent.attendees != null) _attendeesRow(context),
-                      if (descriptionController.text.isNotEmpty &&
-                          parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
-                        _descriptionRow(context),
-                    ],
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    const SizedBox(height: Dimension.padding),
+                    const ScrollChip(),
+                    ListView(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                      children: [
+                        _titleRow(context),
+                        const Separator(),
+                        _datetimeRow(context),
+                        if (selectedEvent.meetingUrl != null) _conferenceRow(context),
+                        const Separator(),
+                        _busyRow(context),
+                        if (location != null && location!.isNotEmpty) _locationRow(context),
+                        if (selectedEvent.attendees != null) _attendeesRow(context),
+                        if (descriptionController.text.isNotEmpty &&
+                            parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
+                          _descriptionRow(context),
+                      ],
+                    ),
+                  ],
                 ),
-                _bottomButtonsRow(context),
-              ],
-            ),
+              ),
+              _bottomButtonsRow(context),
+            ],
           ),
         );
       },
@@ -357,9 +361,9 @@ class _EventModalState extends State<EventModal> {
               ),
               const SizedBox(width: Dimension.padding),
               Expanded(
-                child: Text('${selectedEvent.content?["location"]}',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                child: SelectableText('${selectedEvent.content?["location"]}',
+                    minLines: 1,
+                    maxLines: 4,
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1
@@ -540,7 +544,7 @@ class _EventModalState extends State<EventModal> {
         children: [
           if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty) _responseStatusRow(context),
           const Separator(),
-          _eventActionButtonsRow(context),
+          SafeArea(child: _eventActionButtonsRow(context)),
         ],
       ),
     );
@@ -720,7 +724,7 @@ class _EventModalState extends State<EventModal> {
 
   Padding _eventActionButtonsRow(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Dimension.padding),
+      padding: const EdgeInsets.all(Dimension.paddingS),
       child: selectedEvent.canModify()
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

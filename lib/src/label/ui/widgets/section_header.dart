@@ -4,7 +4,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 
 enum SectionActionType { addTask, rename, delete }
@@ -76,7 +75,7 @@ class SectionHeaderItem extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     Assets.images.icons.common.ellipsisSVG,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey2(context),
                     width: Dimension.defaultIconSize,
                     height: Dimension.defaultIconSize,
                   ),

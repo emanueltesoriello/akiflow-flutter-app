@@ -72,10 +72,16 @@ class _CalendarItemState extends State<CalendarItem> {
                 shrinkWrap: true,
                 itemCount: widget.calendars.length,
                 itemBuilder: (context, index) {
+                  bool notificationsEnabled = widget.calendars[index].settings != null &&
+                      ((widget.calendars[index].settings["notificationsEnabledMobile"] ??
+                              widget.calendars[index].settings["notificationsEnabled"] ??
+                              false) ==
+                          true);
                   return Padding(
                     padding: const EdgeInsets.only(
                         left: Dimension.paddingS, top: Dimension.paddingS + 2, bottom: Dimension.paddingS + 2),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
                           onTap: () {
@@ -99,12 +105,33 @@ class _CalendarItemState extends State<CalendarItem> {
                                     widget.calendars[index].color!),
                               ),
                               const SizedBox(width: Dimension.paddingS),
-                              Text("${widget.calendars[index].title}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                              SizedBox(
+                                width: 220,
+                                child: Text("${widget.calendars[index].title}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                              ),
                             ],
+                          ),
+                        ),
+                        const SizedBox(width: Dimension.padding),
+                        InkWell(
+                          onTap: () {
+                            widget.calendars[index] =
+                                context.read<CalendarCubit>().changeCalendarNotifications(widget.calendars[index]);
+                            context.read<CalendarCubit>().updateCalendar(widget.calendars[index]);
+                          },
+                          child: SvgPicture.asset(
+                            notificationsEnabled
+                                ? Assets.images.icons.common.bellSVG
+                                : Assets.images.icons.common.bellSlashedSVG,
+                            width: Dimension.defaultIconSize,
+                            height: Dimension.defaultIconSize,
+                            color: notificationsEnabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
                           ),
                         ),
                       ],

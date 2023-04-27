@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
@@ -61,15 +62,35 @@ class _EditTaskModalState extends State<EditTaskModal> {
     });
   }
 
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    _titleFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+    super.dispose();
+  }
+
   initFocusNodeListener() {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     _titleFocusNode.addListener(() {
       print('Focus on title');
-      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
+      if (_titleFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 0), () {
+          //SystemChannels.textInput.invokeMethod('TextInput.show');
+
+          cubit.setHasFocusOnTitleOrDescription(true);
+        });
+      }
     });
     _descriptionFocusNode.addListener(() {
       print('Focus on description');
-      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
+      if (_descriptionFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 0), () {
+          //SystemChannels.textInput.invokeMethod('TextInput.show');
+
+          cubit.setHasFocusOnTitleOrDescription(true);
+        });
+      }
     });
   }
 
@@ -85,12 +106,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
     quillController.value =
         quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
     quillController.value.moveCursorToEnd();
-  }
-
-  @override
-  void dispose() {
-    streamSubscription?.cancel();
-    super.dispose();
   }
 
   _actionsForFocusNodes(EditTaskCubitState state) {
@@ -130,67 +145,71 @@ class _EditTaskModalState extends State<EditTaskModal> {
   Future<bool> onBack(EditTaskCubitState state) async {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     if (state.hasFocusOnTitleOrDescription) {
-      await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-                content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('Discard changes?',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
-                const SizedBox(height: 10),
-                Text('The changes you’ve made won’t be saved',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
-                const SizedBox(height: Dimension.paddingS),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      width: 85,
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: ColorsExt.grey6(context),
-                            onPrimary: ColorsExt.grey5(context),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(Dimension.radiusS),
-                            ),
+      if (cubit.state.originalTask == cubit.state.updatedTask) {
+        cubit.setHasFocusOnTitleOrDescription(false);
+        FocusScope.of(context).unfocus();
+      } else {
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  shape:
+                      const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text('Discard changes?',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
+                      const SizedBox(height: Dimension.paddingM),
+                      Text('The changes you’ve made won’t be saved',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
+                      const SizedBox(height: Dimension.paddingM),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            style: Theme.of(context)
+                                .textButtonTheme
+                                .style
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel'.toUpperCase(),
+                                style:
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
                           ),
-                          child: Text('Cancel',
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: Dimension.padding),
-                    TextButton(
-                      onPressed: () async {
-                        streamSubscription?.cancel();
-                        quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
-                            document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
-                        _init();
-                        cubit.undoChanges();
-                        cubit.setHasFocusOnTitleOrDescription(false);
-                        FocusScope.of(context).unfocus();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Discard',
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
-                    )
-                  ],
-                )
-              ],
-            ));
-          });
+                          const SizedBox(width: Dimension.padding),
+                          TextButton(
+                            style: Theme.of(context)
+                                .textButtonTheme
+                                .style
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                            onPressed: () async {
+                              streamSubscription?.cancel();
+                              quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
+                                  document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
+                              _init();
+                              cubit.undoChanges();
+                              cubit.setHasFocusOnTitleOrDescription(false);
+                              FocusScope.of(context).unfocus();
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Discard'.toUpperCase(),
+                                style:
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                          )
+                        ],
+                      )
+                    ],
+                  ));
+            });
+      }
+
       return false;
     } else {
       Navigator.of(context).pop(true);
@@ -200,7 +219,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
   Widget animatedChild(bool showWidget, Widget child) {
     Widget animatedChild = Container();
-    return AnimatedSwitcher(duration: const Duration(milliseconds: 2000), child: showWidget ? child : animatedChild);
+
+    return AnimatedSwitcher(
+        reverseDuration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
+        child: showWidget ? child : animatedChild);
   }
 
   @override
@@ -213,13 +236,14 @@ class _EditTaskModalState extends State<EditTaskModal> {
               color: Theme.of(context).backgroundColor,
               child: AnimatedSize(
                 curve: Curves.elasticOut,
-                duration: const Duration(milliseconds: 400),
+                duration: const Duration(milliseconds: 750),
+                reverseDuration: const Duration(milliseconds: 750),
                 child: Container(
                   height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height / 2 : null,
                   decoration: const BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(Dimension.radiusM),
+                      topLeft: Radius.circular(Dimension.radiusS),
                       topRight: Radius.circular(Dimension.radiusM),
                     ),
                   ),

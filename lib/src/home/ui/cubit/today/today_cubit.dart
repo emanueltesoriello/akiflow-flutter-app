@@ -20,9 +20,13 @@ class TodayCubit extends Cubit<TodayCubitState> {
   }
 
   void onDateSelected(DateTime selectedDay) {
-    emit(state.copyWith(selectedDate: selectedDay, calendarFormat: CalendarFormatState.week));
-    tasksCubit.getTodayTasksByDate(selectedDay);
-    _panelStateStreamController.add(PanelState.closed);
+    try {
+      emit(state.copyWith(selectedDate: selectedDay, calendarFormat: CalendarFormatState.week));
+      tasksCubit.getTodayTasksByDate(selectedDay);
+      _panelStateStreamController.add(PanelState.closed);
+    } catch (e) {
+      print(e);
+    }
   }
 
   tapAppBarTextDate() {

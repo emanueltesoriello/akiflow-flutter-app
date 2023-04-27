@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -19,7 +17,6 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
-import 'package:mobile/core/preferences.dart';
 
 enum TaskListSorting {
   sortingAscending,

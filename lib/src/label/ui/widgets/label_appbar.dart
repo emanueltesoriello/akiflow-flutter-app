@@ -6,10 +6,11 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
-
+import 'package:mobile/src/tasks/ui/pages/edit_task/labels_list.dart';
 import 'package:models/label/label.dart';
 
 enum LabelActions { edit, order, newSection, showDone, delete }
@@ -27,6 +28,47 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(56);
 
+  _buildTitleAppbarSection(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
+      child: PopupMenuButton(
+        child: Row(
+          children: [
+            Text(label.title ?? t.noTitle,
+                textAlign: TextAlign.start,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
+            const SizedBox(width: Dimension.paddingS),
+            const AnimatedChevron(iconUp: true),
+          ],
+        ),
+        itemBuilder: (BuildContext bc) {
+          return [
+            PopupMenuItem(
+              child: Container(
+                //height: 200,
+                width: 200,
+                child: LabelsList(
+                  showHeaders: false,
+                  showNoLabel: false,
+                  onSelect: (Label selected) {
+                    context.read<LabelsCubit>().selectLabel(selected);
+                    context.read<MainCubit>().changeHomeView(HomeViewType.label);
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ),
+          ];
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Color iconBackground;
@@ -42,6 +84,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBarComp(
       title: label.title ?? t.noTitle,
+      titleWidget: _buildTitleAppbarSection(context),
       leading: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
@@ -69,7 +112,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               Assets.images.icons.common.ellipsisSVG,
               width: Dimension.appBarLeadingIcon,
               height: Dimension.appBarLeadingIcon,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey2(context),
             ),
             onSelected: (LabelActions result) async {
               switch (result) {

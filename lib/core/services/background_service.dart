@@ -19,9 +19,9 @@ const backgroundSyncFromNotification = "com.akiflow.mobile.backgroundSyncFromNot
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await initProcesses();
+    //await initProcesses();
 
-    await backgroundProcesses(task);
+    // await backgroundProcesses(task);
     // listen on this port in order to catch trigger from the background services.
     // Useful for UI updates based on background sync
     final sendPort = IsolateNameServer.lookupPortByName("backgroundSync");
@@ -71,15 +71,26 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
     // *********************************************
     if (fromBackground) {
       await initProcesses();
-    }
 
-    final SyncControllerService syncControllerService = locator<SyncControllerService>();
-    if ((locator<PreferencesRepository>().lastTasksSyncAt != null &&
-            DateTime.now().difference(locator<PreferencesRepository>().lastTasksSyncAt!).inMinutes > 15) ||
-        task == backgroundSyncFromNotification) {
-      await syncControllerService.sync();
-    }
+      final SyncControllerService syncControllerService = locator<SyncControllerService>();
+      DateTime now = DateTime.now().toUtc();
+      List<Entity> entitiesToSync = [];
 
+      for (Entity entity in Entity.values) {
+        print('Background sync check for $entity');
+        DateTime? lastSync = await syncControllerService.getLastSyncFromPreferences[entity]!();
+        if (task == backgroundSyncFromNotification ||
+            (lastSync != null && now.difference(lastSync).inMinutes.abs() > 15)) {
+          print('Start background sync for $entity');
+          entitiesToSync.add(entity);
+        }
+      }
+      if (entitiesToSync.isNotEmpty) {
+        await syncControllerService.sync(entitiesToSync);
+      }
+    } else {
+      await locator<SyncControllerService>().sync();
+    }
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {
       NotificationsService.showNotifications("From background!", "Synched successfully");

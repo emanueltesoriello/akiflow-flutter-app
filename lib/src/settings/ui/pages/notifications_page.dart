@@ -6,10 +6,13 @@ import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/notifications_service.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
-import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
+import 'package:mobile/src/settings/ui/widgets/receive_event_notification_setting_modal.dart';
+import 'package:mobile/src/settings/ui/widgets/receive_task_notification_setting_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -22,7 +25,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
   final service = locator<PreferencesRepository>();
   String dailyOverviewTime = '';
   NextTaskNotificationsModel selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
+  NextEventNotificationsModel selectedNextEventNotificationsModel = NextEventNotificationsModel.d;
   bool nextTaskNotificationSettingEnabled = false;
+  bool nextEventNotificationSettingEnabled = false;
   bool dailyOverviewNotificationTimeEnabled = false;
   bool taskCompletedSoundEnabled = true;
 
@@ -31,12 +36,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
     super.initState();
     selectedNextTaskNotificationsModel = service.nextTaskNotificationSetting;
     nextTaskNotificationSettingEnabled = service.nextTaskNotificationSettingEnabled;
+    selectedNextEventNotificationsModel = service.nextEventNotificationSetting;
+    nextEventNotificationSettingEnabled = service.nextEventNotificationSettingEnabled;
     dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
     dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
     taskCompletedSoundEnabled = service.taskCompletedSoundEnabledMobile;
   }
 
-  mainItem(String switchTitle, String mainButtonListTitle, String selectedButtonListItem, Function onTap,
+  mainItem(String switchTitle, String mainButtonListTitle, String selectedBottomListItem, Function onTap,
       {required Function(bool) onChanged, required bool isEnabled}) {
     return Container(
       margin: const EdgeInsets.all(1),
@@ -98,7 +105,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                 ),
                 subtitle: Text(
-                  selectedButtonListItem,
+                  selectedBottomListItem,
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
@@ -120,11 +127,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
   onReceiveNotificationNextTaskClick() async {
     await showCupertinoModalBottomSheet(
       context: context,
-      builder: (context) => ReceiveNotificationSettingModal(
+      builder: (context) => ReceiveTaskNotificationSettingModal(
         selectedNextTaskNotificationsModel: selectedNextTaskNotificationsModel,
         onSelectedNextTaskNotificationsModel: (NextTaskNotificationsModel newVal) {
           setState(() {
             selectedNextTaskNotificationsModel = newVal;
+          });
+        },
+      ),
+    );
+  }
+
+  onReceiveNotificationNextEventClick() async {
+    await showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => ReceiveEventNotificationSettingModal(
+        selectedNextEventNotificationsModel: selectedNextEventNotificationsModel,
+        onSelectedNextEventNotificationsModel: (NextEventNotificationsModel newVal) {
+          setState(() {
+            selectedNextEventNotificationsModel = newVal;
           });
         },
       ),
@@ -168,6 +189,30 @@ class _NotificationsPageState extends State<NotificationsPage> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
               children: [
+                const SizedBox(height: Dimension.padding),
+                Text(
+                  "EVENTS IN CALENDAR".toUpperCase(),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey3(context),
+                      ),
+                ),
+                const SizedBox(height: Dimension.paddingXS),
+                mainItem(
+                    "Next events",
+                    "Receive notification",
+                    selectedNextEventNotificationsModel.title.replaceAll(RegExp(r'task'), 'event'),
+                    () => onReceiveNotificationNextEventClick(), onChanged: (newVal) async {
+                  service.setNextEventNotificationSettingEnabled(newVal);
+                  setState(() {
+                    nextEventNotificationSettingEnabled = newVal;
+                  });
+                  if (newVal == false) {
+                    await NotificationsService.cancelScheduledNotifications(locator<PreferencesRepository>());
+                    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
+                  } else if (newVal) {
+                    locator<SyncCubit>().sync();
+                  }
+                }, isEnabled: nextEventNotificationSettingEnabled),
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "TASKS IN CALENDAR".toUpperCase(),

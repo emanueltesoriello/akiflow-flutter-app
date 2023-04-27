@@ -11,12 +11,12 @@ import 'package:models/task/task.dart';
 class PlanForAction extends StatelessWidget {
   final Task task;
   final Function() onTap;
+  final Color? backgroundPlanColor;
+  final Color? borderPlanColor;
 
-  const PlanForAction({
-    Key? key,
-    required this.task,
-    required this.onTap,
-  }) : super(key: key);
+  const PlanForAction(
+      {Key? key, required this.task, required this.onTap, this.backgroundPlanColor, this.borderPlanColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +73,10 @@ class PlanForAction extends StatelessWidget {
 
     return TagBox(
       text: text,
-      backgroundColor: color,
+      backgroundColor: backgroundPlanColor ?? color,
+      borderColor: borderPlanColor,
       icon: leadingIconAsset,
+      foregroundColor: ColorsExt.grey2(context),
       isBig: true,
       active: true,
       onPressed: () {

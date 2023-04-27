@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/main_com.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
@@ -114,6 +116,20 @@ class AboutPage extends StatelessWidget {
                           mode: LaunchMode.externalApplication);
                     },
                   ),
+                  const SizedBox(height: Dimension.padding),
+                  if (kDebugMode)
+                    ButtonList(
+                      title: "Restart the app",
+                      leading: Assets.images.icons.common.repeatSVG,
+                      position: ButtonListPosition.single,
+                      showShevron: false,
+                      useSvgColor: true,
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        await mainCom();
+                      },
+                    ),
                 ],
               ),
             ),

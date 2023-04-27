@@ -162,7 +162,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                             Assets.images.icons.common.chevronRightSVG,
                             width: Dimension.chevronIconSize,
                             height: Dimension.chevronIconSize,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey3(context),
                           ),
                         ),
                       ),
@@ -177,7 +177,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                           Assets.images.icons.common.chevronRightSVG,
                           width: Dimension.chevronIconSize,
                           height: Dimension.chevronIconSize,
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey3(context),
                         ),
                       )
                     ],
@@ -285,34 +285,39 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                           ],
                         ),
                         const SizedBox(width: Dimension.padding),
-                        InkWell(
-                          onTap: () {
-                            DateTime date = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                            );
-
-                            DateTime? datetime;
-
-                            if (_selectedDatetime.value != null) {
-                              datetime = DateTime(
+                        SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              DateTime date = DateTime(
                                 selectedDate.year,
                                 selectedDate.month,
                                 selectedDate.day,
-                                _selectedDatetime.value!.hour,
-                                _selectedDatetime.value!.minute,
                               );
-                            }
 
-                            widget.onConfirm(date, datetime);
+                              DateTime? datetime;
 
-                            Navigator.pop(context);
-                          },
-                          child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
-                              width: Dimension.chevronIconSize,
-                              height: Dimension.chevronIconSize,
-                              color: ColorsExt.akiflow(context)),
+                              if (_selectedDatetime.value != null) {
+                                datetime = DateTime(
+                                  selectedDate.year,
+                                  selectedDate.month,
+                                  selectedDate.day,
+                                  _selectedDatetime.value!.hour,
+                                  _selectedDatetime.value!.minute,
+                                );
+                              }
+
+                              widget.onConfirm(date, datetime);
+
+                              Navigator.pop(context);
+                            },
+                            icon: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
+                                width: Dimension.chevronIconSize,
+                                height: Dimension.chevronIconSize,
+                                color: ColorsExt.akiflow(context)),
+                          ),
                         ),
                       ],
                     ),

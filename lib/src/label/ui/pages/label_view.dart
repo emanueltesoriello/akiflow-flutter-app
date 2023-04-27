@@ -225,16 +225,33 @@ class _LabelViewState extends State<LabelView> {
                         );
                       }
 
-                      return TaskList(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        tasks: tasksWithoutSnoozedAndSomeday,
-                        visible: labelState.openedSections[section.id] ?? false,
-                        showLabel: false,
-                        header: labelState.sections.length > 1 ? header : null,
-                        footer: footer,
-                        showPlanInfo: true,
-                        sorting: TaskListSorting.sortingLabelAscending,
+                      return Column(
+                        children: [
+                          TaskList(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            tasks: tasksWithoutSnoozedAndSomeday
+                                .where((task) => !task.done! || task.doneAt == null)
+                                .toList(),
+                            visible: labelState.openedSections[section.id] ?? false,
+                            showLabel: false,
+                            header: labelState.sections.length > 1 ? header : null,
+                            footer: footer,
+                            showPlanInfo: true,
+                            sorting: TaskListSorting.sortingLabelAscending,
+                          ),
+                          TaskList(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            tasks: tasksWithoutSnoozedAndSomeday
+                                .where((task) => task.done! || task.doneAt != null)
+                                .toList(),
+                            visible: labelState.openedSections[section.id] ?? false,
+                            showLabel: false,
+                            showPlanInfo: true,
+                            sorting: TaskListSorting.sortingLabelAscending,
+                          ),
+                        ],
                       );
                     }).toList(),
                     const SizedBox(height: Dimension.paddingXXL)

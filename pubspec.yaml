@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.34.18+290
+version: 2.34.26+308
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -35,7 +35,7 @@ dependencies:
   rrule: ^0.2.8
   sentry_flutter: ^6.13.1
   shared_preferences: ^2.0.17
-  sqflite: ^2.2.4+1
+  sqflite: ^2.2.6
   table_calendar: ^3.0.5
   timeago: ^3.2.2
   tuple: ^2.0.0

@@ -18,7 +18,7 @@ class PlanWithLabel extends StatelessWidget {
             backColor: ColorsExt.cyan25(context),
             topColor: ColorsExt.cyan(context),
             icon: Assets.images.icons.common.calendarSVG,
-            label: t.task.plan.toUpperCase(),
+            label: t.task.plan,
             leftToRight: false,
             click: () {
               click.call();

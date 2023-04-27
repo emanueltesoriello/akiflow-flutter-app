@@ -139,7 +139,7 @@ class TaskInfo extends StatelessWidget {
     } else {
       if (task.datetime != null && !task.isOverdue) {
         return TagBox(
-          backgroundColor: ColorsExt.cyan25(context),
+          backgroundColor: ColorsExt.grey5(context),
           text: task.timeFormatted,
           active: true,
         );

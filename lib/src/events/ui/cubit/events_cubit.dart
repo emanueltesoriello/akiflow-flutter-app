@@ -132,13 +132,19 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _eventsRepository.add([event]);
   }
 
-  Future<void> createEvent(BuildContext context) async {
+  Future<void> createEvent(BuildContext context, int duration, {DateTime? tappedTime}) async {
+    //String description = generateAkiflowSignature(context);
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
     Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
     var id = const Uuid().v4();
+    DateTime startTime;
     DateTime now = DateTime.now();
-    DateTime startTimeRounded =
-        DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()]);
+    if (tappedTime != null) {
+      startTime = tappedTime;
+    } else {
+      startTime = DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
+    }
+
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
     Event event = Event(
       id: id,
@@ -150,10 +156,11 @@ class EventsCubit extends Cubit<EventsCubitState> {
       akiflowAccountId: calendar.akiflowAccountId,
       originAccountId: calendar.originAccountId,
       calendarColor: calendar.color,
+      //description: description,
       content: {"transparency": "opaque", "visibility": "default", "location": null},
       startDatetimeTz: currentTimeZone,
-      startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
-      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(const Duration(minutes: 30))),
+      startTime: TzUtils.toUtcStringIfNotNull(startTime),
+      endTime: TzUtils.toUtcStringIfNotNull(startTime.add(Duration(seconds: duration))),
       createdAt: TzUtils.toUtcStringIfNotNull(now),
     );
 
@@ -166,6 +173,25 @@ class EventsCubit extends Cubit<EventsCubitState> {
         createingEvent: true,
       ),
     ).whenComplete(() => refreshAllEvents(context));
+  }
+
+  String generateAkiflowSignature(BuildContext context) {
+    String akiflowUrl =
+        'https://akiflow.com/?utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
+    bool showAkiflowSignature = true;
+    if (context.read<AuthCubit>().state.user?.settings?["general"] != null &&
+        context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"] != null) {
+      showAkiflowSignature = context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"];
+    }
+
+    if (showAkiflowSignature && context.read<AuthCubit>().state.user?.referralUrl != null) {
+      var referral = context.read<AuthCubit>().state.user?.referralUrl;
+      akiflowUrl = '$referral&utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
+    }
+    if (showAkiflowSignature) {
+      return '<br /><br />Scheduled with <a href="$akiflowUrl" target="_blank">Akiflow</a>';
+    }
+    return '';
   }
   //END create Event section
 
@@ -200,6 +226,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required bool removeMeeting,
     bool createingEvent = false,
     bool dragAndDrop = false,
+    String? selectedMeetingSolution,
+    String? conferenceAccountId,
   }) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
       await _eventModifiersRepository.add([
@@ -207,7 +235,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
       ]);
     }
     if (addMeeting || (event.meetingUrl == null && atendeesToAdd.isNotEmpty)) {
-      await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
+      await _eventModifiersRepository
+          .add([addMeetingEventModifier(event, selectedMeetingSolution, conferenceAccountId)]);
     }
     if (removeMeeting) {
       await _eventModifiersRepository.add([removeMeetingEventModifier(event)]);
@@ -239,6 +268,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required List<String> atendeesToRemove,
     required bool addMeeting,
     required bool removeMeeting,
+    String? selectedMeetingSolution,
+    String? conferenceAccountId,
     bool dragAndDrop = false,
   }) async {
     Event parentEvent = await _eventsRepository.getById(exceptionEvent.recurringId);
@@ -285,6 +316,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting,
+        selectedMeetingSolution: selectedMeetingSolution,
+        conferenceAccountId: conferenceAccountId,
         dragAndDrop: dragAndDrop);
     updateEventAndCreateModifiers(
         event: exceptionEvent.copyWith(updatedAt: Nullable(now)),
@@ -292,6 +325,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting,
+        selectedMeetingSolution: selectedMeetingSolution,
+        conferenceAccountId: conferenceAccountId,
         dragAndDrop: dragAndDrop);
   }
 
@@ -307,6 +342,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
       required bool addMeeting,
       required bool removeMeeting,
       required bool rsvpChanged,
+      String? selectedMeetingSolution,
+      String? conferenceAccountId,
       String? rsvpResponse,
       bool deleteEvent = false,
       bool dragAndDrop = false,
@@ -380,6 +417,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
               atendeesToRemove: atendeesToRemove,
               addMeeting: addMeeting,
               removeMeeting: removeMeeting,
+              selectedMeetingSolution: selectedMeetingSolution,
+              conferenceAccountId: conferenceAccountId,
               createingEvent: true,
               dragAndDrop: dragAndDrop)
           .then((value) => refreshAllEvents(context));
@@ -751,14 +790,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   ///creates EventModifier for adding meeting
-  EventModifier addMeetingEventModifier(Event event) {
-    String meetingSolution = getDefaultConferenceSolution();
+  EventModifier addMeetingEventModifier(Event event, String? selectedMeetingSolution, String? conferenceAccountId) {
+    String meetingSolution = selectedMeetingSolution ?? getDefaultConferenceSolution();
     AuthCubit authCubit = locator<AuthCubit>();
 
     dynamic content;
     if (meetingSolution == 'zoom') {
-      String? conferenceAccountId;
-      if (authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
+      if (((conferenceAccountId != null && conferenceAccountId.isEmpty) || conferenceAccountId == null) &&
+          authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
         conferenceAccountId = authCubit.state.user?.settings?['calendar']['conferenceAccountId'];
       }
       if (conferenceAccountId != null) {

@@ -98,37 +98,37 @@ class _ViewState extends State<_View> {
                           context.read<SyncCubit>().sync();
                         },
                         child: const EmptyHomeViewPlaceholder());
-                  }
+                  } else {
+                    return TaskList(
+                      tasks: tasks,
+                      hideInboxLabel: true,
+                      scrollController: scrollController,
+                      sorting: TaskListSorting.sortingDescending,
+                      showLabel: true,
+                      showPlanInfo: false,
+                      addBottomPadding: true,
+                      header: () {
+                        if (!state.showInboxNotice) {
+                          return null;
+                        }
 
-                  return TaskList(
-                    tasks: tasks,
-                    hideInboxLabel: true,
-                    scrollController: scrollController,
-                    sorting: TaskListSorting.sortingDescending,
-                    showLabel: true,
-                    showPlanInfo: false,
-                    addBottomPadding: true,
-                    header: () {
-                      if (!state.showInboxNotice) {
-                        return null;
-                      }
-
-                      return GestureDetector(
-                        onLongPress: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.all(Dimension.padding),
-                          child: Notice(
-                            title: t.notice.inboxTitle,
-                            subtitle: t.notice.inboxSubtitle,
-                            icon: Icons.info_outline,
-                            onClose: () {
-                              context.read<InboxCubit>().inboxNoticeClosed();
-                            },
+                        return GestureDetector(
+                          onLongPress: () {},
+                          child: Padding(
+                            padding: const EdgeInsets.all(Dimension.padding),
+                            child: Notice(
+                              title: t.notice.inboxTitle,
+                              subtitle: t.notice.inboxSubtitle,
+                              icon: Icons.info_outline,
+                              onClose: () {
+                                context.read<InboxCubit>().inboxNoticeClosed();
+                              },
+                            ),
                           ),
-                        ),
-                      );
-                    }(),
-                  );
+                        );
+                      }(),
+                    );
+                  }
                 },
               ),
               tasksState.loading ? const FirstSyncProgress() : const SizedBox()

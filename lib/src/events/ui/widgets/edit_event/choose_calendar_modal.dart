@@ -11,7 +11,7 @@ import 'package:models/calendar/calendar.dart';
 
 class ChooseCalendarModal extends StatelessWidget {
   final String? initialCalendar;
-  final Function(String?, String?) onChange;
+  final Function(Calendar) onChange;
   const ChooseCalendarModal({super.key, required this.initialCalendar, required this.onChange});
 
   @override
@@ -65,7 +65,7 @@ class ChooseCalendarModal extends StatelessWidget {
                       active: initialCalendar == primaryCalendars[index].originId,
                       text: primaryCalendars[index].originId ?? '',
                       click: () {
-                        onChange(primaryCalendars[index].originId, primaryCalendars[index].id);
+                        onChange(primaryCalendars[index]);
                         Navigator.pop(context);
                       },
                     );

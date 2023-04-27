@@ -7,6 +7,7 @@ import 'package:mobile/src/availability/ui/models/navigation_state.dart';
 import 'package:mobile/src/availability/ui/widgets/availability_view_placeholder.dart';
 import 'package:mobile/src/availability/ui/widgets/imported_from_material/expandable_panel.dart';
 import 'package:mobile/src/availability/ui/widgets/slots_header.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
 import 'package:models/task/availability_config.dart';
 import 'slot_list.dart';
@@ -19,9 +20,8 @@ class AvailabilitiesView extends StatelessWidget {
   _buildRecurrentEvents(AvailabilityCubitState cubitState, List<AvailabilityConfig> recurrent) {
     return ExpandablePanel(
         isExpanded: cubitState.isRecurrentOpen,
-        isHeaderVisible: recurrent.isNotEmpty ? true : false,
         headerBuilder: (context, isExpanded) {
-          return GestureDetector(
+          return InkWell(
               onTap: () {
                 context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.recurrent);
               },
@@ -37,13 +37,17 @@ class AvailabilitiesView extends StatelessWidget {
   _buildManualEvents(AvailabilityCubitState cubitState, List<AvailabilityConfig> manual) {
     return ExpandablePanel(
       isExpanded: cubitState.isManualOpen,
-      isHeaderVisible: manual.isNotEmpty ? true : false,
       headerBuilder: (context, isExpanded) {
-        return SlotsHeader(
-            type: AvailabililtyConfigSlotsType.manual,
-            asset: Assets.images.icons.common.handDrawSVG,
-            text: t.availability.activeManualSlots,
-            isOpen: isExpanded);
+        return InkWell(
+          onTap: () {
+            context.read<AvailabilityCubit>().toggleHeader(AvailabililtyConfigSlotsType.manual);
+          },
+          child: SlotsHeader(
+              type: AvailabililtyConfigSlotsType.manual,
+              asset: Assets.images.icons.common.handDrawSVG,
+              text: t.availability.activeManualSlots,
+              isOpen: isExpanded),
+        );
       },
       body: SlotList(isOpen: cubitState.isManualOpen, configs: manual),
     );
@@ -73,7 +77,10 @@ class AvailabilitiesView extends StatelessWidget {
         return b.updated_at.toString().toLowerCase().compareTo(a.updated_at.toString().toLowerCase());
       });
       return RefreshIndicator(
-        onRefresh: () => context.read<AvailabilityCubit>().getAvailabilities(),
+        onRefresh: () async {
+          context.read<SyncCubit>().sync();
+          context.read<AvailabilityCubit>().getAvailabilities();
+        },
         child: ListView(
           children: [
             ExpandablePanelList(
