@@ -76,6 +76,7 @@ class PlanForAction extends StatelessWidget {
       backgroundColor: backgroundPlanColor ?? color,
       borderColor: borderPlanColor,
       icon: leadingIconAsset,
+      foregroundColor: ColorsExt.grey2(context),
       isBig: true,
       active: true,
       onPressed: () {
