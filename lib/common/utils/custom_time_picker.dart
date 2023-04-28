@@ -426,13 +426,14 @@ class _MinuteControl extends StatelessWidget {
 
 Widget decoratedBox(Widget child, _TimePickerFragmentContext context) {
   return Container(
-      width: 100,
+      width: 95,
+      height: 75,
       margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
           color: ColorsLight.grey7,
           border: Border.all(color: ColorsLight.grey5),
-          borderRadius: BorderRadius.circular(10)),
+          borderRadius: BorderRadius.circular(8)),
       child: Center(child: child));
 }
 
@@ -726,13 +727,7 @@ class _TimePickerHeader extends StatelessWidget {
     // These font sizes aren't listed in the spec explicitly. I worked them out
     // by measuring the text using a screen ruler and comparing them to the
     // screen shots of the time picker in the spec.
-    switch (orientation) {
-      case Orientation.landscape:
-        return headerTextTheme.headline3!.copyWith(fontSize: 50.0);
-      case Orientation.portrait:
-      default:
-        return headerTextTheme.headline2!.copyWith(fontSize: 60.0);
-    }
+    return headerTextTheme.headline2!.copyWith(fontSize: 50.0);
   }
 
   @override
