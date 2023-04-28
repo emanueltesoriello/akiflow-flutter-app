@@ -91,31 +91,34 @@ class _EditTaskRowState extends State<EditTaskRow> {
               FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
             }
           },
-          child: AbsorbPointer(
-            child: QuillEditor(
-              controller: value,
-              readOnly: false,
-              scrollController: ScrollController(),
-              scrollable: true,
-              focusNode: widget.descriptionFocusNode,
-              autoFocus: false,
-              expands: false,
-              padding: EdgeInsets.zero,
-              keyboardAppearance: Brightness.light,
-              placeholder: t.task.description,
-              linkActionPickerDelegate: (BuildContext context, String link, node) async {
-                launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-                return LinkMenuAction.none;
-              },
-              customStyles: DefaultStyles(
-                placeHolder: DefaultTextBlockStyle(
-                  const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 18,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: AbsorbPointer(
+              child: QuillEditor(
+                controller: value,
+                readOnly: false,
+                scrollController: ScrollController(),
+                scrollable: true,
+                focusNode: widget.descriptionFocusNode,
+                autoFocus: false,
+                expands: false,
+                padding: EdgeInsets.zero,
+                keyboardAppearance: Brightness.light,
+                placeholder: t.task.description,
+                linkActionPickerDelegate: (BuildContext context, String link, node) async {
+                  launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                  return LinkMenuAction.none;
+                },
+                customStyles: DefaultStyles(
+                  placeHolder: DefaultTextBlockStyle(
+                    const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 18,
+                    ),
+                    const tuple.Tuple2(0, 0),
+                    const tuple.Tuple2(0, 0),
+                    null,
                   ),
-                  const tuple.Tuple2(0, 0),
-                  const tuple.Tuple2(0, 0),
-                  null,
                 ),
               ),
             ),

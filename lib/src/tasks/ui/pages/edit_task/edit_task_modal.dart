@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
@@ -235,11 +234,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
           child: Material(
               color: Theme.of(context).backgroundColor,
               child: AnimatedSize(
-                curve: Curves.elasticOut,
-                duration: const Duration(milliseconds: 750),
-                reverseDuration: const Duration(milliseconds: 750),
+                curve: Curves.linear,
+                duration: const Duration(milliseconds: 200),
+                reverseDuration: const Duration(milliseconds: 200),
                 child: Container(
-                  height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height / 2 : null,
+                  height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height : null,
                   decoration: const BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.only(
