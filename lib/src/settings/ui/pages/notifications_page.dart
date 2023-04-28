@@ -61,10 +61,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
         shrinkWrap: true,
         children: [
           Container(
-            padding: const EdgeInsets.all(Dimension.paddingS),
+            height: 44,
+            padding:
+                const EdgeInsets.only(top: Dimension.paddingS, left: Dimension.paddingSM, right: Dimension.paddingSM),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     switchTitle,
@@ -95,14 +98,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ignoring: !isEnabled,
               child: ListTile(
                 visualDensity: const VisualDensity(vertical: -4), // to compact
-                contentPadding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                contentPadding: const EdgeInsets.only(
+                    bottom: Dimension.paddingS, left: Dimension.paddingSM, right: Dimension.paddingSM),
                 onTap: () => onTap(),
                 title: Text(
                   mainButtonListTitle,
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                        color: ColorsExt.grey2(context),
-                      ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
                 ),
                 subtitle: Text(
                   selectedBottomListItem,
@@ -110,7 +115,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
-                      ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.normal),
+                      ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w400),
                 ),
                 trailing: const Icon(
                   Icons.arrow_forward_ios,
@@ -192,8 +197,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "EVENTS IN CALENDAR".toUpperCase(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: Theme.of(context).textTheme.caption?.copyWith(
                         color: ColorsExt.grey3(context),
+                        fontWeight: FontWeight.w500,
                       ),
                 ),
                 const SizedBox(height: Dimension.paddingXS),
@@ -216,8 +222,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "TASKS IN CALENDAR".toUpperCase(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: Theme.of(context).textTheme.caption?.copyWith(
                         color: ColorsExt.grey3(context),
+                        fontWeight: FontWeight.w500,
                       ),
                 ),
                 const SizedBox(height: Dimension.paddingXS),
@@ -236,8 +243,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "DAILY OVERVIEW".toUpperCase(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: Theme.of(context).textTheme.caption?.copyWith(
                         color: ColorsExt.grey3(context),
+                        fontWeight: FontWeight.w500,
                       ),
                 ),
                 const SizedBox(height: Dimension.paddingXS),
@@ -258,13 +266,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "sounds".toUpperCase(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: Theme.of(context).textTheme.caption?.copyWith(
                         color: ColorsExt.grey3(context),
+                        fontWeight: FontWeight.w500,
                       ),
                 ),
                 const SizedBox(height: Dimension.paddingXS),
                 Container(
-                  height: 58,
+                  height: 54,
                   margin: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
