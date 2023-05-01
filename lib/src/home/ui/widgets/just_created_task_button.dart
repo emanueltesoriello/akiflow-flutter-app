@@ -19,7 +19,7 @@ class JustCreatedTaskView extends StatefulWidget {
 class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
   int snackBarShown = 0;
 
-  _buildSnackBar(BuildContext context, TasksCubitState state) {
+  _buildSnackBar(TasksCubitState state) {
     return SnackBar(
       padding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
@@ -86,7 +86,7 @@ class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
               if (state.justCreatedTask != null && snackBarShown == 0)
                 {
                   snackBarShown += 1,
-                  ScaffoldMessenger.of(context).showSnackBar(_buildSnackBar(context, state)),
+                  ScaffoldMessenger.of(context).showSnackBar(_buildSnackBar(state)),
                 }
               else if (state.justCreatedTask == null)
                 {snackBarShown = 0}
