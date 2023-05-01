@@ -285,99 +285,101 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               TaskExt.editTask(context, widget.task);
             },
             child: Center(
-              child: Stack(
-                children: [
-                  BackgroundDailyGoal(
-                    task: widget.task,
-                    dailyGoalAnimationController: _dailyGoalAnimationController,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: Dimension.padding, top: Dimension.padding),
-                    child: Material(
-                      color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (widget.selectMode) {
-                                widget.selectTask();
-                              } else {
-                                widget.task.playTaskDoneSound();
-                                _checkboxController!.completedClick();
-                              }
-                            },
-                            child: SizedBox(
-                              width: 50,
-                              child: Row(
-                                children: [
-                                  DotPrefix(task: widget.task),
-                                  Builder(builder: ((context) {
-                                    if (widget.selectMode) {
-                                      return SizedBox(
-                                          width: Dimension.appBarLeadingIcon,
-                                          height: Dimension.appBarLeadingIcon,
-                                          child: Center(child: SelectableRadioButton(widget.task)));
-                                    } else {
-                                      return CheckboxAnimated(
-                                        onControllerReady: (controller) {
-                                          _checkboxController = controller;
-                                        },
-                                        task: widget.task,
-                                        key: ObjectKey(widget.task),
-                                        onCompleted: () async {
-                                          if (widget.task.isDailyGoal) {
-                                            _dailyGoalAnimationController.value = 1;
-                                            await Future.delayed(
-                                                const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
-                                            _dailyGoalAnimationController.reverse(from: 1);
-                                            await Future.delayed(
-                                                const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
-                                          }
+              child: Container(
+                color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+                child: Stack(
+                  children: [
+                    BackgroundDailyGoal(
+                      task: widget.task,
+                      dailyGoalAnimationController: _dailyGoalAnimationController,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: Dimension.padding, top: Dimension.padding),
+                      child: Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (widget.selectMode) {
+                                  widget.selectTask();
+                                } else {
+                                  widget.task.playTaskDoneSound();
+                                  _checkboxController!.completedClick();
+                                }
+                              },
+                              child: Container(
+                                width: 50,
+                                child: Row(
+                                  children: [
+                                    DotPrefix(task: widget.task),
+                                    Builder(builder: ((context) {
+                                      if (widget.selectMode) {
+                                        return SizedBox(
+                                            width: Dimension.appBarLeadingIcon,
+                                            height: Dimension.appBarLeadingIcon,
+                                            child: Center(child: SelectableRadioButton(widget.task)));
+                                      } else {
+                                        return CheckboxAnimated(
+                                          onControllerReady: (controller) {
+                                            _checkboxController = controller;
+                                          },
+                                          task: widget.task,
+                                          key: ObjectKey(widget.task),
+                                          onCompleted: () async {
+                                            if (widget.task.isDailyGoal) {
+                                              _dailyGoalAnimationController.value = 1;
+                                              await Future.delayed(
+                                                  const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
+                                              _dailyGoalAnimationController.reverse(from: 1);
+                                              await Future.delayed(
+                                                  const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
+                                            }
 
-                                          _fadeOutAnimationController.forward(from: 0);
-                                          await Future.delayed(
-                                              const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
-                                          widget.completedClick();
-                                        },
-                                      );
-                                    }
-                                  })),
-                                ],
+                                            _fadeOutAnimationController.forward(from: 0);
+                                            await Future.delayed(
+                                                const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
+                                            widget.completedClick();
+                                          },
+                                        );
+                                      }
+                                    })),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                              child: IgnorePointer(
-                                  ignoring: _fadeOutAnimation.value == 0 ? false : true,
-                                  child: AnimatedBuilder(
-                                      animation: _fadeOutAnimation,
-                                      builder: (context, child) {
-                                        return Opacity(
-                                          opacity: _fadeOutAnimation.value == 0 ? 1.0 : 0.0,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              TitleWidget(widget.task),
-                                              const SizedBox(height: Dimension.paddingXS),
-                                              Subtitle(widget.task),
-                                              TaskInfo(
-                                                widget.task,
-                                                hideInboxLabel: widget.hideInboxLabel,
-                                                showLabel: widget.showLabel,
-                                                selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                                                showPlanInfo: widget.showPlanInfo,
-                                              ),
-                                              const SizedBox(height: 12),
-                                            ],
-                                          ),
-                                        );
-                                      }))),
-                        ],
+                            Expanded(
+                                child: IgnorePointer(
+                                    ignoring: _fadeOutAnimation.value == 0 ? false : true,
+                                    child: AnimatedBuilder(
+                                        animation: _fadeOutAnimation,
+                                        builder: (context, child) {
+                                          return Opacity(
+                                            opacity: _fadeOutAnimation.value == 0 ? 1.0 : 0.0,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                TitleWidget(widget.task),
+                                                const SizedBox(height: Dimension.paddingXS),
+                                                Subtitle(widget.task),
+                                                TaskInfo(
+                                                  widget.task,
+                                                  hideInboxLabel: widget.hideInboxLabel,
+                                                  showLabel: widget.showLabel,
+                                                  selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                                                  showPlanInfo: widget.showPlanInfo,
+                                                ),
+                                                const SizedBox(height: 12),
+                                              ],
+                                            ),
+                                          );
+                                        }))),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
