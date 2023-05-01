@@ -36,7 +36,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
               color: ColorsExt.grey4(context),
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(Dimension.radiusS),
           ),
           child: Row(
             children: [
@@ -46,7 +46,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                 child: Text(text(task.type),
                     style: Theme.of(context)
                         .textTheme
-                        .bodyMedium
+                        .bodyText1
                         ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
               ),
               TextButton(

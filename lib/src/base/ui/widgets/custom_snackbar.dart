@@ -11,42 +11,46 @@ class CustomSnackbar extends SnackBar {
 
   static SnackBar get({required BuildContext context, required CustomSnackbarType type, required String message}) {
     return SnackBar(
+      padding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
-      content: SizedBox(
-        height: 51,
-        child: Material(
-          color: Colors.transparent,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 51,
-              margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: Dimension.padding),
-              decoration: BoxDecoration(
-                color: color(context, type),
-                border: Border.all(
-                  color: ColorsExt.grey4(context),
-                  width: 1,
+      content: Padding(
+        padding: const EdgeInsets.only(bottom: Dimension.padding),
+        child: SizedBox(
+          height: Dimension.snackBarHeight,
+          child: Material(
+            color: Colors.transparent,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: Dimension.snackBarHeight,
+                margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                width: double.infinity,
+                padding: const EdgeInsets.only(left: Dimension.padding),
+                decoration: BoxDecoration(
+                  color: color(context, type),
+                  border: Border.all(
+                    color: ColorsExt.grey4(context),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(Dimension.radiusS),
                 ),
-                borderRadius: BorderRadius.circular(Dimension.radiusS),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: Dimension.smallconSize,
-                    width: Dimension.smallconSize,
-                    child: SvgPicture.asset(icon(type), color: ColorsExt.grey2(context)),
-                  ),
-                  const SizedBox(width: Dimension.paddingS),
-                  Expanded(
-                    child: Text(message,
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                              color: ColorsExt.grey2(context),
-                              fontWeight: FontWeight.w500,
-                            )),
-                  ),
-                ],
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: Dimension.smallconSize,
+                      width: Dimension.smallconSize,
+                      child: SvgPicture.asset(icon(type), color: ColorsExt.grey2(context)),
+                    ),
+                    const SizedBox(width: Dimension.paddingS),
+                    Expanded(
+                      child: Text(message,
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                color: ColorsExt.grey2(context),
+                                fontWeight: FontWeight.w500,
+                              )),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
