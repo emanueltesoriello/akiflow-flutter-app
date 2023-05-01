@@ -25,6 +25,7 @@ class Dimension {
   static const buttonHeight = 60;
   static const minButtonHeight = 36.0;
   static const minButtonWidth = 115.0;
+  static const snackBarHeight = 50.0;
 
   /// Sizes
   static const maxWidth = 600.0;

@@ -56,8 +56,7 @@ class FloatingButton extends StatelessWidget {
           );
         } else {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: (state.queue.isNotEmpty || state.justCreatedTask != null) ? bottomBarHeight : 0),
+            padding: EdgeInsets.only(bottom: (state.queue.isNotEmpty) ? bottomBarHeight : 0),
             child: SizedBox(
               width: 52,
               height: 52,
