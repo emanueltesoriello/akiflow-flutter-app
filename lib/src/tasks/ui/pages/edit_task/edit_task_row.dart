@@ -93,32 +93,30 @@ class _EditTaskRowState extends State<EditTaskRow> {
           },
           child: Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: AbsorbPointer(
-              child: QuillEditor(
-                controller: value,
-                readOnly: false,
-                scrollController: ScrollController(),
-                scrollable: true,
-                focusNode: widget.descriptionFocusNode,
-                autoFocus: false,
-                expands: false,
-                padding: EdgeInsets.zero,
-                keyboardAppearance: Brightness.light,
-                placeholder: t.task.description,
-                linkActionPickerDelegate: (BuildContext context, String link, node) async {
-                  launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-                  return LinkMenuAction.none;
-                },
-                customStyles: DefaultStyles(
-                  placeHolder: DefaultTextBlockStyle(
-                    const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 18,
-                    ),
-                    const VerticalSpacing(0, 0),
-                    const VerticalSpacing(0, 0),
-                    null,
+            child: QuillEditor(
+              controller: value,
+              readOnly: false,
+              scrollController: ScrollController(),
+              scrollable: true,
+              focusNode: widget.descriptionFocusNode,
+              autoFocus: false,
+              expands: false,
+              padding: EdgeInsets.zero,
+              keyboardAppearance: Brightness.light,
+              placeholder: t.task.description,
+              linkActionPickerDelegate: (BuildContext context, String link, node) async {
+                launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                return LinkMenuAction.none;
+              },
+              customStyles: DefaultStyles(
+                placeHolder: DefaultTextBlockStyle(
+                  const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18,
                   ),
+                  const VerticalSpacing(0, 0),
+                  const VerticalSpacing(0, 0),
+                  null,
                 ),
               ),
             ),
