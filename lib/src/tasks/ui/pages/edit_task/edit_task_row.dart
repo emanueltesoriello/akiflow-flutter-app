@@ -93,32 +93,30 @@ class _EditTaskRowState extends State<EditTaskRow> {
           },
           child: Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: AbsorbPointer(
-              child: QuillEditor(
-                controller: value,
-                readOnly: false,
-                scrollController: ScrollController(),
-                scrollable: true,
-                focusNode: widget.descriptionFocusNode,
-                autoFocus: false,
-                expands: false,
-                padding: EdgeInsets.zero,
-                keyboardAppearance: Brightness.light,
-                placeholder: t.task.description,
-                linkActionPickerDelegate: (BuildContext context, String link, node) async {
-                  launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-                  return LinkMenuAction.none;
-                },
-                customStyles: DefaultStyles(
-                  placeHolder: DefaultTextBlockStyle(
-                    const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 18,
-                    ),
-                    const tuple.Tuple2(0, 0),
-                    const tuple.Tuple2(0, 0),
-                    null,
+            child: QuillEditor(
+              controller: value,
+              readOnly: false,
+              scrollController: ScrollController(),
+              scrollable: true,
+              focusNode: widget.descriptionFocusNode,
+              autoFocus: false,
+              expands: false,
+              padding: EdgeInsets.zero,
+              keyboardAppearance: Brightness.light,
+              placeholder: t.task.description,
+              linkActionPickerDelegate: (BuildContext context, String link, node) async {
+                launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                return LinkMenuAction.none;
+              },
+              customStyles: DefaultStyles(
+                placeHolder: DefaultTextBlockStyle(
+                  const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18,
                   ),
+                  const tuple.Tuple2(0, 0),
+                  const tuple.Tuple2(0, 0),
+                  null,
                 ),
               ),
             ),
@@ -162,31 +160,29 @@ class _EditTaskRowState extends State<EditTaskRow> {
           FocusScope.of(context).requestFocus(widget.titleFocusNode);
         }
       },
-      child: AbsorbPointer(
-        child: TextField(
-          controller: widget.titleController,
-          maxLines: null,
-          onTap: null,
-          focusNode: widget.titleFocusNode,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.zero,
-            isDense: true,
-            hintText: t.addTask.titleHint,
-            border: InputBorder.none,
-            hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey3(context),
-                ),
-          ),
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+      child: TextField(
+        controller: widget.titleController,
+        maxLines: null,
+        onTap: null,
+        focusNode: widget.titleFocusNode,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          isDense: true,
+          hintText: t.addTask.titleHint,
+          border: InputBorder.none,
+          hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey3(context),
               ),
-          onChanged: (value) {
-            context.read<EditTaskCubit>().onTitleChanged(value);
-          },
         ),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey2(context),
+            ),
+        onChanged: (value) {
+          context.read<EditTaskCubit>().onTitleChanged(value);
+        },
       ),
     );
   }
