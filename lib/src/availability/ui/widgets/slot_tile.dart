@@ -105,6 +105,7 @@ class SlotTile extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           backgroundColor: Colors.transparent,
+          elevation: 0,
           content: Container(
             padding: const EdgeInsets.all(Dimension.padding),
             decoration: BoxDecoration(

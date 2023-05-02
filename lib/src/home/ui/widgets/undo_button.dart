@@ -21,6 +21,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
 
   _buildSnackBar(UndoTask task) {
     return SnackBar(
+      elevation: 0,
       padding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
       content: Padding(

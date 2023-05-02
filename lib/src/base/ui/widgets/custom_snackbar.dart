@@ -12,6 +12,7 @@ class CustomSnackbar extends SnackBar {
   static SnackBar get({required BuildContext context, required CustomSnackbarType type, required String message}) {
     return SnackBar(
       padding: EdgeInsets.zero,
+      elevation: 0,
       backgroundColor: Colors.transparent,
       content: Padding(
         padding: const EdgeInsets.only(bottom: Dimension.padding),

@@ -21,6 +21,7 @@ class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
 
   _buildSnackBar(TasksCubitState state) {
     return SnackBar(
+      elevation: 0,
       padding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
       content: Padding(
