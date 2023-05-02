@@ -101,7 +101,7 @@ class _TaskListState extends State<TaskList> {
             HapticFeedback.selectionClick();
             context.read<TasksCubit>().select(tasks[index]);
           },
-          proxyDecorator: (Widget child, int index, Animation<double> animation) {
+          /*proxyDecorator: (Widget child, int index, Animation<double> animation) {
             return AnimatedBuilder(
               animation: animation,
               builder: (BuildContext context, Widget? child) {
@@ -111,7 +111,7 @@ class _TaskListState extends State<TaskList> {
                   data: Theme.of(context).copyWith(useMaterial3: true),
                   child: Material(
                     elevation: elevation,
-                    color: ColorsExt.grey6(context),
+                    color: ColorsExt.red(context),
                     borderRadius: BorderRadius.zero,
                     child: TaskRowDragMode(tasks[index]),
                   ),
@@ -119,7 +119,7 @@ class _TaskListState extends State<TaskList> {
               },
               child: child,
             );
-          },
+          },*/
           header: Visibility(
             visible: widget.header != null,
             replacement: const SizedBox(key: ObjectKey(0), height: 0),

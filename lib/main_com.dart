@@ -67,9 +67,9 @@ Future<void> initFunctions() async {
   }
 
   try {
-    if (Platform.isAndroid) {
-      await FlutterDisplayMode.setHighRefreshRate();
-    }
+    // if (Platform.isAndroid) {
+    await FlutterDisplayMode.setHighRefreshRate();
+    // }
   } catch (e) {
     print(e);
   }

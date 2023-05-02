@@ -95,10 +95,10 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         groupTag: "task",
         startActionPane: ActionPane(
           motion: const DrawerMotion(),
-          extentRatio: 0.2,
+          extentRatio: 0.25,
           dismissible: DismissiblePane(
             closeOnCancel: true,
-            dismissThreshold: 0.25,
+            dismissThreshold: 0.30,
             confirmDismiss: () async {
               widget.task.playTaskDoneSound();
               widget.completedClick();
@@ -106,7 +106,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             },
             onDismissed: () {},
             motion: SlidableMotion(
-              dismissThreshold: 0.25,
+              dismissThreshold: 0.30,
               motionChild: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -130,7 +130,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 children: [
                   Container(
                     color: ColorsExt.green20(context),
-                    width: MediaQuery.of(context).size.width * 0.18,
+                    width: MediaQuery.of(context).size.width * 0.20,
                     child: DoneWithLabel(
                         click: () {
                           Slidable.of(context)?.close();
