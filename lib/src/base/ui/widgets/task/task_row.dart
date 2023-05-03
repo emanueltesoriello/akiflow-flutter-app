@@ -39,6 +39,7 @@ class TaskRow extends StatefulWidget {
   final bool enableLongPressToSelect;
   final bool isOnboarding;
   final bool openedFromCalendarGroupedTasks;
+  final Color? color;
 
   const TaskRow({
     Key? key,
@@ -52,6 +53,7 @@ class TaskRow extends StatefulWidget {
     this.selectMode = false,
     required this.showLabel,
     required this.showPlanInfo,
+    this.color,
     this.enableLongPressToSelect = false,
     this.isOnboarding = false,
     this.openedFromCalendarGroupedTasks = false,
@@ -89,16 +91,16 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: widget.isOnboarding ? BorderRadius.circular(8) : BorderRadius.zero,
+      borderRadius: widget.isOnboarding ? BorderRadius.circular(Dimension.radius) : BorderRadius.zero,
       child: Slidable(
         key: ValueKey(widget.task.id),
         groupTag: "task",
         startActionPane: ActionPane(
           motion: const DrawerMotion(),
-          extentRatio: 0.2,
+          extentRatio: 0.25,
           dismissible: DismissiblePane(
             closeOnCancel: true,
-            dismissThreshold: 0.25,
+            dismissThreshold: 0.30,
             confirmDismiss: () async {
               widget.task.playTaskDoneSound();
               widget.completedClick();
@@ -106,7 +108,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             },
             onDismissed: () {},
             motion: SlidableMotion(
-              dismissThreshold: 0.25,
+              dismissThreshold: 0.30,
               motionChild: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -130,7 +132,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 children: [
                   Container(
                     color: ColorsExt.green20(context),
-                    width: MediaQuery.of(context).size.width * 0.18,
+                    width: MediaQuery.of(context).size.width * 0.20,
                     child: DoneWithLabel(
                         click: () {
                           Slidable.of(context)?.close();
@@ -285,16 +287,17 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               TaskExt.editTask(context, widget.task);
             },
             child: Center(
-              child: Stack(
-                children: [
-                  BackgroundDailyGoal(
-                    task: widget.task,
-                    dailyGoalAnimationController: _dailyGoalAnimationController,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: Dimension.padding, top: Dimension.padding),
-                    child: Material(
-                      color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+              child: Container(
+                color:
+                    widget.color ?? ((widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent),
+                child: Stack(
+                  children: [
+                    BackgroundDailyGoal(
+                      task: widget.task,
+                      dailyGoalAnimationController: _dailyGoalAnimationController,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: Dimension.padding, top: Dimension.padding),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -307,7 +310,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                 _checkboxController!.completedClick();
                               }
                             },
-                            child: SizedBox(
+                            child: Container(
                               width: 50,
                               child: Row(
                                 children: [
@@ -376,8 +379,8 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

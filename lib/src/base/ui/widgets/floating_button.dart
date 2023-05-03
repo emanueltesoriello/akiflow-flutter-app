@@ -55,23 +55,19 @@ class FloatingButton extends StatelessWidget {
             ],
           );
         } else {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: (state.queue.isNotEmpty || state.justCreatedTask != null) ? bottomBarHeight : 0),
-            child: SizedBox(
-              width: 52,
-              height: 52,
-              child: FloatingActionButton(
-                onPressed: () async {
-                  _onTapTask(context: context, homeViewType: homeViewType);
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimension.radiusM),
-                ),
-                child: SvgPicture.asset(
-                  Assets.images.icons.common.plusSVG,
-                  color: ColorsExt.background(context),
-                ),
+          return SizedBox(
+            width: 52,
+            height: 52,
+            child: FloatingActionButton(
+              onPressed: () async {
+                _onTapTask(context: context, homeViewType: homeViewType);
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Dimension.radiusM),
+              ),
+              child: SvgPicture.asset(
+                Assets.images.icons.common.plusSVG,
+                color: ColorsExt.background(context),
               ),
             ),
           );

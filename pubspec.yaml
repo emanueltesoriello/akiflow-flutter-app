@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.34.26+309
+version: 2.34.26+317
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -15,10 +15,10 @@ dependencies:
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_quill: ^5.0.3
+  flutter_quill: ^7.1.13
   flutter_rounded_date_picker: ^3.0.2
   flutter_segment: ^3.9.0
-  flutter_slidable: ^1.2.1 
+  flutter_slidable: ^3.0.0
   flutter_svg: ^1.1.1+1
   flutter_switch: ^0.3.2
   get_it: ^7.2.0
@@ -28,7 +28,11 @@ dependencies:
     path: ./packages/i18n
   #intercom_flutter: ^7.6.2
   intl: ^0.17.0 
-  modal_bottom_sheet: ^2.1.0
+  modal_bottom_sheet:
+     git:
+       url: https://github.com/followthemoney1/modal_bottom_sheet.git
+       ref: main
+       path: modal_bottom_sheet
   models:
     path: ./packages/models 
   package_info_plus: ^1.4.2
@@ -53,7 +57,7 @@ dependencies:
   workmanager: ^0.5.1 
   firebase_messaging: ^14.2.2
   firebase_core: ^2.5.0
-  flutter_displaymode: ^0.5.0
+  flutter_displaymode: ^0.6.0
   platform_device_id: ^1.0.1 
   extended_text_field: ^10.2.0
   flutter_native_timezone: ^2.0.0

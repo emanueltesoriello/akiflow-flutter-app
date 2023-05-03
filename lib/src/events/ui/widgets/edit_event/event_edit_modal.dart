@@ -1049,8 +1049,8 @@ class _EventEditModalState extends State<EventEditModal> {
           customStyles: quill.DefaultStyles(
             placeHolder: quill.DefaultTextBlockStyle(
               TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-              const tuple.Tuple2(0, 0),
-              const tuple.Tuple2(0, 0),
+              const quill.VerticalSpacing(0, 0),
+              const quill.VerticalSpacing(0, 0),
               null,
             ),
           ),

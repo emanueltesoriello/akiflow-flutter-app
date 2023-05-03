@@ -7,69 +7,80 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
-class UndoBottomView extends StatelessWidget {
+class UndoBottomView extends StatefulWidget {
   const UndoBottomView({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, state) {
-        if (state.queue.isEmpty) {
-          return const SizedBox();
-        }
-        UndoTask? task = state.queue.first;
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Material(
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 51,
-                  margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(left: Dimension.padding),
-                  decoration: BoxDecoration(
-                    color: color(context, task.type),
-                    border: Border.all(
-                      color: ColorsExt.grey4(context),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Row(
-                    children: [
-                      icon(context, task.type),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(text(task.type),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            context.read<TasksCubit>().undo();
-                          },
-                          child: Text(t.task.undo.toUpperCase(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500))),
-                    ],
-                  ),
-                ),
-              ),
+  State<UndoBottomView> createState() => _UndoBottomViewState();
+}
+
+class _UndoBottomViewState extends State<UndoBottomView> {
+  int snackBarShown = 0;
+
+  _buildSnackBar(UndoTask task) {
+    return SnackBar(
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      content: Padding(
+        padding: const EdgeInsets.only(bottom: Dimension.padding),
+        child: Container(
+          height: Dimension.snackBarHeight,
+          margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+          width: double.infinity,
+          padding: const EdgeInsets.only(left: Dimension.padding),
+          decoration: BoxDecoration(
+            color: color(context, task.type),
+            border: Border.all(
+              color: ColorsExt.grey4(context),
+              width: 1,
             ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + Dimension.bottomBarHeight + Dimension.padding),
-          ],
-        );
-      },
+            borderRadius: BorderRadius.circular(Dimension.radiusS),
+          ),
+          child: Row(
+            children: [
+              icon(context, task.type),
+              const SizedBox(width: Dimension.paddingS),
+              Expanded(
+                child: Text(text(task.type),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
+              ),
+              TextButton(
+                  onPressed: () {
+                    context.read<TasksCubit>().undo();
+                  },
+                  child: Text(t.task.undo.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500))),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<TasksCubit, TasksCubitState>(
+        listener: (context, state) {
+          if (state.queue.isNotEmpty && snackBarShown == 0) {
+            snackBarShown += 1;
+
+            UndoTask? task = state.queue.first;
+
+            ScaffoldMessenger.of(context).showSnackBar(_buildSnackBar(task));
+          } else if (state.queue.isEmpty) {
+            snackBarShown = 0;
+          }
+        },
+        child: const SizedBox());
   }
 
   Color color(BuildContext context, UndoType type) {
