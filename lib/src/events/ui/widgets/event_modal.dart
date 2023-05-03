@@ -356,7 +356,9 @@ class _EventModalState extends State<EventModal> {
             selectedEvent.launchMapsUrl();
           },
           onLongPress: () {
-            Clipboard.setData(ClipboardData(text: location));
+            Clipboard.setData(ClipboardData(text: location)).then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                CustomSnackbar.get(
+                    context: context, type: CustomSnackbarType.success, message: t.snackbar.copiedToYourClipboard)));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
