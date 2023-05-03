@@ -39,6 +39,7 @@ class TaskRow extends StatefulWidget {
   final bool enableLongPressToSelect;
   final bool isOnboarding;
   final bool openedFromCalendarGroupedTasks;
+  final Color? color;
 
   const TaskRow({
     Key? key,
@@ -52,6 +53,7 @@ class TaskRow extends StatefulWidget {
     this.selectMode = false,
     required this.showLabel,
     required this.showPlanInfo,
+    this.color,
     this.enableLongPressToSelect = false,
     this.isOnboarding = false,
     this.openedFromCalendarGroupedTasks = false,
@@ -89,7 +91,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: widget.isOnboarding ? BorderRadius.circular(8) : BorderRadius.zero,
+      borderRadius: widget.isOnboarding ? BorderRadius.circular(Dimension.radius) : BorderRadius.zero,
       child: Slidable(
         key: ValueKey(widget.task.id),
         groupTag: "task",
@@ -286,7 +288,8 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             },
             child: Center(
               child: Container(
-                color: (widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent,
+                color:
+                    widget.color ?? ((widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent),
                 child: Stack(
                   children: [
                     BackgroundDailyGoal(

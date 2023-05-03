@@ -110,13 +110,18 @@ class _TaskListState extends State<TaskList> {
               builder: (BuildContext context, Widget? child) {
                 final double animValue = Curves.easeInOut.transform(animation.value);
                 final double elevation = lerpDouble(0, 1, animValue)!;
+                final double color = lerpDouble(0, 1, animValue)!;
+
                 return Theme(
                   data: Theme.of(context).copyWith(useMaterial3: true),
                   child: Material(
                     elevation: elevation,
-                    color: ColorsExt.green20(context),
                     borderRadius: BorderRadius.zero,
-                    child: TaskRowDragMode(tasks[index]),
+                    child: AnimatedContainer(
+                      duration: const Duration(microseconds: 500),
+                      color: color == 0 ? Colors.transparent : ColorsExt.grey6(context),
+                      child: TaskRowDragMode(tasks[index]),
+                    ),
                   ),
                 );
               },
