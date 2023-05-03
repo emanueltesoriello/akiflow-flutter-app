@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:html/parser.dart';
@@ -350,26 +351,34 @@ class _EventModalState extends State<EventModal> {
     return Column(
       children: [
         const Separator(),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
-          child: Row(
-            children: [
-              SizedBox(
-                width: Dimension.defaultIconSize,
-                height: Dimension.defaultIconSize,
-                child: SvgPicture.asset(Assets.images.icons.common.mapSVG, color: ColorsExt.grey2(context)),
-              ),
-              const SizedBox(width: Dimension.padding),
-              Expanded(
-                child: SelectableText('${selectedEvent.content?["location"]}',
-                    minLines: 1,
-                    maxLines: 4,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
-              ),
-            ],
+        InkWell(
+          onTap: () {
+            selectedEvent.launchMapsUrl();
+          },
+          onLongPress: () {
+            Clipboard.setData(ClipboardData(text: location));
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: Dimension.defaultIconSize,
+                  height: Dimension.defaultIconSize,
+                  child: SvgPicture.asset(Assets.images.icons.common.mapSVG, color: ColorsExt.grey2(context)),
+                ),
+                const SizedBox(width: Dimension.padding),
+                Expanded(
+                  child: Text('${selectedEvent.content?["location"]}',
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                ),
+              ],
+            ),
           ),
         ),
       ],

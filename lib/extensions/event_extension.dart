@@ -177,6 +177,17 @@ extension EventExt on Event {
         .join('&');
   }
 
+  Future<void> launchMapsUrl() async {
+    String location = Uri.encodeFull(content?["location"] ?? '');
+
+    Uri uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$location');
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Map<String, String> eventColor = {
     '#a4bdfc': '#7986cb',
     '#7ae7bf': '#33b679',
