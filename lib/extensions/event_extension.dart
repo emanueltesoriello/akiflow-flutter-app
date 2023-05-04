@@ -310,6 +310,18 @@ extension EventExt on Event {
     return computedRule;
   }
 
+  ///returns rrule on first position and exdate on second
+  List<String> computeRuleForThisAndFuture() {
+    List<String> parts = recurrence!;
+    parts.removeWhere((part) => part.startsWith('WKST'));
+
+    List<String> goodRule = parts.where((part) => !part.startsWith('EXDATE') && !part.startsWith('TZID')).toList();
+
+    parts.removeWhere((part) => goodRule.contains(part));
+
+    return [goodRule.join(";"), parts.join(";")];
+  }
+
   ///returns all the valid events to be scheduled for the next 20 days
   static Future<Map<String, Event>> eventNotifications(
       EventsRepository eventsRepository, List<Calendar> calendars) async {
