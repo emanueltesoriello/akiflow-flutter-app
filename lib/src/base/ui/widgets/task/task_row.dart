@@ -100,7 +100,8 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         groupTag: "task",
         startActionPane: ActionPane(
           motion: const BehindMotion(),
-          extentRatio: 0.15,
+          extentRatio: 0.18,
+          openThreshold: 0.18,
           dismissible: DismissiblePane(
             resizeDuration: const Duration(milliseconds: 300),
             closeOnCancel: false,
@@ -136,6 +137,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                     color: ColorsExt.grey6(context),
                     width: MediaQuery.of(context).size.width * 0.3,
                     child: DoneWithLabel(
+                        iconColor: ColorsExt.grey3(context),
                         key: Key(widget.task.id!),
                         click: () async {
                           await Slidable.of(context)?.close();
@@ -155,12 +157,12 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             Builder(builder: (context) {
               return CustomSlidableAction(
                 backgroundColor: ColorsExt.grey6(context),
-                foregroundColor: ColorsExt.green(context),
+                foregroundColor: ColorsExt.grey3(context),
                 onPressed: (context) {},
                 padding: EdgeInsets.zero,
                 child: SlidableButtonAction(
                   backColor: ColorsExt.grey6(context),
-                  topColor: ColorsExt.green(context),
+                  topColor: ColorsExt.grey3(context),
                   icon: Assets.images.icons.common.checkDoneSVG,
                   leftToRight: true,
                   click: () async {
