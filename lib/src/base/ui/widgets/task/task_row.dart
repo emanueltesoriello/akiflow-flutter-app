@@ -8,7 +8,6 @@ import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/slidable_button_action.dart';
 import 'package:mobile/src/base/ui/widgets/task/checkbox_animated.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/done_with_label.dart';
-import 'package:mobile/src/base/ui/widgets/task/components/plan_with_label.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/subtitle_widget.dart';
 import 'package:mobile/src/base/ui/widgets/task/components/title_widget.dart';
 import 'package:mobile/src/base/ui/widgets/task/slidable_motion.dart';
@@ -66,20 +65,24 @@ class TaskRow extends StatefulWidget {
 class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
   CheckboxAnimatedController? _checkboxController;
 
-  late AnimationController _dailyGoalAnimationController;
+  late AnimationController _dailyGoalAnimationController = AnimationController(vsync: this);
 
-  late AnimationController _fadeOutAnimationController;
+  late AnimationController _fadeOutAnimationController = AnimationController(vsync: this);
   late Animation<double> _fadeOutAnimation;
 
   @override
   void initState() {
     super.initState();
     _dailyGoalAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 100), vsync: this, lowerBound: 0, upperBound: 1, value: 0);
+        duration: const Duration(milliseconds: 300), vsync: this, lowerBound: 0, upperBound: 1, value: 0);
 
     _fadeOutAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 100), vsync: this, lowerBound: 0, upperBound: 1, value: 0);
+        duration: const Duration(milliseconds: 300), vsync: this, lowerBound: 0, upperBound: 1, value: 0);
     _fadeOutAnimation = Tween<double>(begin: 0, end: 1).animate(_fadeOutAnimationController);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _fadeOutAnimation = Tween<double>(begin: 0, end: 1).animate(_fadeOutAnimationController);
+    });
   }
 
   @override
@@ -96,48 +99,50 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         key: ValueKey(widget.task.id),
         groupTag: "task",
         startActionPane: ActionPane(
-          motion: const DrawerMotion(),
-          extentRatio: 0.25,
+          motion: const BehindMotion(),
+          extentRatio: 0.15,
           dismissible: DismissiblePane(
-            closeOnCancel: true,
-            dismissThreshold: 0.30,
+            resizeDuration: const Duration(milliseconds: 300),
+            closeOnCancel: false,
+            dismissThreshold: 0.18,
             confirmDismiss: () async {
-              widget.task.playTaskDoneSound();
-              widget.completedClick();
-              return false;
+              await Slidable.of(context)?.close();
+              Future.delayed(const Duration(milliseconds: 300), () {
+                widget.task.playTaskDoneSound();
+                widget.completedClick();
+              });
+              return true;
             },
             onDismissed: () {},
             motion: SlidableMotion(
-              dismissThreshold: 0.30,
-              motionChild: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: ColorsExt.green20(context),
-                      padding: const EdgeInsets.symmetric(horizontal: 27),
-                      child: DoneWithLabel(
-                          click: () {
-                            Slidable.of(context)?.close();
-                            widget.task.playTaskDoneSound();
-                            widget.completedClick();
-                          },
-                          withLabel: true),
-                    ),
-                  ),
-                ],
+              dismissThreshold: 0.18,
+              motionChild: Container(
+                color: ColorsExt.green20(context),
+                child: DoneWithLabel(
+                    key: Key(widget.task.id!),
+                    click: () async {
+                      await Slidable.of(context)?.close();
+                      Future.delayed(const Duration(milliseconds: 300), () {
+                        widget.task.playTaskDoneSound();
+                        widget.completedClick();
+                      });
+                    },
+                    withLabel: false),
               ),
               staticChild: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    color: ColorsExt.green20(context),
-                    width: MediaQuery.of(context).size.width * 0.20,
+                    color: ColorsExt.grey6(context),
+                    width: MediaQuery.of(context).size.width * 0.3,
                     child: DoneWithLabel(
-                        click: () {
-                          Slidable.of(context)?.close();
-                          widget.task.playTaskDoneSound();
-                          widget.completedClick();
+                        key: Key(widget.task.id!),
+                        click: () async {
+                          await Slidable.of(context)?.close();
+                          Future.delayed(const Duration(milliseconds: 300), () {
+                            widget.task.playTaskDoneSound();
+                            widget.completedClick();
+                          });
                         },
                         withLabel: false),
                   ),
@@ -148,20 +153,22 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
           ),
           children: [
             Builder(builder: (context) {
-              // builder is used to get the context of the slidable, not remove!
               return CustomSlidableAction(
-                backgroundColor: ColorsExt.green20(context),
+                backgroundColor: ColorsExt.grey6(context),
                 foregroundColor: ColorsExt.green(context),
                 onPressed: (context) {},
                 padding: EdgeInsets.zero,
                 child: SlidableButtonAction(
-                  backColor: ColorsExt.green20(context),
+                  backColor: ColorsExt.grey6(context),
                   topColor: ColorsExt.green(context),
                   icon: Assets.images.icons.common.checkDoneSVG,
                   leftToRight: true,
-                  click: () {
-                    Slidable.of(context)?.close();
-                    widget.swipeActionSelectLabelClick();
+                  click: () async {
+                    await Slidable.of(context)?.close();
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      widget.task.playTaskDoneSound();
+                      widget.completedClick();
+                    });
                   },
                 ),
               );
@@ -179,8 +186,8 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               return false;
             },
             onDismissed: () {},
-            motion: SlidableMotion(
-              dismissThreshold: 0.75,
+            motion: InversedDrawerMotion(
+                /* dismissThreshold: 0.75,
               motionChild: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -214,8 +221,8 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              leftToRight: false,
-            ),
+              leftToRight: false,*/
+                ),
           ),
           children: [
             Builder(builder: (context) {
@@ -286,101 +293,97 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               }
               TaskExt.editTask(context, widget.task);
             },
-            child: Center(
-              child: Container(
-                color:
-                    widget.color ?? ((widget.task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent),
-                child: Stack(
-                  children: [
-                    BackgroundDailyGoal(
-                      task: widget.task,
-                      dailyGoalAnimationController: _dailyGoalAnimationController,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: Dimension.padding, top: Dimension.padding),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (widget.selectMode) {
-                                widget.selectTask();
-                              } else {
-                                widget.task.playTaskDoneSound();
-                                _checkboxController!.completedClick();
-                              }
-                            },
-                            child: Container(
-                              width: 50,
-                              child: Row(
-                                children: [
-                                  DotPrefix(task: widget.task),
-                                  Builder(builder: ((context) {
-                                    if (widget.selectMode) {
-                                      return SizedBox(
-                                          width: Dimension.appBarLeadingIcon,
-                                          height: Dimension.appBarLeadingIcon,
-                                          child: Center(child: SelectableRadioButton(widget.task)));
-                                    } else {
-                                      return CheckboxAnimated(
-                                        onControllerReady: (controller) {
-                                          _checkboxController = controller;
-                                        },
-                                        task: widget.task,
-                                        key: ObjectKey(widget.task),
-                                        onCompleted: () async {
-                                          if (widget.task.isDailyGoal) {
-                                            _dailyGoalAnimationController.value = 1;
-                                            await Future.delayed(
-                                                const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
-                                            _dailyGoalAnimationController.reverse(from: 1);
-                                            await Future.delayed(
-                                                const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
-                                          }
-
-                                          _fadeOutAnimationController.forward(from: 0);
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              color: widget.color ?? ((widget.task.selected ?? false) ? ColorsExt.grey7(context) : Colors.transparent),
+              child: Stack(
+                children: [
+                  BackgroundDailyGoal(
+                    task: widget.task,
+                    dailyGoalAnimationController: _dailyGoalAnimationController,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: Dimension.padding, top: Dimension.padding),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (!widget.selectMode) {
+                              widget.task.playTaskDoneSound();
+                              _checkboxController!.completedClick();
+                            }
+                          },
+                          child: SizedBox(
+                            width: 50,
+                            child: Row(
+                              children: [
+                                DotPrefix(task: widget.task),
+                                Builder(builder: ((context) {
+                                  if (widget.selectMode) {
+                                    return SizedBox(
+                                        width: Dimension.appBarLeadingIcon,
+                                        height: Dimension.appBarLeadingIcon,
+                                        child: Center(child: SelectableRadioButton(widget.task)));
+                                  } else {
+                                    return CheckboxAnimated(
+                                      onControllerReady: (controller) {
+                                        _checkboxController = controller;
+                                      },
+                                      task: widget.task,
+                                      key: ObjectKey(widget.task.id),
+                                      onCompleted: () async {
+                                        if (widget.task.isDailyGoal) {
+                                          _dailyGoalAnimationController.value = 1;
                                           await Future.delayed(
-                                              const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
-                                          widget.completedClick();
-                                        },
-                                      );
-                                    }
-                                  })),
-                                ],
-                              ),
+                                              const Duration(milliseconds: TaskRow.dailyGoalBackgroundAppearDelay));
+                                          _dailyGoalAnimationController.reverse(from: 1);
+                                          await Future.delayed(
+                                              const Duration(milliseconds: TaskRow.dailyGoalScaleDurationInMillis));
+                                        }
+
+                                        _fadeOutAnimationController.forward(from: 0);
+                                        await Future.delayed(
+                                            const Duration(milliseconds: TaskRow.fadeOutDurationInMillis));
+                                        widget.completedClick();
+                                      },
+                                    );
+                                  }
+                                })),
+                              ],
                             ),
                           ),
-                          Expanded(
-                              child: IgnorePointer(
-                                  ignoring: _fadeOutAnimation.value == 0 ? false : true,
-                                  child: AnimatedBuilder(
-                                      animation: _fadeOutAnimation,
-                                      builder: (context, child) {
-                                        return Opacity(
-                                          opacity: _fadeOutAnimation.value == 0 ? 1.0 : 0.0,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              TitleWidget(widget.task),
-                                              const SizedBox(height: Dimension.paddingXS),
-                                              Subtitle(widget.task),
-                                              TaskInfo(
-                                                widget.task,
-                                                hideInboxLabel: widget.hideInboxLabel,
-                                                showLabel: widget.showLabel,
-                                                selectDate: context.watch<EditTaskCubit>().state.selectedDate,
-                                                showPlanInfo: widget.showPlanInfo,
-                                              ),
-                                              const SizedBox(height: 12),
-                                            ],
-                                          ),
-                                        );
-                                      }))),
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                            child: IgnorePointer(
+                                ignoring: _fadeOutAnimation.value == 0 ? false : true,
+                                child: AnimatedBuilder(
+                                    animation: _fadeOutAnimation,
+                                    builder: (context, child) {
+                                      return Opacity(
+                                        opacity: _fadeOutAnimation.value == 0 ? 1.0 : 0.0,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            TitleWidget(widget.task),
+                                            const SizedBox(height: Dimension.paddingXS),
+                                            Subtitle(widget.task),
+                                            TaskInfo(
+                                              widget.task,
+                                              hideInboxLabel: widget.hideInboxLabel,
+                                              showLabel: widget.showLabel,
+                                              selectDate: context.watch<EditTaskCubit>().state.selectedDate,
+                                              showPlanInfo: widget.showPlanInfo,
+                                            ),
+                                            const SizedBox(height: 12),
+                                          ],
+                                        ),
+                                      );
+                                    }))),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );

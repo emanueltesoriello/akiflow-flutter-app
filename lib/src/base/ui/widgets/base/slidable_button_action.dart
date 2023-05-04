@@ -26,72 +26,59 @@ class SlidableButtonAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (label == null || label!.isEmpty) {
-      return GestureDetector(
-        onTap: click,
-        child: Material(
-          color: Colors.transparent,
-          child: Center(
-            child: SvgPicture.asset(
-              icon,
-              color: topColor,
-              width: size ?? Dimension.defaultIconSize,
-              height: size ?? Dimension.defaultIconSize,
-            ),
+    return GestureDetector(
+      onTap: click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+          child: Align(
+            child: leftToRight
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SvgPicture.asset(
+                        icon,
+                        color: topColor,
+                        width: size ?? Dimension.defaultIconSize,
+                        height: size ?? Dimension.defaultIconSize,
+                      ),
+                      if (label != null && label!.isNotEmpty) const SizedBox(width: Dimension.padding),
+                      if (label != null && label!.isNotEmpty)
+                        Text(
+                          label!,
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: topColor,
+                              ),
+                        ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (label != null && label!.isNotEmpty)
+                        Text(
+                          label!,
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: topColor,
+                              ),
+                        ),
+                      if (label != null && label!.isNotEmpty) const SizedBox(width: Dimension.padding),
+                      SvgPicture.asset(
+                        icon,
+                        color: topColor,
+                        width: size ?? Dimension.defaultIconSize,
+                        height: size ?? Dimension.defaultIconSize,
+                      ),
+                    ],
+                  ),
           ),
         ),
-      );
-    } else {
-      return GestureDetector(
-        onTap: click,
-        child: Material(
-          color: Colors.transparent,
-          child: Center(
-            child: _content(context),
-          ),
-        ),
-      );
-    }
-  }
-
-  Row _content(BuildContext context) {
-    if (leftToRight) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            icon,
-            color: topColor,
-            width: size ?? Dimension.defaultIconSize,
-            height: size ?? Dimension.defaultIconSize,
-          ),
-          const SizedBox(width: Dimension.paddingXS),
-          Text(label!,
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: topColor,
-                  )),
-          const Spacer(),
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Spacer(),
-          Text(label!,
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.w500, color: topColor)),
-          const SizedBox(width: Dimension.paddingXS),
-          SvgPicture.asset(
-            icon,
-            color: topColor,
-            width: Dimension.defaultIconSize,
-            height: Dimension.defaultIconSize,
-          ),
-        ],
-      );
-    }
+      ),
+    );
   }
 }
