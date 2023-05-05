@@ -236,7 +236,8 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
           ],
         ),
         child: Builder(builder: (context) {
-          Widget child = GestureDetector(
+          Widget child = InkWell(
+            splashColor: ColorsExt.grey4(context),
             onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
             onTap: () async {
               if (widget.openedFromCalendarGroupedTasks) {
@@ -245,7 +246,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               TaskExt.editTask(context, widget.task);
             },
             child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               color: widget.color ?? ((widget.task.selected ?? false) ? ColorsExt.grey7(context) : Colors.transparent),
               child: Stack(
                 children: [

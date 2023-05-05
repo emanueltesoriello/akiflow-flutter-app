@@ -169,7 +169,6 @@ class _TaskListState extends State<TaskList> {
                     key: ObjectKey(task.id),
                     create: (context) => editTaskCubit,
                     child: TaskRow(
-                      key: ObjectKey(task),
                       task: task,
                       hideInboxLabel: widget.hideInboxLabel,
                       showLabel: widget.showLabel,
