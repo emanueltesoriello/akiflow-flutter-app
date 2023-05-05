@@ -101,7 +101,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         startActionPane: ActionPane(
           motion: const BehindMotion(),
           extentRatio: 0.18,
-          openThreshold: 0.18,
+          openThreshold: 0.20,
           dismissible: DismissiblePane(
             resizeDuration: const Duration(milliseconds: 300),
             closeOnCancel: false,
@@ -180,52 +180,6 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           extentRatio: 0.6,
-          dismissible: DismissiblePane(
-            closeOnCancel: true,
-            dismissThreshold: 0.75,
-            confirmDismiss: () async {
-              widget.swipeActionPlanClick();
-              return false;
-            },
-            onDismissed: () {},
-            motion: InversedDrawerMotion(
-                /* dismissThreshold: 0.75,
-              motionChild: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: ColorsExt.cyan25(context),
-                      padding: const EdgeInsets.symmetric(horizontal: 27),
-                      child: PlanWithLabel(
-                        click: () {
-                          Slidable.of(context)?.close();
-                          widget.swipeActionPlanClick();
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              staticChild: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    color: ColorsExt.cyan25(context),
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    padding: const EdgeInsets.symmetric(horizontal: 27),
-                    child: PlanWithLabel(
-                      click: () {
-                        Slidable.of(context)?.close();
-                        widget.swipeActionPlanClick();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              leftToRight: false,*/
-                ),
-          ),
           children: [
             Builder(builder: (context) {
               // builder is used to get the context of the slidable, not remove!

@@ -782,8 +782,9 @@ extension TaskExt on Task {
     TasksCubit tasksCubit = context.read<TasksCubit>();
     SyncCubit syncCubit = context.read<SyncCubit>();
     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-    await showCupertinoModalBottomSheet(
+    await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) => BlocProvider(
         create: (context) => editTaskCubit,
         child: const EditTaskModal(),
