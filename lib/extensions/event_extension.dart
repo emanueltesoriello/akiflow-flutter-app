@@ -177,6 +177,17 @@ extension EventExt on Event {
         .join('&');
   }
 
+  Future<void> launchMapsUrl() async {
+    String location = Uri.encodeFull(content?["location"] ?? '');
+
+    Uri uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$location');
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Map<String, String> eventColor = {
     '#a4bdfc': '#7986cb',
     '#7ae7bf': '#33b679',
@@ -297,6 +308,18 @@ extension EventExt on Event {
     }
     computedRule = parts.join(";");
     return computedRule;
+  }
+
+  ///returns rrule on first position and exdate on second
+  List<String> computeRuleForThisAndFuture() {
+    List<String> parts = recurrence!;
+    parts.removeWhere((part) => part.startsWith('WKST'));
+
+    List<String> goodRule = parts.where((part) => !part.startsWith('EXDATE') && !part.startsWith('TZID')).toList();
+
+    parts.removeWhere((part) => goodRule.contains(part));
+
+    return [goodRule.join(";"), parts.join(";")];
   }
 
   ///returns all the valid events to be scheduled for the next 20 days

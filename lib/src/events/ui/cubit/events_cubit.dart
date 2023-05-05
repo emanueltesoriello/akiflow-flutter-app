@@ -12,6 +12,7 @@ import 'package:mobile/core/repository/event_modifiers_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
@@ -460,6 +461,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     Event newParent = selectedEvent.copyWith(
       id: id,
       recurringId: id,
+      recurrence: Nullable(selectedEvent.computeRuleForThisAndFuture()),
       startTime: Nullable(originalStartTime),
       endTime: Nullable(originalEndTime),
       originId: Nullable(null),
@@ -511,14 +513,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     DateTime oldParenUntil = DateTime(tappedDate.year, tappedDate.month, tappedDate.day - 1, 23, 59, 59).toUtc();
 
-    List<String> processedRrule = [];
-    for (String rule in parentEvent.recurrence!) {
-      List<String> parts = rule.split(";");
-      parts.removeWhere((part) => part.startsWith('WKST'));
-      processedRrule.add(parts.join(';'));
-    }
+    String processedRrule = '';
+    processedRrule = parentEvent.computeRuleForThisAndFuture().first;
 
-    RecurrenceRule parentRrule = RecurrenceRule.fromString(processedRrule.join(';'));
+    RecurrenceRule parentRrule = RecurrenceRule.fromString(processedRrule);
     String newParenRrule = parentRrule.copyWith(clearCount: true, until: oldParenUntil).toString();
 
     List<String> parts = newParenRrule.split(";");

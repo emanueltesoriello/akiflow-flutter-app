@@ -405,7 +405,8 @@
   },
   "snackbar": {
     "connectedSuccesfully": "Connected successfully!",
-    "cannotMoveThisEvent": "You cannot move this event!"
+    "cannotMoveThisEvent": "You cannot move this event!",
+    "copiedToYourClipboard": "Copied to your clipboard"
   },
   "confirm": "Confirm",
   "cancel": "Cancel",

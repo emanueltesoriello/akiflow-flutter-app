@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 332 
+ * Strings: 333 
  *
- * Built on 2023-04-10 at 07:47 UTC
+ * Built on 2023-05-03 at 09:23 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -678,6 +678,7 @@ class _StringsSnackbarEn {
 	// Translations
 	String get connectedSuccesfully => 'Connected successfully!';
 	String get cannotMoveThisEvent => 'You cannot move this event!';
+	String get copiedToYourClipboard => 'Copied to your clipboard';
 }
 
 // Path: integrations
@@ -1395,6 +1396,7 @@ extension on _StringsEn {
 			'availability.linkCopiedToClipboard': 'Link copied to clipboard!',
 			'snackbar.connectedSuccesfully': 'Connected successfully!',
 			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
+			'snackbar.copiedToYourClipboard': 'Copied to your clipboard',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',
