@@ -91,6 +91,24 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  _buildSlidableDone(Color color, Color? iconColor) {
+    return Container(
+      key: Key(widget.task.id!),
+      color: color,
+      child: DoneWithLabel(
+          iconColor: iconColor,
+          key: Key(widget.task.id!),
+          click: () async {
+            await Slidable.of(context)?.close();
+            Future.delayed(const Duration(milliseconds: 300), () {
+              widget.task.playTaskDoneSound();
+              widget.completedClick();
+            });
+          },
+          withLabel: false),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -117,36 +135,13 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             onDismissed: () {},
             motion: SlidableMotion(
               dismissThreshold: 0.18,
-              motionChild: Container(
-                color: ColorsExt.green20(context),
-                child: DoneWithLabel(
-                    key: Key(widget.task.id!),
-                    click: () async {
-                      await Slidable.of(context)?.close();
-                      Future.delayed(const Duration(milliseconds: 300), () {
-                        widget.task.playTaskDoneSound();
-                        widget.completedClick();
-                      });
-                    },
-                    withLabel: false),
-              ),
+              motionChild: _buildSlidableDone(ColorsExt.green20(context), ColorsExt.green(context)),
               staticChild: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    color: ColorsExt.grey6(context),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.3,
-                    child: DoneWithLabel(
-                        iconColor: ColorsExt.grey3(context),
-                        key: Key(widget.task.id!),
-                        click: () async {
-                          await Slidable.of(context)?.close();
-                          Future.delayed(const Duration(milliseconds: 300), () {
-                            widget.task.playTaskDoneSound();
-                            widget.completedClick();
-                          });
-                        },
-                        withLabel: false),
+                    child: _buildSlidableDone(ColorsExt.grey6(context), ColorsExt.grey3(context)),
                   ),
                 ],
               ),
