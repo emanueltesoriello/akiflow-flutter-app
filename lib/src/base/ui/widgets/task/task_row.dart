@@ -93,11 +93,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
 
   _buildSlidableDone(Color color, Color? iconColor) {
     return Container(
-      key: Key(widget.task.id!),
       color: color,
       child: DoneWithLabel(
           iconColor: iconColor,
-          key: Key(widget.task.id!),
           click: () async {
             await Slidable.of(context)?.close();
             Future.delayed(const Duration(milliseconds: 300), () {
@@ -114,7 +112,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
     return ClipRRect(
       borderRadius: widget.isOnboarding ? BorderRadius.circular(Dimension.radius) : BorderRadius.zero,
       child: Slidable(
-        key: ValueKey(widget.task.id),
+        key: ValueKey("${widget.task.id!}Slidable"),
         groupTag: "task",
         startActionPane: ActionPane(
           motion: const BehindMotion(),
@@ -260,10 +258,13 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (!widget.selectMode) {
+                              //     _checkboxController!.completedClick();
                               widget.task.playTaskDoneSound();
-                              _checkboxController!.completedClick();
+                              await Slidable.of(context)
+                                  ?.openTo(1, curve: Curves.easeIn, duration: const Duration(milliseconds: 300));
+                              widget.completedClick();
                             }
                           },
                           child: SizedBox(
@@ -283,7 +284,6 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                         _checkboxController = controller;
                                       },
                                       task: widget.task,
-                                      key: ObjectKey(widget.task.id),
                                       onCompleted: () async {
                                         if (widget.task.isDailyGoal) {
                                           _dailyGoalAnimationController.value = 1;
