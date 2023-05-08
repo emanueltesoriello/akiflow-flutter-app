@@ -52,7 +52,7 @@ class PlanForAction extends StatelessWidget {
       text = text ?? t.task.snoozed;
     } else if (task.statusType == TaskStatusType.planned) {
       leadingIconAsset = Assets.images.icons.common.calendarSVG;
-      color = ColorsExt.cyan25(context);
+      color = ColorsExt.grey200(context);
 
       if (task.date != null) {
         if (task.isOverdue) {
