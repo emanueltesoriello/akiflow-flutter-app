@@ -231,21 +231,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
       return const SizedBox();
     }
 
-    if (task.isOverdue) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            Assets.images.icons.common.clockAlertSVG,
-            width: 20,
-            height: 20,
-            color: ColorsExt.red(context),
-          ),
-          const SizedBox(width: 4),
-        ],
-      );
-    }
-
     return const SizedBox();
   }
 

@@ -52,9 +52,14 @@ class PlanForAction extends StatelessWidget {
       text = text ?? t.task.snoozed;
     } else if (task.statusType == TaskStatusType.planned) {
       leadingIconAsset = Assets.images.icons.common.calendarSVG;
-      color = ColorsExt.grey200(context);
+      color = ColorsExt.cyan25(context);
 
       if (task.date != null) {
+        if (task.isOverdue) {
+          leadingIconAsset = Assets.images.icons.common.clockAlertSVG;
+          color = ColorsExt.red20(context);
+        }
+
         DateTime parsed = DateTime.parse(task.date!);
         text = DateFormat("EEE, d MMM").format(parsed);
       } else {

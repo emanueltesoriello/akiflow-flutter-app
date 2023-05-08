@@ -45,7 +45,7 @@ class TaskInfo extends StatelessWidget {
             children: [
               TagBox(
                 text: stringDate,
-                backgroundColor: ColorsExt.pink30(context),
+                backgroundColor: ColorsExt.red20(context),
                 active: true,
               ),
             ],
