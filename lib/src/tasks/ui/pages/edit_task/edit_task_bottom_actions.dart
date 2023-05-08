@@ -84,8 +84,9 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               icon: Assets.images.icons.common.targetActiveSVG,
               isBig: true,
               isSquare: true,
-              backgroundColor:
-                  task.dailyGoal != null && task.dailyGoal == 1 ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+              backgroundColor: task.dailyGoal != null && task.dailyGoal == 1
+                  ? ColorsExt.grey100(context)
+                  : ColorsExt.grey50(context),
               active: task.dailyGoal != null && task.dailyGoal == 1,
               onPressed: () {
                 context.read<EditTaskCubit>().toggleDailyGoal();
@@ -96,6 +97,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               icon: Assets.images.icons.common.flagSVG,
               isBig: true,
               isSquare: true,
+              foregroundColor: task.dueDate != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
               backgroundColor: task.dueDate != null ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
               active: task.dueDate != null,
               text: task.dueDateFormatted,
@@ -140,6 +142,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                 isBig: true,
                 isSquare: true,
                 active: active,
+                foregroundColor: active ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                 backgroundColor: active ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
                 onPressed: () async {
                   var cubit = context.read<EditTaskCubit>();

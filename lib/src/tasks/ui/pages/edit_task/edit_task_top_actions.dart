@@ -91,12 +91,13 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               }
             }
 
+            bool hasDuration = task.duration != null && task.duration != 0;
             return TagBox(
               icon: Assets.images.icons.common.hourglassSVG,
-              backgroundColor:
-                  task.duration != null && task.duration != 0 ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
-              active: task.duration != null && task.duration != 0,
-              isSquare: task.duration != null && task.duration != 0 ? false : true,
+              foregroundColor: hasDuration ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+              backgroundColor: hasDuration ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+              active: hasDuration,
+              isSquare: hasDuration ? false : true,
               text: text,
               isBig: true,
               onPressed: () {
@@ -111,6 +112,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
 
               return TagBox(
                 icon: Assets.images.icons.common.repeatSVG,
+                foregroundColor: enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                 backgroundColor: enabled ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
                 active: enabled,
                 isBig: true,
