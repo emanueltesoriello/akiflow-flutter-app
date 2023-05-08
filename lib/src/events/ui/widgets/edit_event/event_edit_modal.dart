@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -245,6 +246,7 @@ class _EventEditModalState extends State<EventEditModal> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: Dimension.defaultIconSize,
@@ -258,12 +260,12 @@ class _EventEditModalState extends State<EventEditModal> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (!isAllDay) _startTime(context),
-                if (isAllDay) _startDate(context),
+                if (!isAllDay) _startDateTime(context),
+                if (isAllDay) _startDateAllDay(context),
                 SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
                     width: 22, height: 22, color: ColorsExt.grey3(context)),
-                if (!isAllDay) _endTime(context),
-                if (isAllDay) _endDate(context),
+                if (!isAllDay) _endDateTime(context),
+                if (isAllDay) _endDateAllDay(context),
               ],
             ),
           ),
@@ -272,7 +274,7 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  InkWell _startDate(BuildContext context) {
+  InkWell _startDateAllDay(BuildContext context) {
     return InkWell(
       onTap: () {
         showCupertinoModalBottomSheet(
@@ -312,59 +314,101 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  InkWell _startTime(BuildContext context) {
+  Column _startDateTime(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _startDate(context),
+        const SizedBox(height: Dimension.padding),
+        _startTime(context),
+      ],
+    );
+  }
+
+  InkWell _startDate(BuildContext context) {
     return InkWell(
       onTap: () {
-        Duration duration = const Duration(minutes: 30);
-        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
-          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
-        }
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
+            showTime: false,
             initialDate: updatedEvent.startTime != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.startTime!).toLocal()
                 : widget.tappedDate,
-            initialDatetime: updatedEvent.startTime != null ? DateTime.parse(updatedEvent.startTime!).toLocal() : null,
+            initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
+              DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!).toLocal();
+              DateTime eventEndTime = DateTime.parse(updatedEvent.endTime!).toLocal();
+
+              DateTime selectedStartTime = DateTime(date!.year, date.month, date.day, eventStartTime.hour,
+                      eventStartTime.minute, eventStartTime.second, eventStartTime.millisecond)
+                  .toUtc();
+              DateTime selectedEndTime = DateTime(date.year, date.month, date.day, eventEndTime.hour,
+                      eventEndTime.minute, eventEndTime.second, eventEndTime.millisecond)
+                  .toUtc();
+
               setState(() {
                 timeChanged = true;
-                datetime == null ? isAllDay = true : isAllDay = false;
                 updatedEvent = updatedEvent.copyWith(
-                  startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
-                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
-                  startTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
-                  endTime:
-                      datetime != null ? Nullable(datetime.toUtc().add(duration).toIso8601String()) : Nullable(null),
+                  startTime: Nullable(selectedStartTime.toUtc().toIso8601String()),
+                  endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
                 );
               });
             },
           ),
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-              updatedEvent.recurringId == null || timeChanged
-                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!))
-                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
-                  )),
-          const SizedBox(height: Dimension.padding),
-          Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey2(context),
-                  )),
-        ],
-      ),
+      child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w400,
+                color: ColorsExt.grey2(context),
+              )),
     );
   }
 
-  InkWell _endDate(BuildContext context) {
+  InkWell _startTime(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!).toLocal();
+
+        Duration duration = const Duration(minutes: 30);
+        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
+          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
+        }
+
+        TimeOfDay initialTime = TimeOfDay(hour: eventStartTime.hour, minute: eventStartTime.minute);
+
+        TimePickerUtils.pick(
+          context,
+          initialTime: initialTime,
+          onTimeSelected: (selected) {
+            if (selected != null) {
+              DateTime selectedStartTime = DateTime(eventStartTime.year, eventStartTime.month, eventStartTime.day,
+                      selected.hour, selected.minute, eventStartTime.second, eventStartTime.millisecond)
+                  .toUtc();
+
+              DateTime eventEndTime = selectedStartTime.add(duration);
+
+              setState(() {
+                timeChanged = true;
+                updatedEvent = updatedEvent.copyWith(
+                  startTime: Nullable(selectedStartTime.toUtc().toIso8601String()),
+                  endTime: Nullable(eventEndTime.toUtc().toIso8601String()),
+                );
+              });
+            }
+          },
+        );
+      },
+      child: Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey2(context),
+              )),
+    );
+  }
+
+  InkWell _endDateAllDay(BuildContext context) {
     return InkWell(
       onTap: () {
         DateTime eventStart = updatedEvent.startDate != null
@@ -407,62 +451,90 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  InkWell _endTime(BuildContext context) {
+  Column _endDateTime(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        _endDate(context),
+        const SizedBox(height: Dimension.padding),
+        _endTime(context),
+      ],
+    );
+  }
+
+  InkWell _endDate(BuildContext context) {
     return InkWell(
       onTap: () {
-        DateTime eventStart = updatedEvent.startTime != null
-            ? DateTime.parse(updatedEvent.startTime!)
-            : DateTime.parse(updatedEvent.startDate!);
-        Duration duration = const Duration(minutes: 30);
-        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
-          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
-        }
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
+            showTime: false,
             initialDate: updatedEvent.endTime != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endTime!).toLocal()
                 : widget.tappedDate,
-            initialDatetime: updatedEvent.endTime != null ? DateTime.parse(updatedEvent.endTime!).toLocal() : null,
+            initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
-              setState(() {
-                timeChanged = true;
-                if (datetime == null) {
-                  isAllDay = true;
-                }
-                updatedEvent = updatedEvent.copyWith(
-                  startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
-                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!)) : Nullable(null),
-                  endTime: datetime != null
-                      ? eventStart.isBefore(datetime)
-                          ? Nullable(datetime.toUtc().toIso8601String())
-                          : Nullable(eventStart.toUtc().add(duration).toIso8601String())
-                      : Nullable(null),
-                );
-              });
+              DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!);
+              DateTime eventEndTime = DateTime.parse(updatedEvent.endTime!).toLocal();
+
+              DateTime selectedEndTime = DateTime(date!.year, date.month, date.day, eventEndTime.hour,
+                      eventEndTime.minute, eventEndTime.second, eventEndTime.millisecond)
+                  .toUtc();
+
+              if (eventStartTime.isBefore(selectedEndTime)) {
+                setState(() {
+                  timeChanged = true;
+                  updatedEvent = updatedEvent.copyWith(
+                    endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
+                  );
+                });
+              }
             },
           ),
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-              updatedEvent.recurringId == null || timeChanged
-                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!))
-                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
-                  )),
-          const SizedBox(height: Dimension.padding),
-          Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey2(context),
-                  )),
-        ],
-      ),
+      child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w400,
+                color: ColorsExt.grey2(context),
+              )),
+    );
+  }
+
+  InkWell _endTime(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!);
+        DateTime eventEndTime = DateTime.parse(updatedEvent.endTime!).toLocal();
+
+        TimeOfDay initialTime = TimeOfDay(hour: eventEndTime.hour, minute: eventEndTime.minute);
+
+        TimePickerUtils.pick(
+          context,
+          initialTime: initialTime,
+          onTimeSelected: (selected) {
+            if (selected != null) {
+              DateTime selectedEndTime = DateTime(eventEndTime.year, eventEndTime.month, eventEndTime.day,
+                      selected.hour, selected.minute, eventEndTime.second, eventEndTime.millisecond)
+                  .toUtc();
+
+              if (eventStartTime.isBefore(selectedEndTime)) {
+                setState(() {
+                  timeChanged = true;
+                  updatedEvent = updatedEvent.copyWith(
+                    endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
+                  );
+                });
+              }
+            }
+          },
+        );
+      },
+      child: Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey2(context),
+              )),
     );
   }
 

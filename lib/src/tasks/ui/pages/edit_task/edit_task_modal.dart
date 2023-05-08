@@ -232,18 +232,22 @@ class _EditTaskModalState extends State<EditTaskModal> {
         return WillPopScope(
           onWillPop: () => onBack(state),
           child: Material(
-              color: Theme.of(context).backgroundColor,
+              color: Colors.transparent,
               child: AnimatedSize(
                 curve: Curves.linear,
                 duration: const Duration(milliseconds: 200),
                 reverseDuration: const Duration(milliseconds: 200),
                 child: Container(
-                  height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height : null,
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(Dimension.radiusS),
-                      topRight: Radius.circular(Dimension.radiusM),
+                  height: state.hasFocusOnTitleOrDescription
+                      ? MediaQuery.of(context).size.height -
+                          (kToolbarHeight * 2) -
+                          MediaQuery.of(context).viewInsets.bottom
+                      : null,
+                  decoration: BoxDecoration(
+                    color: ColorsExt.background(context),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(Dimension.radius),
+                      topRight: Radius.circular(Dimension.radius),
                     ),
                   ),
                   margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -251,6 +255,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                     behavior: NoScrollBehav(),
                     child: ListView(
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         const SizedBox(height: Dimension.padding),
                         animatedChild(!state.hasFocusOnTitleOrDescription, const ScrollChip()),
