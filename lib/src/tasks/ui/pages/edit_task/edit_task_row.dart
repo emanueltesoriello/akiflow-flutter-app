@@ -249,8 +249,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
     }
 
     return TagBox(
+      isBig: true,
       icon: Assets.images.icons.common.numberSVG,
-      text: label?.title ?? t.editTask.noLabel,
+      text: label?.title ?? t.editTask.addLabel,
       backgroundColor:
           label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey100(context),
       iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey600(context),
