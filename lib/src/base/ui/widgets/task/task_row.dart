@@ -15,6 +15,7 @@ import 'package:mobile/src/base/ui/widgets/task/slidable_sender.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_info.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:models/task/task.dart';
+import 'package:flutter/services.dart';
 
 import 'components/background_daily_goal.dart';
 import 'components/dot_prefix.dart';
@@ -133,7 +134,10 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             onDismissed: () {},
             motion: SlidableMotion(
               dismissThreshold: 0.18,
-              motionChild: _buildSlidableDone(ColorsExt.green20(context), ColorsExt.green(context)),
+              motionChild: Builder(builder: (context) {
+                HapticFeedback.mediumImpact();
+                return _buildSlidableDone(ColorsExt.green20(context), ColorsExt.green(context));
+              }),
               staticChild: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -161,6 +165,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                   click: () async {
                     await Slidable.of(context)?.close();
                     Future.delayed(const Duration(milliseconds: 300), () {
+                      HapticFeedback.heavyImpact();
                       widget.task.playTaskDoneSound();
                       widget.completedClick();
                     });
