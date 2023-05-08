@@ -285,7 +285,7 @@ class CompactInfo extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3),
-          border: Border.all(color: ColorsExt.grey5(context), width: 1),
+          border: Border.all(color: ColorsExt.grey200(context), width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -299,7 +299,7 @@ class CompactInfo extends StatelessWidget {
 
               return Row(
                 children: [
-                  SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey2(context))),
+                  SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey800(context))),
                   const SizedBox(width: Dimension.paddingXS),
                 ],
               );
@@ -307,7 +307,7 @@ class CompactInfo extends StatelessWidget {
             Text(
               text,
               style: Theme.of(context).textTheme.caption?.copyWith(
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                   ),
             ),
           ],

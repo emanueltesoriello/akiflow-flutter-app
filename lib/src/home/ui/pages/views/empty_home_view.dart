@@ -32,7 +32,7 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .titleLarge!
-              .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+              .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
         ),
         const SizedBox(height: Dimension.padding),
         Center(
@@ -42,7 +42,7 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
             },
             child: Text(
               t.calendar.goToToday,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
             ),
           ),
         ),

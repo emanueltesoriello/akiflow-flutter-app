@@ -39,7 +39,7 @@ class SlotsHeader extends StatelessWidget {
             margin: const EdgeInsetsDirectional.only(end: Dimension.padding),
             child: SvgPicture.asset(
               isOpen ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
               width: Dimension.chevronIconSize,
               height: Dimension.chevronIconSize,
             ),

@@ -173,12 +173,12 @@ class _EditTaskRowState extends State<EditTaskRow> {
           border: InputBorder.none,
           hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey600(context),
               ),
         ),
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w500,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
         onChanged: (value) {
           context.read<EditTaskCubit>().onTitleChanged(value);
@@ -206,7 +206,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           completed ? Assets.images.icons.common.checkDoneSVG : Assets.images.icons.common.checkEmptySVG,
           width: 22,
           height: 22,
-          color: completed ? ColorsExt.green(context) : ColorsExt.grey3(context),
+          color: completed ? ColorsExt.green(context) : ColorsExt.grey600(context),
         );
       }),
     );
@@ -220,10 +220,10 @@ class _EditTaskRowState extends State<EditTaskRow> {
         task.statusType == TaskStatusType.trashed) {
       return TagBox(
         icon: Assets.images.icons.common.trashSVG,
-        backgroundColor: ColorsExt.grey6(context),
+        backgroundColor: ColorsExt.grey100(context),
         active: true,
         text: task.statusType!.name.capitalizeFirstCharacter(),
-        foregroundColor: ColorsExt.grey3(context),
+        foregroundColor: ColorsExt.grey600(context),
       );
     }
 
@@ -267,8 +267,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
       icon: Assets.images.icons.common.numberSVG,
       text: label?.title ?? t.editTask.noLabel,
       backgroundColor:
-          label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey6(context),
-      iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey3(context),
+          label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey100(context),
+      iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey600(context),
       active: label?.color != null,
       onPressed: () {
         showCupertinoModalBottomSheet(

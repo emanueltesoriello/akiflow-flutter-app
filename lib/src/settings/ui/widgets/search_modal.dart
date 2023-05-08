@@ -61,7 +61,7 @@ class _SearchModalState extends State<SearchModal> {
                             height: 24,
                             child: SvgPicture.asset(
                               'assets/images/icons/_common/search.svg',
-                              color: ColorsExt.grey3(context),
+                              color: ColorsExt.grey600(context),
                             ),
                           ),
                         ),
@@ -82,7 +82,7 @@ class _SearchModalState extends State<SearchModal> {
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey1(context))),
+                                  ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey900(context))),
                         ),
                         const SizedBox(height: Dimension.paddingXXL),
                       ],

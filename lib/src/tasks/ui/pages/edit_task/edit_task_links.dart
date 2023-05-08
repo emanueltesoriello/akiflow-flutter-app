@@ -46,7 +46,7 @@ class EditTaskLinks extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(3),
-                            color: ColorsExt.grey6(context),
+                            color: ColorsExt.grey100(context),
                           ),
                           padding: const EdgeInsets.all(6),
                           child: Row(
@@ -87,7 +87,7 @@ class EditTaskLinks extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                        color: ColorsExt.grey3(context),
+                                        color: ColorsExt.grey600(context),
                                       ),
                                 ),
                               )
@@ -103,7 +103,7 @@ class EditTaskLinks extends StatelessWidget {
                         Assets.images.icons.common.xmarkSVG,
                         width: 22,
                         height: 22,
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                       ),
                     ),
                   ],

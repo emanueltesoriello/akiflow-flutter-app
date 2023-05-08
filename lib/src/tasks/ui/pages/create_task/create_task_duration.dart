@@ -56,7 +56,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                     return Text(text,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
+                              color: ColorsExt.grey800(context),
                             ));
                   },
                 ),

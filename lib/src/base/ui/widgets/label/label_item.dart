@@ -28,8 +28,8 @@ class LabelItem extends StatelessWidget {
       iconBackground = ColorsExt.getFromName(label.color!).withOpacity(0.1);
       iconForeground = ColorsExt.getFromName(label.color!);
     } else {
-      iconBackground = ColorsExt.grey6(context);
-      iconForeground = ColorsExt.grey2(context);
+      iconBackground = ColorsExt.grey100(context);
+      iconForeground = ColorsExt.grey800(context);
     }
 
     String iconAsset;
@@ -39,7 +39,7 @@ class LabelItem extends StatelessWidget {
     } else {
       iconAsset = Assets.images.icons.common.slashCircleSVG;
       iconBackground = Colors.transparent;
-      iconForeground = ColorsExt.grey3(context);
+      iconForeground = ColorsExt.grey600(context);
     }
 
     return InkWell(

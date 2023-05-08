@@ -78,7 +78,7 @@ class EventCreationSmallModal extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .titleLarge
-                  ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.w500)),
+                  ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -108,19 +108,19 @@ class EventCreationSmallModal extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                            ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     const SizedBox(height: Dimension.padding),
                     Text(DateFormat("HH:mm").format(tappedTime),
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
+                            ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                   ],
                 ),
                 SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
                     width: Dimension.defaultIconSize,
                     height: Dimension.defaultIconSize,
-                    color: ColorsExt.grey3(context)),
+                    color: ColorsExt.grey600(context)),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -128,13 +128,13 @@ class EventCreationSmallModal extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                            ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     const SizedBox(height: Dimension.padding),
                     Text(DateFormat("HH:mm").format(tappedTime.add(const Duration(hours: 1))),
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
+                            ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                   ],
                 ),
               ],
@@ -162,7 +162,7 @@ class EventCreationSmallModal extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .subtitle1
-                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
         ],
       ),
     );

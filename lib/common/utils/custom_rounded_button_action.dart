@@ -41,7 +41,7 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         border: Border.all(
-          color: ColorsExt.grey3(context),
+          color: ColorsExt.grey600(context),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(Dimension.radius),
@@ -53,7 +53,7 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
           textButtonNegative ?? localizations.cancelButtonLabel,
           style: Theme.of(context).textTheme.subtitle1!.copyWith(
                 fontWeight: FontWeight.w400,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               ),
         )),
       ),

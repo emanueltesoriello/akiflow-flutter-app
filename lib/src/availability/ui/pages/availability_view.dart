@@ -22,7 +22,7 @@ class AvailabilityView extends StatelessWidget {
             Assets.images.icons.common.availabilitySVG,
             width: Dimension.appBarLeadingIcon,
             height: Dimension.appBarLeadingIcon,
-            color: ColorsExt.grey1(context),
+            color: ColorsExt.grey900(context),
           ),
           showSyncButton: true,
         ),

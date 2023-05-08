@@ -42,7 +42,7 @@ class GroupedTasksAppointment extends StatelessWidget {
       width: boxWidth,
       height: boxHeight,
       decoration: BoxDecoration(
-        color: ColorsExt.grey7(context),
+        color: ColorsExt.grey50(context),
         borderRadius: const BorderRadius.all(
           Radius.circular(4.0),
         ),
@@ -71,7 +71,7 @@ class GroupedTasksAppointment extends StatelessWidget {
                         width: boxHeight < 15.0 && groupedTasks.taskList.length < 10 ? 12.0 : 16.0,
                         height: boxHeight < 15.0 ? 12.0 : 16.0,
                         decoration: BoxDecoration(
-                          color: ColorsExt.grey5(context),
+                          color: ColorsExt.grey200(context),
                           borderRadius: const BorderRadius.all(
                             Radius.circular(3.0),
                           ),
@@ -85,7 +85,7 @@ class GroupedTasksAppointment extends StatelessWidget {
                                             ? 11.0
                                             : 13.0,
                                     fontWeight: FontWeight.w500,
-                                    color: ColorsExt.grey1(context),
+                                    color: ColorsExt.grey900(context),
                                   )),
                         ),
                       ),
@@ -102,7 +102,7 @@ class GroupedTasksAppointment extends StatelessWidget {
                                           ? 11.0
                                           : 13.0,
                                   fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey1(context),
+                                  color: ColorsExt.grey900(context),
                                 )),
                       ),
                     ],
@@ -122,7 +122,7 @@ class GroupedTasksAppointment extends StatelessWidget {
                         height: boxHeight < 15 ? 1.0 : 1.3,
                         fontSize: boxHeight < 12.0 ? 9.0 : 11.0,
                         fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                       ),
                     ),
                   SizedBox(
@@ -130,7 +130,7 @@ class GroupedTasksAppointment extends StatelessWidget {
                     width: 14,
                     child: SvgPicture.asset(
                       Assets.images.icons.common.chevronDownSVG,
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                     ),
                   ),
                 ],

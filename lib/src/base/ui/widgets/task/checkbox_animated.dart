@@ -133,8 +133,8 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
         }
       });
     _animationForegroundColor = TweenSequence([
-      TweenSequenceItem(tween: Tween<Color>(begin: ColorsLight.grey3, end: ColorsLight.grey2), weight: 1),
-      TweenSequenceItem(tween: Tween<Color>(begin: ColorsLight.grey2, end: ColorsLight.grey3), weight: 1),
+      TweenSequenceItem(tween: Tween<Color>(begin: ColorsLight.grey600, end: ColorsLight.grey800), weight: 1),
+      TweenSequenceItem(tween: Tween<Color>(begin: ColorsLight.grey800, end: ColorsLight.grey600), weight: 1),
     ]).animate(CurvedAnimation(parent: _controllerForegroundColor, curve: Curves.easeIn));
 
     // FOREGROUND OPACITY
@@ -182,7 +182,7 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
                     child: AnimatedBuilder(
                       animation: _controllerBackgroundOpacity,
                       builder: (BuildContext context, Widget? child) => Material(
-                        color: ColorsExt.grey5(context).withOpacity(_animationBackgroundOpacity.value),
+                        color: ColorsExt.grey200(context).withOpacity(_animationBackgroundOpacity.value),
                         borderRadius: BorderRadius.circular(32),
                       ),
                     ),
@@ -231,7 +231,7 @@ class _CheckboxAnimatedState extends State<CheckboxAnimated> with TickerProvider
         color = ColorsExt.green(context);
         break;
       default:
-        color = completed ? ColorsExt.green(context) : ColorsExt.grey3(context);
+        color = completed ? ColorsExt.green(context) : ColorsExt.grey600(context);
     }
 
     String firstChildIconAsset;

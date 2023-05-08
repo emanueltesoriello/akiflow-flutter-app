@@ -34,7 +34,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
           decoration: BoxDecoration(
             color: color(context, task.type),
             border: Border.all(
-              color: ColorsExt.grey4(context),
+              color: ColorsExt.grey300(context),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(Dimension.radiusS),
@@ -48,7 +48,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
-                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
+                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
               ),
               TextButton(
                   onPressed: () {
@@ -167,13 +167,13 @@ class _UndoBottomViewState extends State<UndoBottomView> {
       case UndoType.moveToInbox:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneOutlineSVG,
-          color: ColorsExt.grey2_5(context),
+          color: ColorsExt.grey700(context),
           height: iconSize,
         );
       case UndoType.updated:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneOutlineSVG,
-          color: ColorsExt.grey2_5(context),
+          color: ColorsExt.grey700(context),
           height: iconSize,
         );
     }

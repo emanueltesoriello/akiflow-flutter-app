@@ -104,11 +104,11 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
               },
               weekdayStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
               weekendStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
             ),
             calendarBuilders: CalendarBuilders(
@@ -120,7 +120,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                       DateFormat("d").format(day),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey800(context),
                           ),
                     ),
                   ),
@@ -140,7 +140,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                       DateFormat("d").format(day),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey3(context),
+                            color: ColorsExt.grey600(context),
                           ),
                     ),
                   ),
@@ -162,7 +162,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                             Assets.images.icons.common.chevronRightSVG,
                             width: Dimension.chevronIconSize,
                             height: Dimension.chevronIconSize,
-                            color: ColorsExt.grey3(context),
+                            color: ColorsExt.grey600(context),
                           ),
                         ),
                       ),
@@ -177,7 +177,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                           Assets.images.icons.common.chevronRightSVG,
                           width: Dimension.chevronIconSize,
                           height: Dimension.chevronIconSize,
-                          color: ColorsExt.grey3(context),
+                          color: ColorsExt.grey600(context),
                         ),
                       )
                     ],
@@ -231,7 +231,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                               selectedDate.day, selectedTime.hour, selectedTime.minute)),
                                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                             fontWeight: FontWeight.w500,
-                                            color: ColorsExt.grey2(context),
+                                            color: ColorsExt.grey800(context),
                                           ),
                                     ));
                               },
@@ -266,8 +266,8 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       width: Dimension.defaultIconSize,
                                       height: Dimension.defaultIconSize,
                                       color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                          ? ColorsExt.grey2(context)
-                                          : ColorsExt.grey3(context),
+                                          ? ColorsExt.grey800(context)
+                                          : ColorsExt.grey600(context),
                                     ),
                                     const SizedBox(width: Dimension.paddingS),
                                     Text(
@@ -275,8 +275,8 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                             fontWeight: FontWeight.w500,
                                             color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                                ? ColorsExt.grey2(context)
-                                                : ColorsExt.grey3(context),
+                                                ? ColorsExt.grey800(context)
+                                                : ColorsExt.grey600(context),
                                           ),
                                     ),
                                   ],

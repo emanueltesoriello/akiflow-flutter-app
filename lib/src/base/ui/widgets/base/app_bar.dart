@@ -107,7 +107,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
             Assets.images.icons.common.arrowLeftSVG,
             width: 26,
             height: 26,
-            color: ColorsExt.grey2(context),
+            color: ColorsExt.grey800(context),
           ),
         ),
       );
@@ -125,7 +125,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
             Assets.images.icons.common.arrowLeftSVG,
             height: 26,
             width: 26,
-            color: ColorsExt.grey2(context),
+            color: ColorsExt.grey800(context),
           ),
         ),
       );
@@ -144,7 +144,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         t.task.nSelected(count: tasksSelected),
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.w500,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
       );
     }
@@ -168,7 +168,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         style: Theme.of(context)
             .textTheme
             .titleLarge!
-            .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)));
+            .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)));
   }
 
   List<Widget> _buildActions(BuildContext context) {

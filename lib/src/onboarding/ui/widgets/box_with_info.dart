@@ -31,7 +31,7 @@ class BoxWithInfo extends StatelessWidget {
           child: Text(
             info,
             style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                  color: ColorsExt.grey1(context),
+                  color: ColorsExt.grey900(context),
                 ),
           ),
         ),

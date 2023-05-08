@@ -86,11 +86,11 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                     weekdayStyle: Theme.of(context)
                         .textTheme
                         .bodyText1!
-                        .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600),
+                        .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600),
                     weekendStyle: Theme.of(context)
                         .textTheme
                         .bodyText1!
-                        .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600),
+                        .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600),
                   ),
                   calendarBuilders: CalendarBuilders(
                     defaultBuilder: (context, day, focusedDay) {
@@ -102,7 +102,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1!
-                                .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                                .copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                           ),
                         ),
                       );
@@ -122,7 +122,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1!
-                                .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
+                                .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                           ),
                         ),
                       );
@@ -143,7 +143,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                                   Assets.images.icons.common.chevronRightSVG,
                                   width: 20,
                                   height: 20,
-                                  color: ColorsExt.grey2(context),
+                                  color: ColorsExt.grey800(context),
                                 ),
                               ),
                             ),
@@ -158,7 +158,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                                 Assets.images.icons.common.chevronRightSVG,
                                 width: 20,
                                 height: 20,
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                               ),
                             )
                           ],

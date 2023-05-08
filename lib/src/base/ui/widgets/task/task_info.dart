@@ -139,7 +139,7 @@ class TaskInfo extends StatelessWidget {
     } else {
       if (task.datetime != null && !task.isOverdue) {
         return TagBox(
-          backgroundColor: ColorsExt.grey5(context),
+          backgroundColor: ColorsExt.grey200(context),
           text: task.timeFormatted,
           active: true,
         );
@@ -150,7 +150,7 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget plannedInfo(BuildContext context) {
-    Color color = ColorsExt.grey5(context);
+    Color color = ColorsExt.grey200(context);
 
     String text;
 
@@ -207,7 +207,7 @@ class TaskInfo extends StatelessWidget {
       icon: Assets.images.icons.common.numberSVG,
       text: label.title,
       backgroundColor: active ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
-      iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
+      iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey600(context),
       onPressed: () {
         context.read<LabelsCubit>().selectLabel(label);
         context.read<MainCubit>().changeHomeView(HomeViewType.label);

@@ -34,7 +34,7 @@ class Subtitle extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       Assets.images.icons.common.arrowTurnDownRightSVG,
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                       width: 16,
                       height: 16,
                     ),
@@ -53,7 +53,7 @@ class Subtitle extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1
-                                ?.copyWith(color: ColorsExt.grey3(context), height: 1),
+                                ?.copyWith(color: ColorsExt.grey600(context), height: 1),
                           );
                         },
                       ),
@@ -69,7 +69,7 @@ class Subtitle extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       Assets.images.icons.common.arrowTurnDownRightSVG,
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                       width: 16,
                       height: 16,
                     ),
@@ -79,7 +79,7 @@ class Subtitle extends StatelessWidget {
                       task.descriptionParsed,
                       maxLines: 1,
                       style:
-                          Theme.of(context).textTheme.bodyText1?.copyWith(height: 1, color: ColorsExt.grey3(context)),
+                          Theme.of(context).textTheme.bodyText1?.copyWith(height: 1, color: ColorsExt.grey600(context)),
                     )),
                   ],
                 ),
@@ -99,7 +99,7 @@ class Subtitle extends StatelessWidget {
               return Row(children: [
                 SvgPicture.asset(
                   Assets.images.icons.common.arrowTurnDownRightSVG,
-                  color: ColorsExt.grey3(context),
+                  color: ColorsExt.grey600(context),
                   width: 16,
                   height: 16,
                 ),
@@ -145,7 +145,7 @@ class Subtitle extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1
-                              ?.copyWith(height: 1, color: ColorsExt.grey3(context)),
+                              ?.copyWith(height: 1, color: ColorsExt.grey600(context)),
                         ),
                       )
                     ],

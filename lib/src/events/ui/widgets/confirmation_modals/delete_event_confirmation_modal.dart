@@ -36,14 +36,14 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                 child: Row(
                   children: [
                     SvgPicture.asset(Assets.images.icons.common.trashSVG,
-                        width: 28, height: 28, color: ColorsExt.grey2(context)),
+                        width: 28, height: 28, color: ColorsExt.grey800(context)),
                     const SizedBox(width: Dimension.paddingS),
                     Expanded(
                       child: Text(t.event.editEvent.deleteModal.title(eventName: eventName),
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
+                              ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))),
                     ),
                   ],
                 ),
@@ -54,7 +54,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1
-                        ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                        ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
               ),
               const SizedBox(height: Dimension.paddingM),
               InkWell(
@@ -68,12 +68,12 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
-                      border: Border.all(color: ColorsExt.grey4(context))),
+                      border: Border.all(color: ColorsExt.grey300(context))),
                   child: Center(
                     child: Text(t.event.delete,
                         style: Theme.of(context).textTheme.subtitle1?.copyWith(
                               fontWeight: FontWeight.w400,
-                              color: ColorsExt.grey2(context),
+                              color: ColorsExt.grey800(context),
                             )),
                   ),
                 ),

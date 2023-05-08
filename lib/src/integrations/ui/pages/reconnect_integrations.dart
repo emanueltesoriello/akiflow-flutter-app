@@ -49,7 +49,7 @@ class ReconnectIntegrations extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge
-                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey1(context))),
+                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey900(context))),
                     const SizedBox(height: Dimension.paddingL),
                     BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                       builder: (context, state) {
@@ -87,7 +87,7 @@ class ReconnectIntegrations extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       child: Text(t.onboarding.gmail.skipForNow,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context))),
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context))),
                     ),
                   ],
                 ),

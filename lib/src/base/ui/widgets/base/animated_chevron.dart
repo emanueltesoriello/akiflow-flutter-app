@@ -59,7 +59,7 @@ class _AnimatedChevronState extends State<AnimatedChevron> with SingleTickerProv
           Assets.images.icons.common.chevronDownSVG,
           width: Dimension.chevronIconSize,
           height: Dimension.chevronIconSize,
-          color: ColorsExt.grey3(context),
+          color: ColorsExt.grey600(context),
         ),
       ),
     );

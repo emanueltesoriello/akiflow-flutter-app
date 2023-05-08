@@ -70,7 +70,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                        color: ColorsExt.grey2(context),
+                                        color: ColorsExt.grey800(context),
                                       ),
                                 ),
                               ),
@@ -80,14 +80,14 @@ class EditTaskLinkedContent extends StatelessWidget {
                       ),
                       SvgPicture.asset(
                         Assets.images.icons.common.syncingSVG,
-                        color: ColorsExt.grey2(context),
+                        color: ColorsExt.grey800(context),
                         width: 17,
                         height: 17,
                       ),
                       const SizedBox(width: 10),
                       SvgPicture.asset(
                         Assets.images.icons.common.infoCircleSVG,
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                         width: 18,
                         height: 18,
                       ),

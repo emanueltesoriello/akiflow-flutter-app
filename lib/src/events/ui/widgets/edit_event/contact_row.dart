@@ -34,7 +34,7 @@ class ContactRow extends StatelessWidget {
                     width: 30,
                     child: SvgPicture.asset(
                       Assets.images.icons.common.personCropCircleSVG,
-                      color: ColorsExt.grey2(context),
+                      color: ColorsExt.grey800(context),
                     ),
                   ),
             const SizedBox(width: Dimension.paddingS),
@@ -49,13 +49,13 @@ class ContactRow extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey2(context),
+                                  color: ColorsExt.grey800(context),
                                 )),
                         Text('${contact.identifier}',
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.caption?.copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey2(context),
+                                  color: ColorsExt.grey800(context),
                                 )),
                       ],
                     ),

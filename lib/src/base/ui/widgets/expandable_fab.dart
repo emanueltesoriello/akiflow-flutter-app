@@ -81,7 +81,7 @@ class ExpandableFabState extends State<ExpandableFab> with SingleTickerProviderS
       height: 56.0,
       child: Center(
         child: Material(
-          color: ColorsExt.grey5(context),
+          color: ColorsExt.grey200(context),
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
           shadowColor: Colors.black,

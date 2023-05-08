@@ -41,7 +41,7 @@ class PriorityItem extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                        color: ColorsExt.grey2(context),
+                        color: ColorsExt.grey800(context),
                       ),
                 ),
               ],
@@ -49,7 +49,7 @@ class PriorityItem extends StatelessWidget {
             Text(
               hint,
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
             ),
           ],

@@ -52,7 +52,7 @@ class PlanForAction extends StatelessWidget {
       text = text ?? t.task.snoozed;
     } else if (task.statusType == TaskStatusType.planned) {
       leadingIconAsset = Assets.images.icons.common.calendarSVG;
-      color = ColorsExt.grey5(context);
+      color = ColorsExt.grey200(context);
 
       if (task.date != null) {
         DateTime parsed = DateTime.parse(task.date!);
@@ -76,7 +76,7 @@ class PlanForAction extends StatelessWidget {
       backgroundColor: backgroundPlanColor ?? color,
       borderColor: borderPlanColor,
       icon: leadingIconAsset,
-      foregroundColor: ColorsExt.grey2(context),
+      foregroundColor: ColorsExt.grey800(context),
       isBig: true,
       active: true,
       onPressed: () {

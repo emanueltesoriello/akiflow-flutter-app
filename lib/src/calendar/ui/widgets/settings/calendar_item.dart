@@ -51,14 +51,14 @@ class _CalendarItemState extends State<CalendarItem> {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
                   SvgPicture.asset(
                     Assets.images.icons.common.chevronDownSVG,
                     width: Dimension.defaultIconSize,
                     height: Dimension.defaultIconSize,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
                 ],
               ),
@@ -113,7 +113,7 @@ class _CalendarItemState extends State<CalendarItem> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle1
-                                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                               ),
                             ],
                           ),
@@ -131,7 +131,7 @@ class _CalendarItemState extends State<CalendarItem> {
                                 : Assets.images.icons.common.bellSlashedSVG,
                             width: Dimension.defaultIconSize,
                             height: Dimension.defaultIconSize,
-                            color: notificationsEnabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                            color: notificationsEnabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                           ),
                         ),
                       ],

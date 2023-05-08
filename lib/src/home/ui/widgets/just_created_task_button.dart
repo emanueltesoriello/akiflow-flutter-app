@@ -31,8 +31,8 @@ class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
           width: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
           decoration: BoxDecoration(
-            color: ColorsExt.grey6(context),
-            border: Border.all(color: ColorsExt.grey5(context), width: 1),
+            color: ColorsExt.grey100(context),
+            border: Border.all(color: ColorsExt.grey200(context), width: 1),
             borderRadius: BorderRadius.circular(Dimension.radiusS),
           ),
           child: Padding(
@@ -44,7 +44,7 @@ class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
+                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
                 ),
                 TextButton(
                     onPressed: () {

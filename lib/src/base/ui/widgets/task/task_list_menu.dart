@@ -21,7 +21,7 @@ class TaskListMenu extends StatelessWidget {
           Assets.images.icons.common.ellipsisSVG,
           width: Dimension.defaultIconSize,
           height: Dimension.defaultIconSize,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
         onSelected: (TaskListMenuAction result) {
           switch (result) {
@@ -45,7 +45,7 @@ class TaskListMenu extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .caption
-                      ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500)),
+                      ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500)),
             ),
           ),
           PopupMenuItem<TaskListMenuAction>(

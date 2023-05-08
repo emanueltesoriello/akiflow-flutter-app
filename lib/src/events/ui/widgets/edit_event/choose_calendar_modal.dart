@@ -49,7 +49,7 @@ class ChooseCalendarModal extends StatelessWidget {
                       Text(
                         t.event.editEvent.chooseCalendar,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: ColorsExt.grey2(context),
+                              color: ColorsExt.grey800(context),
                               fontWeight: FontWeight.w500,
                             ),
                       ),
@@ -89,11 +89,11 @@ class ChooseCalendarModal extends StatelessWidget {
     return InkWell(
       onTap: click,
       child: Container(
-        color: active ? ColorsExt.grey6(context) : Colors.transparent,
+        color: active ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.all(Dimension.padding),
         child: Text(
           text,
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
         ),
       ),
     );

@@ -110,8 +110,8 @@ class BottomTaskActions extends StatelessWidget {
                 ),
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.grey5(context),
-                    topColor: ColorsExt.grey2_5(context),
+                    backColor: ColorsExt.grey200(context),
+                    topColor: ColorsExt.grey700(context),
                     icon: Assets.images.icons.common.numberSVG,
                     bottomLabel: 'Label',
                     click: () {
@@ -132,8 +132,8 @@ class BottomTaskActions extends StatelessWidget {
                 ),
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.grey5(context),
-                    topColor: ColorsExt.grey2_5(context),
+                    backColor: ColorsExt.grey200(context),
+                    topColor: ColorsExt.grey700(context),
                     icon: Assets.images.icons.common.exclamationmarkSVG,
                     bottomLabel: t.task.priority.title,
                     click: () async {
@@ -161,7 +161,7 @@ class BottomTaskActions extends StatelessWidget {
                             Assets.images.icons.common.ellipsisSVG,
                             width: Dimension.defaultIconSize,
                             height: Dimension.defaultIconSize,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey800(context),
                           ),
                           onSelected: (BottomTaskAdditionalActions result) {
                             switch (result) {

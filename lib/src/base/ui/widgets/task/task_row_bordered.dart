@@ -25,7 +25,7 @@ class TaskBorderedRow extends StatelessWidget {
         color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(Dimension.noticeRadius),
         border: Border.all(
-          color: ColorsExt.grey5(context),
+          color: ColorsExt.grey200(context),
           width: 1,
         ),
       ),
@@ -40,7 +40,7 @@ class TaskBorderedRow extends StatelessWidget {
               Assets.images.icons.common.squareSVG,
               width: 20,
               height: 20,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
             ),
           ),
           const SizedBox(width: 10),

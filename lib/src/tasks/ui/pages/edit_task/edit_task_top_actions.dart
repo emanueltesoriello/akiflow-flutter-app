@@ -94,7 +94,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             return TagBox(
               icon: Assets.images.icons.common.hourglassSVG,
               backgroundColor:
-                  task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                  task.duration != null && task.duration != 0 ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
               active: task.duration != null && task.duration != 0,
               isSquare: task.duration != null && task.duration != 0 ? false : true,
               text: text,
@@ -111,7 +111,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
 
               return TagBox(
                 icon: Assets.images.icons.common.repeatSVG,
-                backgroundColor: enabled ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                backgroundColor: enabled ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
                 active: enabled,
                 isBig: true,
                 onPressed: () {

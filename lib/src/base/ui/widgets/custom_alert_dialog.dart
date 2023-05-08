@@ -11,8 +11,8 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(action.title, style: TextStyle(color: ColorsExt.grey1(context))),
-      content: action.content != null ? Text(action.content!, style: TextStyle(color: ColorsExt.grey1(context))) : null,
+      title: Text(action.title, style: TextStyle(color: ColorsExt.grey900(context))),
+      content: action.content != null ? Text(action.content!, style: TextStyle(color: ColorsExt.grey900(context))) : null,
       actions: <Widget>[
         action.dismiss != null
             ? TextButton(

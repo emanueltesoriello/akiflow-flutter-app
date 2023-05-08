@@ -68,7 +68,7 @@ class EventRecurrenceModal extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))),
                 ],
               ),
             ),
@@ -175,7 +175,7 @@ class EventRecurrenceModal extends StatelessWidget {
             ),
             Container(
                 color: selectedRecurrence == EventRecurrenceModalType.custom
-                    ? ColorsExt.grey6(context)
+                    ? ColorsExt.grey100(context)
                     : Colors.transparent,
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 child: InkWell(
@@ -193,7 +193,7 @@ class EventRecurrenceModal extends StatelessWidget {
                     );
                   },
                   child: Text(t.editTask.custom,
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
                 )),
             const SizedBox(height: Dimension.paddingL),
           ],
@@ -211,9 +211,9 @@ class EventRecurrenceModal extends StatelessWidget {
     return InkWell(
       onTap: click,
       child: Container(
-        color: active ? ColorsExt.grey6(context) : Colors.transparent,
+        color: active ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Text(text, style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+        child: Text(text, style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
       ),
     );
   }

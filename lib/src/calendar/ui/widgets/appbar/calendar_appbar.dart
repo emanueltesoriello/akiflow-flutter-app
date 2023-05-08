@@ -59,7 +59,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Assets.images.icons.common.ellipsisSVG,
                 width: 24,
                 height: 24,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               ),
               onPressed: () {
                 showCupertinoModalBottomSheet(
@@ -99,7 +99,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                .copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: Dimension.padding),
           AnimatedChevron(iconUp: state.panelState == PanelState.opened),

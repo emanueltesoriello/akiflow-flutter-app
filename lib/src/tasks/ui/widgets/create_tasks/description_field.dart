@@ -22,14 +22,14 @@ class DescriptionField extends StatelessWidget {
         hintText: t.addTask.descriptionHint,
         border: InputBorder.none,
         hintStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
             ),
       ),
       onChanged: (String text) {
         context.read<EditTaskCubit>().updateDescription(text);
       },
       style: Theme.of(context).textTheme.subtitle1?.copyWith(
-            color: ColorsExt.grey2(context),
+            color: ColorsExt.grey800(context),
           ),
     );
   }

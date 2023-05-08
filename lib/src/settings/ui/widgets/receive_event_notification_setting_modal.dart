@@ -39,7 +39,7 @@ class _ReceiveEventNotificationSettingModalState extends State<ReceiveEventNotif
     return InkWell(
       onTap: onPressed,
       child: Container(
-        color: selected ? ColorsExt.grey6(context) : Colors.transparent,
+        color: selected ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
         height: 40,
         child: Row(
@@ -48,7 +48,7 @@ class _ReceiveEventNotificationSettingModalState extends State<ReceiveEventNotif
               child: Text(
                 text,
                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                      color: ColorsExt.grey2(context),
+                      color: ColorsExt.grey800(context),
                     ),
               ),
             ),
@@ -88,7 +88,7 @@ class _ReceiveEventNotificationSettingModalState extends State<ReceiveEventNotif
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                           child: Text('Send notifications ...',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey2(context))),
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey800(context))),
                         ),
                         const SizedBox(height: Dimension.padding),
                         ...List.generate(

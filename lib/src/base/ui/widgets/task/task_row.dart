@@ -143,7 +143,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.3,
-                    child: _buildSlidableDone(ColorsExt.grey6(context), ColorsExt.grey3(context)),
+                    child: _buildSlidableDone(ColorsExt.grey100(context), ColorsExt.grey600(context)),
                   ),
                 ],
               ),
@@ -153,13 +153,13 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
           children: [
             Builder(builder: (context) {
               return CustomSlidableAction(
-                backgroundColor: ColorsExt.grey6(context),
-                foregroundColor: ColorsExt.grey3(context),
+                backgroundColor: ColorsExt.grey100(context),
+                foregroundColor: ColorsExt.grey600(context),
                 onPressed: (context) {},
                 padding: EdgeInsets.zero,
                 child: SlidableButtonAction(
-                  backColor: ColorsExt.grey6(context),
-                  topColor: ColorsExt.grey3(context),
+                  backColor: ColorsExt.grey100(context),
+                  topColor: ColorsExt.grey600(context),
                   icon: Assets.images.icons.common.checkDoneSVG,
                   leftToRight: true,
                   click: () async {
@@ -182,13 +182,13 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             Builder(builder: (context) {
               // builder is used to get the context of the slidable, not remove!
               return CustomSlidableAction(
-                backgroundColor: ColorsExt.grey5(context),
-                foregroundColor: ColorsExt.grey3(context),
+                backgroundColor: ColorsExt.grey200(context),
+                foregroundColor: ColorsExt.grey600(context),
                 onPressed: (context) {},
                 padding: EdgeInsets.zero,
                 child: SlidableButtonAction(
-                  backColor: ColorsExt.grey5(context),
-                  topColor: ColorsExt.grey3(context),
+                  backColor: ColorsExt.grey200(context),
+                  topColor: ColorsExt.grey600(context),
                   icon: Assets.images.icons.common.numberSVG,
                   leftToRight: false,
                   click: () {
@@ -240,7 +240,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         ),
         child: Builder(builder: (context) {
           Widget child = InkWell(
-            splashColor: ColorsExt.grey4(context),
+            splashColor: ColorsExt.grey300(context),
             onLongPress: widget.enableLongPressToSelect ? () => widget.selectTask() : null,
             onTap: () async {
               if (widget.openedFromCalendarGroupedTasks) {
@@ -250,7 +250,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              color: widget.color ?? ((widget.task.selected ?? false) ? ColorsExt.grey7(context) : Colors.transparent),
+              color: widget.color ?? ((widget.task.selected ?? false) ? ColorsExt.grey50(context) : Colors.transparent),
               child: Stack(
                 children: [
                   BackgroundDailyGoal(

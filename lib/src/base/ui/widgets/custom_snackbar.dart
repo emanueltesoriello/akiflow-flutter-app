@@ -30,7 +30,7 @@ class CustomSnackbar extends SnackBar {
                 decoration: BoxDecoration(
                   color: color(context, type),
                   border: Border.all(
-                    color: ColorsExt.grey4(context),
+                    color: ColorsExt.grey300(context),
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(Dimension.radiusS),
@@ -40,13 +40,13 @@ class CustomSnackbar extends SnackBar {
                     SizedBox(
                       height: Dimension.smallconSize,
                       width: Dimension.smallconSize,
-                      child: SvgPicture.asset(icon(type), color: ColorsExt.grey2(context)),
+                      child: SvgPicture.asset(icon(type), color: ColorsExt.grey800(context)),
                     ),
                     const SizedBox(width: Dimension.paddingS),
                     Expanded(
                       child: Text(message,
                           style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                                 fontWeight: FontWeight.w500,
                               )),
                     ),
@@ -67,7 +67,7 @@ class CustomSnackbar extends SnackBar {
       case CustomSnackbarType.error:
         return ColorsExt.orange20(context);
       case CustomSnackbarType.eventCreated:
-        return ColorsExt.grey6(context);
+        return ColorsExt.grey100(context);
       case CustomSnackbarType.eventDeleted:
         return ColorsExt.cyan25(context);
       case CustomSnackbarType.eventEdited:

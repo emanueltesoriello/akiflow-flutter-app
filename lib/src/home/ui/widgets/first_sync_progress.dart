@@ -44,7 +44,7 @@ class FirstSyncProgress extends StatelessWidget {
             const SizedBox(height: Dimension.padding),
             Text(
               'Synching your tasks...',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey2(context)),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
             )
           ],
         ),

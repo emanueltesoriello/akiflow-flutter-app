@@ -101,9 +101,9 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
               return TagBox(
                 icon: Assets.images.icons.common.hourglassSVG,
                 active: task.duration != null && task.duration != 0,
-                foregroundColor: ColorsExt.grey2(context),
+                foregroundColor: ColorsExt.grey800(context),
                 backgroundColor:
-                    task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                    task.duration != null && task.duration != 0 ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
                 isSquare: task.duration != null && task.duration != 0 ? false : true,
                 isBig: true,
                 text: text,
@@ -141,7 +141,7 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
               return TagBox(
                 icon: image,
                 active: task.priority != null,
-                backgroundColor: task.priority != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                backgroundColor: task.priority != null ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
                 isSquare: true,
                 isBig: true,
                 text: text,
@@ -181,9 +181,9 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                 return TagBox(
                   icon: Assets.images.icons.common.numberSVG,
                   active: state.updatedTask.listId != null,
-                  iconColor: background ?? ColorsExt.grey2_5(context),
-                  foregroundColor: background ?? ColorsExt.grey2_5(context),
-                  backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey7(context),
+                  iconColor: background ?? ColorsExt.grey700(context),
+                  foregroundColor: background ?? ColorsExt.grey700(context),
+                  backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey50(context),
                   text: label?.title ?? t.addTask.label,
                   isBig: true,
                   onPressed: () {

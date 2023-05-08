@@ -58,7 +58,7 @@ class Notice extends StatelessWidget {
                   Assets.images.icons.common.xmarkSVG,
                   width: 20,
                   height: 20,
-                  color: ColorsExt.grey1(context),
+                  color: ColorsExt.grey900(context),
                 ),
                 InkWell(
                   onTap: onClose,

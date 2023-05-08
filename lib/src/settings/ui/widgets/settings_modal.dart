@@ -40,7 +40,7 @@ class SettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.traySVG,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       selected: homeViewType == HomeViewType.inbox,
@@ -50,7 +50,7 @@ class SettingsModal extends StatelessWidget {
         return Text(tasks.length.toString(),
             style: Theme.of(context).textTheme.bodyText1?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2_5(context),
+                  color: ColorsExt.grey700(context),
                 ));
       }),
       onPressed: () {
@@ -68,7 +68,7 @@ class SettingsModal extends StatelessWidget {
         width: 22,
         child: SvgPicture.asset(
           "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-          color: ColorsExt.grey1(context),
+          color: ColorsExt.grey900(context),
         ),
       ),
       selected: homeViewType == HomeViewType.today,
@@ -80,7 +80,7 @@ class SettingsModal extends StatelessWidget {
         return Text(fixedTodoTodayTasks.length.toString(),
             style: Theme.of(context).textTheme.bodyText1?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2_5(context),
+                  color: ColorsExt.grey700(context),
                 ));
       }),
       onPressed: () {
@@ -98,13 +98,13 @@ class SettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.archiveboxSVG,
-          color: ColorsExt.grey3(context),
+          color: ColorsExt.grey600(context),
         ),
       ),
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(t.comingSoon,
           style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey600(context),
               )),
       onPressed: () {
         // TODO someday list
@@ -121,13 +121,13 @@ class SettingsModal extends StatelessWidget {
         child: SvgPicture.asset(
           Assets.images.icons.common.rectangleGrid1X2SVG,
           height: 19,
-          color: ColorsExt.grey3(context),
+          color: ColorsExt.grey600(context),
         ),
       ),
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(
         t.comingSoon,
-        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey3(context)),
+        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey600(context)),
       ),
       onPressed: () {
         // TODO all tasks list
@@ -146,7 +146,7 @@ class SettingsModal extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+                  ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey600(context)),
             ),
           ),
           Theme(
@@ -157,7 +157,7 @@ class SettingsModal extends StatelessWidget {
                 Assets.images.icons.common.plusSVG,
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               ),
               onSelected: (AddListType result) async {
                 switch (result) {

@@ -52,14 +52,14 @@ class AuthPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey1(context),
+                            color: ColorsExt.grey900(context),
                           )),
                   const SizedBox(height: Dimension.paddingS),
                   Text(t.onboarding.welcomeToAkiflowSubtitle,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
                             fontWeight: FontWeight.w400,
-                            color: ColorsExt.grey2_5(context),
+                            color: ColorsExt.grey700(context),
                           )),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.5,
@@ -90,21 +90,21 @@ class AuthPage extends StatelessWidget {
                     text: TextSpan(
                       style: Theme.of(context).textTheme.bodyText1?.copyWith(
                             fontWeight: FontWeight.w400,
-                            color: ColorsExt.grey2_5(context),
+                            color: ColorsExt.grey700(context),
                           ),
                       children: [
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.continuingYouAcceptThe,
                           style: Theme.of(context).textTheme.bodyText1?.copyWith(
                                 fontWeight: FontWeight.w400,
-                                color: ColorsExt.grey2_5(context),
+                                color: ColorsExt.grey700(context),
                               ),
                         ),
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.termsAndConditions,
                           style: Theme.of(context).textTheme.bodyText1?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                               ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
@@ -116,14 +116,14 @@ class AuthPage extends StatelessWidget {
                           text: t.onboarding.termsAndPrivacy.andThe,
                           style: Theme.of(context).textTheme.bodyText1?.copyWith(
                                 fontWeight: FontWeight.w400,
-                                color: ColorsExt.grey2_5(context),
+                                color: ColorsExt.grey700(context),
                               ),
                         ),
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.privacyPolicy,
                           style: Theme.of(context).textTheme.bodyText1?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                               ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
@@ -135,7 +135,7 @@ class AuthPage extends StatelessWidget {
                           text: t.onboarding.termsAndPrivacy.ofAkiflow,
                           style: Theme.of(context).textTheme.bodyText1?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                               ),
                         ),
                       ],

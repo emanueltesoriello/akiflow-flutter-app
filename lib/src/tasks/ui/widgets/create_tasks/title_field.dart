@@ -44,14 +44,14 @@ class TitleField extends StatelessWidget {
                 hintText: t.addTask.titleHint,
                 border: InputBorder.none,
                 hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                       fontWeight: FontWeight.w500,
                     )),
             onTap: () {
               print('On tap');
             },
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: ColorsExt.grey2(context),
+                  color: ColorsExt.grey800(context),
                   fontWeight: FontWeight.w500,
                 ),
           );

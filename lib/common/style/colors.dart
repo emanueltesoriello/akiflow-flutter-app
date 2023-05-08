@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
 
 extension ColorsExt on Colors {
-  static Color grey1(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey1 : ColorsDark.grey1;
+  static Color grey900(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey900 : ColorsDark.grey900;
   }
 
-  static Color grey2(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey2 : ColorsDark.grey2;
+  static Color grey800(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey800 : ColorsDark.grey800;
   }
 
-  static Color grey2_5(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey2_5 : ColorsDark.grey2_5;
+  static Color grey700(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey700 : ColorsDark.grey700;
   }
 
-  static Color grey3(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey3 : ColorsDark.grey3;
+  static Color grey600(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey600 : ColorsDark.grey600;
   }
 
-  static Color grey4(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey4 : ColorsDark.grey4;
+  static Color grey500(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey500 : ColorsDark.grey500;
   }
 
-  static Color grey5(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey5 : ColorsDark.grey5;
+  static Color grey400(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey400 : ColorsDark.grey400;
   }
 
-  static Color grey6(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey6 : ColorsDark.grey6;
+  static Color grey300(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey300 : ColorsDark.grey300;
   }
 
-  static Color grey7(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey7 : ColorsDark.grey7;
+  static Color grey200(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey200 : ColorsDark.grey200;
+  }
+
+  static Color grey100(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey100 : ColorsDark.grey100;
+  }
+
+  static Color grey50(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey50 : ColorsDark.grey50;
   }
 
   static green(BuildContext context) {
@@ -78,7 +86,7 @@ extension ColorsExt on Colors {
   }
 
   static background(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.white : ColorsDark.grey1;
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.white : ColorsDark.grey900;
   }
 
   static orange(BuildContext context) {
@@ -168,15 +176,17 @@ extension ColorsLight on Colors {
   static const Color yellow20 = Color(0xFFFCF1CF);
 
   // greys
-  static const Color grey1 = Color(0xFF37404A);
-  static const Color grey2 = Color(0xFF445B6A);
-  static const Color grey2_5 = Color(0xFF7C8B95);
-  static const Color grey3 = Color(0xFFA0AEB8);
-  static const Color grey4 = Color(0xFFBFD6E4);
-  static const Color grey5 = Color(0xFFE4EDF3);
-  static const Color grey6 = Color(0xFFF1F6F9);
-  static const Color grey7 = Color(0xFFFAFBFD);
-  static const Color white = Color(0xFFFFFFFF);
+  static const Color grey900 = Color.fromRGBO(51, 65, 85, 1);
+  static const Color grey800 = Color.fromRGBO(71, 85, 105, 1);
+  static const Color grey700 = Color.fromRGBO(102, 121, 147, 1);
+  static const Color grey600 = Color.fromRGBO(145, 158, 176, 1);
+  static const Color grey500 = Color.fromRGBO(181, 192, 206, 1);
+  static const Color grey400 = Color.fromRGBO(203, 213, 225, 1);
+  static const Color grey300 = Color.fromRGBO(214, 227, 235, 1);
+  static const Color grey200 = Color.fromRGBO(233, 240, 246, 1);
+  static const Color grey100 = Color.fromRGBO(241, 245, 249, 1);
+  static const Color grey50 = Color.fromRGBO(248, 250, 252, 1);
+  static const Color white = Color.fromRGBO(255, 255, 255, 1);
 
   static const Color pink = Color(0xFFF195C1);
   static const Color pink30 = Color(0xFFFFE9F0);
@@ -205,14 +215,17 @@ extension ColorsDark on Colors {
   static const Color yellow20 = Color(0xFFFCF1CF);
 
   // greys
-  static const Color grey1 = Color(0xFF37404A);
-  static const Color grey2 = Color(0xFF445B6A);
-  static const Color grey2_5 = Color(0xFF7C8B95);
-  static const Color grey3 = Color(0xFFA0AEB8);
-  static const Color grey4 = Color(0xFFBFD6E4);
-  static const Color grey5 = Color(0xFFE4EDF3);
-  static const Color grey6 = Color(0xFFF1F6F9);
-  static const Color grey7 = Color(0xFFFAFBFD);
+  static const Color grey900 = Color.fromRGBO(51, 65, 85, 1);
+  static const Color grey800 = Color.fromRGBO(71, 85, 105, 1);
+  static const Color grey700 = Color.fromRGBO(102, 121, 147, 1);
+  static const Color grey600 = Color.fromRGBO(145, 158, 176, 1);
+  static const Color grey500 = Color.fromRGBO(181, 192, 206, 1);
+  static const Color grey400 = Color.fromRGBO(203, 213, 225, 1);
+  static const Color grey300 = Color.fromRGBO(214, 227, 235, 1);
+  static const Color grey200 = Color.fromRGBO(233, 240, 246, 1);
+  static const Color grey100 = Color.fromRGBO(241, 245, 249, 1);
+  static const Color grey50 = Color.fromRGBO(248, 250, 252, 1);
+  static const Color white = Color.fromRGBO(255, 255, 255, 1);
 
   static const Color pink = Color(0xFFF195C1);
   static const Color pink30 = Color(0xFFFFE9F0);

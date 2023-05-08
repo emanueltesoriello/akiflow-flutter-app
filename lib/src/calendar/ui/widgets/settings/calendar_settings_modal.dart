@@ -89,7 +89,7 @@ class CalendarSettingsModal extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .caption
-                  ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600)),
+                  ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600)),
         ),
         _agenda(context, isThreeDays, now),
         const SizedBox(height: 2),
@@ -113,7 +113,7 @@ class CalendarSettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.agendaSVG,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       trailing: const SizedBox(),
@@ -136,7 +136,7 @@ class CalendarSettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.daySVG,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       trailing: const SizedBox(),
@@ -159,7 +159,7 @@ class CalendarSettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.threeDaysSVG,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       trailing: const SizedBox(),
@@ -187,7 +187,7 @@ class CalendarSettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.weekSVG,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       trailing: const SizedBox(),
@@ -216,7 +216,7 @@ class CalendarSettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.monthSVG,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       trailing: const SizedBox(),
@@ -251,12 +251,12 @@ class CalendarSettingsModal extends StatelessWidget {
               width: Dimension.defaultIconSize,
               child: SvgPicture.asset(
                 Assets.images.icons.common.arrow2CirclepathSVG,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               ),
             ),
             const SizedBox(width: Dimension.padding),
             Text(t.calendar.refresh,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
           ],
         ),
       ),
@@ -277,7 +277,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.groupOverlappingTasks,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: groupOverlappingTasks,
                 onToggle: (value) {
@@ -291,7 +291,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.hideWeekends,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: isWeekendHidden,
                 onToggle: (value) {
@@ -315,7 +315,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.hideDeclinedEvents,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: areDeclinedEventsHidden,
                 onToggle: (value) {
@@ -329,7 +329,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.hideTasksFromCalendar,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: areCalendarTasksHidden,
                 onToggle: (value) {
@@ -353,7 +353,7 @@ class CalendarSettingsModal extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .caption
-                  ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600)),
+                  ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600)),
         ),
         ListView.builder(
           shrinkWrap: true,
@@ -389,7 +389,7 @@ class SwitchButton extends StatelessWidget {
         height: 24,
         toggleSize: 20,
         activeColor: ColorsExt.akiflow(context),
-        inactiveColor: ColorsExt.grey5(context),
+        inactiveColor: ColorsExt.grey200(context),
         value: value,
         borderRadius: 24,
         padding: 2,

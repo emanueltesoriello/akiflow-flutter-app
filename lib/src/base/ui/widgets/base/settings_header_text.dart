@@ -15,7 +15,7 @@ class SettingHeaderText extends StatelessWidget {
         Text(text.toUpperCase(),
             style: Theme.of(context).textTheme.caption?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey3(context),
+                  color: ColorsExt.grey600(context),
                 )),
         const SizedBox(height: Dimension.paddingXS),
       ],

@@ -190,13 +190,13 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                           if (widget.onDisconnect != null) widget.onDisconnect!;
                         },
                         color: Colors.transparent,
-                        splashColor: ColorsExt.grey3(context),
-                        borderColor: ColorsExt.grey2_5(context),
+                        splashColor: ColorsExt.grey600(context),
+                        borderColor: ColorsExt.grey700(context),
                         child: Text('Disconnect',
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1
-                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2_5(context))))
+                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey700(context))))
                     : ActionButton(
                         key: const Key('Reconnect'),
                         onPressed: () async {
@@ -264,7 +264,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                                   height: 24,
                                   toggleSize: 20,
                                   activeColor: ColorsExt.akiflow(context),
-                                  inactiveColor: ColorsExt.grey5(context),
+                                  inactiveColor: ColorsExt.grey200(context),
                                   value: isSuperhumanEnabled ?? false,
                                   borderRadius: 24,
                                   padding: 2,

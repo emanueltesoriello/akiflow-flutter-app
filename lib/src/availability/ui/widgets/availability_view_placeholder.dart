@@ -44,13 +44,13 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!
-                          .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                          .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                     ),
                     const SizedBox(height: Dimension.padding),
                     Text(
                       t.availability.toCreateLinkUseDesktop,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: ColorsExt.grey3(context)),
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: ColorsExt.grey600(context)),
                     ),
                   ],
                 ),
@@ -60,7 +60,7 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
                   onPressed: () {
                     context.read<MainCubit>().changeHomeView(HomeViewType.today);
                   },
-                  child: Text(t.calendar.goToToday, style: TextStyle(color: ColorsExt.grey2(context)))),
+                  child: Text(t.calendar.goToToday, style: TextStyle(color: ColorsExt.grey800(context)))),
               const SizedBox(height: Dimension.bottomBarHeight),
             ],
           ),
