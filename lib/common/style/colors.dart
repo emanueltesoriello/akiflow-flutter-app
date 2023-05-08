@@ -153,27 +153,30 @@ extension ColorsExt on Colors {
 
 extension ColorsLight on Colors {
   // primary
-  static const Color akiflow = Color(0xFFAF38F9);
-  static const Color akiflow20 = Color(0xFFEFD7FE);
-  static const Color akiflow10 = Color(0xFFF7EBFE);
+  static const Color akiflow = Color.fromRGBO(175, 56, 249, 1);
+  static const Color akiflow20 = Color.fromRGBO(239, 215, 254, 1);
+  static const Color akiflow10 = Color.fromRGBO(247, 235, 254, 1);
 
-  static const Color highlightColor = Color(0xFFF2DDFF);
+  static const Color highlightColor = Color.fromRGBO(242, 221, 255, 1);
 
-  static const Color green = Color(0xFF6FCF97);
-  static const Color green20 = Color(0xFFE2F5EA);
+  static const Color green = Color.fromRGBO(111, 207, 151, 1);
+  static const Color green20 = Color.fromRGBO(226, 245, 234, 1);
 
-  static const Color cyan = Color(0xFF59B6EB);
-  static const Color cyan20 = Color(0xFFECF8FF);
-  static const Color cyan25 = Color(0xFFD8EDFA);
+  static const Color cyan = Color.fromRGBO(89, 182, 235, 1);
+  static const Color cyan25 = Color.fromRGBO(216, 237, 250, 1);
+  static const Color cyan15 = Color.fromRGBO(236, 248, 255, 1);
 
-  static const Color red = Color(0xFFEB5757);
-  static const Color red20 = Color(0xFFFBDDDD);
+  static const Color red = Color.fromRGBO(235, 87, 87, 1);
+  static const Color red20 = Color.fromRGBO(251, 221, 221, 1);
 
-  static const Color orange = Color(0xFFFB8822);
-  static const Color orange20 = Color(0xFFFEE7D3);
+  static const Color orange = Color.fromRGBO(251, 136, 34, 1);
+  static const Color orange20 = Color.fromRGBO(254, 231, 211, 1);
 
-  static const Color yellow = Color(0xFFF1BA11);
-  static const Color yellow20 = Color(0xFFFCF1CF);
+  static const Color yellow = Color.fromRGBO(241, 186, 17, 1);
+  static const Color yellow20 = Color.fromRGBO(252, 241, 207, 1);
+
+  static const Color pink = Color.fromRGBO(241, 149, 193, 1);
+  static const Color pink30 = Color.fromRGBO(255, 233, 240, 1);
 
   // greys
   static const Color grey900 = Color.fromRGBO(51, 65, 85, 1);
@@ -187,32 +190,32 @@ extension ColorsLight on Colors {
   static const Color grey100 = Color.fromRGBO(241, 245, 249, 1);
   static const Color grey50 = Color.fromRGBO(248, 250, 252, 1);
   static const Color white = Color.fromRGBO(255, 255, 255, 1);
-
-  static const Color pink = Color(0xFFF195C1);
-  static const Color pink30 = Color(0xFFFFE9F0);
 }
 
 extension ColorsDark on Colors {
   // primary
-  static const Color akiflow = Color(0xFFAF38F9);
-  static const Color akiflow20 = Color(0xFFEFD7FE);
-  static const Color akiflow10 = Color(0xFFF7EBFE);
+  static const Color akiflow = Color.fromRGBO(175, 56, 249, 1);
+  static const Color akiflow20 = Color.fromRGBO(239, 215, 254, 1);
+  static const Color akiflow10 = Color.fromRGBO(247, 235, 254, 1);
 
-  static const Color green = Color(0xFF6FCF97);
-  static const Color green20 = Color(0xFFE2F5EA);
+  static const Color green = Color.fromRGBO(111, 207, 151, 1);
+  static const Color green20 = Color.fromRGBO(226, 245, 234, 1);
 
-  static const Color cyan = Color(0xFF59B6EB);
-  static const Color cyan20 = Color(0xFFECF8FF);
-  static const Color cyan25 = Color(0xFFD8EDFA);
+  static const Color cyan = Color.fromRGBO(89, 182, 235, 1);
+  static const Color cyan25 = Color.fromRGBO(216, 237, 250, 1);
+  static const Color cyan15 = Color.fromRGBO(236, 248, 255, 1);
 
-  static const Color red = Color(0xFFEB5757);
-  static const Color red20 = Color(0xFFFBDDDD);
+  static const Color red = Color.fromRGBO(235, 87, 87, 1);
+  static const Color red20 = Color.fromRGBO(251, 221, 221, 1);
 
-  static const Color orange = Color(0xFFFB8822);
-  static const Color orange20 = Color(0xFFFEE7D3);
+  static const Color orange = Color.fromRGBO(251, 136, 34, 1);
+  static const Color orange20 = Color.fromRGBO(254, 231, 211, 1);
 
-  static const Color yellow = Color(0xFFF1BA11);
-  static const Color yellow20 = Color(0xFFFCF1CF);
+  static const Color yellow = Color.fromRGBO(241, 186, 17, 1);
+  static const Color yellow20 = Color.fromRGBO(252, 241, 207, 1);
+
+  static const Color pink = Color.fromRGBO(241, 149, 193, 1);
+  static const Color pink30 = Color.fromRGBO(255, 233, 240, 1);
 
   // greys
   static const Color grey900 = Color.fromRGBO(51, 65, 85, 1);
@@ -226,7 +229,4 @@ extension ColorsDark on Colors {
   static const Color grey100 = Color.fromRGBO(241, 245, 249, 1);
   static const Color grey50 = Color.fromRGBO(248, 250, 252, 1);
   static const Color white = Color.fromRGBO(255, 255, 255, 1);
-
-  static const Color pink = Color(0xFFF195C1);
-  static const Color pink30 = Color(0xFFFFE9F0);
 }
