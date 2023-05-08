@@ -139,7 +139,7 @@ class TaskInfo extends StatelessWidget {
     } else {
       if (task.datetime != null && !task.isOverdue) {
         return TagBox(
-          backgroundColor: ColorsExt.grey200(context),
+          backgroundColor: (task.done ?? false) ? ColorsExt.green20(context) : ColorsExt.grey200(context),
           text: task.timeFormatted,
           active: true,
         );
@@ -150,7 +150,7 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget plannedInfo(BuildContext context) {
-    Color color = ColorsExt.grey200(context);
+    Color color = (task.done ?? false) ? ColorsExt.green20(context) : ColorsExt.grey200(context);
 
     String text;
 

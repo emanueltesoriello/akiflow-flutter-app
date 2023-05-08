@@ -59,6 +59,9 @@ class PlanForAction extends StatelessWidget {
           leadingIconAsset = Assets.images.icons.common.clockAlertSVG;
           color = ColorsExt.red20(context);
         }
+        if(task.done ?? false){
+          color = ColorsExt.green20(context);
+        }
 
         DateTime parsed = DateTime.parse(task.date!);
         text = DateFormat("EEE, d MMM").format(parsed);
