@@ -227,7 +227,7 @@ class FabActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       clipBehavior: Clip.antiAlias,
-      color: ColorsExt.akiflow(context),
+      color: ColorsExt.akiflow500(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimension.radiusM),
       ),

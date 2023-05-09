@@ -648,7 +648,7 @@ class _EventEditModalState extends State<EventEditModal> {
             width: 48,
             height: 24,
             toggleSize: 20,
-            activeColor: ColorsExt.akiflow(context),
+            activeColor: ColorsExt.akiflow500(context),
             inactiveColor: ColorsExt.grey200(context),
             value: isAllDay,
             borderRadius: 24,
@@ -727,7 +727,7 @@ class _EventEditModalState extends State<EventEditModal> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
                 ),
               const SizedBox(width: Dimension.paddingM),
               InkWell(
@@ -944,7 +944,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           height: Dimension.defaultIconSize,
                           child: SvgPicture.asset(
                             Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                            color: ColorsExt.green(context),
+                            color: ColorsExt.yorkGreen400(context),
                           ),
                         )
                       : updatedEvent.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
@@ -953,7 +953,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               height: Dimension.defaultIconSize,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.xmarkCircleFillSVG,
-                                color: ColorsExt.red(context),
+                                color: ColorsExt.cosmos400(context),
                               ),
                             )
                           : SizedBox(
@@ -1101,7 +1101,7 @@ class _EventEditModalState extends State<EventEditModal> {
       builder: (context, quill.QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: quill.QuillEditor(
@@ -1213,8 +1213,8 @@ class _EventEditModalState extends State<EventEditModal> {
                           ? t.event.editEvent.createEvent
                           : t.event.editEvent.saveChanges,
                       image: Assets.images.icons.common.checkmarkAltSVG,
-                      containerColor: ColorsExt.green20(context),
-                      iconColor: ColorsExt.green(context),
+                      containerColor: ColorsExt.yorkGreen200(context),
+                      iconColor: ColorsExt.yorkGreen400(context),
                       onTap: () async {
                         _onSaveTap();
                       },

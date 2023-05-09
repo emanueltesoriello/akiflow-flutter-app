@@ -38,7 +38,7 @@ class TodayHeader extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1!
-                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
             const SizedBox(width: 4),
             Text(tasksLenght.toString(),
                 style: Theme.of(context)

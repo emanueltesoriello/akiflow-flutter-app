@@ -15,12 +15,12 @@ class DotPrefix extends StatelessWidget {
           Color? color;
 
           if (task?.statusType == TaskStatusType.inbox && task?.readAt == null) {
-            color = ColorsExt.cyan(context);
+            color = ColorsExt.jordyBlue400(context);
           }
 
           try {
             if (task?.content["expiredSnooze"] == true) {
-              color = ColorsExt.pink(context);
+              color = ColorsExt.rose400(context);
             }
           } catch (_) {}
 

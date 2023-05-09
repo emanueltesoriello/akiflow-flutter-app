@@ -41,64 +41,64 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey50 : ColorsDark.grey50;
   }
 
-  static green(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.green : ColorsDark.green;
+  static yorkGreen400(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.yorkGreen400 : ColorsDark.yorkGreen400;
   }
 
-  static green20(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.green20 : ColorsDark.green20;
+  static yorkGreen200(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.yorkGreen200 : ColorsDark.yorkGreen200;
   }
 
-  static cyan(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.cyan : ColorsDark.cyan;
+  static jordyBlue400(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.jordyBlue400 : ColorsDark.jordyBlue400;
   }
 
-  static cyan25(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.cyan25 : ColorsDark.cyan25;
+  static jordyBlue200(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.jordyBlue200 : ColorsDark.jordyBlue200;
   }
 
-  static akiflow(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.akiflow : ColorsDark.akiflow;
+  static akiflow500(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.purple500 : ColorsDark.purple500;
   }
 
-  static akiflow10(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.akiflow10 : ColorsDark.akiflow10;
+  static akiflow100(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.purple100 : ColorsDark.purple100;
   }
 
-  static akiflow20(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.akiflow20 : ColorsDark.akiflow20;
+  static akiflow200(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.purple200 : ColorsDark.purple200;
   }
 
-  static pink(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.pink : ColorsDark.pink;
+  static rose400(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.rose400 : ColorsDark.rose400;
   }
 
-  static pink30(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.pink30 : ColorsDark.pink30;
+  static rose200(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.rose200 : ColorsDark.rose200;
   }
 
-  static yellow(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.yellow : ColorsDark.yellow;
+  static buttercup400(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.buttercup400 : ColorsDark.buttercup400;
   }
 
-  static red(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.red : ColorsDark.red;
+  static cosmos400(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.cosmos400 : ColorsDark.cosmos400;
   }
 
-  static red20(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.red20 : ColorsDark.red20;
+  static cosmos200(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.cosmos200 : ColorsDark.cosmos200;
   }
 
   static background(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.white : ColorsDark.grey900;
   }
 
-  static orange(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.orange : ColorsDark.orange;
+  static apricot400(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.apricot400 : ColorsDark.apricot400;
   }
 
-  static orange20(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light ? ColorsLight.orange20 : ColorsDark.orange20;
+  static apricot200(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.apricot200 : ColorsDark.apricot200;
   }
 
   static Color fromHex(String hexString) {
@@ -156,31 +156,30 @@ extension ColorsExt on Colors {
 }
 
 extension ColorsLight on Colors {
-  // primary
-  static const Color akiflow = Color.fromRGBO(175, 56, 249, 1);
-  static const Color akiflow20 = Color.fromRGBO(239, 215, 254, 1);
-  static const Color akiflow10 = Color.fromRGBO(247, 235, 254, 1);
-
   static const Color highlightColor = Color.fromRGBO(242, 221, 255, 1);
+  // primary
+  static const Color purple500 = Color.fromRGBO(175, 56, 249, 1);
+  static const Color purple200 = Color.fromRGBO(237, 210, 255, 1);
+  static const Color purple100 = Color.fromRGBO(247, 235, 255, 1);
 
-  static const Color green = Color.fromRGBO(111, 207, 151, 1);
-  static const Color green20 = Color.fromRGBO(226, 245, 234, 1);
+  static const Color yorkGreen400 = Color.fromRGBO(103, 197, 146, 1);
+  static const Color yorkGreen200 = Color.fromRGBO(196, 237, 211, 1);
 
-  static const Color cyan = Color.fromRGBO(89, 182, 235, 1);
-  static const Color cyan25 = Color.fromRGBO(216, 237, 250, 1);
-  static const Color cyan15 = Color.fromRGBO(236, 248, 255, 1);
+  static const Color jordyBlue400 = Color.fromRGBO(124, 198, 238, 1);
+  static const Color jordyBlue200 = Color.fromRGBO(201, 230, 248, 1);
+  static const Color jordyBlue100 = Color.fromRGBO(233, 243, 252, 1);
 
-  static const Color red = Color.fromRGBO(235, 87, 87, 1);
-  static const Color red20 = Color.fromRGBO(251, 221, 221, 1);
+  static const Color cosmos400 = Color.fromRGBO(250, 86, 86, 1);
+  static const Color cosmos200 = Color.fromRGBO(255, 204, 204, 1);
 
-  static const Color orange = Color.fromRGBO(251, 136, 34, 1);
-  static const Color orange20 = Color.fromRGBO(254, 231, 211, 1);
+  static const Color apricot400 = Color.fromRGBO(249, 142, 77, 1);
+  static const Color apricot200 = Color.fromRGBO(253, 207, 167, 1);
 
-  static const Color yellow = Color.fromRGBO(241, 186, 17, 1);
-  static const Color yellow20 = Color.fromRGBO(252, 241, 207, 1);
+  static const Color buttercup400 = Color.fromRGBO(248, 196, 37, 1);
+  static const Color buttercup200 = Color.fromRGBO(250, 234, 183, 1);
 
-  static const Color pink = Color.fromRGBO(241, 149, 193, 1);
-  static const Color pink30 = Color.fromRGBO(255, 233, 240, 1);
+  static const Color rose400 = Color.fromRGBO(254, 149, 230, 1);
+  static const Color rose200 = Color.fromRGBO(251, 228, 249, 1);
 
   // greys
   static const Color grey900 = Color.fromRGBO(51, 65, 85, 1);
@@ -198,28 +197,28 @@ extension ColorsLight on Colors {
 
 extension ColorsDark on Colors {
   // primary
-  static const Color akiflow = Color.fromRGBO(175, 56, 249, 1);
-  static const Color akiflow20 = Color.fromRGBO(239, 215, 254, 1);
-  static const Color akiflow10 = Color.fromRGBO(247, 235, 254, 1);
+  static const Color purple500 = Color.fromRGBO(175, 56, 249, 1);
+  static const Color purple200 = Color.fromRGBO(237, 210, 255, 1);
+  static const Color purple100 = Color.fromRGBO(247, 235, 255, 1);
 
-  static const Color green = Color.fromRGBO(111, 207, 151, 1);
-  static const Color green20 = Color.fromRGBO(226, 245, 234, 1);
+  static const Color yorkGreen400 = Color.fromRGBO(103, 197, 146, 1);
+  static const Color yorkGreen200 = Color.fromRGBO(196, 237, 211, 1);
 
-  static const Color cyan = Color.fromRGBO(89, 182, 235, 1);
-  static const Color cyan25 = Color.fromRGBO(216, 237, 250, 1);
-  static const Color cyan15 = Color.fromRGBO(236, 248, 255, 1);
+  static const Color jordyBlue400 = Color.fromRGBO(124, 198, 238, 1);
+  static const Color jordyBlue200 = Color.fromRGBO(201, 230, 248, 1);
+  static const Color jordyBlue100 = Color.fromRGBO(233, 243, 252, 1);
 
-  static const Color red = Color.fromRGBO(235, 87, 87, 1);
-  static const Color red20 = Color.fromRGBO(251, 221, 221, 1);
+  static const Color cosmos400 = Color.fromRGBO(250, 86, 86, 1);
+  static const Color cosmos200 = Color.fromRGBO(255, 204, 204, 1);
 
-  static const Color orange = Color.fromRGBO(251, 136, 34, 1);
-  static const Color orange20 = Color.fromRGBO(254, 231, 211, 1);
+  static const Color apricot400 = Color.fromRGBO(249, 142, 77, 1);
+  static const Color apricot200 = Color.fromRGBO(253, 207, 167, 1);
 
-  static const Color yellow = Color.fromRGBO(241, 186, 17, 1);
-  static const Color yellow20 = Color.fromRGBO(252, 241, 207, 1);
+  static const Color buttercup400 = Color.fromRGBO(248, 196, 37, 1);
+  static const Color buttercup200 = Color.fromRGBO(250, 234, 183, 1);
 
-  static const Color pink = Color.fromRGBO(241, 149, 193, 1);
-  static const Color pink30 = Color.fromRGBO(255, 233, 240, 1);
+  static const Color rose400 = Color.fromRGBO(254, 149, 230, 1);
+  static const Color rose200 = Color.fromRGBO(251, 228, 249, 1);
 
   // greys
   static const Color grey900 = Color.fromRGBO(51, 65, 85, 1);

@@ -77,7 +77,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       builder: (context, QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: GestureDetector(
@@ -206,7 +206,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           completed ? Assets.images.icons.common.checkDoneSVG : Assets.images.icons.common.checkEmptySVG,
           width: 22,
           height: 22,
-          color: completed ? ColorsExt.green(context) : ColorsExt.grey600(context),
+          color: completed ? ColorsExt.yorkGreen400(context) : ColorsExt.grey600(context),
         );
       }),
     );

@@ -24,7 +24,7 @@ class FirstSyncProgress extends StatelessWidget {
                   height: Dimension.firstSyncProgressInboxSize,
                   child: CircularProgressIndicator(
                     strokeWidth: 5,
-                    color: ColorsExt.akiflow20(context),
+                    color: ColorsExt.akiflow200(context),
                   ),
                 ),
                 SizedBox(

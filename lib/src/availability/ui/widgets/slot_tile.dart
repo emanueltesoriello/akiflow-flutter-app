@@ -109,7 +109,7 @@ class SlotTile extends StatelessWidget {
           content: Container(
             padding: const EdgeInsets.all(Dimension.padding),
             decoration: BoxDecoration(
-              color: ColorsExt.green20(context),
+              color: ColorsExt.yorkGreen200(context),
               border: Border.all(
                 color: ColorsExt.grey200(context),
                 width: 1,

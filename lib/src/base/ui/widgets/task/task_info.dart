@@ -45,7 +45,7 @@ class TaskInfo extends StatelessWidget {
             children: [
               TagBox(
                 text: stringDate,
-                backgroundColor: ColorsExt.red20(context),
+                backgroundColor: ColorsExt.cosmos200(context),
                 active: true,
               ),
             ],
@@ -100,14 +100,14 @@ class TaskInfo extends StatelessWidget {
     if (task.statusType == TaskStatusType.inbox) {
       return TagBox(
         icon: Assets.images.icons.common.traySVG,
-        backgroundColor: ColorsExt.cyan25(context),
+        backgroundColor: ColorsExt.jordyBlue200(context),
         text: t.bottomBar.inbox,
         active: true,
       );
     } else if (task.statusType == TaskStatusType.someday) {
       return TagBox(
         icon: Assets.images.icons.common.archiveboxSVG,
-        backgroundColor: ColorsExt.akiflow10(context),
+        backgroundColor: ColorsExt.akiflow100(context),
         text: task.statusType!.name.capitalizeFirstCharacter(),
         active: true,
       );
@@ -130,7 +130,7 @@ class TaskInfo extends StatelessWidget {
 
       return TagBox(
         icon: Assets.images.icons.common.clockSVG,
-        backgroundColor: ColorsExt.akiflow10(context),
+        backgroundColor: ColorsExt.akiflow100(context),
         text: text ?? t.task.snoozed,
         active: true,
       );
@@ -139,7 +139,7 @@ class TaskInfo extends StatelessWidget {
     } else {
       if (task.datetime != null && !task.isOverdue) {
         return TagBox(
-          backgroundColor: (task.done ?? false) ? ColorsExt.green20(context) : ColorsExt.grey200(context),
+          backgroundColor: (task.done ?? false) ? ColorsExt.yorkGreen200(context) : ColorsExt.grey200(context),
           text: task.timeFormatted,
           active: true,
         );
@@ -150,7 +150,7 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget plannedInfo(BuildContext context) {
-    Color color = (task.done ?? false) ? ColorsExt.green20(context) : ColorsExt.grey200(context);
+    Color color = (task.done ?? false) ? ColorsExt.yorkGreen200(context) : ColorsExt.grey200(context);
 
     String text;
 

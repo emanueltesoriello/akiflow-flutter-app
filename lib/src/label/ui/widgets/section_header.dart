@@ -44,7 +44,7 @@ class SectionHeaderItem extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.caption?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: ColorsExt.akiflow(context),
+                    color: ColorsExt.akiflow500(context),
                   ),
             ),
             const SizedBox(width: Dimension.paddingXS),

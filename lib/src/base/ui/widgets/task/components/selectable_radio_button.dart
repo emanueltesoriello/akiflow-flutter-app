@@ -13,7 +13,7 @@ class SelectableRadioButton extends StatelessWidget {
   Widget build(BuildContext context) {
     bool selected = task.selected ?? false;
 
-    Color color = selected ? ColorsExt.akiflow(context) : ColorsExt.grey600(context);
+    Color color = selected ? ColorsExt.akiflow500(context) : ColorsExt.grey600(context);
 
     return Container(
       height: double.infinity,

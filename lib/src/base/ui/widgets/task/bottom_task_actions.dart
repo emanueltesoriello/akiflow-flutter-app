@@ -41,8 +41,8 @@ class BottomTaskActions extends StatelessWidget {
               children: [
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.cyan25(context),
-                    topColor: ColorsExt.cyan(context),
+                    backColor: ColorsExt.jordyBlue200(context),
+                    topColor: ColorsExt.jordyBlue400(context),
                     icon: Assets.images.icons.common.calendarSVG,
                     bottomLabel: t.task.plan,
                     click: () {
@@ -75,8 +75,8 @@ class BottomTaskActions extends StatelessWidget {
                 ),
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.pink30(context),
-                    topColor: ColorsExt.pink(context),
+                    backColor: ColorsExt.rose200(context),
+                    topColor: ColorsExt.rose400(context),
                     icon: Assets.images.icons.common.clockSVG,
                     bottomLabel: t.task.snooze,
                     click: () {

@@ -92,7 +92,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
         previousUpdatedTask?.datetime! != context.read<EditTaskCubit>().state.updatedTask.datetime) {
       setState(() {
         backgroundPlanColor = Colors.white;
-        borderPlanColor = ColorsExt.cyan(context);
+        borderPlanColor = ColorsExt.jordyBlue400(context);
       });
       Future.delayed(const Duration(milliseconds: 1000), () {
         setState(() {

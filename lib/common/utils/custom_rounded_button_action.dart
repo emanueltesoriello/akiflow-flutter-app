@@ -63,9 +63,9 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
       width: MediaQuery.of(context).size.width / 3,
       height: 48,
       decoration: BoxDecoration(
-        color: ColorsExt.akiflow10(context),
+        color: ColorsExt.akiflow100(context),
         border: Border.all(
-          color: ColorsExt.akiflow(context),
+          color: ColorsExt.akiflow500(context),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(Dimension.radius),
@@ -77,7 +77,7 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
             textButtonPositive ?? localizations.okButtonLabel,
             style: Theme.of(context).textTheme.subtitle1!.copyWith(
                   fontWeight: FontWeight.w400,
-                  color: ColorsExt.akiflow(context),
+                  color: ColorsExt.akiflow500(context),
                 ),
           ),
         ),

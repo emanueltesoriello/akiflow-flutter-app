@@ -88,7 +88,7 @@ class NavItem extends StatelessWidget {
 
   Color color(BuildContext context) {
     if (active) {
-      return ColorsExt.akiflow(context);
+      return ColorsExt.akiflow500(context);
     } else {
       return ColorsExt.grey800(context);
     }

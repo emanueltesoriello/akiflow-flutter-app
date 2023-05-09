@@ -58,7 +58,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500))),
+                          ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500))),
             ],
           ),
         ),
@@ -86,24 +86,24 @@ class _UndoBottomViewState extends State<UndoBottomView> {
   Color color(BuildContext context, UndoType type) {
     switch (type) {
       case UndoType.delete:
-        return ColorsExt.cyan25(context);
+        return ColorsExt.jordyBlue200(context);
       case UndoType.markDone:
-        return ColorsExt.green20(context);
+        return ColorsExt.yorkGreen200(context);
       case UndoType.markUndone:
-        return ColorsExt.cyan25(context);
+        return ColorsExt.jordyBlue200(context);
       case UndoType.plan:
-        return ColorsExt.cyan25(context);
+        return ColorsExt.jordyBlue200(context);
       case UndoType.snooze:
-        return ColorsExt.akiflow20(context);
+        return ColorsExt.akiflow200(context);
       case UndoType.restore:
         // TODO: Handle this case.
         break;
       case UndoType.moveToInbox:
-        return ColorsExt.green20(context);
+        return ColorsExt.yorkGreen200(context);
       case UndoType.updated:
-        return ColorsExt.green20(context);
+        return ColorsExt.yorkGreen200(context);
     }
-    return ColorsExt.akiflow(context);
+    return ColorsExt.akiflow500(context);
   }
 
   String text(UndoType type) {
@@ -140,25 +140,25 @@ class _UndoBottomViewState extends State<UndoBottomView> {
       case UndoType.markDone:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneSVG,
-          color: ColorsExt.green(context),
+          color: ColorsExt.yorkGreen400(context),
           height: iconSize,
         );
       case UndoType.plan:
         return SvgPicture.asset(
           Assets.images.icons.common.calendarSVG,
-          color: ColorsExt.cyan(context),
+          color: ColorsExt.jordyBlue400(context),
           height: iconSize,
         );
       case UndoType.snooze:
         return SvgPicture.asset(
           Assets.images.icons.common.clockSVG,
-          color: ColorsExt.akiflow(context),
+          color: ColorsExt.akiflow500(context),
           height: iconSize,
         );
       case UndoType.markUndone:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneSVG,
-          color: ColorsExt.cyan25(context),
+          color: ColorsExt.jordyBlue200(context),
           height: iconSize,
         );
       case UndoType.restore:
@@ -179,7 +179,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
     }
     return SvgPicture.asset(
       Assets.images.icons.common.calendarSVG,
-      color: ColorsExt.akiflow10(context),
+      color: ColorsExt.akiflow100(context),
       height: iconSize,
     );
   }

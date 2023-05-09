@@ -388,7 +388,7 @@ class SwitchButton extends StatelessWidget {
         width: 48,
         height: 24,
         toggleSize: 20,
-        activeColor: ColorsExt.akiflow(context),
+        activeColor: ColorsExt.akiflow500(context),
         inactiveColor: ColorsExt.grey200(context),
         value: value,
         borderRadius: 24,

@@ -138,7 +138,7 @@ class _PlanModalState extends State<PlanModal> {
                   const SizedBox(width: 24),
                   CreateTaskTopActionItem(
                     text: t.addTask.snooze,
-                    color: ColorsExt.pink30(context),
+                    color: ColorsExt.rose200(context),
                     leadingIconAsset: Assets.images.icons.common.clockSVG,
                     active: status == TaskStatusType.snoozed,
                     onPressed: () {

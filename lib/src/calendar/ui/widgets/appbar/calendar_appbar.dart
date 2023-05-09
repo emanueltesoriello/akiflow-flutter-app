@@ -51,7 +51,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1!
-                      .copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w600),
+                      .copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w600),
                 ),
               ),
             IconButton(

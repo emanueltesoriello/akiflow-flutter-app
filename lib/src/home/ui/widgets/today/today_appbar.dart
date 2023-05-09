@@ -114,7 +114,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
                     } else if (isToday) {
                       print('case 1');
                       text = t.today.title;
-                      color = ColorsExt.akiflow(context);
+                      color = ColorsExt.akiflow500(context);
                     } else if (state.selectedDate.month != DateTime.now().month) {
                       print('case 2');
                       text = DateFormat('MMMM dd').format(state.selectedDate);
@@ -190,7 +190,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1!
-                      .copyWith(fontWeight: FontWeight.w600, color: ColorsExt.akiflow(context))),
+                      .copyWith(fontWeight: FontWeight.w600, color: ColorsExt.akiflow500(context))),
             ),
           );
         },

@@ -136,7 +136,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               dismissThreshold: 0.18,
               motionChild: Builder(builder: (context) {
                 HapticFeedback.mediumImpact();
-                return _buildSlidableDone(ColorsExt.green20(context), ColorsExt.green(context));
+                return _buildSlidableDone(ColorsExt.yorkGreen200(context), ColorsExt.yorkGreen400(context));
               }),
               staticChild: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -201,13 +201,13 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             Builder(builder: (context) {
               // builder is used to get the context of the slidable, not remove!
               return CustomSlidableAction(
-                backgroundColor: ColorsExt.pink30(context),
-                foregroundColor: ColorsExt.pink(context),
+                backgroundColor: ColorsExt.rose200(context),
+                foregroundColor: ColorsExt.rose400(context),
                 onPressed: (context) {},
                 padding: EdgeInsets.zero,
                 child: SlidableButtonAction(
-                  backColor: ColorsExt.pink30(context),
-                  topColor: ColorsExt.pink(context),
+                  backColor: ColorsExt.rose200(context),
+                  topColor: ColorsExt.rose400(context),
                   icon: Assets.images.icons.common.clockSVG,
                   leftToRight: false,
                   click: () {
@@ -220,13 +220,13 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
             Builder(builder: (context) {
               // builder is used to get the context of the slidable, not remove!
               return CustomSlidableAction(
-                backgroundColor: ColorsExt.cyan25(context),
-                foregroundColor: ColorsExt.cyan(context),
+                backgroundColor: ColorsExt.jordyBlue200(context),
+                foregroundColor: ColorsExt.jordyBlue400(context),
                 onPressed: (context) {},
                 padding: EdgeInsets.zero,
                 child: SlidableButtonAction(
-                  backColor: ColorsExt.cyan25(context),
-                  topColor: ColorsExt.cyan(context),
+                  backColor: ColorsExt.jordyBlue200(context),
+                  topColor: ColorsExt.jordyBlue400(context),
                   icon: Assets.images.icons.common.calendarSVG,
                   leftToRight: false,
                   click: () {

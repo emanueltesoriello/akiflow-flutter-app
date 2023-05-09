@@ -202,9 +202,9 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                         onPressed: () async {
                           context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
                         },
-                        color: ColorsExt.orange20(context),
-                        splashColor: ColorsExt.orange(context),
-                        borderColor: ColorsExt.orange(context),
+                        color: ColorsExt.apricot200(context),
+                        splashColor: ColorsExt.apricot400(context),
+                        borderColor: ColorsExt.apricot400(context),
                         child: Text('Reconnect',
                             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                   fontWeight: FontWeight.w400,
@@ -263,7 +263,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                                   width: 48,
                                   height: 24,
                                   toggleSize: 20,
-                                  activeColor: ColorsExt.akiflow(context),
+                                  activeColor: ColorsExt.akiflow500(context),
                                   inactiveColor: ColorsExt.grey200(context),
                                   value: isSuperhumanEnabled ?? false,
                                   borderRadius: 24,

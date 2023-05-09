@@ -316,7 +316,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                             icon: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
                                 width: Dimension.chevronIconSize,
                                 height: Dimension.chevronIconSize,
-                                color: ColorsExt.akiflow(context)),
+                                color: ColorsExt.akiflow500(context)),
                           ),
                         ),
                       ],

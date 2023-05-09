@@ -16,7 +16,7 @@ class BoxWithInfo extends StatelessWidget {
     return Column(
       children: [
         CustomPaint(
-          painter: TrianglePainter(strokeColor: ColorsExt.cyan25(context)),
+          painter: TrianglePainter(strokeColor: ColorsExt.jordyBlue200(context)),
           child: const SizedBox(
             height: 12,
             width: 14,
@@ -24,7 +24,7 @@ class BoxWithInfo extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            color: ColorsExt.cyan25(context),
+            color: ColorsExt.jordyBlue200(context),
             borderRadius: BorderRadius.circular(Dimension.radius),
           ),
           padding: const EdgeInsets.all(Dimension.padding),

@@ -85,7 +85,7 @@ class SettingsPage extends StatelessWidget {
                     accounts.where((account) => !context.read<IntegrationsCubit>().isLocalActive(account)).length;
 
                 return CircleAvatar(
-                  backgroundColor: ColorsExt.orange(context),
+                  backgroundColor: ColorsExt.apricot400(context),
                   radius: Dimension.radius,
                   child: Text(
                     count.toString(),

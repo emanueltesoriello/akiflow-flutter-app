@@ -77,7 +77,7 @@ class TaskAppointment extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius:
                       const BorderRadius.only(topLeft: Radius.circular(4.0), bottomLeft: Radius.circular(4.0)),
-                  color: ColorsExt.cyan(context),
+                  color: ColorsExt.jordyBlue400(context),
                 ),
               ),
             Expanded(

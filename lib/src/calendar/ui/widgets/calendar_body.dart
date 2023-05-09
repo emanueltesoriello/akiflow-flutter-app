@@ -105,7 +105,7 @@ class CalendarBody extends StatelessWidget {
                 ? const BoxDecoration()
                 : BoxDecoration(
                     color: Colors.transparent,
-                    border: Border.all(color: ColorsExt.akiflow(context), width: 2),
+                    border: Border.all(color: ColorsExt.akiflow500(context), width: 2),
                     borderRadius: const BorderRadius.all(Radius.circular(4)),
                   ),
             view: calendarCubit.state.calendarView,

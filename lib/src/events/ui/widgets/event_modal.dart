@@ -315,7 +315,7 @@ class _EventModalState extends State<EventModal> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500)),
+                          ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500)),
                 ),
             ],
           ),
@@ -429,7 +429,7 @@ class _EventModalState extends State<EventModal> {
                             height: Dimension.defaultIconSize,
                             child: SvgPicture.asset(
                               Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                              color: ColorsExt.green(context),
+                              color: ColorsExt.yorkGreen400(context),
                             ),
                           )
                         : selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
@@ -438,7 +438,7 @@ class _EventModalState extends State<EventModal> {
                                 height: Dimension.defaultIconSize,
                                 child: SvgPicture.asset(
                                   Assets.images.icons.common.xmarkCircleFillSVG,
-                                  color: ColorsExt.red(context),
+                                  color: ColorsExt.cosmos400(context),
                                 ),
                               )
                             : SizedBox(
@@ -507,7 +507,7 @@ class _EventModalState extends State<EventModal> {
       builder: (context, quill.QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: quill.QuillEditor(
@@ -584,7 +584,7 @@ class _EventModalState extends State<EventModal> {
                     child: Text(t.event.yes,
                         style: Theme.of(context).textTheme.bodyText1?.copyWith(
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
-                                ? ColorsExt.green(context)
+                                ? ColorsExt.yorkGreen400(context)
                                 : ColorsExt.grey600(context),
                             fontWeight: FontWeight.w500)),
                   ),
@@ -603,7 +603,7 @@ class _EventModalState extends State<EventModal> {
                         style: Theme.of(context).textTheme.bodyText1?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
-                                ? ColorsExt.red(context)
+                                ? ColorsExt.cosmos400(context)
                                 : ColorsExt.grey600(context))),
                   ),
                 ),

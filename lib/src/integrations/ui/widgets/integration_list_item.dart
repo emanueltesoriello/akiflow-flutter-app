@@ -150,7 +150,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                         CircleAvatar(
                                           radius: Dimension.radiusS,
                                           backgroundColor:
-                                              widget.active ? ColorsExt.green(context) : ColorsExt.orange(context),
+                                              widget.active ? ColorsExt.yorkGreen400(context) : ColorsExt.apricot400(context),
                                         ),
                                         const SizedBox(width: Dimension.paddingXS),
                                         Flexible(

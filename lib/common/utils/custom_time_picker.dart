@@ -769,12 +769,12 @@ class _TimePickerHeader extends StatelessWidget {
     Color inactiveColor;
     switch (themeData.primaryColorBrightness) {
       case Brightness.light:
-        activeColor = ColorsExt.akiflow(context);
+        activeColor = ColorsExt.akiflow500(context);
         inactiveColor = Colors.black54;
         break;
       case Brightness.dark:
       default:
-        activeColor = ColorsExt.akiflow(context);
+        activeColor = ColorsExt.akiflow500(context);
         inactiveColor = Colors.white70;
         break;
     }

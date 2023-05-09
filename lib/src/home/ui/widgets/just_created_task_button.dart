@@ -71,7 +71,7 @@ class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
-                            ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500))),
+                            ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500))),
               ],
             ),
           ),

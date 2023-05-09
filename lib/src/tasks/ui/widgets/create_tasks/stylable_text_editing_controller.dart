@@ -115,7 +115,7 @@ class StyleableTextFieldControllerBackground extends TextEditingController {
             isDate: styleDefinition?.isDate,
             isTime: styleDefinition?.isTime,
             isImportance: styleDefinition?.isImportance,
-            backgroundColor: ColorsExt.cyan25(context),
+            backgroundColor: ColorsExt.jordyBlue200(context),
             foregroundColor: ColorsExt.grey800(context),
             context: context);
 

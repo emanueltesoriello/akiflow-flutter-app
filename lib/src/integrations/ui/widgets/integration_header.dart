@@ -52,7 +52,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
                       replacement: const SizedBox(),
                       child: CircleAvatar(
                         radius: Dimension.radiusS,
-                        backgroundColor: ColorsExt.green(context),
+                        backgroundColor: ColorsExt.yorkGreen400(context),
                       ),
                     ),
                     Flexible(

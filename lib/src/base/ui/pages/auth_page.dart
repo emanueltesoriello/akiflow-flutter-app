@@ -76,7 +76,7 @@ class AuthPage extends StatelessWidget {
                     child: Text(
                       t.onboarding.login,
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: ColorsExt.akiflow(context),
+                            color: ColorsExt.akiflow500(context),
                             fontWeight: FontWeight.w400,
                           ),
                     ),

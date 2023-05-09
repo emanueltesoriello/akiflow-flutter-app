@@ -189,7 +189,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
               width: Dimension.defaultIconSize,
               child: SvgPicture.asset(
                 Assets.images.icons.common.wifiSlashSVG,
-                color: ColorsExt.yellow(context),
+                color: ColorsExt.buttercup400(context),
               ),
             );
           }

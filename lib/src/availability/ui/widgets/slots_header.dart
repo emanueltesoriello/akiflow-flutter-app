@@ -33,7 +33,7 @@ class SlotsHeader extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyText1!
-                  .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+                  .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
           const Spacer(),
           Container(
             margin: const EdgeInsetsDirectional.only(end: Dimension.padding),

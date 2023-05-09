@@ -38,7 +38,7 @@ class ReconnectIntegrations extends StatelessWidget {
                           child: RotatedBox(
                             quarterTurns: 2,
                             child: SvgPicture.asset(Assets.images.icons.common.arrowLeftSVG,
-                                color: ColorsExt.akiflow(context)),
+                                color: ColorsExt.akiflow500(context)),
                           ),
                         ),
                         SvgPicture.asset(Assets.images.logo.logoFullSVG, width: 56, height: 56),

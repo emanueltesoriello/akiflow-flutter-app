@@ -235,7 +235,7 @@ extension EventExt on Event {
     } else if (event.calendarColor != null) {
       return calendarColor[event.calendarColor] ?? event.calendarColor!;
     }
-    return ColorsLight.akiflow.value.toRadixString(16);
+    return ColorsLight.purple500.value.toRadixString(16);
   }
 
   RecurrenceRule? get ruleFromStringList {
