@@ -110,21 +110,21 @@ extension ColorsExt on Colors {
 
   static Map<String, String> paletteColors = {
     'palette-comet': '#586284',
-    'palette-grey': '#B3C0C7',
+    'palette-grey': '#A7B6BE',
     'palette-orange': '#FF9F2E',
-    'palette-yellow': '#FFE642',
+    'palette-yellow': '#F3C902',
     'palette-red': '#EE2435',
     'palette-pink': '#FA7CA2',
     'palette-purple': '#6C2B68',
     'palette-finn': '#BA3872',
     'palette-violet': '#AF38F9',
-    'palette-mauve': '#FDA0FF',
-    'palette-blue': '#4775C7',
-    'palette-cyan': '#5ECDDE',
-    'palette-green': '#248C73',
-    'palette-wildwillow': '#A4C674',
+    'palette-mauve': '#FF80C4',
+    'palette-blue': '#00ABF5',
+    'palette-cyan': '#47D1C1',
+    'palette-green': '#24A888',
+    'palette-wildwillow': '#20B65C',
     'palette-chico': '#925454',
-    'palette-brown': '#D99385',
+    'palette-brown': '#C77A6B',
   };
 
   static Map<String, String> paletteColorsDisplayName = {
