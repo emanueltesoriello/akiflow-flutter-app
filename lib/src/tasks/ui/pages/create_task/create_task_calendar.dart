@@ -240,10 +240,9 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                             if (widget.showRepeat)
                               InkWell(
                                 onTap: () {
-                                  var cubit = context.read<EditTaskCubit>();
-                                  cubit.recurrenceTap();
                                   Task updatedTask = context.read<EditTaskCubit>().state.updatedTask;
-                                  print('UPDATED TASK: $updatedTask');
+                                  var cubit = context.read<EditTaskCubit>()..attachTask(updatedTask);
+                                  cubit.recurrenceTap();
 
                                   showCupertinoModalBottomSheet(
                                     context: context,
@@ -265,7 +264,8 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       Assets.images.icons.common.repeatSVG,
                                       width: Dimension.defaultIconSize,
                                       height: Dimension.defaultIconSize,
-                                      color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
+                                      color: context.read<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                              context.read<EditTaskCubit>().state.updatedTask.recurrence!.isNotEmpty
                                           ? ColorsExt.grey800(context)
                                           : ColorsExt.grey600(context),
                                     ),
@@ -274,9 +274,16 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       t.editTask.repeat,
                                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                             fontWeight: FontWeight.w500,
-                                            color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                                ? ColorsExt.grey800(context)
-                                                : ColorsExt.grey600(context),
+                                            color:
+                                                context.watch<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                                        context
+                                                            .read<EditTaskCubit>()
+                                                            .state
+                                                            .updatedTask
+                                                            .recurrence!
+                                                            .isNotEmpty
+                                                    ? ColorsExt.grey800(context)
+                                                    : ColorsExt.grey600(context),
                                           ),
                                     ),
                                   ],

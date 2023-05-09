@@ -106,9 +106,10 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
             );
           })),
           const SizedBox(width: 8),
-          Builder(
-            builder: (context) {
-              bool enabled = updatedTask.recurrence != null && updatedTask.recurrence!.isNotEmpty;
+          if (updatedTask.statusType == TaskStatusType.planned)
+            Builder(
+              builder: (context) {
+                bool enabled = updatedTask.recurrence != null && updatedTask.recurrence!.isNotEmpty;
 
               return TagBox(
                 icon: Assets.images.icons.common.repeatSVG,
@@ -119,25 +120,25 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 onPressed: () {
                   var cubit = context.read<EditTaskCubit>();
 
-                  cubit.recurrenceTap();
+                    cubit.recurrenceTap();
 
-                  showCupertinoModalBottomSheet(
-                    context: context,
-                    builder: (context) => RecurrenceModal(
-                      onChange: (RecurrenceRule? rule) {
-                        cubit.setRecurrence(rule);
-                      },
-                      selectedRecurrence: updatedTask.recurrenceComputed,
-                      rule: updatedTask.ruleFromStringList,
-                      taskDatetime: updatedTask.datetime != null
-                          ? DateTime.parse(updatedTask.datetime!)
-                          : DateTime.parse(updatedTask.date!),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => RecurrenceModal(
+                        onChange: (RecurrenceRule? rule) {
+                          cubit.setRecurrence(rule);
+                        },
+                        selectedRecurrence: updatedTask.recurrenceComputed,
+                        rule: updatedTask.ruleFromStringList,
+                        taskDatetime: updatedTask.datetime != null
+                            ? DateTime.parse(updatedTask.datetime!)
+                            : DateTime.parse(updatedTask.date!),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
         ],
       ),
     );
