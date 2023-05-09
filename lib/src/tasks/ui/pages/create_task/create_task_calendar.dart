@@ -264,7 +264,8 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       Assets.images.icons.common.repeatSVG,
                                       width: Dimension.defaultIconSize,
                                       height: Dimension.defaultIconSize,
-                                      color: context.read<EditTaskCubit>().state.updatedTask.recurrence != null
+                                      color: context.read<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                              context.read<EditTaskCubit>().state.updatedTask.recurrence!.isNotEmpty
                                           ? ColorsExt.grey2(context)
                                           : ColorsExt.grey3(context),
                                     ),
@@ -273,9 +274,16 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       t.editTask.repeat,
                                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                             fontWeight: FontWeight.w500,
-                                            color: context.watch<EditTaskCubit>().state.updatedTask.recurrence != null
-                                                ? ColorsExt.grey2(context)
-                                                : ColorsExt.grey3(context),
+                                            color:
+                                                context.watch<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                                        context
+                                                            .read<EditTaskCubit>()
+                                                            .state
+                                                            .updatedTask
+                                                            .recurrence!
+                                                            .isNotEmpty
+                                                    ? ColorsExt.grey2(context)
+                                                    : ColorsExt.grey3(context),
                                           ),
                                     ),
                                   ],
