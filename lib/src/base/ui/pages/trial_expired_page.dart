@@ -63,7 +63,7 @@ class TrialExpiredPage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  launchUrlString('https://app.akiflow.com/en/checkout/billing');
+                  launchUrlString('https://web.akiflow.com/en/checkout/billing');
                 },
               ),
               const SizedBox(height: 20),

@@ -105,8 +105,7 @@ class MyAccountPage extends StatelessWidget {
                       height: 22,
                     ),
                     onPressed: () {
-                      launchUrl(Uri.parse("https://app.akiflow.com/en/dashboard/profile"),
-                          mode: LaunchMode.externalApplication);
+                      launchUrl(Uri.parse("http://web.akiflow.com/billing"), mode: LaunchMode.externalApplication);
                     },
                   ),
                   const SizedBox(height: Dimension.padding),

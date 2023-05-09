@@ -80,7 +80,7 @@ class SyncControllerService {
       api: _taskApi,
       databaseRepository: _tasksRepository,
       hasDataToImport: () async {
-        AnalyticsService.track('Tasks imported');
+        // AnalyticsService.track('Tasks imported');
       },
     ),
     Entity.labels: SyncService(
