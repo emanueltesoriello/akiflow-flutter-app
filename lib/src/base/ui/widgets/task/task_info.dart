@@ -29,34 +29,6 @@ class TaskInfo extends StatelessWidget {
     required this.showPlanInfo,
   }) : super(key: key);
 
-  Widget _overdue(BuildContext context) {
-    if (task.isOverdue && task.datetime != null && task.datetime!.isNotEmpty) {
-      var formattedDate = DateTime.tryParse(task.datetime!)!.toLocal();
-      if (formattedDate == null) {
-        return const SizedBox();
-      }
-      var stringDate = DateFormat("dd MMM").add_Hm().format(formattedDate);
-      return Padding(
-        padding: const EdgeInsets.only(right: 5),
-        child: SizedBox(
-          height: 22 + 10,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TagBox(
-                text: stringDate,
-                backgroundColor: ColorsExt.pink30(context),
-                active: true,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return const SizedBox();
-  }
-
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [];
@@ -71,8 +43,6 @@ class TaskInfo extends StatelessWidget {
 
     return Row(
       children: [
-        _overdue(context),
-        if (task.statusType == null && !task.isOverdue && task.listId == null && !hideInboxLabel) const SizedBox(),
         children.isEmpty
             ? const SizedBox()
             : SizedBox(
@@ -134,7 +104,7 @@ class TaskInfo extends StatelessWidget {
         text: text ?? t.task.snoozed,
         active: true,
       );
-    } else if (task.statusType == TaskStatusType.planned && showPlanInfo) {
+    } else if (task.statusType == TaskStatusType.planned && (showPlanInfo || task.isOverdue)) {
       return plannedInfo(context);
     } else {
       if (task.datetime != null && !task.isOverdue) {
@@ -151,6 +121,10 @@ class TaskInfo extends StatelessWidget {
 
   Widget plannedInfo(BuildContext context) {
     Color color = ColorsExt.grey5(context);
+
+    if (task.isOverdue) {
+      color = ColorsExt.pink30(context);
+    }
 
     String text;
 
