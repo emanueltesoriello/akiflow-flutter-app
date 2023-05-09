@@ -113,7 +113,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
     return ClipRRect(
       borderRadius: widget.isOnboarding ? BorderRadius.circular(Dimension.radius) : BorderRadius.zero,
       child: Slidable(
-        key: ValueKey("${widget.task.id!}Slidable"),
+        key: ValueKey("${widget.task.id ?? ''}Slidable"),
         groupTag: "task",
         startActionPane: ActionPane(
           motion: const BehindMotion(),
