@@ -191,7 +191,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
         Color iconForeground;
 
         if (label.color != null) {
-          iconBackground = ColorsExt.getFromName(label.color!).withOpacity(0.1);
+          iconBackground = ColorsExt.getLightColorFromName(label.color!);
           iconForeground = ColorsExt.getFromName(label.color!);
         } else {
           iconBackground = ColorsExt.grey100(context);

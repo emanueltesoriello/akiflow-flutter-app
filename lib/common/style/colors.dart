@@ -108,15 +108,8 @@ extension ColorsExt on Colors {
     return Color(int.parse(buffer.toString(), radix: 16));
   }
 
+  ///normal label colors
   static Map<String, String> paletteColors = {
-    'palette-comet': '#586284',
-    'palette-grey': '#A7B6BE',
-    'palette-orange': '#FF9F2E',
-    'palette-yellow': '#F3C902',
-    'palette-red': '#EE2435',
-    'palette-pink': '#FA7CA2',
-    'palette-purple': '#6C2B68',
-    'palette-finn': '#BA3872',
     'palette-violet': '#AF38F9',
     'palette-mauve': '#FF80C4',
     'palette-blue': '#00ABF5',
@@ -125,17 +118,37 @@ extension ColorsExt on Colors {
     'palette-wildwillow': '#20B65C',
     'palette-chico': '#925454',
     'palette-brown': '#C77A6B',
+    'palette-orange': '#FF9F2E',
+    'palette-yellow': '#F3C902',
+    'palette-red': '#EE2435',
+    'palette-pink': '#FA7CA2',
+    'palette-purple': '#6C2B68',
+    'palette-finn': '#BA3872',
+    'palette-comet': '#586284',
+    'palette-grey': '#A7B6BE',
+  };
+
+  ///light label colors
+  static Map<String, String> paletteColorsLight = {
+    'palette-violet': '#EAE1FF',
+    'palette-mauve': '#FFE9F5',
+    'palette-blue': '#E1F6FF',
+    'palette-cyan': '#D9F7F4',
+    'palette-green': '#D9F2EC',
+    'palette-wildwillow': '#DAFFE9',
+    'palette-chico': '#EFE5E5',
+    'palette-brown': '#FAEFEC',
+    'palette-orange': '#FFF1E0',
+    'palette-yellow': '#FFFAE0',
+    'palette-red': '#FCDEE1',
+    'palette-pink': '#FEEBF1',
+    'palette-purple': '#E9DFE8',
+    'palette-finn': '#F5E1EA',
+    'palette-comet': '#EBECF0',
+    'palette-grey': '#F6F7F8',
   };
 
   static Map<String, String> paletteColorsDisplayName = {
-    'palette-comet': 'Comet',
-    'palette-grey': 'Grey',
-    'palette-orange': 'Orange',
-    'palette-yellow': 'Yellow',
-    'palette-red': 'Red',
-    'palette-pink': 'Pink',
-    'palette-purple': 'Purple',
-    'palette-finn': 'Finn',
     'palette-violet': 'Violet',
     'palette-mauve': 'Mauve',
     'palette-blue': 'Blue',
@@ -144,10 +157,22 @@ extension ColorsExt on Colors {
     'palette-wildwillow': 'Wildwillow',
     'palette-chico': 'Chico',
     'palette-brown': 'Brown',
+    'palette-orange': 'Orange',
+    'palette-yellow': 'Yellow',
+    'palette-red': 'Red',
+    'palette-pink': 'Pink',
+    'palette-purple': 'Purple',
+    'palette-finn': 'Finn',
+    'palette-comet': 'Comet',
+    'palette-grey': 'Grey',
   };
 
   static Color getFromName(String name) {
     return fromHex(paletteColors[name] ?? "#ffffff");
+  }
+
+  static Color getLightColorFromName(String name) {
+    return fromHex(paletteColorsLight[name] ?? "#ffffff");
   }
 
   static String displayTextFromName(String name) {

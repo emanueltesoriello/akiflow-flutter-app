@@ -254,7 +254,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       text: label?.title ?? t.editTask.addLabel,
       textColor: label?.title != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
       backgroundColor:
-          label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey100(context),
+          label?.color != null ? ColorsExt.getLightColorFromName(label!.color!) : ColorsExt.grey100(context),
       iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey600(context),
       active: label?.color != null,
       onPressed: () {

@@ -191,7 +191,7 @@ class TaskAppointment extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: appointment.label!.color != null
-                              ? ColorsExt.getFromName(appointment.label!.color!).withOpacity(0.1)
+                              ? ColorsExt.getLightColorFromName(appointment.label!.color!)
                               : null,
                           borderRadius: BorderRadius.circular(4),
                         ),
