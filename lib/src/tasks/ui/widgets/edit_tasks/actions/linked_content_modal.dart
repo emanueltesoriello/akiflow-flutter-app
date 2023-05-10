@@ -120,9 +120,25 @@ class LinkedContentModal extends StatelessWidget {
               Container(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
-                child: ButtonList(
-                    leadingTextIconAsset: Assets.images.icons.common.arrowUpRightSquareSVG,
-                    title: t.linkedContent.open,
+                child: OutlinedButton(
+                    style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+                        backgroundColor: MaterialStateProperty.all((Colors.transparent)),
+                        minimumSize: MaterialStateProperty.all(const Size(double.infinity, Dimension.buttonHeight))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          Assets.images.icons.common.arrowUpRightSquareSVG,
+                          color: ColorsExt.grey800(context),
+                        ),
+                        const SizedBox(width: Dimension.paddingS),
+                        Text(
+                          t.linkedContent.open,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                     onPressed: () {
                       task.openLinkedContentUrl(doc);
                     }),

@@ -93,6 +93,7 @@ class SettingsModal extends StatelessWidget {
   _buildSomeday(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
       title: t.task.someday,
+      titleColor: ColorsExt.grey600(context),
       leading: SizedBox(
         height: Dimension.defaultIconSize,
         width: Dimension.defaultIconSize,
@@ -115,6 +116,7 @@ class SettingsModal extends StatelessWidget {
   _buildAllTasks(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
       title: t.allTasks,
+      titleColor: ColorsExt.grey600(context),
       leading: SizedBox(
         height: Dimension.defaultIconSize,
         width: Dimension.defaultIconSize,

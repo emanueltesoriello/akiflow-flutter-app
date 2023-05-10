@@ -10,6 +10,7 @@ class ButtonSelectable extends StatefulWidget {
   final Widget? leading;
   final Widget? trailing;
   final bool selected;
+  final Color? titleColor;
 
   const ButtonSelectable({
     Key? key,
@@ -18,6 +19,7 @@ class ButtonSelectable extends StatefulWidget {
     this.leading,
     this.trailing,
     this.selected = false,
+    this.titleColor,
   }) : super(key: key);
 
   @override
@@ -93,7 +95,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                           Expanded(
                             child: Text(widget.title,
                                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                      color: ColorsExt.grey800(context),
+                                      color: widget.titleColor ?? ColorsExt.grey800(context),
                                     )),
                           ),
                           Visibility(
