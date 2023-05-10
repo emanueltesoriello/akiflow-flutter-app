@@ -139,8 +139,6 @@ Batch prepareBatchInsert(BatchInsertModel batchInsertModel) {
 
 Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partitioneItemModel) async {
   try {
-    final SentryService sentryService = locator<SentryService>();
-
     List<dynamic> allRemoteModels = partitioneItemModel.remoteItems;
     List<dynamic> existingLocalModels = partitioneItemModel.existingItems;
     List<dynamic> changedModels = [];
@@ -205,7 +203,6 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
               } catch (e) {
                 print('Error on partitionItemsToUpsert 1');
                 print(e);
-                sentryService.captureException(e);
               }
             }
           }
@@ -224,7 +221,6 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
               } catch (e) {
                 print('Error on partitionItemsToUpsert 2');
                 print(e);
-                sentryService.captureException(e);
               }
 
               changedModels.add(existingModelsById[remoteModel.id]);
