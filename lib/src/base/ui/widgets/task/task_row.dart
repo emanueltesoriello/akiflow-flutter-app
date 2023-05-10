@@ -263,9 +263,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () async {
                             if (!widget.selectMode) {
-                              //     _checkboxController!.completedClick();
                               widget.task.playTaskDoneSound();
                               await Slidable.of(context)
                                   ?.openTo(1, curve: Curves.easeIn, duration: const Duration(milliseconds: 300));
