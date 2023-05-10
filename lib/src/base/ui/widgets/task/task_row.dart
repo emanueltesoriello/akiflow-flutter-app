@@ -108,6 +108,19 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
     );
   }
 
+  _planDismissable() {
+    return DismissiblePane(
+      closeOnCancel: true,
+      dismissThreshold: 0.75,
+      confirmDismiss: () async {
+        widget.swipeActionPlanClick();
+        return false;
+      },
+      onDismissed: () {},
+      motion: const InversedDrawerMotion(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -116,7 +129,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         key: ValueKey("${widget.task.id ?? ''}Slidable"),
         groupTag: "task",
         startActionPane: ActionPane(
-          motion: const BehindMotion(),
+          motion: const DrawerMotion(),
           extentRatio: 0.18,
           openThreshold: 0.20,
           dismissible: DismissiblePane(
@@ -178,6 +191,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           extentRatio: 0.6,
+          dismissible: _planDismissable(),
           children: [
             Builder(builder: (context) {
               // builder is used to get the context of the slidable, not remove!

@@ -30,11 +30,11 @@ class SlidableButtonAction extends StatelessWidget {
       onTap: click,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
-          child: Align(
-            child: leftToRight
-                ? Row(
+        child: Align(
+          child: leftToRight
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SvgPicture.asset(
@@ -54,9 +54,15 @@ class SlidableButtonAction extends StatelessWidget {
                               ),
                         ),
                     ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(
+                      right: (MediaQuery.of(context).size.width * 0.6 / 3 / 2) -
+                          (size ?? Dimension.defaultIconSize) +
+                          Dimension.paddingS),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       if (label != null && label!.isNotEmpty)
                         Text(
@@ -76,7 +82,7 @@ class SlidableButtonAction extends StatelessWidget {
                       ),
                     ],
                   ),
-          ),
+                ),
         ),
       ),
     );
