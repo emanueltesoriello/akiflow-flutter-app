@@ -151,7 +151,7 @@ class TaskInfo extends StatelessWidget {
     Color color = (task.done ?? false) ? ColorsExt.yorkGreen200(context) : ColorsExt.grey200(context);
 
     if (task.isOverdue) {
-      color = ColorsExt.pink30(context);
+      color = ColorsExt.rose200(context);
     }
 
     String text;

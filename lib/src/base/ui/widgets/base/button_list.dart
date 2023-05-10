@@ -98,7 +98,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                         margin: margin(context),
                         padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                         decoration: BoxDecoration(
-                          border: Border.all(color: ColorsExt.grey5(context)),
+                          border: Border.all(color: ColorsExt.grey500(context)),
                           borderRadius: borderRadius(context),
                           color: _animation!.value,
                         ),
@@ -116,8 +116,9 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                                       widget.title,
                                       textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
                                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                          color:
-                                              (widget.enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context))),
+                                          color: (widget.enabled
+                                              ? ColorsExt.grey800(context)
+                                              : ColorsExt.grey600(context))),
                                     ),
                                   ),
                                 ],
