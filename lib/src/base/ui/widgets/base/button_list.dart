@@ -98,7 +98,14 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                         margin: margin(context),
                         padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                         decoration: BoxDecoration(
-                          border: Border.all(color: ColorsExt.grey500(context)),
+                          //border: Border.all(color: ColorsExt.grey500(context)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: ColorsExt.grey200(context),
+                              offset: const Offset(0, 2),
+                              blurRadius: 1,
+                            ),
+                          ],
                           borderRadius: borderRadius(context),
                           color: _animation!.value,
                         ),
@@ -213,43 +220,13 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
       case ButtonListPosition.center:
         return const EdgeInsets.only(left: 1, right: 1);
       case ButtonListPosition.mid:
-        return const EdgeInsets.only(left: 1, right: 1, bottom: 1);
+        return const EdgeInsets.only(left: 1, right: 1, bottom: 1, top: 1);
       case ButtonListPosition.bottom:
         return const EdgeInsets.only(left: 1, bottom: 1, right: 1);
       case ButtonListPosition.onlyHorizontalPadding:
         return const EdgeInsets.only(left: 1, right: 1);
     }
   }
-
-  //Border(bottom: BorderSide(color: ColorsExt.grey5(context)))
-
-  /*Border borderSide(BuildContext context) {
-    switch (widget.position) {
-      case ButtonListPosition.single:
-        return Border.all(color: ColorsExt.grey5(context));
-      case ButtonListPosition.top:
-        return Border(
-            top: BorderSide(color: ColorsExt.grey5(context)),
-            left: BorderSide(color: ColorsExt.grey5(context)),
-            right: BorderSide(color: ColorsExt.grey5(context)));
-
-      case ButtonListPosition.center:
-        return Border.all(color: ColorsExt.grey5(context));
-      case ButtonListPosition.mid:
-        return Border(
-            top: BorderSide(color: ColorsExt.grey5(context)),
-            left: BorderSide(color: ColorsExt.grey5(context)),
-            bottom: BorderSide(color: ColorsExt.grey5(context)));
-      case ButtonListPosition.bottom:
-        return Border(
-            top: BorderSide(color: ColorsExt.grey5(context)),
-            left: BorderSide(color: ColorsExt.grey5(context)),
-            right: BorderSide(color: ColorsExt.grey5(context)));
-      case ButtonListPosition.onlyHorizontalPadding:
-        return Border(
-            left: BorderSide(color: ColorsExt.grey5(context)), right: BorderSide(color: ColorsExt.grey5(context)));
-    }
-  }*/
 
   BorderRadius borderRadius(BuildContext context) {
     switch (widget.position) {

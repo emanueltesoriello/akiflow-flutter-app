@@ -46,7 +46,7 @@ class SettingsPage extends StatelessWidget {
           ButtonList(
             title: t.settings.integrations.title,
             leading: Assets.images.icons.common.puzzleSVG,
-            position: ButtonListPosition.center,
+            position: ButtonListPosition.mid,
             preTrailing: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
               builder: (context, state) {
                 List<Account> accounts = state.accounts;
@@ -95,7 +95,7 @@ class SettingsPage extends StatelessWidget {
           ),
           ButtonList(
             title: t.settings.tasks,
-            position: ButtonListPosition.bottom,
+            position: ButtonListPosition.mid,
             leading: Assets.images.icons.common.checkDoneOutlineSVG,
             enabled: false,
             onPressed: () {},
@@ -112,7 +112,7 @@ class SettingsPage extends StatelessWidget {
           ButtonList(
             title: t.settings.learnAkiflow.title,
             leading: Assets.images.icons.common.guidebookSVG,
-            position: ButtonListPosition.center,
+            position: ButtonListPosition.mid,
             showShevron: false,
             onPressed: () {
               launchUrl(Uri.parse("https://www.notion.so/akiflow/How-to-use-Akiflow-7476c0787ec64e8aa3567bdeb3ab4540"),
