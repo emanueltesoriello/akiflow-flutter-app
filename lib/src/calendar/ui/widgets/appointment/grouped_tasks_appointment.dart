@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_grouped_tasks.dart';
@@ -37,6 +35,8 @@ class GroupedTasksAppointment extends StatelessWidget {
     } else {
       duration = '${hours.floor()}h ${minutes.floor()}m';
     }
+    bool tasksDone = !groupedTasks.taskList.any((task) => task.done! == false);
+
     return Container(
       key: ObjectKey(appointment),
       width: boxWidth,
@@ -56,7 +56,7 @@ class GroupedTasksAppointment extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 2),
+        padding: const EdgeInsets.only(top: 2, left: 2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,13 +65,13 @@ class GroupedTasksAppointment extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         width: boxHeight < 15.0 && groupedTasks.taskList.length < 10 ? 12.0 : 16.0,
                         height: boxHeight < 15.0 ? 12.0 : 16.0,
                         decoration: BoxDecoration(
-                          color: ColorsExt.grey200(context),
+                          color: tasksDone ? ColorsExt.yorkGreen400(context) : ColorsExt.grey200(context),
                           borderRadius: const BorderRadius.all(
                             Radius.circular(3.0),
                           ),
@@ -79,43 +79,33 @@ class GroupedTasksAppointment extends StatelessWidget {
                         child: FittedBox(
                           child: Text('${groupedTasks.taskList.length}',
                               style: Theme.of(context).textTheme.caption?.copyWith(
-                                    fontSize: calendarController.view == CalendarView.schedule
-                                        ? 15.0
-                                        : boxHeight < 15.0
-                                            ? 11.0
-                                            : 13.0,
+                                    height: boxHeight < 15.0 ? 1.0 : 1.2,
+                                    fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
                                     fontWeight: FontWeight.w500,
-                                    color: ColorsExt.grey900(context),
+                                    color: tasksDone ? ColorsExt.grey50(context) : ColorsExt.grey900(context),
                                   )),
                         ),
                       ),
                       const SizedBox(width: Dimension.paddingXS),
-                      Expanded(
-                        child: Text(appointment.subject,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: Theme.of(context).textTheme.caption?.copyWith(
-                                  height: 1.3,
-                                  fontSize: calendarController.view == CalendarView.schedule
-                                      ? 15.0
-                                      : boxHeight < 15.0
-                                          ? 11.0
-                                          : 13.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey900(context),
-                                )),
-                      ),
+                      Text(appointment.subject,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.caption?.copyWith(
+                                height: boxHeight < 15.0 ? 1.0 : 1.3,
+                                fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
+                                fontWeight: FontWeight.w500,
+                                color: tasksDone ? ColorsExt.grey700(context) : ColorsExt.grey900(context),
+                              )),
                     ],
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 2, right: 2),
+              padding: EdgeInsets.only(top: boxHeight < 15.0 ? 0 : 2, right: 2),
               child: Row(
                 children: [
-                  if (boxWidth > 92 &&
-                      (calendarController.view == CalendarView.day || calendarController.view == CalendarView.schedule))
+                  if (boxWidth > 92 && calendarController.view == CalendarView.day)
                     Text(
                       duration,
                       style: TextStyle(
@@ -125,14 +115,6 @@ class GroupedTasksAppointment extends StatelessWidget {
                         color: ColorsExt.grey600(context),
                       ),
                     ),
-                  SizedBox(
-                    height: 14,
-                    width: 14,
-                    child: SvgPicture.asset(
-                      Assets.images.icons.common.chevronDownSVG,
-                      color: ColorsExt.grey600(context),
-                    ),
-                  ),
                 ],
               ),
             ),

@@ -79,7 +79,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
               height: 42,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
-                color: widget.selected ? ColorsExt.grey200(context) : ColorsExt.grey50(context),
+                color: widget.selected ? ColorsExt.grey200(context) : ColorsExt.background(context),
               ),
               child: AnimatedBuilder(
                 animation: _animation!,
@@ -88,7 +88,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                   child: Material(
                     color: _animation!.value,
                     child: Material(
-                      color: widget.selected ? ColorsExt.grey200(context) : ColorsExt.grey50(context),
+                      color: widget.selected ? ColorsExt.grey200(context) : ColorsExt.background(context),
                       child: Row(
                         children: [
                           LeadingIcon(leading: widget.leading),

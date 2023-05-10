@@ -15,7 +15,7 @@ class ChangeColorModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: ColorsExt.background(context),
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -193,7 +193,8 @@ class ChangeColorModal extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: ColorsExt.fromHex(EventExt.eventColor[color]!),
+                  color: ColorsExt.getCalendarBackgroundColor(ColorsExt.fromHex(EventExt.eventColor[color]!)),
+                  border: Border.all(color: ColorsExt.fromHex(EventExt.eventColor[color]!), width: 2),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -202,7 +203,8 @@ class ChangeColorModal extends StatelessWidget {
                   child: SizedBox(
                     height: Dimension.defaultIconSize,
                     width: Dimension.defaultIconSize,
-                    child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG, color: Colors.white),
+                    child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
+                        color: ColorsExt.fromHex(EventExt.eventColor[color]!)),
                   ),
                 ),
             ],

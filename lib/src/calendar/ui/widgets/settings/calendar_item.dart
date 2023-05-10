@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/extensions/event_extension.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/calendar/calendar.dart';
 
@@ -77,6 +77,11 @@ class _CalendarItemState extends State<CalendarItem> {
                               widget.calendars[index].settings["notificationsEnabled"] ??
                               false) ==
                           true);
+                  bool visible = widget.calendars[index].settings != null &&
+                      ((widget.calendars[index].settings["visibleMobile"] ??
+                              widget.calendars[index].settings["visible"] ??
+                              false) ==
+                          true);
                   return Padding(
                     padding: const EdgeInsets.only(
                         left: Dimension.paddingS, top: Dimension.paddingS + 2, bottom: Dimension.paddingS + 2),
@@ -91,29 +96,16 @@ class _CalendarItemState extends State<CalendarItem> {
                           },
                           child: Row(
                             children: [
-                              SvgPicture.asset(
-                                widget.calendars[index].settings != null &&
-                                        ((widget.calendars[index].settings["visibleMobile"] ??
-                                                widget.calendars[index].settings["visible"] ??
-                                                false) ==
-                                            true)
-                                    ? Assets.images.icons.common.checkDoneSVG
-                                    : Assets.images.icons.common.checkEmptySVG,
-                                width: Dimension.defaultIconSize,
-                                height: Dimension.defaultIconSize,
-                                color: ColorsExt.fromHex(EventExt.calendarColor[widget.calendars[index].color!] ??
-                                    widget.calendars[index].color!),
-                              ),
+                              CalendarColorCircle(calendarColor: widget.calendars[index].color!, active: visible),
                               const SizedBox(width: Dimension.paddingS),
                               SizedBox(
                                 width: 220,
                                 child: Text("${widget.calendars[index].title}",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+                                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                        color: visible ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                                        fontWeight: FontWeight.w400)),
                               ),
                             ],
                           ),

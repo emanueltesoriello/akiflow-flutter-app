@@ -13,6 +13,7 @@ import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
@@ -23,7 +24,6 @@ import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tuple/tuple.dart' as tuple;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class EventModal extends StatefulWidget {
@@ -100,7 +100,7 @@ class _EventModalState extends State<EventModal> {
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
-          color: Colors.white,
+          color: ColorsExt.background(context),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(Dimension.padding),
             topRight: Radius.circular(Dimension.padding),
@@ -162,10 +162,8 @@ class _EventModalState extends State<EventModal> {
           SizedBox(
             width: Dimension.defaultIconSize + 6,
             height: Dimension.defaultIconSize + 6,
-            child: SvgPicture.asset(
-              Assets.images.icons.common.circleFillSVG,
-              color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
-            ),
+            child: CalendarColorCircle(
+                calendarColor: EventExt.computeColor(selectedEvent), size: Dimension.defaultIconSize + 6),
           ),
         ],
       ),
@@ -462,8 +460,8 @@ class _EventModalState extends State<EventModal> {
                         if (selectedEvent.attendees![index].organizer ?? false)
                           Text(
                             ' - ${t.event.organizer}',
-                            style:
-                                TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
+                            style: TextStyle(
+                                fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                           ),
                       ],
                     ),
@@ -488,7 +486,8 @@ class _EventModalState extends State<EventModal> {
               SizedBox(
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
-                child: SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG, color: ColorsExt.grey800(context)),
+                child:
+                    SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG, color: ColorsExt.grey800(context)),
               ),
               const SizedBox(width: Dimension.padding),
               Expanded(

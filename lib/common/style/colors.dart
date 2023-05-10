@@ -178,6 +178,14 @@ extension ColorsExt on Colors {
   static String displayTextFromName(String name) {
     return paletteColorsDisplayName[name] ?? "";
   }
+
+  static Color getCalendarBackgroundColor(Color color) {
+    return HSLColor.fromColor(color).withLightness(0.83).toColor().withOpacity(0.5);
+  }
+
+  static Color getCalendarBackgroundColorLight(Color color) {
+    return HSLColor.fromColor(color).withLightness(0.89).toColor().withOpacity(0.5);
+  }
 }
 
 extension ColorsLight on Colors {
