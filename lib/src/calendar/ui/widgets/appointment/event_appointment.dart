@@ -102,7 +102,7 @@ class EventAppointment extends StatelessWidget {
     switch (responseStatus) {
       case AtendeeResponseStatus.declined:
         return BoxDecoration(
-            color: HSLColor.fromColor(appointment.color).withLightness(0.89).toColor().withOpacity(0.5),
+            color: ColorsExt.getCalendarBackgroundColorLight(appointment.color),
             borderRadius: const BorderRadius.all(
               Radius.circular(4.0),
             ));
@@ -113,10 +113,10 @@ class EventAppointment extends StatelessWidget {
               transform: const GradientRotation(3.14 / 4),
               stops: const [0.0, 0.5, 0.5, 1],
               colors: [
-                HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
-                HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
-                HSLColor.fromColor(appointment.color).withLightness(0.89).toColor().withOpacity(0.5),
-                HSLColor.fromColor(appointment.color).withLightness(0.89).toColor().withOpacity(0.5)
+                ColorsExt.getCalendarBackgroundColor(appointment.color),
+                ColorsExt.getCalendarBackgroundColor(appointment.color),
+                ColorsExt.getCalendarBackgroundColorLight(appointment.color),
+                ColorsExt.getCalendarBackgroundColorLight(appointment.color),
               ],
               tileMode: TileMode.repeated,
             ),
@@ -133,13 +133,13 @@ class EventAppointment extends StatelessWidget {
               ));
         }
         return BoxDecoration(
-            color: HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
+            color: ColorsExt.getCalendarBackgroundColor(appointment.color),
             borderRadius: const BorderRadius.all(
               Radius.circular(4.0),
             ));
       default:
         return BoxDecoration(
-            color: HSLColor.fromColor(appointment.color).withLightness(0.83).toColor().withOpacity(0.5),
+            color: ColorsExt.getCalendarBackgroundColor(appointment.color),
             borderRadius: const BorderRadius.all(
               Radius.circular(4.0),
             ));

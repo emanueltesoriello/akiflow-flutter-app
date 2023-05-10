@@ -20,10 +20,8 @@ class CalendarColorCircle extends StatelessWidget {
           Assets.images.icons.common.circleFillSVG,
           width: size,
           height: size,
-          color: HSLColor.fromColor(ColorsExt.fromHex(EventExt.calendarColor[calendarColor] ?? calendarColor))
-              .withLightness(0.83)
-              .toColor()
-              .withOpacity(0.5),
+          color: ColorsExt.getCalendarBackgroundColor(
+              ColorsExt.fromHex(EventExt.calendarColor[calendarColor] ?? calendarColor)),
         ),
       SvgPicture.asset(
         Assets.images.icons.common.circleSVG,
@@ -31,10 +29,8 @@ class CalendarColorCircle extends StatelessWidget {
         height: size,
         color: active
             ? ColorsExt.fromHex(EventExt.calendarColor[calendarColor] ?? calendarColor)
-            : HSLColor.fromColor(ColorsExt.fromHex(EventExt.calendarColor[calendarColor] ?? calendarColor))
-                .withLightness(0.83)
-                .toColor()
-                .withOpacity(0.5),
+            : ColorsExt.getCalendarBackgroundColor(
+                ColorsExt.fromHex(EventExt.calendarColor[calendarColor] ?? calendarColor)),
       ),
     ]);
   }
