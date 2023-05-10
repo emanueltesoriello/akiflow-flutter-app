@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:models/base.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
@@ -137,6 +139,8 @@ Batch prepareBatchInsert(BatchInsertModel batchInsertModel) {
 
 Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partitioneItemModel) async {
   try {
+    final SentryService sentryService = locator<SentryService>();
+
     List<dynamic> allRemoteModels = partitioneItemModel.remoteItems;
     List<dynamic> existingLocalModels = partitioneItemModel.existingItems;
     List<dynamic> changedModels = [];
@@ -187,16 +191,22 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
         if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
           if (remoteModel.runtimeType == Task) {
             if (globalListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
-              Nullable<String?>? globalListIdUpdatedAt =
-                  Nullable(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt);
-              Nullable<String?>? listId = Nullable(existingModelsById[remoteModel.id]?.listId);
-              Nullable<String?>? sectionId = Nullable(existingModelsById[remoteModel.id]?.sectionId);
+              try {
+                Nullable<String?>? globalListIdUpdatedAt =
+                    Nullable(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt);
+                Nullable<String?>? listId = Nullable(existingModelsById[remoteModel.id]?.listId.toString());
+                Nullable<String?>? sectionId = Nullable(existingModelsById[remoteModel.id]?.sectionId);
 
-              remoteModel = (remoteModel as Task).copyWith(
-                  listId: listId,
-                  sectionId: sectionId,
-                  globalListIdUpdatedAt: globalListIdUpdatedAt,
-                  remoteListIdUpdatedAt: existingModelsById[remoteModel.id]?.remoteListIdUpdatedAt);
+                remoteModel = (remoteModel as Task).copyWith(
+                    listId: listId,
+                    sectionId: sectionId,
+                    globalListIdUpdatedAt: globalListIdUpdatedAt,
+                    remoteListIdUpdatedAt: existingModelsById[remoteModel.id]?.remoteListIdUpdatedAt);
+              } catch (e) {
+                print('Error on partitionItemsToUpsert 1');
+                print(e);
+                sentryService.captureException(e);
+              }
             }
           }
 
@@ -205,11 +215,17 @@ Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partit
           if (remoteModel.runtimeType == Task) {
             if (globalListIdUpdatedAtAtMillis > localListIdUpdatedAtAtMillis) {
               Nullable<String?>? globalListIdUpdatedAt = Nullable(remoteModel.globalListIdUpdatedAt);
-              existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id].copyWith(
-                  listId: remoteModel.listId,
-                  sectionId: remoteModel.sectionId,
-                  globalListIdUpdatedAt: globalListIdUpdatedAt,
-                  remoteListIdUpdatedAt: remoteModel.remoteListIdUpdatedAt);
+              try {
+                existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id].copyWith(
+                    listId: remoteModel.listId,
+                    sectionId: remoteModel.sectionId,
+                    globalListIdUpdatedAt: globalListIdUpdatedAt,
+                    remoteListIdUpdatedAt: remoteModel.remoteListIdUpdatedAt);
+              } catch (e) {
+                print('Error on partitionItemsToUpsert 2');
+                print(e);
+                sentryService.captureException(e);
+              }
 
               changedModels.add(existingModelsById[remoteModel.id]);
             } else {
