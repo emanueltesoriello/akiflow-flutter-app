@@ -25,9 +25,9 @@ class PlanForAction extends StatelessWidget {
     Color? color;
 
     if (task.statusType == TaskStatusType.inbox) {
-      leadingIconAsset = Assets.images.icons.common.traySVG;
-      color = ColorsExt.jordyBlue200(context);
-      text = t.bottomBar.inbox;
+      leadingIconAsset = Assets.images.icons.common.calendarSVG;
+      color = ColorsExt.grey200(context);
+      text = t.addTask.plan;
     } else if (task.statusType == TaskStatusType.someday) {
       leadingIconAsset = Assets.images.icons.common.archiveboxSVG;
       color = ColorsExt.akiflow100(context);
@@ -59,7 +59,7 @@ class PlanForAction extends StatelessWidget {
           leadingIconAsset = Assets.images.icons.common.clockAlertSVG;
           color = ColorsExt.cosmos200(context);
         }
-        if(task.done ?? false){
+        if (task.done ?? false) {
           color = ColorsExt.yorkGreen200(context);
         }
 
