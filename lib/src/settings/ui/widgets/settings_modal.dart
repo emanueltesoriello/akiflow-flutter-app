@@ -223,6 +223,27 @@ class SettingsModal extends StatelessWidget {
     );
   }
 
+  _buildAvailabilitySection(BuildContext context) {
+    return ButtonSelectable(
+      title: t.availability.availabilities,
+      titleColor: ColorsExt.grey800(context),
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.availabilitySVG,
+          height: 19,
+          color: ColorsExt.grey800(context),
+        ),
+      ),
+      trailing: Container(),
+      onPressed: () {
+        context.read<MainCubit>().changeHomeView(HomeViewType.availability);
+        Navigator.pop(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -278,6 +299,7 @@ class SettingsModal extends StatelessWidget {
                       return _buildAllTasks(homeViewType, context);
                     },
                   ),
+                  _buildAvailabilitySection(context),
                   const SizedBox(height: Dimension.paddingS),
                   const Separator(),
                   const SizedBox(height: Dimension.paddingS),
