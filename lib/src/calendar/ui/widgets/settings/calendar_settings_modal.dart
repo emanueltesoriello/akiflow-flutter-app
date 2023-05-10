@@ -39,7 +39,7 @@ class CalendarSettingsModal extends StatelessWidget {
         List<Calendar> primaryCalendars = calendars.where((calendar) => calendar.primary ?? false == true).toList();
         DateTime now = DateTime.now().toLocal();
         return Material(
-          color: Colors.transparent,
+          color: Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(Dimension.radiusM),
             topRight: Radius.circular(Dimension.radiusM),
