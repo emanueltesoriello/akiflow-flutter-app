@@ -85,6 +85,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
       actions: _buildActions(context),
       shadow: false,
       showSyncButton: true,
+      elevation: 0,
     );
   }
 

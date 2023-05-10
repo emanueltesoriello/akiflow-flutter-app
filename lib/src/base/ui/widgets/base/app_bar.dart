@@ -22,21 +22,23 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final bool shadow;
   final bool showSyncButton;
   final bool showLinearProgress;
+  final double elevation;
 
-  const AppBarComp({
-    Key? key,
-    this.title,
-    this.titleWidget,
-    this.showBack = false,
-    this.actions = const [],
-    this.onBackClick,
-    this.showLogo = false,
-    this.leading,
-    this.customTitle,
-    this.shadow = true,
-    this.showLinearProgress = true,
-    this.showSyncButton = false,
-  }) : super(key: key);
+  const AppBarComp(
+      {Key? key,
+      this.title,
+      this.titleWidget,
+      this.showBack = false,
+      this.actions = const [],
+      this.onBackClick,
+      this.showLogo = false,
+      this.leading,
+      this.customTitle,
+      this.shadow = true,
+      this.showLinearProgress = true,
+      this.showSyncButton = false,
+      this.elevation = 4})
+      : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
@@ -71,18 +73,21 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
             bottom: (showSyncButton == false || state.loading == false)
                 ? PreferredSize(
                     preferredSize: Size.zero,
-                    child: Container(),
+                    child: Container(height: Dimension.progressIndicatorSize / 2),
                   )
                 : showLinearProgress
                     ? const PreferredSize(
                         preferredSize: Size.fromHeight(Dimension.progressIndicatorSize),
-                        child: LinearProgressIndicator(value: null),
+                        child: LinearProgressIndicator(
+                          value: null,
+                          minHeight: Dimension.progressIndicatorSize / 2,
+                        ),
                       )
                     : PreferredSize(
                         preferredSize: Size.zero,
-                        child: Container(),
+                        child: Container(height: Dimension.progressIndicatorSize / 2),
                       ),
-            elevation: 4,
+            elevation: elevation,
             automaticallyImplyLeading: false,
             shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
             title: _buildTitle(context),
