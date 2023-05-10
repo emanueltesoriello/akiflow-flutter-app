@@ -6,6 +6,7 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/calendar/calendar.dart';
 
@@ -21,7 +22,7 @@ class ChooseCalendarModal extends StatelessWidget {
         List<Calendar> primaryCalendars = state.calendars.where((calendar) => calendar.primary == true).toList();
 
         return Material(
-          color: Theme.of(context).backgroundColor,
+          color: ColorsExt.background(context),
           child: Container(
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -64,6 +65,7 @@ class ChooseCalendarModal extends StatelessWidget {
                       context,
                       active: initialCalendar == primaryCalendars[index].originId,
                       text: primaryCalendars[index].originId ?? '',
+                      calendar: primaryCalendars[index],
                       click: () {
                         onChange(primaryCalendars[index]);
                         Navigator.pop(context);
@@ -84,6 +86,7 @@ class ChooseCalendarModal extends StatelessWidget {
     BuildContext context, {
     required bool active,
     required String text,
+    required Calendar calendar,
     required Function() click,
   }) {
     return InkWell(
@@ -91,9 +94,15 @@ class ChooseCalendarModal extends StatelessWidget {
       child: Container(
         color: active ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.all(Dimension.padding),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+        child: Row(
+          children: [
+            CalendarColorCircle(calendarColor: calendar.color!, active: active),
+            const SizedBox(width: Dimension.paddingS),
+            Text(
+              text,
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+            ),
+          ],
         ),
       ),
     );

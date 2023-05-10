@@ -14,6 +14,7 @@ import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
@@ -32,7 +33,6 @@ import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
 import 'package:rrule/rrule.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tuple/tuple.dart' as tuple;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class EventEditModal extends StatefulWidget {
@@ -130,7 +130,7 @@ class _EventEditModalState extends State<EventEditModal> {
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
-          color: Colors.white,
+          color: ColorsExt.background(context),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(Dimension.radiusM),
             topRight: Radius.circular(Dimension.radiusM),
@@ -221,10 +221,8 @@ class _EventEditModalState extends State<EventEditModal> {
                 SizedBox(
                   width: Dimension.defaultIconSize + 6,
                   height: Dimension.defaultIconSize + 6,
-                  child: SvgPicture.asset(
-                    Assets.images.icons.common.circleFillSVG,
-                    color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
-                  ),
+                  child: CalendarColorCircle(
+                      calendarColor: EventExt.computeColor(updatedEvent), size: Dimension.defaultIconSize + 6),
                 ),
                 SizedBox(
                   width: Dimension.smallconSize,
@@ -858,13 +856,9 @@ class _EventEditModalState extends State<EventEditModal> {
         padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
         child: Row(
           children: [
-            SvgPicture.asset(
-              Assets.images.icons.common.circleFillSVG,
-              width: Dimension.defaultIconSize,
-              height: Dimension.defaultIconSize,
-              color:
-                  ColorsExt.fromHex(EventExt.calendarColor[updatedEvent.calendarColor] ?? updatedEvent.calendarColor!),
-            ),
+            CalendarColorCircle(
+                calendarColor: EventExt.calendarColor[updatedEvent.calendarColor] ?? updatedEvent.calendarColor!,
+                size: Dimension.defaultIconSize),
             const SizedBox(width: Dimension.padding),
             Text(choosenCalendar,
                 style: Theme.of(context)

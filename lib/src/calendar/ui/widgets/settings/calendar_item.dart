@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/extensions/event_extension.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/calendar/calendar.dart';
 
@@ -96,34 +96,7 @@ class _CalendarItemState extends State<CalendarItem> {
                           },
                           child: Row(
                             children: [
-                              Stack(children: [
-                                if (visible)
-                                  SvgPicture.asset(
-                                    Assets.images.icons.common.circleFillSVG,
-                                    width: Dimension.defaultIconSize,
-                                    height: Dimension.defaultIconSize,
-                                    color: HSLColor.fromColor(ColorsExt.fromHex(
-                                            EventExt.calendarColor[widget.calendars[index].color!] ??
-                                                widget.calendars[index].color!))
-                                        .withLightness(0.83)
-                                        .toColor()
-                                        .withOpacity(0.5),
-                                  ),
-                                SvgPicture.asset(
-                                  Assets.images.icons.common.circleSVG,
-                                  width: Dimension.defaultIconSize,
-                                  height: Dimension.defaultIconSize,
-                                  color: visible
-                                      ? ColorsExt.fromHex(EventExt.calendarColor[widget.calendars[index].color!] ??
-                                          widget.calendars[index].color!)
-                                      : HSLColor.fromColor(ColorsExt.fromHex(
-                                              EventExt.calendarColor[widget.calendars[index].color!] ??
-                                                  widget.calendars[index].color!))
-                                          .withLightness(0.83)
-                                          .toColor()
-                                          .withOpacity(0.5),
-                                ),
-                              ]),
+                              CalendarColorCircle(calendarColor: widget.calendars[index].color!, active: visible),
                               const SizedBox(width: Dimension.paddingS),
                               SizedBox(
                                 width: 220,
