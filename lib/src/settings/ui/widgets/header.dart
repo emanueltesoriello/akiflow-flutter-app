@@ -46,7 +46,7 @@ class Header extends StatelessWidget {
                   Text(
                     state.user?.email ?? "n/d",
                     style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                          color: ColorsExt.grey3(context),
+                          color: ColorsExt.grey600(context),
                         ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -65,7 +65,7 @@ class Header extends StatelessWidget {
             icon: SvgPicture.asset(
               Assets.images.icons.common.searchSVG,
               height: 25,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
             onPressed: () {
               showCupertinoModalBottomSheet(
@@ -86,7 +86,7 @@ class Header extends StatelessWidget {
               height: 25,
               child: SvgPicture.asset(
                 Assets.images.icons.common.gearAltSVG,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               ),
             ),
             onPressed: () {

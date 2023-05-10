@@ -247,7 +247,7 @@ class _TodayViewState extends State<TodayView> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle1
-                                        ?.copyWith(color: ColorsExt.grey1(context)),
+                                        ?.copyWith(color: ColorsExt.grey900(context)),
                                   )
                                 ],
                               ),

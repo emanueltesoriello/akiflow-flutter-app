@@ -41,7 +41,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!
-                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
+                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))),
             const SizedBox(width: Dimension.paddingS),
             const AnimatedChevron(iconUp: true),
           ],
@@ -75,11 +75,11 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
     Color iconForeground;
 
     if (label.color != null) {
-      iconBackground = ColorsExt.getFromName(label.color!).withOpacity(0.1);
+      iconBackground = ColorsExt.getLightColorFromName(label.color!);
       iconForeground = ColorsExt.getFromName(label.color!);
     } else {
-      iconBackground = ColorsExt.grey6(context);
-      iconForeground = ColorsExt.grey2(context);
+      iconBackground = ColorsExt.grey100(context);
+      iconForeground = ColorsExt.grey800(context);
     }
 
     return AppBarComp(
@@ -112,7 +112,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
               Assets.images.icons.common.ellipsisSVG,
               width: Dimension.appBarLeadingIcon,
               height: Dimension.appBarLeadingIcon,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
             onSelected: (LabelActions result) async {
               switch (result) {

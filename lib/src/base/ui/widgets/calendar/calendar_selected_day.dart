@@ -15,7 +15,7 @@ class CalendarToday extends StatelessWidget {
         style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w500,
-          color: ColorsExt.akiflow(context),
+          color: ColorsExt.akiflow500(context),
         ),
       ),
     );

@@ -105,11 +105,11 @@ class CalendarBody extends StatelessWidget {
                 ? const BoxDecoration()
                 : BoxDecoration(
                     color: Colors.transparent,
-                    border: Border.all(color: ColorsExt.akiflow(context), width: 2),
+                    border: Border.all(color: ColorsExt.akiflow500(context), width: 2),
                     borderRadius: const BorderRadius.all(Radius.circular(4)),
                   ),
             view: calendarCubit.state.calendarView,
-            cellBorderColor: ColorsExt.grey5(context),
+            cellBorderColor: ColorsExt.grey200(context),
             onViewChanged: (ViewChangedDetails details) {
               calendarCubit.setVisibleDates(details.visibleDates);
               DateTime start = details.visibleDates.first.subtract(const Duration(days: 1));
@@ -127,18 +127,18 @@ class CalendarBody extends StatelessWidget {
                 dayTextStyle: Theme.of(context)
                     .textTheme
                     .bodyText1
-                    ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                    ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                 dateTextStyle: Theme.of(context)
                     .textTheme
                     .bodyText1
-                    ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
+                    ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
             timeSlotViewSettings: TimeSlotViewSettings(
               timeIntervalHeight: 60.0,
               minimumAppointmentDuration: const Duration(minutes: 15),
               timeTextStyle: Theme.of(context)
                   .textTheme
                   .caption
-                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600),
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
               dayFormat: isThreeDays ? 'EEE' : 'EE',
@@ -150,25 +150,25 @@ class CalendarBody extends StatelessWidget {
                   dayTextStyle: Theme.of(context)
                       .textTheme
                       .caption
-                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                   dateTextStyle: Theme.of(context)
                       .textTheme
                       .titleLarge
-                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                 ),
                 weekHeaderSettings: WeekHeaderSettings(
                   startDateFormat: 'dd',
                   endDateFormat: 'dd MMM',
                   weekTextStyle:
-                      TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ColorsExt.grey2_5(context)),
+                      TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ColorsExt.grey700(context)),
                 ),
                 monthHeaderSettings: MonthHeaderSettings(
                   height: 66,
-                  backgroundColor: ColorsExt.grey7(context),
+                  backgroundColor: ColorsExt.grey50(context),
                   monthTextStyle: Theme.of(context)
                       .textTheme
                       .titleLarge
-                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                 )),
             monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
             onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),

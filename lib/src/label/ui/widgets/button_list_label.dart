@@ -45,7 +45,7 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
-        end: ColorsExt.grey5(context),
+        end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
@@ -102,7 +102,7 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
                                 widget.title,
                                 textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
                                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                      color: ColorsExt.grey2(context),
+                                      color: ColorsExt.grey800(context),
                                     ),
                               ),
                             ),
@@ -122,7 +122,7 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
                           Assets.images.icons.common.chevronRightSVG,
                           width: Dimension.chevronIconSize,
                           height: Dimension.chevronIconSize,
-                          color: ColorsExt.grey3(context),
+                          color: ColorsExt.grey600(context),
                         );
                       }),
                     ],

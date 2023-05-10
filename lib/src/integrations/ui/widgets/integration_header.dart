@@ -23,7 +23,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 62, maxHeight: 70),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimension.radius),
-        border: Border.all(color: ColorsExt.grey5(context)),
+        border: Border.all(color: ColorsExt.grey200(context)),
         color: ColorsExt.background(context),
       ),
       margin: const EdgeInsets.all(1),
@@ -41,7 +41,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
                   child: Text(
                     t.settings.integrations.gmail.title,
                     textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+                    style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
                   ),
                 ),
                 const SizedBox(height: Dimension.paddingXS),
@@ -52,7 +52,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
                       replacement: const SizedBox(),
                       child: CircleAvatar(
                         radius: Dimension.radiusS,
-                        backgroundColor: ColorsExt.green(context),
+                        backgroundColor: ColorsExt.yorkGreen400(context),
                       ),
                     ),
                     Flexible(
@@ -61,7 +61,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .caption
-                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                       ),
                     ),
                   ],

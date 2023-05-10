@@ -190,21 +190,21 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                           if (widget.onDisconnect != null) widget.onDisconnect!;
                         },
                         color: Colors.transparent,
-                        splashColor: ColorsExt.grey3(context),
-                        borderColor: ColorsExt.grey2_5(context),
+                        splashColor: ColorsExt.grey600(context),
+                        borderColor: ColorsExt.grey700(context),
                         child: Text('Disconnect',
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1
-                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2_5(context))))
+                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey700(context))))
                     : ActionButton(
                         key: const Key('Reconnect'),
                         onPressed: () async {
                           context.read<IntegrationsCubit>().connectGmail(email: user.identifier);
                         },
-                        color: ColorsExt.orange20(context),
-                        splashColor: ColorsExt.orange(context),
-                        borderColor: ColorsExt.orange(context),
+                        color: ColorsExt.apricot200(context),
+                        splashColor: ColorsExt.apricot400(context),
+                        borderColor: ColorsExt.apricot400(context),
                         child: Text('Reconnect',
                             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                   fontWeight: FontWeight.w400,
@@ -263,8 +263,8 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                                   width: 48,
                                   height: 24,
                                   toggleSize: 20,
-                                  activeColor: ColorsExt.akiflow(context),
-                                  inactiveColor: ColorsExt.grey5(context),
+                                  activeColor: ColorsExt.akiflow500(context),
+                                  inactiveColor: ColorsExt.grey200(context),
                                   value: isSuperhumanEnabled ?? false,
                                   borderRadius: 24,
                                   padding: 2,

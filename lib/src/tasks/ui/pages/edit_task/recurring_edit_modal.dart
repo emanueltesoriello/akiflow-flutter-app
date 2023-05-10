@@ -36,13 +36,13 @@ class RecurringEditModal extends StatelessWidget {
                 child: Row(
                   children: [
                     SvgPicture.asset(Assets.images.icons.common.pencilSVG,
-                        width: 28, height: 28, color: ColorsExt.grey2(context)),
+                        width: 28, height: 28, color: ColorsExt.grey800(context)),
                     const SizedBox(width: 8.0),
                     Text(
                       t.editTask.repeatingEditDialog.title,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey800(context),
                           ),
                     ),
                   ],
@@ -55,7 +55,7 @@ class RecurringEditModal extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
-                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                 ),
               ),
               const SizedBox(height: Dimension.paddingM),
@@ -70,13 +70,13 @@ class RecurringEditModal extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
-                      border: Border.all(color: ColorsExt.grey5(context))),
+                      border: Border.all(color: ColorsExt.grey200(context))),
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.onlyThis,
                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
                             fontWeight: FontWeight.w400,
-                            color: ColorsExt.grey3(context),
+                            color: ColorsExt.grey600(context),
                           ),
                     ),
                   ),
@@ -94,13 +94,13 @@ class RecurringEditModal extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
-                      border: Border.all(color: ColorsExt.grey4(context))),
+                      border: Border.all(color: ColorsExt.grey300(context))),
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.thisAndAllFuture,
                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
                             fontWeight: FontWeight.w400,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey800(context),
                           ),
                     ),
                   ),

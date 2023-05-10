@@ -64,7 +64,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                     margin: const EdgeInsets.fromLTRB(16, 16, 16, 32),
                     child: ActionButton(
                       child: Text(t.connect,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.akiflow(context))),
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.akiflow500(context))),
                       onPressed: () {
                         context.read<IntegrationsCubit>().connectGmail();
                       },
@@ -85,7 +85,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimension.radius),
         color: ColorsExt.background(context),
-        border: Border.all(color: ColorsExt.grey7(context), width: 1),
+        border: Border.all(color: ColorsExt.grey50(context), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
@@ -104,7 +104,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
-                  child: CircleAvatar(radius: 19, backgroundColor: ColorsExt.grey4(context)),
+                  child: CircleAvatar(radius: 19, backgroundColor: ColorsExt.grey300(context)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -117,7 +117,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                         margin: const EdgeInsets.only(right: 100),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
-                          color: ColorsExt.grey6(context),
+                          color: ColorsExt.grey100(context),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -126,7 +126,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
-                          color: ColorsExt.grey6(context),
+                          color: ColorsExt.grey100(context),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -135,7 +135,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
-                          color: ColorsExt.grey6(context),
+                          color: ColorsExt.grey100(context),
                         ),
                       ),
                     ],
@@ -151,7 +151,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
                       width: 47,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(3),
-                        color: ColorsExt.grey6(context),
+                        color: ColorsExt.grey100(context),
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -190,7 +190,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 10,
-          backgroundColor: ColorsExt.akiflow(context),
+          backgroundColor: ColorsExt.akiflow500(context),
           child: const Text("1"),
         ),
         const SizedBox(width: 14),
@@ -198,7 +198,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
             child: RichText(
           text: TextSpan(
             text: t.settings.integrations.gmail.step1.t1,
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
             children: [
               TextSpan(
                   text: t.settings.integrations.gmail.step1.t2, style: const TextStyle(fontWeight: FontWeight.w500)),
@@ -215,7 +215,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 10,
-          backgroundColor: ColorsExt.akiflow(context),
+          backgroundColor: ColorsExt.akiflow500(context),
           child: const Text("2"),
         ),
         const SizedBox(width: 14),
@@ -223,7 +223,7 @@ class GmailInstructionIntegrationsPage extends StatelessWidget {
             child: RichText(
           text: TextSpan(
               text: t.settings.integrations.gmail.step2,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context))),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
         )),
       ],
     );

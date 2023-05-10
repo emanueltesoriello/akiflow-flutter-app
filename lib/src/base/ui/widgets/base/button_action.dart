@@ -70,7 +70,7 @@ class ButtonAction extends StatelessWidget {
         Text(bottomLabel!,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.caption?.copyWith(
-                  color: ColorsExt.grey2(context),
+                  color: ColorsExt.grey800(context),
                   fontWeight: FontWeight.w500,
                 )),
       ],

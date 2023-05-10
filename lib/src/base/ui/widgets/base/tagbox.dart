@@ -11,6 +11,7 @@ class TagBox extends StatelessWidget {
   final Color? borderColor;
   final Color? foregroundColor;
   final Color? iconColor;
+  final Color? textColor;
   final Function()? onPressed;
   final bool isBig;
   final bool isSquare;
@@ -25,6 +26,7 @@ class TagBox extends StatelessWidget {
     this.borderColor,
     this.foregroundColor,
     this.iconColor,
+    this.textColor,
     this.onPressed,
     this.isBig = false,
     this.isSquare = false,
@@ -61,7 +63,7 @@ class TagBox extends StatelessWidget {
                   const SizedBox(width: 6),
                   SvgPicture.asset(
                     icon!,
-                    color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey2_5(context),
+                    color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey600(context),
                     width: iconSize ?? (isBig ? 20 : 14),
                     height: iconSize ?? (isBig ? 20 : 14),
                   ),
@@ -86,7 +88,7 @@ class TagBox extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: isBig ? 15 : 13,
-                          color: foregroundColor ?? ColorsExt.grey2_5(context),
+                          color: textColor ?? foregroundColor ?? ColorsExt.grey800(context),
                         ),
                         textAlign: TextAlign.end,
                       ),

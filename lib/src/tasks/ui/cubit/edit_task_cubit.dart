@@ -679,7 +679,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         nlpDateTime.textWithDate!: MapType(
             0,
             TextStyle(
-              color: ColorsExt.akiflow20(context),
+              color: ColorsExt.akiflow200(context),
             )),
       });
 
@@ -689,7 +689,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         nlpDateTime.textWithDate!: MapType(
             0,
             TextStyle(
-              color: ColorsExt.akiflow20(context),
+              color: ColorsExt.akiflow200(context),
             )),
       });
       planWithNLP(nlpDateTime);

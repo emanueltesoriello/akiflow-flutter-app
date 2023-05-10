@@ -50,7 +50,7 @@ class EventAppointment extends StatelessWidget {
                         width: boxHeight < 15.0 ? 13 : 16,
                         child: SvgPicture.asset(
                           rsvpIcon,
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey800(context),
                         ),
                       ),
                     ),
@@ -74,8 +74,8 @@ class EventAppointment extends StatelessWidget {
                             : 13.0,
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined
-                        ? ColorsExt.grey2_5(context)
-                        : ColorsExt.grey1(context),
+                        ? ColorsExt.grey700(context)
+                        : ColorsExt.grey900(context),
                     decoration: responseStatus == AtendeeResponseStatus.declined ? TextDecoration.lineThrough : null,
                   ),
                 ),
@@ -88,7 +88,7 @@ class EventAppointment extends StatelessWidget {
                             height: 1.3,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey3(context),
+                            color: ColorsExt.grey600(context),
                           )),
               ],
             ),

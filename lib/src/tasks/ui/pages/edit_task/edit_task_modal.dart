@@ -120,10 +120,10 @@ class _EditTaskModalState extends State<EditTaskModal> {
             onPressed: () {
               onBack(state);
             },
-            icon: Icon(Icons.arrow_back, size: 16, color: ColorsExt.grey3(context)),
+            icon: Icon(Icons.arrow_back, size: 16, color: ColorsExt.grey600(context)),
             label: Text(
               'Edit task',
-              style: Theme.of(context).textTheme.button?.copyWith(color: ColorsExt.grey3(context)),
+              style: Theme.of(context).textTheme.button?.copyWith(color: ColorsExt.grey600(context)),
             ),
           ),
           TextButton(
@@ -133,7 +133,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
               style: Theme.of(context)
                   .textTheme
                   .bodyText1!
-                  .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
+                  .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context)),
             ),
           ),
         ],
@@ -159,13 +159,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text('Discard changes?',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey900(context))),
                       const SizedBox(height: Dimension.paddingM),
                       Text('The changes you’ve made won’t be saved',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
+                              ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.normal)),
                       const SizedBox(height: Dimension.paddingM),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,20 +174,20 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             style: Theme.of(context)
                                 .textButtonTheme
                                 .style
-                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey200(context))),
                             onPressed: () async {
                               Navigator.of(context).pop();
                             },
                             child: Text('Cancel'.toUpperCase(),
                                 style:
-                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey900(context))),
                           ),
                           const SizedBox(width: Dimension.padding),
                           TextButton(
                             style: Theme.of(context)
                                 .textButtonTheme
                                 .style
-                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey200(context))),
                             onPressed: () async {
                               streamSubscription?.cancel();
                               quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
@@ -200,7 +200,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             },
                             child: Text('Discard'.toUpperCase(),
                                 style:
-                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey900(context))),
                           )
                         ],
                       )

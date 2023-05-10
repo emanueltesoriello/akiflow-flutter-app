@@ -43,7 +43,7 @@ class ChooseConferenceModal extends StatelessWidget {
                       Text(
                         'Choose conference account',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: ColorsExt.grey2(context),
+                              color: ColorsExt.grey800(context),
                               fontWeight: FontWeight.w500,
                             ),
                       ),
@@ -104,7 +104,7 @@ class ChooseConferenceModal extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
               ),
             ),
           ],

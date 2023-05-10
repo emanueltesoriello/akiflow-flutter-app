@@ -19,7 +19,7 @@ class NotifcationCountIcon extends StatelessWidget {
       width: 25,
       height: 25,
       decoration: BoxDecoration(
-        color: ColorsExt.akiflow(context),
+        color: ColorsExt.akiflow500(context),
         border: Border.all(color: ColorsExt.background(context), width: 1),
         shape: BoxShape.circle,
       ),

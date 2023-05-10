@@ -54,7 +54,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
-        end: ColorsExt.grey5(context),
+        end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
@@ -110,7 +110,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                       color: _animation!.value,
                       boxShadow: [
                         BoxShadow(
-                          color: ColorsExt.grey5(context),
+                          color: ColorsExt.grey200(context),
                           offset: const Offset(0, 2),
                           blurRadius: 1,
                         ),
@@ -131,8 +131,8 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                         textAlign: TextAlign.left,
                                         style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                               color: (widget.enabled
-                                                  ? ColorsExt.grey2(context)
-                                                  : ColorsExt.grey3(context)),
+                                                  ? ColorsExt.grey800(context)
+                                                  : ColorsExt.grey600(context)),
                                             )),
                                   ),
                                 ],
@@ -150,7 +150,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                         CircleAvatar(
                                           radius: Dimension.radiusS,
                                           backgroundColor:
-                                              widget.active ? ColorsExt.green(context) : ColorsExt.orange(context),
+                                              widget.active ? ColorsExt.yorkGreen400(context) : ColorsExt.apricot400(context),
                                         ),
                                         const SizedBox(width: Dimension.paddingXS),
                                         Flexible(
@@ -158,7 +158,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                           widget.identifier!,
                                           style: Theme.of(context).textTheme.bodyText2?.copyWith(
                                                 fontWeight: FontWeight.w500,
-                                                color: ColorsExt.grey3(context),
+                                                color: ColorsExt.grey600(context),
                                               ),
                                         )),
                                       ],
@@ -178,7 +178,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                             Assets.images.icons.common.chevronRightSVG,
                             width: 20,
                             height: 20,
-                            color: ColorsExt.grey3(context),
+                            color: ColorsExt.grey600(context),
                           );
                         }),
                       ],

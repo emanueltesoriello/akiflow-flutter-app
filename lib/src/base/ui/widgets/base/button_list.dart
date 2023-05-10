@@ -58,7 +58,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
-        end: ColorsExt.grey5(context),
+        end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
@@ -117,7 +117,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                                       textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
                                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                           color:
-                                              (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
+                                              (widget.enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context))),
                                     ),
                                   ),
                                 ],
@@ -154,7 +154,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                                 Assets.images.icons.common.chevronRightSVG,
                                 width: 20,
                                 height: 20,
-                                color: ColorsExt.grey3(context),
+                                color: ColorsExt.grey600(context),
                               );
                             }),
                           ],
@@ -178,7 +178,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
           height: 24,
           color: widget.useSvgColor
               ? null
-              : (widget.leadingColor ?? (widget.enabled ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
+              : (widget.leadingColor ?? (widget.enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context))),
         ),
         const SizedBox(width: 8),
       ],
@@ -196,7 +196,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
           widget.leadingTextIconAsset!,
           width: 24,
           height: 24,
-          color: widget.leadingColor ?? ColorsExt.grey2(context),
+          color: widget.leadingColor ?? ColorsExt.grey800(context),
         ),
         const SizedBox(width: 8),
       ],

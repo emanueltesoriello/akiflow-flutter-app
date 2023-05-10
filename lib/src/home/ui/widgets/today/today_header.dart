@@ -38,17 +38,17 @@ class TodayHeader extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1!
-                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
             const SizedBox(width: 4),
             Text(tasksLenght.toString(),
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1!
-                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))),
+                    .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))),
             const Spacer(),
             SvgPicture.asset(
               listOpened ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
               width: Dimension.chevronIconSize,
               height: Dimension.chevronIconSize,
             )

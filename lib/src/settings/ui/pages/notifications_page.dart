@@ -51,7 +51,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           borderRadius: BorderRadius.circular(Dimension.radius),
           boxShadow: [
             BoxShadow(
-              color: ColorsExt.grey5(context),
+              color: ColorsExt.grey200(context),
               offset: const Offset(0, 2),
               blurRadius: 1,
             ),
@@ -73,15 +73,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     switchTitle,
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey800(context),
                         ),
                   ),
                   FlutterSwitch(
                     width: 48,
                     height: 24,
                     toggleSize: 20,
-                    activeColor: ColorsExt.akiflow(context),
-                    inactiveColor: ColorsExt.grey5(context),
+                    activeColor: ColorsExt.akiflow500(context),
+                    inactiveColor: ColorsExt.grey200(context),
                     value: isEnabled,
                     borderRadius: Dimension.radiusL,
                     padding: 2,
@@ -107,7 +107,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
-                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                 ),
                 subtitle: Text(
                   selectedBottomListItem,
@@ -115,7 +115,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
-                      ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w400),
+                      ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w400),
                 ),
                 trailing: const Icon(
                   Icons.arrow_forward_ios,
@@ -198,7 +198,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 Text(
                   "EVENTS IN CALENDAR".toUpperCase(),
                   style: Theme.of(context).textTheme.caption?.copyWith(
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
                 ),
@@ -223,7 +223,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 Text(
                   "TASKS IN CALENDAR".toUpperCase(),
                   style: Theme.of(context).textTheme.caption?.copyWith(
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
                 ),
@@ -244,7 +244,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 Text(
                   "DAILY OVERVIEW".toUpperCase(),
                   style: Theme.of(context).textTheme.caption?.copyWith(
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
                 ),
@@ -267,7 +267,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 Text(
                   "sounds".toUpperCase(),
                   style: Theme.of(context).textTheme.caption?.copyWith(
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
                 ),
@@ -279,7 +279,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       borderRadius: BorderRadius.circular(Dimension.radius),
                       boxShadow: [
                         BoxShadow(
-                          color: ColorsExt.grey5(context),
+                          color: ColorsExt.grey200(context),
                           offset: const Offset(0, 2),
                           blurRadius: 1,
                         ),
@@ -294,15 +294,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           "Task completed",
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                               ),
                         ),
                         FlutterSwitch(
                           width: 48,
                           height: 24,
                           toggleSize: 20,
-                          activeColor: ColorsExt.akiflow(context),
-                          inactiveColor: ColorsExt.grey5(context),
+                          activeColor: ColorsExt.akiflow500(context),
+                          inactiveColor: ColorsExt.grey200(context),
                           value: taskCompletedSoundEnabled,
                           borderRadius: 24,
                           padding: 2,

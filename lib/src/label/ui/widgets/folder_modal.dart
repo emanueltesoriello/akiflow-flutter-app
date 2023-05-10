@@ -50,7 +50,7 @@ class FolderModal extends StatelessWidget {
                           t.label.folder,
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                               ),
                         ),
                       );
@@ -72,7 +72,7 @@ class FolderModal extends StatelessWidget {
                                 child: Text(
                               folder.title ?? t.noTitle,
                               style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                    color: ColorsExt.grey2(context),
+                                    color: ColorsExt.grey800(context),
                                   ),
                             )),
                           ],

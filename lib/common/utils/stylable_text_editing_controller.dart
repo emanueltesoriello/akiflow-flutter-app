@@ -108,7 +108,7 @@ class StylableTextEditingController extends TextEditingController {
     return CustomTextSpan(
       text: textToBeStyled,
       style: TextStyle(
-        color: color ?? ColorsLight.akiflow,
+        color: color ?? ColorsLight.purple500,
         fontWeight: FontWeight.w500,
       ),
       recognizer: TapGestureRecognizer()

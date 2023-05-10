@@ -41,7 +41,7 @@ class ChangeColorModal extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge
-                            ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
+                            ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
                   ],
                 ),
               ),

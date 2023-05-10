@@ -73,13 +73,13 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
                               width: 22,
                               height: 22,
                               child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
-                                  color: ColorsExt.grey1(context)),
+                                  color: ColorsExt.grey900(context)),
                             ),
                             const SizedBox(width: Dimension.paddingS),
                             Text(
                               t.label.createFolder,
                               style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                    color: ColorsExt.grey2(context),
+                                    color: ColorsExt.grey800(context),
                                   ),
                               textAlign: TextAlign.center,
                             ),

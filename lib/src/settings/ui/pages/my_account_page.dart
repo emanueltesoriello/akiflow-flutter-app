@@ -34,7 +34,7 @@ class MyAccountPage extends StatelessWidget {
                     t.settings.myAccount.connectedAs.toUpperCase(),
                     style: Theme.of(context).textTheme.caption?.copyWith(
                           fontWeight: FontWeight.w500,
-                          color: ColorsExt.grey3(context),
+                          color: ColorsExt.grey600(context),
                         ),
                   ),
                   const SizedBox(height: Dimension.paddingXS),
@@ -43,7 +43,7 @@ class MyAccountPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
                       color: ColorsExt.background(context),
-                      border: Border.all(color: ColorsExt.grey5(context), width: 1),
+                      border: Border.all(color: ColorsExt.grey200(context), width: 1),
                     ),
                     child: Row(
                       children: [
@@ -68,7 +68,7 @@ class MyAccountPage extends StatelessWidget {
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle1
-                                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
+                                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                                   ),
                                   const SizedBox(height: Dimension.paddingXS),
                                   Text(
@@ -76,7 +76,7 @@ class MyAccountPage extends StatelessWidget {
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText2
-                                        ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
+                                        ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               );
@@ -92,7 +92,7 @@ class MyAccountPage extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall
-                        ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
+                        ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: Dimension.paddingXS),
                   ButtonList(

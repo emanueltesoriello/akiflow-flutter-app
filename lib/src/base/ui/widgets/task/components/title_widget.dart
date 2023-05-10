@@ -35,8 +35,8 @@ class TitleWidget extends StatelessWidget {
                       height: 1.3,
                       fontWeight: FontWeight.w500,
                       color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                          ? ColorsExt.grey3(context)
-                          : ColorsExt.grey1(context),
+                          ? ColorsExt.grey600(context)
+                          : ColorsExt.grey900(context),
                     ),
               ),
             ),

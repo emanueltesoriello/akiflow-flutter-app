@@ -36,7 +36,7 @@ class FrequencySelectionModal extends StatelessWidget {
                   Text(
                     t.editTask.recurrence.repeatEvery,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey800(context),
                           fontWeight: FontWeight.w500,
                         ),
                   ),
@@ -95,11 +95,11 @@ class FrequencySelectionModal extends StatelessWidget {
     return InkWell(
       onTap: click,
       child: Container(
-        color: active ? ColorsExt.grey6(context) : Colors.transparent,
+        color: active ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context)),
+          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context)),
         ),
       ),
     );

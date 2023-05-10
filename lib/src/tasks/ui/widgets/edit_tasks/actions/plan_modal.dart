@@ -128,7 +128,7 @@ class _PlanModalState extends State<PlanModal> {
                 children: [
                   CreateTaskTopActionItem(
                     text: t.addTask.plan,
-                    color: ColorsExt.grey5(context),
+                    color: ColorsExt.grey200(context),
                     leadingIconAsset: Assets.images.icons.common.calendarSVG,
                     active: status == TaskStatusType.planned,
                     onPressed: () {
@@ -138,7 +138,7 @@ class _PlanModalState extends State<PlanModal> {
                   const SizedBox(width: 24),
                   CreateTaskTopActionItem(
                     text: t.addTask.snooze,
-                    color: ColorsExt.pink30(context),
+                    color: ColorsExt.rose200(context),
                     leadingIconAsset: Assets.images.icons.common.clockSVG,
                     active: status == TaskStatusType.snoozed,
                     onPressed: () {
@@ -350,7 +350,7 @@ class _PlanModalState extends State<PlanModal> {
               iconAsset,
               width: 24,
               height: 24,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -359,7 +359,7 @@ class _PlanModalState extends State<PlanModal> {
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1
-                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
               ),
             ),
             const SizedBox(width: 8),
@@ -374,7 +374,7 @@ class _PlanModalState extends State<PlanModal> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                     ),
                   ),
                 ],

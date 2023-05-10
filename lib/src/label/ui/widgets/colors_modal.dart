@@ -34,7 +34,7 @@ class ColorsModal extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                      ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                 ),
               ),
               const SizedBox(height: Dimension.padding),

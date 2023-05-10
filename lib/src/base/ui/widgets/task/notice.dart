@@ -23,14 +23,14 @@ class Notice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: background ?? ColorsExt.green20(context),
+      color: background ?? ColorsExt.yorkGreen200(context),
       borderRadius: BorderRadius.circular(Dimension.noticeRadius),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 20, color: ColorsExt.green(context)),
+            Icon(icon, size: 20, color: ColorsExt.yorkGreen400(context)),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -58,7 +58,7 @@ class Notice extends StatelessWidget {
                   Assets.images.icons.common.xmarkSVG,
                   width: 20,
                   height: 20,
-                  color: ColorsExt.grey1(context),
+                  color: ColorsExt.grey900(context),
                 ),
                 InkWell(
                   onTap: onClose,

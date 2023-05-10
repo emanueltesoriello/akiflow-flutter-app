@@ -50,7 +50,7 @@ class GroupedTasksModal extends StatelessWidget {
                   Text(
                     '${tasks.length} tasks',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey800(context),
                           fontWeight: FontWeight.w500,
                         ),
                   ),

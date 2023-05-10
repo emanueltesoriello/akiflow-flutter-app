@@ -77,7 +77,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
       builder: (context, QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: GestureDetector(
@@ -173,12 +173,12 @@ class _EditTaskRowState extends State<EditTaskRow> {
           border: InputBorder.none,
           hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey600(context),
               ),
         ),
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w500,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
         onChanged: (value) {
           context.read<EditTaskCubit>().onTitleChanged(value);
@@ -206,7 +206,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           completed ? Assets.images.icons.common.checkDoneSVG : Assets.images.icons.common.checkEmptySVG,
           width: 22,
           height: 22,
-          color: completed ? ColorsExt.green(context) : ColorsExt.grey3(context),
+          color: completed ? ColorsExt.yorkGreen400(context) : ColorsExt.grey600(context),
         );
       }),
     );
@@ -220,30 +220,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
         task.statusType == TaskStatusType.trashed) {
       return TagBox(
         icon: Assets.images.icons.common.trashSVG,
-        backgroundColor: ColorsExt.grey6(context),
+        backgroundColor: ColorsExt.grey100(context),
         active: true,
         text: task.statusType!.name.capitalizeFirstCharacter(),
-        foregroundColor: ColorsExt.grey3(context),
+        foregroundColor: ColorsExt.grey600(context),
       );
     }
 
     if (task.isCompletedComputed) {
       return const SizedBox();
-    }
-
-    if (task.isOverdue) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            Assets.images.icons.common.clockAlertSVG,
-            width: 20,
-            height: 20,
-            color: ColorsExt.red(context),
-          ),
-          const SizedBox(width: 4),
-        ],
-      );
     }
 
     return const SizedBox();
@@ -264,11 +249,13 @@ class _EditTaskRowState extends State<EditTaskRow> {
     }
 
     return TagBox(
+      isBig: true,
       icon: Assets.images.icons.common.numberSVG,
-      text: label?.title ?? t.editTask.noLabel,
+      text: label?.title ?? t.editTask.addLabel,
+      textColor: label?.title != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
       backgroundColor:
-          label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey6(context),
-      iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey3(context),
+          label?.color != null ? ColorsExt.getLightColorFromName(label!.color!) : ColorsExt.grey100(context),
+      iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey600(context),
       active: label?.color != null,
       onPressed: () {
         showCupertinoModalBottomSheet(

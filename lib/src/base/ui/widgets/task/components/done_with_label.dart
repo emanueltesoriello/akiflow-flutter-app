@@ -18,8 +18,8 @@ class DoneWithLabel extends StatelessWidget {
       children: [
         Flexible(
           child: SlidableButtonAction(
-            backColor: ColorsExt.green20(context),
-            topColor: iconColor ?? ColorsExt.green(context),
+            backColor: ColorsExt.yorkGreen200(context),
+            topColor: iconColor ?? ColorsExt.yorkGreen400(context),
             icon: Assets.images.icons.common.checkDoneSVG,
             label: withLabel ? t.task.done : null,
             size: Dimension.defaultIconSize,

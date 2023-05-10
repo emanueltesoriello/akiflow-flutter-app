@@ -44,7 +44,7 @@ class SectionHeaderItem extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.caption?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: ColorsExt.akiflow(context),
+                    color: ColorsExt.akiflow500(context),
                   ),
             ),
             const SizedBox(width: Dimension.paddingXS),
@@ -52,13 +52,13 @@ class SectionHeaderItem extends StatelessWidget {
               "($taskCount)",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: ColorsExt.grey2_5(context),
+                    color: ColorsExt.grey700(context),
                   ),
             ),
             const Spacer(),
             SvgPicture.asset(
               listOpened ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
               width: Dimension.chevronIconSize,
               height: Dimension.chevronIconSize,
             ),
@@ -75,7 +75,7 @@ class SectionHeaderItem extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     Assets.images.icons.common.ellipsisSVG,
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                     width: Dimension.defaultIconSize,
                     height: Dimension.defaultIconSize,
                   ),

@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 333 
+ * Strings: 334 
  *
- * Built on 2023-05-03 at 09:23 UTC
+ * Built on 2023-05-08 at 14:31 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -565,6 +565,7 @@ class _StringsEditTaskEn {
 	String get assignLabel => 'Assign Label';
 	String get searchALabel => 'Search a label';
 	String get noLabel => 'No label';
+	String get addLabel => 'Add label';
 	String get removeLabel => 'Remove label';
 	String get deadline => 'Deadline';
 	String get repeat => 'Repeat';
@@ -1274,6 +1275,7 @@ extension on _StringsEn {
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.searchALabel': 'Search a label',
 			'editTask.noLabel': 'No label',
+			'editTask.addLabel': 'Add label',
 			'editTask.removeLabel': 'Remove label',
 			'editTask.deadline': 'Deadline',
 			'editTask.repeat': 'Repeat',

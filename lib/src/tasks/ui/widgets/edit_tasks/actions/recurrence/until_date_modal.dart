@@ -48,7 +48,7 @@ class _DeadlineModalState extends State<UntilDateModal> {
                   Text(
                     t.editTask.recurrence.repeatUntil,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey800(context),
                           fontWeight: FontWeight.w500,
                         ),
                   ),

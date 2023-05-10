@@ -198,7 +198,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 decoration: InputDecoration(border: InputBorder.none, hintText: t.event.editEvent.addTitle),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey1(context),
+                      color: ColorsExt.grey900(context),
                     )),
           ),
           const SizedBox(width: Dimension.paddingS),
@@ -231,7 +231,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   height: Dimension.smallconSize,
                   child: SvgPicture.asset(
                     Assets.images.icons.common.chevronDownSVG,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
                 ),
               ],
@@ -263,7 +263,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 if (!isAllDay) _startDateTime(context),
                 if (isAllDay) _startDateAllDay(context),
                 SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
-                    width: 22, height: 22, color: ColorsExt.grey3(context)),
+                    width: 22, height: 22, color: ColorsExt.grey600(context)),
                 if (!isAllDay) _endDateTime(context),
                 if (isAllDay) _endDateAllDay(context),
               ],
@@ -307,7 +307,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                   )),
         ],
       ),
@@ -361,7 +361,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               )),
     );
   }
@@ -403,7 +403,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               )),
     );
   }
@@ -444,7 +444,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                   )),
         ],
       ),
@@ -496,7 +496,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               )),
     );
   }
@@ -533,7 +533,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: ColorsExt.grey2(context),
+                color: ColorsExt.grey800(context),
               )),
     );
   }
@@ -553,8 +553,8 @@ class _EventEditModalState extends State<EventEditModal> {
               child: SvgPicture.asset(
                 Assets.images.icons.common.repeatSVG,
                 color: selectedRecurrence == EventRecurrenceModalType.none
-                    ? ColorsExt.grey3(context)
-                    : ColorsExt.grey2(context),
+                    ? ColorsExt.grey600(context)
+                    : ColorsExt.grey800(context),
               ),
             ),
             const SizedBox(width: Dimension.padding),
@@ -562,8 +562,8 @@ class _EventEditModalState extends State<EventEditModal> {
                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
                       fontWeight: FontWeight.w400,
                       color: selectedRecurrence == EventRecurrenceModalType.none
-                          ? ColorsExt.grey3(context)
-                          : ColorsExt.grey2(context),
+                          ? ColorsExt.grey600(context)
+                          : ColorsExt.grey800(context),
                     )),
           ],
         ),
@@ -635,21 +635,21 @@ class _EventEditModalState extends State<EventEditModal> {
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
                 child: SvgPicture.asset(Assets.images.icons.common.daySVG,
-                    color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+                    color: isAllDay ? ColorsExt.grey800(context) : ColorsExt.grey600(context)),
               ),
               const SizedBox(width: Dimension.padding),
               Text(t.event.editEvent.allDay,
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
+                      color: isAllDay ? ColorsExt.grey800(context) : ColorsExt.grey600(context))),
             ],
           ),
           FlutterSwitch(
             width: 48,
             height: 24,
             toggleSize: 20,
-            activeColor: ColorsExt.akiflow(context),
-            inactiveColor: ColorsExt.grey5(context),
+            activeColor: ColorsExt.akiflow500(context),
+            inactiveColor: ColorsExt.grey200(context),
             value: isAllDay,
             borderRadius: 24,
             padding: 2,
@@ -711,7 +711,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
-                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
             ],
           ),
           Row(
@@ -727,7 +727,7 @@ class _EventEditModalState extends State<EventEditModal> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
                 ),
               const SizedBox(width: Dimension.paddingM),
               InkWell(
@@ -740,7 +740,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 child: SizedBox(
                   width: Dimension.defaultIconSize,
                   height: Dimension.defaultIconSize,
-                  child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG, color: ColorsExt.grey3(context)),
+                  child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG, color: ColorsExt.grey600(context)),
                 ),
               ),
             ],
@@ -776,7 +776,7 @@ class _EventEditModalState extends State<EventEditModal> {
               height: Dimension.defaultIconSize,
               child: SvgPicture.asset(
                 Assets.images.icons.common.videocamSVG,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey600(context),
               ),
             ),
             const SizedBox(width: Dimension.padding),
@@ -784,7 +784,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
           ],
         ),
       ),
@@ -801,7 +801,7 @@ class _EventEditModalState extends State<EventEditModal> {
             height: Dimension.defaultIconSize,
             child: SvgPicture.asset(
               Assets.images.icons.common.mapSVG,
-              color: locationController.text.isEmpty ? ColorsExt.grey3(context) : ColorsExt.grey2(context),
+              color: locationController.text.isEmpty ? ColorsExt.grey600(context) : ColorsExt.grey800(context),
             ),
           ),
           const SizedBox(width: Dimension.padding),
@@ -813,13 +813,13 @@ class _EventEditModalState extends State<EventEditModal> {
                   hintStyle: Theme.of(context)
                       .textTheme
                       .subtitle1
-                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                   border: InputBorder.none,
                 ),
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
           ),
         ],
       ),
@@ -870,7 +870,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
           ],
         ),
       ),
@@ -894,7 +894,7 @@ class _EventEditModalState extends State<EventEditModal> {
               style: Theme.of(context)
                   .textTheme
                   .subtitle1
-                  ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                  ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
         ],
       ),
     );
@@ -910,7 +910,7 @@ class _EventEditModalState extends State<EventEditModal> {
             height: Dimension.defaultIconSize,
             child: SvgPicture.asset(
               Assets.images.icons.common.personCropCircleSVG,
-              color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+              color: updatedEvent.attendees != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
             ),
           ),
           const SizedBox(width: Dimension.padding),
@@ -918,7 +918,7 @@ class _EventEditModalState extends State<EventEditModal> {
             t.event.guests,
             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
-                color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+                color: updatedEvent.attendees != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context)),
           ),
         ],
       ),
@@ -944,7 +944,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           height: Dimension.defaultIconSize,
                           child: SvgPicture.asset(
                             Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                            color: ColorsExt.green(context),
+                            color: ColorsExt.yorkGreen400(context),
                           ),
                         )
                       : updatedEvent.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
@@ -953,7 +953,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               height: Dimension.defaultIconSize,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.xmarkCircleFillSVG,
-                                color: ColorsExt.red(context),
+                                color: ColorsExt.cosmos400(context),
                               ),
                             )
                           : SizedBox(
@@ -961,7 +961,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               height: Dimension.defaultIconSize,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.questionCircleFillSVG,
-                                color: ColorsExt.grey3(context),
+                                color: ColorsExt.grey600(context),
                               ),
                             ),
                   const SizedBox(width: Dimension.padding),
@@ -974,12 +974,12 @@ class _EventEditModalState extends State<EventEditModal> {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                              ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
                       if (updatedEvent.attendees![index].organizer ?? false)
                         Text(
                           ' - ${t.event.organizer}',
                           style:
-                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                         ),
                     ],
                   ),
@@ -999,7 +999,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   height: Dimension.defaultIconSize,
                   child: SvgPicture.asset(
                     Assets.images.icons.common.xmarkSVG,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
                 ),
               ),
@@ -1023,14 +1023,14 @@ class _EventEditModalState extends State<EventEditModal> {
               Assets.images.icons.common.plusCircleSVG,
               width: Dimension.defaultIconSize,
               height: Dimension.defaultIconSize,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
             ),
             const SizedBox(width: Dimension.padding),
             Text(t.event.editEvent.addGuests,
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
           ],
         ),
       ),
@@ -1101,7 +1101,7 @@ class _EventEditModalState extends State<EventEditModal> {
       builder: (context, quill.QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: quill.QuillEditor(
@@ -1120,7 +1120,7 @@ class _EventEditModalState extends State<EventEditModal> {
           },
           customStyles: quill.DefaultStyles(
             placeHolder: quill.DefaultTextBlockStyle(
-              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
               const quill.VerticalSpacing(0, 0),
               const quill.VerticalSpacing(0, 0),
               null,
@@ -1160,7 +1160,7 @@ class _EventEditModalState extends State<EventEditModal> {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                            ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
                   ],
                 ),
                 SvgPicture.asset(
@@ -1213,8 +1213,8 @@ class _EventEditModalState extends State<EventEditModal> {
                           ? t.event.editEvent.createEvent
                           : t.event.editEvent.saveChanges,
                       image: Assets.images.icons.common.checkmarkAltSVG,
-                      containerColor: ColorsExt.green20(context),
-                      iconColor: ColorsExt.green(context),
+                      containerColor: ColorsExt.yorkGreen200(context),
+                      iconColor: ColorsExt.yorkGreen400(context),
                       onTap: () async {
                         _onSaveTap();
                       },

@@ -60,7 +60,7 @@ class _SyncProgressState extends State<SyncProgress> with SingleTickerProviderSt
             Assets.images.icons.common.arrow2CirclepathSVG,
             width: 24,
             height: 24,
-            color: state.loading ? ColorsExt.akiflow(context) : ColorsExt.grey3(context),
+            color: state.loading ? ColorsExt.akiflow500(context) : ColorsExt.grey600(context),
           ),
         );
       },

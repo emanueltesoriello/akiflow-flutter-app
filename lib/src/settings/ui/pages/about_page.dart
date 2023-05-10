@@ -39,7 +39,7 @@ class AboutPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
                       color: ColorsExt.background(context),
-                      border: Border.all(color: ColorsExt.grey5(context), width: 1),
+                      border: Border.all(color: ColorsExt.grey200(context), width: 1),
                     ),
                     child: Row(
                       children: [
@@ -59,7 +59,7 @@ class AboutPage extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge
-                                          ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400),
+                                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                                     ),
                                     const SizedBox(height: Dimension.paddingXS),
                                     BlocBuilder<SettingsCubit, SettingsCubitState>(
@@ -69,7 +69,7 @@ class AboutPage extends StatelessWidget {
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall
-                                              ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
+                                              ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                                         );
                                       },
                                     ),
@@ -88,7 +88,7 @@ class AboutPage extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall
-                        ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
+                        ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: Dimension.paddingXS),
                   ButtonList(

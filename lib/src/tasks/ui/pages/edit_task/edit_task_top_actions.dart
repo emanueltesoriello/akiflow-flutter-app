@@ -91,12 +91,13 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               }
             }
 
+            bool hasDuration = task.duration != null && task.duration != 0;
             return TagBox(
               icon: Assets.images.icons.common.hourglassSVG,
-              backgroundColor:
-                  task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-              active: task.duration != null && task.duration != 0,
-              isSquare: task.duration != null && task.duration != 0 ? false : true,
+              foregroundColor: hasDuration ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+              backgroundColor: hasDuration ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+              active: hasDuration,
+              isSquare: hasDuration ? false : true,
               text: text,
               isBig: true,
               onPressed: () {
@@ -110,13 +111,14 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               builder: (context) {
                 bool enabled = updatedTask.recurrence != null && updatedTask.recurrence!.isNotEmpty;
 
-                return TagBox(
-                  icon: Assets.images.icons.common.repeatSVG,
-                  backgroundColor: enabled ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-                  active: enabled,
-                  isBig: true,
-                  onPressed: () {
-                    var cubit = context.read<EditTaskCubit>();
+              return TagBox(
+                icon: Assets.images.icons.common.repeatSVG,
+                foregroundColor: enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                backgroundColor: enabled ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+                active: enabled,
+                isBig: true,
+                onPressed: () {
+                  var cubit = context.read<EditTaskCubit>();
 
                     cubit.recurrenceTap();
 

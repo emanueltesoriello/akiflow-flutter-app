@@ -53,7 +53,7 @@ class TaskAppointment extends StatelessWidget {
         width: boxWidth,
         height: boxHeight,
         decoration: BoxDecoration(
-          color: ColorsExt.grey7(context),
+          color: ColorsExt.grey50(context),
           borderRadius: const BorderRadius.all(
             Radius.circular(4.0),
           ),
@@ -77,7 +77,7 @@ class TaskAppointment extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius:
                       const BorderRadius.only(topLeft: Radius.circular(4.0), bottomLeft: Radius.circular(4.0)),
-                  color: ColorsExt.cyan(context),
+                  color: ColorsExt.jordyBlue400(context),
                 ),
               ),
             Expanded(
@@ -131,7 +131,7 @@ class TaskAppointment extends StatelessWidget {
                                           ? 10.5
                                           : 13.0,
                                   fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey1(context),
+                                  color: ColorsExt.grey900(context),
                                 )),
                       ),
                     ],
@@ -146,7 +146,7 @@ class TaskAppointment extends StatelessWidget {
                                   height: 1.3,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey3(context),
+                                  color: ColorsExt.grey600(context),
                                 )),
                       ],
                     ),
@@ -165,7 +165,7 @@ class TaskAppointment extends StatelessWidget {
                         height: boxHeight < 15 ? 1.0 : 1.3,
                         fontSize: boxHeight < 12.0 ? 9.0 : 11.0,
                         fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                       ),
                     ),
                   if (task.calendarId != null &&
@@ -176,7 +176,7 @@ class TaskAppointment extends StatelessWidget {
                       width: 14,
                       child: SvgPicture.asset(
                         Assets.images.icons.common.lockSVG,
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                       ),
                     ),
                   if (appointment.label != null && calendarController.view != CalendarView.month && boxWidth > 25)
@@ -191,7 +191,7 @@ class TaskAppointment extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: appointment.label!.color != null
-                              ? ColorsExt.getFromName(appointment.label!.color!).withOpacity(0.1)
+                              ? ColorsExt.getLightColorFromName(appointment.label!.color!)
                               : null,
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -200,7 +200,7 @@ class TaskAppointment extends StatelessWidget {
                             Assets.images.icons.common.numberSVG,
                             color: appointment.label!.color != null
                                 ? ColorsExt.getFromName(appointment.label!.color!)
-                                : ColorsExt.grey3(context),
+                                : ColorsExt.grey600(context),
                             width: 12,
                             height: 12,
                           ),

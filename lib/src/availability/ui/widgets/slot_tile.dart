@@ -21,10 +21,10 @@ class SlotTile extends StatelessWidget {
         title: Container(
           padding: const EdgeInsets.all(Dimension.paddingS),
           decoration: BoxDecoration(
-              color: ColorsExt.grey7(context),
+              color: ColorsExt.grey50(context),
               borderRadius: BorderRadius.circular(Dimension.radius),
               border: Border.all(
-                color: ColorsExt.grey5(context),
+                color: ColorsExt.grey200(context),
                 width: 1,
               )),
           child: Row(
@@ -50,7 +50,7 @@ class SlotTile extends StatelessWidget {
                 config.title ?? '',
                 maxLines: 1,
                 style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      color: ColorsExt.grey1(context),
+                      color: ColorsExt.grey900(context),
                       fontWeight: FontWeight.w600,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -60,7 +60,7 @@ class SlotTile extends StatelessWidget {
                 config.durationString,
                 maxLines: 1,
                 style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                       fontWeight: FontWeight.w600,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -109,9 +109,9 @@ class SlotTile extends StatelessWidget {
           content: Container(
             padding: const EdgeInsets.all(Dimension.padding),
             decoration: BoxDecoration(
-              color: ColorsExt.green20(context),
+              color: ColorsExt.yorkGreen200(context),
               border: Border.all(
-                color: ColorsExt.grey5(context),
+                color: ColorsExt.grey200(context),
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(Dimension.radiusS),
@@ -123,7 +123,7 @@ class SlotTile extends StatelessWidget {
                 Text(
                   t.availability.linkCopiedToClipboard,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: ColorsExt.grey2(context),
+                        color: ColorsExt.grey800(context),
                         fontWeight: FontWeight.w600,
                       ),
                 ),

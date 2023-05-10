@@ -28,13 +28,13 @@ class FolderItem extends StatelessWidget {
                 child: SizedBox(
                   width: 22,
                   height: 22,
-                  child: SvgPicture.asset(Assets.images.icons.common.folderSVG, color: ColorsExt.grey2(context)),
+                  child: SvgPicture.asset(Assets.images.icons.common.folderSVG, color: ColorsExt.grey800(context)),
                 ),
               ),
               const SizedBox(width: 8),
               Text(label.title ?? '(No title)',
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                        color: ColorsExt.grey2(context),
+                        color: ColorsExt.grey800(context),
                       )),
             ],
           ),

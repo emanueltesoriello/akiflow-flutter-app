@@ -48,7 +48,7 @@ class _BackgroundDailyGoalState extends State<BackgroundDailyGoal> {
                 if (widget._task.isDailyGoal) {
                   return Colors.white;
                 } else {
-                  return (widget._task.selected ?? false) ? ColorsExt.grey6(context) : Colors.transparent;
+                  return (widget._task.selected ?? false) ? ColorsExt.grey100(context) : Colors.transparent;
                 }
               }(),
               gradient: () {

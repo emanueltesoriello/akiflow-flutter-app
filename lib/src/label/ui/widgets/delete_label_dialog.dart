@@ -48,19 +48,19 @@ class DeleteLabelDialog extends StatelessWidget {
                         children: [
                           const SizedBox(height: Dimension.paddingS),
                           SvgPicture.asset(Assets.images.icons.common.exclamationmarkTriangleFillSVG,
-                              width: 48, height: 48, color: ColorsExt.grey2(context)),
+                              width: 48, height: 48, color: ColorsExt.grey800(context)),
                           const SizedBox(height: Dimension.padding),
                           Text(
                             t.label.deleteDialog.title(labelTitle: label.title ?? t.noTitle),
                             style:
-                                TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                                TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: Dimension.padding),
                           Text(
                             t.label.deleteDialog.description,
                             style:
-                                TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                                TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: Dimension.paddingM),
@@ -74,7 +74,7 @@ class DeleteLabelDialog extends StatelessWidget {
                                 minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
                             child: Text(
                               t.label.deleteDialog.justDeleteTheLabel,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey2(context)),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -89,7 +89,7 @@ class DeleteLabelDialog extends StatelessWidget {
                                 minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
                             child: Text(
                               t.label.deleteDialog.markAllTasksAsDone,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey2(context)),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -108,7 +108,7 @@ class DeleteLabelDialog extends StatelessWidget {
                           child: Text(
                             t.cancel,
                             style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                  color: ColorsExt.grey3(context),
+                                  color: ColorsExt.grey600(context),
                                 ),
                             textAlign: TextAlign.center,
                           ),

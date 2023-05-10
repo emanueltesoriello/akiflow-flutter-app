@@ -62,7 +62,7 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
                   Text(t.event.editEvent.addGuestModal.addGuest,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey800(context),
                           )),
                   const SizedBox(height: Dimension.padding),
                   BorderedInputView(

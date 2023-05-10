@@ -24,7 +24,7 @@ class FirstSyncProgress extends StatelessWidget {
                   height: Dimension.firstSyncProgressInboxSize,
                   child: CircularProgressIndicator(
                     strokeWidth: 5,
-                    color: ColorsExt.akiflow20(context),
+                    color: ColorsExt.akiflow200(context),
                   ),
                 ),
                 SizedBox(
@@ -44,7 +44,7 @@ class FirstSyncProgress extends StatelessWidget {
             const SizedBox(height: Dimension.padding),
             Text(
               'Synching your tasks...',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey2(context)),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
             )
           ],
         ),

@@ -51,7 +51,7 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
                         t.settings.integrations.gmail.toImportTask.title,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
+                              color: ColorsExt.grey800(context),
                             ),
                       ),
                     ),
@@ -113,7 +113,7 @@ Widget _predefinedDateItem(
   return InkWell(
     onTap: onPressed,
     child: Container(
-      color: selected ? ColorsExt.grey6(context) : Colors.transparent,
+      color: selected ? ColorsExt.grey100(context) : Colors.transparent,
       padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
       height: 40,
       child: Row(
@@ -122,7 +122,7 @@ Widget _predefinedDateItem(
             child: Text(
               text,
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                   ),
             ),
           ),
