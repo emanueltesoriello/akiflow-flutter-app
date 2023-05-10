@@ -63,6 +63,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         builder: (context, state) {
           return AppBar(
             centerTitle: false,
+            scrolledUnderElevation: 0,
             backgroundColor: ColorsExt.background(context),
             surfaceTintColor: ColorsExt.background(context),
             systemOverlayStyle: const SystemUiOverlayStyle(

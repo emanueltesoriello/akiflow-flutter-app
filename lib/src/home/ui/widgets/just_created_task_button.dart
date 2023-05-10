@@ -48,6 +48,8 @@ class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
                 ),
                 TextButton(
                     onPressed: () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
                       Task task = state.justCreatedTask!;
 
                       TaskStatusType? statusType = task.statusType;

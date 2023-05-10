@@ -288,9 +288,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                           },
                           child: SizedBox(
                             width: 50,
-                            child: Row(
+                            child: Stack(
+                              alignment: Alignment.center,
                               children: [
-                                DotPrefix(task: widget.task),
                                 Builder(builder: ((context) {
                                   if (widget.selectMode) {
                                     return SizedBox(
@@ -321,6 +321,11 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                     );
                                   }
                                 })),
+                                if (!widget.selectMode)
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: DotPrefix(task: widget.task),
+                                  ),
                               ],
                             ),
                           ),

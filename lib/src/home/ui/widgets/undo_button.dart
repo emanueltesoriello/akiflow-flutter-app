@@ -53,6 +53,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
               TextButton(
                   onPressed: () {
                     context.read<TasksCubit>().undo();
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   },
                   child: Text(t.task.undo.toUpperCase(),
                       style: Theme.of(context)
