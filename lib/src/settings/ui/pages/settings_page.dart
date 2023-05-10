@@ -37,42 +37,16 @@ class SettingsPage extends StatelessWidget {
                 builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
           ButtonList(
             title: t.settings.myAccount.title,
-            position: ButtonListPosition.single,
+            position: ButtonListPosition.top,
             leading: Assets.images.icons.common.personCircleSVG,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAccountPage()));
             },
           ),
-          const SizedBox(height: Dimension.padding),
-          SettingHeaderText(text: t.comingSoon),
-          ButtonList(
-            title: t.settings.general,
-            position: ButtonListPosition.top,
-            leading: Assets.images.icons.common.gearAltSVG,
-            enabled: false,
-            onPressed: () {},
-          ),
-          ButtonList(
-            title: t.settings.notifications,
-            position: ButtonListPosition.center,
-            leading: Assets.images.icons.common.bellSVG,
-            enabled: true,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationsPage()));
-            },
-          ),
-          ButtonList(
-            title: t.settings.tasks,
-            position: ButtonListPosition.bottom,
-            leading: Assets.images.icons.common.checkDoneOutlineSVG,
-            enabled: false,
-            onPressed: () {},
-          ),
-          const SizedBox(height: Dimension.padding),
           ButtonList(
             title: t.settings.integrations.title,
             leading: Assets.images.icons.common.puzzleSVG,
-            position: ButtonListPosition.single,
+            position: ButtonListPosition.center,
             preTrailing: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
               builder: (context, state) {
                 List<Account> accounts = state.accounts;
@@ -100,6 +74,31 @@ class SettingsPage extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const IntegrationsPage()));
             },
+          ),
+          ButtonList(
+            title: t.settings.notifications,
+            position: ButtonListPosition.bottom,
+            leading: Assets.images.icons.common.bellSVG,
+            enabled: true,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationsPage()));
+            },
+          ),
+          const SizedBox(height: Dimension.padding),
+          SettingHeaderText(text: t.comingSoon),
+          ButtonList(
+            title: t.settings.general,
+            position: ButtonListPosition.top,
+            leading: Assets.images.icons.common.gearAltSVG,
+            enabled: false,
+            onPressed: () {},
+          ),
+          ButtonList(
+            title: t.settings.tasks,
+            position: ButtonListPosition.bottom,
+            leading: Assets.images.icons.common.checkDoneOutlineSVG,
+            enabled: false,
+            onPressed: () {},
           ),
           const SizedBox(height: Dimension.padding),
           ButtonList(
