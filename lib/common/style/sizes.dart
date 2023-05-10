@@ -22,7 +22,7 @@ class Dimension {
   static const subtitleFontSize = 16.0;
   static const buttonFontSize = 18.0;
   static const buttonSubtitleFontSize = 16.0;
-  static const buttonHeight = 60;
+  static const buttonHeight = 45.0;
   static const minButtonHeight = 36.0;
   static const minButtonWidth = 115.0;
   static const snackBarHeight = 50.0;
