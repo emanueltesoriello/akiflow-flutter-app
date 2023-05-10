@@ -31,7 +31,7 @@ class EmptyHomeViewPlaceholder extends StatelessWidget {
           textAlign: TextAlign.center,
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
+              .titleMedium!
               .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
         ),
         const SizedBox(height: Dimension.padding),
