@@ -40,24 +40,9 @@ class TitleWidget extends StatelessWidget {
                     ),
               ),
             ),
-            isGoal(context),
           ],
         ),
       ),
     );
-  }
-
-  Widget isGoal(BuildContext context) {
-    if (task.isDailyGoal) {
-      return TagBox(
-        icon: Assets.images.icons.common.targetActiveSVG,
-        isBig: true,
-        isSquare: true,
-        backgroundColor: Colors.transparent,
-        active: task.dailyGoal != null && task.dailyGoal == 1,
-      );
-    }
-
-    return const SizedBox();
   }
 }
