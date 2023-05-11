@@ -127,7 +127,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
             ),
           ),
           TextButton(
-            onPressed: () => cubit.setHasFocusOnTitleOrDescription(false),
+            onPressed: () {
+              _titleFocusNode.unfocus();
+              _descriptionFocusNode.unfocus();
+              cubit.setHasFocusOnTitleOrDescription(false);
+            },
             child: Text(
               'SAVE',
               style: Theme.of(context)
@@ -232,7 +236,10 @@ class _EditTaskModalState extends State<EditTaskModal> {
         return WillPopScope(
           onWillPop: () => onBack(state),
           child: Material(
-              color: Colors.transparent,
+            color: Colors.transparent,
+            child: ConstrainedBox(
+              constraints:
+                  BoxConstraints(minHeight: 0, maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2),
               child: AnimatedSize(
                 curve: Curves.linear,
                 duration: const Duration(milliseconds: 200),
@@ -250,12 +257,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
                       topRight: Radius.circular(Dimension.radius),
                     ),
                   ),
-                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
                   child: ScrollConfiguration(
                     behavior: NoScrollBehav(),
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const SizedBox(height: Dimension.padding),
                         animatedChild(!state.hasFocusOnTitleOrDescription, const ScrollChip()),
@@ -275,34 +283,44 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             );
                           },
                         )),
-                        Column(
-                          children: [
-                            animatedChild(!state.hasFocusOnTitleOrDescription, const EditTaskTopActions()),
-                            animatedChild(!state.hasFocusOnTitleOrDescription, const SizedBox(height: 12)),
-                            animatedChild(state.hasFocusOnTitleOrDescription, _actionsForFocusNodes(state)),
-                            if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 10),
-                            if (state.hasFocusOnTitleOrDescription) const Separator(),
-                            if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 15),
-                            EditTaskRow(
-                              key: const GlobalObjectKey('EditTaskRow'),
-                              quillController: quillController,
-                              titleController: _titleController,
-                              descriptionFocusNode: _descriptionFocusNode,
-                              titleFocusNode: _titleFocusNode,
-                            ),
-                            if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
-                            if (!state.hasFocusOnTitleOrDescription) const Separator(),
-                            if (!state.hasFocusOnTitleOrDescription) const EditTaskLinkedContent(),
-                            if (!state.hasFocusOnTitleOrDescription) const EditTaskLinks(),
-                            if (!state.hasFocusOnTitleOrDescription) const EditTaskBottomActions(),
-                            if (!state.hasFocusOnTitleOrDescription) const Separator(),
-                          ],
-                        )
+                        animatedChild(!state.hasFocusOnTitleOrDescription, const EditTaskTopActions()),
+                        animatedChild(!state.hasFocusOnTitleOrDescription, const SizedBox(height: 12)),
+                        animatedChild(state.hasFocusOnTitleOrDescription, _actionsForFocusNodes(state)),
+                        if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 10),
+                        if (state.hasFocusOnTitleOrDescription) const Separator(),
+                        Flexible(
+                          child: ListView(
+                            shrinkWrap: true,
+                            //  physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              Column(
+                                children: [
+                                  if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 15),
+                                  EditTaskRow(
+                                    key: const GlobalObjectKey('EditTaskRow'),
+                                    quillController: quillController,
+                                    titleController: _titleController,
+                                    descriptionFocusNode: _descriptionFocusNode,
+                                    titleFocusNode: _titleFocusNode,
+                                  ),
+                                  if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
+                                  if (!state.hasFocusOnTitleOrDescription) const Separator(),
+                                  if (!state.hasFocusOnTitleOrDescription) const EditTaskLinkedContent(),
+                                  if (!state.hasFocusOnTitleOrDescription) const EditTaskLinks(),
+                                  if (!state.hasFocusOnTitleOrDescription) const EditTaskBottomActions(),
+                                  if (!state.hasFocusOnTitleOrDescription) const Separator(),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-              )),
+              ),
+            ),
+          ),
         );
       },
     );
