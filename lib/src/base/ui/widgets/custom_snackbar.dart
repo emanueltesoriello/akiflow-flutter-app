@@ -63,15 +63,15 @@ class CustomSnackbar extends SnackBar {
   static Color color(BuildContext context, CustomSnackbarType type) {
     switch (type) {
       case CustomSnackbarType.success:
-        return ColorsExt.yorkGreen200(context);
+        return ColorsExt.yorkGreen100(context);
       case CustomSnackbarType.error:
-        return ColorsExt.apricot200(context);
+        return ColorsExt.apricot100(context);
       case CustomSnackbarType.eventCreated:
         return ColorsExt.grey100(context);
       case CustomSnackbarType.eventDeleted:
-        return ColorsExt.jordyBlue200(context);
+        return ColorsExt.jordyBlue100(context);
       case CustomSnackbarType.eventEdited:
-        return ColorsExt.yorkGreen200(context);
+        return ColorsExt.yorkGreen100(context);
     }
   }
 

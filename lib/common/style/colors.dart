@@ -49,12 +49,20 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.yorkGreen200 : ColorsDark.yorkGreen200;
   }
 
+  static yorkGreen100(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.yorkGreen100 : ColorsDark.yorkGreen100;
+  }
+
   static jordyBlue400(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.jordyBlue400 : ColorsDark.jordyBlue400;
   }
 
   static jordyBlue200(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.jordyBlue200 : ColorsDark.jordyBlue200;
+  }
+
+  static jordyBlue100(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.jordyBlue100 : ColorsDark.jordyBlue100;
   }
 
   static akiflow500(BuildContext context) {
@@ -99,6 +107,10 @@ extension ColorsExt on Colors {
 
   static apricot200(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.apricot200 : ColorsDark.apricot200;
+  }
+
+  static apricot100(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.apricot100 : ColorsDark.apricot100;
   }
 
   static Color fromHex(String hexString) {
@@ -197,6 +209,7 @@ extension ColorsLight on Colors {
 
   static const Color yorkGreen400 = Color.fromRGBO(103, 197, 146, 1);
   static const Color yorkGreen200 = Color.fromRGBO(196, 237, 211, 1);
+  static const Color yorkGreen100 = Color.fromRGBO(231, 248, 237, 1);
 
   static const Color jordyBlue400 = Color.fromRGBO(124, 198, 238, 1);
   static const Color jordyBlue200 = Color.fromRGBO(201, 230, 248, 1);
@@ -207,9 +220,11 @@ extension ColorsLight on Colors {
 
   static const Color apricot400 = Color.fromRGBO(249, 142, 77, 1);
   static const Color apricot200 = Color.fromRGBO(253, 207, 167, 1);
+  static const Color apricot100 = Color.fromRGBO(255, 234, 213, 1);
 
   static const Color buttercup400 = Color.fromRGBO(248, 196, 37, 1);
   static const Color buttercup200 = Color.fromRGBO(250, 234, 183, 1);
+  static const Color buttercup100 = Color.fromRGBO(255, 252, 235, 1);
 
   static const Color rose400 = Color.fromRGBO(254, 149, 230, 1);
   static const Color rose200 = Color.fromRGBO(251, 228, 249, 1);
@@ -236,6 +251,7 @@ extension ColorsDark on Colors {
 
   static const Color yorkGreen400 = Color.fromRGBO(103, 197, 146, 1);
   static const Color yorkGreen200 = Color.fromRGBO(196, 237, 211, 1);
+  static const Color yorkGreen100 = Color.fromRGBO(231, 248, 237, 1);
 
   static const Color jordyBlue400 = Color.fromRGBO(124, 198, 238, 1);
   static const Color jordyBlue200 = Color.fromRGBO(201, 230, 248, 1);
@@ -246,9 +262,11 @@ extension ColorsDark on Colors {
 
   static const Color apricot400 = Color.fromRGBO(249, 142, 77, 1);
   static const Color apricot200 = Color.fromRGBO(253, 207, 167, 1);
+  static const Color apricot100 = Color.fromRGBO(255, 234, 213, 1);
 
   static const Color buttercup400 = Color.fromRGBO(248, 196, 37, 1);
   static const Color buttercup200 = Color.fromRGBO(250, 234, 183, 1);
+  static const Color buttercup100 = Color.fromRGBO(255, 252, 235, 1);
 
   static const Color rose400 = Color.fromRGBO(254, 149, 230, 1);
   static const Color rose200 = Color.fromRGBO(251, 228, 249, 1);

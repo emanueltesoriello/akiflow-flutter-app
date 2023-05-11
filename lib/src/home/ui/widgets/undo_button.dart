@@ -87,22 +87,22 @@ class _UndoBottomViewState extends State<UndoBottomView> {
   Color color(BuildContext context, UndoType type) {
     switch (type) {
       case UndoType.delete:
-        return ColorsExt.jordyBlue200(context);
+        return ColorsExt.jordyBlue100(context);
       case UndoType.markDone:
-        return ColorsExt.yorkGreen200(context);
+        return ColorsExt.yorkGreen100(context);
       case UndoType.markUndone:
-        return ColorsExt.jordyBlue200(context);
+        return ColorsExt.jordyBlue100(context);
       case UndoType.plan:
-        return ColorsExt.jordyBlue200(context);
+        return ColorsExt.jordyBlue100(context);
       case UndoType.snooze:
         return ColorsExt.akiflow200(context);
       case UndoType.restore:
         // TODO: Handle this case.
         break;
       case UndoType.moveToInbox:
-        return ColorsExt.yorkGreen200(context);
+        return ColorsExt.yorkGreen100(context);
       case UndoType.updated:
-        return ColorsExt.yorkGreen200(context);
+        return ColorsExt.yorkGreen100(context);
     }
     return ColorsExt.akiflow500(context);
   }
