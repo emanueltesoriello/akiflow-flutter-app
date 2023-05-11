@@ -75,8 +75,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
       print('Focus on title');
       if (_titleFocusNode.hasFocus) {
         Future.delayed(const Duration(milliseconds: 0), () {
-          //SystemChannels.textInput.invokeMethod('TextInput.show');
-
           cubit.setHasFocusOnTitleOrDescription(true);
         });
       }
@@ -85,8 +83,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
       print('Focus on description');
       if (_descriptionFocusNode.hasFocus) {
         Future.delayed(const Duration(milliseconds: 0), () {
-          //SystemChannels.textInput.invokeMethod('TextInput.show');
-
           cubit.setHasFocusOnTitleOrDescription(true);
         });
       }
@@ -156,12 +152,15 @@ class _EditTaskModalState extends State<EditTaskModal> {
             context: context,
             builder: (context) {
               return AlertDialog(
+                  surfaceTintColor: Colors.white,
+                  backgroundColor: Colors.white,
                   shape:
                       const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
                   content: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+                      const SizedBox(height: Dimension.padding),
                       Text('Discard changes?',
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey900(context))),
                       const SizedBox(height: Dimension.paddingM),
@@ -247,7 +246,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                 child: Container(
                   height: state.hasFocusOnTitleOrDescription
                       ? MediaQuery.of(context).size.height -
-                          (kToolbarHeight * 2) -
+                          (kToolbarHeight * 2) +
                           MediaQuery.of(context).viewInsets.bottom
                       : null,
                   decoration: BoxDecoration(
@@ -256,9 +255,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
                       topLeft: Radius.circular(Dimension.radius),
                       topRight: Radius.circular(Dimension.radius),
                     ),
-                  ),
-                  margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: ScrollConfiguration(
                     behavior: NoScrollBehav(),
@@ -291,7 +287,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
                         Flexible(
                           child: ListView(
                             shrinkWrap: true,
-                            //  physics: const NeverScrollableScrollPhysics(),
                             children: [
                               Column(
                                 children: [
