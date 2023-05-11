@@ -103,16 +103,20 @@ class TaskAppointment extends StatelessWidget {
                                     SyncCubit syncCubit = context.read<SyncCubit>();
                                     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)
                                       ..attachTask(task);
-                                    return CheckboxAnimated(
-                                      onControllerReady: (controller) {
-                                        checkboxController = controller;
-                                      },
-                                      task: task,
-                                      key: ObjectKey(task),
-                                      onCompleted: () async {
-                                        HapticFeedback.mediumImpact();
-                                        editTaskCubit.markAsDone(forceUpdate: true);
-                                      },
+                                    return SizedBox(
+                                      height: calendarController.view == CalendarView.day ? 20 : 24,
+                                      width: calendarController.view == CalendarView.day ? 20 : 24,
+                                      child: CheckboxAnimated(
+                                        onControllerReady: (controller) {
+                                          checkboxController = controller;
+                                        },
+                                        task: task,
+                                        key: ObjectKey(task),
+                                        onCompleted: () async {
+                                          HapticFeedback.mediumImpact();
+                                          editTaskCubit.markAsDone(forceUpdate: true);
+                                        },
+                                      ),
                                     );
                                   })),
                                 ],

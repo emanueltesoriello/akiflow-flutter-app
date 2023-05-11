@@ -68,8 +68,8 @@ class GroupedTasksAppointment extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        width: boxHeight < 15.0 && groupedTasks.taskList.length < 10 ? 12.0 : 16.0,
-                        height: boxHeight < 15.0 ? 12.0 : 16.0,
+                        width: boxHeight < 15.0 && groupedTasks.taskList.length < 10 ? 12.0 : 14.0,
+                        height: boxHeight < 15.0 ? 12.0 : 14.0,
                         decoration: BoxDecoration(
                           color: tasksDone ? ColorsExt.yorkGreen400(context) : ColorsExt.grey200(context),
                           borderRadius: const BorderRadius.all(
@@ -87,15 +87,17 @@ class GroupedTasksAppointment extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: Dimension.paddingXS),
-                      Text(appointment.subject,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.caption?.copyWith(
-                                height: boxHeight < 15.0 ? 1.0 : 1.3,
-                                fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
-                                fontWeight: FontWeight.w500,
-                                color: tasksDone ? ColorsExt.grey700(context) : ColorsExt.grey900(context),
-                              )),
+                      Expanded(
+                        child: Text(appointment.subject,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.caption?.copyWith(
+                                  height: boxHeight < 15.0 ? 1.0 : 1.3,
+                                  fontSize: boxHeight < 15.0 ? 11.0 : 13.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: tasksDone ? ColorsExt.grey700(context) : ColorsExt.grey900(context),
+                                )),
+                      ),
                     ],
                   ),
                 ],
