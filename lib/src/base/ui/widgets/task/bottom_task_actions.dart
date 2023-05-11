@@ -157,6 +157,7 @@ class BottomTaskActions extends StatelessWidget {
                     child: BlocBuilder<TodayCubit, TodayCubitState>(builder: (context, todayCubitState) {
                       return BlocBuilder<MainCubit, MainCubitState>(builder: (context, state) {
                         return PopupMenuButton<BottomTaskAdditionalActions>(
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
                           icon: SvgPicture.asset(
                             Assets.images.icons.common.ellipsisSVG,
                             width: Dimension.defaultIconSize,

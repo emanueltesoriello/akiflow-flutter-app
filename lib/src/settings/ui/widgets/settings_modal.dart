@@ -155,6 +155,7 @@ class SettingsModal extends StatelessWidget {
             data:
                 Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
             child: PopupMenuButton<AddListType>(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
               icon: SvgPicture.asset(
                 Assets.images.icons.common.plusSVG,
                 width: Dimension.defaultIconSize,

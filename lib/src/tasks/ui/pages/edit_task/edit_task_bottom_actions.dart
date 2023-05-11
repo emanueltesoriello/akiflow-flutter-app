@@ -178,6 +178,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
     return Theme(
       data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
       child: PopupMenuButton<EditTaskAdditionalAction>(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
         icon: Container(
           height: 32,
           width: 32,

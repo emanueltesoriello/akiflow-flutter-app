@@ -42,7 +42,7 @@ class SectionHeaderItem extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.caption?.copyWith(
+              style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: ColorsExt.akiflow500(context),
                   ),
@@ -50,7 +50,7 @@ class SectionHeaderItem extends StatelessWidget {
             const SizedBox(width: Dimension.paddingXS),
             Text(
               "($taskCount)",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: ColorsExt.grey700(context),
                   ),
@@ -72,6 +72,7 @@ class SectionHeaderItem extends StatelessWidget {
                 data: Theme.of(context)
                     .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
                 child: PopupMenuButton<SectionActionType>(
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
                   padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     Assets.images.icons.common.ellipsisSVG,
@@ -97,7 +98,7 @@ class SectionHeaderItem extends StatelessWidget {
                       value: SectionActionType.addTask,
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
                           iconAsset: Assets.images.icons.common.plusSquareSVG,
                           text: t.label.addTask,
@@ -108,7 +109,7 @@ class SectionHeaderItem extends StatelessWidget {
                       value: SectionActionType.rename,
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
                           iconAsset: Assets.images.icons.common.pencilSVG,
                           text: t.label.rename,
@@ -119,7 +120,7 @@ class SectionHeaderItem extends StatelessWidget {
                       value: SectionActionType.delete,
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
                           iconAsset: Assets.images.icons.common.trashSVG,
                           text: t.label.delete,

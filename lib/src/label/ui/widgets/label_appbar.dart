@@ -107,7 +107,7 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
         Theme(
           data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
           child: PopupMenuButton<LabelActions>(
-            padding: const EdgeInsets.all(0),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
             icon: SvgPicture.asset(
               Assets.images.icons.common.ellipsisSVG,
               width: Dimension.appBarLeadingIcon,
@@ -136,59 +136,39 @@ class LabelAppBar extends StatelessWidget implements PreferredSizeWidget {
             itemBuilder: (BuildContext context) => <PopupMenuEntry<LabelActions>>[
               PopupMenuItem<LabelActions>(
                 value: LabelActions.edit,
-                padding: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
-                  child: PopupMenuCustomItem(
-                    iconAsset: Assets.images.icons.common.pencilSVG,
-                    text: t.label.editLabel,
-                  ),
+                child: PopupMenuCustomItem(
+                  iconAsset: Assets.images.icons.common.pencilSVG,
+                  text: t.label.editLabel,
                 ),
               ),
               PopupMenuItem<LabelActions>(
                 value: LabelActions.order,
                 enabled: false,
-                padding: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
-                  child: PopupMenuCustomItem(
-                    iconAsset: Assets.images.icons.common.arrowUpArrowDownSVG,
-                    text: t.label.sortComingSoon,
-                    enabled: false,
-                  ),
+                child: PopupMenuCustomItem(
+                  iconAsset: Assets.images.icons.common.arrowUpArrowDownSVG,
+                  text: t.label.sortComingSoon,
+                  enabled: false,
                 ),
               ),
               PopupMenuItem<LabelActions>(
                 value: LabelActions.newSection,
-                padding: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
-                  child: PopupMenuCustomItem(
-                    iconAsset: Assets.images.icons.common.plusSVG,
-                    text: t.label.newSection,
-                  ),
+                child: PopupMenuCustomItem(
+                  iconAsset: Assets.images.icons.common.plusSVG,
+                  text: t.label.newSection,
                 ),
               ),
               PopupMenuItem<LabelActions>(
                 value: LabelActions.showDone,
-                padding: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
-                  child: PopupMenuCustomItem(
-                    iconAsset: Assets.images.icons.common.checkDoneOutlineSVG,
-                    text: showDone ? t.label.hideDone : t.label.showDone,
-                  ),
+                child: PopupMenuCustomItem(
+                  iconAsset: Assets.images.icons.common.checkDoneOutlineSVG,
+                  text: showDone ? t.label.hideDone : t.label.showDone,
                 ),
               ),
               PopupMenuItem<LabelActions>(
                 value: LabelActions.delete,
-                padding: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
-                  child: PopupMenuCustomItem(
-                    iconAsset: Assets.images.icons.common.trashSVG,
-                    text: t.label.deleteLabel,
-                  ),
+                child: PopupMenuCustomItem(
+                  iconAsset: Assets.images.icons.common.trashSVG,
+                  text: t.label.deleteLabel,
                 ),
               ),
             ],

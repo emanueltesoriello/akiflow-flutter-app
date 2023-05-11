@@ -17,6 +17,7 @@ class TaskListMenu extends StatelessWidget {
       data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
       child: PopupMenuButton<TaskListMenuAction>(
         padding: EdgeInsets.zero,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
         icon: SvgPicture.asset(
           Assets.images.icons.common.ellipsisSVG,
           width: Dimension.defaultIconSize,
@@ -40,7 +41,7 @@ class TaskListMenu extends StatelessWidget {
             padding: EdgeInsets.zero,
             height: 30,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
               child: Text(t.comingSoon.toUpperCase(),
                   style: Theme.of(context)
                       .textTheme
@@ -54,7 +55,7 @@ class TaskListMenu extends StatelessWidget {
             height: 40,
             enabled: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
               child: PopupMenuCustomItem(
                 iconAsset: Assets.images.icons.common.arrowUpArrowDownSVG,
                 text: t.task.sort,
@@ -68,7 +69,7 @@ class TaskListMenu extends StatelessWidget {
             height: 40,
             enabled: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
               child: PopupMenuCustomItem(
                 iconAsset: Assets.images.icons.common.lineHorizontal3DecreaseSVG,
                 text: t.task.filter,
