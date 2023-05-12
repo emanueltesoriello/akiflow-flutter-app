@@ -11199,8 +11199,7 @@ class _AgendaDateTimePainter extends CustomPainter {
         : 'EEE';
     TextSpan span = TextSpan(
         text: DateFormat(dayTextFormat, locale)
-            .format(selectedDate!)
-            .toUpperCase(),
+            .format(selectedDate!),
         style: dayTextStyle);
     _updateTextPainter(span);
 

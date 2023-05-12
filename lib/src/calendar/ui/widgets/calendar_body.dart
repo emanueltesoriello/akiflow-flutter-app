@@ -149,7 +149,7 @@ class CalendarBody extends StatelessWidget {
                 dayHeaderSettings: DayHeaderSettings(
                   dayTextStyle: Theme.of(context)
                       .textTheme
-                      .caption
+                      .bodyText2
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                   dateTextStyle: Theme.of(context)
                       .textTheme
