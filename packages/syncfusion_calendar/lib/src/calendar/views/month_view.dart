@@ -1060,11 +1060,12 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
         _linePainter.isAntiAlias = true;
 
         final double textHeight = _textPainter.height / 2;
-        canvas.drawCircle(
-            Offset(xPosition + cellWidth / 2,
-                yPosition + circlePadding + textHeight),
-            textHeight + viewPadding,
-            _linePainter);
+
+        final RRect rrect = RRect.fromRectAndRadius(
+        Rect.fromCircle(center: Offset(xPosition + cellWidth / 2,
+        yPosition + circlePadding + textHeight), radius: textHeight + 3),
+        const Radius.circular(4));
+        canvas.drawRRect(rrect, _linePainter);    
       }
 
       _textPainter.paint(
