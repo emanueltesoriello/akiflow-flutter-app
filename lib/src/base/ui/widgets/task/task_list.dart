@@ -73,7 +73,7 @@ class _TaskListState extends State<TaskList> {
         opacityFirstRow = 0;
       });
       print('wiwireweqrfnwe');
-      Future.delayed(const Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 400), () {
         setState(() {
           opacityFirstRow = 1;
         });
@@ -177,10 +177,19 @@ class _TaskListState extends State<TaskList> {
               onTap: tasks.any((element) => element.selected ?? false)
                   ? () => {HapticFeedback.selectionClick(), context.read<TasksCubit>().select(task)}
                   : null,
-              child: AnimatedOpacity(
-                opacity: index == 0 ? opacityFirstRow ?? 1 : 1,
-                curve: Curves.linear,
-                duration: const Duration(milliseconds: 300),
+              child: AnimatedContainer(
+                padding: index == 0 ? const EdgeInsets.only(top: Dimension.paddingS) : EdgeInsets.zero,
+                duration: const Duration(milliseconds: 400),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Dimension.radius),
+                    border: Border.all(
+                      width: index == 0 ? (opacityFirstRow != null && opacityFirstRow == 0 ? 2 : 0) : 0,
+                      color: index == 0
+                          ? (opacityFirstRow != null && opacityFirstRow == 0
+                              ? ColorsExt.grey100(context)
+                              : Colors.transparent)
+                          : Colors.transparent,
+                    )),
                 child: AbsorbPointer(
                   absorbing: tasks.any((element) => element.selected ?? false),
                   child: Padding(
