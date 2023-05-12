@@ -11508,8 +11508,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
       final DateTime currentDate = visibleDates[i];
 
       String dayText = DateFormat(timeSlotViewSettings.dayFormat, locale)
-          .format(currentDate)
-          .toUpperCase();
+          .format(currentDate);
 
       dayText =
           _updateViewHeaderFormat(timeSlotViewSettings.dayFormat, dayText);
@@ -11820,13 +11819,17 @@ class _ViewHeaderViewPainter extends CustomPainter {
       Canvas canvas, double x, double y, TextPainter dateTextPainter,
       {Color? hoveringColor}) {
     _circlePainter.color = (hoveringColor ?? todayHighlightColor)!;
-    const double circlePadding = 5;
+    const double paddingAroundDate = 3;
     final double painterWidth = dateTextPainter.width / 2;
     final double painterHeight = dateTextPainter.height / 2;
     final double radius =
         painterHeight > painterWidth ? painterHeight : painterWidth;
-    canvas.drawCircle(Offset(x + painterWidth, y + painterHeight),
-        radius + circlePadding, _circlePainter);
+ 
+    final RRect rrect = RRect.fromRectAndRadius(
+      Rect.fromCircle(center: Offset(x + painterWidth, y + painterHeight), 
+      radius: radius + paddingAroundDate),
+      const Radius.circular(4));
+    canvas.drawRRect(rrect, _circlePainter);
   }
 
   /// overrides this property to build the semantics information which uses to
