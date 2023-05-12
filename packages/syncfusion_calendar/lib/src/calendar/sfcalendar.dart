@@ -11343,13 +11343,15 @@ class _AgendaDateTimePainter extends CustomPainter {
 
   void _drawTodayCircle(
       Canvas canvas, double xPosition, double yPosition, double padding) {
-    canvas.drawCircle(
-        Offset(xPosition + (_textPainter.width / 2),
-            yPosition + (_textPainter.height / 2)),
-        _textPainter.width > _textPainter.height
+        
+    final RRect rrect = RRect.fromRectAndRadius(
+    Rect.fromCircle(center: Offset(xPosition + (_textPainter.width / 2),
+    yPosition + (_textPainter.height / 2)), 
+    radius: _textPainter.width > _textPainter.height
             ? (_textPainter.width / 2) + padding
-            : (_textPainter.height / 2) + padding,
-        _linePainter);
+            : (_textPainter.height / 2) + padding,),
+    const Radius.circular(4));
+    canvas.drawRRect(rrect, _linePainter);    
   }
 
   @override
