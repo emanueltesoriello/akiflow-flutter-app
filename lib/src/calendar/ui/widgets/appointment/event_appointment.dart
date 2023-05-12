@@ -6,7 +6,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class EventAppointment extends StatelessWidget {
   const EventAppointment({

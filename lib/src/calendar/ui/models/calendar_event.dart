@@ -4,7 +4,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class CalendarEvent extends Appointment {
   CalendarEvent(

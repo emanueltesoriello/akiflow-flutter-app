@@ -15,7 +15,7 @@ import 'package:mobile/src/calendar/ui/models/calendar_view_mode.dart';
 import 'package:mobile/src/calendar/ui/models/navigation_state.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/nullable.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 part 'calendar_state.dart';
 

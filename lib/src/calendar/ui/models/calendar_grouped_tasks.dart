@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mobile/src/calendar/ui/models/grouped_tasks.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class CalendarGroupedTasks extends Appointment {
   CalendarGroupedTasks({

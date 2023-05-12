@@ -28,7 +28,7 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/task/task.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class CalendarBody extends StatelessWidget {
   const CalendarBody({

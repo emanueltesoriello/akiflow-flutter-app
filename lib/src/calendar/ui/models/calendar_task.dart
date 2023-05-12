@@ -4,7 +4,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 import 'package:collection/collection.dart';
 
 class CalendarTask extends Appointment {

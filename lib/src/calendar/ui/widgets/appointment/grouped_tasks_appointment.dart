@@ -3,7 +3,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_grouped_tasks.dart';
 import 'package:mobile/src/calendar/ui/models/grouped_tasks.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class GroupedTasksAppointment extends StatelessWidget {
   const GroupedTasksAppointment({
