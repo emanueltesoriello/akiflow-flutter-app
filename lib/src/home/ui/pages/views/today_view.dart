@@ -178,7 +178,7 @@ class _TodayViewState extends State<TodayView> {
                           padding: EdgeInsets.zero,
                           children: [
                             TaskList(
-                              key: const ObjectKey("todos"),
+                              key: Key("todos${todos.isNotEmpty ? todos[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: todos,
@@ -196,7 +196,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("pinned"),
+                              key: Key("pinned${pinned.isNotEmpty ? pinned[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: pinned,
@@ -214,7 +214,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("completed"),
+                              key: Key("completed${completed.isNotEmpty ? completed[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: completed,

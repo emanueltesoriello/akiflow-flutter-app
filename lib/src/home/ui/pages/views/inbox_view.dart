@@ -100,6 +100,7 @@ class _ViewState extends State<_View> {
                         child: const EmptyHomeViewPlaceholder());
                   } else {
                     return TaskList(
+                      key: const Key("inbox"),
                       tasks: tasks,
                       hideInboxLabel: true,
                       scrollController: scrollController,

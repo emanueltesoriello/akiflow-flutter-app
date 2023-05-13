@@ -68,7 +68,7 @@ class _TaskListState extends State<TaskList> {
 
   @override
   void didUpdateWidget(covariant TaskList oldWidget) {
-    if (widget.tasks.length > oldWidget.tasks.length) {
+    if (widget.key.toString() == oldWidget.key.toString() && (widget.tasks.length > oldWidget.tasks.length)) {
       setState(() {
         opacityFirstRow = 0;
       });
@@ -181,14 +181,12 @@ class _TaskListState extends State<TaskList> {
                 padding: index == 0 ? const EdgeInsets.only(top: Dimension.paddingS) : EdgeInsets.zero,
                 duration: const Duration(milliseconds: 400),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimension.radius),
+                    color: index == 0
+                        ? (opacityFirstRow != null && opacityFirstRow == 0 ? ColorsExt.grey100(context) : null)
+                        : Colors.transparent,
                     border: Border.all(
                       width: index == 0 ? (opacityFirstRow != null && opacityFirstRow == 0 ? 2 : 0) : 0,
-                      color: index == 0
-                          ? (opacityFirstRow != null && opacityFirstRow == 0
-                              ? ColorsExt.grey100(context)
-                              : Colors.transparent)
-                          : Colors.transparent,
+                      color: Colors.transparent,
                     )),
                 child: AbsorbPointer(
                   absorbing: tasks.any((element) => element.selected ?? false),

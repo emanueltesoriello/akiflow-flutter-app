@@ -228,6 +228,7 @@ class _LabelViewState extends State<LabelView> {
                       return Column(
                         children: [
                           TaskList(
+                            key: const Key("Label"),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             tasks: tasksWithoutSnoozedAndSomeday
@@ -241,6 +242,7 @@ class _LabelViewState extends State<LabelView> {
                             sorting: TaskListSorting.sortingLabelAscending,
                           ),
                           TaskList(
+                            key: const Key("Label done"),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             tasks: tasksWithoutSnoozedAndSomeday
@@ -299,7 +301,8 @@ class CompactInfo extends StatelessWidget {
 
               return Row(
                 children: [
-                  SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey800(context))),
+                  SizedBox(
+                      width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey800(context))),
                   const SizedBox(width: Dimension.paddingXS),
                 ],
               );
