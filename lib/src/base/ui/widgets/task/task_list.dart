@@ -64,19 +64,33 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  double? opacityFirstRow;
+  double? opacityOfTaskRow;
+  String idOfNewTask = '';
 
   @override
   void didUpdateWidget(covariant TaskList oldWidget) {
-    if (widget.key.toString() == oldWidget.key.toString() && (widget.tasks.length > oldWidget.tasks.length)) {
-      setState(() {
-        opacityFirstRow = 0;
-      });
-      print('wiwireweqrfnwe');
-      Future.delayed(const Duration(milliseconds: 400), () {
+    idOfNewTask = '';
+    try {
+      if ((widget.key.toString() == oldWidget.key.toString() && (widget.tasks.length > oldWidget.tasks.length))) {
+        // Get the ID of the new just added task
+        final List<String> oldIds = oldWidget.tasks.map((Task task) => task.id ?? '').toList();
+        final List<String> newIds = widget.tasks.map((Task task) => task.id ?? '').toList();
+        var differenceList = newIds.where((id) => !oldIds.contains(id)).toList();
+        idOfNewTask = differenceList.last;
+
         setState(() {
-          opacityFirstRow = 1;
+          opacityOfTaskRow = 0;
         });
+        Future.delayed(const Duration(milliseconds: 400), () {
+          setState(() {
+            opacityOfTaskRow = 1;
+          });
+        });
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        opacityOfTaskRow = 1;
       });
     }
     super.didUpdateWidget(oldWidget);
@@ -178,14 +192,14 @@ class _TaskListState extends State<TaskList> {
                   ? () => {HapticFeedback.selectionClick(), context.read<TasksCubit>().select(task)}
                   : null,
               child: AnimatedContainer(
-                padding: index == 0 ? const EdgeInsets.only(top: Dimension.paddingS) : EdgeInsets.zero,
+                padding: task.id == idOfNewTask ? const EdgeInsets.only(top: Dimension.paddingS) : EdgeInsets.zero,
                 duration: const Duration(milliseconds: 400),
                 decoration: BoxDecoration(
-                    color: index == 0
-                        ? (opacityFirstRow != null && opacityFirstRow == 0 ? ColorsExt.grey100(context) : null)
-                        : Colors.transparent,
+                    color: task.id == idOfNewTask
+                        ? (opacityOfTaskRow != null && opacityOfTaskRow == 0 ? ColorsExt.grey100(context) : null)
+                        : null,
                     border: Border.all(
-                      width: index == 0 ? (opacityFirstRow != null && opacityFirstRow == 0 ? 2 : 0) : 0,
+                      width: task.id == idOfNewTask ? (opacityOfTaskRow != null && opacityOfTaskRow == 0 ? 2 : 0) : 0,
                       color: Colors.transparent,
                     )),
                 child: AbsorbPointer(

@@ -224,16 +224,23 @@ class _LabelViewState extends State<LabelView> {
                           child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
                         );
                       }
+                      List<Task> notDoneTasks = [];
+                      notDoneTasks.addAll(
+                          tasksWithoutSnoozedAndSomeday.where((task) => !task.done! || task.doneAt == null).toList());
+                      Key keyNotDoneTasks = Key("label${notDoneTasks.isNotEmpty ? notDoneTasks[0].id : ''}");
+
+                      List<Task> doneTasks = [];
+                      doneTasks.addAll(
+                          tasksWithoutSnoozedAndSomeday.where((task) => task.done! || task.doneAt != null).toList());
+                      Key keyDoneTasks = Key("labelDone${doneTasks.isNotEmpty ? doneTasks[0].id : ''}");
 
                       return Column(
                         children: [
                           TaskList(
-                            key: const Key("Label"),
+                            key: keyNotDoneTasks,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            tasks: tasksWithoutSnoozedAndSomeday
-                                .where((task) => !task.done! || task.doneAt == null)
-                                .toList(),
+                            tasks: notDoneTasks,
                             visible: labelState.openedSections[section.id] ?? false,
                             showLabel: false,
                             header: labelState.sections.length > 1 ? header : null,
@@ -242,12 +249,10 @@ class _LabelViewState extends State<LabelView> {
                             sorting: TaskListSorting.sortingLabelAscending,
                           ),
                           TaskList(
-                            key: const Key("Label done"),
+                            key: keyDoneTasks,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            tasks: tasksWithoutSnoozedAndSomeday
-                                .where((task) => task.done! || task.doneAt != null)
-                                .toList(),
+                            tasks: doneTasks,
                             visible: labelState.openedSections[section.id] ?? false,
                             showLabel: false,
                             showPlanInfo: true,

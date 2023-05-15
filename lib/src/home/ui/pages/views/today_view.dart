@@ -7,8 +7,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/animated_linear_progress_indicator.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
