@@ -11526,7 +11526,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
         dayTextStyle = todayTextStyle != null
             ? todayTextStyle!.copyWith(
                 fontSize: viewHeaderDayStyle.fontSize, color: todayTextColor)
-            : viewHeaderDayStyle.copyWith(color: todayTextColor);
+            : viewHeaderDayStyle;
         dateTextStyle = todayTextStyle != null
             ? todayTextStyle!.copyWith(fontSize: viewHeaderDateStyle.fontSize)
             : viewHeaderDateStyle.copyWith(color: todayTextStyleColor);
