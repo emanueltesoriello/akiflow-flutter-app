@@ -399,7 +399,7 @@
   "availability": {
     "availabilities": "Availabilities",
     "shareAvailabilities": "Share availabilities",
-    "activeRecurrentSlots": "Active recurrent slots",
+    "activeRecurrentSlots": "Recurrent slots",
     "activeManualSlots": "Active manual slots",
     "noActiveLinksToShow": "No active links to show",
     "toCreateLinkUseDesktop": "To create a link use the desktop app",
