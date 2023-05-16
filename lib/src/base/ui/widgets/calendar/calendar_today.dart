@@ -14,7 +14,7 @@ class CalendarSelectedDay extends StatelessWidget {
       height: 24,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Center(
         child: Text(
