@@ -168,7 +168,7 @@ class _TaskListState extends State<TaskList> {
                     borderRadius: BorderRadius.zero,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      color: color == 0 ? ColorsExt.grey50(context) : null,
+                      color: color == 0 ? ColorsExt.grey100(context) : null,
                       child: TaskRowDragMode(tasks[index]),
                     ),
                   ),

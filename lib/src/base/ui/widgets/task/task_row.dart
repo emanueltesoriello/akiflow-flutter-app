@@ -263,10 +263,11 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               TaskExt.editTask(context, widget.task);
             },
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              curve: Curves.fastOutSlowIn,
+              duration: const Duration(milliseconds: 300),
               color: widget.color ??
                   ((widget.task.selected ?? false)
-                      ? ColorsExt.grey50(context)
+                      ? ColorsExt.grey100(context)
                       : ColorsExt.grey50(context).withOpacity(0)),
               child: Stack(
                 children: [
