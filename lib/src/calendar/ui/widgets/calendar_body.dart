@@ -124,14 +124,20 @@ class CalendarBody extends StatelessWidget {
             },
             dataSource: _getCalendarDataSource(context, state),
             viewHeaderStyle: ViewHeaderStyle(
-                dayTextStyle: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
-                dateTextStyle: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
+              dayTextStyle: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+              dateTextStyle: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
+              narrowDateDay:
+                  (calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
+                          !isThreeDays
+                      ? true
+                      : false,
+            ),
             timeSlotViewSettings: TimeSlotViewSettings(
               timeIntervalHeight: 60.0,
               minimumAppointmentDuration: const Duration(minutes: 15),

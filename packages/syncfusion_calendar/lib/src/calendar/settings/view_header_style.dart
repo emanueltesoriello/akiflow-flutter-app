@@ -36,7 +36,8 @@ class ViewHeaderStyle with Diagnosticable {
   ///
   /// The properties allows to customize the view header view of [SfCalendar].
   const ViewHeaderStyle(
-      {this.backgroundColor, this.dateTextStyle, this.dayTextStyle});
+      {this.backgroundColor, this.dateTextStyle, this.dayTextStyle, 
+      this.narrowDateDay = false});
 
   /// The color which fills the background of [SfCalendar] view header view.
   ///
@@ -130,6 +131,11 @@ class ViewHeaderStyle with Diagnosticable {
   ///  }
   /// ```
   final TextStyle? dayTextStyle;
+
+  ///date and day of header. narrow is used for week view
+  final bool narrowDateDay;
+
+
 
   @override
   bool operator ==(dynamic other) {

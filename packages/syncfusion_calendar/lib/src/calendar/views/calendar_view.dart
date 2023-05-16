@@ -6012,29 +6012,7 @@ class _CalendarViewState extends State<_CalendarView>
     }
 
     _allDayHeight = 0;
-    final bool isDayView = CalendarViewHelper.isDayView(
-        widget.view,
-        widget.calendar.timeSlotViewSettings.numberOfDaysInView,
-        widget.calendar.timeSlotViewSettings.nonWorkingDays,
-        widget.calendar.monthViewSettings.numberOfWeeksInView);
-    if (isDayView) {
-      final double viewHeaderHeight = CalendarViewHelper.getViewHeaderHeight(
-          widget.calendar.viewHeaderHeight, widget.view);
-      if (isCurrentView) {
-        _allDayHeight = _kAllDayLayoutHeight > viewHeaderHeight &&
-                _updateCalendarStateDetails.allDayPanelHeight > viewHeaderHeight
-            ? _updateCalendarStateDetails.allDayPanelHeight >
-                    _kAllDayLayoutHeight
-                ? _kAllDayLayoutHeight
-                : _updateCalendarStateDetails.allDayPanelHeight
-            : viewHeaderHeight;
-        if (_allDayHeight < _updateCalendarStateDetails.allDayPanelHeight) {
-          _allDayHeight += kAllDayAppointmentHeight;
-        }
-      } else {
-        _allDayHeight = viewHeaderHeight;
-      }
-    } else if (isCurrentView) {
+    if (isCurrentView) {
       _allDayHeight =
           _updateCalendarStateDetails.allDayPanelHeight > _kAllDayLayoutHeight
               ? _kAllDayLayoutHeight
@@ -6382,11 +6360,6 @@ class _CalendarViewState extends State<_CalendarView>
 
   Widget _addAllDayAppointmentPanel(
       SfCalendarThemeData calendarTheme, bool isCurrentView) {
-    final bool isDayView = CalendarViewHelper.isDayView(
-        widget.view,
-        widget.calendar.timeSlotViewSettings.numberOfDaysInView,
-        widget.calendar.timeSlotViewSettings.nonWorkingDays,
-        widget.calendar.monthViewSettings.numberOfWeeksInView);
     final Color borderColor =
         widget.calendar.cellBorderColor ?? calendarTheme.cellBorderColor!;
     final Widget shadowView = Divider(
@@ -6397,24 +6370,14 @@ class _CalendarViewState extends State<_CalendarView>
 
     final double timeLabelWidth = CalendarViewHelper.getTimeLabelWidth(
         widget.calendar.timeSlotViewSettings.timeRulerSize, widget.view);
-    double topPosition = CalendarViewHelper.getViewHeaderHeight(
+    final double topPosition = CalendarViewHelper.getViewHeaderHeight(
         widget.calendar.viewHeaderHeight, widget.view);
-    if (isDayView) {
-      topPosition = _allDayHeight;
-    }
 
     if (_allDayHeight == 0 ||
-        (!isDayView &&
-            widget.visibleDates !=
+        (widget.visibleDates !=
                 _updateCalendarStateDetails.currentViewVisibleDates)) {
       return Positioned(
           left: 0, right: 0, top: topPosition, height: 1, child: shadowView);
-    }
-
-    if (isDayView) {
-      //// Default minimum view header width in day view as 50,so set 50
-      //// when view header width less than 50.
-      topPosition = 0;
     }
 
     double panelHeight = isCurrentView
@@ -8266,7 +8229,8 @@ class _CalendarViewState extends State<_CalendarView>
                     widget.calendar.showWeekNumber,
                     widget.isMobilePlatform,
                     widget.calendar.weekNumberStyle,
-                    widget.localizations),
+                    widget.localizations,
+                    widget.calendar.viewHeaderStyle.narrowDateDay,),
               ),
             ),
           ),
@@ -8419,23 +8383,13 @@ class _CalendarViewState extends State<_CalendarView>
   // Returns the day view as a child for the calendar view.
   Widget _addDayView(double width, double height, bool isRTL, String locale,
       bool isCurrentView) {
-    double viewHeaderWidth = widget.width;
+    final double viewHeaderWidth = widget.width;
     final double actualViewHeaderHeight =
         CalendarViewHelper.getViewHeaderHeight(
             widget.calendar.viewHeaderHeight, widget.view);
-    double viewHeaderHeight = actualViewHeaderHeight;
+    final double viewHeaderHeight = actualViewHeaderHeight;
     final double timeLabelWidth = CalendarViewHelper.getTimeLabelWidth(
         widget.calendar.timeSlotViewSettings.timeRulerSize, widget.view);
-    final bool isDayView = CalendarViewHelper.isDayView(
-        widget.view,
-        widget.calendar.timeSlotViewSettings.numberOfDaysInView,
-        widget.calendar.timeSlotViewSettings.nonWorkingDays,
-        widget.calendar.monthViewSettings.numberOfWeeksInView);
-    if (isDayView) {
-      viewHeaderWidth = timeLabelWidth < 50 ? 50 : timeLabelWidth;
-      viewHeaderHeight =
-          _allDayHeight > viewHeaderHeight ? _allDayHeight : viewHeaderHeight;
-    }
 
     double panelHeight = isCurrentView
         ? _updateCalendarStateDetails.allDayPanelHeight - _allDayHeight
@@ -8483,15 +8437,14 @@ class _CalendarViewState extends State<_CalendarView>
                     widget.calendar.showWeekNumber,
                     widget.isMobilePlatform,
                     widget.calendar.weekNumberStyle,
-                    widget.localizations),
+                    widget.localizations,
+                    widget.calendar.viewHeaderStyle.narrowDateDay),
               ),
             ),
           ),
         ),
         Positioned(
-            top: isDayView
-                ? viewHeaderHeight + allDayExpanderHeight
-                : viewHeaderHeight + _allDayHeight + allDayExpanderHeight,
+            top: viewHeaderHeight + _allDayHeight + allDayExpanderHeight,
             left: 0,
             right: 0,
             bottom: 0,
@@ -11326,7 +11279,8 @@ class _ViewHeaderViewPainter extends CustomPainter {
       this.showWeekNumber,
       this.isMobilePlatform,
       this.weekNumberStyle,
-      this.localizations)
+      this.localizations,
+      this.narrowDateDay,)
       : super(repaint: viewHeaderNotifier);
 
   final CalendarView view;
@@ -11353,6 +11307,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
   final bool isMobilePlatform;
   final WeekNumberStyle weekNumberStyle;
   final SfLocalizations localizations;
+  final bool narrowDateDay;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -11375,7 +11330,8 @@ class _ViewHeaderViewPainter extends CustomPainter {
     final DateTime today = DateTime.now();
     if (view != CalendarView.month) {
       _addViewHeaderForTimeSlotViews(
-          canvas, size, viewHeaderDayStyle, viewHeaderDateStyle, width, today);
+          canvas, size, viewHeaderDayStyle, viewHeaderDateStyle, width, today,
+          narrowDateDay);
     } else {
       _addViewHeaderForMonthView(
           canvas, size, viewHeaderDayStyle, width, today, weekNumberPanelWidth);
@@ -11480,28 +11436,19 @@ class _ViewHeaderViewPainter extends CustomPainter {
       TextStyle viewHeaderDayStyle,
       TextStyle viewHeaderDateStyle,
       double width,
-      DateTime today) {
+      DateTime today,
+      bool narrowDateDay,) {
     double xPosition, yPosition;
-    final bool isDayView = CalendarViewHelper.isDayView(
-        view,
-        timeSlotViewSettings.numberOfDaysInView,
-        timeSlotViewSettings.nonWorkingDays,
-        monthViewSettings.numberOfWeeksInView);
-    final double labelWidth =
-        isDayView && timeLabelWidth < 50 ? 50 : timeLabelWidth;
     TextStyle dayTextStyle = viewHeaderDayStyle;
     TextStyle dateTextStyle = viewHeaderDateStyle;
     const double topPadding = 5;
-    if (isDayView) {
-      width = labelWidth;
-    }
 
     final Paint linePainter = Paint();
-    xPosition = isDayView ? 0 : timeLabelWidth;
+    xPosition = timeLabelWidth;
     yPosition = 2;
     final int visibleDatesLength = visibleDates.length;
     final double cellWidth = width / visibleDatesLength;
-    if (isRTL && !isDayView) {
+    if (isRTL) {
       xPosition = size.width - timeLabelWidth - cellWidth;
     }
     for (int i = 0; i < visibleDatesLength; i++) {
@@ -11578,16 +11525,26 @@ class _ViewHeaderViewPainter extends CustomPainter {
                   _dateTextPainter.height +
                   inBetweenPadding) /
               2;
+      if(!narrowDateDay){
+        yPosition = yPosition + 10;
+      }           
 
       _dayTextPainter.paint(
           canvas, Offset(xPosition + dayXPosition, yPosition));
 
       if (isToday) {
-        _drawTodayCircle(
+        if(narrowDateDay){
+          _drawTodayCircle(
             canvas,
             xPosition + dateXPosition,
             yPosition + topPadding + _dayTextPainter.height + inBetweenPadding,
             _dateTextPainter);
+        }else{
+          _drawTodayCircle(
+            canvas,
+            xPosition + dateXPosition + 30,
+            yPosition,
+            _dateTextPainter);}
       }
 
       if (viewHeaderNotifier.value != null) {
@@ -11595,16 +11552,24 @@ class _ViewHeaderViewPainter extends CustomPainter {
             dateXPosition, topPadding, isToday, inBetweenPadding);
       }
 
-      _dateTextPainter.paint(
-          canvas,
-          Offset(
-              xPosition + dateXPosition,
-              yPosition +
-                  topPadding +
-                  _dayTextPainter.height +
-                  inBetweenPadding));
-      if (!isDayView &&
-          showWeekNumber &&
+      if(narrowDateDay){
+        _dateTextPainter.paint(
+        canvas,
+        Offset(
+          xPosition + dateXPosition,
+          yPosition +
+          topPadding +
+          _dayTextPainter.height +
+          inBetweenPadding));
+      }else{
+        _dateTextPainter.paint(
+        canvas,
+        Offset(
+          xPosition + dateXPosition + 30,
+          yPosition));
+      }
+
+      if (showWeekNumber &&
           ((currentDate.weekday == DateTime.monday) ||
               (view == CalendarView.workWeek &&
                   timeSlotViewSettings.nonWorkingDays
@@ -11782,16 +11747,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
       case CalendarView.day:
       case CalendarView.week:
       case CalendarView.workWeek:
-        {
-          if (CalendarViewHelper.isDayView(
-              view,
-              timeSlotViewSettings.numberOfDaysInView,
-              timeSlotViewSettings.nonWorkingDays,
-              monthViewSettings.numberOfWeeksInView)) {
-            return timeLabelWidth;
-          }
-          return width - timeLabelWidth;
-        }
+        return width - timeLabelWidth;      
     }
   }
 
@@ -11888,25 +11844,17 @@ class _ViewHeaderViewPainter extends CustomPainter {
         <CustomPainterSemantics>[];
     const double top = 0;
     double left;
-    final bool isDayView = CalendarViewHelper.isDayView(
-        view,
-        timeSlotViewSettings.numberOfDaysInView,
-        timeSlotViewSettings.nonWorkingDays,
-        monthViewSettings.numberOfWeeksInView);
-    final double cellWidth = isDayView
-        ? size.width
-        : (size.width - timeLabelWidth) / visibleDates.length;
+
+    final double cellWidth = (size.width - timeLabelWidth) / visibleDates.length;
     if (isRTL) {
-      left = isDayView
-          ? size.width - timeLabelWidth
-          : (size.width - timeLabelWidth) - cellWidth;
+      left =  (size.width - timeLabelWidth) - cellWidth;
     } else {
-      left = isDayView ? 0 : timeLabelWidth;
+      left = timeLabelWidth;
     }
     for (int i = 0; i < visibleDates.length; i++) {
       final DateTime visibleDate = visibleDates[i];
       if (showWeekNumber &&
-          ((visibleDate.weekday == DateTime.monday && !isDayView) ||
+          ((visibleDate.weekday == DateTime.monday) ||
               (view == CalendarView.workWeek &&
                   timeSlotViewSettings.nonWorkingDays
                       .contains(DateTime.monday) &&
