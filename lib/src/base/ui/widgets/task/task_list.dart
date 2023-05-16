@@ -42,6 +42,8 @@ class TaskList extends StatefulWidget {
   final ScrollController? scrollController;
   final ScrollPhysics physics;
   final bool addBottomPadding;
+  final bool wasEmpty;
+  final Function? afterAddingFirstTask;
 
   const TaskList({
     Key? key,
@@ -56,6 +58,8 @@ class TaskList extends StatefulWidget {
     this.visible = true,
     this.addBottomPadding = false,
     this.scrollController,
+    this.afterAddingFirstTask,
+    this.wasEmpty = false,
     this.physics = const AlwaysScrollableScrollPhysics(),
   }) : super(key: key);
 
@@ -71,7 +75,7 @@ class _TaskListState extends State<TaskList> {
   void didUpdateWidget(covariant TaskList oldWidget) {
     idOfNewTask = '';
     try {
-      if ((widget.key.toString() == oldWidget.key.toString() && (widget.tasks.length > oldWidget.tasks.length))) {
+      if (widget.key.toString() == oldWidget.key.toString() && (widget.tasks.length > oldWidget.tasks.length)) {
         // Get the ID of the new just added task
         final List<String> oldIds = oldWidget.tasks.map((Task task) => task.id ?? '').toList();
         final List<String> newIds = widget.tasks.map((Task task) => task.id ?? '').toList();
@@ -86,6 +90,19 @@ class _TaskListState extends State<TaskList> {
             opacityOfTaskRow = 1;
           });
         });
+      } else if ((widget.key.toString() == oldWidget.key.toString() && widget.wasEmpty)) {
+        idOfNewTask = widget.tasks.first.id!;
+        setState(() {
+          opacityOfTaskRow = 0;
+        });
+        Future.delayed(const Duration(milliseconds: 400), () {
+          setState(() {
+            opacityOfTaskRow = 1;
+          });
+        });
+        if (widget.afterAddingFirstTask != null) {
+          widget.afterAddingFirstTask!();
+        }
       }
     } catch (e) {
       print(e);
@@ -185,67 +202,57 @@ class _TaskListState extends State<TaskList> {
             EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
 
             return GestureDetector(
-              key: ObjectKey(task),
+              key: ObjectKey(task.id),
               onLongPress:
                   tasks.any((element) => element.selected ?? false) ? () => TaskExt.editTask(context, task) : null,
               onTap: tasks.any((element) => element.selected ?? false)
                   ? () => {HapticFeedback.selectionClick(), context.read<TasksCubit>().select(task)}
                   : null,
               child: AnimatedContainer(
-                padding: task.id == idOfNewTask ? const EdgeInsets.only(top: Dimension.paddingS) : EdgeInsets.zero,
                 duration: const Duration(milliseconds: 400),
                 decoration: BoxDecoration(
                     color: task.id == idOfNewTask
                         ? (opacityOfTaskRow != null && opacityOfTaskRow == 0 ? ColorsExt.grey100(context) : null)
-                        : null,
-                    border: Border.all(
-                      width: task.id == idOfNewTask ? (opacityOfTaskRow != null && opacityOfTaskRow == 0 ? 2 : 0) : 0,
-                      color: Colors.transparent,
-                    )),
+                        : null),
                 child: AbsorbPointer(
                   absorbing: tasks.any((element) => element.selected ?? false),
-                  child: Padding(
-                    padding: widget.addBottomPadding
-                        ? EdgeInsets.only(bottom: index == tasks.length - 1 ? 100 : 0)
-                        : EdgeInsets.zero,
-                    child: BlocProvider(
-                      key: ObjectKey(task.id),
-                      create: (context) => editTaskCubit,
-                      child: TaskRow(
-                        task: task,
-                        hideInboxLabel: widget.hideInboxLabel,
-                        showLabel: widget.showLabel,
-                        showPlanInfo: widget.showPlanInfo,
-                        selectTask: () {
-                          HapticFeedback.selectionClick();
-                          context.read<TasksCubit>().select(task);
-                        },
-                        selectMode: tasks.any((element) => element.selected ?? false),
-                        completedClick: () {
-                          HapticFeedback.mediumImpact();
-                          editTaskCubit.markAsDone(forceUpdate: true);
-                        },
-                        swipeActionPlanClick: () {
-                          HapticFeedback.mediumImpact();
-                          _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
-                        },
-                        swipeActionSelectLabelClick: () {
-                          HapticFeedback.mediumImpact();
-                          showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) => LabelsModal(
-                              selectLabel: (Label label) {
-                                editTaskCubit.setLabel(label, forceUpdate: true);
-                              },
-                              showNoLabel: true,
-                            ),
-                          );
-                        },
-                        swipeActionSnoozeClick: () {
-                          HapticFeedback.mediumImpact();
-                          _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
-                        },
-                      ),
+                  child: BlocProvider(
+                    key: ObjectKey(task.id),
+                    create: (context) => editTaskCubit,
+                    child: TaskRow(
+                      task: task,
+                      hideInboxLabel: widget.hideInboxLabel,
+                      showLabel: widget.showLabel,
+                      showPlanInfo: widget.showPlanInfo,
+                      selectTask: () {
+                        HapticFeedback.selectionClick();
+                        context.read<TasksCubit>().select(task);
+                      },
+                      selectMode: tasks.any((element) => element.selected ?? false),
+                      completedClick: () {
+                        HapticFeedback.mediumImpact();
+                        editTaskCubit.markAsDone(forceUpdate: true);
+                      },
+                      swipeActionPlanClick: () {
+                        HapticFeedback.mediumImpact();
+                        _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
+                      },
+                      swipeActionSelectLabelClick: () {
+                        HapticFeedback.mediumImpact();
+                        showCupertinoModalBottomSheet(
+                          context: context,
+                          builder: (context) => LabelsModal(
+                            selectLabel: (Label label) {
+                              editTaskCubit.setLabel(label, forceUpdate: true);
+                            },
+                            showNoLabel: true,
+                          ),
+                        );
+                      },
+                      swipeActionSnoozeClick: () {
+                        HapticFeedback.mediumImpact();
+                        _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
+                      },
                     ),
                   ),
                 ),
