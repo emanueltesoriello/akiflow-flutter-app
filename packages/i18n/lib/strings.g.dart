@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 334 
+ * Strings: 335 
  *
- * Built on 2023-05-08 at 14:31 UTC
+ * Built on 2023-05-16 at 08:55 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -663,6 +663,7 @@ class _StringsAvailabilityEn {
 
 	// Translations
 	String get availabilities => 'Availabilities';
+	String get shareAvailabilities => 'Share availabilities';
 	String get activeRecurrentSlots => 'Active recurrent slots';
 	String get activeManualSlots => 'Active manual slots';
 	String get noActiveLinksToShow => 'No active links to show';
@@ -1391,6 +1392,7 @@ extension on _StringsEn {
 			'event.snackbar.edited': 'Event updated successfully',
 			'event.snackbar.deleted': 'Event has been deleted',
 			'availability.availabilities': 'Availabilities',
+			'availability.shareAvailabilities': 'Share availabilities',
 			'availability.activeRecurrentSlots': 'Active recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',
 			'availability.noActiveLinksToShow': 'No active links to show',

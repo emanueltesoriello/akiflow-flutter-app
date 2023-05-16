@@ -226,7 +226,7 @@ class SettingsModal extends StatelessWidget {
 
   _buildAvailabilitySection(BuildContext context) {
     return ButtonSelectable(
-      title: t.availability.availabilities,
+      title: t.availability.shareAvailabilities,
       titleColor: ColorsExt.grey800(context),
       leading: SizedBox(
         height: Dimension.defaultIconSize,

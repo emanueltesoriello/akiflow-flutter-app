@@ -398,6 +398,7 @@
   },
   "availability": {
     "availabilities": "Availabilities",
+    "shareAvailabilities": "Share availabilities",
     "activeRecurrentSlots": "Active recurrent slots",
     "activeManualSlots": "Active manual slots",
     "noActiveLinksToShow": "No active links to show",
