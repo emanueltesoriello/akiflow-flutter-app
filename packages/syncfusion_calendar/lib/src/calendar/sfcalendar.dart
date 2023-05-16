@@ -11349,7 +11349,7 @@ class _AgendaDateTimePainter extends CustomPainter {
     radius: _textPainter.width > _textPainter.height
             ? (_textPainter.width / 2) + padding
             : (_textPainter.height / 2) + padding,),
-    const Radius.circular(4));
+    const Radius.circular(6));
     canvas.drawRRect(rrect, _linePainter);    
   }
 

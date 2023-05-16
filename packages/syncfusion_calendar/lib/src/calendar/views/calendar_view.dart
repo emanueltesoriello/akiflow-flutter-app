@@ -11784,7 +11784,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
     final RRect rrect = RRect.fromRectAndRadius(
       Rect.fromCircle(center: Offset(x + painterWidth, y + painterHeight), 
       radius: radius + paddingAroundDate),
-      const Radius.circular(4));
+      const Radius.circular(6));
     canvas.drawRRect(rrect, _circlePainter);
   }
 

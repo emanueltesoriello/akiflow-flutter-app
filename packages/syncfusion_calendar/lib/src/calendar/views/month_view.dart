@@ -1064,7 +1064,7 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
         final RRect rrect = RRect.fromRectAndRadius(
         Rect.fromCircle(center: Offset(xPosition + cellWidth / 2,
         yPosition + circlePadding + textHeight), radius: textHeight + 3),
-        const Radius.circular(4));
+        const Radius.circular(6));
         canvas.drawRRect(rrect, _linePainter);    
       }
 
