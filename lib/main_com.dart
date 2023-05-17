@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +28,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/services/focus_detector_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:app_links/app_links.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -39,32 +39,24 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
   return event;
 }
 
-handleDeeplinks() async {
-  // Check if you received the link via `getInitialLink` first
-  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
-
-  if (initialLink != null) {
-    final Uri deepLink = initialLink.link;
-    // Implement the deeplinks using the dynamic link to push the user to a different screen
-    BuildContext? context = NavigationService.navigatorKey.currentContext;
-    if (context != null) {
-      print(deepLink.path);
-    }
+initAppLinks() async {
+  final appLinks = AppLinks();
+//Get the initial/first link.
+// This is useful when app was terminated (i.e. not started)
+  final uri = await appLinks.getInitialAppLink();
+  BuildContext? context = NavigationService.navigatorKey.currentContext;
+  if (context != null) {
+    // Do something (navigation, ...)
   }
 
-  FirebaseDynamicLinks.instance.onLink.listen(
-    (PendingDynamicLinkData? pendingDynamicLinkData) {
-      // Set up the `onLink` event listener next as it may be received here
-      if (pendingDynamicLinkData != null) {
-        final Uri deepLink = pendingDynamicLinkData.link;
-        // Implement the deeplinks using the dynamic link to push the user to a different screen
-        BuildContext? context = NavigationService.navigatorKey.currentContext;
-        if (context != null) {
-          print(deepLink.path);
-        }
-      }
-    },
-  );
+// Subscribe to further events when app is started.
+// (Use stringLinkStream to get it as [String])
+  appLinks.uriLinkStream.listen((uri) {
+    BuildContext? context = NavigationService.navigatorKey.currentContext;
+    if (context != null) {
+      // Do something (navigation, ...)
+    }
+  });
 }
 
 Future<void> initFunctions() async {
@@ -86,8 +78,6 @@ Future<void> initFunctions() async {
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
-  //await Intercom.instance.initialize(Config.intercomCredential.appId,
-  //    iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
 
   // Init Background Service and register periodic task
   await BackgroundService.initBackgroundService();
@@ -96,13 +86,16 @@ Future<void> initFunctions() async {
   }
 
   try {
-    // if (Platform.isAndroid) {
     await FlutterDisplayMode.setHighRefreshRate();
-    // }
   } catch (e) {
     print(e);
   }
-  await handleDeeplinks();
+
+  try {
+    initAppLinks();
+  } catch (e) {
+    print(e);
+  }
 }
 
 _identifyAnalytics(User user) async {
