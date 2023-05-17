@@ -83,17 +83,16 @@ class TasksRepository extends DatabaseRepository {
     DateTime endTime = startTime.add(const Duration(days: 1));
 
     List<Map<String, Object?>> items;
-
     try {
       if (date.day == DateTime.now().day && date.month == DateTime.now().month && date.year == DateTime.now().year) {
         items = await _databaseService.database!.transaction((txn) async {
           return await txn.rawQuery(
             """
         SELECT * FROM tasks
-        WHERE deleted_at IS NULL
+        WHERE deleted_at IS NULL 
         AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
-        AND (date <= ? OR datetime < ?)
+        AND (((date > ? AND date < ?) OR (datetime > ? AND datetime < ?)) OR ((date <= ? OR datetime < ?) AND done = 0)) 
         ORDER BY
           CASE
             WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
@@ -103,7 +102,11 @@ class TasksRepository extends DatabaseRepository {
           END
 """,
             [
-              date.toUtc().toIso8601String(),
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              startTime.toUtc().toIso8601String(),
               endTime.toUtc().toIso8601String(),
               DateTime.now().toUtc().toIso8601String(),
               DateTime.now().toUtc().toIso8601String(),

@@ -36,7 +36,7 @@ class NavItem extends StatelessWidget {
             context.read<MainCubit>().changeHomeView(homeViewType!);
 
             if (homeViewType == HomeViewType.today) {
-              DateTime now = DateTime.now().toUtc();
+              DateTime now = DateTime.now();
               context.read<TodayCubit>().onDateSelected(now);
             }
           } else {

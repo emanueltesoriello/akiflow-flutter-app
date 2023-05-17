@@ -6,7 +6,7 @@ class TaskRowDragMode extends TaskRow {
   TaskRowDragMode(Task task, {Key? key})
       : super(
           key: key,
-          color: Colors.transparent,
+          color: null,
           completedClick: () {},
           selectTask: () {},
           task: task.copyWith(selected: true),
