@@ -94,20 +94,7 @@ class _TodayViewState extends State<TodayView> {
 
     pinned.sort((a, b) {
       try {
-        DateTime parsedAUTC = DateTime.parse(a.datetime!);
-        DateTime parsedALocal = parsedAUTC.toLocal();
-        DateTime fixedA = parsedALocal != null
-            ? DateTime(parsedAUTC.year, parsedAUTC.month, parsedAUTC.day, parsedALocal.hour, parsedALocal.minute,
-                parsedALocal.second)
-            : DateTime.now();
-
-        DateTime parsedBUTC = DateTime.parse(b.datetime!);
-        DateTime parsedBLocal = parsedBUTC.toLocal();
-        DateTime fixedB = parsedBLocal != null
-            ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
-                parsedBLocal.second)
-            : DateTime.now();
-        return fixedA.compareTo(fixedB);
+        return a.datetime!.compareTo(b.datetime!);
       } catch (e) {
         print("Error sorting pinned items: ${e.toString()}");
         return 0;
