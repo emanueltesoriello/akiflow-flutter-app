@@ -147,7 +147,7 @@ class CalendarBody extends StatelessWidget {
                   ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
-              dayFormat: isThreeDays ? 'EEE' : 'EE',
+              dayFormat: isThreeDays || calendarController.view == CalendarView.day ? 'EEE' : 'EE',
               nonWorkingDays: state.nonWorkingDays,
             ),
             scheduleViewSettings: ScheduleViewSettings(

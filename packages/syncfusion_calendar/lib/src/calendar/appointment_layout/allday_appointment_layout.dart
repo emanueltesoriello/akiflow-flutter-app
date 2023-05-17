@@ -955,41 +955,7 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
   @override
   void paint(PaintingContext context, Offset offset) {
     _textPainter.textScaleFactor = _textScaleFactor;
-    double leftPosition = 0, rightPosition = size.width;
-    if (CalendarViewHelper.isDayView(
-        view,
-        calendar.timeSlotViewSettings.numberOfDaysInView,
-        calendar.timeSlotViewSettings.nonWorkingDays,
-        calendar.monthViewSettings.numberOfWeeksInView)) {
-      _rectPainter.strokeWidth = 0.5;
-      _rectPainter.color =
-          calendar.cellBorderColor ?? calendarTheme.cellBorderColor!;
-      //// Decrease the x position by 0.5 because draw the end point of the view
-      /// draws half of the line to current view and hides another half.
-      context.canvas.drawLine(
-          Offset(
-              isRTL ? size.width - timeLabelWidth + 0.5 : timeLabelWidth - 0.5,
-              0),
-          Offset(
-              isRTL ? size.width - timeLabelWidth + 0.5 : timeLabelWidth - 0.5,
-              size.height),
-          _rectPainter);
-
-      leftPosition = isRTL ? 0 : timeLabelWidth;
-      rightPosition = isRTL ? size.width - timeLabelWidth : size.width;
-
-      final double viewHeaderHeight = CalendarViewHelper.getViewHeaderHeight(
-          calendar.viewHeaderHeight, view);
-      _rectPainter.color = calendar.timeSlotViewSettings.allDayPanelColor ??
-          calendarTheme.allDayPanelColor!;
-      context.canvas.drawRect(
-          Rect.fromLTRB(
-              isRTL ? size.width - timeLabelWidth : 0,
-              viewHeaderHeight,
-              isRTL ? size.width : timeLabelWidth,
-              size.height),
-          _rectPainter);
-    }
+    final double leftPosition = 0, rightPosition = size.width;
     _rectPainter.color = calendar.timeSlotViewSettings.allDayPanelColor ??
         calendarTheme.allDayPanelColor!;
     context.canvas.drawRect(
@@ -1108,15 +1074,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
   /// view  we display the current date, and total dates of the spanning
   /// appointment.
   String _getAllDayAppointmentText(CalendarAppointment appointment) {
-    if (!CalendarViewHelper.isDayView(
-            view,
-            calendar.timeSlotViewSettings.numberOfDaysInView,
-            calendar.timeSlotViewSettings.nonWorkingDays,
-            calendar.monthViewSettings.numberOfWeeksInView) ||
-        !appointment.isSpanned) {
-      return appointment.subject;
-    }
-
     return AppointmentHelper.getSpanAppointmentText(
         appointment, visibleDates[0], _localizations);
   }
