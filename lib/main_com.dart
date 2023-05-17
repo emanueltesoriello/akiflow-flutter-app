@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +37,34 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
     return null;
   }
   return event;
+}
+
+handleDeeplinks() async {
+  // Check if you received the link via `getInitialLink` first
+  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+
+  if (initialLink != null) {
+    final Uri deepLink = initialLink.link;
+    // Implement the deeplinks using the dynamic link to push the user to a different screen
+    BuildContext? context = NavigationService.navigatorKey.currentContext;
+    if (context != null) {
+      print(deepLink.path);
+    }
+  }
+
+  FirebaseDynamicLinks.instance.onLink.listen(
+    (PendingDynamicLinkData? pendingDynamicLinkData) {
+      // Set up the `onLink` event listener next as it may be received here
+      if (pendingDynamicLinkData != null) {
+        final Uri deepLink = pendingDynamicLinkData.link;
+        // Implement the deeplinks using the dynamic link to push the user to a different screen
+        BuildContext? context = NavigationService.navigatorKey.currentContext;
+        if (context != null) {
+          print(deepLink.path);
+        }
+      }
+    },
+  );
 }
 
 Future<void> initFunctions() async {
@@ -73,6 +102,7 @@ Future<void> initFunctions() async {
   } catch (e) {
     print(e);
   }
+  await handleDeeplinks();
 }
 
 _identifyAnalytics(User user) async {
