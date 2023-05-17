@@ -22,7 +22,6 @@ class AgendaViewLayout extends StatefulWidget {
       this.locale,
       this.localizations,
       this.calendarTheme,
-      this.agendaViewNotifier,
       this.appointmentTimeTextFormat,
       this.timeLabelWidth,
       this.textScaleFactor,
@@ -53,9 +52,6 @@ class AgendaViewLayout extends StatefulWidget {
 
   /// Holds the theme data of the calendar widget.
   final SfCalendarThemeData calendarTheme;
-
-  /// Holds the hovering details of the agenda view widget.
-  final ValueNotifier<ScheduleViewHoveringDetails?> agendaViewNotifier;
 
   /// Holds the localization data of the calendar widget.
   final SfLocalizations localizations;
@@ -155,7 +151,6 @@ class _AgendaViewLayoutState extends State<AgendaViewLayout> {
         widget.locale,
         widget.localizations,
         widget.calendarTheme,
-        widget.agendaViewNotifier,
         widget.appointmentTimeTextFormat,
         widget.timeLabelWidth,
         widget.textScaleFactor,
@@ -251,7 +246,6 @@ class _AgendaViewRenderWidget extends MultiChildRenderObjectWidget {
       this.locale,
       this.localizations,
       this.calendarTheme,
-      this.agendaViewNotifier,
       this.appointmentTimeTextFormat,
       this.timeLabelWidth,
       this.textScaleFactor,
@@ -270,7 +264,6 @@ class _AgendaViewRenderWidget extends MultiChildRenderObjectWidget {
   final bool isRTL;
   final String locale;
   final SfCalendarThemeData calendarTheme;
-  final ValueNotifier<ScheduleViewHoveringDetails?> agendaViewNotifier;
   final SfLocalizations localizations;
   final double timeLabelWidth;
   final String? appointmentTimeTextFormat;
@@ -292,7 +285,6 @@ class _AgendaViewRenderWidget extends MultiChildRenderObjectWidget {
       locale,
       localizations,
       calendarTheme,
-      agendaViewNotifier,
       appointmentTimeTextFormat,
       timeLabelWidth,
       textScaleFactor,
@@ -316,7 +308,6 @@ class _AgendaViewRenderWidget extends MultiChildRenderObjectWidget {
       ..locale = locale
       ..localizations = localizations
       ..calendarTheme = calendarTheme
-      ..agendaViewNotifier = agendaViewNotifier
       ..appointmentTimeTextFormat = appointmentTimeTextFormat
       ..timeLabelWidth = timeLabelWidth
       ..textScaleFactor = textScaleFactor
@@ -337,7 +328,6 @@ class _AgendaViewRenderObject extends CustomCalendarRenderObject {
       this._locale,
       this._localizations,
       this._calendarTheme,
-      this._agendaViewNotifier,
       this._appointmentTimeTextFormat,
       this._timeLabelWidth,
       this._textScaleFactor,
@@ -584,21 +574,6 @@ class _AgendaViewRenderObject extends CustomCalendarRenderObject {
     markNeedsPaint();
   }
 
-  ValueNotifier<ScheduleViewHoveringDetails?> _agendaViewNotifier;
-
-  ValueNotifier<ScheduleViewHoveringDetails?> get agendaViewNotifier =>
-      _agendaViewNotifier;
-
-  set agendaViewNotifier(ValueNotifier<ScheduleViewHoveringDetails?> value) {
-    if (_agendaViewNotifier == value) {
-      return;
-    }
-
-    _agendaViewNotifier.removeListener(markNeedsPaint);
-    _agendaViewNotifier = value;
-    _agendaViewNotifier.addListener(markNeedsPaint);
-  }
-
   /// Caches [SemanticsNode]s created during [assembleSemanticsNode] so they
   /// can be re-used when [assembleSemanticsNode] is called again. This ensures
   /// stable ids for the [SemanticsNode]s of children across
@@ -613,13 +588,11 @@ class _AgendaViewRenderObject extends CustomCalendarRenderObject {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    _agendaViewNotifier.addListener(markNeedsPaint);
   }
 
   /// detach will called when the render object removed from view.
   @override
   void detach() {
-    _agendaViewNotifier.removeListener(markNeedsPaint);
     super.detach();
   }
 
@@ -707,12 +680,6 @@ class _AgendaViewRenderObject extends CustomCalendarRenderObject {
 
         final RRect rect = appointmentView.appointmentRect!.shift(offset);
         context.paintChild(child, Offset(rect.left, rect.top));
-        if (agendaViewNotifier.value != null &&
-            isSameDate(agendaViewNotifier.value!.hoveringDate, selectedDate)) {
-          _addMouseHovering(
-              context.canvas, size, rect, isLargerScheduleUI, padding);
-        }
-
         child = childAfter(child);
       }
     }
@@ -982,11 +949,6 @@ class _AgendaViewRenderObject extends CustomCalendarRenderObject {
             false,
             appointment.isAllDay,
             spanIconWidth);
-      }
-
-      if (agendaViewNotifier.value != null &&
-          isSameDate(agendaViewNotifier.value!.hoveringDate, selectedDate)) {
-        _addMouseHovering(canvas, size, rect, isLargerScheduleUI, padding);
       }
     }
   }
@@ -1286,45 +1248,5 @@ class _AgendaViewRenderObject extends CustomCalendarRenderObject {
         Offset(xPosition + padding,
             yPosition + ((appointmentHeight - _textPainter.height) / 2)));
     return topPadding;
-  }
-
-  void _addMouseHovering(Canvas canvas, Size size, RRect rect,
-      bool isLargerScheduleUI, double padding) {
-    if (rect.left < agendaViewNotifier.value!.hoveringOffset.dx &&
-        rect.right > agendaViewNotifier.value!.hoveringOffset.dx &&
-        rect.top < agendaViewNotifier.value!.hoveringOffset.dy &&
-        rect.bottom > agendaViewNotifier.value!.hoveringOffset.dy) {
-      if (isLargerScheduleUI) {
-        _rectPainter.color = Colors.grey.withOpacity(0.1);
-        const double viewPadding = 2;
-        canvas.drawRRect(
-            RRect.fromRectAndRadius(
-                Rect.fromLTWH(
-                    rect.left - padding,
-                    rect.top + viewPadding,
-                    size.width - (isRTL ? viewPadding : padding),
-                    rect.height - (2 * viewPadding)),
-                const Radius.circular(4)),
-            _rectPainter);
-      } else {
-        _rectPainter.color =
-            calendarTheme.selectionBorderColor!.withOpacity(0.4);
-        _rectPainter.style = PaintingStyle.stroke;
-        _rectPainter.strokeWidth = 2;
-        if (childCount == 0) {
-          final Radius cornerRadius = Radius.circular(
-              (rect.outerRect.height * 0.1) > 5
-                  ? 5
-                  : (rect.outerRect.height * 0.1));
-          canvas.drawRRect(
-              RRect.fromRectAndRadius(rect.outerRect, cornerRadius),
-              _rectPainter);
-        } else {
-          canvas.drawRect(rect.outerRect, _rectPainter);
-        }
-
-        _rectPainter.style = PaintingStyle.fill;
-      }
-    }
   }
 }

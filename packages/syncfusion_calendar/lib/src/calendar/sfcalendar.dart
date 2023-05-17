@@ -2603,9 +2603,6 @@ class _SfCalendarState extends State<SfCalendar>
   late SfLocalizations _localizations;
   late double _minWidth, _minHeight, _textScaleFactor;
   late SfCalendarThemeData _calendarTheme;
-  late ValueNotifier<Offset?> _headerHoverNotifier, _resourceHoverNotifier;
-  late ValueNotifier<ScheduleViewHoveringDetails?> _agendaDateNotifier,
-      _agendaViewNotifier;
 
   /// Notifier to repaint the resource view if the image doesn't loaded on
   /// initial load.
@@ -2726,13 +2723,7 @@ class _SfCalendarState extends State<SfCalendar>
     _calendarViewWidth = 0;
     initializeDateFormatting();
     _loadDataBase().then((bool value) => _getAppointment());
-    _agendaDateNotifier = ValueNotifier<ScheduleViewHoveringDetails?>(null);
-    _agendaViewNotifier = ValueNotifier<ScheduleViewHoveringDetails?>(null);
     _resourceImageNotifier = ValueNotifier<bool>(false);
-    _headerHoverNotifier = ValueNotifier<Offset?>(null)
-      ..addListener(_updateViewHeaderHover);
-    _resourceHoverNotifier = ValueNotifier<Offset?>(null)
-      ..addListener(_updateViewHeaderHover);
     _controller = widget.controller ?? CalendarController();
     _controller.getCalendarDetailsAtOffset = _getCalendarDetails;
     _controller.selectedDate ??= widget.initialSelectedDate;
@@ -3771,10 +3762,6 @@ class _SfCalendarState extends State<SfCalendar>
       _resourcePanelScrollController!.dispose();
       _resourcePanelScrollController = null;
     }
-
-    _headerHoverNotifier.removeListener(_updateViewHeaderHover);
-    _agendaDateNotifier.removeListener(_agendaSelectedDateListener);
-    _resourceHoverNotifier.removeListener(_updateViewHeaderHover);
 
     _disposeResourceImagePainter();
 
@@ -4934,184 +4921,6 @@ class _SfCalendarState extends State<SfCalendar>
         : widget.monthViewSettings.agendaViewHeight;
   }
 
-  void _updateMouseHoveringForHeader(Offset localPosition) {
-    if (_agendaDateNotifier.value != null) {
-      _agendaDateNotifier.value = null;
-    }
-
-    if (_agendaViewNotifier.value != null) {
-      _agendaViewNotifier.value = null;
-    }
-
-    if (_resourceHoverNotifier.value != null) {
-      _resourceHoverNotifier.value = null;
-    }
-
-    _headerHoverNotifier.value = Offset(localPosition.dx, localPosition.dy);
-  }
-
-  void _updateMouseHoverPosition(
-      Offset globalPosition,
-      bool isScheduleDisplayDate,
-      bool isRTL,
-      DateTime? currentDate,
-      double? startPosition,
-      [double padding = 0,
-      bool isResourceEnabled = false]) {
-    if (_isMobilePlatform) {
-      return;
-    }
-
-    // ignore: avoid_as
-    final RenderBox box = context.findRenderObject()! as RenderBox;
-    final Offset localPosition = box.globalToLocal(globalPosition);
-    if (localPosition.dy < widget.headerHeight) {
-      _updateMouseHoveringForHeader(localPosition);
-    } else {
-      if (isResourceEnabled &&
-          ((isRTL &&
-                  localPosition.dx >
-                      (_minWidth - widget.resourceViewSettings.size)) ||
-              (!isRTL &&
-                  localPosition.dx < widget.resourceViewSettings.size)) &&
-          localPosition.dy > startPosition! &&
-          (CalendarViewHelper.shouldRaiseCalendarTapCallback(widget.onTap) ||
-              CalendarViewHelper.shouldRaiseCalendarLongPressCallback(
-                  widget.onLongPress))) {
-        if (_headerHoverNotifier.value != null) {
-          _headerHoverNotifier.value = null;
-        }
-
-        if (_agendaViewNotifier.value != null) {
-          _agendaViewNotifier.value = null;
-        }
-
-        if (_agendaDateNotifier.value != null) {
-          _agendaDateNotifier.value = null;
-        }
-
-        if (_resourceHoverNotifier.value != null) {
-          _resourceHoverNotifier.value = null;
-        }
-
-        final double yPosition =
-            (_resourcePanelScrollController!.offset + localPosition.dy) -
-                startPosition;
-
-        _resourceHoverNotifier.value = Offset(localPosition.dx, yPosition);
-      }
-
-      if (_view != CalendarView.month && _view != CalendarView.schedule) {
-        return;
-      }
-
-      double yPosition = localPosition.dy;
-      double xPosition = localPosition.dx;
-      double dateViewWidth = _getAgendaViewDayLabelWidth(
-          widget.scheduleViewSettings, _useMobilePlatformUI);
-      if (_view == CalendarView.month) {
-        currentDate = _selectedDate;
-        final double agendaHeight = _getMonthAgendaHeight();
-        yPosition -= _minHeight - agendaHeight;
-        dateViewWidth = _agendaDateViewWidth;
-        if (_selectedDate == null) {
-          dateViewWidth = 0;
-        }
-
-        if (dateViewWidth > 60 && !_isMobilePlatform) {
-          dateViewWidth = 60;
-        }
-      } else {
-        yPosition = (_agendaScrollController!.offset + localPosition.dy) -
-            startPosition! -
-            widget.headerHeight;
-      }
-
-      if ((isRTL && localPosition.dx > (_minWidth - dateViewWidth)) ||
-          (!isRTL && localPosition.dx < dateViewWidth)) {
-        if (_headerHoverNotifier.value != null) {
-          _headerHoverNotifier.value = null;
-        }
-
-        if (_agendaViewNotifier.value != null) {
-          _agendaViewNotifier.value = null;
-        }
-
-        if (_resourceHoverNotifier.value != null) {
-          _resourceHoverNotifier.value = null;
-        }
-
-        if (widget.onTap == null &&
-            widget.onLongPress == null &&
-            !widget.allowViewNavigation) {
-          _agendaDateNotifier.value = null;
-          return;
-        }
-
-        xPosition = isRTL ? _minWidth - xPosition : xPosition;
-        _agendaDateNotifier.value = ScheduleViewHoveringDetails(
-            currentDate!, Offset(xPosition, yPosition));
-      } else {
-        /// padding value used to specify the view top padding on agenda view.
-        /// padding value is assigned when the agenda view has top padding
-        /// eg., if the agenda view holds one all day appointment in
-        /// schedule view then it have top padding because the agenda view
-        /// minimum panel height as appointment height specified in setting.
-        if (_view == CalendarView.month) {
-          yPosition += _agendaScrollController!.offset;
-          xPosition -= isRTL ? 0 : dateViewWidth;
-        }
-        yPosition -= padding;
-        if (_headerHoverNotifier.value != null) {
-          _headerHoverNotifier.value = null;
-        }
-
-        if (_agendaDateNotifier.value != null) {
-          _agendaDateNotifier.value = null;
-        }
-
-        if (_resourceHoverNotifier.value != null) {
-          _resourceHoverNotifier.value = null;
-        }
-        if (isScheduleDisplayDate &&
-            widget.onTap == null &&
-            widget.onLongPress == null) {
-          _agendaViewNotifier.value = null;
-          return;
-        }
-        _agendaViewNotifier.value = ScheduleViewHoveringDetails(
-            currentDate!, Offset(xPosition, yPosition));
-      }
-    }
-  }
-
-  void _pointerEnterEvent(
-      PointerEnterEvent event, bool isScheduleDisplayDate, bool isRTL,
-      [DateTime? currentDate,
-      double? startPosition,
-      double padding = 0,
-      bool resourceEnabled = false]) {
-    _updateMouseHoverPosition(event.position, isScheduleDisplayDate, isRTL,
-        currentDate, startPosition, padding, resourceEnabled);
-  }
-
-  void _pointerHoverEvent(
-      PointerHoverEvent event, bool isScheduleDisplayDate, bool isRTL,
-      [DateTime? currentDate,
-      double? startPosition,
-      double padding = 0,
-      bool resourceEnabled = false]) {
-    _updateMouseHoverPosition(event.position, isScheduleDisplayDate, isRTL,
-        currentDate, startPosition, padding, resourceEnabled);
-  }
-
-  void _pointerExitEvent(PointerExitEvent event) {
-    _headerHoverNotifier.value = null;
-    _agendaDateNotifier.value = null;
-    _agendaViewNotifier.value = null;
-    _resourceHoverNotifier.value = null;
-  }
-
   /// Calculate the maximum appointment date based on appointment collection
   /// and schedule view settings.
   DateTime _getMaxAppointmentDate(
@@ -6008,17 +5817,7 @@ class _SfCalendarState extends State<SfCalendar>
                   app1.isSpanned, app2.isSpanned));
 
       /// Add appointment view to the current views collection.
-      widgets.add(MouseRegion(
-          onEnter: (PointerEnterEvent event) {
-            _pointerEnterEvent(event, false, isRTL, currentDate,
-                viewStartPosition, appointmentViewTopPadding);
-          },
-          onExit: _pointerExitEvent,
-          onHover: (PointerHoverEvent event) {
-            _pointerHoverEvent(event, false, isRTL, currentDate,
-                viewStartPosition, appointmentViewTopPadding);
-          },
-          child: GestureDetector(
+      widgets.add(GestureDetector(
             child: _ScheduleAppointmentView(
                 header: CustomPaint(
                     painter: _AgendaDateTimePainter(
@@ -6030,7 +5829,6 @@ class _SfCalendarState extends State<SfCalendar>
                         widget.todayTextStyle,
                         _locale,
                         _calendarTheme,
-                        _agendaDateNotifier,
                         _minWidth,
                         isRTL,
                         _textScaleFactor,
@@ -6051,7 +5849,6 @@ class _SfCalendarState extends State<SfCalendar>
                       _locale,
                       _localizations,
                       _calendarTheme,
-                      _agendaViewNotifier,
                       widget.appointmentTimeTextFormat,
                       viewPadding,
                       _textScaleFactor,
@@ -6100,7 +5897,7 @@ class _SfCalendarState extends State<SfCalendar>
               _raiseCallbackForScheduleView(currentDate, details.localPosition,
                   currentAppointments, viewPadding, padding, false);
             },
-          )));
+          ));
 
       interSectPoint += panelHeight + dividerHeight;
 
@@ -6300,7 +6097,6 @@ class _SfCalendarState extends State<SfCalendar>
                             isRTL,
                             _locale,
                             _useMobilePlatformUI,
-                            _agendaViewNotifier,
                             _calendarTheme,
                             _localizations,
                             _textScaleFactor),
@@ -6355,17 +6151,7 @@ class _SfCalendarState extends State<SfCalendar>
       double viewHeaderWidth,
       double displayDateHighlightHeight,
       double padding) {
-    return MouseRegion(
-        onEnter: (PointerEnterEvent event) {
-          _pointerEnterEvent(event, true, isRTL, currentDisplayDate,
-              highlightViewStartPosition);
-        },
-        onExit: _pointerExitEvent,
-        onHover: (PointerHoverEvent event) {
-          _pointerHoverEvent(event, true, isRTL, currentDisplayDate,
-              highlightViewStartPosition);
-        },
-        child: GestureDetector(
+    return GestureDetector(
           child: _ScheduleAppointmentView(
               header: CustomPaint(
                   painter: _AgendaDateTimePainter(
@@ -6377,7 +6163,6 @@ class _SfCalendarState extends State<SfCalendar>
                       widget.todayTextStyle,
                       _locale,
                       _calendarTheme,
-                      _agendaDateNotifier,
                       _minWidth,
                       isRTL,
                       _textScaleFactor,
@@ -6395,7 +6180,6 @@ class _SfCalendarState extends State<SfCalendar>
                         isRTL,
                         _locale,
                         _useMobilePlatformUI,
-                        _agendaViewNotifier,
                         _calendarTheme,
                         _localizations,
                         _textScaleFactor,
@@ -6453,7 +6237,7 @@ class _SfCalendarState extends State<SfCalendar>
                 false,
                 isDisplayDate: true);
           },
-        ));
+        );
   }
 
   void _raiseCallbackForScheduleView(
@@ -8301,17 +8085,7 @@ class _SfCalendarState extends State<SfCalendar>
               width: resourceViewSize,
               top: widget.headerHeight + top,
               bottom: 0,
-              child: MouseRegion(
-                  onEnter: (PointerEnterEvent event) {
-                    _pointerEnterEvent(event, false, isRTL, null,
-                        top + widget.headerHeight, 0, isResourceEnabled);
-                  },
-                  onExit: _pointerExitEvent,
-                  onHover: (PointerHoverEvent event) {
-                    _pointerHoverEvent(event, false, isRTL, null,
-                        top + widget.headerHeight, 0, isResourceEnabled);
-                  },
-                  child: GestureDetector(
+              child: GestureDetector(
                     child: ScrollConfiguration(
                       behavior: ScrollConfiguration.of(context)
                           .copyWith(scrollbars: false),
@@ -8329,7 +8103,6 @@ class _SfCalendarState extends State<SfCalendar>
                                 _resourceImageNotifier,
                                 isRTL,
                                 _textScaleFactor,
-                                _resourceHoverNotifier.value,
                                 _imagePainterCollection,
                                 resourceViewSize,
                                 panelHeight,
@@ -8343,7 +8116,7 @@ class _SfCalendarState extends State<SfCalendar>
                       _handleOnLongPressForResourcePanel(
                           details, resourceItemHeight);
                     },
-                  )))
+                  ))
         ]));
   }
 
@@ -9032,7 +8805,6 @@ class _SfCalendarState extends State<SfCalendar>
                         _locale,
                         _localizations,
                         _calendarTheme,
-                        _agendaViewNotifier,
                         widget.appointmentTimeTextFormat,
                         0,
                         _textScaleFactor,
@@ -9099,15 +8871,7 @@ class _SfCalendarState extends State<SfCalendar>
             child: Container(
                 color: widget.monthViewSettings.agendaStyle.backgroundColor ??
                     _calendarTheme.agendaBackgroundColor,
-                child: MouseRegion(
-                    onEnter: (PointerEnterEvent event) {
-                      _pointerEnterEvent(event, false, isRTL);
-                    },
-                    onExit: _pointerExitEvent,
-                    onHover: (PointerHoverEvent event) {
-                      _pointerHoverEvent(event, false, isRTL);
-                    },
-                    child: GestureDetector(
+                child: GestureDetector(
                       child: Stack(children: <Widget>[
                         CustomPaint(
                           painter: _AgendaDateTimePainter(
@@ -9119,7 +8883,6 @@ class _SfCalendarState extends State<SfCalendar>
                               widget.todayTextStyle,
                               _locale,
                               _calendarTheme,
-                              _agendaDateNotifier,
                               _minWidth,
                               isRTL,
                               _textScaleFactor,
@@ -9144,7 +8907,6 @@ class _SfCalendarState extends State<SfCalendar>
                                   _locale,
                                   _localizations,
                                   _calendarTheme,
-                                  _agendaViewNotifier,
                                   widget.appointmentTimeTextFormat,
                                   _agendaDateViewWidth,
                                   _textScaleFactor,
@@ -9165,7 +8927,7 @@ class _SfCalendarState extends State<SfCalendar>
                       onLongPressStart: (LongPressStartDetails details) {
                         _handleLongPressForAgenda(details, _selectedDate);
                       },
-                    )))));
+                    ))));
   }
 }
 
@@ -10454,12 +10216,12 @@ class _ScheduleLabelPainter extends CustomPainter {
       this.isRTL,
       this.locale,
       this.useMobilePlatformUI,
-      this.agendaViewNotifier,
+      //this.agendaViewNotifier,
       this.calendarTheme,
       this._localizations,
       this.textScaleFactor,
       {this.isDisplayDate = false})
-      : super(repaint: isDisplayDate ? agendaViewNotifier : null);
+      : super(repaint: null);
 
   final DateTime startDate;
   final DateTime? endDate;
@@ -10469,7 +10231,7 @@ class _ScheduleLabelPainter extends CustomPainter {
   final ScheduleViewSettings scheduleViewSettings;
   final SfLocalizations _localizations;
   final bool useMobilePlatformUI;
-  final ValueNotifier<ScheduleViewHoveringDetails?> agendaViewNotifier;
+  //final ValueNotifier<ScheduleViewHoveringDetails?> agendaViewNotifier;
   final SfCalendarThemeData calendarTheme;
   final bool isDisplayDate;
   final double textScaleFactor;
@@ -10513,34 +10275,6 @@ class _ScheduleLabelPainter extends CustomPainter {
     /// Draw display date view text
     _textPainter.paint(
         canvas, Offset(xPosition, (size.height - _textPainter.height) / 2));
-
-    /// Add hovering effect on display date view.
-    if (isDisplayDate &&
-        agendaViewNotifier.value != null &&
-        isSameDate(agendaViewNotifier.value!.hoveringDate, startDate)) {
-      const double padding = 5;
-      if (useMobilePlatformUI) {
-        final Rect rect = Rect.fromLTWH(
-            0, padding, size.width - 2, size.height - (2 * padding));
-        _backgroundPainter.color =
-            calendarTheme.selectionBorderColor!.withOpacity(0.4);
-        _backgroundPainter.style = PaintingStyle.stroke;
-        _backgroundPainter.strokeWidth = 2;
-        canvas.drawRect(rect, _backgroundPainter);
-        _backgroundPainter.style = PaintingStyle.fill;
-      } else {
-        const double viewPadding = 2;
-        final Rect rect = Rect.fromLTWH(
-            0,
-            padding + viewPadding,
-            size.width - (isRTL ? viewPadding : padding),
-            size.height - (2 * (viewPadding + padding)));
-        _backgroundPainter.color = Colors.grey.withOpacity(0.1);
-        canvas.drawRRect(
-            RRect.fromRectAndRadius(rect, const Radius.circular(4)),
-            _backgroundPainter);
-      }
-    }
   }
 
   void _addWeekLabel(Canvas canvas, Size size) {
@@ -11090,12 +10824,12 @@ class _AgendaDateTimePainter extends CustomPainter {
       this.todayTextStyle,
       this.locale,
       this.calendarTheme,
-      this.agendaDateNotifier,
+      //this.agendaDateNotifier,
       this.viewWidth,
       this.isRTL,
       this.textScaleFactor,
-      this.isMobilePlatform)
-      : super(repaint: agendaDateNotifier);
+      this.isMobilePlatform);
+      //: super(repaint: agendaDateNotifier);
 
   final DateTime? selectedDate;
   final MonthViewSettings? monthViewSettings;
@@ -11103,7 +10837,7 @@ class _AgendaDateTimePainter extends CustomPainter {
   final Color? todayHighlightColor;
   final TextStyle? todayTextStyle;
   final String locale;
-  final ValueNotifier<ScheduleViewHoveringDetails?> agendaDateNotifier;
+  //final ValueNotifier<ScheduleViewHoveringDetails?> agendaDateNotifier;
   final SfCalendarThemeData calendarTheme;
   final double viewWidth;
   final bool isRTL;
@@ -11227,30 +10961,6 @@ class _AgendaDateTimePainter extends CustomPainter {
       _linePainter.color = todayHighlightColor!;
       _drawTodayCircle(canvas, xPosition, yPosition, padding);
     }
-
-    /// padding added between date and day labels in web, to avoid the
-    /// hovering effect overlapping issue.
-    if (!isMobile && !isToday) {
-      yPosition = weekDayHeight + padding + inBetweenPadding;
-    }
-    if (agendaDateNotifier.value != null &&
-        isSameDate(agendaDateNotifier.value!.hoveringDate, selectedDate)) {
-      if (xPosition < agendaDateNotifier.value!.hoveringOffset.dx &&
-          xPosition + _textPainter.width >
-              agendaDateNotifier.value!.hoveringOffset.dx &&
-          yPosition < agendaDateNotifier.value!.hoveringOffset.dy &&
-          yPosition + _textPainter.height >
-              agendaDateNotifier.value!.hoveringOffset.dy) {
-        _linePainter.color = isToday
-            ? Colors.black.withOpacity(0.1)
-            : (calendarTheme.brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black87)
-                .withOpacity(0.04);
-        _drawTodayCircle(canvas, xPosition, yPosition, padding);
-      }
-    }
-
     _textPainter.paint(canvas, Offset(xPosition, yPosition));
   }
 
@@ -11293,30 +11003,6 @@ class _AgendaDateTimePainter extends CustomPainter {
       _linePainter.color = todayHighlightColor!;
       _drawTodayCircle(canvas, dateTextStartPosition, yPosition, padding);
     }
-
-    if (agendaDateNotifier.value != null &&
-        isSameDate(agendaDateNotifier.value!.hoveringDate, selectedDate)) {
-      if (dateTextStartPosition <
-              (isRTL
-                  ? size.width - agendaDateNotifier.value!.hoveringOffset.dx
-                  : agendaDateNotifier.value!.hoveringOffset.dx) &&
-          (dateTextStartPosition + _textPainter.width) >
-              (isRTL
-                  ? size.width - agendaDateNotifier.value!.hoveringOffset.dx
-                  : agendaDateNotifier.value!.hoveringOffset.dx) &&
-          yPosition < agendaDateNotifier.value!.hoveringOffset.dy &&
-          (yPosition + _textPainter.height) >
-              agendaDateNotifier.value!.hoveringOffset.dy) {
-        _linePainter.color = isToday
-            ? Colors.black.withOpacity(0.1)
-            : (calendarTheme.brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black87)
-                .withOpacity(0.04);
-        _drawTodayCircle(canvas, dateTextStartPosition, yPosition, padding);
-      }
-    }
-
     _textPainter.paint(canvas, Offset(dateTextStartPosition, yPosition));
 
     //// Draw Date

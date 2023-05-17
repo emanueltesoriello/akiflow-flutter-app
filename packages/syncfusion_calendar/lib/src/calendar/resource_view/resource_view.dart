@@ -18,7 +18,6 @@ class ResourceViewWidget extends StatefulWidget {
       this.notifier,
       this.isRTL,
       this.textScaleFactor,
-      this.mouseHoverPosition,
       this.imagePainterCollection,
       this.width,
       this.panelHeight,
@@ -50,9 +49,6 @@ class ResourceViewWidget extends StatefulWidget {
 
   /// Collection of images painter to paint the image.
   final Map<Object, DecorationImagePainter> imagePainterCollection;
-
-  /// Holds the mouse hovering position used to paint highlight.
-  final Offset? mouseHoverPosition;
 
   /// Defines the width of the resource view widget.
   final double width;
@@ -97,7 +93,6 @@ class _ResourceViewWidgetState extends State<ResourceViewWidget> {
       widget.notifier,
       widget.isRTL,
       widget.textScaleFactor,
-      widget.mouseHoverPosition,
       widget.imagePainterCollection,
       widget.width,
       widget.panelHeight,
@@ -116,7 +111,6 @@ class _ResourceViewRenderObjectWidget extends MultiChildRenderObjectWidget {
       this.notifier,
       this.isRTL,
       this.textScaleFactor,
-      this.mouseHoverPosition,
       this.imagePainterCollection,
       this.width,
       this.panelHeight,
@@ -131,7 +125,6 @@ class _ResourceViewRenderObjectWidget extends MultiChildRenderObjectWidget {
   final ValueNotifier<bool> notifier;
   final bool isRTL;
   final double textScaleFactor;
-  final Offset? mouseHoverPosition;
   final Map<Object, DecorationImagePainter> imagePainterCollection;
   final double width;
   final double panelHeight;
@@ -147,7 +140,6 @@ class _ResourceViewRenderObjectWidget extends MultiChildRenderObjectWidget {
         notifier,
         isRTL,
         textScaleFactor,
-        mouseHoverPosition,
         imagePainterCollection,
         width,
         panelHeight);
@@ -165,7 +157,6 @@ class _ResourceViewRenderObjectWidget extends MultiChildRenderObjectWidget {
       ..notifier = notifier
       ..isRTL = isRTL
       ..textScaleFactor = textScaleFactor
-      ..mouseHoverPosition = mouseHoverPosition
       ..imagePainterCollection = imagePainterCollection
       ..width = width
       ..panelHeight = panelHeight;
@@ -182,7 +173,6 @@ class _ResourceViewRenderObject extends CustomCalendarRenderObject {
       this._notifier,
       this._isRTL,
       this._textScaleFactor,
-      this._mouseHoverPosition,
       this._imagePainterCollection,
       this._width,
       this._panelHeight);
@@ -315,23 +305,6 @@ class _ResourceViewRenderObject extends CustomCalendarRenderObject {
     markNeedsPaint();
   }
 
-  Offset? _mouseHoverPosition;
-
-  Offset? get mouseHoverPosition => _mouseHoverPosition;
-
-  set mouseHoverPosition(Offset? value) {
-    if (_mouseHoverPosition == value) {
-      return;
-    }
-
-    _mouseHoverPosition = value;
-    if (childCount == 0) {
-      markNeedsPaint();
-    } else {
-      markNeedsLayout();
-    }
-  }
-
   Map<Object, DecorationImagePainter> _imagePainterCollection;
 
   Map<Object, DecorationImagePainter> get imagePainterCollection =>
@@ -420,16 +393,6 @@ class _ResourceViewRenderObject extends CustomCalendarRenderObject {
       for (int i = 0; i < resourceLength; i++) {
         context.paintChild(child!, Offset(0, yPosition));
         child = childAfter(child);
-
-        if (mouseHoverPosition != null) {
-          final Color resourceHoveringColor =
-              (calendarTheme.brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87)
-                  .withOpacity(0.04);
-          _addHovering(context.canvas, size, yPosition, resourceHoveringColor);
-        }
-
         yPosition += resourceItemHeight;
       }
     }
@@ -454,11 +417,6 @@ class _ResourceViewRenderObject extends CustomCalendarRenderObject {
         : actualItemWidth / 2;
     final Color resourceCellBorderColor =
         cellBorderColor ?? calendarTheme.cellBorderColor!;
-    final Color resourceHoveringColor =
-        (calendarTheme.brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black87)
-            .withOpacity(0.04);
     final TextStyle displayNameTextStyle =
         resourceViewSettings.displayNameTextStyle ??
             calendarTheme.displayNameTextStyle!;
@@ -486,10 +444,6 @@ class _ResourceViewRenderObject extends CustomCalendarRenderObject {
         canvas.drawLine(Offset(0, yPosition), Offset(size.width, yPosition),
             _circlePainter);
 
-        if (mouseHoverPosition != null) {
-          _addHovering(canvas, size, yPosition, resourceHoveringColor);
-        }
-
         yPosition += resourceItemHeight;
         canvas.restore();
       }
@@ -499,23 +453,8 @@ class _ResourceViewRenderObject extends CustomCalendarRenderObject {
         _drawResourceBackground(canvas, size, resource, yPosition);
         _drawDisplayName(resource, displayNameTextStyle, canvas, size,
             yPosition, actualItemHeight, radius);
-        _addHovering(canvas, size, yPosition, resourceHoveringColor);
         yPosition += resourceItemHeight;
       }
-    }
-  }
-
-  void _addHovering(
-      Canvas canvas, Size size, double yPosition, Color resourceHoveringColor) {
-    if (mouseHoverPosition != null &&
-        mouseHoverPosition!.dy > yPosition &&
-        mouseHoverPosition!.dy < (yPosition + resourceItemHeight)) {
-      _circlePainter.style = PaintingStyle.fill;
-      _circlePainter.color = resourceHoveringColor;
-      const double padding = 0.5;
-      canvas.drawRect(
-          Rect.fromLTWH(0, yPosition, size.width, resourceItemHeight - padding),
-          _circlePainter);
     }
   }
 
