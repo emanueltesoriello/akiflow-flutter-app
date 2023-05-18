@@ -39,25 +39,28 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
   return event;
 }
 
-initAppLinks() async {
+/*initAppLinks() async {
   final appLinks = AppLinks();
 //Get the initial/first link.
 // This is useful when app was terminated (i.e. not started)
   final uri = await appLinks.getInitialAppLink();
   BuildContext? context = NavigationService.navigatorKey.currentContext;
-  if (context != null) {
+  if (context != null && uri != null && uri.host.contains('link.akiflow.com')) {
     // Do something (navigation, ...)
+    print('deeplink');
+
   }
 
 // Subscribe to further events when app is started.
 // (Use stringLinkStream to get it as [String])
   appLinks.uriLinkStream.listen((uri) {
     BuildContext? context = NavigationService.navigatorKey.currentContext;
-    if (context != null) {
+    if (context != null && uri.host.contains('link.akiflow.com')) {
       // Do something (navigation, ...)
+      print('deeplink');
     }
   });
-}
+}*/
 
 Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -91,11 +94,11 @@ Future<void> initFunctions() async {
     print(e);
   }
 
-  try {
+  /*try {
     initAppLinks();
   } catch (e) {
     print(e);
-  }
+  }*/
 }
 
 _identifyAnalytics(User user) async {

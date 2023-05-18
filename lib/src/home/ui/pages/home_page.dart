@@ -38,29 +38,64 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   SharedMedia? media;
   final handler = ShareHandlerPlatform.instance;
 
+  handleDeeplinks(String path) {
+    if (path.isEmpty) {
+      return;
+    } else if (path.toLowerCase().contains('inbox')) {
+      print('deeplink inbox');
+      context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+    } else if (path.toLowerCase().contains('calendar')) {
+      print('deeplink calendar');
+      context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
+    } else if (path.toLowerCase().contains('today')) {
+      print('deeplink today page');
+      context.read<MainCubit>().changeHomeView(HomeViewType.today);
+    } else if (path.toLowerCase().contains('createtask')) {
+      print('deeplink create task');
+      context.read<MainCubit>().changeHomeView(HomeViewType.today);
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => const CreateTaskModal(),
+      );
+    } else if (path.toLowerCase().contains('shareavailability')) {
+      print('deeplink share availability');
+      context.read<MainCubit>().changeHomeView(HomeViewType.availability);
+    }
+  }
+
   Future<void> initPlatformState() async {
     print('started initPlatformState');
     try {
       var media = await handler.getInitialSharedMedia();
       if (!mounted) return;
       if (media != null) {
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => CreateTaskModal(
-            sharedText: media.content,
-          ),
-        );
-      }
-
-      handler.sharedMediaStream.listen((SharedMedia? media) {
-        if (!mounted) return;
-        if (media != null) {
+        if (media.content!.contains('link.akiflow.com')) {
+          String path = Uri.parse(media.content!).path;
+          handleDeeplinks(path);
+        } else {
           showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => CreateTaskModal(
               sharedText: media.content,
             ),
           );
+        }
+      }
+
+      handler.sharedMediaStream.listen((SharedMedia? media) {
+        if (!mounted) return;
+        if (media != null) {
+          if (media.content!.contains('link.akiflow.com')) {
+            String path = Uri.parse(media.content!).path;
+            handleDeeplinks(path);
+          } else {
+            showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => CreateTaskModal(
+                sharedText: media.content,
+              ),
+            );
+          }
         }
       });
       if (!mounted) return;
