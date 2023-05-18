@@ -118,6 +118,8 @@ class CalendarBody extends StatelessWidget {
                 tasksCubit.fetchCalendarTasks();
                 eventsCubit.fetchEvents();
               } else {
+                tasksCubit.resetTasks();
+                eventsCubit.resetEvents();
                 tasksCubit.fetchTasksBetweenDates(start.toIso8601String(), end.toIso8601String());
                 eventsCubit.fetchEventsBetweenDates(start, end);
               }

@@ -22,7 +22,7 @@ class CalendarView extends StatelessWidget {
       builder: (context, state) {
         final PanelController panelController = PanelController();
         final sf_calendar.CalendarController calendarController = sf_calendar.CalendarController();
-        calendarController.view = context.watch<CalendarCubit>().state.calendarView;
+        calendarController.view = state.calendarView;
 
         TasksCubit tasksCubit = context.watch<TasksCubit>();
         List<Task> tasks = [];
@@ -42,7 +42,7 @@ class CalendarView extends StatelessWidget {
           }
         }
 
-        List<Calendar> calendars = context.watch<CalendarCubit>().state.calendars;
+        List<Calendar> calendars = state.calendars;
         List<String> visibleCalendarIds = [];
         if (calendars.isNotEmpty) {
           calendars = calendars

@@ -67,6 +67,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
   }
 
+  resetEvents(){
+    emit(state.copyWith(events: []));
+  }
+
   Future<void> fetchSearchedContacts(String query) async {
     List<Contact> searchedContacts = await _contactsRepository.getSearchedContacts(query);
     if (searchedContacts.isEmpty) {
