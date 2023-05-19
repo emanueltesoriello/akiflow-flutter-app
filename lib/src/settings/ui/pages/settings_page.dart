@@ -15,6 +15,7 @@ import 'package:mobile/src/settings/ui/pages/about_page.dart';
 import 'package:mobile/src/settings/ui/pages/my_account_page.dart';
 import 'package:mobile/src/settings/ui/pages/notifications_page.dart';
 import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
+import 'package:mobile/src/settings/ui/pages/test_pusher_page.dart';
 import 'package:models/account/account.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,6 +42,14 @@ class SettingsPage extends StatelessWidget {
             leading: Assets.images.icons.common.personCircleSVG,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAccountPage()));
+            },
+          ),
+          ButtonList(
+            title: "Test pusher",
+            position: ButtonListPosition.top,
+            leading: Assets.images.icons.common.personCircleSVG,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => TestPusher()));
             },
           ),
           ButtonList(
