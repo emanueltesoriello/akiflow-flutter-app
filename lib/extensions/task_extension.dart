@@ -468,7 +468,7 @@ extension TaskExt on Task {
       case "github":
         return Assets.images.icons.github.githubSVG;
       case "google":
-        return Assets.images.icons.google.googleSVG;
+        return Assets.images.icons.google.calendarSVG;
       case "gmail":
         return Assets.images.icons.google.gmailSVG;
       case "jira":

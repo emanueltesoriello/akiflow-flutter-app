@@ -38,6 +38,7 @@ class _View extends StatefulWidget {
 class _ViewState extends State<_View> {
   StreamSubscription? streamSubscription;
   ScrollController scrollController = ScrollController();
+  bool wasEmpty = false;
 
   @override
   void initState() {
@@ -92,6 +93,7 @@ class _ViewState extends State<_View> {
 
                   tasks = tasks.where((element) => element.deletedAt == null && !element.isCompletedComputed).toList();
                   if (tasksState.tasksLoaded && tasks.isEmpty) {
+                    wasEmpty = true;
                     return RefreshIndicator(
                         backgroundColor: ColorsExt.background(context),
                         onRefresh: () async {
@@ -100,7 +102,12 @@ class _ViewState extends State<_View> {
                         child: const EmptyHomeViewPlaceholder());
                   } else {
                     return TaskList(
+                      key: const Key("inbox"),
                       tasks: tasks,
+                      wasEmpty: wasEmpty, // workaround to show animation on first task added
+                      afterAddingFirstTask: () {
+                        wasEmpty = false; // workaround to show animation on first task added
+                      },
                       hideInboxLabel: true,
                       scrollController: scrollController,
                       sorting: TaskListSorting.sortingDescending,
