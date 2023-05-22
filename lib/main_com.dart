@@ -28,7 +28,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/services/focus_detector_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:app_links/app_links.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -38,29 +37,6 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
   }
   return event;
 }
-
-/*initAppLinks() async {
-  final appLinks = AppLinks();
-//Get the initial/first link.
-// This is useful when app was terminated (i.e. not started)
-  final uri = await appLinks.getInitialAppLink();
-  BuildContext? context = NavigationService.navigatorKey.currentContext;
-  if (context != null && uri != null && uri.host.contains('link.akiflow.com')) {
-    // Do something (navigation, ...)
-    print('deeplink');
-
-  }
-
-// Subscribe to further events when app is started.
-// (Use stringLinkStream to get it as [String])
-  appLinks.uriLinkStream.listen((uri) {
-    BuildContext? context = NavigationService.navigatorKey.currentContext;
-    if (context != null && uri.host.contains('link.akiflow.com')) {
-      // Do something (navigation, ...)
-      print('deeplink');
-    }
-  });
-}*/
 
 Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -93,12 +69,6 @@ Future<void> initFunctions() async {
   } catch (e) {
     print(e);
   }
-
-  /*try {
-    initAppLinks();
-  } catch (e) {
-    print(e);
-  }*/
 }
 
 _identifyAnalytics(User user) async {
