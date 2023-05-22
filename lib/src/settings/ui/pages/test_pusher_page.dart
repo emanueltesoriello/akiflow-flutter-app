@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobile/core/api/pusher.dart';
@@ -14,6 +16,7 @@ class TestPusher extends StatelessWidget {
       await pusher.init(
         apiKey: "4fa6328da6969ef162ec",
         cluster: "eu",
+
         //authEndpoint: "https://web.akiflow.com/api/pusherAuth",
         onConnectionStateChange: (m, s) {
           print("onConnectionStateChange m: $m \n s: $s");
@@ -41,18 +44,26 @@ class TestPusher extends StatelessWidget {
         },
         onAuthorizer: (String channelName, String socketId, dynamic options) async {
           print("onAuthorizer");
-          var authParams = {
-            'headers': {
-              'Authorization': 'Bearer ${locator<PreferencesRepository>().user!.accessToken}',
-            }
-          };
-          //connect to authEndpoint: "https://web.akiflow.com/api/pusherAuth",
-          //return {"channel_name": channelName, "socket_id": socketId};
+
+          try {
+            //TODO refactor code and handle onEvents
+            PusherAPI pusherApi = PusherAPI();
+            var res = await pusherApi.authorizePusher(channelName: channelName, socketId: socketId);
+            var b = 0;
+
+            return {
+              "auth": jsonDecode(res.body)['auth'],
+            };
+          } catch (e) {
+            print(e);
+          }
         },
       );
       await pusher.connect();
-      var privateChannelName = "private-user.${locator<PreferencesRepository>().user!.id}";
-      await pusher.subscribe(channelName: privateChannelName);
+
+      await pusher.subscribe(
+        channelName: "private-user.${locator<PreferencesRepository>().user!.id}",
+      );
     } catch (e) {
       print("ERROR: $e");
     }

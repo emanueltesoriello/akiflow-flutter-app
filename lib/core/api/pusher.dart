@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
@@ -11,15 +10,15 @@ class PusherAPI {
 
   PusherAPI();
 
-  @override
-  Future getPusher() async {
+  Future<Response> authorizePusher({required String channelName, required String socketId}) async {
+    var body = {"channel_name": channelName, "socket_id": socketId};
+
     Uri url = Uri.parse("${Config.oauthEndpoint}/api/pusherAuth");
 
-    Response responseRaw = await _httpClient.post(
+    Response response = await _httpClient.post(
       url,
-      body: {"channel_name": "ciao", "socket_id": "ciaone"},
+      body: jsonEncode(body),
     );
-    var b = 0;
-    return Future.value();
+    return response;
   }
 }
