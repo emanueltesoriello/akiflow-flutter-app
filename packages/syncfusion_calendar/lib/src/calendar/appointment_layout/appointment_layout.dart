@@ -28,7 +28,6 @@ class AppointmentLayout extends StatefulWidget {
       this.timeIntervalHeight,
       this.calendarTheme,
       this.isRTL,
-      this.appointmentHoverPosition,
       this.resourceCollection,
       this.resourceItemHeight,
       this.textScaleFactor,
@@ -61,9 +60,6 @@ class AppointmentLayout extends StatefulWidget {
 
   /// Holds the theme data of the calendar widget.
   final SfCalendarThemeData calendarTheme;
-
-  /// Used to hold the appointment layout hovering position.
-  final ValueNotifier<Offset?> appointmentHoverPosition;
 
   /// Holds the resource details of the calendar widget.
   final List<CalendarResource>? resourceCollection;
@@ -282,7 +278,6 @@ class _AppointmentLayoutState extends State<AppointmentLayout> {
         widget.timeIntervalHeight,
         widget.calendarTheme,
         widget.isRTL,
-        widget.appointmentHoverPosition,
         widget.resourceCollection,
         widget.resourceItemHeight,
         widget.textScaleFactor,
@@ -1101,7 +1096,6 @@ class _AppointmentRenderWidget extends MultiChildRenderObjectWidget {
       this.timeIntervalHeight,
       this.calendarTheme,
       this.isRTL,
-      this.appointmentHoverPosition,
       this.resourceCollection,
       this.resourceItemHeight,
       this.textScaleFactor,
@@ -1123,7 +1117,6 @@ class _AppointmentRenderWidget extends MultiChildRenderObjectWidget {
   final double timeIntervalHeight;
   final bool isRTL;
   final SfCalendarThemeData calendarTheme;
-  final ValueNotifier<Offset?> appointmentHoverPosition;
   final List<CalendarResource>? resourceCollection;
   final double? resourceItemHeight;
   final double textScaleFactor;
@@ -1146,7 +1139,6 @@ class _AppointmentRenderWidget extends MultiChildRenderObjectWidget {
         timeIntervalHeight,
         calendarTheme,
         isRTL,
-        appointmentHoverPosition,
         resourceCollection,
         resourceItemHeight,
         textScaleFactor,
@@ -1171,7 +1163,6 @@ class _AppointmentRenderWidget extends MultiChildRenderObjectWidget {
       ..timeIntervalHeight = timeIntervalHeight
       ..calendarTheme = calendarTheme
       ..isRTL = isRTL
-      ..appointmentHoverPosition = appointmentHoverPosition
       ..resourceCollection = resourceCollection
       ..resourceItemHeight = resourceItemHeight
       ..textScaleFactor = textScaleFactor
@@ -1195,7 +1186,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
       this._timeIntervalHeight,
       this._calendarTheme,
       this._isRTL,
-      this._appointmentHoverPosition,
       this._resourceCollection,
       this._resourceItemHeight,
       this._textScaleFactor,
@@ -1223,21 +1213,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
     } else {
       markNeedsLayout();
     }
-  }
-
-  ValueNotifier<Offset?> _appointmentHoverPosition;
-
-  ValueNotifier<Offset?> get appointmentHoverPosition =>
-      _appointmentHoverPosition;
-
-  set appointmentHoverPosition(ValueNotifier<Offset?> value) {
-    if (_appointmentHoverPosition == value) {
-      return;
-    }
-
-    _appointmentHoverPosition.removeListener(markNeedsPaint);
-    _appointmentHoverPosition = value;
-    _appointmentHoverPosition.addListener(markNeedsPaint);
   }
 
   double _weekNumberPanelWidth;
@@ -1429,13 +1404,11 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    _appointmentHoverPosition.addListener(markNeedsPaint);
   }
 
   /// detach will called when the render object removed from view.
   @override
   void detach() {
-    _appointmentHoverPosition.removeListener(markNeedsPaint);
     super.detach();
   }
 
@@ -1643,8 +1616,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
             child,
             Offset(appointmentView.appointmentRect!.left,
                 appointmentView.appointmentRect!.top));
-        _updateAppointmentHovering(
-            appointmentView.appointmentRect!, context.canvas);
 
         child = childAfter(child);
       }
@@ -1664,7 +1635,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         final RRect moreRegionRect = monthAppointmentCountViews[keys[i]]!;
         context.paintChild(
             child, Offset(moreRegionRect.left, moreRegionRect.top));
-        _updateAppointmentHovering(moreRegionRect, context.canvas);
 
         child = childAfter(child);
       }
@@ -1841,7 +1811,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
             forwardSpanIconSize,
             backwardSpanIconSize,
             paint);
-        _updateAppointmentHovering(appointmentRect, canvas);
       }
     }
 
@@ -1875,8 +1844,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
           startXPosition += padding + (2 * radius);
         }
       }
-
-      _updateAppointmentHovering(moreRegionRect, canvas);
     }
   }
 
@@ -2123,25 +2090,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
     return appointmentCollection;
   }
 
-  void _updateAppointmentHovering(RRect rect, Canvas canvas) {
-    final Offset? hoverPosition = appointmentHoverPosition.value;
-    if (hoverPosition == null) {
-      return;
-    }
-
-    if (rect.left < hoverPosition.dx &&
-        rect.right > hoverPosition.dx &&
-        rect.top < hoverPosition.dy &&
-        rect.bottom > hoverPosition.dy) {
-      _appointmentPainter.color =
-          calendarTheme.selectionBorderColor!.withOpacity(0.4);
-      _appointmentPainter.strokeWidth = 2;
-      _appointmentPainter.style = PaintingStyle.stroke;
-      canvas.drawRRect(rect, _appointmentPainter);
-      _appointmentPainter.style = PaintingStyle.fill;
-    }
-  }
-
   void _drawDayAppointments(Canvas canvas, Size size, Paint paint) {
     const int textStartPadding = 3;
 
@@ -2199,27 +2147,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
       maxTextWidth = maxTextWidth > 0 ? maxTextWidth : 0;
       _textPainter.layout(maxWidth: maxTextWidth);
 
-      /// minIntrinsicWidth property in text painter used to get the
-      /// minimum text width of the text.
-      /// eg., The text as 'Meeting' and it rendered in two lines and
-      /// first line has 'Meet' text and second line has 'ing' text then it
-      /// return second lines width.
-      /// We are using the minIntrinsicWidth to restrict the text rendering
-      /// when the appointment view bound does not hold single letter.
-      final double textWidth = appointmentRect.width - textStartPadding;
-      if (textWidth < _textPainter.minIntrinsicWidth &&
-          textWidth < _textPainter.width &&
-          textWidth < (appointmentTextStyle.fontSize ?? 15) * textScaleFactor) {
-        _updateAppointmentHovering(appointmentRect, canvas);
-
-        continue;
-      }
-
-      if ((_textPainter.maxLines == 1 || _textPainter.maxLines == null) &&
-          _textPainter.height > totalHeight) {
-        _updateAppointmentHovering(appointmentRect, canvas);
-        continue;
-      }
 
       if (isRTL) {
         xPosition +=
@@ -2256,8 +2183,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
             isRecurrenceAppointment,
             appointmentTextStyle);
       }
-
-      _updateAppointmentHovering(appointmentRect, canvas);
     }
   }
 
@@ -2454,14 +2379,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         _textPainter.textWidthBasis = TextWidthBasis.parent;
       }
 
-      //// left and right side padding value 2 subtracted in appointment width
-      _textPainter.layout(maxWidth: maxWidth);
-      if ((_textPainter.maxLines == null || _textPainter.maxLines == 1) &&
-          _textPainter.height > totalHeight) {
-        _updateAppointmentHovering(appointmentRect, canvas);
-        continue;
-      }
-
       final double xPosition = isRTL
           ? appointmentRect.right -
               backwardSpanIconSize -
@@ -2528,8 +2445,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
               appointmentTextStyle);
         }
       }
-
-      _updateAppointmentHovering(appointmentRect, canvas);
     }
   }
 

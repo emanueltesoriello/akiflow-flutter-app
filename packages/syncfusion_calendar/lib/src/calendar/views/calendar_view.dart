@@ -870,7 +870,6 @@ class _CustomCalendarScrollViewState extends State<CustomCalendarScrollView>
       _dragDetails.value.position.value = null;
       return;
     }
-    currentState._removeAllWidgetHovering();
     appointmentView = appointmentView.clone();
     _handleAppointmentDragStart(
         appointmentView,
@@ -5540,10 +5539,6 @@ class _CalendarViewState extends State<_CalendarView>
   ValueNotifier<SelectionDetails?> _allDaySelectionNotifier =
       ValueNotifier<SelectionDetails?>(null);
   late ValueNotifier<Offset?> _viewHeaderNotifier;
-  final ValueNotifier<Offset?> _calendarCellNotifier =
-          ValueNotifier<Offset?>(null),
-      _allDayNotifier = ValueNotifier<Offset?>(null),
-      _appointmentHoverNotifier = ValueNotifier<Offset?>(null);
   final ValueNotifier<bool> _selectionNotifier = ValueNotifier<bool>(false),
       _timelineViewHeaderNotifier = ValueNotifier<bool>(false);
   late bool _isRTL;
@@ -5587,7 +5582,7 @@ class _CalendarViewState extends State<_CalendarView>
     if (!CalendarViewHelper.isTimelineView(widget.view) &&
         widget.view != CalendarView.month) {
       _animationController = AnimationController(
-          duration: const Duration(milliseconds: 200), vsync: this);
+          duration: const Duration(milliseconds: 100), vsync: this);
       _heightAnimation =
           CurveTween(curve: Curves.easeIn).animate(_animationController!)
             ..addListener(() {
@@ -5771,8 +5766,6 @@ class _CalendarViewState extends State<_CalendarView>
   void dispose() {
     _viewHeaderNotifier.removeListener(_timelineViewHoveringUpdate);
 
-    _calendarCellNotifier.removeListener(_timelineViewHoveringUpdate);
-
     if (_timelineViewAnimation != null) {
       _timelineViewAnimation!.removeListener(_scrollAnimationListener);
     }
@@ -5888,12 +5881,7 @@ class _CalendarViewState extends State<_CalendarView>
   }
 
   Widget _getMonthView() {
-    return MouseRegion(
-      cursor: _mouseCursor,
-      onEnter: _pointerEnterEvent,
-      onExit: _pointerExitEvent,
-      onHover: _pointerHoverEvent,
-      child: Stack(children: <Widget>[
+    return Stack(children: <Widget>[
         GestureDetector(
           onTapUp: _handleOnTapForMonth,
           child: SizedBox(
@@ -5902,8 +5890,7 @@ class _CalendarViewState extends State<_CalendarView>
               child: _addMonthView(_isRTL, widget.locale)),
         ),
         _getResizeShadowView()
-      ]),
-    );
+      ]);
   }
 
   Widget _getDayView() {
@@ -5930,12 +5917,7 @@ class _CalendarViewState extends State<_CalendarView>
 
     _updateAllDayHeight(isCurrentView);
 
-    return MouseRegion(
-      cursor: _mouseCursor,
-      onEnter: _pointerEnterEvent,
-      onHover: _pointerHoverEvent,
-      onExit: _pointerExitEvent,
-      child: Stack(
+    return Stack(
         children: <Widget>[
           GestureDetector(
             onTapUp: _handleOnTapForDay,
@@ -5951,8 +5933,7 @@ class _CalendarViewState extends State<_CalendarView>
           ),
           _getResizeShadowView()
         ],
-      ),
-    );
+      );
   }
 
   /// Method to update alldayHeight calculation for day, week and work week
@@ -5975,12 +5956,7 @@ class _CalendarViewState extends State<_CalendarView>
   }
 
   Widget _getTimelineView() {
-    return MouseRegion(
-        cursor: _mouseCursor,
-        onEnter: _pointerEnterEvent,
-        onHover: _pointerHoverEvent,
-        onExit: _pointerExitEvent,
-        child: Stack(children: <Widget>[
+    return Stack(children: <Widget>[
           GestureDetector(
             onTapUp: _handleOnTapForTimeline,
             child: SizedBox(
@@ -5994,7 +5970,7 @@ class _CalendarViewState extends State<_CalendarView>
             ),
           ),
           _getResizeShadowView()
-        ]));
+        ]);
   }
 
   void _timelineViewHoveringUpdate() {
@@ -6396,7 +6372,6 @@ class _CalendarViewState extends State<_CalendarView>
         _isRTL,
         widget.calendarTheme,
         _allDaySelectionNotifier,
-        _allDayNotifier,
         widget.textScaleFactor,
         widget.isMobilePlatform,
         widget.width,
@@ -6437,7 +6412,6 @@ class _CalendarViewState extends State<_CalendarView>
       _timeIntervalHeight,
       widget.calendarTheme,
       _isRTL,
-      _appointmentHoverNotifier,
       widget.resourceCollection,
       resourceItemHeight,
       widget.textScaleFactor,
@@ -8180,7 +8154,6 @@ class _CalendarViewState extends State<_CalendarView>
         widget.calendar.todayTextStyle,
         widget.calendar.cellBorderColor,
         widget.calendarTheme,
-        _calendarCellNotifier,
         widget.calendar.monthViewSettings.showTrailingAndLeadingDates,
         widget.calendar.minDate,
         widget.calendar.maxDate,
@@ -8362,7 +8335,6 @@ class _CalendarViewState extends State<_CalendarView>
                                   widget.calendar.timeSlotViewSettings,
                                   isRTL,
                                   widget.regions,
-                                  _calendarCellNotifier,
                                   widget.textScaleFactor,
                                   widget.calendar.timeRegionBuilder,
                                   width,
@@ -8555,7 +8527,6 @@ class _CalendarViewState extends State<_CalendarView>
                                                 widget.calendar.cellBorderColor,
                                                 _isRTL,
                                                 widget.calendarTheme,
-                                                _calendarCellNotifier,
                                                 _scrollController!,
                                                 widget.regions,
                                                 resourceItemHeight,
@@ -10026,212 +9997,6 @@ class _CalendarViewState extends State<_CalendarView>
     }
   }
 
-  void _updateHoveringForAppointment(double xPosition, double yPosition) {
-    if (_viewHeaderNotifier.value != null) {
-      _viewHeaderNotifier.value = null;
-    }
-
-    if (_calendarCellNotifier.value != null) {
-      _calendarCellNotifier.value = null;
-    }
-
-    if (_allDayNotifier.value != null) {
-      _allDayNotifier.value = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-
-    if (_hoveringDate != null) {
-      _hoveringDate = null;
-    }
-
-    _appointmentHoverNotifier.value = Offset(xPosition, yPosition);
-  }
-
-  void _updateHoveringForAllDayPanel(double xPosition, double yPosition) {
-    if (_viewHeaderNotifier.value != null) {
-      _viewHeaderNotifier.value = null;
-    }
-
-    if (_calendarCellNotifier.value != null) {
-      _hoveringDate = null;
-      _calendarCellNotifier.value = null;
-    }
-
-    if (_appointmentHoverNotifier.value != null) {
-      _appointmentHoverNotifier.value = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-
-    if (_hoveringDate != null) {
-      _hoveringDate = null;
-    }
-
-    _allDayNotifier.value = Offset(xPosition, yPosition);
-  }
-
-  /// Removes the view header hovering in multiple occasions, when the pointer
-  /// hovering the disabled or blackout dates, and when the pointer moves out
-  /// of the view header.
-  void _removeViewHeaderHovering() {
-    if (_hoveringDate != null) {
-      _hoveringDate = null;
-    }
-
-    if (_viewHeaderNotifier.value != null) {
-      _viewHeaderNotifier.value = null;
-    }
-  }
-
-  void _removeAllWidgetHovering() {
-    if (_hoveringDate != null) {
-      _hoveringDate = null;
-    }
-
-    if (_viewHeaderNotifier.value != null) {
-      _viewHeaderNotifier.value = null;
-    }
-
-    if (_calendarCellNotifier.value != null) {
-      _hoveringDate = null;
-      _calendarCellNotifier.value = null;
-    }
-
-    if (_allDayNotifier.value != null) {
-      _allDayNotifier.value = null;
-      _hoveringAppointmentView = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-
-    if (_appointmentHoverNotifier.value != null) {
-      _appointmentHoverNotifier.value = null;
-      _hoveringAppointmentView = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-  }
-
-  void _updateHoveringForViewHeader(Offset localPosition, double xPosition,
-      double yPosition, double viewHeaderHeight) {
-    if (widget.calendar.onTap == null && widget.calendar.onLongPress == null) {
-      final bool isViewNavigationEnabled =
-          widget.calendar.allowViewNavigation &&
-              widget.view != CalendarView.month &&
-              widget.view != CalendarView.day &&
-              widget.view != CalendarView.timelineDay;
-      if (!isViewNavigationEnabled) {
-        _removeAllWidgetHovering();
-        return;
-      }
-    }
-
-    if (yPosition < 0) {
-      if (_hoveringDate != null) {
-        _hoveringDate = null;
-      }
-
-      if (_viewHeaderNotifier.value != null) {
-        _viewHeaderNotifier.value = null;
-      }
-
-      if (_calendarCellNotifier.value != null) {
-        _calendarCellNotifier.value = null;
-      }
-
-      if (_allDayNotifier.value != null) {
-        _allDayNotifier.value = null;
-        _hoveringAppointmentView = null;
-        if (_mouseCursor != SystemMouseCursors.basic) {
-          setState(() {
-            _mouseCursor = SystemMouseCursors.basic;
-          });
-        }
-      }
-
-      if (_appointmentHoverNotifier.value != null) {
-        _appointmentHoverNotifier.value = null;
-        _hoveringAppointmentView = null;
-        if (_mouseCursor != SystemMouseCursors.basic) {
-          setState(() {
-            _mouseCursor = SystemMouseCursors.basic;
-          });
-        }
-      }
-    }
-
-    final DateTime? hoverDate = _getTappedViewHeaderDate(
-        Offset(
-            CalendarViewHelper.isTimelineView(widget.view)
-                ? localPosition.dx
-                : xPosition,
-            yPosition),
-        widget.width);
-
-    // Remove the hovering when the position not in cell regions.
-    if (hoverDate == null) {
-      _removeViewHeaderHovering();
-
-      return;
-    }
-
-    if (!isDateWithInDateRange(
-        widget.calendar.minDate, widget.calendar.maxDate, hoverDate)) {
-      _removeViewHeaderHovering();
-
-      return;
-    }
-
-    if (widget.view == CalendarView.timelineMonth &&
-        CalendarViewHelper.isDateInDateCollection(
-            widget.blackoutDates, hoverDate)) {
-      _removeViewHeaderHovering();
-
-      return;
-    }
-
-    _hoveringDate = hoverDate;
-
-    if (_calendarCellNotifier.value != null) {
-      _calendarCellNotifier.value = null;
-    }
-
-    if (_allDayNotifier.value != null) {
-      _allDayNotifier.value = null;
-      _hoveringAppointmentView = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-
-    if (_appointmentHoverNotifier.value != null) {
-      _appointmentHoverNotifier.value = null;
-      _hoveringAppointmentView = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-
-    _viewHeaderNotifier.value = Offset(xPosition, yPosition);
-  }
-
   void _updateDraggingMouseCursor(bool isDragging) {
     if (_mouseCursor != SystemMouseCursors.move && isDragging) {
       setState(() {
@@ -10383,368 +10148,6 @@ class _CalendarViewState extends State<_CalendarView>
         });
       }
     }
-  }
-
-  void _updatePointerHover(Offset globalPosition) {
-    if (widget.isMobilePlatform ||
-        _resizingDetails.value.appointmentView != null ||
-        widget.dragDetails.value.appointmentView != null &&
-            widget.calendar.appointmentBuilder == null) {
-      return;
-    }
-
-    // ignore: avoid_as
-    final RenderBox box = context.findRenderObject()! as RenderBox;
-    final Offset localPosition = box.globalToLocal(globalPosition);
-    double viewHeaderHeight = CalendarViewHelper.getViewHeaderHeight(
-        widget.calendar.viewHeaderHeight, widget.view);
-    final double timeLabelWidth = CalendarViewHelper.getTimeLabelWidth(
-        widget.calendar.timeSlotViewSettings.timeRulerSize, widget.view);
-    double allDayHeight = _isExpanded
-        ? _updateCalendarStateDetails.allDayPanelHeight
-        : _allDayHeight;
-
-    /// All day panel and view header are arranged horizontally,
-    /// so get the maximum value from all day height and view header height and
-    /// use the value instead of adding of view header height and all day
-    /// height.
-
-
-    double xPosition;
-    double yPosition;
-    final bool isTimelineViews = CalendarViewHelper.isTimelineView(widget.view);
-    if (widget.view != CalendarView.month && !isTimelineViews) {
-      /// In LTR, remove the time ruler width value from the
-      /// touch x position while calculate the selected date from position.
-      xPosition = _isRTL ? localPosition.dx : localPosition.dx - timeLabelWidth;
-
-      if (localPosition.dy < viewHeaderHeight) {
-        _updateHoveringForViewHeader(localPosition, localPosition.dx,
-            localPosition.dy, viewHeaderHeight);
-        return;
-      }
-
-      double panelHeight =
-          _updateCalendarStateDetails.allDayPanelHeight - _allDayHeight;
-      if (panelHeight < 0) {
-        panelHeight = 0;
-      }
-
-      final double allDayExpanderHeight =
-          panelHeight * _allDayExpanderAnimation!.value;
-      final double allDayBottom =
-       viewHeaderHeight + _allDayHeight + allDayExpanderHeight;
-      if (localPosition.dy > viewHeaderHeight &&
-          localPosition.dy < allDayBottom) {
-        if ((_isRTL && localPosition.dx < widget.width - timeLabelWidth) ||
-            (!_isRTL && localPosition.dx > timeLabelWidth)) {
-          _updateHoveringForAllDayPanel(
-              localPosition.dx, localPosition.dy - viewHeaderHeight);
-          final AppointmentView? appointment = _getAllDayAppointmentOnPoint(
-              _updateCalendarStateDetails.allDayAppointmentViewCollection,
-              localPosition.dx,
-              localPosition.dy - viewHeaderHeight);
-          _updateMouseCursorForAppointment(appointment, localPosition.dx,
-              localPosition.dy - viewHeaderHeight, isTimelineViews,
-              isAllDayPanel: true);
-        } else {
-          _removeAllWidgetHovering();
-        }
-
-        return;
-      }
-
-      yPosition = localPosition.dy - (viewHeaderHeight + allDayHeight);
-
-      final AppointmentView? appointment =
-          _appointmentLayout.getAppointmentViewOnPoint(
-              localPosition.dx, yPosition + _scrollController!.offset);
-      _hoveringAppointmentView = appointment;
-      if (appointment != null) {
-        _updateHoveringForAppointment(
-            localPosition.dx, yPosition + _scrollController!.offset);
-        _updateMouseCursorForAppointment(appointment, localPosition.dx,
-            yPosition + _scrollController!.offset, isTimelineViews);
-        _hoveringDate = null;
-        return;
-      }
-    } else {
-      xPosition = localPosition.dx;
-
-      /// Remove the hovering when the position not in week number panel.
-      if (widget.calendar.showWeekNumber && widget.view == CalendarView.month) {
-        final double weekNumberPanelWidth =
-            CalendarViewHelper.getWeekNumberPanelWidth(
-                widget.calendar.showWeekNumber,
-                widget.width,
-                widget.isMobilePlatform);
-        if ((!_isRTL && xPosition < weekNumberPanelWidth) ||
-            (_isRTL && xPosition > widget.width - weekNumberPanelWidth)) {
-          _hoveringDate = null;
-          _calendarCellNotifier.value = null;
-          _viewHeaderNotifier.value = null;
-          _appointmentHoverNotifier.value = null;
-          if (_mouseCursor != SystemMouseCursors.basic) {
-            setState(() {
-              _mouseCursor = SystemMouseCursors.basic;
-            });
-          }
-          _allDayNotifier.value = null;
-          _hoveringAppointmentView = null;
-          return;
-        }
-      }
-
-      /// Update the x position value with scroller offset and the value
-      /// assigned to mouse hover position.
-      /// mouse hover position value used for highlight the position
-      /// on all the calendar views.
-      if (isTimelineViews) {
-        if (_isRTL) {
-          xPosition = (_getSingleViewWidthForTimeLineView(this) *
-                  widget.visibleDates.length) -
-              (_scrollController!.offset +
-                  (_scrollController!.position.viewportDimension -
-                      localPosition.dx));
-        } else {
-          xPosition = localPosition.dx + _scrollController!.offset;
-        }
-      }
-
-      if (localPosition.dy < viewHeaderHeight) {
-        _updateHoveringForViewHeader(
-            localPosition, xPosition, localPosition.dy, viewHeaderHeight);
-        return;
-      }
-
-      yPosition = localPosition.dy - viewHeaderHeight - timeLabelWidth;
-      if (CalendarViewHelper.isResourceEnabled(
-          widget.calendar.dataSource, widget.view)) {
-        yPosition += _timelineViewVerticalScrollController!.offset;
-      }
-
-      final AppointmentView? appointment =
-          _appointmentLayout.getAppointmentViewOnPoint(xPosition, yPosition);
-      _hoveringAppointmentView = appointment;
-      if (appointment != null) {
-        _updateHoveringForAppointment(xPosition, yPosition);
-        _updateMouseCursorForAppointment(
-            appointment, xPosition, yPosition, isTimelineViews);
-        _hoveringDate = null;
-        return;
-      }
-    }
-
-    /// Remove the hovering when the position not in cell regions.
-    if (yPosition < 0) {
-      if (_hoveringDate != null) {
-        _hoveringDate = null;
-      }
-
-      if (_calendarCellNotifier.value != null) {
-        _calendarCellNotifier.value = null;
-      }
-
-      return;
-    }
-
-    final DateTime? hoverDate = _getDateFromPosition(
-        isTimelineViews ? localPosition.dx : xPosition,
-        yPosition,
-        timeLabelWidth);
-
-    /// Remove the hovering when the position not in cell regions or non active
-    /// cell regions.
-    final bool isMonthView = widget.view == CalendarView.month ||
-        widget.view == CalendarView.timelineMonth;
-    final int timeInterval = CalendarViewHelper.getTimeInterval(
-        widget.calendar.timeSlotViewSettings);
-    if (hoverDate == null ||
-        (isMonthView &&
-            !isDateWithInDateRange(
-                widget.calendar.minDate, widget.calendar.maxDate, hoverDate)) ||
-        (!isMonthView &&
-            !CalendarViewHelper.isDateTimeWithInDateTimeRange(
-                widget.calendar.minDate,
-                widget.calendar.maxDate,
-                hoverDate,
-                timeInterval))) {
-      if (_hoveringDate != null) {
-        _hoveringDate = null;
-      }
-
-      if (_calendarCellNotifier.value != null) {
-        _calendarCellNotifier.value = null;
-      }
-
-      return;
-    }
-
-    /// Check the hovering month cell date is blackout date.
-    if (isMonthView &&
-        CalendarViewHelper.isDateInDateCollection(
-            widget.blackoutDates, hoverDate)) {
-      if (_hoveringDate != null) {
-        _hoveringDate = null;
-      }
-
-      /// Remove the existing cell hovering.
-      if (_calendarCellNotifier.value != null) {
-        _calendarCellNotifier.value = null;
-      }
-
-      /// Remove the existing appointment hovering.
-      if (_appointmentHoverNotifier.value != null) {
-        _appointmentHoverNotifier.value = null;
-        _hoveringAppointmentView = null;
-        if (_mouseCursor != SystemMouseCursors.basic) {
-          setState(() {
-            _mouseCursor = SystemMouseCursors.basic;
-          });
-        }
-      }
-
-      return;
-    }
-
-    final int hoveringResourceIndex =
-        _getSelectedResourceIndex(yPosition, viewHeaderHeight, timeLabelWidth);
-
-    /// Restrict the hovering, while selected region as disabled [TimeRegion].
-    if (((widget.view == CalendarView.day ||
-                widget.view == CalendarView.week ||
-                widget.view == CalendarView.workWeek) &&
-            !_isEnabledRegion(yPosition, hoverDate, hoveringResourceIndex)) ||
-        (isTimelineViews &&
-            !_isEnabledRegion(
-                localPosition.dx, hoverDate, hoveringResourceIndex))) {
-      if (_hoveringDate != null) {
-        _hoveringDate = null;
-      }
-
-      if (_calendarCellNotifier.value != null) {
-        _calendarCellNotifier.value = null;
-      }
-      return;
-    }
-
-    final int currentMonth =
-        widget.visibleDates[widget.visibleDates.length ~/ 2].month;
-
-    /// Check the selected cell date as trailing or leading date when
-    /// [SfCalendar] month not shown leading and trailing dates.
-    if (isMonthView &&
-        !CalendarViewHelper.isCurrentMonthDate(
-            widget.calendar.monthViewSettings.numberOfWeeksInView,
-            widget.calendar.monthViewSettings.showTrailingAndLeadingDates,
-            currentMonth,
-            hoverDate)) {
-      if (_hoveringDate != null) {
-        _hoveringDate = null;
-      }
-
-      /// Remove the existing cell hovering.
-      if (_calendarCellNotifier.value != null) {
-        _calendarCellNotifier.value = null;
-      }
-
-      /// Remove the existing appointment hovering.
-      if (_appointmentHoverNotifier.value != null) {
-        _appointmentHoverNotifier.value = null;
-        _hoveringAppointmentView = null;
-        if (_mouseCursor != SystemMouseCursors.basic) {
-          setState(() {
-            _mouseCursor = SystemMouseCursors.basic;
-          });
-        }
-      }
-
-      return;
-    }
-
-    final bool isResourceEnabled = CalendarViewHelper.isResourceEnabled(
-        widget.calendar.dataSource, widget.view);
-
-    /// If resource enabled the selected date or time slot can be same but the
-    /// resource value differs hence to handle this scenario we are excluding
-    /// the following conditions, if resource enabled.
-    if (!isResourceEnabled) {
-      if ((widget.view == CalendarView.month &&
-              isSameDate(_hoveringDate, hoverDate) &&
-              _viewHeaderNotifier.value == null) ||
-          (widget.view != CalendarView.month &&
-              CalendarViewHelper.isSameTimeSlot(_hoveringDate, hoverDate) &&
-              _viewHeaderNotifier.value == null)) {
-        return;
-      }
-    }
-
-    _hoveringDate = hoverDate;
-
-    if (widget.view == CalendarView.month &&
-        isSameDate(_selectionPainter!.selectedDate, _hoveringDate)) {
-      _calendarCellNotifier.value = null;
-      return;
-    } else if (widget.view != CalendarView.month &&
-        CalendarViewHelper.isSameTimeSlot(
-            _selectionPainter!.selectedDate, _hoveringDate) &&
-        hoveringResourceIndex == _selectedResourceIndex) {
-      _calendarCellNotifier.value = null;
-      return;
-    }
-
-    if (widget.view != CalendarView.month && !isTimelineViews) {
-      yPosition += _scrollController!.offset;
-    }
-
-    if (_viewHeaderNotifier.value != null) {
-      _viewHeaderNotifier.value = null;
-    }
-
-    if (_allDayNotifier.value != null) {
-      _allDayNotifier.value = null;
-      _hoveringAppointmentView = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-
-    if (_appointmentHoverNotifier.value != null) {
-      _appointmentHoverNotifier.value = null;
-      _hoveringAppointmentView = null;
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-
-    _calendarCellNotifier.value = Offset(xPosition, yPosition);
-  }
-
-  void _pointerEnterEvent(PointerEnterEvent event) {
-    _updatePointerHover(event.position);
-  }
-
-  void _pointerHoverEvent(PointerHoverEvent event) {
-    _updatePointerHover(event.position);
-  }
-
-  void _pointerExitEvent(PointerExitEvent event) {
-    _hoveringDate = null;
-    _calendarCellNotifier.value = null;
-    _viewHeaderNotifier.value = null;
-    _appointmentHoverNotifier.value = null;
-    if (_mouseCursor != SystemMouseCursors.basic &&
-        _resizingDetails.value.appointmentView == null) {
-      setState(() {
-        _mouseCursor = SystemMouseCursors.basic;
-      });
-    }
-    _allDayNotifier.value = null;
-    _hoveringAppointmentView = null;
   }
 
   AppointmentView? _getAllDayAppointmentOnPoint(

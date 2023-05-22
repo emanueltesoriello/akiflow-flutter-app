@@ -24,7 +24,6 @@ class TimeSlotWidget extends StatefulWidget {
       this.timeSlotViewSettings,
       this.isRTL,
       this.specialRegion,
-      this.calendarCellNotifier,
       this.textScaleFactor,
       this.timeRegionBuilder,
       this.width,
@@ -55,9 +54,6 @@ class TimeSlotWidget extends StatefulWidget {
 
   /// Defines the direction of the calendar widget is RTL or not.
   final bool isRTL;
-
-  /// Used to draw the hovering on time slot view.
-  final ValueNotifier<Offset?> calendarCellNotifier;
 
   /// Defines the special time region for the current time slot view.
   final List<CalendarTimeRegion>? specialRegion;
@@ -142,7 +138,6 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
       widget.timeSlotViewSettings,
       widget.isRTL,
       widget.specialRegion,
-      widget.calendarCellNotifier,
       widget.textScaleFactor,
       widget.width,
       widget.height,
@@ -292,7 +287,6 @@ class _TimeSlotRenderWidget extends MultiChildRenderObjectWidget {
       this.timeSlotViewSettings,
       this.isRTL,
       this.specialRegion,
-      this.calendarCellNotifier,
       this.textScaleFactor,
       this.width,
       this.height,
@@ -310,7 +304,6 @@ class _TimeSlotRenderWidget extends MultiChildRenderObjectWidget {
   final SfCalendarThemeData calendarTheme;
   final TimeSlotViewSettings timeSlotViewSettings;
   final bool isRTL;
-  final ValueNotifier<Offset?> calendarCellNotifier;
   final List<CalendarTimeRegion>? specialRegion;
   final double textScaleFactor;
   final double width;
@@ -331,7 +324,6 @@ class _TimeSlotRenderWidget extends MultiChildRenderObjectWidget {
         timeSlotViewSettings,
         isRTL,
         specialRegion,
-        calendarCellNotifier,
         textScaleFactor,
         width,
         height,
@@ -353,7 +345,6 @@ class _TimeSlotRenderWidget extends MultiChildRenderObjectWidget {
       ..timeSlotViewSettings = timeSlotViewSettings
       ..isRTL = isRTL
       ..specialRegion = specialRegion
-      ..calendarCellNotifier = calendarCellNotifier
       ..textScaleFactor = textScaleFactor
       ..width = width
       ..height = height
@@ -374,7 +365,6 @@ class _TimeSlotRenderObject extends CustomCalendarRenderObject {
       this._timeSlotViewSettings,
       this._isRTL,
       this._specialRegion,
-      this._calendarCellNotifier,
       this._textScaleFactor,
       this._width,
       this._height,
@@ -506,20 +496,6 @@ class _TimeSlotRenderObject extends CustomCalendarRenderObject {
     markNeedsPaint();
   }
 
-  ValueNotifier<Offset?> _calendarCellNotifier;
-
-  ValueNotifier<Offset?> get calendarCellNotifier => _calendarCellNotifier;
-
-  set calendarCellNotifier(ValueNotifier<Offset?> value) {
-    if (_calendarCellNotifier == value) {
-      return;
-    }
-
-    _calendarCellNotifier.removeListener(markNeedsPaint);
-    _calendarCellNotifier = value;
-    _calendarCellNotifier.addListener(markNeedsPaint);
-  }
-
   double _width;
 
   double get width => _width;
@@ -612,13 +588,11 @@ class _TimeSlotRenderObject extends CustomCalendarRenderObject {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    _calendarCellNotifier.addListener(markNeedsPaint);
   }
 
   /// detach will called when the render object removed from view.
   @override
   void detach() {
-    _calendarCellNotifier.removeListener(markNeedsPaint);
     super.detach();
   }
 
@@ -761,35 +735,6 @@ class _TimeSlotRenderObject extends CustomCalendarRenderObject {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), _linePainter);
       x += _cellWidth;
     }
-
-    if (calendarCellNotifier.value != null) {
-      _addMouseHoveringForTimeSlot(canvas, size);
-    }
-  }
-
-  void _addMouseHoveringForTimeSlot(Canvas canvas, Size size) {
-    const double strokeWidth = 2;
-    const double padding = strokeWidth / 2;
-    double left = (calendarCellNotifier.value!.dx ~/ _cellWidth) * _cellWidth;
-    double top = (calendarCellNotifier.value!.dy ~/ timeIntervalHeight) *
-        timeIntervalHeight;
-    _linePainter.style = PaintingStyle.stroke;
-    _linePainter.strokeWidth = strokeWidth;
-    _linePainter.color = calendarTheme.selectionBorderColor!.withOpacity(0.4);
-    left += isRTL ? 0 : timeLabelWidth;
-    double height = timeIntervalHeight;
-    if (top == 0) {
-      top = padding;
-      height -= padding;
-    }
-
-    canvas.drawRect(
-        Rect.fromLTWH(
-            left,
-            top,
-            left + _cellWidth == size.width ? _cellWidth - padding : _cellWidth,
-            top + height == size.height ? height - padding : height),
-        _linePainter);
   }
 
   void _addSpecialRegions(Canvas canvas) {

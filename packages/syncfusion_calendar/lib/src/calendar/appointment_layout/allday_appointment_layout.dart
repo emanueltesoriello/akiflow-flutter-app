@@ -24,7 +24,6 @@ class AllDayAppointmentLayout extends StatefulWidget {
       this.isRTL,
       this.calendarTheme,
       this.repaintNotifier,
-      this.allDayHoverPosition,
       this.textScaleFactor,
       this.isMobilePlatform,
       this.width,
@@ -64,9 +63,6 @@ class AllDayAppointmentLayout extends StatefulWidget {
 
   /// Holds the theme data of the calendar widget.
   final SfCalendarThemeData calendarTheme;
-
-  /// Used to hold the all day appointment hovering position.
-  final ValueNotifier<Offset?> allDayHoverPosition;
 
   /// Defines the scale factor of the calendar widget.
   final double textScaleFactor;
@@ -243,7 +239,6 @@ class _AllDayAppointmentLayoutState extends State<AllDayAppointmentLayout> {
       widget.isRTL,
       widget.calendarTheme,
       widget.repaintNotifier,
-      widget.allDayHoverPosition,
       widget.textScaleFactor,
       widget.isMobilePlatform,
       widget.width,
@@ -428,7 +423,6 @@ class _AllDayAppointmentRenderWidget extends MultiChildRenderObjectWidget {
       this.isRTL,
       this.calendarTheme,
       this.repaintNotifier,
-      this.allDayHoverPosition,
       this.textScaleFactor,
       this.isMobilePlatform,
       this.width,
@@ -447,7 +441,6 @@ class _AllDayAppointmentRenderWidget extends MultiChildRenderObjectWidget {
   final double allDayPainterHeight;
   final bool isRTL;
   final SfCalendarThemeData calendarTheme;
-  final ValueNotifier<Offset?> allDayHoverPosition;
   final double textScaleFactor;
   final bool isMobilePlatform;
   final double height;
@@ -472,7 +465,6 @@ class _AllDayAppointmentRenderWidget extends MultiChildRenderObjectWidget {
         isRTL,
         calendarTheme,
         repaintNotifier,
-        allDayHoverPosition,
         textScaleFactor,
         isMobilePlatform,
         width,
@@ -499,7 +491,6 @@ class _AllDayAppointmentRenderWidget extends MultiChildRenderObjectWidget {
       ..isRTL = isRTL
       ..calendarTheme = calendarTheme
       ..selectionNotifier = repaintNotifier
-      ..allDayHoverPosition = allDayHoverPosition
       ..textScaleFactor = textScaleFactor
       ..isMobilePlatform = isMobilePlatform
       ..localizations = localizations
@@ -521,7 +512,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
       this._isRTL,
       this._calendarTheme,
       this._selectionNotifier,
-      this._allDayHoverPosition,
       this._textScaleFactor,
       this.isMobilePlatform,
       this._width,
@@ -729,20 +719,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
     markNeedsPaint();
   }
 
-  ValueNotifier<Offset?> _allDayHoverPosition;
-
-  ValueNotifier<Offset?> get allDayHoverPosition => _allDayHoverPosition;
-
-  set allDayHoverPosition(ValueNotifier<Offset?> value) {
-    if (_allDayHoverPosition == value) {
-      return;
-    }
-
-    _allDayHoverPosition.removeListener(markNeedsPaint);
-    _allDayHoverPosition = value;
-    _allDayHoverPosition.addListener(markNeedsPaint);
-  }
-
   ValueNotifier<SelectionDetails?> _selectionNotifier;
 
   ValueNotifier<SelectionDetails?> get selectionNotifier => _selectionNotifier;
@@ -781,7 +757,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    _allDayHoverPosition.addListener(markNeedsPaint);
     _selectionNotifier.addListener(markNeedsPaint);
   }
 
@@ -874,7 +849,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
   /// detach will called when the render object removed from view.
   @override
   void detach() {
-    _allDayHoverPosition.removeListener(markNeedsPaint);
     _selectionNotifier.removeListener(markNeedsPaint);
     super.detach();
   }
@@ -1019,8 +993,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
         _drawAllDayAppointmentView(context, offset, appointmentView);
       }
 
-      _addMouseHoveringForAppointment(context.canvas, rect);
-
       if (selectionNotifier.value != null &&
           selectionNotifier.value!.appointmentView != null &&
           selectionNotifier.value!.appointmentView == appointmentView &&
@@ -1062,10 +1034,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
 
     if (isExpandable) {
       _addExpandOrCollapseIcon(context.canvas, size, position);
-    }
-
-    if (!_isHoveringAppointment) {
-      _addMouseHoveringForAllDayPanel(context.canvas, size);
     }
   }
 
@@ -1302,20 +1270,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
                 (kAllDayAppointmentHeight - _expanderTextPainter.height) / 2));
   }
 
-  void _addMouseHoveringForAllDayPanel(Canvas canvas, Size size) {
-    if (allDayHoverPosition.value == null) {
-      return;
-    }
-    final int rowIndex =
-        (allDayHoverPosition.value!.dx - (isRTL ? 0 : timeLabelWidth)) ~/
-            _cellWidth;
-    final double leftPosition =
-        (rowIndex * _cellWidth) + (isRTL ? 0 : timeLabelWidth);
-    _rectPainter.color = Colors.grey.withOpacity(0.1);
-    canvas.drawRect(
-        Rect.fromLTWH(leftPosition, 0, _cellWidth, size.height), _rectPainter);
-  }
-
   void _addSelectionForAllDayPanel(Canvas canvas, Size size) {
     final int index = DateTimeHelper.getIndex(
         visibleDates, selectionNotifier.value!.selectedDate!);
@@ -1394,24 +1348,6 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
         selectionDecoration.createBoxPainter(_updateSelectionDecorationPainter);
     _boxPainter.paint(canvas, Offset(rect.left, rect.top),
         ImageConfiguration(size: rect.size));
-  }
-
-  void _addMouseHoveringForAppointment(Canvas canvas, RRect rect) {
-    if (allDayHoverPosition.value == null) {
-      return;
-    }
-
-    if (rect.left < allDayHoverPosition.value!.dx &&
-        rect.right > allDayHoverPosition.value!.dx &&
-        rect.top < allDayHoverPosition.value!.dy &&
-        rect.bottom > allDayHoverPosition.value!.dy) {
-      _rectPainter.color = calendarTheme.selectionBorderColor!.withOpacity(0.4);
-      _rectPainter.strokeWidth = 2;
-      _rectPainter.style = PaintingStyle.stroke;
-      canvas.drawRRect(rect, _rectPainter);
-      _rectPainter.style = PaintingStyle.fill;
-      _isHoveringAppointment = true;
-    }
   }
 
   void _addRecurrenceIcon(

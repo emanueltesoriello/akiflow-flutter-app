@@ -26,7 +26,6 @@ class TimelineWidget extends StatefulWidget {
       this.cellBorderColor,
       this.isRTL,
       this.calendarTheme,
-      this.calendarCellNotifier,
       this.scrollController,
       this.specialRegion,
       this.resourceItemHeight,
@@ -60,9 +59,6 @@ class TimelineWidget extends StatefulWidget {
 
   /// Defines the direction of the calendar widget is RTL or not.
   final bool isRTL;
-
-  /// Used to draw the hovering on timeline view.
-  final ValueNotifier<Offset?> calendarCellNotifier;
 
   /// Used to get the current scroll position of the timeline view.
   final ScrollController scrollController;
@@ -161,7 +157,6 @@ class _TimelineWidgetState extends State<TimelineWidget> {
       widget.cellBorderColor,
       widget.isRTL,
       widget.calendarTheme,
-      widget.calendarCellNotifier,
       widget.scrollController,
       widget.specialRegion,
       widget.resourceItemHeight,
@@ -349,7 +344,6 @@ class _TimelineRenderWidget extends MultiChildRenderObjectWidget {
       this.cellBorderColor,
       this.isRTL,
       this.calendarTheme,
-      this.calendarCellNotifier,
       this.scrollController,
       this.specialRegion,
       this.resourceItemHeight,
@@ -372,7 +366,6 @@ class _TimelineRenderWidget extends MultiChildRenderObjectWidget {
   final Color? cellBorderColor;
   final SfCalendarThemeData calendarTheme;
   final bool isRTL;
-  final ValueNotifier<Offset?> calendarCellNotifier;
   final ScrollController scrollController;
   final List<CalendarTimeRegion>? specialRegion;
   final double resourceItemHeight;
@@ -396,7 +389,6 @@ class _TimelineRenderWidget extends MultiChildRenderObjectWidget {
         cellBorderColor,
         isRTL,
         calendarTheme,
-        calendarCellNotifier,
         scrollController,
         specialRegion,
         resourceItemHeight,
@@ -422,7 +414,6 @@ class _TimelineRenderWidget extends MultiChildRenderObjectWidget {
       ..cellBorderColor = cellBorderColor
       ..isRTL = isRTL
       ..calendarTheme = calendarTheme
-      ..calendarCellNotifier = calendarCellNotifier
       ..scrollController = scrollController
       ..specialRegion = specialRegion
       ..resourceItemHeight = resourceItemHeight
@@ -447,7 +438,6 @@ class _TimelineRenderObject extends CustomCalendarRenderObject {
       this._cellBorderColor,
       this._isRTL,
       this._calendarTheme,
-      this._calendarCellNotifier,
       this.scrollController,
       this._specialRegion,
       this._resourceItemHeight,
@@ -587,20 +577,6 @@ class _TimelineRenderObject extends CustomCalendarRenderObject {
     markNeedsPaint();
   }
 
-  ValueNotifier<Offset?> _calendarCellNotifier;
-
-  ValueNotifier<Offset?> get calendarCellNotifier => _calendarCellNotifier;
-
-  set calendarCellNotifier(ValueNotifier<Offset?> value) {
-    if (_calendarCellNotifier == value) {
-      return;
-    }
-
-    _calendarCellNotifier.removeListener(markNeedsPaint);
-    _calendarCellNotifier = value;
-    _calendarCellNotifier.addListener(markNeedsPaint);
-  }
-
   double _width;
 
   double get width => _width;
@@ -709,13 +685,11 @@ class _TimelineRenderObject extends CustomCalendarRenderObject {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    _calendarCellNotifier.addListener(markNeedsPaint);
   }
 
   /// detach will called when the render object removed from view.
   @override
   void detach() {
-    _calendarCellNotifier.removeListener(markNeedsPaint);
     super.detach();
   }
 
@@ -914,49 +888,6 @@ class _TimelineRenderObject extends CustomCalendarRenderObject {
         startYPosition += resourceItemHeight;
       }
     }
-
-    if (calendarCellNotifier.value != null) {
-      _addMouseHovering(canvas, size, isResourceEnabled);
-    }
-  }
-
-  void _addMouseHovering(Canvas canvas, Size size, bool isResourceEnabled) {
-    double left = (calendarCellNotifier.value!.dx ~/ timeIntervalWidth) *
-        timeIntervalWidth;
-    double top = 0;
-    double height = size.height;
-    if (isResourceEnabled) {
-      final int index =
-          (calendarCellNotifier.value!.dy / resourceItemHeight).truncate();
-      top = index * resourceItemHeight;
-      height = resourceItemHeight;
-    }
-    const double padding = 0.5;
-    top = top == 0 ? padding : top;
-    height = height == size.height
-        ? top == padding
-            ? height - (padding * 2)
-            : height - padding
-        : height;
-    double width = timeIntervalWidth;
-    double difference = 0;
-    if (isRTL &&
-        (size.width - scrollController.offset) <
-            scrollController.position.viewportDimension) {
-      difference = scrollController.position.viewportDimension - size.width;
-    }
-
-    if ((size.width - scrollController.offset) <
-            scrollController.position.viewportDimension &&
-        (left + timeIntervalWidth).round() == size.width.round()) {
-      width -= padding;
-    }
-
-    _linePainter.style = PaintingStyle.stroke;
-    _linePainter.strokeWidth = 2;
-    _linePainter.color = calendarTheme.selectionBorderColor!.withOpacity(0.4);
-    left = left == 0 ? left - difference + padding : left - difference;
-    canvas.drawRect(Rect.fromLTWH(left, top, width, height), _linePainter);
   }
 
   /// Calculate the position for special regions and draw the special regions

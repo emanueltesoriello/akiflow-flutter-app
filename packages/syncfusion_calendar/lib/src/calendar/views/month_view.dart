@@ -25,7 +25,6 @@ class MonthViewWidget extends StatefulWidget {
       this.todayTextStyle,
       this.cellBorderColor,
       this.calendarTheme,
-      this.calendarCellNotifier,
       this.showTrailingAndLeadingDates,
       this.minDate,
       this.maxDate,
@@ -63,9 +62,6 @@ class MonthViewWidget extends StatefulWidget {
 
   /// Holds the theme data details for calendar.
   final SfCalendarThemeData calendarTheme;
-
-  /// Holds the current hovering point used to paint the hovering.
-  final ValueNotifier<Offset?> calendarCellNotifier;
 
   /// Defines the min date of the calendar.
   final DateTime minDate;
@@ -214,7 +210,6 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
       widget.todayTextStyle,
       widget.cellBorderColor,
       widget.calendarTheme,
-      widget.calendarCellNotifier,
       widget.minDate,
       widget.maxDate,
       widget.blackoutDates,
@@ -248,7 +243,6 @@ class _MonthViewRenderObjectWidget extends MultiChildRenderObjectWidget {
       this.todayTextStyle,
       this.cellBorderColor,
       this.calendarTheme,
-      this.calendarCellNotifier,
       this.minDate,
       this.maxDate,
       this.blackoutDates,
@@ -272,7 +266,6 @@ class _MonthViewRenderObjectWidget extends MultiChildRenderObjectWidget {
   final TextStyle? todayTextStyle;
   final Color? cellBorderColor;
   final SfCalendarThemeData calendarTheme;
-  final ValueNotifier<Offset?> calendarCellNotifier;
   final DateTime minDate;
   final DateTime maxDate;
   final List<DateTime>? blackoutDates;
@@ -297,7 +290,6 @@ class _MonthViewRenderObjectWidget extends MultiChildRenderObjectWidget {
         todayTextStyle,
         cellBorderColor,
         calendarTheme,
-        calendarCellNotifier,
         minDate,
         maxDate,
         blackoutDates,
@@ -324,7 +316,6 @@ class _MonthViewRenderObjectWidget extends MultiChildRenderObjectWidget {
       ..todayTextStyle = todayTextStyle
       ..cellBorderColor = cellBorderColor
       ..calendarTheme = calendarTheme
-      ..calendarCellNotifier = calendarCellNotifier
       ..minDate = minDate
       ..maxDate = maxDate
       ..blackoutDates = blackoutDates
@@ -350,7 +341,6 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
       this._todayTextStyle,
       this._cellBorderColor,
       this._calendarTheme,
-      this._calendarCellNotifier,
       this._minDate,
       this._maxDate,
       this._blackoutDates,
@@ -639,20 +629,6 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
     markNeedsPaint();
   }
 
-  ValueNotifier<Offset?> _calendarCellNotifier;
-
-  ValueNotifier<Offset?> get calendarCellNotifier => _calendarCellNotifier;
-
-  set calendarCellNotifier(ValueNotifier<Offset?> value) {
-    if (_calendarCellNotifier == value) {
-      return;
-    }
-
-    _calendarCellNotifier.removeListener(markNeedsPaint);
-    _calendarCellNotifier = value;
-    _calendarCellNotifier.addListener(markNeedsPaint);
-  }
-
   WeekNumberStyle _weekNumberStyle;
 
   WeekNumberStyle get weekNumberStyle => _weekNumberStyle;
@@ -691,13 +667,11 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    _calendarCellNotifier.addListener(markNeedsPaint);
   }
 
   /// detach will called when the render object removed from view.
   @override
   void detach() {
-    _calendarCellNotifier.removeListener(markNeedsPaint);
     super.detach();
   }
 
@@ -782,12 +756,6 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
             Offset(isRTL ? size.width - xPosition - cellWidth : xPosition,
                 yPosition));
         child = childAfter(child);
-
-        if (calendarCellNotifier.value != null &&
-            !_blackoutDatesIndex.contains(i)) {
-          _addMouseHovering(context.canvas, size, cellWidth, cellHeight,
-              isRTL ? xPosition - weekNumberPanelWidth : xPosition, yPosition);
-        }
 
         xPosition += cellWidth;
         if (xPosition + 1 >= size.width) {
@@ -1049,11 +1017,6 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
               xPosition, yPosition - viewPadding, cellWidth, cellHeight),
           _linePainter);
 
-      if (calendarCellNotifier.value != null && !isBlackoutDate) {
-        _addMouseHovering(canvas, size, cellWidth, cellHeight, xPosition,
-            yPosition - viewPadding);
-      }
-
       if (isCurrentDate) {
         _linePainter.style = PaintingStyle.fill;
         _linePainter.color = todayHighlightColor!;
@@ -1091,29 +1054,6 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
 
     _drawVerticalAndHorizontalLines(
         canvas, size, yPosition, xPosition, cellHeight, cellWidth);
-  }
-
-  void _addMouseHovering(Canvas canvas, Size size, double cellWidth,
-      double cellHeight, double xPosition, double yPosition) {
-    if (xPosition <= calendarCellNotifier.value!.dx &&
-        xPosition + cellWidth >= calendarCellNotifier.value!.dx &&
-        yPosition <= calendarCellNotifier.value!.dy &&
-        yPosition + cellHeight >= calendarCellNotifier.value!.dy) {
-      _linePainter.style = PaintingStyle.stroke;
-      _linePainter.strokeWidth = 2;
-      _linePainter.color = calendarTheme.selectionBorderColor!.withOpacity(0.4);
-      canvas.drawRect(
-          Rect.fromLTWH(
-              xPosition == 0 ? xPosition + linePadding : xPosition,
-              yPosition,
-              (xPosition + cellWidth).round() >= size.width
-                  ? cellWidth - linePadding - 1
-                  : cellWidth - 1,
-              (yPosition + cellHeight).round() >= size.height.round()
-                  ? cellHeight - 1 - linePadding
-                  : cellHeight - 1),
-          _linePainter);
-    }
   }
 
   void _drawVerticalAndHorizontalLines(Canvas canvas, Size size,
