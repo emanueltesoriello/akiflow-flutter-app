@@ -42,31 +42,27 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final handler = ShareHandlerPlatform.instance;
 
   handleDeeplinks(String path) {
-    if (Platform.isAndroid) {
-      if (path.isEmpty) {
-        return;
-      } else if (path.toLowerCase().contains('inbox')) {
-        print('deeplink inbox');
-        context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
-      } else if (path.toLowerCase().contains('calendar')) {
-        print('deeplink calendar');
-        context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
-      } else if (path.toLowerCase().contains('today')) {
-        print('deeplink today page');
-        context.read<MainCubit>().changeHomeView(HomeViewType.today);
-      } else if (path.toLowerCase().contains('createtask')) {
-        print('deeplink create task');
-        context.read<MainCubit>().changeHomeView(HomeViewType.today);
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => const CreateTaskModal(),
-        );
-      } else if (path.toLowerCase().contains('shareavailability')) {
-        print('deeplink share availability');
-        context.read<MainCubit>().changeHomeView(HomeViewType.availability);
-      }
-    } else {
+    if (path.isEmpty) {
       return;
+    } else if (path.toLowerCase().contains('inbox')) {
+      print('deeplink inbox');
+      context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+    } else if (path.toLowerCase().contains('calendar')) {
+      print('deeplink calendar');
+      context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
+    } else if (path.toLowerCase().contains('today')) {
+      print('deeplink today page');
+      context.read<MainCubit>().changeHomeView(HomeViewType.today);
+    } else if (path.toLowerCase().contains('createtask')) {
+      print('deeplink create task');
+      context.read<MainCubit>().changeHomeView(HomeViewType.today);
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => const CreateTaskModal(),
+      );
+    } else if (path.toLowerCase().contains('shareavailability')) {
+      print('deeplink share availability');
+      context.read<MainCubit>().changeHomeView(HomeViewType.availability);
     }
   }
 
@@ -76,7 +72,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       var media = await handler.getInitialSharedMedia();
       if (!mounted) return;
       if (media != null) {
-        if (media.content!.contains('link.akiflow.com')) {
+        if (media.content!.contains('link.akiflow.com') && Platform.isAndroid) {
           String path = Uri.parse(media.content!).path;
           handleDeeplinks(path);
         } else {
@@ -92,7 +88,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       handler.sharedMediaStream.listen((SharedMedia? media) {
         if (!mounted) return;
         if (media != null) {
-          if (media.content!.contains('link.akiflow.com')) {
+          if (media.content!.contains('link.akiflow.com') && Platform.isAndroid) {
             String path = Uri.parse(media.content!).path;
             handleDeeplinks(path);
           } else {
