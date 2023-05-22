@@ -5544,7 +5544,6 @@ class _CalendarViewState extends State<_CalendarView>
   late bool _isRTL;
 
   bool _isExpanded = false;
-  DateTime? _hoveringDate;
   SystemMouseCursor _mouseCursor = SystemMouseCursors.basic;
   AppointmentView? _hoveringAppointmentView;
 
@@ -10021,135 +10020,6 @@ class _CalendarViewState extends State<_CalendarView>
     }
   }
 
-  void _updateMouseCursorForAppointment(AppointmentView? appointmentView,
-      double xPosition, double yPosition, bool isTimelineViews,
-      {bool isAllDayPanel = false}) {
-    _hoveringAppointmentView = appointmentView;
-    if (!widget.calendar.allowAppointmentResize ||
-        (widget.view == CalendarView.month &&
-            widget.calendar.monthViewSettings.appointmentDisplayMode !=
-                MonthAppointmentDisplayMode.appointment)) {
-      return;
-    }
-
-    if (appointmentView == null || appointmentView.appointment == null) {
-      if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-
-      return;
-    }
-
-    const double padding = 5;
-
-    if (isAllDayPanel ||
-        (widget.view == CalendarView.month || isTimelineViews)) {
-      final bool isMonthView = widget.view == CalendarView.month ||
-          widget.view == CalendarView.timelineMonth;
-      final DateTime viewStartDate =
-          AppointmentHelper.convertToStartTime(widget.visibleDates[0]);
-      final DateTime viewEndDate = AppointmentHelper.convertToEndTime(
-          widget.visibleDates[widget.visibleDates.length - 1]);
-      final DateTime appStartTime = appointmentView.appointment!.exactStartTime;
-      final DateTime appEndTime = appointmentView.appointment!.exactEndTime;
-
-      final bool canAddForwardSpanIcon =
-          AppointmentHelper.canAddForwardSpanIcon(
-              appStartTime, appEndTime, viewStartDate, viewEndDate);
-      final bool canAddBackwardSpanIcon =
-          AppointmentHelper.canAddBackwardSpanIcon(
-              appStartTime, appEndTime, viewStartDate, viewEndDate);
-
-      final DateTime appointmentStartTime =
-          appointmentView.appointment!.isAllDay
-              ? AppointmentHelper.convertToStartTime(
-                  appointmentView.appointment!.actualStartTime)
-              : appointmentView.appointment!.actualStartTime;
-      final DateTime appointmentEndTime = appointmentView.appointment!.isAllDay
-          ? AppointmentHelper.convertToEndTime(
-              appointmentView.appointment!.actualEndTime)
-          : appointmentView.appointment!.actualEndTime;
-      final DateTime appointmentExactStartTime =
-          appointmentView.appointment!.isAllDay
-              ? AppointmentHelper.convertToStartTime(
-                  appointmentView.appointment!.exactStartTime)
-              : appointmentView.appointment!.exactStartTime;
-      final DateTime appointmentExactEndTime =
-          appointmentView.appointment!.isAllDay
-              ? AppointmentHelper.convertToEndTime(
-                  appointmentView.appointment!.exactEndTime)
-              : appointmentView.appointment!.exactEndTime;
-
-      if (xPosition >= appointmentView.appointmentRect!.left &&
-          xPosition <= appointmentView.appointmentRect!.left + padding &&
-          ((isMonthView &&
-                  isSameDate(
-                      _isRTL ? appointmentEndTime : appointmentStartTime,
-                      _isRTL
-                          ? appointmentExactEndTime
-                          : appointmentExactStartTime)) ||
-              (!isMonthView &&
-                  CalendarViewHelper.isSameTimeSlot(
-                      _isRTL ? appointmentEndTime : appointmentStartTime,
-                      _isRTL
-                          ? appointmentExactEndTime
-                          : appointmentExactStartTime))) &&
-          ((_isRTL && !canAddForwardSpanIcon) ||
-              (!_isRTL && !canAddBackwardSpanIcon))) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.resizeLeft;
-        });
-      } else if (xPosition <= appointmentView.appointmentRect!.right &&
-          xPosition >= appointmentView.appointmentRect!.right - padding &&
-          ((isMonthView &&
-                  isSameDate(
-                      _isRTL ? appointmentStartTime : appointmentEndTime,
-                      _isRTL
-                          ? appointmentExactStartTime
-                          : appointmentExactEndTime)) ||
-              (!isMonthView &&
-                  CalendarViewHelper.isSameTimeSlot(
-                      _isRTL ? appointmentStartTime : appointmentEndTime,
-                      _isRTL
-                          ? appointmentExactStartTime
-                          : appointmentExactEndTime))) &&
-          ((_isRTL && !canAddBackwardSpanIcon) ||
-              (!_isRTL && !canAddForwardSpanIcon))) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.resizeRight;
-        });
-      } else if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    } else {
-      if (yPosition >= appointmentView.appointmentRect!.top &&
-          yPosition <= appointmentView.appointmentRect!.top + padding &&
-          CalendarViewHelper.isSameTimeSlot(
-              appointmentView.appointment!.actualStartTime,
-              appointmentView.appointment!.exactStartTime)) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.resizeUp;
-        });
-      } else if (yPosition <= appointmentView.appointmentRect!.bottom &&
-          yPosition >= appointmentView.appointmentRect!.bottom - padding &&
-          CalendarViewHelper.isSameTimeSlot(
-              appointmentView.appointment!.actualEndTime,
-              appointmentView.appointment!.exactEndTime)) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.resizeDown;
-        });
-      } else if (_mouseCursor != SystemMouseCursors.basic) {
-        setState(() {
-          _mouseCursor = SystemMouseCursors.basic;
-        });
-      }
-    }
-  }
-
   AppointmentView? _getAllDayAppointmentOnPoint(
       List<AppointmentView>? appointmentCollection, double x, double y) {
     if (appointmentCollection == null) {
@@ -11059,7 +10929,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
     const double top = 0;
     double left;
 
-    final double cellWidth = (size.width - timeLabelWidth) / visibleDates.length;
+    final double cellWidth = (size.width - timeLabelWidth)/visibleDates.length;
     if (isRTL) {
       left =  (size.width - timeLabelWidth) - cellWidth;
     } else {
