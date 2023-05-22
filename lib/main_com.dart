@@ -57,8 +57,6 @@ Future<void> initFunctions() async {
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
-  //await Intercom.instance.initialize(Config.intercomCredential.appId,
-  //    iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
 
   // Init Background Service and register periodic task
   await BackgroundService.initBackgroundService();
@@ -67,9 +65,7 @@ Future<void> initFunctions() async {
   }
 
   try {
-    // if (Platform.isAndroid) {
     await FlutterDisplayMode.setHighRefreshRate();
-    // }
   } catch (e) {
     print(e);
   }
