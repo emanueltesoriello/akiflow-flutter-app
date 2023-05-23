@@ -66,8 +66,8 @@ class MainCubit extends Cubit<MainCubitState> {
         onConnectionStateChange: (m, s) {
           print("onConnectionStateChange m: $m \n s: $s");
         },
-        onError: (_, __, ___) {
-          print("onError");
+        onError: (m, s, t) {
+          print("onError m: $m\n s: $s\n t: $t");
         },
         onSubscriptionSucceeded: (_, __) {
           print("onSubscriptionSucceeded");
@@ -128,11 +128,14 @@ class MainCubit extends Cubit<MainCubitState> {
             PusherAPI pusherApi = PusherAPI();
             var res = await pusherApi.authorizePusher(channelName: channelName, socketId: socketId);
             if (res.statusCode == 200) {
+              print({
+                "auth": jsonDecode(res.body)['auth'],
+              });
               return {
                 "auth": jsonDecode(res.body)['auth'],
               };
             } else {
-              return {"auth": ""};
+              return false;
             }
           } catch (e) {
             print(e);
