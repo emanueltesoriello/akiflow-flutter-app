@@ -6,6 +6,7 @@ import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/expandable_fab.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -89,10 +90,16 @@ class FloatingButton extends StatelessWidget {
     int duration = 1800;
     if (homeViewType == HomeViewType.calendar) {
       DateTime now = DateTime.now();
-      startTimeRounded =
-          DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()])
-              .toUtc()
-              .toIso8601String();
+      startTimeRounded = DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()])
+          .toUtc()
+          .toIso8601String();
+
+      List<DateTime> visibleDates = context.read<CalendarCubit>().state.visibleDates;
+      if (visibleDates.isNotEmpty && visibleDates.length < 2) {
+        date = visibleDates.first;
+      } else {
+        date = now;
+      }
 
       AuthCubit authCubit = context.read<AuthCubit>();
       if (authCubit.state.user != null &&

@@ -388,6 +388,10 @@
       "addGuestModal": {
         "addGuest": "Add guest",
         "searchContact": "Search contact"
+      },
+      "addLocationModal": {
+        "addLocation": "Add Location",
+        "search": "Search"
       }
     },
     "snackbar": {

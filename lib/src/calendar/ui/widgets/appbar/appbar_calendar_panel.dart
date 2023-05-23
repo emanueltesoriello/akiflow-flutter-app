@@ -11,7 +11,7 @@ import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AppbarCalendarPanel extends StatefulWidget {

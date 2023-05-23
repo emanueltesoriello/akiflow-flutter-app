@@ -13,5 +13,9 @@
         "app_id": "hqlby49q",
         "ios_api_key": "ios_sdk-c80c16999ffce9cb6988a6478b18de09a932c4ed",
         "android_api_key": "android_sdk-02d22b9bbde45e6ca6419ac5af05878bae1a74c6"
+    },
+    "google_places": {
+        "android_api_key": "AIzaSyCqU0NKCKiZp4NFUCof3bs2jFl4l9ZHjDw",
+        "ios_api_key": "AIzaSyBG7LGaSu8APbl8yzUvifx_5vVbxnljgfQ"
     }
 }

@@ -234,6 +234,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
+  resetTasks(){
+    emit(state.copyWith(calendarTasks: []));
+  }
+
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
     try {
       await fetchSelectedDayTasks(selectedDay);

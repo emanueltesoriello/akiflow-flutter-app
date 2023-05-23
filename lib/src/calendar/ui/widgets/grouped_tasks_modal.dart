@@ -29,7 +29,7 @@ class GroupedTasksModal extends StatelessWidget {
     List<Task> tasksInGroup = calendarTasks.where((task) => idList.contains(task.id)).toList();
 
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: ColorsExt.background(context),
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -38,8 +38,7 @@ class GroupedTasksModal extends StatelessWidget {
           ),
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: ListView(
-          shrinkWrap: true,
+        child: Column(
           children: [
             const SizedBox(height: Dimension.padding),
             const ScrollChip(),
@@ -57,57 +56,59 @@ class GroupedTasksModal extends StatelessWidget {
                 ],
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: tasksInGroup.length,
-              itemBuilder: (context, index) {
-                Task task = tasksInGroup[index];
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: tasksInGroup.length,
+                itemBuilder: (context, index) {
+                  Task task = tasksInGroup[index];
 
-                TasksCubit tasksCubit = context.read<TasksCubit>();
-                SyncCubit syncCubit = context.read<SyncCubit>();
+                  TasksCubit tasksCubit = context.read<TasksCubit>();
+                  SyncCubit syncCubit = context.read<SyncCubit>();
 
-                EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
+                  EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
 
-                return BlocProvider(
-                  key: ObjectKey(task),
-                  create: (context) => editTaskCubit,
-                  child: TaskRow(
+                  return BlocProvider(
                     key: ObjectKey(task),
-                    task: task,
-                    openedFromCalendarGroupedTasks: true,
-                    showLabel: true,
-                    showPlanInfo: false,
-                    selectTask: () {},
-                    selectMode: false,
-                    completedClick: () {
-                      HapticFeedback.mediumImpact();
-                      editTaskCubit.markAsDone(forceUpdate: true);
-                    },
-                    swipeActionPlanClick: () {
-                      HapticFeedback.mediumImpact();
-                      Navigator.pop(context);
-                      _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
-                    },
-                    swipeActionSelectLabelClick: () {
-                      HapticFeedback.mediumImpact();
-                      Navigator.pop(context);
-                      showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) => LabelsModal(
-                          selectLabel: (Label label) {
-                            editTaskCubit.setLabel(label, forceUpdate: true);
-                          },
-                          showNoLabel: true,
-                        ),
-                      );
-                    },
-                    swipeActionSnoozeClick: () {
-                      HapticFeedback.mediumImpact();
-                      _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
-                    },
-                  ),
-                );
-              },
+                    create: (context) => editTaskCubit,
+                    child: TaskRow(
+                      key: ObjectKey(task),
+                      task: task,
+                      openedFromCalendarGroupedTasks: true,
+                      showLabel: true,
+                      showPlanInfo: false,
+                      selectTask: () {},
+                      selectMode: false,
+                      completedClick: () {
+                        HapticFeedback.mediumImpact();
+                        editTaskCubit.markAsDone(forceUpdate: true);
+                      },
+                      swipeActionPlanClick: () {
+                        HapticFeedback.mediumImpact();
+                        Navigator.pop(context);
+                        _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
+                      },
+                      swipeActionSelectLabelClick: () {
+                        HapticFeedback.mediumImpact();
+                        Navigator.pop(context);
+                        showCupertinoModalBottomSheet(
+                          context: context,
+                          builder: (context) => LabelsModal(
+                            selectLabel: (Label label) {
+                              editTaskCubit.setLabel(label, forceUpdate: true);
+                            },
+                            showNoLabel: true,
+                          ),
+                        );
+                      },
+                      swipeActionSnoozeClick: () {
+                        HapticFeedback.mediumImpact();
+                        _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 48),
           ],

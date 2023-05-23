@@ -9,7 +9,7 @@ import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
 import 'package:rrule/rrule.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum AtendeeResponseStatus { needsAction, accepted, declined, tentative }

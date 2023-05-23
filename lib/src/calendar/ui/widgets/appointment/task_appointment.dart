@@ -12,7 +12,7 @@ import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class TaskAppointment extends StatelessWidget {
   TaskAppointment({
