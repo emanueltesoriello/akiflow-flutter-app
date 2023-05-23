@@ -67,7 +67,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
   }
 
-  resetEvents(){
+  resetEvents() {
     emit(state.copyWith(events: []));
   }
 
@@ -144,8 +144,13 @@ class EventsCubit extends Cubit<EventsCubitState> {
     var id = const Uuid().v4();
     DateTime startTime;
     DateTime now = DateTime.now();
+    List<DateTime> visibleDates = calendarCubit.state.visibleDates;
+
     if (tappedTime != null) {
       startTime = tappedTime;
+    } else if (visibleDates.isNotEmpty && visibleDates.length < 2) {
+      startTime = DateTime(visibleDates.first.year, visibleDates.first.month, visibleDates.first.day, now.hour,
+          [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
     } else {
       startTime = DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
     }
