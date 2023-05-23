@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.34.26+336
+version: 2.35.28+342
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
