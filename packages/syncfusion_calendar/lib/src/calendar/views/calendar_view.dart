@@ -10532,6 +10532,12 @@ class _ViewHeaderViewPainter extends CustomPainter {
     TextStyle dateTextStyle = viewHeaderDateStyle;
     const double topPadding = 5;
 
+    final bool isDayView = CalendarViewHelper.isDayView(
+    view,
+    timeSlotViewSettings.numberOfDaysInView,
+    timeSlotViewSettings.nonWorkingDays,
+    monthViewSettings.numberOfWeeksInView);
+
     final Paint linePainter = Paint();
     xPosition = timeLabelWidth;
     yPosition = 2;
@@ -10607,6 +10613,8 @@ class _ViewHeaderViewPainter extends CustomPainter {
       /// To calculate the date start position by width and date painter
       final double dateXPosition = (cellWidth - _dateTextPainter.width) / 2;
 
+      final int horizontalPadding = isDayView ? 25 : 35;
+
       const int inBetweenPadding = 2;
       yPosition = size.height / 2 -
           (_dayTextPainter.height +
@@ -10619,7 +10627,11 @@ class _ViewHeaderViewPainter extends CustomPainter {
       }           
 
       _dayTextPainter.paint(
-          canvas, Offset(xPosition + dayXPosition, yPosition));
+          canvas, 
+          Offset(xPosition + dayXPosition 
+          - (narrowDateDay ? 0 : 
+            isDayView ? _dayTextPainter.width: _dateTextPainter.width),
+           yPosition));
 
       if (isToday) {
         if(narrowDateDay){
@@ -10631,7 +10643,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
         }else{
           _drawTodayCircle(
             canvas,
-            xPosition + dateXPosition + 30,
+            xPosition + dateXPosition + horizontalPadding - _dateTextPainter.width,
             yPosition,
             _dateTextPainter);}
       }
@@ -10654,7 +10666,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
         _dateTextPainter.paint(
         canvas,
         Offset(
-          xPosition + dateXPosition + 30,
+          xPosition + dateXPosition + horizontalPadding - _dateTextPainter.width,
           yPosition));
       }
 
