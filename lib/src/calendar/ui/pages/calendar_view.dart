@@ -45,14 +45,12 @@ class CalendarView extends StatelessWidget {
         List<Calendar> calendars = state.calendars;
         List<String> visibleCalendarIds = [];
         if (calendars.isNotEmpty) {
-          calendars = calendars
-              .where((element) =>
-                  element.settings != null &&
-                  ((element.settings["visibleMobile"] ?? element.settings["visible"] ?? false) == true))
-              .toList();
-
-          for (var calendar in calendars) {
-            visibleCalendarIds.add(calendar.id!);
+          for (Calendar calendar in calendars) {
+            bool visible = calendar.settings != null &&
+                ((calendar.settings["visibleMobile"] ?? calendar.settings["visible"] ?? false) == true);
+            if (visible) {
+              visibleCalendarIds.add(calendar.id!);
+            }
           }
         }
 
