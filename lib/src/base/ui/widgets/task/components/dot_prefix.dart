@@ -21,7 +21,7 @@ class DotPrefix extends StatelessWidget {
           }
 
           try {
-            if (task?.content["expiredSnooze"] == true) {
+            if (task?.content != null && task?.content["expiredSnooze"] == true) {
               color = ColorsExt.rose400(context);
             }
           } catch (_) {}
