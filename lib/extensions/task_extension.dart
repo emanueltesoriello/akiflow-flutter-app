@@ -879,7 +879,8 @@ extension TaskExt on Task {
       PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
       if (preferencesRepository.taskCompletedSoundEnabledMobile) {
         final audioPlayer = AudioPlayer();
-        audioPlayer.play(ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
+        audioPlayer.play(
+            volume: 0.3, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
       }
     }
   }
