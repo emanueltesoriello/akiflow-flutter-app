@@ -85,7 +85,7 @@ class _TaskListState extends State<TaskList> {
         setState(() {
           opacityOfTaskRow = 0;
         });
-        Future.delayed(const Duration(milliseconds: 400), () {
+        Future.delayed(const Duration(milliseconds: 600), () {
           setState(() {
             opacityOfTaskRow = 1;
           });
@@ -95,7 +95,7 @@ class _TaskListState extends State<TaskList> {
         setState(() {
           opacityOfTaskRow = 0;
         });
-        Future.delayed(const Duration(milliseconds: 400), () {
+        Future.delayed(const Duration(milliseconds: 600), () {
           setState(() {
             opacityOfTaskRow = 1;
           });
@@ -209,7 +209,7 @@ class _TaskListState extends State<TaskList> {
                   ? () => {HapticFeedback.selectionClick(), context.read<TasksCubit>().select(task)}
                   : null,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 400),
+                duration: const Duration(milliseconds: 600),
                 decoration: BoxDecoration(
                     color: task.id == idOfNewTask
                         ? (opacityOfTaskRow != null && opacityOfTaskRow == 0 ? ColorsExt.grey100(context) : null)
