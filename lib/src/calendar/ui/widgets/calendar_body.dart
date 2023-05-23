@@ -306,6 +306,7 @@ class CalendarBody extends StatelessWidget {
 
   void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context, CalendarCubit calendarCubit,
       EventsCubit eventsCubit) {
+    calendarCubit.setAppointmentTapped(true);    
     dynamic appointment = appointmentDragEndDetails.appointment!;
     DateTime droppingTime = appointmentDragEndDetails.droppingTime!;
     DateTime droppedTimeRounded = DateTime(droppingTime.year, droppingTime.month, droppingTime.day, droppingTime.hour,
