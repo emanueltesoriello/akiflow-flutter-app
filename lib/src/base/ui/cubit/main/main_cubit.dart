@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
@@ -135,7 +136,11 @@ class MainCubit extends Cubit<MainCubitState> {
                 "auth": jsonDecode(res.body)['auth'],
               };
             } else {
-              return false;
+              if (Platform.isAndroid) {
+                return false;
+              } else {
+                print('No auth on iOS - Pusher');
+              }
             }
           } catch (e) {
             print(e);

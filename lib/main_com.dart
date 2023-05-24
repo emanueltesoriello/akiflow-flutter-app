@@ -63,11 +63,12 @@ Future<void> initFunctions() async {
   if (Platform.isAndroid) {
     BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
   }
-
-  try {
-    await FlutterDisplayMode.setHighRefreshRate();
-  } catch (e) {
-    print(e);
+  if (Platform.isAndroid) {
+    try {
+      await FlutterDisplayMode.setHighRefreshRate();
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
