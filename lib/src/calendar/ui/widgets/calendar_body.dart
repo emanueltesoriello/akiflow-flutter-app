@@ -153,7 +153,6 @@ class CalendarBody extends StatelessWidget {
               nonWorkingDays: state.nonWorkingDays,
             ),
             scheduleViewSettings: ScheduleViewSettings(
-                hideEmptyScheduleWeek: true,
                 dayHeaderSettings: DayHeaderSettings(
                   dayTextStyle: Theme.of(context)
                       .textTheme
