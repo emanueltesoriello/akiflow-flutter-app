@@ -93,7 +93,7 @@ class TasksRepository extends DatabaseRepository {
           date.toLocal().year == DateTime.now().year) {
         items = await _databaseService.database!.transaction((txn) async {
           print('case Today');
-
+          //TODO search what indexes we can use on this query
           return await txn.rawQuery(
             """
         SELECT * FROM tasks
