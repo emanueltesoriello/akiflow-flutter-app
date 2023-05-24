@@ -305,13 +305,15 @@ class CalendarBody extends StatelessWidget {
 
   void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context, CalendarCubit calendarCubit,
       EventsCubit eventsCubit) {
-    calendarCubit.setAppointmentTapped(true);    
+    calendarCubit.setAppointmentTapped(true);
     dynamic appointment = appointmentDragEndDetails.appointment!;
     DateTime droppingTime = appointmentDragEndDetails.droppingTime!;
     DateTime droppedTimeRounded = DateTime(droppingTime.year, droppingTime.month, droppingTime.day, droppingTime.hour,
         [0, 15, 30, 45, 60][(droppingTime.minute / 15).round()]);
 
-    if (tasks.any((task) => task.id == appointment.id)) {
+    if (groupedTasks.any((group) => group.id == appointment.id)) {
+      _noPermissionToEditEvent(context, calendarCubit);
+    } else if (tasks.any((task) => task.id == appointment.id)) {
       Task task = tasks.firstWhere((task) => task.id == appointment.id);
       DateTime taskDateTime = DateTime.parse(task.datetime!);
       TasksCubit tasksCubit = context.read<TasksCubit>();
