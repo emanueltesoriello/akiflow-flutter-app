@@ -91,7 +91,6 @@ class _TodayViewState extends State<TodayView> {
       completed =
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
-
     pinned.sort((a, b) {
       try {
         return a.datetime!.compareTo(b.datetime!);
