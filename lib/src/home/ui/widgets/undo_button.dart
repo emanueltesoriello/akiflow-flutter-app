@@ -19,6 +19,57 @@ class UndoBottomView extends StatefulWidget {
 class _UndoBottomViewState extends State<UndoBottomView> {
   int snackBarShown = 0;
 
+  _buildSnackBarAfterUndoneClick() {
+    return SnackBar(
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      content: Padding(
+        padding: const EdgeInsets.only(bottom: Dimension.padding),
+        child: Container(
+          height: Dimension.snackBarHeight,
+          margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+          width: double.infinity,
+          padding: const EdgeInsets.only(left: Dimension.padding),
+          decoration: BoxDecoration(
+            color: ColorsExt.jordyBlue100(context),
+            border: Border.all(
+              color: ColorsExt.grey300(context),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(Dimension.radiusS),
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                Assets.images.icons.common.checkDoneOutlineSVG,
+                color: ColorsExt.grey700(context),
+                height: 25.0,
+              ),
+              const SizedBox(width: Dimension.paddingS),
+              Expanded(
+                child: Text("Action undone",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
+              ),
+              TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                  child: Text("CLOSE",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500))),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   _buildSnackBar(UndoTask task) {
     return SnackBar(
       elevation: 0,
@@ -54,6 +105,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                   onPressed: () {
                     context.read<TasksCubit>().undo();
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(_buildSnackBarAfterUndoneClick());
                   },
                   child: Text(t.task.undo.toUpperCase(),
                       style: Theme.of(context)
