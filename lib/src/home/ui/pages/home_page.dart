@@ -18,6 +18,7 @@ import 'package:mobile/src/integrations/ui/pages/reconnect_integrations.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
+import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/create_task/create_task_modal.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       showCupertinoModalBottomSheet(
         context: context,
         builder: (context) => const CreateTaskModal(),
-      );
+      ).then((value) => context.read<EditTaskCubit>().onModalClose());
     } else if (path.toLowerCase().contains('shareavailability')) {
       print('deeplink share availability');
       context.read<MainCubit>().changeHomeView(HomeViewType.availability);
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             builder: (context) => CreateTaskModal(
               sharedText: media.content,
             ),
-          );
+          ).then((value) => context.read<EditTaskCubit>().onModalClose());
         }
       }
 
@@ -97,7 +98,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               builder: (context) => CreateTaskModal(
                 sharedText: media.content,
               ),
-            );
+            ).then((value) => context.read<EditTaskCubit>().onModalClose());
           }
         }
       });

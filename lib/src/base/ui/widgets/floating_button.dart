@@ -128,7 +128,7 @@ class FloatingButton extends StatelessWidget {
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => const CreateTaskModal(),
-    );
+    ).then((value) => context.read<EditTaskCubit>().onModalClose());
   }
 
   _onTapEvent(BuildContext context) {

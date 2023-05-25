@@ -137,7 +137,7 @@ class _LabelViewState extends State<LabelView> {
                           showCupertinoModalBottomSheet(
                             context: context,
                             builder: (context) => const CreateTaskModal(),
-                          );
+                          ).then((value) => context.read<EditTaskCubit>().onModalClose());
                         },
                         onDelete: () {
                           context.read<LabelsCubit>().deleteSection(section);
