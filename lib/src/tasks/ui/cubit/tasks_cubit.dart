@@ -647,7 +647,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in allSelected) {
       Task updated = task.copyWith(
         date: Nullable(date?.toIso8601String()),
-        datetime: Nullable(dateTime?.toIso8601String()),
+        datetime: Nullable(TzUtils.toUtcStringIfNotNull(dateTime)),
         status: Nullable(statusType.id),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
         selected: false,
