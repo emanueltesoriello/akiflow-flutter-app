@@ -17,6 +17,16 @@ extension AccountExt on Account {
     "github",
   ];
 
+  static const List<String> settingsEnabled = [
+    "todoist",
+    "clickup",
+    "notion",
+    "asana",
+    "trello",
+    "jira",
+    "github",
+  ];
+
   static const List<String> v3Accounts = ["gmail"];
 
   GmailSyncMode get gmailSyncMode {

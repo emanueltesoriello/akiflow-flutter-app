@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/extensions/doc_extension.dart';
+import 'package:mobile/common/utils/integrations_utils.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/circle_account_picture.dart';
 import 'package:mobile/src/integrations/ui/widgets/integration_list_item.dart';
 import 'package:models/account/account.dart';
+import 'package:models/extensions/account_ext.dart';
 
 class IntegrationsList extends StatelessWidget {
   final List<Account> accounts;
@@ -21,7 +22,7 @@ class IntegrationsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     accounts.sort((a, b) => a.connectorId != b.connectorId ? 1 : -1);
-    accounts.sort((a, b) => b.connectorId == 'gmail' ? 1 : -1);
+    accounts.sort((a, b) => AccountExt.settingsEnabled.contains(b.connectorId) ? 1 : -1);
 
     return ListView.builder(
       shrinkWrap: true,
@@ -30,7 +31,7 @@ class IntegrationsList extends StatelessWidget {
       itemCount: accounts.length,
       itemBuilder: (context, index) {
         Account account = accounts[index];
-        String? title = DocExt.titleFromConnectorId(account.connectorId);
+        String? title = IntegrationsUtils.titleFromConnectorId(account.connectorId);
         String? iconAsset = TaskExt.iconFromConnectorId(account.connectorId);
 
         bool isLocalActive = context.read<IntegrationsCubit>().isLocalActive(account);
@@ -60,7 +61,7 @@ class IntegrationsList extends StatelessWidget {
           identifier: account.identifier ?? '',
           insets: _getEdgeInsets(index, accounts.length),
           borderRadius: _getBorderRadius(index, accounts.length),
-          enabled: account.connectorId == 'gmail',
+          enabled: account.connectorId == 'gmail' || AccountExt.settingsEnabled.contains(account.connectorId),
           onPressed: () {
             onTap(account);
           },
