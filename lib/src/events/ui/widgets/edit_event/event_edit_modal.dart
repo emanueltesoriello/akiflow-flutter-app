@@ -357,7 +357,9 @@ class _EventEditModalState extends State<EventEditModal> {
           ),
         );
       },
-      child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
+      child: Text(
+          DateFormat("EEE dd MMM").format(
+              updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.startTime!).toLocal() : widget.tappedDate),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: ColorsExt.grey800(context),
@@ -492,7 +494,9 @@ class _EventEditModalState extends State<EventEditModal> {
           ),
         );
       },
-      child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
+      child: Text(
+          DateFormat("EEE dd MMM").format(
+              updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.endTime!).toLocal() : widget.tappedDate),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: ColorsExt.grey800(context),

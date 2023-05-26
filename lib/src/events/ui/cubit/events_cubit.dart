@@ -362,22 +362,24 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     DateTime? eventStartTime = parentEvent.startTime != null ? DateTime.parse(parentEvent.startTime!).toLocal() : null;
     DateTime? eventEndTime = parentEvent.endTime != null ? DateTime.parse(parentEvent.endTime!).toLocal() : null;
-    String? startTime = timeChanged
-        ? parentEvent.startTime
-        : eventStartTime != null
+
+    String? startTime = eventStartTime != null
+        ? timeChanged
             ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
                     eventStartTime.second)
                 .toUtc()
                 .toIso8601String()
-            : null;
-    String? endTime = timeChanged
-        ? parentEvent.endTime
-        : eventEndTime != null
+            : parentEvent.startTime
+        : null;
+
+    String? endTime = eventEndTime != null
+        ? timeChanged
             ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
                     eventEndTime.second)
                 .toUtc()
                 .toIso8601String()
-            : null;
+            : parentEvent.endTime
+        : null;
 
     String? startDate = parentEvent.startDate != null
         ? dateChanged
