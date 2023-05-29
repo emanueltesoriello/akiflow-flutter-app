@@ -86,17 +86,6 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     _syncCubit.sync(loading: true);
   }
 
-  void gmailBehaviorOnMarkAsDone(MarkAsDoneType selectedType) {
-    Map<String, dynamic> settings = Map.from(_authCubit.state.user!.settings ?? {});
-    Map<String, dynamic> popups = settings['popups'] ?? {};
-
-    popups['gmail.unstar'] = selectedType.key;
-
-    settings['popups'] = popups;
-
-    _authCubit.updateUserSettings(Map<String, dynamic>.from(settings));
-  }
-
   Future<void> updateGmailSuperHumanEnabled(Account account, {required bool isSuperhumanEnabled}) async {
     Map<String, dynamic>? settings = Map.from(account.details ?? {});
     settings['isSuperhumanEnabled'] = isSuperhumanEnabled;

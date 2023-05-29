@@ -6,7 +6,6 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/integrations_utils.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/widgets/base/action_button.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -21,8 +20,6 @@ import 'package:mobile/src/integrations/ui/widgets/mark_done_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/integrations/gmail.dart';
-import 'package:models/user.dart';
-import 'package:models/extensions/user_ext.dart';
 
 class GmailDetailsIntegrationsPage extends StatefulWidget {
   final Account? account;
@@ -37,50 +34,44 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
   bool isConnected = false;
 
   Widget _behaviour(Account gmailAccount) {
-    return BlocBuilder<AuthCubit, AuthCubitState>(
-      builder: (context, authState) {
-        String? markAsDone = authState.user!.markAsDone;
-        GmailSyncMode syncMode = GmailSyncMode.fromKey(gmailAccount.details?['syncMode']);
-        String subtitle = MarkAsDoneType.titleFromKey(key: markAsDone, syncMode: syncMode, integrationTitle: 'Gmail');
+    GmailSyncMode syncMode = GmailSyncMode.fromKey(gmailAccount.details?['syncMode']);
+    String? markDoneSetting = gmailAccount.details?['mark_as_done_action'];
+    String subtitle = MarkAsDoneType.titleFromKey(key: markDoneSetting, syncMode: syncMode, integrationTitle: 'Gmail');
 
-        return IntegrationSetting(
-          title: t.settings.integrations.onMarkAsDone.title,
-          subtitle: subtitle,
-          onPressed: () async {
-            var bloc = context.read<IntegrationsCubit>();
+    return IntegrationSetting(
+      title: t.settings.integrations.onMarkAsDone.title,
+      subtitle: subtitle,
+      onPressed: () async {
+        var bloc = context.read<IntegrationsCubit>();
 
-            User user = authState.user!;
+        MarkAsDoneType initialType;
 
-            MarkAsDoneType initialType;
+        switch (markDoneSetting) {
+          case 'unstar':
+            initialType = MarkAsDoneType.unstarTheEmail;
+            break;
+          case 'open':
+            initialType = MarkAsDoneType.goTo;
+            break;
+          case 'cancel':
+            initialType = MarkAsDoneType.doNothing;
+            break;
+          default:
+            initialType = MarkAsDoneType.askMeEveryTime;
+            break;
+        }
 
-            switch (user.settings?['popups']['gmail.unstar']) {
-              case 'unstar':
-                initialType = MarkAsDoneType.unstarTheEmail;
-                break;
-              case 'open':
-                initialType = MarkAsDoneType.goTo;
-                break;
-              case 'cancel':
-                initialType = MarkAsDoneType.doNothing;
-                break;
-              default:
-                initialType = MarkAsDoneType.askMeEveryTime;
-                break;
-            }
-
-            MarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => MarkDoneModal(
-                initialType: initialType,
-                integrationTitle: 'Gmail',
-              ),
-            );
-
-            if (selectedType != null) {
-              bloc.gmailBehaviorOnMarkAsDone(selectedType);
-            }
-          },
+        MarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => MarkDoneModal(
+            initialType: initialType,
+            integrationTitle: 'Gmail',
+          ),
         );
+
+        if (selectedType != null) {
+          bloc.behaviorMarkAsDone(gmailAccount, selectedType);
+        }
       },
     );
   }
