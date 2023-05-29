@@ -4,8 +4,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/integrations_utils.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/circle_account_picture.dart';
@@ -14,8 +13,6 @@ import 'package:mobile/src/integrations/ui/widgets/integration_list_item.dart';
 import 'package:mobile/src/integrations/ui/widgets/integration_setting.dart';
 import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
 import 'package:models/account/account.dart';
-import 'package:models/integrations/gmail.dart';
-import 'package:models/extensions/user_ext.dart';
 
 class IntegrationDetailsPage extends StatefulWidget {
   final Account? account;
@@ -34,10 +31,10 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
       Account account = state.accounts.firstWhere((element) =>
           element.connectorId == widget.account!.connectorId &&
           element.originAccountId == widget.account!.originAccountId);
-
+      String title = IntegrationsUtils.titleFromConnectorId(account.connectorId);
       return Scaffold(
         appBar: AppBarComp(
-          title: IntegrationsUtils.titleFromConnectorId(account.connectorId),
+          title: title,
           showBack: true,
           actions: [HeaderTrailingActionButtons(account)],
         ),
@@ -63,7 +60,7 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
                               children: [
                                 const SizedBox(height: 32),
                                 SettingHeaderText(text: t.settings.integrations.gmail.behavior),
-                                _behaviour(),
+                                _behaviour(account, title),
                                 const SizedBox(height: 20),
                               ],
                             ),
@@ -97,25 +94,13 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
     );
   }
 
-  Widget _behaviour() {
-    return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
-      builder: (context, state) {
-        Account account = state.accounts.firstWhere((element) => element.connectorId == "gmail");
-
-        return BlocBuilder<AuthCubit, AuthCubitState>(
-          builder: (context, authState) {
-            String? markAsDone = authState.user!.markAsDone;
-            GmailSyncMode syncMode = GmailSyncMode.fromKey(account.details?['syncMode']);
-            String subtitle = GmailMarkAsDoneType.titleFromKey(markAsDone, syncMode);
-
-            return IntegrationSetting(
-              title: t.settings.integrations.gmail.onMarkAsDone.title,
-              subtitle: subtitle,
-              onPressed: () async {},
-            );
-          },
-        );
-      },
+  Widget _behaviour(Account account, String title) {
+    String subtitle =
+        MarkAsDoneType.titleFromKey(key: account.details?['mark_as_done_action'], integrationTitle: title);
+    return IntegrationSetting(
+      title: t.settings.integrations.onMarkAsDone.title,
+      subtitle: subtitle,
+      onPressed: () async {},
     );
   }
 }

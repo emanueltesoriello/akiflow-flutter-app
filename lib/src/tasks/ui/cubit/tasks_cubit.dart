@@ -21,7 +21,7 @@ import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
-import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
@@ -776,30 +776,30 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     for (Task task in gmailTasks) {
       String? markAsDoneKey = _authCubit!.state.user?.settings?['popups']['gmail.unstar'];
-      GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
+      MarkAsDoneType gmailMarkAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
 
       List<Account> accounts = await _accountsRepository.getAccounts();
       Account account = accounts.firstWhere(
           (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
 
       switch (gmailMarkAsDoneType) {
-        case GmailMarkAsDoneType.unstarTheEmail:
+        case MarkAsDoneType.unstarTheEmail:
           docActions.add(GmailDocAction(
-            markAsDoneType: GmailMarkAsDoneType.unstarTheEmail,
+            markAsDoneType: MarkAsDoneType.unstarTheEmail,
             task: task,
             account: account,
           ));
           break;
-        case GmailMarkAsDoneType.goToGmail:
+        case MarkAsDoneType.goTo:
           docActions.add(GmailDocAction(
-            markAsDoneType: GmailMarkAsDoneType.goToGmail,
+            markAsDoneType: MarkAsDoneType.goTo,
             task: task,
             account: account,
           ));
           break;
-        case GmailMarkAsDoneType.askMeEveryTime:
+        case MarkAsDoneType.askMeEveryTime:
           docActions.add(GmailDocAction(
-            markAsDoneType: GmailMarkAsDoneType.askMeEveryTime,
+            markAsDoneType: MarkAsDoneType.askMeEveryTime,
             task: task,
             account: account,
           ));
@@ -808,22 +808,22 @@ class TasksCubit extends Cubit<TasksCubitState> {
       }
     }
 
-    GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(
+    MarkAsDoneType gmailMarkAsDoneType = MarkAsDoneType.fromKey(
       _authCubit!.state.user?.settings?['popups']['gmail.unstar'],
     );
 
     switch (gmailMarkAsDoneType) {
-      case GmailMarkAsDoneType.unstarTheEmail:
+      case MarkAsDoneType.unstarTheEmail:
         for (GmailDocAction docAction in docActions) {
           await unstarGmail(docAction);
         }
         break;
-      case GmailMarkAsDoneType.goToGmail:
+      case MarkAsDoneType.goTo:
         for (GmailDocAction docAction in docActions) {
           await launchUrl(Uri.parse(docAction.task.doc!.value!.url!), mode: LaunchMode.externalApplication);
         }
         break;
-      case GmailMarkAsDoneType.askMeEveryTime:
+      case MarkAsDoneType.askMeEveryTime:
         if (docActions.isNotEmpty) {
           _docActionsController.add(docActions);
         }

@@ -1,9 +1,9 @@
-import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:models/account/account.dart';
 import 'package:models/task/task.dart';
 
 class GmailDocAction {
-  GmailMarkAsDoneType markAsDoneType;
+  MarkAsDoneType markAsDoneType;
   Task task;
   Account account;
 

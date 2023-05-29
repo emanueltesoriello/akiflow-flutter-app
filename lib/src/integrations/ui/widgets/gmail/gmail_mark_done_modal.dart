@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 class GmailMarkDoneModal extends StatefulWidget {
-  final GmailMarkAsDoneType initialType;
+  final MarkAsDoneType initialType;
 
   const GmailMarkDoneModal({Key? key, required this.initialType}) : super(key: key);
 
@@ -15,11 +15,11 @@ class GmailMarkDoneModal extends StatefulWidget {
 }
 
 class _GmailMarkDoneModalState extends State<GmailMarkDoneModal> {
-  late final ValueNotifier<GmailMarkAsDoneType> _selectedType;
+  late final ValueNotifier<MarkAsDoneType> _selectedType;
 
   @override
   void initState() {
-    _selectedType = ValueNotifier<GmailMarkAsDoneType>(widget.initialType);
+    _selectedType = ValueNotifier<MarkAsDoneType>(widget.initialType);
     super.initState();
   }
 
@@ -37,7 +37,7 @@ class _GmailMarkDoneModalState extends State<GmailMarkDoneModal> {
         ),
         child: ValueListenableBuilder(
           valueListenable: _selectedType,
-          builder: (context, GmailMarkAsDoneType type, child) => ListView(
+          builder: (context, MarkAsDoneType type, child) => ListView(
             shrinkWrap: true,
             children: [
               const SizedBox(height: 12),
@@ -48,7 +48,7 @@ class _GmailMarkDoneModalState extends State<GmailMarkDoneModal> {
                   children: [
                     Expanded(
                       child: Text(
-                        t.settings.integrations.gmail.onMarkAsDone.title,
+                        t.settings.integrations.onMarkAsDone.title,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: ColorsExt.grey800(context),
@@ -61,37 +61,37 @@ class _GmailMarkDoneModalState extends State<GmailMarkDoneModal> {
               const SizedBox(height: 2),
               _predefinedDateItem(
                 context,
-                text: t.settings.integrations.gmail.onMarkAsDone.unstarTheEmail,
-                selected: type == GmailMarkAsDoneType.unstarTheEmail,
+                text: t.settings.integrations.onMarkAsDone.unstarTheEmail,
+                selected: type == MarkAsDoneType.unstarTheEmail,
                 onPressed: () {
-                  Navigator.pop(context, GmailMarkAsDoneType.unstarTheEmail);
+                  Navigator.pop(context, MarkAsDoneType.unstarTheEmail);
                 },
               ),
               const SizedBox(height: 2),
               _predefinedDateItem(
                 context,
-                text: t.settings.integrations.gmail.onMarkAsDone.goToGmail,
-                selected: type == GmailMarkAsDoneType.goToGmail,
+                text: '${t.settings.integrations.onMarkAsDone.goTo} Gmail',
+                selected: type == MarkAsDoneType.goTo,
                 onPressed: () {
-                  Navigator.pop(context, GmailMarkAsDoneType.goToGmail);
+                  Navigator.pop(context, MarkAsDoneType.goTo);
                 },
               ),
               const SizedBox(height: 2),
               _predefinedDateItem(
                 context,
-                text: t.settings.integrations.gmail.onMarkAsDone.doNothing,
-                selected: type == GmailMarkAsDoneType.doNothing,
+                text: t.settings.integrations.onMarkAsDone.doNothing,
+                selected: type == MarkAsDoneType.doNothing,
                 onPressed: () {
-                  Navigator.pop(context, GmailMarkAsDoneType.doNothing);
+                  Navigator.pop(context, MarkAsDoneType.doNothing);
                 },
               ),
               const SizedBox(height: 2),
               _predefinedDateItem(
                 context,
-                text: t.settings.integrations.gmail.onMarkAsDone.askMeEveryTime,
-                selected: type == GmailMarkAsDoneType.askMeEveryTime,
+                text: t.settings.integrations.onMarkAsDone.askMeEveryTime,
+                selected: type == MarkAsDoneType.askMeEveryTime,
                 onPressed: () {
-                  Navigator.pop(context, GmailMarkAsDoneType.askMeEveryTime);
+                  Navigator.pop(context, MarkAsDoneType.askMeEveryTime);
                 },
               ),
               const SizedBox(height: 50),

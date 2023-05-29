@@ -15,7 +15,7 @@ import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
@@ -69,7 +69,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     _syncCubit.sync(loading: true);
   }
 
-  void gmailBehaviorOnMarkAsDone(GmailMarkAsDoneType selectedType) {
+  void gmailBehaviorOnMarkAsDone(MarkAsDoneType selectedType) {
     Map<String, dynamic> settings = Map.from(_authCubit.state.user!.settings ?? {});
     Map<String, dynamic> popups = settings['popups'] ?? {};
 
