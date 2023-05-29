@@ -12,6 +12,8 @@ import 'package:mobile/src/integrations/ui/widgets/header_trailing_action_button
 import 'package:mobile/src/integrations/ui/widgets/integration_list_item.dart';
 import 'package:mobile/src/integrations/ui/widgets/integration_setting.dart';
 import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
+import 'package:mobile/src/integrations/ui/widgets/mark_done_modal.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 
 class IntegrationDetailsPage extends StatefulWidget {
@@ -95,12 +97,42 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
   }
 
   Widget _behaviour(Account account, String title) {
-    String subtitle =
-        MarkAsDoneType.titleFromKey(key: account.details?['mark_as_done_action'], integrationTitle: title);
+    String? markDoneSetting = account.details?['mark_as_done_action'];
+    String subtitle = MarkAsDoneType.titleFromKey(key: markDoneSetting, integrationTitle: title);
     return IntegrationSetting(
       title: t.settings.integrations.onMarkAsDone.title,
       subtitle: subtitle,
-      onPressed: () async {},
+      onPressed: () async {
+        MarkAsDoneType initialType;
+
+        switch (markDoneSetting) {
+          case 'unstar':
+            initialType = MarkAsDoneType.unstarTheEmail;
+            break;
+          case 'markAsDone':
+            initialType = MarkAsDoneType.markAsDone;
+            break;
+          case 'open':
+            initialType = MarkAsDoneType.goTo;
+            break;
+          case 'cancel':
+            initialType = MarkAsDoneType.doNothing;
+            break;
+          default:
+            initialType = MarkAsDoneType.askMeEveryTime;
+            break;
+        }
+
+        MarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => MarkDoneModal(
+            initialType: initialType,
+            integrationTitle: title,
+          ),
+        );
+
+        print(selectedType);
+      },
     );
   }
 }

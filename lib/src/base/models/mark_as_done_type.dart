@@ -3,6 +3,7 @@ import 'package:models/integrations/gmail.dart';
 
 enum MarkAsDoneType {
   unstarTheEmail('unstar'),
+  markAsDone('markAsDone'),
   goTo('open'),
   doNothing('cancel'),
   askMeEveryTime(null);
@@ -14,6 +15,8 @@ enum MarkAsDoneType {
     switch (key) {
       case 'unstar':
         return unstarTheEmail;
+      case 'markAsDone':
+        return markAsDone;
       case 'open':
         return goTo;
       case 'cancel':
@@ -31,6 +34,8 @@ enum MarkAsDoneType {
         } else {
           return t.settings.integrations.onMarkAsDone.unstarTheEmail;
         }
+      case 'markAsDone':
+        return t.settings.integrations.onMarkAsDone.markAsDone(tool: integrationTitle ?? t.settings.integrations.title);
       case 'open':
         return '${t.settings.integrations.onMarkAsDone.goTo} $integrationTitle';
       case 'cancel':

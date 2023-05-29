@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 337 
+ * Strings: 339 
  *
- * Built on 2023-05-29 at 07:31 UTC
+ * Built on 2023-05-29 at 08:35 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -942,8 +942,10 @@ class _StringsSettingsIntegrationsOnMarkAsDoneEn {
 
 	// Translations
 	String get title => 'On mark as done';
+	String behaviorOfToolOnMarkDone({required Object tool}) => 'Behavior of ${tool} tasks on mark as done';
 	String get unstarTheEmail => 'Unstar the email';
 	String get unlabelTheEmail => 'Unlabel the email';
+	String markAsDone({required Object tool}) => 'Mark as done in ${tool}';
 	String get goTo => 'Go to';
 	String get doNothing => 'Do nothing';
 	String get askMeEveryTime => 'Ask me every time';
@@ -1153,8 +1155,10 @@ extension on _StringsEn {
 			'settings.integrations.title': 'Integrations',
 			'settings.integrations.connected': 'Connected',
 			'settings.integrations.onMarkAsDone.title': 'On mark as done',
+			'settings.integrations.onMarkAsDone.behaviorOfToolOnMarkDone': ({required Object tool}) => 'Behavior of ${tool} tasks on mark as done',
 			'settings.integrations.onMarkAsDone.unstarTheEmail': 'Unstar the email',
 			'settings.integrations.onMarkAsDone.unlabelTheEmail': 'Unlabel the email',
+			'settings.integrations.onMarkAsDone.markAsDone': ({required Object tool}) => 'Mark as done in ${tool}',
 			'settings.integrations.onMarkAsDone.goTo': 'Go to',
 			'settings.integrations.onMarkAsDone.doNothing': 'Do nothing',
 			'settings.integrations.onMarkAsDone.askMeEveryTime': 'Ask me every time',

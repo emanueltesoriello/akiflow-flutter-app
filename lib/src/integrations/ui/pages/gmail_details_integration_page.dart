@@ -13,11 +13,11 @@ import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/circle_account_picture.dart';
 import 'package:mobile/src/integrations/ui/widgets/gmail/gmail_import_task_modal.dart';
-import 'package:mobile/src/integrations/ui/widgets/gmail/gmail_mark_done_modal.dart';
 import 'package:mobile/src/integrations/ui/widgets/header_trailing_action_buttons.dart';
 import 'package:mobile/src/integrations/ui/widgets/integration_list_item.dart';
 import 'package:mobile/src/integrations/ui/widgets/integration_setting.dart';
 import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
+import 'package:mobile/src/integrations/ui/widgets/mark_done_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:models/integrations/gmail.dart';
@@ -70,7 +70,10 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
 
             MarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
               context: context,
-              builder: (context) => GmailMarkDoneModal(initialType: initialType),
+              builder: (context) => MarkDoneModal(
+                initialType: initialType,
+                integrationTitle: 'Gmail',
+              ),
             );
 
             if (selectedType != null) {
