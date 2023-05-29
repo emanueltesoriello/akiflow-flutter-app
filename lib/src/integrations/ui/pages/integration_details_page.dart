@@ -104,6 +104,7 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
       subtitle: subtitle,
       onPressed: () async {
         MarkAsDoneType initialType;
+        var integrationsCubit = context.read<IntegrationsCubit>();
 
         switch (markDoneSetting) {
           case 'unstar':
@@ -131,7 +132,9 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
           ),
         );
 
-        print(selectedType);
+        if (selectedType != null) {
+          integrationsCubit.behaviorMarkAsDone(account, selectedType);
+        }
       },
     );
   }

@@ -69,6 +69,23 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     _syncCubit.sync(loading: true);
   }
 
+  Future<void> behaviorMarkAsDone(Account account, MarkAsDoneType selectedType) async {
+    Map<String, dynamic>? settings = Map.from(account.details ?? {});
+    settings['mark_as_done_action'] = selectedType.key;
+
+    account = account.copyWith(
+      details: settings,
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+
+    await _accountsRepository.updateById(account.id, data: account);
+
+    List<Account> accounts = await _accountsRepository.getAccounts();
+    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+
+    _syncCubit.sync(loading: true);
+  }
+
   void gmailBehaviorOnMarkAsDone(MarkAsDoneType selectedType) {
     Map<String, dynamic> settings = Map.from(_authCubit.state.user!.settings ?? {});
     Map<String, dynamic> popups = settings['popups'] ?? {};
