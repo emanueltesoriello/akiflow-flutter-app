@@ -27,6 +27,7 @@ import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/extensions/account_ext.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
@@ -286,6 +287,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
     for (Task taskSelected in all) {
       Task updated = taskSelected.markAsDone(taskSelected);
+
+      bool markAsDoneRemote = await shouldMarkAsDoneRemote(updated);
+      if (markAsDoneRemote) {
+        Map<String, dynamic> content = updated.content;
+        content['shouldMarkAsDoneRemote'] = updated.done!;
+
+        updated = updated.copyWith(content: content);
+      }
 
       await _tasksRepository.updateById(taskSelected.id, data: updated);
 
@@ -738,6 +747,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in labelTasksSelected) {
       Task updated = task.markAsDone(task);
 
+      bool markAsDoneRemote = await shouldMarkAsDoneRemote(updated);
+      if (markAsDoneRemote) {
+        Map<String, dynamic> content = updated.content;
+        content['shouldMarkAsDoneRemote'] = updated.done!;
+
+        updated = updated.copyWith(content: content);
+      }
+
       await _tasksRepository.updateById(updated.id, data: updated);
 
       refreshTasksUi(updated);
@@ -750,6 +767,22 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync(entities: [Entity.tasks]);
 
     emit(state.copyWith(labelTasks: []));
+  }
+
+  Future<bool> shouldMarkAsDoneRemote(Task task) async {
+    if (task.connectorId != null && AccountExt.settingsEnabled.contains(task.connectorId!.value!)) {
+      List<Account> accounts = await _accountsRepository.getAccounts();
+      Account account = accounts.firstWhere(
+          (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
+
+      String? markAsDoneKey = account.details?['mark_as_done_action'];
+      MarkAsDoneType markAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
+
+      if (markAsDoneType == MarkAsDoneType.markAsDone) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Future<void> handleDocAction(List<Task> tasks) async {
@@ -767,7 +800,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> gmailTasks = [];
 
     for (var task in all) {
-      if (task.connectorId != null && task.connectorId!.value! == 'gmail' && task.doc != null) {
+      if (task.connectorId != null &&
+          task.doc != null &&
+          (task.connectorId!.value! == 'gmail' || AccountExt.settingsEnabled.contains(task.connectorId!.value!))) {
         gmailTasks.add(task);
       }
     }

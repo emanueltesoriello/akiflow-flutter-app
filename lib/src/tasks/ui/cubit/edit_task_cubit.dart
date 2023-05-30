@@ -277,6 +277,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
 
     Task updated = task.markAsDone(state.originalTask);
 
+    bool markAsDoneRemote = await _tasksCubit.shouldMarkAsDoneRemote(updated);
+    if (markAsDoneRemote) {
+      Map<String, dynamic> content = updated.content;
+      content['shouldMarkAsDoneRemote'] = updated.done!;
+
+      updated = updated.copyWith(content: content);
+    }
+
     emit(state.copyWith(updatedTask: updated));
 
     _tasksCubit.refreshTasksUi(updated);
