@@ -792,7 +792,23 @@ class TasksCubit extends Cubit<TasksCubitState> {
       String? markAsDoneKey = account.details?['mark_as_done_action'];
       MarkAsDoneType markAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
 
-      if (markAsDoneType == MarkAsDoneType.markAsDone) {
+      if (markAsDoneType == MarkAsDoneType.markAsDone || markAsDoneType == MarkAsDoneType.changeList) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> shouldArchiveRemote(Task task) async {
+    if (task.connectorId != null && AccountExt.settingsEnabled.contains(task.connectorId!.value!)) {
+      List<Account> accounts = await _accountsRepository.getAccounts();
+      Account account = accounts.firstWhere(
+          (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
+
+      String? markAsDoneKey = account.details?['mark_as_done_action'];
+      MarkAsDoneType markAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
+
+      if (markAsDoneType == MarkAsDoneType.archive) {
         return true;
       }
     }

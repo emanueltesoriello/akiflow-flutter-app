@@ -95,7 +95,7 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                   ),
                 ],
               ),
-            if (integrationTitle != 'Gmail')
+            if (integrationTitle != 'Gmail' && integrationTitle != 'Trello')
               Column(
                 children: [
                   const SizedBox(height: 2),
@@ -109,6 +109,44 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                       });
                       if (!widget.askBehavior) {
                         Navigator.pop(context, MarkAsDoneType.markAsDone);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            if (integrationTitle == 'Trello')
+              Column(
+                children: [
+                  const SizedBox(height: 2),
+                  _item(
+                    context,
+                    text: 'Archive in Trello',
+                    selected: selectedType == MarkAsDoneType.archive,
+                    onPressed: () {
+                      setState(() {
+                        selectedType = MarkAsDoneType.archive;
+                      });
+                      if (!widget.askBehavior) {
+                        Navigator.pop(context, MarkAsDoneType.archive);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            if (integrationTitle == 'Trello')
+              Column(
+                children: [
+                  const SizedBox(height: 2),
+                  _item(
+                    context,
+                    text: 'Change list in Trello',
+                    selected: selectedType == MarkAsDoneType.changeList,
+                    onPressed: () {
+                      setState(() {
+                        selectedType = MarkAsDoneType.changeList;
+                      });
+                      if (!widget.askBehavior) {
+                        Navigator.pop(context, MarkAsDoneType.changeList);
                       }
                     },
                   ),

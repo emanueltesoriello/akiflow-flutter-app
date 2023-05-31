@@ -113,6 +113,12 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
           case 'markAsDone':
             initialType = MarkAsDoneType.markAsDone;
             break;
+          case 'change_list':
+            initialType = MarkAsDoneType.changeList;
+            break;
+          case 'archive':
+            initialType = MarkAsDoneType.archive;
+            break;
           case 'open':
             initialType = MarkAsDoneType.goTo;
             break;

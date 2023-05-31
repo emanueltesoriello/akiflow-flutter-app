@@ -255,7 +255,13 @@ class _TaskListState extends State<TaskList> {
                             );
                             switch (selectedType) {
                               case MarkAsDoneType.markAsDone:
-                                editTaskCubit.markAsDone(forceUpdate: true, forceMarkAsDoneRemove: true);
+                                editTaskCubit.markAsDone(forceUpdate: true, forceMarkAsDoneRemote: true);
+                                break;
+                              case MarkAsDoneType.changeList:
+                                editTaskCubit.markAsDone(forceUpdate: true, forceMarkAsDoneRemote: true);
+                                break;
+                              case MarkAsDoneType.archive:
+                                editTaskCubit.markAsDone(forceUpdate: true, forceArchiveRemote: true);
                                 break;
                               case MarkAsDoneType.goTo:
                                 editTaskCubit
