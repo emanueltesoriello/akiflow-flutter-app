@@ -5,9 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/base/sync_progress.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
@@ -21,20 +21,24 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
   final Widget? customTitle;
   final bool shadow;
   final bool showSyncButton;
+  final bool showLinearProgress;
+  final double elevation;
 
-  const AppBarComp({
-    Key? key,
-    this.title,
-    this.titleWidget,
-    this.showBack = false,
-    this.actions = const [],
-    this.onBackClick,
-    this.showLogo = false,
-    this.leading,
-    this.customTitle,
-    this.shadow = true,
-    this.showSyncButton = false,
-  }) : super(key: key);
+  const AppBarComp(
+      {Key? key,
+      this.title,
+      this.titleWidget,
+      this.showBack = false,
+      this.actions = const [],
+      this.onBackClick,
+      this.showLogo = false,
+      this.leading,
+      this.customTitle,
+      this.shadow = true,
+      this.showLinearProgress = true,
+      this.showSyncButton = false,
+      this.elevation = 4})
+      : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
@@ -55,22 +59,44 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
               ]
             : null,
       ),
-      child: AppBar(
-        centerTitle: false,
-        backgroundColor: ColorsExt.background(context),
-        surfaceTintColor: ColorsExt.background(context),
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-        ),
-        elevation: 4,
-        automaticallyImplyLeading: false,
-        shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
-        title: _buildTitle(context),
-        titleSpacing: leading != null || showBack == true ? 0 : 16,
-        leading: _buildLeading(context),
-        actions: _buildActions(context),
+      child: BlocBuilder<SyncCubit, SyncCubitState>(
+        builder: (context, state) {
+          return AppBar(
+            centerTitle: false,
+            scrolledUnderElevation: 0,
+            backgroundColor: ColorsExt.background(context),
+            surfaceTintColor: ColorsExt.background(context),
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+            ),
+            bottom: (showSyncButton == false || state.loading == false)
+                ? PreferredSize(
+                    preferredSize: Size.zero,
+                    child: Container(height: Dimension.progressIndicatorSize / 2),
+                  )
+                : showLinearProgress
+                    ? const PreferredSize(
+                        preferredSize: Size.fromHeight(Dimension.progressIndicatorSize),
+                        child: LinearProgressIndicator(
+                          value: null,
+                          minHeight: Dimension.progressIndicatorSize / 2,
+                        ),
+                      )
+                    : PreferredSize(
+                        preferredSize: Size.zero,
+                        child: Container(height: Dimension.progressIndicatorSize / 2),
+                      ),
+            elevation: elevation,
+            automaticallyImplyLeading: false,
+            shadowColor: shadow ? const Color.fromRGBO(0, 0, 0, 0.3) : null,
+            title: _buildTitle(context),
+            titleSpacing: leading != null || showBack == true ? 0 : Dimension.padding,
+            leading: _buildLeading(context),
+            actions: _buildActions(context),
+          );
+        },
       ),
     );
   }
@@ -87,7 +113,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
             Assets.images.icons.common.arrowLeftSVG,
             width: 26,
             height: 26,
-            color: ColorsExt.grey2(context),
+            color: ColorsExt.grey800(context),
           ),
         ),
       );
@@ -105,7 +131,7 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
             Assets.images.icons.common.arrowLeftSVG,
             height: 26,
             width: 26,
-            color: ColorsExt.grey2(context),
+            color: ColorsExt.grey800(context),
           ),
         ),
       );
@@ -122,11 +148,10 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
     if (tasksSelected != 0) {
       return Text(
         t.task.nSelected(count: tasksSelected),
-        style: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w500,
-          color: ColorsExt.grey2(context),
-        ),
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey800(context),
+            ),
       );
     }
 
@@ -142,13 +167,14 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
       return const SizedBox();
     }
 
-    return Text(
-      title!,
-      textAlign: TextAlign.start,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: ColorsExt.grey2(context)),
-    );
+    return Text(title!,
+        textAlign: TextAlign.start,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context)
+            .textTheme
+            .titleLarge!
+            .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)));
   }
 
   List<Widget> _buildActions(BuildContext context) {
@@ -165,22 +191,21 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
         builder: (context, state) {
           if (state.networkError) {
             return SizedBox(
-              height: 24,
-              width: 24,
+              height: Dimension.defaultIconSize,
+              width: Dimension.defaultIconSize,
               child: SvgPicture.asset(
                 Assets.images.icons.common.wifiSlashSVG,
-                color: ColorsExt.yellow(context),
+                color: ColorsExt.buttercup400(context),
               ),
             );
           }
           if (showSyncButton == false || state.loading == false) {
             return const SizedBox();
           }
-
-          return const SyncProgress();
+          return Container();
         },
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: Dimension.paddingS),
       ...actions,
     ];
   }

@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -34,17 +35,17 @@ class _DeadlineModalState extends State<DeadlineModal> {
         decoration: const BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         child: ListView(
           shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   SvgPicture.asset(
@@ -52,14 +53,13 @@ class _DeadlineModalState extends State<DeadlineModal> {
                     width: 28,
                     height: 28,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.deadline,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey800(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),
@@ -77,7 +77,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
               defaultTimeHour: context.watch<AuthCubit>().state.user!.defaultHour,
             ),
             const Separator(),
-            const SizedBox(height: 50),
+            const SizedBox(height: Dimension.paddingXL),
           ],
         ),
       ),
@@ -162,21 +162,19 @@ Widget _predefinedDateItem(
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-                color: ColorsExt.grey2(context),
-              ),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: ColorsExt.grey800(context),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: Dimension.paddingS),
           Text(
             trailingText,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: ColorsExt.grey3(context),
-            ),
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  color: ColorsExt.grey600(context),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ],
       ),

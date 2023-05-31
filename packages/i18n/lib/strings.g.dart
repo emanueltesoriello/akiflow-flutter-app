@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 320 
+ * Strings: 337 
  *
- * Built on 2023-03-17 at 15:25 UTC
+ * Built on 2023-05-23 at 11:45 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -510,8 +510,12 @@ class _StringsCalendarEn {
 	String get goToToday => 'Go to Today';
 	String get calendarView => 'Calendar View';
 	late final _StringsCalendarViewEn view = _StringsCalendarViewEn._(_root);
+	String get groupOverlappingTasks => 'Group overlapping tasks';
 	String get hideWeekends => 'Hide Weekends';
+	String get hideDeclinedEvents => 'Hide Declined events';
+	String get hideTasksFromCalendar => 'Hide Tasks from calendar';
 	String get calendars => 'Calendars';
+	String get refresh => 'Refresh';
 }
 
 // Path: linkedContent
@@ -561,6 +565,7 @@ class _StringsEditTaskEn {
 	String get assignLabel => 'Assign Label';
 	String get searchALabel => 'Search a label';
 	String get noLabel => 'No label';
+	String get addLabel => 'Add label';
 	String get removeLabel => 'Remove label';
 	String get deadline => 'Deadline';
 	String get repeat => 'Repeat';
@@ -569,6 +574,8 @@ class _StringsEditTaskEn {
 	String everyCurrentDay({required Object day}) => 'Every ${day}';
 	String everyFirstCurrentDayOfTheMonth({required Object day}) => 'Every first ${day} of the month';
 	String everyYearOn({required Object date}) => 'Every year on ${date}';
+	String everyMonthOn({required Object date}) => 'Every month on ${date}';
+	String get everyLastDayOfTheMonth => 'Every last day of the month';
 	String get everyWeekday => 'Every weekday';
 	String get custom => 'Custom';
 	String get comingSoon => 'Coming soon';
@@ -656,7 +663,8 @@ class _StringsAvailabilityEn {
 
 	// Translations
 	String get availabilities => 'Availabilities';
-	String get activeRecurrentSlots => 'Active recurrent slots';
+	String get shareAvailabilities => 'Share availabilities';
+	String get activeRecurrentSlots => 'Recurrent slots';
 	String get activeManualSlots => 'Active manual slots';
 	String get noActiveLinksToShow => 'No active links to show';
 	String get toCreateLinkUseDesktop => 'To create a link use the desktop app';
@@ -672,6 +680,7 @@ class _StringsSnackbarEn {
 	// Translations
 	String get connectedSuccesfully => 'Connected successfully!';
 	String get cannotMoveThisEvent => 'You cannot move this event!';
+	String get copiedToYourClipboard => 'Copied to your clipboard';
 }
 
 // Path: integrations
@@ -892,18 +901,24 @@ class _StringsEventEditEventEn {
 	final _StringsEn _root; // ignore: unused_field
 
 	// Translations
+	String get addTitle => 'Add title';
 	String get allDay => 'All Day';
 	String get addConference => 'Add Conference';
 	String get addLocation => 'Add Location';
+	String get chooseCalendar => 'Choose Calendar';
 	String get addGuests => 'Add guests';
 	String get addDescription => 'Add Description';
 	String get defaultColor => 'Default Color';
+	String get customColor => 'Custom color';
+	String get eventColor => 'Event color';
 	String get viewOnGoogleCalendar => 'View on Google Calendar';
 	String get createEvent => 'Create event';
 	String get saveChanges => 'Save Changes';
 	late final _StringsEventEditEventRepeatingEditModalEn repeatingEditModal = _StringsEventEditEventRepeatingEditModalEn._(_root);
 	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
 	late final _StringsEventEditEventRecurrenceEn recurrence = _StringsEventEditEventRecurrenceEn._(_root);
+	late final _StringsEventEditEventAddGuestModalEn addGuestModal = _StringsEventEditEventAddGuestModalEn._(_root);
+	late final _StringsEventEditEventAddLocationModalEn addLocationModal = _StringsEventEditEventAddLocationModalEn._(_root);
 }
 
 // Path: event.snackbar
@@ -1000,6 +1015,28 @@ class _StringsEventEditEventRecurrenceEn {
 	String get everyDay => 'Every day';
 	String get everyWeekday => 'Every weekday';
 	String get custom => 'Custom';
+}
+
+// Path: event.editEvent.addGuestModal
+class _StringsEventEditEventAddGuestModalEn {
+	_StringsEventEditEventAddGuestModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get addGuest => 'Add guest';
+	String get searchContact => 'Search contact';
+}
+
+// Path: event.editEvent.addLocationModal
+class _StringsEventEditEventAddLocationModalEn {
+	_StringsEventEditEventAddLocationModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get addLocation => 'Add Location';
+	String get search => 'Search';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1214,8 +1251,12 @@ extension on _StringsEn {
 			'calendar.view.threeDays': '3 Days',
 			'calendar.view.week': 'Week',
 			'calendar.view.month': 'Month',
+			'calendar.groupOverlappingTasks': 'Group overlapping tasks',
 			'calendar.hideWeekends': 'Hide Weekends',
+			'calendar.hideDeclinedEvents': 'Hide Declined events',
+			'calendar.hideTasksFromCalendar': 'Hide Tasks from calendar',
 			'calendar.calendars': 'Calendars',
+			'calendar.refresh': 'Refresh',
 			'linkedContent.subject': 'Subject',
 			'linkedContent.from': 'From',
 			'linkedContent.date': 'Date',
@@ -1247,6 +1288,7 @@ extension on _StringsEn {
 			'editTask.assignLabel': 'Assign Label',
 			'editTask.searchALabel': 'Search a label',
 			'editTask.noLabel': 'No label',
+			'editTask.addLabel': 'Add label',
 			'editTask.removeLabel': 'Remove label',
 			'editTask.deadline': 'Deadline',
 			'editTask.repeat': 'Repeat',
@@ -1255,6 +1297,8 @@ extension on _StringsEn {
 			'editTask.everyCurrentDay': ({required Object day}) => 'Every ${day}',
 			'editTask.everyFirstCurrentDayOfTheMonth': ({required Object day}) => 'Every first ${day} of the month',
 			'editTask.everyYearOn': ({required Object date}) => 'Every year on ${date}',
+			'editTask.everyMonthOn': ({required Object date}) => 'Every month on ${date}',
+			'editTask.everyLastDayOfTheMonth': 'Every last day of the month',
 			'editTask.everyWeekday': 'Every weekday',
 			'editTask.custom': 'Custom',
 			'editTask.comingSoon': 'Coming soon',
@@ -1327,12 +1371,16 @@ extension on _StringsEn {
 			'event.mailGuests': 'Mail Guests',
 			'event.edit': 'Edit',
 			'event.delete': 'Delete',
+			'event.editEvent.addTitle': 'Add title',
 			'event.editEvent.allDay': 'All Day',
 			'event.editEvent.addConference': 'Add Conference',
 			'event.editEvent.addLocation': 'Add Location',
+			'event.editEvent.chooseCalendar': 'Choose Calendar',
 			'event.editEvent.addGuests': 'Add guests',
 			'event.editEvent.addDescription': 'Add Description',
 			'event.editEvent.defaultColor': 'Default Color',
+			'event.editEvent.customColor': 'Custom color',
+			'event.editEvent.eventColor': 'Event color',
 			'event.editEvent.viewOnGoogleCalendar': 'View on Google Calendar',
 			'event.editEvent.createEvent': 'Create event',
 			'event.editEvent.saveChanges': 'Save Changes',
@@ -1350,17 +1398,23 @@ extension on _StringsEn {
 			'event.editEvent.recurrence.everyDay': 'Every day',
 			'event.editEvent.recurrence.everyWeekday': 'Every weekday',
 			'event.editEvent.recurrence.custom': 'Custom',
+			'event.editEvent.addGuestModal.addGuest': 'Add guest',
+			'event.editEvent.addGuestModal.searchContact': 'Search contact',
+			'event.editEvent.addLocationModal.addLocation': 'Add Location',
+			'event.editEvent.addLocationModal.search': 'Search',
 			'event.snackbar.created': 'Event created successfully',
 			'event.snackbar.edited': 'Event updated successfully',
 			'event.snackbar.deleted': 'Event has been deleted',
 			'availability.availabilities': 'Availabilities',
-			'availability.activeRecurrentSlots': 'Active recurrent slots',
+			'availability.shareAvailabilities': 'Share availabilities',
+			'availability.activeRecurrentSlots': 'Recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',
 			'availability.noActiveLinksToShow': 'No active links to show',
 			'availability.toCreateLinkUseDesktop': 'To create a link use the desktop app',
 			'availability.linkCopiedToClipboard': 'Link copied to clipboard!',
 			'snackbar.connectedSuccesfully': 'Connected successfully!',
 			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
+			'snackbar.copiedToYourClipboard': 'Copied to your clipboard',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',

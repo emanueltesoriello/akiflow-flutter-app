@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/pages/auth_page.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
@@ -24,23 +25,25 @@ class MyAccountPage extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.paddingS),
                   Text(
                     t.settings.myAccount.connectedAs.toUpperCase(),
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey600(context),
+                        ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.paddingXS),
                   Container(
-                    height: 62,
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                    padding: const EdgeInsets.all(Dimension.padding),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
                       color: ColorsExt.background(context),
-                      border: Border.all(color: ColorsExt.grey5(context), width: 1),
+                      border: Border.all(color: ColorsExt.grey200(context), width: 1),
                     ),
                     child: Row(
                       children: [
@@ -49,7 +52,7 @@ class MyAccountPage extends StatelessWidget {
                           width: 42,
                           height: 42,
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: Dimension.padding),
                         Expanded(
                           child: BlocBuilder<AuthCubit, AuthCubitState>(
                             builder: (context, state) {
@@ -62,14 +65,18 @@ class MyAccountPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     state.user?.name ?? "n/d",
-                                    style: TextStyle(
-                                        fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: Dimension.paddingXS),
                                   Text(
                                     state.user?.email ?? "n/d",
-                                    style: TextStyle(
-                                        fontSize: 12, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               );
@@ -79,12 +86,15 @@ class MyAccountPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Dimension.padding),
                   Text(
                     t.settings.myAccount.manageAccount.toUpperCase(),
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.paddingXS),
                   ButtonList(
                     title: t.settings.myAccount.manageAccount,
                     position: ButtonListPosition.single,
@@ -95,42 +105,21 @@ class MyAccountPage extends StatelessWidget {
                       height: 22,
                     ),
                     onPressed: () {
-                      launchUrl(Uri.parse("https://app.akiflow.com/en/dashboard/profile"),
-                          mode: LaunchMode.externalApplication);
+                      launchUrl(Uri.parse("http://web.akiflow.com/billing"), mode: LaunchMode.externalApplication);
                     },
                   ),
-                  const SizedBox(height: 16),
-                  // Text(
-                  //   t.settings.myAccount.manageSubscriptionAndBillingPreferences.toUpperCase(),
-                  //   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
-                  // ),
-                  // const SizedBox(height: 4),
-                  // ButtonList(
-                  //   title: t.settings.myAccount.manageAccount,
-                  //   position: ButtonListPosition.single,
-                  //   leading: "assets/images/icons/_common/money_dollar_circle.svg",
-                  //   trailingWidget: SvgPicture.asset(
-                  //     "assets/images/icons/_common/arrow_up_right_square.svg",
-                  //     width: 22,
-                  //     height: 22,
-                  //   ),
-                  //   onPressed: () {
-                  //     launchUrl(Uri.parse("https://app.akiflow.com/en/checkout/billing"),
-                  //         mode: LaunchMode.externalApplication);
-                  //   },
-                  // ),
+                  const SizedBox(height: Dimension.padding),
                   const Spacer(),
                   ButtonList(
                     title: t.settings.myAccount.logout,
                     position: ButtonListPosition.single,
                     onPressed: () {
                       context.read<AuthCubit>().logout();
-
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (context) => const AuthPage()), (Route<dynamic> route) => false);
                     },
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: Dimension.paddingL),
                 ],
               ),
             ),

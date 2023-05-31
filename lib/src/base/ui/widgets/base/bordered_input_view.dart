@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class BorderedInputView extends StatefulWidget {
   final String hint;
@@ -43,7 +44,7 @@ class _BorderedInputViewState extends State<BorderedInputView> {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: ColorsExt.grey4(context),
+          color: ColorsExt.grey300(context),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -54,7 +55,7 @@ class _BorderedInputViewState extends State<BorderedInputView> {
           children: [
             if (widget.leading != null)
               Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: Dimension.paddingS),
                 child: widget.leading!,
               ),
             Expanded(
@@ -67,16 +68,15 @@ class _BorderedInputViewState extends State<BorderedInputView> {
                   isDense: true,
                   hintText: widget.hint,
                   border: InputBorder.none,
-                  hintStyle: TextStyle(
-                    color: ColorsExt.grey3(context),
-                    fontSize: 17,
-                  ),
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                 ),
-                style: TextStyle(
-                  color: ColorsExt.grey2(context),
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                 onChanged: widget.onChanged,
               ),
             ),

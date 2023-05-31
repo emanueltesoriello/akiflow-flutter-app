@@ -34,16 +34,16 @@ class BottomTaskActions extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: bottomBarHeight,
+            height: Dimension.bottomBarHeight,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.cyan25(context),
-                    topColor: ColorsExt.cyan(context),
-                    icon: 'assets/images/icons/_common/calendar.svg',
+                    backColor: ColorsExt.jordyBlue200(context),
+                    topColor: ColorsExt.jordyBlue400(context),
+                    icon: Assets.images.icons.common.calendarSVG,
                     bottomLabel: t.task.plan,
                     click: () {
                       showCupertinoModalBottomSheet(
@@ -75,9 +75,9 @@ class BottomTaskActions extends StatelessWidget {
                 ),
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.pink30(context),
-                    topColor: ColorsExt.pink(context),
-                    icon: 'assets/images/icons/_common/clock.svg',
+                    backColor: ColorsExt.rose200(context),
+                    topColor: ColorsExt.rose400(context),
+                    icon: Assets.images.icons.common.clockSVG,
                     bottomLabel: t.task.snooze,
                     click: () {
                       showCupertinoModalBottomSheet(
@@ -110,9 +110,9 @@ class BottomTaskActions extends StatelessWidget {
                 ),
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.grey5(context),
-                    topColor: ColorsExt.grey3(context),
-                    icon: 'assets/images/icons/_common/number.svg',
+                    backColor: ColorsExt.grey200(context),
+                    topColor: ColorsExt.grey700(context),
+                    icon: Assets.images.icons.common.numberSVG,
                     bottomLabel: 'Label',
                     click: () {
                       var cubit = context.read<TasksCubit>();
@@ -122,7 +122,6 @@ class BottomTaskActions extends StatelessWidget {
                         builder: (context) => LabelsModal(
                           selectLabel: (Label label) {
                             cubit.assignLabel(label);
-                            Navigator.pop(context);
                           },
                           showNoLabel: true,
                         ),
@@ -132,9 +131,9 @@ class BottomTaskActions extends StatelessWidget {
                 ),
                 Expanded(
                   child: ButtonAction(
-                    backColor: ColorsExt.grey5(context),
-                    topColor: ColorsExt.grey3(context),
-                    icon: 'assets/images/icons/_common/exclamationmark.svg',
+                    backColor: ColorsExt.grey200(context),
+                    topColor: ColorsExt.grey700(context),
+                    icon: Assets.images.icons.common.exclamationmarkSVG,
                     bottomLabel: t.task.priority.title,
                     click: () async {
                       TasksCubit cubit = context.read<TasksCubit>();
@@ -151,17 +150,29 @@ class BottomTaskActions extends StatelessWidget {
                   ),
                 ),
                 Expanded(
+                  child: ButtonAction(
+                    backColor: ColorsExt.grey200(context),
+                    topColor: ColorsExt.grey700(context),
+                    icon: Assets.images.icons.common.trashSVG,
+                    bottomLabel: t.task.delete,
+                    click: () async {
+                      context.read<TasksCubit>().delete();
+                    },
+                  ),
+                ),
+                Expanded(
                   child: Theme(
                     data: Theme.of(context)
                         .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
                     child: BlocBuilder<TodayCubit, TodayCubitState>(builder: (context, todayCubitState) {
                       return BlocBuilder<MainCubit, MainCubitState>(builder: (context, state) {
                         return PopupMenuButton<BottomTaskAdditionalActions>(
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
                           icon: SvgPicture.asset(
                             Assets.images.icons.common.ellipsisSVG,
-                            width: 26,
-                            height: 26,
-                            color: ColorsExt.grey2(context),
+                            width: Dimension.defaultIconSize,
+                            height: Dimension.defaultIconSize,
+                            color: ColorsExt.grey800(context),
                           ),
                           onSelected: (BottomTaskAdditionalActions result) {
                             switch (result) {
@@ -203,8 +214,7 @@ class BottomTaskActions extends StatelessWidget {
                                 TasksCubit tasksCubit = context.read<TasksCubit>();
                                 tasksCubit.markAsDone();
                                 break;
-                              case BottomTaskAdditionalActions.delete:
-                                context.read<TasksCubit>().delete();
+                              default:
                                 break;
                             }
                           },
@@ -246,13 +256,6 @@ class BottomTaskActions extends StatelessWidget {
                               child: PopupMenuCustomItem(
                                 iconAsset: Assets.images.icons.common.checkDoneOutlineSVG,
                                 text: t.task.markAsDone,
-                              ),
-                            ),
-                            PopupMenuItem<BottomTaskAdditionalActions>(
-                              value: BottomTaskAdditionalActions.delete,
-                              child: PopupMenuCustomItem(
-                                iconAsset: Assets.images.icons.common.trashSVG,
-                                text: t.task.delete,
                               ),
                             ),
                           ],

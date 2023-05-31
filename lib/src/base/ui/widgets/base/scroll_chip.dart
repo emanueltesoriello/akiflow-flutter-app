@@ -14,7 +14,7 @@ class ScrollChip extends StatelessWidget {
           width: 32,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(3),
-            color: ColorsExt.grey4(context),
+            color: ColorsExt.grey300(context),
           ),
         ),
       ],

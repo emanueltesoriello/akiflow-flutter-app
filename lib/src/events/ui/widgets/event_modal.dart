@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:html/parser.dart';
@@ -8,21 +9,21 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/utils/no_scroll_behav.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
-import 'package:mobile/src/events/ui/widgets/delete_event_confirmation_modal.dart';
-import 'package:mobile/src/events/ui/widgets/event_edit_modal.dart';
-import 'package:mobile/src/events/ui/widgets/recurrent_event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/confirmation_modals/delete_event_confirmation_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tuple/tuple.dart' as tuple;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class EventModal extends StatefulWidget {
@@ -99,641 +100,413 @@ class _EventModalState extends State<EventModal> {
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
-          color: Colors.white,
+          color: ColorsExt.background(context),
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.padding),
+            topRight: Radius.circular(Dimension.padding),
           ),
-          child: ScrollConfiguration(
-            behavior: NoScrollBehav(),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                const ScrollChip(),
-                Expanded(
-                  child: ListView(
-                    physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset(
-                                Assets.images.icons.common.squareFillSVG,
-                                color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
-                              ),
-                            ),
-                            const SizedBox(width: 16.0),
-                            Expanded(
-                              child: Text(
-                                selectedEvent.title ?? t.noTitle,
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 20.0, fontWeight: FontWeight.w500, color: ColorsExt.grey1(context)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Separator(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset(
-                                Assets.images.icons.common.calendarSVG,
-                              ),
-                            ),
-                            const SizedBox(width: 16.0),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (selectedEvent.startTime != null)
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          selectedEvent.recurringId == null
-                                              ? DateFormat("EEE dd MMM")
-                                                  .format(DateTime.parse(selectedEvent.startTime!))
-                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey2(context)),
-                                        ),
-                                        const SizedBox(height: 12.0),
-                                        Text(
-                                          DateFormat("HH:mm")
-                                              .format(DateTime.parse(selectedEvent.startTime!).toLocal()),
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w600,
-                                              color: ColorsExt.grey2(context)),
-                                        ),
-                                      ],
-                                    ),
-                                  if (selectedEvent.startDate != null)
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          selectedEvent.recurringId == null
-                                              ? DateFormat("EEE dd MMM")
-                                                  .format(DateTime.parse(selectedEvent.startDate!))
-                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey2(context)),
-                                        ),
-                                      ],
-                                    ),
-                                  SvgPicture.asset(
-                                    Assets.images.icons.common.chevronRightSVG,
-                                    width: 22,
-                                    height: 22,
-                                  ),
-                                  if (selectedEvent.endTime != null)
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          selectedEvent.recurringId == null
-                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endTime!))
-                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey2(context)),
-                                        ),
-                                        const SizedBox(height: 12.0),
-                                        Text(
-                                          DateFormat("HH:mm").format(DateTime.parse(selectedEvent.endTime!).toLocal()),
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w600,
-                                              color: ColorsExt.grey2(context)),
-                                        ),
-                                      ],
-                                    ),
-                                  if (selectedEvent.endDate != null)
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          selectedEvent.recurringId == null
-                                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endDate!))
-                                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
-                                          style: TextStyle(
-                                              fontSize: 17.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsExt.grey2(context)),
-                                        ),
-                                      ],
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (selectedEvent.meetingUrl != null)
-                        Column(
-                          children: [
-                            const Separator(),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: SvgPicture.asset(
-                                          selectedEvent.meetingSolution == 'meet'
-                                              ? Assets.images.icons.google.meetSVG
-                                              : selectedEvent.meetingSolution == 'zoom'
-                                                  ? Assets.images.icons.zoom.zoomSVG
-                                                  : Assets.images.icons.common.videocamSVG,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16.0),
-                                      Text(
-                                        selectedEvent.meetingSolution == 'meet'
-                                            ? t.event.googleMeet
-                                            : selectedEvent.meetingSolution == 'zoom'
-                                                ? t.event.zoom
-                                                : 'Conference',
-                                        style: selectedEvent.meetingSolution == 'meet' ||
-                                                selectedEvent.meetingSolution == 'zoom'
-                                            ? TextStyle(
-                                                fontSize: 17.0,
-                                                fontWeight: FontWeight.w500,
-                                                color: ColorsExt.grey2(context))
-                                            : TextStyle(
-                                                fontSize: 17.0,
-                                                fontWeight: FontWeight.w400,
-                                                color: ColorsExt.grey3(context)),
-                                      ),
-                                    ],
-                                  ),
-                                  if (selectedEvent.meetingUrl != null && selectedEvent.meetingSolution != null)
-                                    InkWell(
-                                      onTap: () {
-                                        if (selectedEvent.meetingUrl != null) {
-                                          selectedEvent.joinConference();
-                                        }
-                                      },
-                                      child: Text(
-                                        t.event.join.toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.w500,
-                                            color: ColorsExt.akiflow(context)),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      const Separator(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset(
-                                Assets.images.icons.common.briefcaseSVG,
-                              ),
-                            ),
-                            const SizedBox(width: 16.0),
-                            Text(
-                              t.event.busy,
-                              style: TextStyle(
-                                  fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (location != null && location!.isNotEmpty)
-                        Column(
-                          children: [
-                            const Separator(),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: SvgPicture.asset(Assets.images.icons.common.mapSVG,
-                                        color: ColorsExt.grey2(context)),
-                                  ),
-                                  const SizedBox(width: 16.0),
-                                  Expanded(
-                                    child: Text(
-                                      '${selectedEvent.content?["location"]}',
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      if (selectedEvent.attendees != null)
-                        Column(
-                          children: [
-                            const Separator(),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: SvgPicture.asset(
-                                          Assets.images.icons.common.personCropCircleSVG,
-                                          color: ColorsExt.grey2(context),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16.0),
-                                      Text(
-                                        t.event.guests,
-                                        style: TextStyle(
-                                          fontSize: 17.0,
-                                          fontWeight: FontWeight.w400,
-                                          color: ColorsExt.grey2(context),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: SvgPicture.asset(
-                                      Assets.images.icons.common.envelopeSVG,
-                                      color: ColorsExt.grey2(context),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const ClampingScrollPhysics(),
-                                itemCount: selectedEvent.attendees?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                                    child: Row(
-                                      children: [
-                                        selectedEvent.attendees![index].responseStatus ==
-                                                AtendeeResponseStatus.accepted.id
-                                            ? SizedBox(
-                                                width: 19,
-                                                height: 19,
-                                                child: SvgPicture.asset(
-                                                  Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                                                  color: ColorsExt.green(context),
-                                                ),
-                                              )
-                                            : selectedEvent.attendees![index].responseStatus ==
-                                                    AtendeeResponseStatus.declined.id
-                                                ? SizedBox(
-                                                    width: 19,
-                                                    height: 19,
-                                                    child: SvgPicture.asset(
-                                                      Assets.images.icons.common.xmarkCircleFillSVG,
-                                                      color: ColorsExt.red(context),
-                                                    ),
-                                                  )
-                                                : SizedBox(
-                                                    width: 19,
-                                                    height: 19,
-                                                    child: SvgPicture.asset(
-                                                      Assets.images.icons.common.questionCircleFillSVG,
-                                                      color: ColorsExt.grey3(context),
-                                                    ),
-                                                  ),
-                                        const SizedBox(width: 16.0),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              selectedEvent.attendees![index].email!.contains('group')
-                                                  ? '${selectedEvent.attendees![index].displayName}'
-                                                  : '${selectedEvent.attendees![index].email}',
-                                              style: TextStyle(
-                                                  fontSize: 17.0,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: ColorsExt.grey2(context)),
-                                            ),
-                                            if (selectedEvent.attendees![index].organizer ?? false)
-                                              Text(
-                                                ' - ${t.event.organizer}',
-                                                style: TextStyle(
-                                                    fontSize: 17.0,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: ColorsExt.grey3(context)),
-                                              ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      if (descriptionController.text.isNotEmpty &&
-                          parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
-                        Column(
-                          children: [
-                            const Separator(),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG,
-                                        color: ColorsExt.grey2(context)),
-                                  ),
-                                  const SizedBox(width: 16.0),
-                                  Expanded(
-                                    child: _description(context),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    const SizedBox(height: Dimension.padding),
+                    const ScrollChip(),
+                    ListView(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                      children: [
+                        _titleRow(context),
+                        const Separator(),
+                        _datetimeRow(context),
+                        if (selectedEvent.meetingUrl != null) _conferenceRow(context),
+                        const Separator(),
+                        _busyRow(context),
+                        if (location != null && location!.isNotEmpty) _locationRow(context),
+                        if (selectedEvent.attendees != null) _attendeesRow(context),
+                        if (descriptionController.text.isNotEmpty &&
+                            parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
+                          _descriptionRow(context),
+                      ],
+                    ),
+                  ],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, -2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                t.event.going,
-                                style: TextStyle(
-                                    fontSize: 15.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
-                              ),
-                              Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () async {
-                                      _responseTap(AtendeeResponseStatus.accepted);
-                                    },
-                                    child: SizedBox(
-                                      height: 50,
-                                      width: 40,
-                                      child: Center(
-                                        child: Text(
-                                          t.event.yes,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w500,
-                                              color: selectedEvent.isLoggedUserAttndingEvent ==
-                                                      AtendeeResponseStatus.accepted
-                                                  ? ColorsExt.green(context)
-                                                  : ColorsExt.grey3(context)),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 28.0),
-                                  InkWell(
-                                    onTap: () async {
-                                      _responseTap(AtendeeResponseStatus.declined);
-                                    },
-                                    child: SizedBox(
-                                      height: 50,
-                                      width: 40,
-                                      child: Center(
-                                        child: Text(
-                                          t.event.no,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w500,
-                                              color: selectedEvent.isLoggedUserAttndingEvent ==
-                                                      AtendeeResponseStatus.declined
-                                                  ? ColorsExt.red(context)
-                                                  : ColorsExt.grey3(context)),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 28.0),
-                                  InkWell(
-                                    onTap: () async {
-                                      _responseTap(AtendeeResponseStatus.tentative);
-                                    },
-                                    child: SizedBox(
-                                      height: 50,
-                                      child: Center(
-                                        child: Text(
-                                          t.event.maybe,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w500,
-                                              color: selectedEvent.isLoggedUserAttndingEvent ==
-                                                      AtendeeResponseStatus.tentative
-                                                  ? ColorsExt.grey2(context)
-                                                  : ColorsExt.grey3(context)),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      const Separator(),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: selectedEvent.canModify()
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  if (selectedEvent.attendees != null)
-                                    BottomButton(
-                                      title: t.event.mailGuests,
-                                      image: Assets.images.icons.common.envelopeSVG,
-                                      onTap: () {
-                                        selectedEvent.sendEmail();
-                                      },
-                                    ),
-                                  BottomButton(
-                                    title: t.event.edit,
-                                    image: Assets.images.icons.common.pencilSVG,
-                                    onTap: () {
-                                      showCupertinoModalBottomSheet(
-                                        context: context,
-                                        builder: (context) => EventEditModal(
-                                          event: selectedEvent,
-                                          tappedDate: widget.tappedDate!,
-                                          originalStartTime: originalStartTime,
-                                        ),
-                                      ).whenComplete(
-                                        () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      );
-                                    },
-                                  ),
-                                  BottomButton(
-                                    title: t.event.delete,
-                                    image: Assets.images.icons.common.trashSVG,
-                                    onTap: () {
-                                      if (selectedEvent.recurringId != null) {
-                                        showCupertinoModalBottomSheet(
-                                          context: context,
-                                          builder: (context) => RecurrentEventEditModal(
-                                            deleteEvent: true,
-                                            onlyThisTap: () {
-                                              Navigator.of(context).pop();
-                                              if (selectedEvent.recurringId == selectedEvent.id) {
-                                                context.read<EventsCubit>().createEventException(
-                                                    context: context,
-                                                    tappedDate: widget.tappedDate!,
-                                                    originalStartTime: originalStartTime,
-                                                    dateChanged: false,
-                                                    timeChanged: false,
-                                                    parentEvent: selectedEvent,
-                                                    atendeesToAdd: const [],
-                                                    atendeesToRemove: const [],
-                                                    addMeeting: false,
-                                                    removeMeeting: false,
-                                                    rsvpChanged: false,
-                                                    deleteEvent: true);
-                                              } else {
-                                                context.read<EventsCubit>().deleteEvent(selectedEvent).then((value) {
-                                                  context.read<EventsCubit>().refreshAllEvents(context);
-                                                  _showEventDeletedSnackbar();
-                                                });
-                                              }
-                                            },
-                                            thisAndFutureTap: () {
-                                              Navigator.of(context).pop();
-                                              context
-                                                  .read<EventsCubit>()
-                                                  .endParentAtSelectedEvent(
-                                                      tappedDate: widget.tappedDate!, selectedEvent: selectedEvent)
-                                                  .then((value) {
-                                                _showEventDeletedSnackbar();
-                                              });
-                                            },
-                                            allTap: () {
-                                              Navigator.of(context).pop();
-                                              context
-                                                  .read<EventsCubit>()
-                                                  .deleteEvent(selectedEvent, deleteExceptions: true)
-                                                  .then((value) {
-                                                context.read<EventsCubit>().refreshAllEvents(context);
-                                                _showEventDeletedSnackbar();
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      } else {
-                                        showCupertinoModalBottomSheet(
-                                          context: context,
-                                          builder: (context) => DeleteEventConfirmationModal(
-                                            eventName: selectedEvent.title ?? '',
-                                            onTapDelete: () {
-                                              Navigator.of(context).pop();
-                                              context.read<EventsCubit>().deleteEvent(selectedEvent).then((value) {
-                                                context.read<EventsCubit>().refreshAllEvents(context);
-                                                _showEventDeletedSnackbar();
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  BottomButton(
-                                    title: t.event.mailGuests,
-                                    image: Assets.images.icons.common.envelopeSVG,
-                                    onTap: () {
-                                      selectedEvent.sendEmail();
-                                    },
-                                  ),
-                                  BottomButton(
-                                    title: t.event.delete,
-                                    image: Assets.images.icons.common.trashSVG,
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+              _bottomButtonsRow(context),
+            ],
           ),
         );
       },
     );
   }
 
-  Widget _description(BuildContext context) {
+  Padding _titleRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(selectedEvent.title ?? t.noTitle,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: ColorsExt.grey900(context), fontWeight: FontWeight.w500)),
+          ),
+          const SizedBox(width: Dimension.paddingS),
+          SizedBox(
+            width: Dimension.defaultIconSize + 6,
+            height: Dimension.defaultIconSize + 6,
+            child: CalendarColorCircle(
+                calendarColor: EventExt.computeColor(selectedEvent), size: Dimension.defaultIconSize + 6),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _datetimeRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        children: [
+          SizedBox(
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.calendarSVG,
+            ),
+          ),
+          const SizedBox(width: Dimension.padding),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (selectedEvent.startTime != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.startTime!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+                      const SizedBox(height: Dimension.padding),
+                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.startTime!).toLocal()),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                if (selectedEvent.startDate != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.startDate!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
+                    width: Dimension.defaultIconSize,
+                    height: Dimension.defaultIconSize,
+                    color: ColorsExt.grey600(context)),
+                if (selectedEvent.endTime != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endTime!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+                      const SizedBox(height: Dimension.padding),
+                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.endTime!).toLocal()),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                if (selectedEvent.endDate != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          selectedEvent.recurringId == null
+                              ? DateFormat("EEE dd MMM").format(DateTime.parse(selectedEvent.endDate!))
+                              : DateFormat("EEE dd MMM").format(widget.tappedDate!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Column _conferenceRow(BuildContext context) {
+    return Column(
+      children: [
+        const Separator(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: Dimension.defaultIconSize,
+                    height: Dimension.defaultIconSize,
+                    child: SvgPicture.asset(
+                      selectedEvent.meetingSolution == 'meet'
+                          ? Assets.images.icons.google.meetSVG
+                          : selectedEvent.meetingSolution == 'zoom'
+                              ? Assets.images.icons.zoom.zoomSVG
+                              : Assets.images.icons.common.videocamSVG,
+                    ),
+                  ),
+                  const SizedBox(width: Dimension.padding),
+                  Text(
+                    selectedEvent.meetingSolution == 'meet'
+                        ? t.event.googleMeet
+                        : selectedEvent.meetingSolution == 'zoom'
+                            ? t.event.zoom
+                            : 'Conference',
+                    style: selectedEvent.meetingSolution == 'meet' || selectedEvent.meetingSolution == 'zoom'
+                        ? TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))
+                        : TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
+                  ),
+                ],
+              ),
+              if (selectedEvent.meetingUrl != null && selectedEvent.meetingSolution != null)
+                InkWell(
+                  onTap: () {
+                    if (selectedEvent.meetingUrl != null) {
+                      selectedEvent.joinConference();
+                    }
+                  },
+                  child: Text(t.event.join.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500)),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding _busyRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+      child: Row(
+        children: [
+          SizedBox(
+            width: Dimension.defaultIconSize,
+            height: Dimension.defaultIconSize,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.briefcaseSVG,
+            ),
+          ),
+          const SizedBox(width: Dimension.padding),
+          Text(t.event.busy,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+        ],
+      ),
+    );
+  }
+
+  Column _locationRow(BuildContext context) {
+    return Column(
+      children: [
+        const Separator(),
+        InkWell(
+          onTap: () {
+            selectedEvent.launchMapsUrl();
+          },
+          onLongPress: () {
+            Clipboard.setData(ClipboardData(text: location)).then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                CustomSnackbar.get(
+                    context: context, type: CustomSnackbarType.success, message: t.snackbar.copiedToYourClipboard)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: Dimension.defaultIconSize,
+                  height: Dimension.defaultIconSize,
+                  child: SvgPicture.asset(Assets.images.icons.common.mapSVG, color: ColorsExt.grey800(context)),
+                ),
+                const SizedBox(width: Dimension.padding),
+                Expanded(
+                  child: Text('${selectedEvent.content?["location"]}',
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _attendeesRow(BuildContext context) {
+    return Column(
+      children: [
+        const Separator(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+          child: Row(
+            children: [
+              SizedBox(
+                width: Dimension.defaultIconSize,
+                height: Dimension.defaultIconSize,
+                child: SvgPicture.asset(
+                  Assets.images.icons.common.personCropCircleSVG,
+                  color: ColorsExt.grey800(context),
+                ),
+              ),
+              const SizedBox(width: Dimension.padding),
+              Text(t.event.guests,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: Dimension.padding),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            itemCount: selectedEvent.attendees?.length ?? 0,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: Row(
+                  children: [
+                    selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.accepted.id
+                        ? SizedBox(
+                            width: Dimension.defaultIconSize,
+                            height: Dimension.defaultIconSize,
+                            child: SvgPicture.asset(
+                              Assets.images.icons.common.checkmarkAltCircleFillSVG,
+                              color: ColorsExt.yorkGreen400(context),
+                            ),
+                          )
+                        : selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
+                            ? SizedBox(
+                                width: Dimension.defaultIconSize,
+                                height: Dimension.defaultIconSize,
+                                child: SvgPicture.asset(
+                                  Assets.images.icons.common.xmarkCircleFillSVG,
+                                  color: ColorsExt.cosmos400(context),
+                                ),
+                              )
+                            : SizedBox(
+                                width: Dimension.defaultIconSize,
+                                height: Dimension.defaultIconSize,
+                                child: SvgPicture.asset(
+                                  Assets.images.icons.common.questionCircleFillSVG,
+                                  color: ColorsExt.grey600(context),
+                                ),
+                              ),
+                    const SizedBox(width: Dimension.padding),
+                    Row(
+                      children: [
+                        Text(
+                          selectedEvent.attendees![index].email!.contains('group')
+                              ? '${selectedEvent.attendees![index].displayName}'
+                              : '${selectedEvent.attendees![index].email}',
+                          style:
+                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
+                        ),
+                        if (selectedEvent.attendees![index].organizer ?? false)
+                          Text(
+                            ' - ${t.event.organizer}',
+                            style: TextStyle(
+                                fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _descriptionRow(BuildContext context) {
+    return Column(
+      children: [
+        const Separator(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+          child: Row(
+            children: [
+              SizedBox(
+                width: Dimension.defaultIconSize,
+                height: Dimension.defaultIconSize,
+                child:
+                    SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG, color: ColorsExt.grey800(context)),
+              ),
+              const SizedBox(width: Dimension.padding),
+              Expanded(
+                child: _descriptionContent(context),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _descriptionContent(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: quillController,
       builder: (context, quill.QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: quill.QuillEditor(
@@ -753,13 +526,107 @@ class _EventModalState extends State<EventModal> {
           },
           customStyles: quill.DefaultStyles(
             placeHolder: quill.DefaultTextBlockStyle(
-              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-              const tuple.Tuple2(0, 0),
-              const tuple.Tuple2(0, 0),
-              null,
-            ),
+                TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
+                const quill.VerticalSpacing(0, 0),
+                const quill.VerticalSpacing(0, 0),
+                null),
           ),
         ),
+      ),
+    );
+  }
+
+  Container _bottomButtonsRow(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty) _responseStatusRow(context),
+          const Separator(),
+          SafeArea(child: _eventActionButtonsRow(context)),
+        ],
+      ),
+    );
+  }
+
+  Padding _responseStatusRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(t.event.going,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+          Row(
+            children: [
+              InkWell(
+                onTap: () async {
+                  _responseTap(AtendeeResponseStatus.accepted);
+                },
+                child: SizedBox(
+                  height: 50,
+                  width: 40,
+                  child: Center(
+                    child: Text(t.event.yes,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
+                                ? ColorsExt.yorkGreen400(context)
+                                : ColorsExt.grey600(context),
+                            fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Dimension.paddingM),
+              InkWell(
+                onTap: () async {
+                  _responseTap(AtendeeResponseStatus.declined);
+                },
+                child: SizedBox(
+                  height: 50,
+                  width: 40,
+                  child: Center(
+                    child: Text(t.event.no,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
+                                ? ColorsExt.cosmos400(context)
+                                : ColorsExt.grey600(context))),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Dimension.paddingM),
+              InkWell(
+                onTap: () async {
+                  _responseTap(AtendeeResponseStatus.tentative);
+                },
+                child: SizedBox(
+                  height: 50,
+                  child: Center(
+                    child: Text(t.event.maybe,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
+                                ? ColorsExt.grey800(context)
+                                : ColorsExt.grey600(context))),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -861,6 +728,132 @@ class _EventModalState extends State<EventModal> {
       setState(() {
         selectedEvent.setLoggedUserAttendingResponse(response);
       });
+    }
+  }
+
+  Padding _eventActionButtonsRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(Dimension.paddingS),
+      child: selectedEvent.canModify()
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                if (selectedEvent.attendees != null)
+                  BottomButton(
+                    title: t.event.mailGuests,
+                    image: Assets.images.icons.common.envelopeSVG,
+                    onTap: () {
+                      selectedEvent.sendEmail();
+                    },
+                  ),
+                BottomButton(
+                  title: t.event.edit,
+                  image: Assets.images.icons.common.pencilSVG,
+                  onTap: () {
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => EventEditModal(
+                        event: selectedEvent,
+                        tappedDate: widget.tappedDate!,
+                        originalStartTime: originalStartTime,
+                      ),
+                    ).whenComplete(
+                      () {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  },
+                ),
+                BottomButton(
+                  title: t.event.delete,
+                  image: Assets.images.icons.common.trashSVG,
+                  onTap: () {
+                    _onDeleteTap();
+                  },
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                BottomButton(
+                  title: t.event.mailGuests,
+                  image: Assets.images.icons.common.envelopeSVG,
+                  onTap: () {
+                    selectedEvent.sendEmail();
+                  },
+                ),
+                BottomButton(
+                  title: t.event.delete,
+                  image: Assets.images.icons.common.trashSVG,
+                  onTap: () {},
+                ),
+              ],
+            ),
+    );
+  }
+
+  _onDeleteTap() {
+    if (selectedEvent.recurringId != null) {
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => RecurrentEventEditModal(
+          deleteEvent: true,
+          onlyThisTap: () {
+            Navigator.of(context).pop();
+            if (selectedEvent.recurringId == selectedEvent.id) {
+              context.read<EventsCubit>().createEventException(
+                  context: context,
+                  tappedDate: widget.tappedDate!,
+                  originalStartTime: originalStartTime,
+                  dateChanged: false,
+                  timeChanged: false,
+                  parentEvent: selectedEvent,
+                  atendeesToAdd: const [],
+                  atendeesToRemove: const [],
+                  addMeeting: false,
+                  removeMeeting: false,
+                  rsvpChanged: false,
+                  deleteEvent: true);
+            } else {
+              context.read<EventsCubit>().deleteEvent(selectedEvent).then((value) {
+                context.read<EventsCubit>().refreshAllEvents(context);
+                _showEventDeletedSnackbar();
+              });
+            }
+          },
+          thisAndFutureTap: () {
+            Navigator.of(context).pop();
+            context
+                .read<EventsCubit>()
+                .endParentAtSelectedEvent(tappedDate: widget.tappedDate!, selectedEvent: selectedEvent)
+                .then((value) {
+              _showEventDeletedSnackbar();
+            });
+          },
+          allTap: () {
+            Navigator.of(context).pop();
+            context.read<EventsCubit>().deleteEvent(selectedEvent, deleteExceptions: true).then((value) {
+              context.read<EventsCubit>().refreshAllEvents(context);
+              _showEventDeletedSnackbar();
+            });
+          },
+        ),
+      );
+    } else {
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => DeleteEventConfirmationModal(
+          eventName: selectedEvent.title ?? '',
+          onTapDelete: () {
+            Navigator.of(context).pop();
+            context.read<EventsCubit>().deleteEvent(selectedEvent).then((value) {
+              context.read<EventsCubit>().refreshAllEvents(context);
+              _showEventDeletedSnackbar();
+            });
+          },
+        ),
+      );
     }
   }
 

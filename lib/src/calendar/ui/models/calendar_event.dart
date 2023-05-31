@@ -4,7 +4,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class CalendarEvent extends Appointment {
   CalendarEvent(
@@ -30,11 +30,20 @@ class CalendarEvent extends Appointment {
     required bool isRecurringException,
     required bool isNonRecurring,
     List<Event>? exceptions,
+    bool? areDeclinedEventsHidden,
   }) {
     DateTime startTime = DateTime(DateTime.now().year - 1, 2, 31);
     DateTime endTime = startTime;
 
+    //used to hide deleted events
     if (event.deletedAt != null || (event.status != null && event.status == 'cancelled')) {
+      return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
+    }
+
+    //used to hide declined events (used specially for declined exceptions)
+    if (areDeclinedEventsHidden != null &&
+        areDeclinedEventsHidden &&
+        event.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined) {
       return CalendarEvent(id: event.id, startTime: startTime, endTime: endTime, isAllDay: true, notes: 'deleted');
     }
 
@@ -46,31 +55,36 @@ class CalendarEvent extends Appointment {
       endTime = DateTime.parse(event.endDate!).toLocal();
     }
 
+    //gets the exceptions and adds them to the parent's "exceptionDates"
     List<DateTime>? exceptionDates = [];
     if (isRecurringParent && exceptions != null) {
       for (var element in exceptions) {
         if (element.recurringId == event.id) {
           if (element.originalStartTime != null || element.originalStartDate != null) {
             exceptionDates.add(element.originalStartTime != null
-                ? DateTime.parse(element.originalStartTime!)
-                : DateTime.parse(element.originalStartDate!));
+                ? DateTime.parse(element.originalStartTime!).toLocal()
+                : DateTime.parse(element.originalStartDate!).toLocal());
           } else if (element.startTime != null || element.startDate != null) {
-            exceptionDates.add(
-                element.startTime != null ? DateTime.parse(element.startTime!) : DateTime.parse(element.startDate!));
+            exceptionDates.add(element.startTime != null
+                ? DateTime.parse(element.startTime!).toLocal()
+                : DateTime.parse(element.startDate!).toLocal());
           }
         }
       }
     }
 
     String? formatedRrule;
+    SentryService sentryService = locator<SentryService>();
     try {
       if (isRecurringParent && event.recurrence != null && event.recurrence!.isNotEmpty) {
         List<String> parts = event.recurrence!.first.replaceFirst('RRULE:', '').split(";");
         formatedRrule = computeRrule(parts, startTime);
+        //TODO: remove this after fixing all possible rrule use cases
+        sentryService.addBreadcrumb(
+            category: "calendar_event", message: 'event id: ${event.id} formattedRrule: $formatedRrule');
       }
     } catch (e) {
       print(e);
-      SentryService sentryService = locator<SentryService>();
       sentryService.addBreadcrumb(category: "calendar_event", message: e.toString());
     }
 
@@ -87,6 +101,7 @@ class CalendarEvent extends Appointment {
     );
   }
 
+  ///used for making the rrule to be accepted by the calendar package
   static String? computeRrule(List<String> parts, DateTime startTime) {
     parts.removeWhere((part) => part.startsWith('WKST'));
 
@@ -95,11 +110,18 @@ class CalendarEvent extends Appointment {
       List<String> days = byDay.first.replaceFirst('BYDAY=', '').split(',');
       List<int> bySetPos = [];
       for (int i = 0; i < days.length; i++) {
-        if (days[i].startsWith(RegExp(r'[0-9]'))) {
+        if (days[i].startsWith(RegExp(r'-?[0-9]'))) {
           bySetPos.add(int.parse(days[i].replaceAll(RegExp(r'[a-zA-Z]'), '')));
-          days[i] = days[i].replaceAll(RegExp(r'[0-9]'), '');
+          days[i] = days[i].replaceAll(RegExp(r'-?[0-9]'), '');
         }
       }
+      DateTime startUtc = startTime.toUtc();
+      DateTime startUtcLocal =
+          DateTime(startUtc.year, startUtc.month, startUtc.day, startUtc.hour, startUtc.minute, startUtc.millisecond);
+      if (days.length == 1 && startUtcLocal.day != startTime.day) {
+        days[0] = dayOfWeekComputed(startTime.weekday)!;
+      }
+
       parts.removeWhere((part) => part.startsWith('BYDAY'));
 
       String byDayString = days.join(',');

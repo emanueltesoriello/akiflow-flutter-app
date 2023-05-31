@@ -8,7 +8,7 @@ class DocExt {
       case "dropbox":
         return "Dropbox";
       case "google":
-        return "Google";
+        return "Google Calendar";
       case "gmail":
         return "Gmail";
       case "github":

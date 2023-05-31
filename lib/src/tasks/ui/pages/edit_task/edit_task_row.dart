@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -42,7 +43,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -50,15 +51,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
                 padding: const EdgeInsets.only(top: 2.0),
                 child: _checkbox(context),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: Dimension.paddingS),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _firstLine(context),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: Dimension.paddingS),
                     _description(context),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: Dimension.paddingM),
                     if (!state.hasFocusOnTitleOrDescription) _thirdLine(context),
                   ],
                 ),
@@ -76,33 +77,48 @@ class _EditTaskRowState extends State<EditTaskRow> {
       builder: (context, QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
-        child: QuillEditor(
-          controller: value,
-          readOnly: false,
-          scrollController: ScrollController(),
-          scrollable: true,
-          focusNode: widget.descriptionFocusNode,
-          autoFocus: false,
-          expands: false,
-          padding: EdgeInsets.zero,
-          keyboardAppearance: Brightness.light,
-          placeholder: t.task.description,
-          linkActionPickerDelegate: (BuildContext context, String link, node) async {
-            launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-            return LinkMenuAction.none;
+        child: GestureDetector(
+          onTap: () async {
+            if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
+              widget.descriptionFocusNode.unfocus();
+              context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+              await Future.delayed(const Duration(milliseconds: 500));
+              FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+            } else {
+              FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+            }
           },
-          customStyles: DefaultStyles(
-            placeHolder: DefaultTextBlockStyle(
-              const TextStyle(
-                color: Colors.grey,
-                fontSize: 18,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: QuillEditor(
+              controller: value,
+              readOnly: false,
+              scrollController: ScrollController(),
+              scrollable: true,
+              focusNode: widget.descriptionFocusNode,
+              autoFocus: false,
+              expands: false,
+              padding: EdgeInsets.zero,
+              keyboardAppearance: Brightness.light,
+              placeholder: t.task.description,
+              linkActionPickerDelegate: (BuildContext context, String link, node) async {
+                launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                return LinkMenuAction.none;
+              },
+              customStyles: DefaultStyles(
+                placeHolder: DefaultTextBlockStyle(
+                  const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18,
+                  ),
+                  const VerticalSpacing(0, 0),
+                  const VerticalSpacing(0, 0),
+                  null,
+                ),
               ),
-              const tuple.Tuple2(0, 0),
-              const tuple.Tuple2(0, 0),
-              null,
             ),
           ),
         ),
@@ -133,30 +149,41 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _firstLine(BuildContext context) {
-    return TextField(
-      controller: widget.titleController,
-      maxLines: null,
-      focusNode: widget.titleFocusNode,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.zero,
-        isDense: true,
-        hintText: t.addTask.titleHint,
-        border: InputBorder.none,
-        hintStyle: TextStyle(
-          color: ColorsExt.grey3(context),
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      style: TextStyle(
-        color: ColorsExt.grey2(context),
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-      onChanged: (value) {
-        context.read<EditTaskCubit>().onTitleChanged(value);
+    return GestureDetector(
+      onTap: () async {
+        if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
+          widget.titleFocusNode.unfocus();
+          context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+          await Future.delayed(const Duration(milliseconds: 500));
+          FocusScope.of(context).requestFocus(widget.titleFocusNode);
+        } else {
+          FocusScope.of(context).requestFocus(widget.titleFocusNode);
+        }
       },
+      child: TextField(
+        controller: widget.titleController,
+        maxLines: null,
+        onTap: null,
+        focusNode: widget.titleFocusNode,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          isDense: true,
+          hintText: t.addTask.titleHint,
+          border: InputBorder.none,
+          hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey600(context),
+              ),
+        ),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: ColorsExt.grey800(context),
+            ),
+        onChanged: (value) {
+          context.read<EditTaskCubit>().onTitleChanged(value);
+        },
+      ),
     );
   }
 
@@ -179,7 +206,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           completed ? Assets.images.icons.common.checkDoneSVG : Assets.images.icons.common.checkEmptySVG,
           width: 22,
           height: 22,
-          color: completed ? ColorsExt.green(context) : ColorsExt.grey3(context),
+          color: completed ? ColorsExt.yorkGreen400(context) : ColorsExt.grey600(context),
         );
       }),
     );
@@ -193,30 +220,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
         task.statusType == TaskStatusType.trashed) {
       return TagBox(
         icon: Assets.images.icons.common.trashSVG,
-        backgroundColor: ColorsExt.grey6(context),
+        backgroundColor: ColorsExt.grey100(context),
         active: true,
         text: task.statusType!.name.capitalizeFirstCharacter(),
-        foregroundColor: ColorsExt.grey3(context),
+        foregroundColor: ColorsExt.grey600(context),
       );
     }
 
     if (task.isCompletedComputed) {
       return const SizedBox();
-    }
-
-    if (task.isOverdue) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            Assets.images.icons.common.clockAlertSVG,
-            width: 20,
-            height: 20,
-            color: ColorsExt.red(context),
-          ),
-          const SizedBox(width: 4),
-        ],
-      );
     }
 
     return const SizedBox();
@@ -237,11 +249,13 @@ class _EditTaskRowState extends State<EditTaskRow> {
     }
 
     return TagBox(
+      isBig: true,
       icon: Assets.images.icons.common.numberSVG,
-      text: label?.title ?? t.editTask.noLabel,
+      text: label?.title ?? t.editTask.addLabel,
+      textColor: label?.title != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
       backgroundColor:
-          label?.color != null ? ColorsExt.getFromName(label!.color!).withOpacity(0.1) : ColorsExt.grey6(context),
-      iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey3(context),
+          label?.color != null ? ColorsExt.getLightColorFromName(label!.color!) : ColorsExt.grey100(context),
+      iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey600(context),
       active: label?.color != null,
       onPressed: () {
         showCupertinoModalBottomSheet(

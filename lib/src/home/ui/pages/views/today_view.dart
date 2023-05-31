@@ -7,12 +7,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_linear_progress_indicator.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
-import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
+import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -23,7 +22,6 @@ import 'package:mobile/src/home/ui/widgets/today/today_header.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
-import 'package:mobile/core/preferences.dart';
 
 class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
@@ -93,35 +91,9 @@ class _TodayViewState extends State<TodayView> {
       completed =
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
-
-    try {
-      todos.sort((a, b) {
-        try {
-          return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
-        } catch (_) {}
-        return 0;
-      });
-    } catch (e) {
-      print(e);
-    }
-
     pinned.sort((a, b) {
       try {
-        DateTime parsedAUTC = DateTime.parse(a.datetime!);
-        DateTime parsedALocal = parsedAUTC.toLocal();
-        DateTime fixedA = parsedALocal != null
-            ? DateTime(parsedAUTC.year, parsedAUTC.month, parsedAUTC.day, parsedALocal.hour, parsedALocal.minute,
-                parsedALocal.second)
-            : DateTime.now();
-
-        DateTime parsedBUTC = DateTime.parse(b.datetime!);
-        DateTime parsedBLocal = parsedBUTC.toLocal();
-        DateTime fixedB = parsedBLocal != null
-            ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
-                parsedBLocal.second)
-            : DateTime.now();
-
-        return fixedA.compareTo(fixedB);
+        return a.datetime!.compareTo(b.datetime!);
       } catch (e) {
         print("Error sorting pinned items: ${e.toString()}");
         return 0;
@@ -133,21 +105,28 @@ class _TodayViewState extends State<TodayView> {
         create: (BuildContext context) => ViewedMonthCubit(),
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const TodayAppBar(preferredSizeHeight: toolbarHeight, calendarTopMargin: toolbarHeight),
+          appBar: const TodayAppBar(
+              preferredSizeHeight: Dimension.toolbarHeight, calendarTopMargin: Dimension.toolbarHeight),
           body: LayoutBuilder(builder: (context, constraints) {
             return SlidingUpPanel(
               bodyHeight: constraints.maxHeight,
               slideDirection: SlideDirection.down,
               controller: panelController,
               maxHeight: 280,
-              minHeight: todayViewTopMargin,
+              minHeight: Dimension.todayViewTopMargin,
               defaultPanelState: PanelState.closed,
               panel: ValueListenableBuilder(
                 valueListenable: calendarOffsetNotifier,
                 builder: (context, value, child) {
                   return Container(
                     color: Colors.white,
-                    child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                        AnimatedLinearProgressIndicator(),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -157,19 +136,24 @@ class _TodayViewState extends State<TodayView> {
               onPanelOpened: () {
                 context.read<TodayCubit>().panelOpened();
               },
-              collapsed: const Material(
+              collapsed: Material(
                 color: Colors.white,
-                child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                    AnimatedLinearProgressIndicator()
+                  ],
+                ),
               ),
               body: Container(
-                margin: const EdgeInsets.only(top: todayViewTopMargin),
+                margin: const EdgeInsets.only(top: Dimension.todayViewTopMargin),
                 child: Stack(
                   children: [
                     RefreshIndicator(
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: SlidableAutoCloseBehavior(
                         child: ListView(
@@ -177,27 +161,18 @@ class _TodayViewState extends State<TodayView> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.zero,
                           children: [
-                            if (todos.isEmpty && pinned.isEmpty)
-                              Container(
-                                padding: const EdgeInsets.only(top: 100, bottom: 10),
-                                child: SvgPicture.asset(
-                                  Assets.images.akiflow.tasksDoneSVG,
-                                  width: 80.81,
-                                  height: 97.72,
-                                ),
-                              ),
                             TaskList(
-                              key: const ObjectKey("todos"),
+                              key: Key("todos${todos.isNotEmpty ? todos[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: todos,
-                              sorting: TaskListSorting.dateAscending,
+                              sorting: TaskListSorting.sortingDescending,
                               visible: context.watch<TodayCubit>().state.todosListOpen,
                               showLabel: true,
                               showPlanInfo: false,
                               header: TodayHeader(
                                 t.today.toDos,
-                                tasks: todos,
+                                tasksLenght: todos.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openTodoList();
                                 },
@@ -205,7 +180,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("pinned"),
+                              key: Key("pinned${pinned.isNotEmpty ? pinned[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: pinned,
@@ -215,7 +190,7 @@ class _TodayViewState extends State<TodayView> {
                               sorting: TaskListSorting.dateAscending,
                               header: TodayHeader(
                                 t.today.pinnedInCalendar,
-                                tasks: pinned,
+                                tasksLenght: pinned.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openPinnedList();
                                 },
@@ -223,7 +198,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("completed"),
+                              key: Key("completed${completed.isNotEmpty ? completed[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: completed,
@@ -233,14 +208,34 @@ class _TodayViewState extends State<TodayView> {
                               showPlanInfo: false,
                               header: TodayHeader(
                                 t.today.done,
-                                tasks: completed,
+                                tasksLenght: completed.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openCompletedList();
                                 },
                                 listOpened: context.watch<TodayCubit>().state.completedListOpen,
                               ),
                             ),
-                            const SizedBox(height: 100)
+                            if (todos.isEmpty && pinned.isEmpty && !context.watch<TodayCubit>().state.completedListOpen)
+                              Column(
+                                children: [
+                                  const SizedBox(height: Dimension.padding),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.only(top: Dimension.paddingXXL, bottom: Dimension.paddingS),
+                                    child: SvgPicture.asset(Assets.images.akiflow.tasksDoneSVG,
+                                        width: Dimension.pagesImageSize, height: Dimension.pagesImageSize),
+                                  ),
+                                  const SizedBox(height: Dimension.paddingS),
+                                  Text(
+                                    'Good job! All done',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        ?.copyWith(color: ColorsExt.grey900(context)),
+                                  )
+                                ],
+                              ),
+                            const SizedBox(height: Dimension.paddingXXL)
                           ],
                         ),
                       ),
@@ -248,7 +243,7 @@ class _TodayViewState extends State<TodayView> {
                     Builder(
                       builder: (context) {
                         if (tasksCubit.state.loading) {
-                          return const FirstSyncProgressToday();
+                          return const FirstSyncProgress();
                         } else {
                           return const SizedBox();
                         }

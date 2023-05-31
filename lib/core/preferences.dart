@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
@@ -73,6 +74,16 @@ abstract class PreferencesRepository {
 
   bool get isCalendarWeekendHidden;
   Future<void> setIsCalendarWeekendHidden(bool isCalendarWeekendHidden);
+
+  bool get areDeclinedEventsHidden;
+  Future<void> setAreDeclinedEventsHidden(bool areDeclinedEventsHidden);
+
+  bool get areCalendarTasksHidden;
+  Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden);
+
+  bool get groupOverlappingTasks;
+  Future<void> setGroupOverlappingTasks(bool groupOverlappingTasks);
+
   NextTaskNotificationsModel get nextTaskNotificationSetting;
   Future<void> setNextTaskNotificationSetting(NextTaskNotificationsModel value);
 
@@ -81,6 +92,12 @@ abstract class PreferencesRepository {
 
   bool get nextTaskNotificationSettingEnabled;
   Future<void> setNextTaskNotificationSettingEnabled(bool value);
+
+  NextEventNotificationsModel get nextEventNotificationSetting;
+  Future<void> setNextEventNotificationSetting(NextEventNotificationsModel value);
+
+  bool get nextEventNotificationSettingEnabled;
+  Future<void> setNextEventNotificationSettingEnabled(bool value);
 
   bool get dailyOverviewNotificationTimeEnabled;
   Future<void> seDailyOverviewNotificationTime(bool value);
@@ -96,6 +113,9 @@ abstract class PreferencesRepository {
 
   int get recurringNotificationsSyncCounter;
   Future<void> setRecurringNotificationsSyncCounter(int value);
+
+  String get getLastSavedTimeZone;
+  Future<void> setLastSavedTimeZone(String value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -378,6 +398,37 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     await _prefs.setBool("isCalendarWeekendHidden", isCalendarWeekendHidden);
   }
 
+  @override
+  bool get areDeclinedEventsHidden {
+    return _prefs.getBool("areDeclinedEventsHidden") ?? false;
+  }
+
+  @override
+  Future<void> setAreDeclinedEventsHidden(bool areDeclinedEventsHidden) async {
+    await _prefs.setBool("areDeclinedEventsHidden", areDeclinedEventsHidden);
+  }
+
+  @override
+  bool get areCalendarTasksHidden {
+    return _prefs.getBool("areCalendarTasksHidden") ?? false;
+  }
+
+  @override
+  Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden) async {
+    await _prefs.setBool("areCalendarTasksHidden", areCalendarTasksHidden);
+  }
+
+  @override
+  bool get groupOverlappingTasks {
+    return _prefs.getBool("groupOverlappingTasks") ?? true;
+  }
+
+  @override
+  Future<void> setGroupOverlappingTasks(bool groupOverlappingTasks) async {
+    await _prefs.setBool("groupOverlappingTasks", groupOverlappingTasks);
+  }
+
+  @override
   NextTaskNotificationsModel get nextTaskNotificationSetting {
     return NextTaskNotificationsModel.fromMap(
       jsonDecode(_prefs.getString("nextTaskNotificationSettingValue") ?? '{}'),
@@ -416,6 +467,31 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setNextTaskNotificationSettingEnabled(bool value) async {
     await _prefs.setBool("nextTaskNotificationSettingEnabled", value);
+  }
+
+  @override
+  bool get nextEventNotificationSettingEnabled {
+    return _prefs.getBool("nextEventNotificationSettingEnabled") ?? true;
+  }
+
+  @override
+  Future<void> setNextEventNotificationSettingEnabled(bool value) async {
+    await _prefs.setBool("nextEventNotificationSettingEnabled", value);
+  }
+
+  @override
+  NextEventNotificationsModel get nextEventNotificationSetting {
+    return NextEventNotificationsModel.fromMap(
+      jsonDecode(_prefs.getString("nextEventNotificationSettingValue") ?? '{}'),
+    );
+  }
+
+  @override
+  Future<void> setNextEventNotificationSetting(NextEventNotificationsModel value) async {
+    await _prefs.setString(
+      "nextEventNotificationSettingValue",
+      jsonEncode(NextEventNotificationsModel.toMap(value)),
+    );
   }
 
   @override
@@ -475,5 +551,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setRecurringNotificationsSyncCounter(int value) async {
     await _prefs.setInt("recurring_notifications_sync_counter", value);
+  }
+
+  @override
+  String get getLastSavedTimeZone {
+    return _prefs.getString("last_saved_time_zone") ?? "";
+  }
+
+  @override
+  Future<void> setLastSavedTimeZone(String value) async {
+    await _prefs.setString("last_saved_time_zone", value);
   }
 }

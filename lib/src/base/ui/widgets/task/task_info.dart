@@ -45,7 +45,7 @@ class TaskInfo extends StatelessWidget {
             children: [
               TagBox(
                 text: stringDate,
-                backgroundColor: ColorsExt.pink30(context),
+                backgroundColor: ColorsExt.cosmos200(context),
                 active: true,
               ),
             ],
@@ -71,8 +71,6 @@ class TaskInfo extends StatelessWidget {
 
     return Row(
       children: [
-        _overdue(context),
-        if (task.statusType == null && !task.isOverdue && task.listId == null && !hideInboxLabel) const SizedBox(),
         children.isEmpty
             ? const SizedBox()
             : SizedBox(
@@ -100,14 +98,14 @@ class TaskInfo extends StatelessWidget {
     if (task.statusType == TaskStatusType.inbox) {
       return TagBox(
         icon: Assets.images.icons.common.traySVG,
-        backgroundColor: ColorsExt.cyan25(context),
+        backgroundColor: ColorsExt.jordyBlue200(context),
         text: t.bottomBar.inbox,
         active: true,
       );
     } else if (task.statusType == TaskStatusType.someday) {
       return TagBox(
         icon: Assets.images.icons.common.archiveboxSVG,
-        backgroundColor: ColorsExt.akiflow10(context),
+        backgroundColor: ColorsExt.akiflow100(context),
         text: task.statusType!.name.capitalizeFirstCharacter(),
         active: true,
       );
@@ -130,16 +128,16 @@ class TaskInfo extends StatelessWidget {
 
       return TagBox(
         icon: Assets.images.icons.common.clockSVG,
-        backgroundColor: ColorsExt.akiflow10(context),
+        backgroundColor: ColorsExt.akiflow100(context),
         text: text ?? t.task.snoozed,
         active: true,
       );
-    } else if (task.statusType == TaskStatusType.planned && showPlanInfo) {
+    } else if (task.statusType == TaskStatusType.planned && (showPlanInfo || task.isOverdue)) {
       return plannedInfo(context);
     } else {
       if (task.datetime != null && !task.isOverdue) {
         return TagBox(
-          backgroundColor: ColorsExt.cyan25(context),
+          backgroundColor: (task.done ?? false) ? ColorsExt.yorkGreen200(context) : ColorsExt.grey200(context),
           text: task.timeFormatted,
           active: true,
         );
@@ -150,7 +148,11 @@ class TaskInfo extends StatelessWidget {
   }
 
   Widget plannedInfo(BuildContext context) {
-    Color color = ColorsExt.grey5(context);
+    Color color = (task.done ?? false) ? ColorsExt.yorkGreen200(context) : ColorsExt.grey200(context);
+
+    if (task.isOverdue) {
+      color = ColorsExt.cosmos200(context);
+    }
 
     String text;
 
@@ -204,10 +206,9 @@ class TaskInfo extends StatelessWidget {
     bool active = label.color != null;
 
     return TagBox(
-      icon: Assets.images.icons.common.numberSVG,
       text: label.title,
-      backgroundColor: active ? ColorsExt.getFromName(label.color!).withOpacity(0.1) : null,
-      iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey3(context),
+      backgroundColor: active ? ColorsExt.getLightColorFromName(label.color!) : null,
+      iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey600(context),
       onPressed: () {
         context.read<LabelsCubit>().selectLabel(label);
         context.read<MainCubit>().changeHomeView(HomeViewType.label);

@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/main_com.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
@@ -26,27 +29,22 @@ class AboutPage extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.paddingXS),
                   Container(
-                    height: 62,
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                    padding: const EdgeInsets.all(Dimension.padding),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
                       color: ColorsExt.background(context),
-                      border: Border.all(color: ColorsExt.grey5(context), width: 1),
+                      border: Border.all(color: ColorsExt.grey200(context), width: 1),
                     ),
                     child: Row(
                       children: [
-                        SvgPicture.asset(
-                          "assets/images/logo/logo_outline.svg",
-                          width: 42,
-                          height: 42,
-                        ),
-                        const SizedBox(width: 12),
+                        SvgPicture.asset("assets/images/logo/logo_outline.svg", width: 42, height: 42),
+                        const SizedBox(width: Dimension.padding),
                         Expanded(
                           child: BlocBuilder<AuthCubit, AuthCubitState>(
                             builder: (context, state) {
@@ -58,18 +56,20 @@ class AboutPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       t.settings.about.version,
-                                      style: TextStyle(
-                                          fontSize: 17, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                                     ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: Dimension.paddingXS),
                                     BlocBuilder<SettingsCubit, SettingsCubitState>(
                                       builder: (context, state) {
                                         return Text(
                                           state.appVersion ?? "",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: ColorsExt.grey3(context)),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                                         );
                                       },
                                     ),
@@ -82,12 +82,15 @@ class AboutPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Dimension.padding),
                   Text(
                     t.settings.about.legal.toUpperCase(),
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.paddingXS),
                   ButtonList(
                     title: t.settings.about.licensesInfo,
                     position: ButtonListPosition.top,
@@ -105,15 +108,28 @@ class AboutPage extends StatelessWidget {
                     textMainAxisAlignment: MainAxisAlignment.start,
                     trailingWidget: SvgPicture.asset(
                       Assets.images.icons.common.arrowUpRightSquareSVG,
-                      width: 22,
-                      height: 22,
+                      width: Dimension.defaultIconSize,
+                      height: Dimension.defaultIconSize,
                     ),
                     onPressed: () {
                       launchUrl(Uri.parse("https://www.notion.so/akiflow/Security-6d61cefd8c2349b2b4d5561aa82f1832"),
                           mode: LaunchMode.externalApplication);
                     },
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: Dimension.padding),
+                  if (kDebugMode)
+                    ButtonList(
+                      title: "Restart the app",
+                      leading: Assets.images.icons.common.repeatSVG,
+                      position: ButtonListPosition.single,
+                      showShevron: false,
+                      useSvgColor: true,
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        await mainCom();
+                      },
+                    ),
                 ],
               ),
             ),

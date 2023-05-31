@@ -26,70 +26,42 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 80,
-              ),
+              const SizedBox(height: Dimension.paddingXXL),
               IgnorePointer(
                 child: SvgPicture.asset(
                   Assets.images.icons.common.noActiveLinksSVG,
-                  width: 130,
-                  height: 130,
+                  width: Dimension.defaultIllustrationSize,
+                  height: Dimension.defaultIllustrationSize,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimension.paddingM),
               IgnorePointer(
                 child: Column(
                   children: [
                     Text(
                       t.availability.noActiveLinksToShow,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: Dimension.padding),
                     Text(
                       t.availability.toCreateLinkUseDesktop,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: ColorsExt.grey3(context),
-                      ),
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: ColorsExt.grey600(context)),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              InkWell(
-                borderRadius: BorderRadius.circular(4),
-                onTap: () {
-                  context.read<MainCubit>().changeHomeView(HomeViewType.today);
-                },
-                child: Container(
-                  width: 114,
-                  margin: const EdgeInsets.symmetric(horizontal: 24),
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: ColorsExt.grey6(context),
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
-                      color: ColorsExt.grey4(context),
-                      width: 1,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      t.calendar.goToToday,
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: ColorsExt.grey2(context),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: bottomBarHeight),
+              const SizedBox(height: Dimension.paddingM),
+              OutlinedButton(
+                  onPressed: () {
+                    context.read<MainCubit>().changeHomeView(HomeViewType.today);
+                  },
+                  child: Text(t.calendar.goToToday, style: TextStyle(color: ColorsExt.grey800(context)))),
+              const SizedBox(height: Dimension.bottomBarHeight),
             ],
           ),
         ],

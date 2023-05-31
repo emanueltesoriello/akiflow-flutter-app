@@ -200,7 +200,6 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     const withoutRemoteUpdatedAt = 'remote_updated_at IS NULL';
     const deletedAtGreaterThanRemoteUpdatedAt = 'deleted_at > remote_updated_at';
     const updatedAtGreaterThanRemoteUpdatedAt = 'updated_at > remote_updated_at';
-    //const trashedAtGreaterThanRemoteUpdatedAt = 'trashed_at > remote_updated_at';
 
     List<String> conditionsListId = [
       '(global_list_id_updated_at IS NOT NULL AND remote_list_id_updated_at IS NULL)',

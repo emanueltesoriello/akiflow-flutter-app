@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -61,8 +62,8 @@ class _PlanModalState extends State<PlanModal> {
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.radiusM),
+                topRight: Radius.circular(Dimension.radiusM),
               ),
             ),
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -102,7 +103,7 @@ class _PlanModalState extends State<PlanModal> {
                       }
                     }(),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Dimension.padding),
                 ],
               ),
             ),
@@ -127,7 +128,7 @@ class _PlanModalState extends State<PlanModal> {
                 children: [
                   CreateTaskTopActionItem(
                     text: t.addTask.plan,
-                    color: ColorsExt.grey5(context),
+                    color: ColorsExt.grey200(context),
                     leadingIconAsset: Assets.images.icons.common.calendarSVG,
                     active: status == TaskStatusType.planned,
                     onPressed: () {
@@ -137,7 +138,7 @@ class _PlanModalState extends State<PlanModal> {
                   const SizedBox(width: 24),
                   CreateTaskTopActionItem(
                     text: t.addTask.snooze,
-                    color: ColorsExt.pink30(context),
+                    color: ColorsExt.rose200(context),
                     leadingIconAsset: Assets.images.icons.common.clockSVG,
                     active: status == TaskStatusType.snoozed,
                     onPressed: () {
@@ -349,17 +350,16 @@ class _PlanModalState extends State<PlanModal> {
               iconAsset,
               width: 24,
               height: 24,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
               ),
             ),
             const SizedBox(width: 8),
@@ -371,11 +371,10 @@ class _PlanModalState extends State<PlanModal> {
                     child: Text(
                       trailingText,
                       textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey3(context),
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                     ),
                   ),
                 ],

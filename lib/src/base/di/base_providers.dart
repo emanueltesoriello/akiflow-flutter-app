@@ -18,7 +18,7 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 List<BlocProvider> baseProviders = [
   BlocProvider<DialogCubit>(
     lazy: false,
-    create: (BuildContext context) => DialogCubit(),
+    create: (BuildContext context) => locator<DialogCubit>(),
   ),
   BlocProvider<SyncCubit>(
     lazy: false,
@@ -62,7 +62,7 @@ List<BlocProvider> baseProviders = [
   ),
   BlocProvider<CalendarCubit>(
     lazy: false,
-    create: (BuildContext context) => CalendarCubit(locator<SyncCubit>()),
+    create: (BuildContext context) => CalendarCubit(locator<SyncCubit>(), locator<AuthCubit>()),
   ),
   BlocProvider<EventsCubit>(
     lazy: false,

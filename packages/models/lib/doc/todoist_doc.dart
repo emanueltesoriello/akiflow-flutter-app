@@ -6,7 +6,7 @@ class TodoistDoc extends DocBase {
   final String? url;
   final String? localUrl;
   final String? dueDate;
-  final String? dueDateTime;
+  final int? dueDateTime;
   final String? projectId;
   final String? projectName;
   final bool? isRecurring;
@@ -35,7 +35,7 @@ class TodoistDoc extends DocBase {
         url: json['url'] as String?,
         localUrl: json['local_url'] as String?,
         dueDate: json['due_date'] as String?,
-        dueDateTime: json['due_date_time'] as String?,
+        dueDateTime: json['due_date_time'] as int?,
         projectId: json['project_id'] as String?,
         projectName: json['project_name'] as String?,
         isRecurring: json['is_recurring'] as bool?,

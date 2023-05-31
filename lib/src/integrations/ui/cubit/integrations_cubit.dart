@@ -40,7 +40,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
   IntegrationsCubit(this._authCubit, this._syncCubit) : super(const IntegrationsCubitState()) {
     _syncCubit.syncCompletedStream.listen((_) async {
-      List<Account> accounts = await _accountsRepository.get();
+      List<Account> accounts = await _accountsRepository.getAccounts();
       emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
     });
 
@@ -48,7 +48,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
   }
 
   _init() async {
-    List<Account> accounts = await _accountsRepository.get();
+    List<Account> accounts = await _accountsRepository.getAccounts();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
   }
 
@@ -63,7 +63,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     await _accountsRepository.updateById(account.id, data: account);
 
-    List<Account> accounts = await _accountsRepository.get();
+    List<Account> accounts = await _accountsRepository.getAccounts();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
     _syncCubit.sync(loading: true);
@@ -91,7 +91,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     await _accountsRepository.updateById(account.id, data: account);
 
-    List<Account> accounts = await _accountsRepository.get();
+    List<Account> accounts = await _accountsRepository.getAccounts();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
     _syncCubit.sync(loading: true);
@@ -159,7 +159,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     emit(state.copyWith(isAuthenticatingOAuth: false));
 
-    List<Account> accounts = await _accountsRepository.get();
+    List<Account> accounts = await _accountsRepository.getAccounts();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
     emit(state.copyWith(connected: true));
@@ -193,7 +193,7 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     emit(state.copyWith(isAuthenticatingOAuth: false));
 
-    List<Account> accounts = await _accountsRepository.get();
+    List<Account> accounts = await _accountsRepository.getAccounts();
     emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
 
     emit(state.copyWith(connected: false));

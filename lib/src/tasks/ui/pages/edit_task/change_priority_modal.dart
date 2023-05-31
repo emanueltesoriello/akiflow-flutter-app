@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 enum PriorityEnum {
@@ -48,19 +49,18 @@ class PriorityModal extends StatelessWidget {
         child: ListView(
           shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   Text(
                     t.task.priority.title,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey800(context),
+                        ),
                   ),
                 ],
               ),
@@ -105,7 +105,7 @@ class PriorityModal extends StatelessWidget {
               },
               icon: Assets.images.icons.common.exclamationmark3SVG,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: Dimension.paddingL),
           ],
         ),
       ),
@@ -122,7 +122,7 @@ class PriorityModal extends StatelessWidget {
     return InkWell(
       onTap: click,
       child: Container(
-        color: active ? ColorsExt.grey6(context) : Colors.transparent,
+        color: active ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Row(
           children: [
@@ -135,10 +135,9 @@ class PriorityModal extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: ColorsExt.grey2(context),
-                ),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      color: ColorsExt.grey800(context),
+                    ),
               ),
             ),
           ],
