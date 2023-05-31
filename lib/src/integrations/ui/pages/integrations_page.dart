@@ -58,7 +58,7 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                   BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                     builder: (context, state) {
                       List<Account> accounts = state.accounts.toList();
-                      accounts.removeWhere((element) => element.connectorId == "akiflow" || element.deletedAt != null);
+                      accounts.removeWhere((element) => element.connectorId == "akiflow");
 
                       accounts
                           .removeWhere((element) => !AccountExt.acceptedAccountsOrigin.contains(element.connectorId));
