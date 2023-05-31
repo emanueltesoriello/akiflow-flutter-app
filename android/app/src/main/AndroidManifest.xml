@@ -26,18 +26,37 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                <action android:name="android.intent.action.VIEW" />
                <category android:name="android.intent.category.DEFAULT" />
                <category android:name="android.intent.category.BROWSABLE" />
                <!--TODO:  Add this filter, if you want support opening urls into your app-->
                <data
                    android:scheme="https"
-                   android:host="example.com"
+                   android:host="link.akiflow.com"
                    android:pathPrefix="/invite"/>
             </intent-filter>
 
-             <!--TODO: Add this filter, if you want to support sharing text into your app-->
+            <intent-filter android:autoVerify="true">
+               <action android:name="android.intent.action.VIEW" />
+               <category android:name="android.intent.category.DEFAULT" />
+               <category android:name="android.intent.category.BROWSABLE" />
+               <!--TODO:  Add this filter, if you want support opening urls into your app-->
+               <data android:scheme="http" />
+               <data android:scheme="https" />
+               <data android:host="link.akiflow.com" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+               <action android:name="android.intent.action.VIEW" />
+               <category android:name="android.intent.category.DEFAULT" />
+               <category android:name="android.intent.category.BROWSABLE" />
+               <!--TODO:  Add this filter, if you want support opening urls into your app-->
+               <data android:scheme="test" />
+               <data android:host="link.akiflow.com" />
+            </intent-filter>
+
+             <!--TODO: Add this filter, if you want to support sharing text into your app--> 
             <intent-filter>
                <action android:name="android.intent.action.SEND" />
                <category android:name="android.intent.category.DEFAULT" />

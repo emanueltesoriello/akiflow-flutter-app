@@ -12,7 +12,7 @@ import 'package:mobile/src/calendar/ui/models/calendar_task.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class TaskAppointment extends StatelessWidget {
   TaskAppointment({
@@ -131,9 +131,11 @@ class TaskAppointment extends StatelessWidget {
                                   height: 1.3,
                                   fontSize: calendarController.view == CalendarView.schedule
                                       ? 15.0
-                                      : boxHeight < 15.0
+                                      : calendarController.view == CalendarView.month
                                           ? 10.5
-                                          : 13.0,
+                                          : boxHeight < 15.0
+                                              ? 10.5
+                                              : 13.0,
                                   fontWeight: FontWeight.w500,
                                   color: ColorsExt.grey900(context),
                                 )),

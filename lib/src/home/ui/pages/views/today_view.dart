@@ -7,8 +7,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/animated_linear_progress_indicator.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
@@ -93,23 +91,9 @@ class _TodayViewState extends State<TodayView> {
       completed =
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
-
     pinned.sort((a, b) {
       try {
-        DateTime parsedAUTC = DateTime.parse(a.datetime!);
-        DateTime parsedALocal = parsedAUTC.toLocal();
-        DateTime fixedA = parsedALocal != null
-            ? DateTime(parsedAUTC.year, parsedAUTC.month, parsedAUTC.day, parsedALocal.hour, parsedALocal.minute,
-                parsedALocal.second)
-            : DateTime.now();
-
-        DateTime parsedBUTC = DateTime.parse(b.datetime!);
-        DateTime parsedBLocal = parsedBUTC.toLocal();
-        DateTime fixedB = parsedBLocal != null
-            ? DateTime(parsedBUTC.year, parsedBUTC.month, parsedBUTC.day, parsedBLocal.hour, parsedBLocal.minute,
-                parsedBLocal.second)
-            : DateTime.now();
-        return fixedA.compareTo(fixedB);
+        return a.datetime!.compareTo(b.datetime!);
       } catch (e) {
         print("Error sorting pinned items: ${e.toString()}");
         return 0;
@@ -178,7 +162,7 @@ class _TodayViewState extends State<TodayView> {
                           padding: EdgeInsets.zero,
                           children: [
                             TaskList(
-                              key: const ObjectKey("todos"),
+                              key: Key("todos${todos.isNotEmpty ? todos[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: todos,
@@ -196,7 +180,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("pinned"),
+                              key: Key("pinned${pinned.isNotEmpty ? pinned[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: pinned,
@@ -214,7 +198,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("completed"),
+                              key: Key("completed${completed.isNotEmpty ? completed[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: completed,

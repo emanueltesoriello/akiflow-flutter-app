@@ -28,7 +28,7 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/task/task.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class CalendarBody extends StatelessWidget {
   const CalendarBody({
@@ -118,20 +118,28 @@ class CalendarBody extends StatelessWidget {
                 tasksCubit.fetchCalendarTasks();
                 eventsCubit.fetchEvents();
               } else {
+                tasksCubit.resetTasks();
+                eventsCubit.resetEvents();
                 tasksCubit.fetchTasksBetweenDates(start.toIso8601String(), end.toIso8601String());
                 eventsCubit.fetchEventsBetweenDates(start, end);
               }
             },
             dataSource: _getCalendarDataSource(context, state),
             viewHeaderStyle: ViewHeaderStyle(
-                dayTextStyle: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
-                dateTextStyle: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
+              dayTextStyle: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+              dateTextStyle: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
+              narrowDateDay:
+                  (calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
+                          !isThreeDays
+                      ? true
+                      : false,
+            ),
             timeSlotViewSettings: TimeSlotViewSettings(
               timeIntervalHeight: 60.0,
               minimumAppointmentDuration: const Duration(minutes: 15),
@@ -141,15 +149,14 @@ class CalendarBody extends StatelessWidget {
                   ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
               numberOfDaysInView: isThreeDays ? 3 : -1,
               timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
-              dayFormat: isThreeDays ? 'EEE' : 'EE',
+              dayFormat: isThreeDays || calendarController.view == CalendarView.day ? 'EEE' : 'EE',
               nonWorkingDays: state.nonWorkingDays,
             ),
             scheduleViewSettings: ScheduleViewSettings(
-                hideEmptyScheduleWeek: true,
                 dayHeaderSettings: DayHeaderSettings(
                   dayTextStyle: Theme.of(context)
                       .textTheme
-                      .caption
+                      .bodyText2
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                   dateTextStyle: Theme.of(context)
                       .textTheme
@@ -170,7 +177,8 @@ class CalendarBody extends StatelessWidget {
                       .titleLarge
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                 )),
-            monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+            monthViewSettings: const MonthViewSettings(
+                appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 4),
             onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),
             appointmentBuilder: (context, calendarAppointmentDetails) =>
                 appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
@@ -298,12 +306,15 @@ class CalendarBody extends StatelessWidget {
 
   void dragEnd(AppointmentDragEndDetails appointmentDragEndDetails, BuildContext context, CalendarCubit calendarCubit,
       EventsCubit eventsCubit) {
+    calendarCubit.setAppointmentTapped(true);
     dynamic appointment = appointmentDragEndDetails.appointment!;
     DateTime droppingTime = appointmentDragEndDetails.droppingTime!;
     DateTime droppedTimeRounded = DateTime(droppingTime.year, droppingTime.month, droppingTime.day, droppingTime.hour,
         [0, 15, 30, 45, 60][(droppingTime.minute / 15).round()]);
 
-    if (tasks.any((task) => task.id == appointment.id)) {
+    if (groupedTasks.any((group) => group.id == appointment.id)) {
+      _noPermissionToEditEvent(context, calendarCubit);
+    } else if (tasks.any((task) => task.id == appointment.id)) {
       Task task = tasks.firstWhere((task) => task.id == appointment.id);
       DateTime taskDateTime = DateTime.parse(task.datetime!);
       TasksCubit tasksCubit = context.read<TasksCubit>();

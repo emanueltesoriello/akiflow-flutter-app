@@ -123,11 +123,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
     try {
       String startDateCalendarTasks = DateTime.now().toUtc().subtract(const Duration(days: 7)).toIso8601String();
       String endDateCalendarTasks = DateTime.now().toUtc().add(const Duration(days: 7)).toIso8601String();
-
+      if (_todayCubit != null) {}
       await Future.wait([
         fetchInbox().then((_) => print('fetched inbox')),
         fetchTodayTasks().then((_) => print('fetched today tasks')),
-        fetchSelectedDayTasks(_todayCubit!.state.selectedDate).then((_) => print('fetched selected day tasks')),
+        if (_todayCubit != null)
+          fetchSelectedDayTasks(_todayCubit!.state.selectedDate).then((_) => print('fetched selected day tasks')),
         _labelsCubit != null
             ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!).then((_) => print('fetched label tasks'))
             : Future.value(),
@@ -231,6 +232,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     } catch (e, s) {
       _sentryService.captureException(e, stackTrace: s);
     }
+  }
+
+  resetTasks(){
+    emit(state.copyWith(calendarTasks: []));
   }
 
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
@@ -642,7 +647,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in allSelected) {
       Task updated = task.copyWith(
         date: Nullable(date?.toIso8601String()),
-        datetime: Nullable(dateTime?.toIso8601String()),
+        datetime: Nullable(TzUtils.toUtcStringIfNotNull(dateTime)),
         status: Nullable(statusType.id),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
         selected: false,

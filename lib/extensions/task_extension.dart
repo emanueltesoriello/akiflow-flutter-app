@@ -102,11 +102,20 @@ extension TaskStatusTypeExt on TaskStatusType {
 
 extension TaskExt on Task {
   bool isSameDateOf(DateTime ofDate) {
-    if (date != null) {
+    ofDate = DateTime(
+        ofDate.year, ofDate.month, ofDate.day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second);
+
+    if (datetime != null) {
+      DateTime selectedLocalDate = ofDate;
+      DateTime dateParsed = DateTime.parse(datetime!);
+
+      return dateParsed.toLocal().day == selectedLocalDate.day &&
+          dateParsed.toLocal().month == selectedLocalDate.month &&
+          dateParsed.toLocal().year == selectedLocalDate.year;
+    } else if (date != null) {
       DateTime dateParsed = DateTime.parse(date!);
       return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
     }
-
     return false;
   }
 
@@ -468,7 +477,7 @@ extension TaskExt on Task {
       case "github":
         return Assets.images.icons.github.githubSVG;
       case "google":
-        return Assets.images.icons.google.googleSVG;
+        return Assets.images.icons.google.calendarSVG;
       case "gmail":
         return Assets.images.icons.google.gmailSVG;
       case "jira":
@@ -879,7 +888,8 @@ extension TaskExt on Task {
       PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
       if (preferencesRepository.taskCompletedSoundEnabledMobile) {
         final audioPlayer = AudioPlayer();
-        audioPlayer.play(ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
+        audioPlayer.play(
+            volume: 0.3, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
       }
     }
   }

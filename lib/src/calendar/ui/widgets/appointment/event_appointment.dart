@@ -6,7 +6,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class EventAppointment extends StatelessWidget {
   const EventAppointment({
@@ -46,8 +46,16 @@ class EventAppointment extends StatelessWidget {
                           ? EdgeInsets.only(left: 2, right: 2, top: appointment.isAllDay ? 4 : 2)
                           : EdgeInsets.only(left: 2, right: 2, top: boxHeight < 15.0 ? 0 : 2),
                       child: SizedBox(
-                        height: boxHeight < 15.0 ? 13 : 16,
-                        width: boxHeight < 15.0 ? 13 : 16,
+                        height: calendarController.view == CalendarView.month
+                            ? 12
+                            : boxHeight < 15.0
+                                ? 13
+                                : 16,
+                        width: calendarController.view == CalendarView.month
+                            ? 13
+                            : boxHeight < 15.0
+                                ? 13
+                                : 16,
                         child: SvgPicture.asset(
                           rsvpIcon,
                           color: ColorsExt.grey800(context),
@@ -69,9 +77,11 @@ class EventAppointment extends StatelessWidget {
                     height: event.attendees != null && responseStatus == AtendeeResponseStatus.needsAction ? 1.1 : 1.3,
                     fontSize: calendarController.view == CalendarView.schedule
                         ? 15.0
-                        : boxHeight < 15.0
+                        : calendarController.view == CalendarView.month
                             ? 10.5
-                            : 13.0,
+                            : boxHeight < 15.0
+                                ? 10.5
+                                : 13.0,
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined
                         ? ColorsExt.grey700(context)

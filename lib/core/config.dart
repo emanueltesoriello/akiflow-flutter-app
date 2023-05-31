@@ -61,6 +61,13 @@ abstract class Config {
       androidApiKey: _config['intercom']['android_api_key'] as String,
     );
   }
+
+  static GooglePlacesCredentials get googlePlacesCredentials {
+    return GooglePlacesCredentials(
+      androidApiKey: _config['google_places']['android_api_key'] as String,
+      iosApiKey: _config['google_places']['ios_api_key'] as String,
+    );
+  }
 }
 
 class GoogleCredentials {
@@ -76,4 +83,11 @@ class IntercomCredential {
   final String androidApiKey;
 
   IntercomCredential({required this.appId, required this.iosApiKey, required this.androidApiKey});
+}
+
+class GooglePlacesCredentials {
+  final String androidApiKey;
+  final String iosApiKey;
+
+  GooglePlacesCredentials({required this.androidApiKey, required this.iosApiKey});
 }

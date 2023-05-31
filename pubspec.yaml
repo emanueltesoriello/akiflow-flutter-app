@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.34.26+330
+version: 2.35.28+348
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -52,7 +52,8 @@ dependencies:
   share_handler: ^0.0.16
   device_preview: ^1.1.0 
   timezone: ^0.9.0
-  syncfusion_flutter_calendar: ^20.4.38
+  syncfusion_calendar:
+    path: ./packages/syncfusion_calendar
   flutter_local_notifications: ^13.0.0
   workmanager: ^0.5.1 
   firebase_messaging: ^14.2.2
@@ -63,7 +64,8 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   flutter_js: ^0.6.0
   audioplayers: ^3.0.1
-
+  pusher_channels_flutter: ^2.1.2
+  app_links: ^3.4.2
   
 dev_dependencies:
   flutter_launcher_icons_maker: ^0.10.1

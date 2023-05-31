@@ -122,7 +122,6 @@ class BottomTaskActions extends StatelessWidget {
                         builder: (context) => LabelsModal(
                           selectLabel: (Label label) {
                             cubit.assignLabel(label);
-                            Navigator.pop(context);
                           },
                           showNoLabel: true,
                         ),
@@ -147,6 +146,17 @@ class BottomTaskActions extends StatelessWidget {
                       );
 
                       cubit.setPriority(newPriority);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: ButtonAction(
+                    backColor: ColorsExt.grey200(context),
+                    topColor: ColorsExt.grey700(context),
+                    icon: Assets.images.icons.common.trashSVG,
+                    bottomLabel: t.task.delete,
+                    click: () async {
+                      context.read<TasksCubit>().delete();
                     },
                   ),
                 ),
@@ -204,8 +214,7 @@ class BottomTaskActions extends StatelessWidget {
                                 TasksCubit tasksCubit = context.read<TasksCubit>();
                                 tasksCubit.markAsDone();
                                 break;
-                              case BottomTaskAdditionalActions.delete:
-                                context.read<TasksCubit>().delete();
+                              default:
                                 break;
                             }
                           },
@@ -247,13 +256,6 @@ class BottomTaskActions extends StatelessWidget {
                               child: PopupMenuCustomItem(
                                 iconAsset: Assets.images.icons.common.checkDoneOutlineSVG,
                                 text: t.task.markAsDone,
-                              ),
-                            ),
-                            PopupMenuItem<BottomTaskAdditionalActions>(
-                              value: BottomTaskAdditionalActions.delete,
-                              child: PopupMenuCustomItem(
-                                iconAsset: Assets.images.icons.common.trashSVG,
-                                text: t.task.delete,
                               ),
                             ),
                           ],

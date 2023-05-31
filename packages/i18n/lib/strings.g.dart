@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 334 
+ * Strings: 337 
  *
- * Built on 2023-05-08 at 14:31 UTC
+ * Built on 2023-05-23 at 11:45 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -663,7 +663,8 @@ class _StringsAvailabilityEn {
 
 	// Translations
 	String get availabilities => 'Availabilities';
-	String get activeRecurrentSlots => 'Active recurrent slots';
+	String get shareAvailabilities => 'Share availabilities';
+	String get activeRecurrentSlots => 'Recurrent slots';
 	String get activeManualSlots => 'Active manual slots';
 	String get noActiveLinksToShow => 'No active links to show';
 	String get toCreateLinkUseDesktop => 'To create a link use the desktop app';
@@ -917,6 +918,7 @@ class _StringsEventEditEventEn {
 	late final _StringsEventEditEventDeleteModalEn deleteModal = _StringsEventEditEventDeleteModalEn._(_root);
 	late final _StringsEventEditEventRecurrenceEn recurrence = _StringsEventEditEventRecurrenceEn._(_root);
 	late final _StringsEventEditEventAddGuestModalEn addGuestModal = _StringsEventEditEventAddGuestModalEn._(_root);
+	late final _StringsEventEditEventAddLocationModalEn addLocationModal = _StringsEventEditEventAddLocationModalEn._(_root);
 }
 
 // Path: event.snackbar
@@ -1024,6 +1026,17 @@ class _StringsEventEditEventAddGuestModalEn {
 	// Translations
 	String get addGuest => 'Add guest';
 	String get searchContact => 'Search contact';
+}
+
+// Path: event.editEvent.addLocationModal
+class _StringsEventEditEventAddLocationModalEn {
+	_StringsEventEditEventAddLocationModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get addLocation => 'Add Location';
+	String get search => 'Search';
 }
 
 // Path: settings.integrations.gmail.step1
@@ -1387,11 +1400,14 @@ extension on _StringsEn {
 			'event.editEvent.recurrence.custom': 'Custom',
 			'event.editEvent.addGuestModal.addGuest': 'Add guest',
 			'event.editEvent.addGuestModal.searchContact': 'Search contact',
+			'event.editEvent.addLocationModal.addLocation': 'Add Location',
+			'event.editEvent.addLocationModal.search': 'Search',
 			'event.snackbar.created': 'Event created successfully',
 			'event.snackbar.edited': 'Event updated successfully',
 			'event.snackbar.deleted': 'Event has been deleted',
 			'availability.availabilities': 'Availabilities',
-			'availability.activeRecurrentSlots': 'Active recurrent slots',
+			'availability.shareAvailabilities': 'Share availabilities',
+			'availability.activeRecurrentSlots': 'Recurrent slots',
 			'availability.activeManualSlots': 'Active manual slots',
 			'availability.noActiveLinksToShow': 'No active links to show',
 			'availability.toCreateLinkUseDesktop': 'To create a link use the desktop app',

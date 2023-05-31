@@ -38,7 +38,7 @@ class TagBox extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 400),
         constraints: BoxConstraints(
           minHeight: isBig ? 32 : 22,
           minWidth: isSquare ? (isBig ? 32 : 22) : 0,

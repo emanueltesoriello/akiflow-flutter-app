@@ -388,6 +388,10 @@
       "addGuestModal": {
         "addGuest": "Add guest",
         "searchContact": "Search contact"
+      },
+      "addLocationModal": {
+        "addLocation": "Add Location",
+        "search": "Search"
       }
     },
     "snackbar": {
@@ -398,7 +402,8 @@
   },
   "availability": {
     "availabilities": "Availabilities",
-    "activeRecurrentSlots": "Active recurrent slots",
+    "shareAvailabilities": "Share availabilities",
+    "activeRecurrentSlots": "Recurrent slots",
     "activeManualSlots": "Active manual slots",
     "noActiveLinksToShow": "No active links to show",
     "toCreateLinkUseDesktop": "To create a link use the desktop app",

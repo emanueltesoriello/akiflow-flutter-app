@@ -1,0 +1,19 @@
+name: syncfusion_calendar
+description: The Flutter Calendar widget has nine built-in configurable views that provide basic functionalities for scheduling and representing appointments/events efficiently.
+version: 20.4.54
+homepage: https://github.com/syncfusion/flutter-examples
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  timezone: 0.9.1
+  syncfusion_flutter_core: ^20.4.54
+  syncfusion_flutter_datepicker: ^20.4.54
+  intl: ">=0.17.0 <0.20.0"
+
+flutter:
+  assets:
+    - packages/timezone/data/latest_all.tzf

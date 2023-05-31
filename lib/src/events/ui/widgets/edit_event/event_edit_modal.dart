@@ -21,6 +21,7 @@ import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/add_location_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/choose_calendar_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/choose_conference_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
@@ -356,7 +357,9 @@ class _EventEditModalState extends State<EventEditModal> {
           ),
         );
       },
-      child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
+      child: Text(
+          DateFormat("EEE dd MMM").format(
+              updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.startTime!).toLocal() : widget.tappedDate),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: ColorsExt.grey800(context),
@@ -491,7 +494,9 @@ class _EventEditModalState extends State<EventEditModal> {
           ),
         );
       },
-      child: Text(DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
+      child: Text(
+          DateFormat("EEE dd MMM").format(
+              updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.endTime!).toLocal() : widget.tappedDate),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: ColorsExt.grey800(context),
@@ -789,37 +794,44 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  Padding _locationRow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Dimension.paddingXS),
-      child: Row(
-        children: [
-          SizedBox(
-            width: Dimension.defaultIconSize,
-            height: Dimension.defaultIconSize,
-            child: SvgPicture.asset(
-              Assets.images.icons.common.mapSVG,
-              color: locationController.text.isEmpty ? ColorsExt.grey600(context) : ColorsExt.grey800(context),
+  InkWell _locationRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => AddLocationModal(
+            initialLocation: updatedEvent.content?["location"],
+            updateLocation: (String location) {
+              setState(() {
+                locationController.text = location;
+              });
+            },
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.mapSVG,
+                color: locationController.text.isEmpty ? ColorsExt.grey600(context) : ColorsExt.grey800(context),
+              ),
             ),
-          ),
-          const SizedBox(width: Dimension.padding),
-          Expanded(
-            child: TextField(
-                controller: locationController,
-                decoration: InputDecoration(
-                  hintText: t.event.editEvent.addLocation,
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .subtitle1
-                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
-                  border: InputBorder.none,
-                ),
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
-          ),
-        ],
+            const SizedBox(width: Dimension.padding),
+            Expanded(
+              child: Text(locationController.text.isEmpty ? t.event.editEvent.addLocation : locationController.text,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      color: locationController.text.isEmpty ? ColorsExt.grey600(context) : ColorsExt.grey800(context),
+                      fontWeight: FontWeight.w400)),
+            ),
+          ],
+        ),
       ),
     );
   }

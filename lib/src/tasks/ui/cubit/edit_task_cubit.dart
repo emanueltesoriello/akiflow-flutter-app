@@ -705,6 +705,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
+  void onModalClose() {
+    print('onModalClose');
+    emit(state.copyWith(showDuration: false, showLabelsList: false, showPriority: false));
+  }
+
   void addLink(String newLink) {
     List<String> links = state.updatedTask.links ?? [];
 

@@ -9,7 +9,7 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
 import 'package:models/task/task.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart' as sf_calendar;
+import 'package:syncfusion_calendar/calendar.dart' as sf_calendar;
 import 'package:uuid/uuid.dart';
 import '../widgets/calendar_body.dart';
 
@@ -22,7 +22,7 @@ class CalendarView extends StatelessWidget {
       builder: (context, state) {
         final PanelController panelController = PanelController();
         final sf_calendar.CalendarController calendarController = sf_calendar.CalendarController();
-        calendarController.view = context.watch<CalendarCubit>().state.calendarView;
+        calendarController.view = state.calendarView;
 
         TasksCubit tasksCubit = context.watch<TasksCubit>();
         List<Task> tasks = [];
@@ -42,17 +42,15 @@ class CalendarView extends StatelessWidget {
           }
         }
 
-        List<Calendar> calendars = context.watch<CalendarCubit>().state.calendars;
+        List<Calendar> calendars = state.calendars;
         List<String> visibleCalendarIds = [];
         if (calendars.isNotEmpty) {
-          calendars = calendars
-              .where((element) =>
-                  element.settings != null &&
-                  ((element.settings["visibleMobile"] ?? element.settings["visible"] ?? false) == true))
-              .toList();
-
-          for (var calendar in calendars) {
-            visibleCalendarIds.add(calendar.id!);
+          for (Calendar calendar in calendars) {
+            bool visible = calendar.settings != null &&
+                ((calendar.settings["visibleMobile"] ?? calendar.settings["visible"] ?? false) == true);
+            if (visible) {
+              visibleCalendarIds.add(calendar.id!);
+            }
           }
         }
 

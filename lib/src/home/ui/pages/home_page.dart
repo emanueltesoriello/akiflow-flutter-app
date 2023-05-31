@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -15,6 +18,7 @@ import 'package:mobile/src/integrations/ui/pages/reconnect_integrations.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
+import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/create_task/create_task_modal.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
@@ -38,29 +42,64 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   SharedMedia? media;
   final handler = ShareHandlerPlatform.instance;
 
+  handleDeeplinks(String path) {
+    if (path.isEmpty) {
+      return;
+    } else if (path.toLowerCase().contains('inbox')) {
+      print('deeplink inbox');
+      context.read<MainCubit>().changeHomeView(HomeViewType.inbox);
+    } else if (path.toLowerCase().contains('calendar')) {
+      print('deeplink calendar');
+      context.read<MainCubit>().changeHomeView(HomeViewType.calendar);
+    } else if (path.toLowerCase().contains('today')) {
+      print('deeplink today page');
+      context.read<MainCubit>().changeHomeView(HomeViewType.today);
+    } else if (path.toLowerCase().contains('createtask')) {
+      print('deeplink create task');
+      context.read<MainCubit>().changeHomeView(HomeViewType.today);
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => const CreateTaskModal(),
+      ).then((value) => context.read<EditTaskCubit>().onModalClose());
+    } else if (path.toLowerCase().contains('shareavailability')) {
+      print('deeplink share availability');
+      context.read<MainCubit>().changeHomeView(HomeViewType.availability);
+    }
+  }
+
   Future<void> initPlatformState() async {
     print('started initPlatformState');
     try {
       var media = await handler.getInitialSharedMedia();
       if (!mounted) return;
       if (media != null) {
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => CreateTaskModal(
-            sharedText: media.content,
-          ),
-        );
-      }
-
-      handler.sharedMediaStream.listen((SharedMedia? media) {
-        if (!mounted) return;
-        if (media != null) {
+        if (media.content!.contains('link.akiflow.com') && Platform.isAndroid) {
+          String path = Uri.parse(media.content!).path;
+          handleDeeplinks(path);
+        } else {
           showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => CreateTaskModal(
               sharedText: media.content,
             ),
-          );
+          ).then((value) => context.read<EditTaskCubit>().onModalClose());
+        }
+      }
+
+      handler.sharedMediaStream.listen((SharedMedia? media) {
+        if (!mounted) return;
+        if (media != null) {
+          if (media.content!.contains('link.akiflow.com') && Platform.isAndroid) {
+            String path = Uri.parse(media.content!).path;
+            handleDeeplinks(path);
+          } else {
+            showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => CreateTaskModal(
+                sharedText: media.content,
+              ),
+            ).then((value) => context.read<EditTaskCubit>().onModalClose());
+          }
         }
       });
       if (!mounted) return;
@@ -70,11 +109,42 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
+  initiOSAppLinks() async {
+    final appLinks = AppLinks();
+//Get the initial/first link.
+// This is useful when app was terminated (i.e. not started)
+    final uri = await appLinks.getInitialAppLink();
+    if (Platform.isIOS) {
+      BuildContext? context = NavigationService.navigatorKey.currentContext;
+      if (context != null && uri != null && uri.host.contains('link.akiflow.com')) {
+        // Do something (navigation, ...)
+        print('deeplink');
+        String path = uri.path;
+        handleDeeplinks(path);
+      }
+    }
+
+// Subscribe to further events when app is started.
+// (Use stringLinkStream to get it as [String])
+    appLinks.uriLinkStream.listen((uri) {
+      if (Platform.isIOS) {
+        BuildContext? context = NavigationService.navigatorKey.currentContext;
+        if (context != null && uri.host.contains('link.akiflow.com')) {
+          // Do something (navigation, ...)
+          print('deeplink');
+          String path = uri.path;
+          handleDeeplinks(path);
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initPlatformState();
+    initiOSAppLinks();
 
     TasksCubit tasksCubit = context.read<TasksCubit>();
 

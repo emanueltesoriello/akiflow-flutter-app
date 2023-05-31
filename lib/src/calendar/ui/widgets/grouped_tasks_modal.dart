@@ -21,99 +21,103 @@ class GroupedTasksModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TasksCubit tasksCubit = context.watch<TasksCubit>();
-    List<Task> calendarTasks = List.from(tasksCubit.state.calendarTasks);
+    return BlocBuilder<TasksCubit, TasksCubitState>(builder: (context, state) {
+      List<Task> calendarTasks = List.from(state.calendarTasks);
+      List<String> idList = tasks.map((e) => e.id!).toList();
 
-    List<String> idList = tasks.map((e) => e.id!).toList();
+      List<Task> tasksInGroup = calendarTasks.where((task) => idList.contains(task.id)).toList();
+      tasksInGroup.sort((a, b) => a.datetime!.compareTo(b.datetime!));
 
-    List<Task> tasksInGroup = calendarTasks.where((task) => idList.contains(task.id)).toList();
+      return Material(
+        color: ColorsExt.background(context),
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(Dimension.radiusM),
+              topRight: Radius.circular(Dimension.radiusM),
+            ),
+          ),
+          margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: Dimension.padding),
+              const ScrollChip(),
+              Padding(
+                padding: const EdgeInsets.all(Dimension.padding),
+                child: Row(
+                  children: [
+                    Text(
+                      '${tasks.length} tasks',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: ColorsExt.grey800(context),
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: tasksInGroup.length,
+                  itemBuilder: (context, index) {
+                    Task task = tasksInGroup[index];
 
-    return Material(
-      color: Theme.of(context).backgroundColor,
-      child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(Dimension.radiusM),
-            topRight: Radius.circular(Dimension.radiusM),
+                    TasksCubit tasksCubit = context.read<TasksCubit>();
+                    SyncCubit syncCubit = context.read<SyncCubit>();
+
+                    EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
+
+                    return BlocProvider(
+                      key: ObjectKey(task),
+                      create: (context) => editTaskCubit,
+                      child: TaskRow(
+                        key: ObjectKey(task),
+                        task: task,
+                        openedFromCalendarGroupedTasks: true,
+                        showLabel: true,
+                        showPlanInfo: false,
+                        selectTask: () {},
+                        selectMode: false,
+                        completedClick: () {
+                          HapticFeedback.mediumImpact();
+                          editTaskCubit.markAsDone(forceUpdate: true);
+                        },
+                        swipeActionPlanClick: () {
+                          HapticFeedback.mediumImpact();
+                          Navigator.pop(context);
+                          _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
+                        },
+                        swipeActionSelectLabelClick: () {
+                          HapticFeedback.mediumImpact();
+                          Navigator.pop(context);
+                          showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context) => LabelsModal(
+                              selectLabel: (Label label) {
+                                editTaskCubit.setLabel(label, forceUpdate: true);
+                              },
+                              showNoLabel: true,
+                            ),
+                          );
+                        },
+                        swipeActionSnoozeClick: () {
+                          HapticFeedback.mediumImpact();
+                          _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 48),
+            ],
           ),
         ),
-        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            const SizedBox(height: Dimension.padding),
-            const ScrollChip(),
-            Padding(
-              padding: const EdgeInsets.all(Dimension.padding),
-              child: Row(
-                children: [
-                  Text(
-                    '${tasks.length} tasks',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: ColorsExt.grey800(context),
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: tasksInGroup.length,
-              itemBuilder: (context, index) {
-                Task task = tasksInGroup[index];
-
-                TasksCubit tasksCubit = context.read<TasksCubit>();
-                SyncCubit syncCubit = context.read<SyncCubit>();
-
-                EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-
-                return BlocProvider(
-                  key: ObjectKey(task),
-                  create: (context) => editTaskCubit,
-                  child: TaskRow(
-                    key: ObjectKey(task),
-                    task: task,
-                    openedFromCalendarGroupedTasks: true,
-                    showLabel: true,
-                    showPlanInfo: false,
-                    selectTask: () {},
-                    selectMode: false,
-                    completedClick: () {
-                      HapticFeedback.mediumImpact();
-                      editTaskCubit.markAsDone(forceUpdate: true);
-                    },
-                    swipeActionPlanClick: () {
-                      HapticFeedback.mediumImpact();
-                      Navigator.pop(context);
-                      _showPlan(context, task, TaskStatusType.planned, editTaskCubit);
-                    },
-                    swipeActionSelectLabelClick: () {
-                      HapticFeedback.mediumImpact();
-                      Navigator.pop(context);
-                      showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) => LabelsModal(
-                          selectLabel: (Label label) {
-                            editTaskCubit.setLabel(label, forceUpdate: true);
-                          },
-                          showNoLabel: true,
-                        ),
-                      );
-                    },
-                    swipeActionSnoozeClick: () {
-                      HapticFeedback.mediumImpact();
-                      _showPlan(context, task, TaskStatusType.snoozed, editTaskCubit);
-                    },
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 48),
-          ],
-        ),
-      ),
-    );
+      );
+    });
   }
 
   void _showPlan(BuildContext context, Task task, TaskStatusType initialHeaderStatusType, EditTaskCubit editTaskCubit) {
