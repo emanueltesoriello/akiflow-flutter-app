@@ -43,9 +43,9 @@ enum MarkAsDoneType {
       case 'markAsDone':
         return t.settings.integrations.onMarkAsDone.markAsDone(tool: integrationTitle ?? t.settings.integrations.title);
       case 'change_list':
-        return 'Change list in Trello';
+        return t.settings.integrations.onMarkAsDone.changeListInTrello;
       case 'archive':
-        return 'Archive in Trello';
+        return t.settings.integrations.onMarkAsDone.archiveInTrello;
       case 'open':
         return '${t.settings.integrations.onMarkAsDone.goTo} $integrationTitle';
       case 'cancel':

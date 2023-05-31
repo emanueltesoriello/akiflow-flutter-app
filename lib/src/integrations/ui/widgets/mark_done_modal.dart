@@ -120,7 +120,7 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                   const SizedBox(height: 2),
                   _item(
                     context,
-                    text: 'Archive in Trello',
+                    text: t.settings.integrations.onMarkAsDone.archiveInTrello,
                     selected: selectedType == MarkAsDoneType.archive,
                     onPressed: () {
                       setState(() {
@@ -139,7 +139,7 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                   const SizedBox(height: 2),
                   _item(
                     context,
-                    text: 'Change list in Trello',
+                    text: t.settings.integrations.onMarkAsDone.changeListInTrello,
                     selected: selectedType == MarkAsDoneType.changeList,
                     onPressed: () {
                       setState(() {
@@ -210,7 +210,7 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Remember my choice',
+                          t.settings.integrations.onMarkAsDone.rememberMyChoice,
                           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                 color: ColorsExt.grey800(context),
                               ),
@@ -240,7 +240,7 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                       color: ColorsExt.akiflow100(context),
                       splashColor: ColorsExt.akiflow200(context),
                       borderColor: ColorsExt.akiflow500(context),
-                      child: Text('Confirm',
+                      child: Text(t.confirm,
                           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: ColorsExt.akiflow500(context),

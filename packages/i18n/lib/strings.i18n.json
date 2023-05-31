@@ -87,13 +87,16 @@
       "connected": "Connected",
       "onMarkAsDone": {
         "title": "On mark as done",
-        "behaviorOfToolOnMarkDone":"Behavior of ${tool} tasks on mark as done",
+        "behaviorOfToolOnMarkDone": "Behavior of ${tool} tasks on mark as done",
         "unstarTheEmail": "Unstar the email",
         "unlabelTheEmail": "Unlabel the email",
-        "markAsDone":"Mark as done in ${tool}",
+        "markAsDone": "Mark as done in ${tool}",
+        "changeListInTrello": "Change list in Trello",
+        "archiveInTrello": "Archive in Trello",
         "goTo": "Go to",
         "doNothing": "Do nothing",
-        "askMeEveryTime": "Ask me every time"
+        "askMeEveryTime": "Ask me every time",
+        "rememberMyChoice": "Remember my choice"
       },
       "gmail": {
         "title": "Gmail",

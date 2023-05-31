@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 339 
+ * Strings: 342 
  *
- * Built on 2023-05-29 at 08:35 UTC
+ * Built on 2023-05-31 at 14:49 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -946,9 +946,12 @@ class _StringsSettingsIntegrationsOnMarkAsDoneEn {
 	String get unstarTheEmail => 'Unstar the email';
 	String get unlabelTheEmail => 'Unlabel the email';
 	String markAsDone({required Object tool}) => 'Mark as done in ${tool}';
+	String get changeListInTrello => 'Change list in Trello';
+	String get archiveInTrello => 'Archive in Trello';
 	String get goTo => 'Go to';
 	String get doNothing => 'Do nothing';
 	String get askMeEveryTime => 'Ask me every time';
+	String get rememberMyChoice => 'Remember my choice';
 }
 
 // Path: settings.integrations.gmail
@@ -1159,9 +1162,12 @@ extension on _StringsEn {
 			'settings.integrations.onMarkAsDone.unstarTheEmail': 'Unstar the email',
 			'settings.integrations.onMarkAsDone.unlabelTheEmail': 'Unlabel the email',
 			'settings.integrations.onMarkAsDone.markAsDone': ({required Object tool}) => 'Mark as done in ${tool}',
+			'settings.integrations.onMarkAsDone.changeListInTrello': 'Change list in Trello',
+			'settings.integrations.onMarkAsDone.archiveInTrello': 'Archive in Trello',
 			'settings.integrations.onMarkAsDone.goTo': 'Go to',
 			'settings.integrations.onMarkAsDone.doNothing': 'Do nothing',
 			'settings.integrations.onMarkAsDone.askMeEveryTime': 'Ask me every time',
+			'settings.integrations.onMarkAsDone.rememberMyChoice': 'Remember my choice',
 			'settings.integrations.gmail.title': 'Gmail',
 			'settings.integrations.gmail.description': 'Communication',
 			'settings.integrations.gmail.step1.t1': 'Star an email or activate the ',
