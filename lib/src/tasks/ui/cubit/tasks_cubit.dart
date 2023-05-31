@@ -312,6 +312,20 @@ class TasksCubit extends Cubit<TasksCubitState> {
     handleDocAction(tasksChanged);
   }
 
+  Future<void> markAsDoneRemoteOnly(Task task) async {
+    task = task.markAsDone(task);
+
+    Map<String, dynamic> content = task.content;
+    content['shouldMarkAsDoneRemote'] = true;
+
+    task = task.copyWith(
+      content: content,
+    );
+    await _tasksRepository.updateById(task.id, data: task);
+
+    _syncCubit.sync(entities: [Entity.tasks]);
+  }
+
   Future<void> duplicate() async {
     String? now = TzUtils.toUtcStringIfNotNull(DateTime.now());
 
@@ -824,16 +838,21 @@ class TasksCubit extends Cubit<TasksCubitState> {
           ));
           break;
         case MarkAsDoneType.goTo:
-          await launchUrl(Uri.parse(task.doc!.value!.url!), mode: LaunchMode.externalApplication);
+          Future.delayed(
+            const Duration(milliseconds: 1200),
+            () => launchUrl(Uri.parse(task.doc?['url']), mode: LaunchMode.externalApplication),
+          );
           break;
         case MarkAsDoneType.askMeEveryTime:
-          _docActionsController.add([
-            GmailDocAction(
-              markAsDoneType: MarkAsDoneType.askMeEveryTime,
-              task: task,
-              account: account,
-            )
-          ]);
+          if (task.done! && task.connectorId!.value! == 'gmail') {
+            _docActionsController.add([
+              GmailDocAction(
+                markAsDoneType: MarkAsDoneType.askMeEveryTime,
+                task: task,
+                account: account,
+              )
+            ]);
+          }
           break;
         default:
       }
@@ -850,7 +869,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     await gmailApi.unstar(action.task.originId!.value!);
   }
 
-  Future<void> goToGmail(String url) async {
+  Future<void> goToUrl(String url) async {
+    print(url);
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
 }

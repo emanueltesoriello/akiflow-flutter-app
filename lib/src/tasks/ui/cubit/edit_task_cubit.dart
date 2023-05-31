@@ -272,16 +272,15 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task Label");
   }
 
-  Future<void> markAsDone({bool forceUpdate = false}) async {
+  Future<void> markAsDone({bool forceUpdate = false, bool forceMarkAsDoneRemove = false}) async {
     Task task = state.updatedTask;
 
     Task updated = task.markAsDone(state.originalTask);
 
-    bool markAsDoneRemote = await _tasksCubit.shouldMarkAsDoneRemote(updated);
+    bool markAsDoneRemote = forceMarkAsDoneRemove ? true : await _tasksCubit.shouldMarkAsDoneRemote(updated);
     if (markAsDoneRemote) {
-      Map<String, dynamic> content = updated.content;
+      dynamic content = updated.content ?? {};
       content['shouldMarkAsDoneRemote'] = updated.done!;
-
       updated = updated.copyWith(content: content);
     }
 

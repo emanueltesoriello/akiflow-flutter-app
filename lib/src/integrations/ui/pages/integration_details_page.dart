@@ -128,7 +128,7 @@ class _IntegrationDetailsPageState extends State<IntegrationDetailsPage> {
           context: context,
           builder: (context) => MarkDoneModal(
             initialType: initialType,
-            integrationTitle: title,
+            account: account,
           ),
         );
 

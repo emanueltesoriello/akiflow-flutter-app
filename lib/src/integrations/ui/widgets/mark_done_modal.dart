@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/integrations_utils.dart';
 import 'package:mobile/src/base/models/mark_as_done_type.dart';
+import 'package:mobile/src/base/ui/widgets/base/action_button.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
+import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/calendar/ui/widgets/settings/calendar_settings_modal.dart';
+import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
+import 'package:models/account/account.dart';
 
 class MarkDoneModal extends StatefulWidget {
   final MarkAsDoneType initialType;
-  final String integrationTitle;
+  final Account account;
+  final bool askBehavior;
 
   const MarkDoneModal({
     Key? key,
     required this.initialType,
-    required this.integrationTitle,
+    required this.account,
+    this.askBehavior = false,
   }) : super(key: key);
 
   @override
@@ -20,11 +29,15 @@ class MarkDoneModal extends StatefulWidget {
 }
 
 class _MarkDoneModalState extends State<MarkDoneModal> {
-  late final ValueNotifier<MarkAsDoneType> _selectedType;
+  late MarkAsDoneType selectedType;
+  bool rememberChoice = false;
+  late String integrationTitle;
 
   @override
   void initState() {
-    _selectedType = ValueNotifier<MarkAsDoneType>(widget.initialType);
+    selectedType = widget.initialType;
+    rememberChoice = false;
+    integrationTitle = IntegrationsUtils.titleFromConnectorId(widget.account.connectorId);
     super.initState();
   }
 
@@ -40,87 +53,166 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
             topRight: Radius.circular(Dimension.padding),
           ),
         ),
-        child: ValueListenableBuilder(
-          valueListenable: _selectedType,
-          builder: (context, MarkAsDoneType type, child) => ListView(
-            shrinkWrap: true,
-            children: [
-              const SizedBox(height: 12),
-              const ScrollChip(),
-              Padding(
-                padding: const EdgeInsets.all(Dimension.padding),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        t.settings.integrations.onMarkAsDone.behaviorOfToolOnMarkDone(tool: widget.integrationTitle),
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey800(context),
-                            ),
-                      ),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            const SizedBox(height: 12),
+            const ScrollChip(),
+            Padding(
+              padding: const EdgeInsets.all(Dimension.padding),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      integrationTitle == 'Gmail'
+                          ? t.task.gmail.doYouAlsoWantTo
+                          : t.settings.integrations.onMarkAsDone.behaviorOfToolOnMarkDone(tool: integrationTitle),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: ColorsExt.grey800(context),
+                          ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              if (widget.integrationTitle == 'Gmail')
-                Column(
-                  children: [
-                    const SizedBox(height: 2),
-                    _item(
-                      context,
-                      text: t.settings.integrations.onMarkAsDone.unstarTheEmail,
-                      selected: type == MarkAsDoneType.unstarTheEmail,
-                      onPressed: () {
+            ),
+            if (integrationTitle == 'Gmail')
+              Column(
+                children: [
+                  const SizedBox(height: 2),
+                  _item(
+                    context,
+                    text: t.settings.integrations.onMarkAsDone.unstarTheEmail,
+                    selected: selectedType == MarkAsDoneType.unstarTheEmail,
+                    onPressed: () {
+                      setState(() {
+                        selectedType = MarkAsDoneType.unstarTheEmail;
+                      });
+                      if (!widget.askBehavior) {
                         Navigator.pop(context, MarkAsDoneType.unstarTheEmail);
-                      },
-                    ),
-                  ],
-                ),
-              if (widget.integrationTitle != 'Gmail')
-                Column(
-                  children: [
-                    const SizedBox(height: 2),
-                    _item(
-                      context,
-                      text: t.settings.integrations.onMarkAsDone.markAsDone(tool: widget.integrationTitle),
-                      selected: type == MarkAsDoneType.markAsDone,
-                      onPressed: () {
+                      }
+                    },
+                  ),
+                ],
+              ),
+            if (integrationTitle != 'Gmail')
+              Column(
+                children: [
+                  const SizedBox(height: 2),
+                  _item(
+                    context,
+                    text: t.settings.integrations.onMarkAsDone.markAsDone(tool: integrationTitle),
+                    selected: selectedType == MarkAsDoneType.markAsDone,
+                    onPressed: () {
+                      setState(() {
+                        selectedType = MarkAsDoneType.markAsDone;
+                      });
+                      if (!widget.askBehavior) {
                         Navigator.pop(context, MarkAsDoneType.markAsDone);
-                      },
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 2),
-              _item(
-                context,
-                text: '${t.settings.integrations.onMarkAsDone.goTo} ${widget.integrationTitle}',
-                selected: type == MarkAsDoneType.goTo,
-                onPressed: () {
+                      }
+                    },
+                  ),
+                ],
+              ),
+            const SizedBox(height: 2),
+            _item(
+              context,
+              text: '${t.settings.integrations.onMarkAsDone.goTo} $integrationTitle',
+              selected: selectedType == MarkAsDoneType.goTo,
+              onPressed: () {
+                setState(() {
+                  selectedType = MarkAsDoneType.goTo;
+                });
+                if (!widget.askBehavior) {
                   Navigator.pop(context, MarkAsDoneType.goTo);
-                },
-              ),
-              const SizedBox(height: 2),
-              _item(
-                context,
-                text: t.settings.integrations.onMarkAsDone.doNothing,
-                selected: type == MarkAsDoneType.doNothing,
-                onPressed: () {
+                }
+              },
+            ),
+            const SizedBox(height: 2),
+            _item(
+              context,
+              text: t.settings.integrations.onMarkAsDone.doNothing,
+              selected: selectedType == MarkAsDoneType.doNothing,
+              onPressed: () {
+                setState(() {
+                  selectedType = MarkAsDoneType.doNothing;
+                });
+                if (!widget.askBehavior) {
                   Navigator.pop(context, MarkAsDoneType.doNothing);
-                },
+                }
+              },
+            ),
+            if (!widget.askBehavior)
+              Column(
+                children: [
+                  const SizedBox(height: 2),
+                  _item(
+                    context,
+                    text: t.settings.integrations.onMarkAsDone.askMeEveryTime,
+                    selected: selectedType == MarkAsDoneType.askMeEveryTime,
+                    onPressed: () {
+                      setState(() {
+                        selectedType = MarkAsDoneType.askMeEveryTime;
+                      });
+                      Navigator.pop(context, MarkAsDoneType.askMeEveryTime);
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 2),
-              _item(
-                context,
-                text: t.settings.integrations.onMarkAsDone.askMeEveryTime,
-                selected: type == MarkAsDoneType.askMeEveryTime,
-                onPressed: () {
-                  Navigator.pop(context, MarkAsDoneType.askMeEveryTime);
-                },
+            if (widget.askBehavior)
+              Column(
+                children: [
+                  const SizedBox(height: Dimension.padding),
+                  const Separator(),
+                  const SizedBox(height: Dimension.padding),
+                  Container(
+                    height: 46,
+                    padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Remember my choice',
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                color: ColorsExt.grey800(context),
+                              ),
+                        ),
+                        SwitchButton(
+                          value: rememberChoice,
+                          onToggle: (value) {
+                            setState(() {
+                              rememberChoice = !rememberChoice;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: Dimension.padding, left: Dimension.padding, right: Dimension.padding),
+                    child: ActionButton(
+                      onPressed: () {
+                        if (rememberChoice) {
+                          var integrationsCubit = context.read<IntegrationsCubit>();
+                          integrationsCubit.behaviorMarkAsDone(widget.account, selectedType);
+                        }
+                        Navigator.pop(context, selectedType);
+                      },
+                      color: ColorsExt.akiflow100(context),
+                      splashColor: ColorsExt.akiflow200(context),
+                      borderColor: ColorsExt.akiflow500(context),
+                      child: Text('Confirm',
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: ColorsExt.akiflow500(context),
+                              )),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 50),
-            ],
-          ),
+            const SizedBox(height: 50),
+          ],
         ),
       ),
     );

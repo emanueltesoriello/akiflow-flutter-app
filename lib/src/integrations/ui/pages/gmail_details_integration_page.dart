@@ -65,7 +65,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
           context: context,
           builder: (context) => MarkDoneModal(
             initialType: initialType,
-            integrationTitle: 'Gmail',
+            account: gmailAccount,
           ),
         );
 
