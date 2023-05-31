@@ -21,8 +21,9 @@ class IntegrationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    accounts.sort((a, b) => a.connectorId != b.connectorId ? 1 : -1);
-    accounts.sort((a, b) => AccountExt.settingsEnabled.contains(b.connectorId) ? 1 : -1);
+    accounts.sort((a, b) => AccountExt.acceptedAccountsOrigin
+        .indexOf(a.connectorId!)
+        .compareTo(AccountExt.acceptedAccountsOrigin.indexOf(b.connectorId!)));
 
     return ListView.builder(
       shrinkWrap: true,
