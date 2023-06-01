@@ -78,6 +78,36 @@ class TasksRepository extends DatabaseRepository {
     return objects;
   }
 
+  /*
+
+            """
+        SELECT * FROM tasks
+        WHERE deleted_at IS NULL 
+        AND trashed_at IS NULL
+        AND status = '${TaskStatusType.planned.id}'
+        AND (((date > ? AND date < ?) OR (datetime > ? AND datetime < ?)) OR ((date <= ? OR datetime < ?) AND done = 0)) 
+        ORDER BY
+          CASE
+            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
+              THEN datetime
+            ELSE
+              sorting
+          END
+""",
+            [
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              DateTime.now().toUtc().toIso8601String(),
+              DateTime.now().toUtc().toIso8601String(),
+            ],
+          );
+
+  */
+
   Future<List<Task>> getTodayTasks<Task>({required DateTime date}) async {
     var format = DateFormat("yyyy-MM-dd");
 
@@ -100,7 +130,7 @@ class TasksRepository extends DatabaseRepository {
         WHERE deleted_at IS NULL 
         AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
-        AND (((date = ? AND  datetime IS NULL) OR (datetime > ? AND datetime < ?)) OR ((date < ? OR datetime < ?) AND done = 0)) 
+        AND (((date >= ? AND date <= ? AND datetime IS NULL) OR (datetime > ? AND datetime < ?)) OR ((date < ? OR datetime < ?) AND done = 0)) 
         ORDER BY 
           CASE 
             WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
@@ -111,6 +141,7 @@ class TasksRepository extends DatabaseRepository {
 """,
             [
               startDate,
+              endDate,
               startTime.toUtc().toIso8601String(),
               endTime.toUtc().toIso8601String(),
               startDate,
@@ -130,7 +161,7 @@ class TasksRepository extends DatabaseRepository {
         WHERE deleted_at IS NULL
         AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}' 
-        AND ((date >= ? AND date <= ?) OR (datetime > ? AND datetime < ?)) 
+        AND ((date >= ? AND date <= ?) OR (datetime >= ? AND datetime < ?)) 
         ORDER BY
           CASE
             WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
