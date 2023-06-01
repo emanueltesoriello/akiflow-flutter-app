@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
@@ -100,8 +101,19 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         return;
       }
       DateTime now = DateTime.now();
+      String? date;
+      try {
+        var format = DateFormat("yyyy-MM-dd");
+
+        DateTime dtDate = DateTime.parse(state.updatedTask.date!);
+        date = format.format(dtDate);
+      } catch (e) {
+        print(e);
+      }
+
       Task updated = state.updatedTask.copyWith(
         id: const Uuid().v4(),
+        date: Nullable(date),
         title: state.updatedTask.title,
         description: state.updatedTask.description,
         createdAt: TzUtils.toUtcStringIfNotNull(now),

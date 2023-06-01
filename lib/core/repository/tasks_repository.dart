@@ -130,7 +130,7 @@ class TasksRepository extends DatabaseRepository {
         WHERE deleted_at IS NULL 
         AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
-        AND (((date >= ? AND date <= ? AND datetime IS NULL) OR (datetime > ? AND datetime < ?)) OR ((date < ? OR datetime < ?) AND done = 0)) 
+        AND (((date = ? AND datetime IS NULL) OR (datetime > ? AND datetime < ?)) OR ((date < ? OR datetime < ?) AND done = 0)) 
         ORDER BY 
           CASE 
             WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
@@ -141,7 +141,6 @@ class TasksRepository extends DatabaseRepository {
 """,
             [
               startDate,
-              endDate,
               startTime.toUtc().toIso8601String(),
               endTime.toUtc().toIso8601String(),
               startDate,
