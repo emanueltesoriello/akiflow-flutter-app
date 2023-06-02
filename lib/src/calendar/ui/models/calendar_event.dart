@@ -127,7 +127,7 @@ class CalendarEvent extends Appointment {
       String byDayString = days.join(',');
       parts.add('BYDAY=$byDayString');
 
-      if (bySetPos.isEmpty) {
+      if (parts.where((part) => part.startsWith('BYSETPOS=')).isEmpty && bySetPos.isEmpty) {
         bySetPos.add(1);
       }
       String bySetPosString = bySetPos.join(',');
