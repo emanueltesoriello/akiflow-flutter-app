@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+   
+    <string name="label_all">All Tasks</string>
+    <string name="label_active">Active Tasks</string>
+    <string name="label_active_long">Active Tasks Long</string>
+    <string name="label_completed">Completed Tasks</string>
+    <string name="label_completed_long">Completed Tasks Long</string>
+</resources>
