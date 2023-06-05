@@ -55,6 +55,11 @@ class CalendarBody extends StatelessWidget {
       TasksCubit tasksCubit = context.read<TasksCubit>();
       bool isThreeDays = calendarCubit.state.isCalendarThreeDays;
       bool appointmentTapped = calendarCubit.state.appointmentTapped;
+      bool narrowDateDay =
+          (calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
+                  !isThreeDays
+              ? true
+              : false;
 
       calendarCubit.panelStateStream.listen((PanelState panelState) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -96,95 +101,107 @@ class CalendarBody extends StatelessWidget {
           onPanelOpened: () {
             calendarCubit.panelOpened();
           },
-          body: SfCalendar(
-            backgroundColor: ColorsExt.background(context),
-            controller: calendarController,
-            headerHeight: 0,
-            firstDayOfWeek: CalendarUtils.computeFirstDayOfWeek(context),
-            selectionDecoration: appointmentTapped
-                ? const BoxDecoration()
-                : BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(color: ColorsExt.akiflow500(context), width: 2),
-                    borderRadius: const BorderRadius.all(Radius.circular(4)),
-                  ),
-            view: calendarCubit.state.calendarView,
-            cellBorderColor: ColorsExt.grey200(context),
-            onViewChanged: (ViewChangedDetails details) {
-              calendarCubit.setVisibleDates(details.visibleDates);
-              DateTime start = details.visibleDates.first.subtract(const Duration(days: 1));
-              DateTime end = details.visibleDates.last.add(const Duration(days: 1));
-              if (calendarController.view == CalendarView.schedule) {
-                tasksCubit.fetchCalendarTasks();
-                eventsCubit.fetchEvents();
-              } else {
-                tasksCubit.resetTasks();
-                eventsCubit.resetEvents();
-                tasksCubit.fetchTasksBetweenDates(start.toIso8601String(), end.toIso8601String());
-                eventsCubit.fetchEventsBetweenDates(start, end);
-              }
-            },
-            dataSource: _getCalendarDataSource(context, state),
-            viewHeaderStyle: ViewHeaderStyle(
-              dayTextStyle: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
-              dateTextStyle: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
-              narrowDateDay:
-                  (calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
-                          !isThreeDays
-                      ? true
-                      : false,
-            ),
-            timeSlotViewSettings: TimeSlotViewSettings(
-              timeIntervalHeight: 60.0,
-              minimumAppointmentDuration: const Duration(minutes: 15),
-              timeTextStyle: Theme.of(context)
-                  .textTheme
-                  .caption
-                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
-              numberOfDaysInView: isThreeDays ? 3 : -1,
-              timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
-              dayFormat: isThreeDays || calendarController.view == CalendarView.day ? 'EEE' : 'EE',
-              nonWorkingDays: state.nonWorkingDays,
-            ),
-            scheduleViewSettings: ScheduleViewSettings(
-                dayHeaderSettings: DayHeaderSettings(
+          body: Stack(
+            children: [
+              SfCalendar(
+                backgroundColor: ColorsExt.background(context),
+                controller: calendarController,
+                headerHeight: 0,
+                firstDayOfWeek: CalendarUtils.computeFirstDayOfWeek(context),
+                selectionDecoration: appointmentTapped
+                    ? const BoxDecoration()
+                    : BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border.all(color: ColorsExt.akiflow500(context), width: 2),
+                        borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      ),
+                view: calendarCubit.state.calendarView,
+                cellBorderColor: ColorsExt.grey200(context),
+                onViewChanged: (ViewChangedDetails details) {
+                  calendarCubit.setVisibleDates(details.visibleDates);
+                  DateTime start = details.visibleDates.first.subtract(const Duration(days: 1));
+                  DateTime end = details.visibleDates.last.add(const Duration(days: 1));
+                  if (calendarController.view == CalendarView.schedule) {
+                    tasksCubit.fetchCalendarTasks();
+                    eventsCubit.fetchEvents();
+                  } else {
+                    tasksCubit.resetTasks();
+                    eventsCubit.resetEvents();
+                    tasksCubit.fetchTasksBetweenDates(start.toIso8601String(), end.toIso8601String());
+                    eventsCubit.fetchEventsBetweenDates(start, end);
+                  }
+                },
+                dataSource: _getCalendarDataSource(context, state),
+                viewHeaderStyle: ViewHeaderStyle(
                   dayTextStyle: Theme.of(context)
                       .textTheme
-                      .bodyText2
+                      .bodyText1
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                   dateTextStyle: Theme.of(context)
                       .textTheme
-                      .titleLarge
-                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+                      .bodyText1
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
+                  narrowDateDay: narrowDateDay,
                 ),
-                weekHeaderSettings: WeekHeaderSettings(
-                  startDateFormat: 'dd',
-                  endDateFormat: 'dd MMM',
-                  weekTextStyle:
-                      TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ColorsExt.grey700(context)),
-                ),
-                monthHeaderSettings: MonthHeaderSettings(
-                  height: 66,
-                  backgroundColor: ColorsExt.grey50(context),
-                  monthTextStyle: Theme.of(context)
+                timeSlotViewSettings: TimeSlotViewSettings(
+                  timeIntervalHeight: 60.0,
+                  minimumAppointmentDuration: const Duration(minutes: 15),
+                  timeTextStyle: Theme.of(context)
                       .textTheme
-                      .titleLarge
-                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
-                )),
-            monthViewSettings: const MonthViewSettings(
-                appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 4),
-            onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),
-            appointmentBuilder: (context, calendarAppointmentDetails) =>
-                appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
-            allowDragAndDrop: true,
-            onDragEnd: (appointmentDragEndDetails) =>
-                dragEnd(appointmentDragEndDetails, context, calendarCubit, eventsCubit),
+                      .caption
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
+                  numberOfDaysInView: isThreeDays ? 3 : -1,
+                  timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
+                  dayFormat: isThreeDays || calendarController.view == CalendarView.day ? 'EEE' : 'EE',
+                  nonWorkingDays: state.nonWorkingDays,
+                ),
+                scheduleViewSettings: ScheduleViewSettings(
+                    dayHeaderSettings: DayHeaderSettings(
+                      dayTextStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+                      dateTextStyle: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+                    ),
+                    weekHeaderSettings: WeekHeaderSettings(
+                      startDateFormat: 'dd',
+                      endDateFormat: 'dd MMM',
+                      weekTextStyle:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ColorsExt.grey700(context)),
+                    ),
+                    monthHeaderSettings: MonthHeaderSettings(
+                      height: 66,
+                      backgroundColor: ColorsExt.grey50(context),
+                      monthTextStyle: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+                    )),
+                monthViewSettings: const MonthViewSettings(
+                    appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 4),
+                onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),
+                appointmentBuilder: (context, calendarAppointmentDetails) =>
+                    appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
+                allowDragAndDrop: true,
+                onDragEnd: (appointmentDragEndDetails) =>
+                    dragEnd(appointmentDragEndDetails, context, calendarCubit, eventsCubit),
+              ),
+              if (calendarController.view != CalendarView.schedule)
+                Container(
+                  width: 50,
+                  height: 50,
+                  color: ColorsExt.background(context),
+                  padding: EdgeInsets.fromLTRB(8, narrowDateDay ? 8 : 18, 8, 8),
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    DateTime.now().timeZoneName,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey800(context)),
+                  ),
+                ),
+            ],
           ),
         );
       });
