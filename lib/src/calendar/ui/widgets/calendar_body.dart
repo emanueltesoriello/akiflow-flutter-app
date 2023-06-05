@@ -160,11 +160,11 @@ class CalendarBody extends StatelessWidget {
                       dayTextStyle: Theme.of(context)
                           .textTheme
                           .bodyText2
-                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+                          ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.w500),
                       dateTextStyle: Theme.of(context)
                           .textTheme
                           .titleLarge
-                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+                          ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.w500),
                     ),
                     weekHeaderSettings: WeekHeaderSettings(
                       startDateFormat: 'dd',
@@ -173,7 +173,7 @@ class CalendarBody extends StatelessWidget {
                           TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ColorsExt.grey700(context)),
                     ),
                     monthHeaderSettings: MonthHeaderSettings(
-                      height: 66,
+                      height: 70,
                       backgroundColor: ColorsExt.grey50(context),
                       monthTextStyle: Theme.of(context)
                           .textTheme
