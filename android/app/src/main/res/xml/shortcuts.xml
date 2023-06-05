@@ -1,7 +1,7 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
- <!--   <capability android:name="actions.intent.OPEN_APP_FEATURE">
+    <capability android:name="actions.intent.OPEN_APP_FEATURE">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.akiflow.mobile"
@@ -36,38 +36,5 @@
                 android:key="feature"
                 android:value="@array/completed_tasks_synonyms" />
         </capability-binding>
-    </shortcut> -->
-
-<capability android:name="actions.intent.OPEN_APP_FEATURE">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetClass="com.akiflow.mobile.ui.activity.SplashActivity"
-            android:targetPackage="com.akiflow.mobile">
-            <parameter
-                android:name="feature"
-                android:key="SplashScreen"/>
-        </intent>
-    </capability>
-
-    <shortcut
-        android:shortcutId="ID_ONE"
-        android:shortcutShortLabel="@string/label_completed"
-        android:shortcutLongLabel="@string/label_completed_long">
-        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
-            <parameter-binding
-                android:value="splash screen"
-                android:key="feature"/>
-        </capability-binding>
     </shortcut>
-
-    <capability android:name="actions.intent.START_EXERCISE">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.akiflow.mobile"
-            android:targetClass="com.akiflow.mobile.ui.activity.RunningActivity">
-            <parameter
-                android:name="running"
-                android:key="exercise"/>
-        </intent>
-    </capability>
 </shortcuts>
