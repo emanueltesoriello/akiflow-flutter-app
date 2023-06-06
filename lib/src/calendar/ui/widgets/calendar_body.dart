@@ -189,7 +189,7 @@ class CalendarBody extends StatelessWidget {
                 onDragEnd: (appointmentDragEndDetails) =>
                     dragEnd(appointmentDragEndDetails, context, calendarCubit, eventsCubit),
               ),
-              if (calendarController.view != CalendarView.schedule)
+              if (!(calendarController.view == CalendarView.schedule || calendarController.view == CalendarView.month))
                 Container(
                   width: 50,
                   height: 50,
