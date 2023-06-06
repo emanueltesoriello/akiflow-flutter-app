@@ -211,6 +211,9 @@ class CalendarBody extends StatelessWidget {
   Widget appointmentBuilder(BuildContext context, CalendarAppointmentDetails calendarAppointmentDetails,
       CheckboxAnimatedController? checkboxController) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
+    if (calendarAppointmentDetails.isMoreAppointmentRegion) {
+      return const Text(' ...');
+    }
     if (appointment is CalendarTask) {
       try {
         Task task = tasks.where((task) => task.id == appointment.id).first;
