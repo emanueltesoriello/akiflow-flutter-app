@@ -49,15 +49,19 @@ class EventsRepository extends DatabaseRepository {
             AND ((start_time >= ? AND end_time <= ?) 
             OR (start_date >= ? AND start_date <= ?) OR (start_date <= ? AND end_date >= ?)))
           OR (recurring_id IS NOT NULL 
-              AND (original_start_time >= ? AND original_start_time <= ?)) 
+              AND ((original_start_time >= ? AND original_start_time <= ?)
+                  OR (start_time >= ? AND end_time <= ?)
+                  OR (start_date >= ? AND start_date <= ?))) 
            OR (recurring_id = id AND (start_time <= ? OR start_date <= ?) 
                 AND (until_datetime IS NULL OR until_datetime >= ?))   
         )    
       """, [
           startTime, endTime,
-          startDate,endDate, startDate, startDate,
+          startDate, endDate, startDate, startDate,
           startTime, endTime,
-          startTime, startDate,
+          startTime, endTime,
+          startDate, endDate,
+          endTime, endDate,
           startTime,
         ]);
       });
