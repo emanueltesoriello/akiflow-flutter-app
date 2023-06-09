@@ -7,15 +7,19 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_row.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_row_drag_mode.dart';
+import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
+import 'package:mobile/src/integrations/ui/widgets/mark_done_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/labels_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/account/account.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 
@@ -229,9 +233,50 @@ class _TaskListState extends State<TaskList> {
                         context.read<TasksCubit>().select(task);
                       },
                       selectMode: tasks.any((element) => element.selected ?? false),
-                      completedClick: () {
+                      completedClick: () async {
                         HapticFeedback.mediumImpact();
-                        editTaskCubit.markAsDone(forceUpdate: true);
+                        if (task.connectorId?.value != null && task.connectorId!.value! != 'gmail') {
+                          IntegrationsCubit integrationsCubit = context.read<IntegrationsCubit>();
+                          Account account = integrationsCubit.state.accounts.firstWhere((element) =>
+                              element.connectorId == task.connectorId?.value &&
+                              element.originAccountId == task.originAccountId?.value);
+
+                          String? markAsDoneKey = account.details?['mark_as_done_action'];
+                          MarkAsDoneType markAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
+
+                          if (markAsDoneType == MarkAsDoneType.askMeEveryTime) {
+                            MarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
+                              context: context,
+                              builder: (context) => MarkDoneModal(
+                                askBehavior: true,
+                                initialType: MarkAsDoneType.doNothing,
+                                account: account,
+                              ),
+                            );
+                            switch (selectedType) {
+                              case MarkAsDoneType.markAsDone:
+                                editTaskCubit.markAsDone(forceUpdate: true, forceMarkAsDoneRemote: true);
+                                break;
+                              case MarkAsDoneType.changeList:
+                                editTaskCubit.markAsDone(forceUpdate: true, forceMarkAsDoneRemote: true);
+                                break;
+                              case MarkAsDoneType.archive:
+                                editTaskCubit.markAsDone(forceUpdate: true, forceArchiveRemote: true);
+                                break;
+                              case MarkAsDoneType.goTo:
+                                editTaskCubit
+                                    .markAsDone(forceUpdate: true)
+                                    .then((value) => tasksCubit.goToUrl(task.doc['url']));
+                                break;
+                              default:
+                                editTaskCubit.markAsDone(forceUpdate: true);
+                            }
+                          } else {
+                            editTaskCubit.markAsDone(forceUpdate: true);
+                          }
+                        } else {
+                          editTaskCubit.markAsDone(forceUpdate: true);
+                        }
                       },
                       swipeActionPlanClick: () {
                         HapticFeedback.mediumImpact();
