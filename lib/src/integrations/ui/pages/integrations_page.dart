@@ -13,6 +13,7 @@ import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/pages/gmail_details_integration_page.dart';
+import 'package:mobile/src/integrations/ui/pages/integration_details_page.dart';
 import 'package:mobile/src/integrations/ui/widgets/integrations_list.dart';
 import 'package:models/account/account.dart';
 import 'package:models/extensions/account_ext.dart';
@@ -57,7 +58,7 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                   BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                     builder: (context, state) {
                       List<Account> accounts = state.accounts.toList();
-                      accounts.removeWhere((element) => element.connectorId == "akiflow" || element.deletedAt != null);
+                      accounts.removeWhere((element) => element.connectorId == "akiflow");
 
                       accounts
                           .removeWhere((element) => !AccountExt.acceptedAccountsOrigin.contains(element.connectorId));
@@ -72,13 +73,17 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                               SvgPicture.asset(Assets.images.akiflow.thatsItnothingSVG),
                               const SizedBox(height: Dimension.padding),
                               Text('Nothing to reconnect',
-                                  style:
-                                      Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      ?.copyWith(color: ColorsExt.grey800(context))),
                               const SizedBox(height: Dimension.padding),
                               Text('You have no active integrations, check your desktop app to add more',
                                   textAlign: TextAlign.center,
-                                  style:
-                                      Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey600(context))),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      ?.copyWith(color: ColorsExt.grey600(context))),
                             ],
                           ),
                         ),
@@ -88,28 +93,24 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                             const SizedBox(height: Dimension.padding),
                             Text(
                               t.settings.integrations.connected.toUpperCase(),
-                              style:
-                                  TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
+                              style: TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                             ),
                             IntegrationsList(
                               accounts,
                               onTap: (Account account) async {
-                                if (context.read<IntegrationsCubit>().isLocalActive(account) &&
-                                    account.connectorId == 'gmail') {
+                                if (account.connectorId == 'gmail') {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => GmailDetailsIntegrationsPage(
                                           account: account,
                                           onDisconnect: () {
                                             rebuildAllChildren(context);
                                           })));
-                                  super.dispose();
-                                } else if (account.connectorId == 'gmail') {
+                                } else if (AccountExt.settingsEnabled.contains(account.connectorId)) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => GmailDetailsIntegrationsPage(
-                                          account: account,
-                                          onDisconnect: () {
-                                            rebuildAllChildren(context);
-                                          })));
+                                      builder: (context) => IntegrationDetailsPage(
+                                            account: account,
+                                          )));
                                 }
                               },
                             ),

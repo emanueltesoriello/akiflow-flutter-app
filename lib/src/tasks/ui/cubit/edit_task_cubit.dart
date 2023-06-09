@@ -284,10 +284,27 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task Label");
   }
 
-  Future<void> markAsDone({bool forceUpdate = false}) async {
+  Future<void> markAsDone(
+      {bool forceUpdate = false, bool forceMarkAsDoneRemote = false, bool forceArchiveRemote = false}) async {
     Task task = state.updatedTask;
 
     Task updated = task.markAsDone(state.originalTask);
+
+    bool markAsDoneRemote = forceMarkAsDoneRemote ? true : await _tasksCubit.shouldMarkAsDoneRemote(updated);
+    if (markAsDoneRemote) {
+      dynamic content = updated.content ?? {};
+      content['shouldMarkAsDoneRemote'] = updated.done!;
+      updated = updated.copyWith(content: content);
+    }
+
+    if (task.connectorId?.value == 'trello') {
+      bool shouldArchiveRemote = forceArchiveRemote ? true : await _tasksCubit.shouldArchiveRemote(updated);
+      if (shouldArchiveRemote) {
+        dynamic content = updated.content ?? {};
+        content['shouldArchiveRemote'] = true;
+        updated = updated.copyWith(content: content);
+      }
+    }
 
     emit(state.copyWith(updatedTask: updated));
 

@@ -41,7 +41,11 @@ class AccountsRepository extends DatabaseRepository {
     List<Map<String, Object?>> items;
     try {
       items = await _databaseService.database!.transaction((txn) async {
-        return await txn.query(table);
+        return await txn.rawQuery("""
+        SELECT *
+        FROM accounts
+        WHERE deleted_at IS NULL
+      """);
       });
     } catch (e) {
       print('Error retrieving accounts: $e');
