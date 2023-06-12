@@ -333,7 +333,18 @@ class CalendarBody extends StatelessWidget {
         [0, 15, 30, 45, 60][(droppingTime.minute / 15).round()]);
 
     if (groupedTasks.any((group) => group.id == appointment.id)) {
-      _noPermissionToEditEvent(context, calendarCubit);
+      GroupedTasks group = groupedTasks.firstWhere((group) => group.id == appointment.id);
+      TasksCubit tasksCubit = context.read<TasksCubit>();
+      SyncCubit syncCubit = context.read<SyncCubit>();
+
+      if (group.startTime.difference(droppingTime.toUtc()).inMinutes.abs() > 4) {
+        for (Task task in group.taskList) {
+          EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
+          editTaskCubit.changeDateTimeFromCalendar(date: droppingTime, dateTime: droppedTimeRounded);
+        }
+      } else {
+        tasksCubit.fetchCalendarTasks();
+      }
     } else if (tasks.any((task) => task.id == appointment.id)) {
       Task task = tasks.firstWhere((task) => task.id == appointment.id);
       DateTime taskDateTime = DateTime.parse(task.datetime!);
