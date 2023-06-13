@@ -88,6 +88,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
         _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
       }
     });
+
+    DateTime? lastTaskDoneAt = _preferencesRepository.lastTaskDoneAt;
+    DateTime? lastDayInboxZero = _preferencesRepository.lastDayInboxZero;
+    DateTime? lastDayTodayZero = _preferencesRepository.lastDayTodayZero;
+    emit(state.copyWith(
+      lastTaskDoneAt: lastTaskDoneAt,
+      lastDayInboxZero: lastDayInboxZero,
+      lastDayTodayZero: lastDayTodayZero,
+    ));
   }
 
   attachAuthCubit(AuthCubit authCubit) {
@@ -108,6 +117,26 @@ class TasksCubit extends Cubit<TasksCubitState> {
     if (user != null) {
       await _syncCubit.sync(entities: [Entity.tasks]);
     }
+  }
+
+  setLastTaskDoneAt() {
+    print('setLastTaskDoneAt A FOST AICI la TASK DONE');
+    DateTime now = DateTime.now().toUtc();
+    emit(state.copyWith(lastTaskDoneAt: now));
+    _preferencesRepository.setLastTaskDoneAt(now);
+  }
+
+  setLastDayTodayZero() {
+    DateTime now = DateTime.now().toUtc();
+    emit(state.copyWith(lastDayTodayZero: now));
+    _preferencesRepository.setDayTodayZero(now);
+  }
+
+  setLastDayInboxZero() {
+    print('setLastDayInboxZero A FOST AICI');
+    DateTime now = DateTime.now().toUtc();
+    emit(state.copyWith(lastDayInboxZero: now));
+    _preferencesRepository.setLastDayInboxZero(now);
   }
 
   void refreshTasksUi(Task updatedTask) {
@@ -302,6 +331,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
       tasksChanged.add(updated);
     }
+
+    setLastTaskDoneAt();
 
     refreshAllFromRepository();
 

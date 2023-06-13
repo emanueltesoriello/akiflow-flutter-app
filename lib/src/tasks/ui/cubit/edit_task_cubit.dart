@@ -320,6 +320,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     _tasksCubit.handleDocAction([updated]);
 
     if (updated.isCompletedComputed) {
+      _tasksCubit.setLastTaskDoneAt();
+    }
+
+    if (updated.isCompletedComputed) {
       AnalyticsService.track("Task Done");
     } else {
       AnalyticsService.track("Task Undone");

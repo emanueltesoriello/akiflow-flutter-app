@@ -42,6 +42,9 @@ class TasksCubitState extends Equatable {
   final Task? justCreatedTask;
   final bool tasksLoaded;
   final bool loading;
+  final DateTime? lastTaskDoneAt;
+  final DateTime? lastDayInboxZero;
+  final DateTime? lastDayTodayZero;
 
   int get todayCount =>
       fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore).toList().length;
@@ -56,6 +59,9 @@ class TasksCubitState extends Equatable {
     this.justCreatedTask,
     this.tasksLoaded = false,
     this.loading = false,
+    this.lastTaskDoneAt,
+    this.lastDayInboxZero,
+    this.lastDayTodayZero,
   });
 
   TasksCubitState copyWith({
@@ -68,6 +74,9 @@ class TasksCubitState extends Equatable {
     Nullable<Task?>? justCreatedTask,
     bool? tasksLoaded,
     bool? loading,
+    DateTime? lastTaskDoneAt,
+    DateTime? lastDayInboxZero,
+    DateTime? lastDayTodayZero,
   }) {
     return TasksCubitState(
       inboxTasks: inboxTasks ?? this.inboxTasks,
@@ -79,6 +88,9 @@ class TasksCubitState extends Equatable {
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
       tasksLoaded: tasksLoaded ?? this.tasksLoaded,
       loading: loading ?? this.loading,
+      lastTaskDoneAt: lastTaskDoneAt ?? this.lastTaskDoneAt,
+      lastDayInboxZero: lastDayInboxZero ?? this.lastDayInboxZero,
+      lastDayTodayZero: lastDayTodayZero ?? this.lastDayTodayZero,
     );
   }
 
@@ -93,5 +105,8 @@ class TasksCubitState extends Equatable {
         justCreatedTask,
         tasksLoaded,
         loading,
+        lastTaskDoneAt,
+        lastDayInboxZero,
+        lastDayTodayZero,
       ];
 }
