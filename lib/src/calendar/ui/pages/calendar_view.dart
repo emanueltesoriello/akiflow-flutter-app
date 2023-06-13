@@ -101,7 +101,7 @@ class CalendarView extends StatelessWidget {
 
       // add the task to a new group if it doesn't overlap with any existing group
       if (!isOverlapping) {
-        groupedTasks.add(GroupedTasks(const Uuid().v4(), [task], taskStartTime, taskEndTime));
+        groupedTasks.add(GroupedTasks('group${task.id}', [task], taskStartTime, taskEndTime));
       }
     }
 
