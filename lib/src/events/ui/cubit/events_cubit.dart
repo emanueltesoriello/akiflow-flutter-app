@@ -469,12 +469,18 @@ class EventsCubit extends Cubit<EventsCubitState> {
             .toIso8601String()
         : null;
 
+    String? originalStartDate =
+        selectedEvent.startDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
+    String? originalEndDate = selectedEvent.endDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
+
     Event newParent = selectedEvent.copyWith(
       id: id,
       recurringId: id,
       recurrence: Nullable(selectedEvent.computeRuleForThisAndFuture()),
       startTime: Nullable(originalStartTime),
       endTime: Nullable(originalEndTime),
+      startDate: Nullable(originalStartDate),
+      endDate: Nullable(originalEndDate),
       originId: Nullable(null),
       customOriginId: Nullable(null),
       untilDatetime: Nullable(null),
