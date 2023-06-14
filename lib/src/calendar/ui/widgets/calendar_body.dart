@@ -191,10 +191,10 @@ class CalendarBody extends StatelessWidget {
               ),
               if (!(calendarController.view == CalendarView.schedule || calendarController.view == CalendarView.month))
                 Container(
-                  width: 50,
+                  width: 55,
                   height: 50,
                   color: ColorsExt.background(context),
-                  padding: EdgeInsets.fromLTRB(8, narrowDateDay ? 8 : 18, 8, 8),
+                  padding: EdgeInsets.fromLTRB(8, narrowDateDay ? 8 : 18, 2, 8),
                   child: Text(
                     overflow: TextOverflow.ellipsis,
                     DateTime.now().timeZoneName,
