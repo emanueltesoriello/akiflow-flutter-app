@@ -251,24 +251,26 @@ class EventsCubit extends Cubit<EventsCubitState> {
     if (removeMeeting) {
       await _eventModifiersRepository.add([removeMeetingEventModifier(event)]);
     }
-    await _eventsRepository.updateById(event.id, data: event);
-    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-    await scheduleEventsSync();
-    refetchEvent(event);
+    if (event.isTimeOrDateValid()) {
+      await _eventsRepository.updateById(event.id, data: event);
+      await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+      await scheduleEventsSync();
+      refetchEvent(event);
 
-    AnalyticsService.track(
-        createingEvent == true
-            ? 'New Event'
-            : dragAndDrop
-                ? "Event Rescheduled"
-                : 'Edit Event',
-        properties: {
-          "mobile": true,
-          "mode": dragAndDrop ? "DragAndDrop" : "click",
-          "origin": dragAndDrop ? "calendar" : "eventModal",
-          "eventId": event.id,
-          "eventRecurringId": event.recurringId,
-        });
+      AnalyticsService.track(
+          createingEvent == true
+              ? 'New Event'
+              : dragAndDrop
+                  ? "Event Rescheduled"
+                  : 'Edit Event',
+          properties: {
+            "mobile": true,
+            "mode": dragAndDrop ? "DragAndDrop" : "click",
+            "origin": dragAndDrop ? "calendar" : "eventModal",
+            "eventId": event.id,
+            "eventRecurringId": event.recurringId,
+          });
+    }
   }
 
   ///update method for case user selects "All Events" from an exception-event
@@ -377,19 +379,19 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     String? startTime = eventStartTime != null
         ? timeChanged
-            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
-                    eventStartTime.second)
-                .toUtc()
-                .toIso8601String()
+        ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
+                eventStartTime.second)
+            .toUtc()
+            .toIso8601String()
             : parentEvent.startTime
         : null;
 
     String? endTime = eventEndTime != null
         ? timeChanged
-            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
-                    eventEndTime.second)
-                .toUtc()
-                .toIso8601String()
+        ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
+                eventEndTime.second)
+            .toUtc()
+            .toIso8601String()
             : parentEvent.endTime
         : null;
 
