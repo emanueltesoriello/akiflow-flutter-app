@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 342 
+ * Strings: 343 
  *
- * Built on 2023-05-31 at 14:49 UTC
+ * Built on 2023-06-14 at 12:51 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -681,6 +681,7 @@ class _StringsSnackbarEn {
 	String get connectedSuccesfully => 'Connected successfully!';
 	String get cannotMoveThisEvent => 'You cannot move this event!';
 	String get copiedToYourClipboard => 'Copied to your clipboard';
+	String get gmailLinkNotSupported => 'Gmail link not supported on mobile';
 }
 
 // Path: integrations
@@ -1425,6 +1426,7 @@ extension on _StringsEn {
 			'snackbar.connectedSuccesfully': 'Connected successfully!',
 			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
 			'snackbar.copiedToYourClipboard': 'Copied to your clipboard',
+			'snackbar.gmailLinkNotSupported': 'Gmail link not supported on mobile',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',
