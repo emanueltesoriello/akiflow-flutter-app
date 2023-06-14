@@ -285,6 +285,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     Event parentEvent = await _eventsRepository.getById(exceptionEvent.recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
 
+    //processing start/end time
     DateTime? parentStartTime = parentEvent.startTime != null ? DateTime.parse(parentEvent.startTime!).toLocal() : null;
     DateTime? exceptionStartTime =
         exceptionEvent.startTime != null ? DateTime.parse(exceptionEvent.startTime!).toLocal() : null;
@@ -305,11 +306,22 @@ class EventsCubit extends Cubit<EventsCubitState> {
             .toIso8601String()
         : null;
 
+    //processing start/end date
+    String? parentStartDate = parentEvent.startDate;
+    String? exceptionStartDate = exceptionEvent.startDate;
+    String? startDate = parentStartDate != null && exceptionStartDate != null ? exceptionStartDate : null;
+
+    String? parentEndDate = parentEvent.endDate;
+    String? exceptionEndDate = exceptionEvent.endDate;
+    String? endDate = parentEndDate != null && exceptionEndDate != null ? exceptionEndDate : null;
+
     parentEvent = parentEvent.copyWith(
       title: Nullable(exceptionEvent.title),
       description: Nullable(exceptionEvent.description),
       startTime: Nullable(startTime),
       endTime: Nullable(endTime),
+      startDate: Nullable(startDate),
+      endDate: Nullable(endDate),
       color: exceptionEvent.color,
       meetingIcon: Nullable(exceptionEvent.meetingIcon),
       meetingSolution: Nullable(exceptionEvent.meetingSolution),
