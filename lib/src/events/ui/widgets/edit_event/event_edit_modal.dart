@@ -1269,9 +1269,7 @@ class _EventEditModalState extends State<EventEditModal> {
                         .createEventException(
                             context: context,
                             tappedDate: widget.tappedDate,
-                            dateChanged: dateChanged,
                             originalStartTime: widget.originalStartTime,
-                            timeChanged: timeChanged,
                             parentEvent: updatedEvent,
                             atendeesToAdd: atendeesToAdd,
                             atendeesToRemove: atendeesToRemove,

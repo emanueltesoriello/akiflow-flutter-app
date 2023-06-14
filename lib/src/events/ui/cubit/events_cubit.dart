@@ -359,8 +359,6 @@ class EventsCubit extends Cubit<EventsCubitState> {
       {required BuildContext context,
       required DateTime tappedDate,
       required Event parentEvent,
-      required bool dateChanged,
-      required bool timeChanged,
       required List<String> atendeesToAdd,
       required List<String> atendeesToRemove,
       required bool addMeeting,
@@ -378,33 +376,21 @@ class EventsCubit extends Cubit<EventsCubitState> {
     DateTime? eventEndTime = parentEvent.endTime != null ? DateTime.parse(parentEvent.endTime!).toLocal() : null;
 
     String? startTime = eventStartTime != null
-        ? timeChanged
         ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
                 eventStartTime.second)
             .toUtc()
             .toIso8601String()
-            : parentEvent.startTime
         : null;
 
     String? endTime = eventEndTime != null
-        ? timeChanged
         ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
                 eventEndTime.second)
             .toUtc()
             .toIso8601String()
-            : parentEvent.endTime
         : null;
 
-    String? startDate = parentEvent.startDate != null
-        ? dateChanged
-            ? parentEvent.startDate
-            : DateFormat("y-MM-dd").format(tappedDate.toUtc())
-        : null;
-    String? endDate = parentEvent.endDate != null
-        ? dateChanged
-            ? parentEvent.endDate
-            : DateFormat("y-MM-dd").format(tappedDate.toUtc())
-        : null;
+    String? startDate = parentEvent.startDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
+    String? endDate = parentEvent.endDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
 
     Event recurringException = parentEvent.copyWith(
       id: const Uuid().v4(),
@@ -681,9 +667,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
                   createEventException(
                       context: context,
                       tappedDate: droppedTimeRounded,
-                      dateChanged: false,
                       originalStartTime: originalStartTime,
-                      timeChanged: true,
                       parentEvent: event,
                       atendeesToAdd: [],
                       atendeesToRemove: [],
