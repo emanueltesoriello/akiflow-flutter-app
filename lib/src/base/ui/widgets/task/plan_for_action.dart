@@ -51,7 +51,8 @@ class PlanForAction extends StatelessWidget {
       }
 
       if (task.datetime != null) {
-        text = task.datetimeFormatted;
+        DateTime parsed = DateTime.parse(task.datetime!).toLocal();
+        text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(parsed)}";
       }
 
       leadingIconAsset = Assets.images.icons.common.clockSVG;
