@@ -78,7 +78,7 @@ class PlanForAction extends StatelessWidget {
 
       if (task.datetime != null) {
         DateTime parsed = DateTime.parse(task.datetime!).toLocal();
-        text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h a").format(parsed)}";
+        text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(parsed)}";
       }
     } else if (task.date != null && !task.isOverdue) {
       color = ColorsExt.jordyBlue200(context);

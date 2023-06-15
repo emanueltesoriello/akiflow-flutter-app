@@ -182,7 +182,7 @@ class _PlanModalState extends State<PlanModal> {
               datetime ??= DateTime(
                   _selectedDate.value.year, _selectedDate.value.month, _selectedDate.value.day, defaultTimeHour, 0);
 
-              text = " - ${DateFormat(use24hFormat ? "HH:mm" : "h a").format(datetime)}";
+              text = " - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(datetime)}";
             } else {
               text = "";
             }
@@ -223,7 +223,7 @@ class _PlanModalState extends State<PlanModal> {
                             iconAsset: Assets.images.icons.common.clockSVG,
                             text: t.addTask.laterToday,
                             trailingText:
-                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat(use24hFormat ? "HH:mm" : "h a").format(laterTodayMore3Hours)}',
+                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(laterTodayMore3Hours)}',
                             onPressed: () {
                               widget.onSelectDate(
                                   date: laterTodayMore3Hours,

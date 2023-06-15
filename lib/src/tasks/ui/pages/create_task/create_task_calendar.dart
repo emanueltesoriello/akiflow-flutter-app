@@ -237,7 +237,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                     child: Text(
                                       selectedTime == null
                                           ? t.addTask.addTime
-                                          : DateFormat(use24hFormat ? "HH:mm" : "h a").format(DateTime(
+                                          : DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime(
                                               selectedDate.year,
                                               selectedDate.month,
                                               selectedDate.day,
