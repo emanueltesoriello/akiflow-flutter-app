@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TimeFormatUtils {
-  static const int systemDefault = 1;
-  static const int twelveHours = 2;
-  static const int twentyFourHours = 3;
+  static const int systemDefault = -1;
+  static const int twelveHours = 0;
+  static const int twentyFourHours = 1;
 
   static bool use24hFormat({required int timeFormat, required BuildContext context}) {
     switch (timeFormat) {
