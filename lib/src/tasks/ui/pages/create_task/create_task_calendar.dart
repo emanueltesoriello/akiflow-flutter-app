@@ -6,7 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -49,6 +52,11 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
   final ValueNotifier<DateTime> _selectedDay;
   final ValueNotifier<TimeOfDay?> _selectedDatetime;
 
+  final _preferencesRepository = locator<PreferencesRepository>();
+
+  int timeFormat = -1;
+  bool use24hFormat = true;
+
   _CreateTaskCalendarState()
       : _selectedDay = ValueNotifier(DateTime.now()),
         _selectedDatetime = ValueNotifier(null);
@@ -62,12 +70,14 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
     } else {
       _selectedDatetime.value = null;
     }
+    timeFormat = _preferencesRepository.timeFormat;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
     return ValueListenableBuilder<DateTime>(
       valueListenable: _selectedDay,
@@ -227,8 +237,12 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                     child: Text(
                                       selectedTime == null
                                           ? t.addTask.addTime
-                                          : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
-                                              selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                                          : DateFormat(use24hFormat ? "HH:mm" : "h a").format(DateTime(
+                                              selectedDate.year,
+                                              selectedDate.month,
+                                              selectedDate.day,
+                                              selectedTime.hour,
+                                              selectedTime.minute)),
                                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                             fontWeight: FontWeight.w500,
                                             color: ColorsExt.grey800(context),

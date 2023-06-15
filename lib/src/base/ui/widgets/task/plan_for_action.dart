@@ -3,6 +3,9 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
@@ -20,6 +23,10 @@ class PlanForAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final preferencesRepository = locator<PreferencesRepository>();
+    int timeFormat = preferencesRepository.timeFormat;
+    bool use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
+
     String? leadingIconAsset;
     String? text;
     Color? color;
@@ -71,7 +78,7 @@ class PlanForAction extends StatelessWidget {
 
       if (task.datetime != null) {
         DateTime parsed = DateTime.parse(task.datetime!).toLocal();
-        text = "$text ${DateFormat("HH:mm").format(parsed)}";
+        text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h a").format(parsed)}";
       }
     } else if (task.date != null && !task.isOverdue) {
       color = ColorsExt.jordyBlue200(context);

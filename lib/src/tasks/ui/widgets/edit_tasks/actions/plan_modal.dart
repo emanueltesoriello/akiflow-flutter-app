@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -42,6 +45,10 @@ class _PlanModalState extends State<PlanModal> {
   final ValueNotifier<DateTime> _selectedDate = ValueNotifier(DateTime.now());
   final ValueNotifier<DateTime?> _selectedDatetime = ValueNotifier(null);
   final ValueNotifier<TaskStatusType> _selectedStatus = ValueNotifier(TaskStatusType.planned);
+  final _preferencesRepository = locator<PreferencesRepository>();
+
+  int timeFormat = -1;
+  bool use24hFormat = true;
 
   @override
   void initState() {
@@ -49,11 +56,15 @@ class _PlanModalState extends State<PlanModal> {
     _selectedDatetime.value = widget.initialDatetime;
     _selectedStatus.value = widget.initialHeaderStatusType;
 
+    timeFormat = _preferencesRepository.timeFormat;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
+
     return Material(
       color: Colors.transparent,
       child: Wrap(
@@ -171,7 +182,7 @@ class _PlanModalState extends State<PlanModal> {
               datetime ??= DateTime(
                   _selectedDate.value.year, _selectedDate.value.month, _selectedDate.value.day, defaultTimeHour, 0);
 
-              text = " - ${DateFormat("HH:mm").format(datetime)}";
+              text = " - ${DateFormat(use24hFormat ? "HH:mm" : "h a").format(datetime)}";
             } else {
               text = "";
             }
@@ -212,7 +223,7 @@ class _PlanModalState extends State<PlanModal> {
                             iconAsset: Assets.images.icons.common.clockSVG,
                             text: t.addTask.laterToday,
                             trailingText:
-                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat("HH:mm").format(laterTodayMore3Hours)}',
+                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat(use24hFormat ? "HH:mm" : "h a").format(laterTodayMore3Hours)}',
                             onPressed: () {
                               widget.onSelectDate(
                                   date: laterTodayMore3Hours,

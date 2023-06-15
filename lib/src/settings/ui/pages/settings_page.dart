@@ -12,6 +12,7 @@ import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/pages/integrations_page.dart';
 import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
 import 'package:mobile/src/settings/ui/pages/about_page.dart';
+import 'package:mobile/src/settings/ui/pages/calendar_settings_page.dart';
 import 'package:mobile/src/settings/ui/pages/my_account_page.dart';
 import 'package:mobile/src/settings/ui/pages/notifications_page.dart';
 import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
@@ -46,7 +47,7 @@ class SettingsPage extends StatelessWidget {
           ButtonList(
             title: t.settings.integrations.title,
             leading: Assets.images.icons.common.puzzleSVG,
-            position: ButtonListPosition.mid,
+            position: ButtonListPosition.center,
             preTrailing: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
               builder: (context, state) {
                 List<Account> accounts = state.accounts;
@@ -73,6 +74,15 @@ class SettingsPage extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const IntegrationsPage()));
+            },
+          ),
+          ButtonList(
+            title: 'Calendar',
+            position: ButtonListPosition.mid,
+            leading: Assets.images.icons.common.calendarSVG,
+            enabled: true,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarSettingsPage()));
             },
           ),
           ButtonList(

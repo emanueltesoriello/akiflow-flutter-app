@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
 import 'package:mobile/core/api/pusher.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
@@ -190,6 +191,10 @@ class MainCubit extends Cubit<MainCubitState> {
               status: user.status,
               planExpireDate: user.planExpireDate));
           _sentryService.authenticate(user.id.toString(), user.email);
+
+          _preferencesRepository
+              .setTimeFormat(user.settings?['calendar']?['timeFormat'] ?? TimeFormatUtils.systemDefault);
+
           //await _intercomService.authenticate(
           //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
           try {
