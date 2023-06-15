@@ -192,8 +192,11 @@ class MainCubit extends Cubit<MainCubitState> {
               planExpireDate: user.planExpireDate));
           _sentryService.authenticate(user.id.toString(), user.email);
 
-          _preferencesRepository
-              .setTimeFormat(user.settings?['calendar']?['timeFormat'] ?? TimeFormatUtils.systemDefault);
+          bool timeFormatChanged = _preferencesRepository.timeFormatChanged;
+          if (!timeFormatChanged) {
+            _preferencesRepository
+                .setTimeFormat(appUser.settings?['calendar']?['timeFormat'] ?? TimeFormatUtils.systemDefault);
+          }
 
           //await _intercomService.authenticate(
           //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);

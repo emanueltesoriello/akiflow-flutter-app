@@ -108,6 +108,9 @@ abstract class PreferencesRepository {
   int get timeFormat;
   Future<void> setTimeFormat(int value);
 
+  bool get timeFormatChanged;
+  Future<void> setTimeFormatChanged(bool value);
+
   String get deviceUUID;
   Future<void> setDeviceUUID(String value);
 
@@ -534,6 +537,16 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setTimeFormat(int value) async {
     await _prefs.setInt("timeFormat", value);
+  }
+
+  @override
+  bool get timeFormatChanged {
+    return _prefs.getBool("timeFormatChanged") ?? false;
+  }
+
+  @override
+  Future<void> setTimeFormatChanged(bool value) async {
+    await _prefs.setBool("timeFormatChanged", value);
   }
 
   @override

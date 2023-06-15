@@ -29,6 +29,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    timeFormat = _preferencesRepository.timeFormat;
     use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
     return Scaffold(
@@ -83,7 +84,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                             ),
                             const SizedBox(height: Dimension.paddingXS),
                             Text(
-                              use24hFormat ? "13:00" : "1 PM",
+                              use24hFormat ? "13:00" : "1:00 PM",
                               textAlign: TextAlign.left,
                               style: Theme.of(context).textTheme.caption?.copyWith(
                                     color: ColorsExt.grey600(context),
@@ -106,6 +107,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                             });
                             _preferencesRepository
                                 .setTimeFormat(value ? TimeFormatUtils.twentyFourHours : TimeFormatUtils.twelveHours);
+                            _preferencesRepository.setTimeFormatChanged(true);
                           },
                         ),
                       ],
