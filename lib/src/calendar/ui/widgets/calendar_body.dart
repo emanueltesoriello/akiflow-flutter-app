@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/calendar_utils.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -75,6 +78,10 @@ class CalendarBody extends StatelessWidget {
           }
         });
       });
+
+      final preferencesRepository = locator<PreferencesRepository>();
+      int timeFormat = preferencesRepository.timeFormat;
+      bool use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
       return LayoutBuilder(builder: (context, constraints) {
         return SlidingUpPanel(
@@ -151,7 +158,7 @@ class CalendarBody extends StatelessWidget {
                       .caption
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
                   numberOfDaysInView: isThreeDays ? 3 : -1,
-                  timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
+                  timeFormat: use24hFormat ? 'HH:mm' : 'h a',
                   dayFormat: isThreeDays || calendarController.view == CalendarView.day ? 'EEE' : 'EE',
                   nonWorkingDays: state.nonWorkingDays,
                 ),

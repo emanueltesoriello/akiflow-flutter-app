@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -174,12 +175,17 @@ class EventsCubit extends Cubit<EventsCubitState> {
       createdAt: TzUtils.toUtcStringIfNotNull(now),
     );
 
+    int timeFormat = -1;
+    bool use24hFormat = true;
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
+
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => EventEditModal(
         event: event,
         tappedDate: now,
         originalStartTime: now.toIso8601String(),
+        use24hFormat: use24hFormat,
         createingEvent: true,
       ),
     ).whenComplete(() => refreshAllEvents(context));
