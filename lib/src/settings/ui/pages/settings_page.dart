@@ -77,7 +77,7 @@ class SettingsPage extends StatelessWidget {
             },
           ),
           ButtonList(
-            title: 'Calendar',
+            title: t.settings.calendar,
             position: ButtonListPosition.mid,
             leading: Assets.images.icons.common.calendarSVG,
             enabled: true,

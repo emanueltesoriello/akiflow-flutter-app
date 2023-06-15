@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/time_format_utils.dart';
@@ -33,8 +34,8 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
     use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
     return Scaffold(
-      appBar: const AppBarComp(
-        title: "Calendar",
+      appBar: AppBarComp(
+        title: t.settings.calendar,
         showBack: true,
       ),
       body: Column(
@@ -46,7 +47,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
               children: [
                 const SizedBox(height: Dimension.padding),
                 Text(
-                  "VIEW OPTIONS",
+                  t.settings.viewOptions.toUpperCase(),
                   style: Theme.of(context).textTheme.caption?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
@@ -76,7 +77,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Use 24 hours Format",
+                              t.settings.use24hoursFormat,
                               textAlign: TextAlign.left,
                               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                     color: ColorsExt.grey800(context),
