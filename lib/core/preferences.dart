@@ -105,6 +105,12 @@ abstract class PreferencesRepository {
   bool get taskCompletedSoundEnabledMobile;
   Future<void> setTaskCompletedSoundEnabledMobile(bool value);
 
+  int get timeFormat;
+  Future<void> setTimeFormat(int value);
+
+  bool get timeFormatChanged;
+  Future<void> setTimeFormatChanged(bool value);
+
   String get deviceUUID;
   Future<void> setDeviceUUID(String value);
 
@@ -521,6 +527,26 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   bool get taskCompletedSoundEnabledMobile {
     return _prefs.getBool("taskCompletedSoundEnabledMobile") ?? true;
+  }
+
+  @override
+  int get timeFormat {
+    return _prefs.getInt("timeFormat") ?? -1;
+  }
+
+  @override
+  Future<void> setTimeFormat(int value) async {
+    await _prefs.setInt("timeFormat", value);
+  }
+
+  @override
+  bool get timeFormatChanged {
+    return _prefs.getBool("timeFormatChanged") ?? false;
+  }
+
+  @override
+  Future<void> setTimeFormatChanged(bool value) async {
+    await _prefs.setBool("timeFormatChanged", value);
   }
 
   @override

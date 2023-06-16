@@ -42,11 +42,13 @@ class EventEditModal extends StatefulWidget {
     required this.event,
     required this.tappedDate,
     required this.originalStartTime,
+    required this.use24hFormat,
     this.createingEvent,
   }) : super(key: key);
   final Event event;
   final DateTime tappedDate;
   final String? originalStartTime;
+  final bool use24hFormat;
   final bool? createingEvent;
 
   @override
@@ -401,7 +403,9 @@ class _EventEditModalState extends State<EventEditModal> {
           },
         );
       },
-      child: Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
+      child: Text(
+          DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a")
+              .format(DateTime.parse(updatedEvent.startTime!).toLocal()),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: ColorsExt.grey800(context),
@@ -533,7 +537,8 @@ class _EventEditModalState extends State<EventEditModal> {
           },
         );
       },
-      child: Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
+      child: Text(
+          DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: ColorsExt.grey800(context),

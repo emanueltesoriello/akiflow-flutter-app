@@ -245,6 +245,14 @@ export class ChronoHelper {
         }
         return results
       }
+    }, {
+      // values with only a number followed by the single letter `s` are ignored
+      refine: (_, results) => {
+        return results.filter((result) => {
+          const match = result.text.match(/^\d+s$/i);
+          return !match;
+        });
+      }
     })
 
     const parseResults = ChronoHelper.customChrono.parse(text, forwardFrom, options)

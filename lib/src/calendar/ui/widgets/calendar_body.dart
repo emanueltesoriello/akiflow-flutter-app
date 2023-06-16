@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/calendar_utils.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -75,6 +78,10 @@ class CalendarBody extends StatelessWidget {
           }
         });
       });
+
+      final preferencesRepository = locator<PreferencesRepository>();
+      int timeFormat = preferencesRepository.timeFormat;
+      bool use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
       return LayoutBuilder(builder: (context, constraints) {
         return SlidingUpPanel(
@@ -151,7 +158,7 @@ class CalendarBody extends StatelessWidget {
                       .caption
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
                   numberOfDaysInView: isThreeDays ? 3 : -1,
-                  timeFormat: MediaQuery.of(context).alwaysUse24HourFormat ? 'HH:mm' : 'h a',
+                  timeFormat: use24hFormat ? 'HH:mm' : 'h a',
                   dayFormat: isThreeDays || calendarController.view == CalendarView.day ? 'EEE' : 'EE',
                   nonWorkingDays: state.nonWorkingDays,
                 ),
@@ -182,9 +189,10 @@ class CalendarBody extends StatelessWidget {
                     )),
                 monthViewSettings: const MonthViewSettings(
                     appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 4),
-                onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),
+                onTap: (calendarTapDetails) =>
+                    calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit, use24hFormat),
                 appointmentBuilder: (context, calendarAppointmentDetails) =>
-                    appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
+                    appointmentBuilder(context, calendarAppointmentDetails, checkboxController, use24hFormat),
                 allowDragAndDrop: true,
                 onDragEnd: (appointmentDragEndDetails) =>
                     dragEnd(appointmentDragEndDetails, context, calendarCubit, eventsCubit),
@@ -209,7 +217,7 @@ class CalendarBody extends StatelessWidget {
   }
 
   Widget appointmentBuilder(BuildContext context, CalendarAppointmentDetails calendarAppointmentDetails,
-      CheckboxAnimatedController? checkboxController) {
+      CheckboxAnimatedController? checkboxController, bool use24hFormat) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
     if (calendarAppointmentDetails.isMoreAppointmentRegion) {
       return const Text(' ...');
@@ -223,7 +231,8 @@ class CalendarBody extends StatelessWidget {
             calendarAppointmentDetails: calendarAppointmentDetails,
             checkboxController: checkboxController,
             task: task,
-            context: context);
+            context: context,
+            use24hFormat: use24hFormat);
       } catch (e) {
         print('calendar_body find task error: $e');
       }
@@ -251,7 +260,8 @@ class CalendarBody extends StatelessWidget {
             calendarController: calendarController,
             appointment: appointment,
             event: event,
-            context: context);
+            context: context,
+            use24hFormat: use24hFormat);
       } catch (e) {
         print('calendar_body find event error: $e');
       }
@@ -260,7 +270,7 @@ class CalendarBody extends StatelessWidget {
   }
 
   void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext mainContext, EventsCubit eventsCubit,
-      CalendarCubit calendarCubit) {
+      CalendarCubit calendarCubit, bool use24hFormat) {
     mainContext.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
@@ -273,6 +283,7 @@ class CalendarBody extends StatelessWidget {
         context: mainContext,
         builder: (context) => EventCreationSmallModal(
           tappedTime: calendarTapDetails.date!,
+          use24hFormat: use24hFormat,
           onTap: (tapped) {
             if (tapped) {
               calendarCubit.setAppointmentTapped(true);
