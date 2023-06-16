@@ -69,8 +69,11 @@ class _ViewState extends State<_View> {
     } catch (e) {
       print(e);
     }
-    _controller = VideoPlayerController.asset(Assets.animations.inboxEmptyAnimationWEBM);
-    _controller.initialize();
+    _controller = VideoPlayerController.asset(Assets.animations.inboxEmptyAnimationWEBM)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
     _controller.play();
     super.initState();
   }
@@ -200,7 +203,7 @@ class _ViewState extends State<_View> {
         width: 200,
         child: AspectRatio(
           aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
+          child: _controller.value.isInitialized ? VideoPlayer(_controller) : Container(),
         ));
   }
 }

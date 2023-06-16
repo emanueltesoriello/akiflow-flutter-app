@@ -28,7 +28,7 @@ class CircleAccountPicture extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   child: CircleAvatar(
                       radius: Dimension.radius,
-                      backgroundColor: ColorsExt.grey600(context),
+                      backgroundColor: ColorsExt.grey100(context),
                       backgroundImage: NetworkImage(networkImageUrl!))),
             );
           })

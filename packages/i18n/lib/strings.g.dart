@@ -684,6 +684,7 @@ class _StringsSnackbarEn {
 	String get connectedSuccesfully => 'Connected successfully!';
 	String get cannotMoveThisEvent => 'You cannot move this event!';
 	String get copiedToYourClipboard => 'Copied to your clipboard';
+	String get gmailLinkNotSupported => 'Gmail link not supported on mobile';
 }
 
 // Path: integrations
@@ -1431,6 +1432,7 @@ extension on _StringsEn {
 			'snackbar.connectedSuccesfully': 'Connected successfully!',
 			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
 			'snackbar.copiedToYourClipboard': 'Copied to your clipboard',
+			'snackbar.gmailLinkNotSupported': 'Gmail link not supported on mobile',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',

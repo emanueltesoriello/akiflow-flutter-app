@@ -420,7 +420,8 @@
   "snackbar": {
     "connectedSuccesfully": "Connected successfully!",
     "cannotMoveThisEvent": "You cannot move this event!",
-    "copiedToYourClipboard": "Copied to your clipboard"
+    "copiedToYourClipboard": "Copied to your clipboard",
+    "gmailLinkNotSupported": "Gmail link not supported on mobile"
   },
   "confirm": "Confirm",
   "cancel": "Cancel",

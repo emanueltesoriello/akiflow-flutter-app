@@ -268,7 +268,9 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       rule: updatedTask.ruleFromStringList,
                                       taskDatetime: updatedTask.datetime != null
                                           ? DateTime.parse(updatedTask.datetime!)
-                                          : DateTime.parse(updatedTask.date!),
+                                          : updatedTask.date != null
+                                              ? DateTime.parse(updatedTask.date!)
+                                              : DateTime.now(),
                                     ),
                                   );
                                 },

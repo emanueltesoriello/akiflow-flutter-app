@@ -93,7 +93,9 @@ class EventAppointment extends StatelessWidget {
                 ),
                 if (calendarController.view == CalendarView.schedule &&
                     event.startTime != null &&
-                    event.endTime != null)
+                    event.endTime != null &&
+                    DateUtils.isSameDay(
+                        DateTime.parse(event.startTime!).toLocal(), DateTime.parse(event.endTime!).toLocal()))
                   Text(
                       '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.endTime!).toLocal())}',
                       style: Theme.of(context).textTheme.caption?.copyWith(
