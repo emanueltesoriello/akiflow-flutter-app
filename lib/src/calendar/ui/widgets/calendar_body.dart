@@ -191,7 +191,7 @@ class CalendarBody extends StatelessWidget {
                     appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 4),
                 onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),
                 appointmentBuilder: (context, calendarAppointmentDetails) =>
-                    appointmentBuilder(context, calendarAppointmentDetails, checkboxController),
+                    appointmentBuilder(context, calendarAppointmentDetails, checkboxController, use24hFormat),
                 allowDragAndDrop: true,
                 onDragEnd: (appointmentDragEndDetails) =>
                     dragEnd(appointmentDragEndDetails, context, calendarCubit, eventsCubit),
@@ -216,7 +216,7 @@ class CalendarBody extends StatelessWidget {
   }
 
   Widget appointmentBuilder(BuildContext context, CalendarAppointmentDetails calendarAppointmentDetails,
-      CheckboxAnimatedController? checkboxController) {
+      CheckboxAnimatedController? checkboxController, bool use24hFormat) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
     if (calendarAppointmentDetails.isMoreAppointmentRegion) {
       return const Text(' ...');
@@ -230,7 +230,8 @@ class CalendarBody extends StatelessWidget {
             calendarAppointmentDetails: calendarAppointmentDetails,
             checkboxController: checkboxController,
             task: task,
-            context: context);
+            context: context,
+            use24hFormat: use24hFormat);
       } catch (e) {
         print('calendar_body find task error: $e');
       }
@@ -258,7 +259,8 @@ class CalendarBody extends StatelessWidget {
             calendarController: calendarController,
             appointment: appointment,
             event: event,
-            context: context);
+            context: context,
+            use24hFormat: use24hFormat);
       } catch (e) {
         print('calendar_body find event error: $e');
       }
