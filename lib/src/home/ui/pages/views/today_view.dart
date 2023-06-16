@@ -56,8 +56,12 @@ class _TodayViewState extends State<TodayView> {
         }
       });
     });
-    _controller = VideoPlayerController.asset(Assets.animations.todayEmptyAnimationWEBM);
-    _controller.initialize();
+
+    _controller = VideoPlayerController.asset(Assets.animations.todayEmptyAnimationWEBM)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
     _controller.play();
 
     super.initState();
@@ -287,7 +291,7 @@ class _TodayViewState extends State<TodayView> {
         width: 125,
         child: AspectRatio(
           aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
+          child: _controller.value.isInitialized ? VideoPlayer(_controller) : Container(),
         ));
   }
 }
