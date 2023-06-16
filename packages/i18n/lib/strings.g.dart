@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 342 
+ * Strings: 345 
  *
- * Built on 2023-05-31 at 14:49 UTC
+ * Built on 2023-06-15 at 15:49 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -409,6 +409,9 @@ class _StringsSettingsEn {
 	String get general => 'General';
 	String get tasks => 'Tasks';
 	String get notifications => 'Notifications';
+	String get calendar => 'Calendar';
+	String get viewOptions => 'view options';
+	String get use24hoursFormat => 'Use 24 hours format';
 	String get referYourFriends => 'Refer your friends';
 	String get helpCenter => 'Help center';
 	String get followUsOnTwitter => 'Follow Us on Twitter';
@@ -1134,6 +1137,9 @@ extension on _StringsEn {
 			'settings.general': 'General',
 			'settings.tasks': 'Tasks',
 			'settings.notifications': 'Notifications',
+			'settings.calendar': 'Calendar',
+			'settings.viewOptions': 'view options',
+			'settings.use24hoursFormat': 'Use 24 hours format',
 			'settings.referYourFriends': 'Refer your friends',
 			'settings.helpCenter': 'Help center',
 			'settings.followUsOnTwitter': 'Follow Us on Twitter',

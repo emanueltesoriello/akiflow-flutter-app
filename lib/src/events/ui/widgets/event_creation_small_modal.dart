@@ -15,9 +15,11 @@ class EventCreationSmallModal extends StatelessWidget {
     Key? key,
     required this.tappedTime,
     required this.onTap,
+    required this.use24hFormat,
   }) : super(key: key);
   final DateTime tappedTime;
   final Function(bool) onTap;
+  final bool use24hFormat;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +112,7 @@ class EventCreationSmallModal extends StatelessWidget {
                             .subtitle1
                             ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     const SizedBox(height: Dimension.padding),
-                    Text(DateFormat("HH:mm").format(tappedTime),
+                    Text(DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(tappedTime),
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
@@ -130,7 +132,7 @@ class EventCreationSmallModal extends StatelessWidget {
                             .subtitle1
                             ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     const SizedBox(height: Dimension.padding),
-                    Text(DateFormat("HH:mm").format(tappedTime.add(const Duration(hours: 1))),
+                    Text(DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(tappedTime.add(const Duration(hours: 1))),
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1

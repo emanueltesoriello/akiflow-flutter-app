@@ -10,6 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -49,6 +52,11 @@ class _EventModalState extends State<EventModal> {
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
 
+  final _preferencesRepository = locator<PreferencesRepository>();
+
+  int timeFormat = -1;
+  bool use24hFormat = true;
+
   @override
   void initState() {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
@@ -78,6 +86,8 @@ class _EventModalState extends State<EventModal> {
       });
     });
 
+    timeFormat = _preferencesRepository.timeFormat;
+
     super.initState();
   }
 
@@ -97,6 +107,8 @@ class _EventModalState extends State<EventModal> {
 
   @override
   Widget build(BuildContext context) {
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
+
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
@@ -200,7 +212,9 @@ class _EventModalState extends State<EventModal> {
                               .subtitle1
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
-                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.startTime!).toLocal()),
+                      Text(
+                          DateFormat(use24hFormat ? "HH:mm" : "h:mm a")
+                              .format(DateTime.parse(selectedEvent.startTime!).toLocal()),
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
@@ -238,7 +252,9 @@ class _EventModalState extends State<EventModal> {
                               .subtitle1
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
-                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.endTime!).toLocal()),
+                      Text(
+                          DateFormat(use24hFormat ? "HH:mm" : "h:mm a")
+                              .format(DateTime.parse(selectedEvent.endTime!).toLocal()),
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
@@ -756,6 +772,7 @@ class _EventModalState extends State<EventModal> {
                         event: selectedEvent,
                         tappedDate: widget.tappedDate!,
                         originalStartTime: originalStartTime,
+                        use24hFormat: use24hFormat,
                       ),
                     ).whenComplete(
                       () {
