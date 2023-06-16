@@ -218,7 +218,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
       case ButtonListPosition.top:
         return const EdgeInsets.only(left: 1, top: 1, right: 1);
       case ButtonListPosition.center:
-        return const EdgeInsets.only(left: 1, right: 1);
+        return const EdgeInsets.only(left: 1, right: 1, top: 1);
       case ButtonListPosition.mid:
         return const EdgeInsets.only(left: 1, right: 1, bottom: 1, top: 1);
       case ButtonListPosition.bottom:

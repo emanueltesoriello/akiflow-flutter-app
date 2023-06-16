@@ -36,6 +36,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     fetchFromPreferences();
     fetchCalendars();
     setNonWorkingDays();
+    await setSystemStartOfWeekDay();
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await fetchCalendars();
@@ -140,6 +141,12 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   void setNonWorkingDays() {
     emit(state.copyWith(nonWorkingDays: computeNonWorkinkDays()));
+  }
+
+  Future<void> setSystemStartOfWeekDay() async {
+    int systemDefault = DateTime.sunday;
+    systemDefault = await CalendarUtils.retrieveSystemFirstDayOfWeek();
+    emit(state.copyWith(systemStartOfWeekDay: systemDefault));
   }
 
   void setAppointmentTapped(bool tapped) {

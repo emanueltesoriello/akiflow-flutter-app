@@ -16,6 +16,7 @@ class EventAppointment extends StatelessWidget {
     required this.calendarController,
     required this.appointment,
     required this.context,
+    required this.use24hFormat,
   }) : super(key: key);
 
   final CalendarAppointmentDetails calendarAppointmentDetails;
@@ -23,6 +24,7 @@ class EventAppointment extends StatelessWidget {
   final Appointment appointment;
   final Event event;
   final BuildContext context;
+  final bool use24hFormat;
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +93,11 @@ class EventAppointment extends StatelessWidget {
                 ),
                 if (calendarController.view == CalendarView.schedule &&
                     event.startTime != null &&
-                    event.endTime != null)
+                    event.endTime != null &&
+                    DateUtils.isSameDay(
+                        DateTime.parse(event.startTime!).toLocal(), DateTime.parse(event.endTime!).toLocal()))
                   Text(
-                      '${DateFormat("HH:mm").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(event.endTime!).toLocal())}',
+                      '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.endTime!).toLocal())}',
                       style: Theme.of(context).textTheme.caption?.copyWith(
                             height: 1.3,
                             fontSize: 11.0,

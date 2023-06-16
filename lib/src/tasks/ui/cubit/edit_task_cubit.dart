@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
@@ -100,8 +101,19 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         return;
       }
       DateTime now = DateTime.now();
+      String? date;
+      try {
+        var format = DateFormat("yyyy-MM-dd");
+
+        DateTime dtDate = DateTime.parse(state.updatedTask.date!);
+        date = format.format(dtDate);
+      } catch (e) {
+        print(e);
+      }
+
       Task updated = state.updatedTask.copyWith(
         id: const Uuid().v4(),
+        date: Nullable(date),
         title: state.updatedTask.title,
         description: state.updatedTask.description,
         createdAt: TzUtils.toUtcStringIfNotNull(now),
@@ -272,10 +284,27 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task Label");
   }
 
-  Future<void> markAsDone({bool forceUpdate = false}) async {
+  Future<void> markAsDone(
+      {bool forceUpdate = false, bool forceMarkAsDoneRemote = false, bool forceArchiveRemote = false}) async {
     Task task = state.updatedTask;
 
     Task updated = task.markAsDone(state.originalTask);
+
+    bool markAsDoneRemote = forceMarkAsDoneRemote ? true : await _tasksCubit.shouldMarkAsDoneRemote(updated);
+    if (markAsDoneRemote) {
+      dynamic content = updated.content ?? {};
+      content['shouldMarkAsDoneRemote'] = updated.done!;
+      updated = updated.copyWith(content: content);
+    }
+
+    if (task.connectorId?.value == 'trello') {
+      bool shouldArchiveRemote = forceArchiveRemote ? true : await _tasksCubit.shouldArchiveRemote(updated);
+      if (shouldArchiveRemote) {
+        dynamic content = updated.content ?? {};
+        content['shouldArchiveRemote'] = true;
+        updated = updated.copyWith(content: content);
+      }
+    }
 
     emit(state.copyWith(updatedTask: updated));
 
@@ -289,6 +318,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     _tasksCubit.handleDocAction([updated]);
+
+    if (updated.isCompletedComputed) {
+      _tasksCubit.setLastTaskDoneAt();
+    }
 
     if (updated.isCompletedComputed) {
       AnalyticsService.track("Task Done");

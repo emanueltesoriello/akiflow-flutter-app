@@ -1,6 +1,6 @@
 {
   "name": "@akiflow/chrono-custom-rules",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "dist/index.js",
   "repository": "https://github.com/akiflow/chrono-custom-rules",
   "license": "MIT",

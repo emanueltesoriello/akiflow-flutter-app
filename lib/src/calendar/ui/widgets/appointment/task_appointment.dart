@@ -23,6 +23,7 @@ class TaskAppointment extends StatelessWidget {
     required this.checkboxController,
     required this.task,
     required this.context,
+    required this.use24hFormat,
   }) : super(key: key);
 
   final CalendarController calendarController;
@@ -31,6 +32,7 @@ class TaskAppointment extends StatelessWidget {
   CheckboxAnimatedController? checkboxController;
   final Task task;
   final BuildContext context;
+  final bool use24hFormat;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +149,7 @@ class TaskAppointment extends StatelessWidget {
                       children: [
                         const SizedBox(width: 5),
                         Text(
-                            '${DateFormat("HH:mm").format(DateTime.parse(task.datetime!).toLocal())} - ${DateFormat("HH:mm").format(DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!)))}',
+                            '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(task.datetime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!)))}',
                             style: Theme.of(context).textTheme.caption?.copyWith(
                                   height: 1.3,
                                   fontSize: 11.0,
