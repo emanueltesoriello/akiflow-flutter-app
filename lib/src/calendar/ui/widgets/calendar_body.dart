@@ -189,7 +189,8 @@ class CalendarBody extends StatelessWidget {
                     )),
                 monthViewSettings: const MonthViewSettings(
                     appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 4),
-                onTap: (calendarTapDetails) => calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit),
+                onTap: (calendarTapDetails) =>
+                    calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit, use24hFormat),
                 appointmentBuilder: (context, calendarAppointmentDetails) =>
                     appointmentBuilder(context, calendarAppointmentDetails, checkboxController, use24hFormat),
                 allowDragAndDrop: true,
@@ -269,7 +270,7 @@ class CalendarBody extends StatelessWidget {
   }
 
   void calendarTapped(CalendarTapDetails calendarTapDetails, BuildContext mainContext, EventsCubit eventsCubit,
-      CalendarCubit calendarCubit) {
+      CalendarCubit calendarCubit, bool use24hFormat) {
     mainContext.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
@@ -282,6 +283,7 @@ class CalendarBody extends StatelessWidget {
         context: mainContext,
         builder: (context) => EventCreationSmallModal(
           tappedTime: calendarTapDetails.date!,
+          use24hFormat: use24hFormat,
           onTap: (tapped) {
             if (tapped) {
               calendarCubit.setAppointmentTapped(true);
