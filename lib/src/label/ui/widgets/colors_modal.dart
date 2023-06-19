@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
 class ColorsModal extends StatelessWidget {
@@ -14,26 +15,29 @@ class ColorsModal extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).backgroundColor,
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
+              topLeft: Radius.circular(Dimension.padding),
+              topRight: Radius.circular(Dimension.padding),
             ),
           ),
           margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
             shrinkWrap: true,
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               const ScrollChip(),
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
                 child: Text(
                   t.label.color,
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: Dimension.padding),
               GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -48,14 +52,14 @@ class ColorsModal extends StatelessWidget {
                     },
                     child: Center(
                       child: SizedBox(
-                        height: 35,
+                        height: Dimension.mediumIconSize,
                         child: CircleAvatar(backgroundColor: ColorsExt.getFromName(rawColorName)),
                       ),
                     ),
                   );
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimension.padding),
             ],
           )),
     );

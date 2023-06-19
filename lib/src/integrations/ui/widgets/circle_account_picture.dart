@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class CircleAccountPicture extends StatelessWidget {
   final String iconAsset;
@@ -26,8 +27,8 @@ class CircleAccountPicture extends StatelessWidget {
               child: Align(
                   alignment: Alignment.bottomRight,
                   child: CircleAvatar(
-                      radius: 8,
-                      backgroundColor: ColorsExt.grey3(context),
+                      radius: Dimension.radius,
+                      backgroundColor: ColorsExt.grey100(context),
                       backgroundImage: NetworkImage(networkImageUrl!))),
             );
           })

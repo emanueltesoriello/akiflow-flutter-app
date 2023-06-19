@@ -25,11 +25,10 @@ class MarksWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     i == 0 ? "0" : "${i ~/ 4}h",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                      fontSize: 13,
-                    ),
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.grey800(context),
+                        ),
                   ),
                 ),
               ),
@@ -47,7 +46,7 @@ class MarksWidget extends StatelessWidget {
                   child: Container(
                     height: 6,
                     width: 1,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
                 ),
               ),
@@ -65,7 +64,7 @@ class MarksWidget extends StatelessWidget {
                   child: Container(
                     height: 3,
                     width: 1,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
                 ),
               ),

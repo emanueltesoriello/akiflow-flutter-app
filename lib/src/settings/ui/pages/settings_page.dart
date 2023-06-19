@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
-//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
-import 'package:mobile/src/base/ui/widgets/base/notification_count_icon.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/pages/integrations_page.dart';
 import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
 import 'package:mobile/src/settings/ui/pages/about_page.dart';
+import 'package:mobile/src/settings/ui/pages/calendar_settings_page.dart';
 import 'package:mobile/src/settings/ui/pages/my_account_page.dart';
 import 'package:mobile/src/settings/ui/pages/notifications_page.dart';
-import 'package:mobile/src/settings/ui/widgets/settings_header_text.dart';
+import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
 import 'package:models/account/account.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
         showBack: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(Dimension.padding),
         children: [
           if (kDebugMode)
             FutureBuilder(
@@ -38,42 +38,16 @@ class SettingsPage extends StatelessWidget {
                 builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
           ButtonList(
             title: t.settings.myAccount.title,
-            position: ButtonListPosition.single,
+            position: ButtonListPosition.top,
             leading: Assets.images.icons.common.personCircleSVG,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAccountPage()));
             },
           ),
-          const SizedBox(height: 16),
-          SettingHeaderText(text: t.comingSoon),
-          ButtonList(
-            title: t.settings.general,
-            position: ButtonListPosition.top,
-            leading: Assets.images.icons.common.gearAltSVG,
-            enabled: false,
-            onPressed: () {},
-          ),
-          ButtonList(
-            title: t.settings.notifications,
-            position: ButtonListPosition.center,
-            leading: Assets.images.icons.common.bellSVG,
-            enabled: true,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationsPage()));
-            },
-          ),
-          ButtonList(
-            title: t.settings.tasks,
-            position: ButtonListPosition.bottom,
-            leading: Assets.images.icons.common.checkDoneOutlineSVG,
-            enabled: false,
-            onPressed: () {},
-          ),
-          const SizedBox(height: 16),
           ButtonList(
             title: t.settings.integrations.title,
             leading: Assets.images.icons.common.puzzleSVG,
-            position: ButtonListPosition.single,
+            position: ButtonListPosition.center,
             preTrailing: BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
               builder: (context, state) {
                 List<Account> accounts = state.accounts;
@@ -86,11 +60,14 @@ class SettingsPage extends StatelessWidget {
                     accounts.where((account) => !context.read<IntegrationsCubit>().isLocalActive(account)).length;
 
                 return CircleAvatar(
-                  backgroundColor: ColorsExt.orange(context),
-                  radius: 9,
+                  backgroundColor: ColorsExt.apricot400(context),
+                  radius: Dimension.radius,
                   child: Text(
                     count.toString(),
-                    style: TextStyle(color: ColorsExt.background(context), fontSize: 13, fontWeight: FontWeight.w500),
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: ColorsExt.background(context),
+                        ),
                   ),
                 );
               },
@@ -99,7 +76,41 @@ class SettingsPage extends StatelessWidget {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const IntegrationsPage()));
             },
           ),
-          const SizedBox(height: 16),
+          ButtonList(
+            title: t.settings.calendar,
+            position: ButtonListPosition.mid,
+            leading: Assets.images.icons.common.calendarSVG,
+            enabled: true,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarSettingsPage()));
+            },
+          ),
+          ButtonList(
+            title: t.settings.notifications,
+            position: ButtonListPosition.bottom,
+            leading: Assets.images.icons.common.bellSVG,
+            enabled: true,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationsPage()));
+            },
+          ),
+          const SizedBox(height: Dimension.padding),
+          SettingHeaderText(text: t.comingSoon),
+          ButtonList(
+            title: t.settings.general,
+            position: ButtonListPosition.top,
+            leading: Assets.images.icons.common.gearAltSVG,
+            enabled: false,
+            onPressed: () {},
+          ),
+          ButtonList(
+            title: t.settings.tasks,
+            position: ButtonListPosition.mid,
+            leading: Assets.images.icons.common.checkDoneOutlineSVG,
+            enabled: false,
+            onPressed: () {},
+          ),
+          const SizedBox(height: Dimension.padding),
           ButtonList(
             title: t.settings.about.title,
             leading: Assets.images.icons.common.infoCircleSVG,
@@ -111,7 +122,7 @@ class SettingsPage extends StatelessWidget {
           ButtonList(
             title: t.settings.learnAkiflow.title,
             leading: Assets.images.icons.common.guidebookSVG,
-            position: ButtonListPosition.center,
+            position: ButtonListPosition.mid,
             showShevron: false,
             onPressed: () {
               launchUrl(Uri.parse("https://www.notion.so/akiflow/How-to-use-Akiflow-7476c0787ec64e8aa3567bdeb3ab4540"),
@@ -127,7 +138,7 @@ class SettingsPage extends StatelessWidget {
               launchUrl(Uri.parse("https://product.akiflow.com/changelog"), mode: LaunchMode.externalApplication);
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
           ButtonList(
             title: t.settings.followUsOnTwitter,
             leading: Assets.images.icons.twitter.logoTwitterSVG,
@@ -148,24 +159,6 @@ class SettingsPage extends StatelessWidget {
               launchUrl(Uri.parse("https://akiflow-community.slack.com"), mode: LaunchMode.externalApplication);
             },
           ),
-          /*ButtonList(
-            title: t.settings.chatWithUs,
-            leading: "assets/images/icons/_common/chat_bubble.svg",
-            trailingWidget: FutureBuilder<dynamic>(
-                future: Intercom.instance.unreadConversationCount(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return NotifcationCountIcon(snapshot.data);
-                  }
-                  return const SizedBox();
-                }),
-            position: ButtonListPosition.mid,
-            showShevron: false,
-            useSvgColor: true,
-            onPressed: () async {
-              await context.read<SettingsCubit>().launchIntercom();
-            },
-          ),*/
           ButtonList(
             title: t.settings.chatWithUs,
             leading: "assets/images/icons/_common/chat_bubble.svg",
@@ -186,7 +179,7 @@ class SettingsPage extends StatelessWidget {
               context.read<SettingsCubit>().sendEmail();
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
         ],
       ),
     );

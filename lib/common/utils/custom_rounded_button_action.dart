@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 
 class CustomFlutterRoundedButtonAction extends StatelessWidget {
@@ -40,17 +41,20 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         border: Border.all(
-          color: ColorsExt.grey4(context),
+          color: ColorsExt.grey600(context),
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimension.radius),
       ),
       child: InkWell(
         onTap: onTapButtonNegative,
         child: Center(
             child: Text(
           textButtonNegative ?? localizations.cancelButtonLabel,
-          style: textStyleButtonNegative,
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                fontWeight: FontWeight.w400,
+                color: ColorsExt.grey800(context),
+              ),
         )),
       ),
     );
@@ -59,21 +63,23 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
       width: MediaQuery.of(context).size.width / 3,
       height: 48,
       decoration: BoxDecoration(
-        color: ColorsExt.akiflow10(context),
+        color: ColorsExt.akiflow100(context),
         border: Border.all(
-          color: ColorsExt.akiflow(context),
+          color: ColorsExt.akiflow500(context),
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Dimension.radius),
       ),
       child: InkWell(
         onTap: onTapButtonPositive,
         child: Center(
-          child: Text(textButtonPositive ?? localizations.okButtonLabel,
-              style: TextStyle(
-                  color: ColorsExt.akiflow(
-                      context)) //textStyleButtonPositive?.copyWith(color: ColorsExt.akiflow(context), fontSize: 40),
-              ),
+          child: Text(
+            textButtonPositive ?? localizations.okButtonLabel,
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: ColorsExt.akiflow500(context),
+                ),
+          ),
         ),
       ),
     );

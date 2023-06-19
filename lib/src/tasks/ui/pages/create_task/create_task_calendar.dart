@@ -5,7 +5,11 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -48,6 +52,11 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
   final ValueNotifier<DateTime> _selectedDay;
   final ValueNotifier<TimeOfDay?> _selectedDatetime;
 
+  final _preferencesRepository = locator<PreferencesRepository>();
+
+  int timeFormat = -1;
+  bool use24hFormat = true;
+
   _CreateTaskCalendarState()
       : _selectedDay = ValueNotifier(DateTime.now()),
         _selectedDatetime = ValueNotifier(null);
@@ -61,12 +70,14 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
     } else {
       _selectedDatetime.value = null;
     }
+    timeFormat = _preferencesRepository.timeFormat;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
     return ValueListenableBuilder<DateTime>(
       valueListenable: _selectedDay,
@@ -101,16 +112,14 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
               dowTextFormatter: (date, locale) {
                 return DateFormat("E").format(date).substring(0, 1);
               },
-              weekdayStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: ColorsExt.grey3(context),
-              ),
-              weekendStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: ColorsExt.grey3(context),
-              ),
+              weekdayStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: ColorsExt.grey600(context),
+                  ),
+              weekendStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: ColorsExt.grey600(context),
+                  ),
             ),
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, day, focusedDay) {
@@ -119,11 +128,10 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                   child: Center(
                     child: Text(
                       DateFormat("d").format(day),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey2(context),
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: ColorsExt.grey800(context),
+                          ),
                     ),
                   ),
                 );
@@ -140,11 +148,10 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                   child: Center(
                     child: Text(
                       DateFormat("d").format(day),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey3(context),
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: ColorsExt.grey600(context),
+                          ),
                     ),
                   ),
                 );
@@ -163,24 +170,24 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                           quarterTurns: 2,
                           child: SvgPicture.asset(
                             Assets.images.icons.common.chevronRightSVG,
-                            width: 20,
-                            height: 20,
-                            color: ColorsExt.grey2(context),
+                            width: Dimension.chevronIconSize,
+                            height: Dimension.chevronIconSize,
+                            color: ColorsExt.grey600(context),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: Dimension.padding),
                       DateDisplay(date: day),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: Dimension.padding),
                       InkWell(
                         onTap: () {
                           _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
                         },
                         child: SvgPicture.asset(
                           Assets.images.icons.common.chevronRightSVG,
-                          width: 20,
-                          height: 20,
-                          color: ColorsExt.grey2(context),
+                          width: Dimension.chevronIconSize,
+                          height: Dimension.chevronIconSize,
+                          color: ColorsExt.grey600(context),
                         ),
                       )
                     ],
@@ -189,7 +196,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
               },
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Dimension.padding),
           Visibility(
             visible: widget.showTime,
             replacement: const SizedBox(),
@@ -199,7 +206,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                 SizedBox(
                   height: 60,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -230,24 +237,26 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                     child: Text(
                                       selectedTime == null
                                           ? t.addTask.addTime
-                                          : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
-                                              selectedDate.day, selectedTime.hour, selectedTime.minute)),
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: ColorsExt.grey2(context),
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                          : DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime(
+                                              selectedDate.year,
+                                              selectedDate.month,
+                                              selectedDate.day,
+                                              selectedTime.hour,
+                                              selectedTime.minute)),
+                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            color: ColorsExt.grey800(context),
+                                          ),
                                     ));
                               },
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: Dimension.padding),
                             if (widget.showRepeat)
                               InkWell(
                                 onTap: () {
-                                  var cubit = context.read<EditTaskCubit>();
-                                  cubit.recurrenceTap();
                                   Task updatedTask = context.read<EditTaskCubit>().state.updatedTask;
-                                  print('UPDATED TASK: $updatedTask');
+                                  var cubit = context.read<EditTaskCubit>()..attachTask(updatedTask);
+                                  cubit.recurrenceTap();
 
                                   showCupertinoModalBottomSheet(
                                     context: context,
@@ -257,6 +266,11 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       },
                                       selectedRecurrence: updatedTask.recurrenceComputed,
                                       rule: updatedTask.ruleFromStringList,
+                                      taskDatetime: updatedTask.datetime != null
+                                          ? DateTime.parse(updatedTask.datetime!)
+                                          : updatedTask.date != null
+                                              ? DateTime.parse(updatedTask.date!)
+                                              : DateTime.now(),
                                     ),
                                   );
                                 },
@@ -264,55 +278,69 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                   children: [
                                     SvgPicture.asset(
                                       Assets.images.icons.common.repeatSVG,
-                                      width: 20,
-                                      height: 20,
-                                      color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                          ? ColorsExt.grey2(context)
-                                          : ColorsExt.grey3(context),
+                                      width: Dimension.defaultIconSize,
+                                      height: Dimension.defaultIconSize,
+                                      color: context.read<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                              context.read<EditTaskCubit>().state.updatedTask.recurrence!.isNotEmpty
+                                          ? ColorsExt.grey800(context)
+                                          : ColorsExt.grey600(context),
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: Dimension.paddingS),
                                     Text(
                                       t.editTask.repeat,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                            ? ColorsExt.grey2(context)
-                                            : ColorsExt.grey3(context),
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                context.watch<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                                        context
+                                                            .read<EditTaskCubit>()
+                                                            .state
+                                                            .updatedTask
+                                                            .recurrence!
+                                                            .isNotEmpty
+                                                    ? ColorsExt.grey800(context)
+                                                    : ColorsExt.grey600(context),
+                                          ),
                                     ),
                                   ],
                                 ),
                               ),
                           ],
                         ),
-                        const SizedBox(width: 16),
-                        InkWell(
-                          onTap: () {
-                            DateTime date = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                            );
-
-                            DateTime? datetime;
-
-                            if (_selectedDatetime.value != null) {
-                              datetime = DateTime(
+                        const SizedBox(width: Dimension.padding),
+                        SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              DateTime date = DateTime(
                                 selectedDate.year,
                                 selectedDate.month,
                                 selectedDate.day,
-                                _selectedDatetime.value!.hour,
-                                _selectedDatetime.value!.minute,
                               );
-                            }
 
-                            widget.onConfirm(date, datetime);
+                              DateTime? datetime;
 
-                            Navigator.pop(context);
-                          },
-                          child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
-                              width: 24, height: 24, color: ColorsExt.akiflow(context)),
+                              if (_selectedDatetime.value != null) {
+                                datetime = DateTime(
+                                  selectedDate.year,
+                                  selectedDate.month,
+                                  selectedDate.day,
+                                  _selectedDatetime.value!.hour,
+                                  _selectedDatetime.value!.minute,
+                                );
+                              }
+
+                              widget.onConfirm(date, datetime);
+
+                              Navigator.pop(context);
+                            },
+                            icon: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
+                                width: Dimension.chevronIconSize,
+                                height: Dimension.chevronIconSize,
+                                color: ColorsExt.akiflow500(context)),
+                          ),
                         ),
                       ],
                     ),

@@ -6,10 +6,11 @@ class TaskRowDragMode extends TaskRow {
   TaskRowDragMode(Task task, {Key? key})
       : super(
           key: key,
+          color: null,
           completedClick: () {},
           selectTask: () {},
           task: task.copyWith(selected: true),
-          showLabel: false,
+          showLabel: true,
           showPlanInfo: false,
           hideInboxLabel: true,
           swipeActionPlanClick: () {},

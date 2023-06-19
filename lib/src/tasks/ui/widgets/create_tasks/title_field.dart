@@ -39,24 +39,21 @@ class TitleField extends StatelessWidget {
             maxLines: null,
             keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.zero,
-              isDense: true,
-              hintText: t.addTask.titleHint,
-              border: InputBorder.none,
-              hintStyle: TextStyle(
-                color: ColorsExt.grey3(context),
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+                contentPadding: EdgeInsets.zero,
+                isDense: true,
+                hintText: t.addTask.titleHint,
+                border: InputBorder.none,
+                hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: ColorsExt.grey600(context),
+                      fontWeight: FontWeight.w500,
+                    )),
             onTap: () {
               print('On tap');
             },
-            style: TextStyle(
-              color: ColorsExt.grey2(context),
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: ColorsExt.grey800(context),
+                  fontWeight: FontWeight.w500,
+                ),
           );
         });
   }

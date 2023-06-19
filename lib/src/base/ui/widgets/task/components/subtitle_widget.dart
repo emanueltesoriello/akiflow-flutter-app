@@ -28,46 +28,48 @@ class Subtitle extends StatelessWidget {
         children: [
           Builder(builder: (context) {
             if (doc != null) {
-              return Row(
-                children: [
-                  SvgPicture.asset(
-                    Assets.images.icons.common.arrowTurnDownRightSVG,
-                    color: ColorsExt.grey3(context),
-                    width: 16,
-                    height: 16,
-                  ),
-                  const SizedBox(width: 4.5),
-                  ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 16, maxHeight: 16),
-                      child: SvgPicture.asset(task.computedIcon(), width: 16, height: 16)),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        return Text(
-                          doc!.getLinkedContentSummary().toString().parseHtmlString ?? doc.url ?? '',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: ColorsExt.grey3(context),
-                            height: 1,
-                          ),
-                        );
-                      },
+              return SizedBox(
+                height: 24,
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      Assets.images.icons.common.arrowTurnDownRightSVG,
+                      color: ColorsExt.grey600(context),
+                      width: 16,
+                      height: 16,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 4.5),
+                    ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 16, maxHeight: 16),
+                        child: SvgPicture.asset(task.computedIcon(), width: 16, height: 16)),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          return Text(
+                            doc!.getLinkedContentSummary().toString().parseHtmlString ?? doc.url ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.copyWith(color: ColorsExt.grey600(context), height: 1),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               );
             } else if (task.descriptionParsed.isNotEmpty) {
-              return Container(
+              return SizedBox(
                 height: 24,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
                       Assets.images.icons.common.arrowTurnDownRightSVG,
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                       width: 16,
                       height: 16,
                     ),
@@ -76,11 +78,8 @@ class Subtitle extends StatelessWidget {
                         child: Text(
                       task.descriptionParsed,
                       maxLines: 1,
-                      style: TextStyle(
-                        height: 1,
-                        fontSize: 15,
-                        color: ColorsExt.grey3(context),
-                      ),
+                      style:
+                          Theme.of(context).textTheme.bodyText1?.copyWith(height: 1, color: ColorsExt.grey600(context)),
                     )),
                   ],
                 ),
@@ -100,7 +99,7 @@ class Subtitle extends StatelessWidget {
               return Row(children: [
                 SvgPicture.asset(
                   Assets.images.icons.common.arrowTurnDownRightSVG,
-                  color: ColorsExt.grey3(context),
+                  color: ColorsExt.grey600(context),
                   width: 16,
                   height: 16,
                 ),
@@ -143,11 +142,10 @@ class Subtitle extends StatelessWidget {
                           text,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            height: 1,
-                            fontSize: 15,
-                            color: ColorsExt.grey3(context),
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.copyWith(height: 1, color: ColorsExt.grey600(context)),
                         ),
                       )
                     ],

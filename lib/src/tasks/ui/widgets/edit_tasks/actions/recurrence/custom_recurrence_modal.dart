@@ -5,6 +5,7 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/end_selection_modal.dart';
@@ -67,8 +68,8 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
         decoration: const BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -86,35 +87,33 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                     width: 28,
                     height: 28,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimension.paddingS),
                   Text(
                     '${t.editTask.custom} ${t.editTask.repeat}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey800(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),
               const SizedBox(
-                height: 12.0,
+                height: Dimension.padding,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       t.editTask.recurrence.every,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey2(context),
-                      ),
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            color: ColorsExt.grey800(context),
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+                      padding: const EdgeInsets.only(left: Dimension.padding, right: Dimension.paddingS),
                       child: Container(
                         constraints: const BoxConstraints(
                           minHeight: 40,
@@ -123,9 +122,9 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                           maxWidth: 40,
                         ),
                         decoration: BoxDecoration(
-                            color: ColorsExt.grey7(context),
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: ColorsExt.grey4(context))),
+                            color: ColorsExt.grey50(context),
+                            borderRadius: BorderRadius.circular(Dimension.radiusS),
+                            border: Border.all(color: ColorsExt.grey300(context))),
                         child: TextField(
                           controller: intervalController,
                           maxLines: 1,
@@ -138,11 +137,10 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                             isDense: true,
                           ),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
-                          ),
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                color: ColorsExt.grey800(context),
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ),
                     ),
@@ -166,17 +164,16 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                           minWidth: 90,
                         ),
                         decoration: BoxDecoration(
-                            color: ColorsExt.grey7(context),
+                            color: ColorsExt.grey50(context),
                             borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: ColorsExt.grey4(context))),
+                            border: Border.all(color: ColorsExt.grey300(context))),
                         child: Center(
                           child: Text(
                             _frequency(),
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  color: ColorsExt.grey800(context),
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                         ),
                       ),
@@ -186,14 +183,13 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
               ),
               const Separator(),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.paddingS),
                 child: Text(
                   t.editTask.recurrence.selectedDays,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: ColorsExt.grey2(context),
-                  ),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                        color: ColorsExt.grey800(context),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
               ),
               Row(
@@ -209,7 +205,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 ],
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Separator(),
               ),
               Row(
@@ -217,14 +213,13 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 children: [
                   Text(
                     t.editTask.recurrence.ends,
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          color: ColorsExt.grey800(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+                    padding: const EdgeInsets.only(left: Dimension.padding, right: Dimension.paddingS),
                     child: InkWell(
                       onTap: () {
                         showCupertinoModalBottomSheet(
@@ -245,17 +240,16 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                           minWidth: 77,
                         ),
                         decoration: BoxDecoration(
-                            color: ColorsExt.grey7(context),
+                            color: ColorsExt.grey50(context),
                             borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: ColorsExt.grey4(context))),
+                            border: Border.all(color: ColorsExt.grey300(context))),
                         child: Center(
                           child: Text(
                             _endOption(),
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  color: ColorsExt.grey800(context),
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                         ),
                       ),
@@ -282,17 +276,16 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                           minWidth: 130,
                         ),
                         decoration: BoxDecoration(
-                            color: ColorsExt.grey7(context),
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: ColorsExt.grey4(context))),
+                            color: ColorsExt.grey50(context),
+                            borderRadius: BorderRadius.circular(Dimension.radiusS),
+                            border: Border.all(color: ColorsExt.grey300(context))),
                         child: Center(
                           child: Text(
                             DateFormat("dd MMM yyyy").format(ends!.toLocal()),
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  color: ColorsExt.grey800(context),
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                         ),
                       ),
@@ -301,7 +294,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
+                          padding: const EdgeInsets.only(right: Dimension.paddingS),
                           child: Container(
                             constraints: const BoxConstraints(
                               minHeight: 40,
@@ -310,9 +303,9 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                               maxWidth: 40,
                             ),
                             decoration: BoxDecoration(
-                                color: ColorsExt.grey7(context),
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(color: ColorsExt.grey4(context))),
+                                color: ColorsExt.grey50(context),
+                                borderRadius: BorderRadius.circular(Dimension.radius),
+                                border: Border.all(color: ColorsExt.grey300(context))),
                             child: TextField(
                               controller: countController,
                               maxLines: 1,
@@ -325,28 +318,26 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                                 isDense: true,
                               ),
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                                color: ColorsExt.grey2(context),
-                              ),
+                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    color: ColorsExt.grey800(context),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                           ),
                         ),
                         Text(
                           t.editTask.recurrence.times,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
-                          ),
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                color: ColorsExt.grey800(context),
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ],
                     ),
                 ],
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: EdgeInsets.only(top: Dimension.padding, bottom: Dimension.padding),
                 child: Separator(),
               ),
               Row(
@@ -361,22 +352,21 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                           minHeight: 46,
                         ),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: ColorsExt.grey5(context))),
+                            borderRadius: BorderRadius.circular(Dimension.radius),
+                            border: Border.all(color: ColorsExt.grey200(context))),
                         child: Center(
                           child: Text(
                             t.cancel,
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400,
-                              color: ColorsExt.grey3(context),
-                            ),
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  color: ColorsExt.grey600(context),
+                                  fontWeight: FontWeight.w400,
+                                ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10.0),
+                  const SizedBox(width: Dimension.paddingS),
                   Expanded(
                     child: InkWell(
                       onTap: () {
@@ -399,16 +389,15 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                           minHeight: 46,
                         ),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: ColorsExt.grey4(context))),
+                            borderRadius: BorderRadius.circular(Dimension.radius),
+                            border: Border.all(color: ColorsExt.grey300(context))),
                         child: Center(
                           child: Text(
                             t.confirm,
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400,
-                              color: ColorsExt.grey2(context),
-                            ),
+                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  color: ColorsExt.grey800(context),
+                                  fontWeight: FontWeight.w400,
+                                ),
                           ),
                         ),
                       ),
@@ -477,17 +466,16 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
           minWidth: 40,
         ),
         decoration: BoxDecoration(
-          color: selectedDays[index] ? ColorsExt.grey5(context) : ColorsExt.grey6(context),
+          color: selectedDays[index] ? ColorsExt.grey200(context) : ColorsExt.grey100(context),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: selectedDays[index] ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-            ),
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  color: selectedDays[index] ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ),
       ),

@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:models/label/label.dart';
 
 class LabelTitle extends StatelessWidget {
@@ -20,14 +20,11 @@ class LabelTitle extends StatelessWidget {
     return Wrap(
       children: [
         const SizedBox(width: 8),
-        Text(
-          label.title ?? '(No title)',
-          style: TextStyle(
-            fontSize: 17,
-            overflow: TextOverflow.ellipsis,
-            color: label.id != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
-          ),
-        ),
+        Text(label.title ?? '(No title)',
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  overflow: TextOverflow.ellipsis,
+                  color: label.id != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                )),
         Builder(builder: (context) {
           if (folder == null) {
             return const SizedBox();
@@ -35,16 +32,15 @@ class LabelTitle extends StatelessWidget {
 
           return Row(
             children: [
-              const SizedBox(width: 12),
+              const SizedBox(width: Dimension.padding),
               SvgPicture.asset(Assets.images.icons.common.folderSVG,
-                  width: 16, height: 16, color: ColorsExt.grey3(context)),
-              const SizedBox(width: 4),
+                  width: 16, height: 16, color: ColorsExt.grey600(context)),
+              const SizedBox(width: Dimension.paddingXS),
               Text(
                 folder?.title ?? "",
-                style: TextStyle(
-                  fontSize: 15,
-                  color: ColorsExt.grey3(context),
-                ),
+                style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                      color: ColorsExt.grey600(context),
+                    ),
               ),
             ],
           );

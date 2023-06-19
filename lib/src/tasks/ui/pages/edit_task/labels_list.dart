@@ -4,10 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/bordered_input_view.dart';
 import 'package:mobile/src/base/ui/widgets/label/label_item.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
-import 'package:mobile/src/settings/ui/widgets/folder_item.dart';
+import 'package:mobile/src/base/ui/widgets/base/folder_item.dart';
 import 'package:models/label/label.dart';
 
 class LabelsList extends StatefulWidget {
@@ -110,26 +111,25 @@ class _LabelsListState extends State<LabelsList> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: count,
-      separatorBuilder: (context, index) => const SizedBox(height: 4),
+      separatorBuilder: (context, index) => const SizedBox(height: Dimension.paddingXS),
       itemBuilder: (context, index) {
         if (widget.showHeaders) {
           if (index == 0) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: Dimension.padding),
               child: Text(
                 t.editTask.assignLabel,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
-                ),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: ColorsExt.grey800(context),
+                    ),
               ),
             );
           }
 
           if (index == 1) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: Dimension.padding),
               child: BorderedInputView(
                 hint: t.editTask.searchALabel,
                 onChanged: (value) {
@@ -208,7 +208,7 @@ class _LabelsListState extends State<LabelsList> {
                       open ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
                       width: 16,
                       height: 16,
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                     ),
                   );
                 },

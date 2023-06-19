@@ -25,7 +25,7 @@ class IconBadge extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: ColorsExt.akiflow(context),
+            color: ColorsExt.akiflow500(context),
           ),
           height: 16,
           width: 16,

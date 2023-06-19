@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/widgets/integrations_list.dart';
@@ -24,7 +25,7 @@ class ReconnectIntegrations extends StatelessWidget {
           child: SafeArea(
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(Dimension.padding),
                 child: Column(
                   children: [
                     SizedBox(height: 111 - MediaQuery.of(context).padding.top),
@@ -33,22 +34,23 @@ class ReconnectIntegrations extends StatelessWidget {
                       children: [
                         SvgPicture.asset(Assets.images.icons.google.gmailShadowSVG, width: 56, height: 56),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                           child: RotatedBox(
                             quarterTurns: 2,
                             child: SvgPicture.asset(Assets.images.icons.common.arrowLeftSVG,
-                                color: ColorsExt.akiflow(context)),
+                                color: ColorsExt.akiflow500(context)),
                           ),
                         ),
                         SvgPicture.asset(Assets.images.logo.logoFullSVG, width: 56, height: 56),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      t.onboarding.gmail.reconnectGmailAccount,
-                      style: TextStyle(fontSize: 20, color: ColorsExt.grey1(context), fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 48),
+                    const SizedBox(height: Dimension.padding),
+                    Text(t.onboarding.gmail.reconnectGmailAccount,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey900(context))),
+                    const SizedBox(height: Dimension.paddingL),
                     BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(
                       builder: (context, state) {
                         return IntegrationsList(
@@ -80,14 +82,13 @@ class ReconnectIntegrations extends StatelessWidget {
                     ),
                     const Spacer(),
                     TextButton(
-                        onPressed: () {
-                          context.read<IntegrationsCubit>().skipForNowTap();
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          t.onboarding.gmail.skipForNow,
-                          style: TextStyle(fontSize: 15, color: ColorsExt.grey2(context)),
-                        )),
+                      onPressed: () {
+                        context.read<IntegrationsCubit>().skipForNowTap();
+                        Navigator.pop(context);
+                      },
+                      child: Text(t.onboarding.gmail.skipForNow,
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context))),
+                    ),
                   ],
                 ),
               ),

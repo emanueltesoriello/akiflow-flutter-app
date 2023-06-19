@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/common/style/sizes.dart';
 import '../../../../../common/style/colors.dart';
 
 class PriorityItem extends StatelessWidget {
-  const PriorityItem({Key? key, required this.asset, required this.title, required this.onSelect, required this.hint}) : super(key: key);
+  const PriorityItem({Key? key, required this.asset, required this.title, required this.onSelect, required this.hint})
+      : super(key: key);
   final String asset;
   final String title;
   final String hint;
@@ -13,7 +15,7 @@ class PriorityItem extends StatelessWidget {
     return InkWell(
       onTap: onSelect,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(Dimension.paddingS),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -23,7 +25,7 @@ class PriorityItem extends StatelessWidget {
                   height: 26,
                   width: 26,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(Dimension.radiusS),
                   ),
                   child: Center(
                     child: SvgPicture.asset(
@@ -34,23 +36,21 @@ class PriorityItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  width: 10,
+                  width: Dimension.paddingS,
                 ),
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: ColorsExt.grey2(context),
-                  ),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                        color: ColorsExt.grey800(context),
+                      ),
                 ),
               ],
             ),
             Text(
               hint,
-              style: TextStyle(
-                fontSize: 17,
-                color: ColorsExt.grey3(context),
-              ),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: ColorsExt.grey600(context),
+                  ),
             ),
           ],
         ),

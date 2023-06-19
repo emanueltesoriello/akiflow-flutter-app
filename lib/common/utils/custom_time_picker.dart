@@ -426,13 +426,14 @@ class _MinuteControl extends StatelessWidget {
 
 Widget decoratedBox(Widget child, _TimePickerFragmentContext context) {
   return Container(
-      width: 100,
+      width: 95,
+      height: 75,
       margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
-          color: ColorsLight.grey7,
-          border: Border.all(color: ColorsLight.grey5),
-          borderRadius: BorderRadius.circular(10)),
+          color: ColorsLight.grey50,
+          border: Border.all(color: ColorsLight.grey200),
+          borderRadius: BorderRadius.circular(8)),
       child: Center(child: child));
 }
 
@@ -726,13 +727,7 @@ class _TimePickerHeader extends StatelessWidget {
     // These font sizes aren't listed in the spec explicitly. I worked them out
     // by measuring the text using a screen ruler and comparing them to the
     // screen shots of the time picker in the spec.
-    switch (orientation) {
-      case Orientation.landscape:
-        return headerTextTheme.headline3!.copyWith(fontSize: 50.0);
-      case Orientation.portrait:
-      default:
-        return headerTextTheme.headline2!.copyWith(fontSize: 60.0);
-    }
+    return headerTextTheme.headline2!.copyWith(fontSize: 50.0);
   }
 
   @override
@@ -774,12 +769,12 @@ class _TimePickerHeader extends StatelessWidget {
     Color inactiveColor;
     switch (themeData.primaryColorBrightness) {
       case Brightness.light:
-        activeColor = ColorsExt.akiflow(context);
+        activeColor = ColorsExt.akiflow500(context);
         inactiveColor = Colors.black54;
         break;
       case Brightness.dark:
       default:
-        activeColor = ColorsExt.akiflow(context);
+        activeColor = ColorsExt.akiflow500(context);
         inactiveColor = Colors.white70;
         break;
     }
@@ -887,7 +882,7 @@ class _DialPainter extends CustomPainter {
     final double radius = size.shortestSide / 2.0;
     final Offset center = Offset(size.width / 2.0, size.height / 2.0);
     final Offset centerPoint = center;
-    canvas.drawCircle(centerPoint, radius + 1, Paint()..color = ColorsLight.grey5);
+    canvas.drawCircle(centerPoint, radius + 1, Paint()..color = ColorsLight.grey200);
     canvas.drawCircle(centerPoint, radius, Paint()..color = backgroundColor);
 
     const double labelPadding = 24.0;
@@ -1376,7 +1371,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     Color backgroundColor;
     switch (themeData.brightness) {
       case Brightness.light:
-        backgroundColor = ColorsExt.grey7(context);
+        backgroundColor = ColorsExt.grey50(context);
         break;
       case Brightness.dark:
       default:

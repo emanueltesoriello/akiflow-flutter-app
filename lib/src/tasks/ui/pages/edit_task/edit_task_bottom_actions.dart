@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
@@ -60,7 +61,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               isBig: true,
               isSquare: true,
               backgroundColor:
-                  task.priority != null && task.priority != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                  task.priority != null && task.priority != 0 ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
               active: task.priority != null && task.priority != 0,
               onPressed: () async {
                 PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
@@ -83,8 +84,9 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               icon: Assets.images.icons.common.targetActiveSVG,
               isBig: true,
               isSquare: true,
-              backgroundColor:
-                  task.dailyGoal != null && task.dailyGoal == 1 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              backgroundColor: task.dailyGoal != null && task.dailyGoal == 1
+                  ? ColorsExt.grey100(context)
+                  : ColorsExt.grey50(context),
               active: task.dailyGoal != null && task.dailyGoal == 1,
               onPressed: () {
                 context.read<EditTaskCubit>().toggleDailyGoal();
@@ -95,7 +97,8 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
               icon: Assets.images.icons.common.flagSVG,
               isBig: true,
               isSquare: true,
-              backgroundColor: task.dueDate != null ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+              foregroundColor: task.dueDate != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+              backgroundColor: task.dueDate != null ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
               active: task.dueDate != null,
               text: task.dueDateFormatted,
               onPressed: () {
@@ -123,7 +126,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                 );
               },
             ),
-            const SizedBox(width: 11),
+            const SizedBox(width: Dimension.paddingS),
             Builder(builder: (context) {
               bool active = false;
 
@@ -139,7 +142,8 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
                 isBig: true,
                 isSquare: true,
                 active: active,
-                backgroundColor: active ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
+                foregroundColor: active ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                backgroundColor: active ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
                 onPressed: () async {
                   var cubit = context.read<EditTaskCubit>();
 
@@ -162,7 +166,7 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
             }),
           ]),
           Padding(
-            padding: const EdgeInsets.only(right: 4.0),
+            padding: const EdgeInsets.only(right: Dimension.paddingXS),
             child: _menu(context),
           ),
         ],
@@ -174,19 +178,20 @@ class _EditTaskBottomActionsState extends State<EditTaskBottomActions> {
     return Theme(
       data: Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
       child: PopupMenuButton<EditTaskAdditionalAction>(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
         icon: Container(
           height: 32,
           width: 32,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(3),
-            color: ColorsExt.grey6(context),
+            color: ColorsExt.grey100(context),
           ),
           child: Center(
             child: SvgPicture.asset(
               Assets.images.icons.common.ellipsisSVG,
               width: 22,
               height: 22,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
           ),
         ),

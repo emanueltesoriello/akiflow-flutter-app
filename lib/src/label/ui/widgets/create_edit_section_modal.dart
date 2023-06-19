@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/label/label.dart';
 
@@ -40,20 +41,20 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
             constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.1),
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(Dimension.padding),
+                topRight: Radius.circular(Dimension.padding),
               ),
               child: Container(
                 color: Theme.of(context).backgroundColor,
                 margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                     child: Column(
                       children: [
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimension.padding),
                         const ScrollChip(),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: Dimension.padding),
                         Row(
                           children: [
                             Expanded(
@@ -65,17 +66,15 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                                   isDense: true,
                                   hintText: t.label.sectionTitle,
                                   border: InputBorder.none,
-                                  hintStyle: TextStyle(
-                                    color: ColorsExt.grey3(context),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  hintStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: ColorsExt.grey600(context),
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                 ),
-                                style: TextStyle(
-                                  color: ColorsExt.grey2(context),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      color: ColorsExt.grey600(context),
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                 onChanged: (value) {
                                   section.value = section.value.copyWith(title: value);
                                 },
@@ -87,18 +86,18 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                                 onTap: () {
                                   Navigator.pop(context, section.value);
                                 },
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(Dimension.radius),
                                 child: Material(
                                   color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(Dimension.radius),
                                   child: SizedBox(
-                                    height: 36,
-                                    width: 36,
+                                    height: Dimension.mediumIconSize,
+                                    width: Dimension.mediumIconSize,
                                     child: Center(
                                       child: SvgPicture.asset(
                                         Assets.images.icons.common.arrowUpSVG,
-                                        width: 24,
-                                        height: 24,
+                                        width: Dimension.chevronIconSize,
+                                        height: Dimension.chevronIconSize,
                                         color: Theme.of(context).backgroundColor,
                                       ),
                                     ),

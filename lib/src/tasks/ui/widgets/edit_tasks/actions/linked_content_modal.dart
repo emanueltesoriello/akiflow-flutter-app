@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -48,19 +49,19 @@ class LinkedContentModal extends StatelessWidget {
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.paddingM),
           ),
           child: Wrap(
             children: [
               ListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                 children: [
-                  const SizedBox(height: 12),
+                  const SizedBox(height: Dimension.padding),
                   const ScrollChip(),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: Dimension.padding),
                   Column(
                     children: [
                       SizedBox(
@@ -78,8 +79,10 @@ class LinkedContentModal extends StatelessWidget {
                                 doc.getLinkedContentSummary(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                               ),
                             ),
                           ],
@@ -116,10 +119,26 @@ class LinkedContentModal extends StatelessWidget {
               ),
               Container(height: 10),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ButtonList(
-                    leadingTextIconAsset: Assets.images.icons.common.arrowUpRightSquareSVG,
-                    title: t.linkedContent.open,
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                child: OutlinedButton(
+                    style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+                        backgroundColor: MaterialStateProperty.all((Colors.transparent)),
+                        minimumSize: MaterialStateProperty.all(const Size(double.infinity, Dimension.buttonHeight))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          Assets.images.icons.common.arrowUpRightSquareSVG,
+                          color: ColorsExt.grey800(context),
+                        ),
+                        const SizedBox(width: Dimension.paddingS),
+                        Text(
+                          t.linkedContent.open,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                     onPressed: () {
                       task.openLinkedContentUrl(doc);
                     }),
@@ -148,18 +167,21 @@ class LinkedContentModal extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title.isEmpty ? '-' : title, style: TextStyle(fontSize: 17, color: ColorsExt.grey3(context))),
-            const SizedBox(width: 8),
+            Text(
+              title.isEmpty ? '-' : title,
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey600(context)),
+            ),
+            const SizedBox(width: Dimension.paddingS),
             Expanded(
               child: Text(value.isEmpty ? '-' : value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context))),
+                  style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context))),
             ),
             syncing
                 ? SvgPicture.asset(
                     Assets.images.icons.common.syncingSVG,
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                     width: 18,
                     height: 18,
                   )

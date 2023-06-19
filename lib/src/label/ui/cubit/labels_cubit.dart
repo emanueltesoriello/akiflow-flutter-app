@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -6,12 +7,18 @@ import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
+import 'package:mobile/src/label/ui/widgets/create_edit_label_modal.dart';
+import 'package:mobile/src/label/ui/widgets/create_edit_section_modal.dart';
+import 'package:mobile/src/label/ui/widgets/delete_label_dialog.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/user.dart';
+import 'package:uuid/uuid.dart';
 
 part 'labels_state.dart';
 
@@ -207,5 +214,65 @@ class LabelsCubit extends Cubit<LabelsCubitState> {
 
   void toggleShowSomeday() {
     emit(state.copyWith(showSomeday: !state.showSomeday));
+  }
+
+  void appbarActionEditLabel(BuildContext context) async {
+    List<Label> folders = state.labels.where((label) => label.isFolder && label.deletedAt == null).toList();
+
+    Label? updated = await showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => CreateEditLabelModal(
+        label: state.selectedLabel!,
+        folders: folders,
+      ),
+    );
+    if (updated != null) {
+      saveLabel(updated);
+    }
+  }
+
+  void appbarActionNewSection(BuildContext context) async {
+    Label currentLabel = state.selectedLabel!;
+    Label newSection = Label(id: const Uuid().v4(), parentId: currentLabel.id!, type: "section");
+
+    LabelsCubit labelsCubit = context.read<LabelsCubit>();
+
+    Label? section = await showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => CreateEditSectionModal(initialSection: newSection),
+    );
+
+    if (section != null) {
+      labelsCubit.addSectionToLocalUi(section);
+      labelsCubit.addLabel(section, labelType: LabelType.section);
+    }
+  }
+
+  void appbarActionDeleteLabel(BuildContext context) async {
+    MainCubit mainCubit = context.read<MainCubit>();
+
+    Label labelToDelete = state.selectedLabel!;
+
+    showDialog(
+        context: context,
+        builder: (context) => DeleteLabelDialog(
+              labelToDelete,
+              justDeleteTheLabelClick: () {
+                delete();
+
+                Label deletedLabel = state.selectedLabel!;
+                updateLabel(deletedLabel);
+
+                mainCubit.changeHomeView(HomeViewType.inbox);
+              },
+              markAllTasksAsDoneClick: () {
+                delete(markTasksAsDone: true);
+
+                Label deletedLabel = state.selectedLabel!;
+                updateLabel(deletedLabel);
+
+                mainCubit.changeHomeView(HomeViewType.inbox);
+              },
+            ));
   }
 }

@@ -8,8 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/notifications_service.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -22,7 +21,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
-import 'package:mobile/core/preferences.dart';
 
 import '../../../base/ui/widgets/task/task_list.dart';
 import '../../../tasks/ui/pages/create_task/create_task_modal.dart';
@@ -139,7 +137,7 @@ class _LabelViewState extends State<LabelView> {
                           showCupertinoModalBottomSheet(
                             context: context,
                             builder: (context) => const CreateTaskModal(),
-                          );
+                          ).then((value) => context.read<EditTaskCubit>().onModalClose());
                         },
                         onDelete: () {
                           context.read<LabelsCubit>().deleteSection(section);
@@ -222,24 +220,48 @@ class _LabelViewState extends State<LabelView> {
                           }());
                         }
                         footer = Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                           child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
                         );
                       }
+                      List<Task> notDoneTasks = [];
+                      notDoneTasks.addAll(
+                          tasksWithoutSnoozedAndSomeday.where((task) => !task.done! || task.doneAt == null).toList());
+                      Key keyNotDoneTasks = Key("label${notDoneTasks.isNotEmpty ? notDoneTasks[0].id : ''}");
 
-                      return TaskList(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        tasks: tasksWithoutSnoozedAndSomeday,
-                        visible: labelState.openedSections[section.id] ?? false,
-                        showLabel: false,
-                        header: labelState.sections.length > 1 ? header : null,
-                        footer: footer,
-                        showPlanInfo: true,
-                        sorting: TaskListSorting.sortingLabelAscending,
+                      List<Task> doneTasks = [];
+                      doneTasks.addAll(
+                          tasksWithoutSnoozedAndSomeday.where((task) => task.done! || task.doneAt != null).toList());
+                      Key keyDoneTasks = Key("labelDone${doneTasks.isNotEmpty ? doneTasks[0].id : ''}");
+
+                      return Column(
+                        children: [
+                          TaskList(
+                            key: keyNotDoneTasks,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            tasks: notDoneTasks,
+                            visible: labelState.openedSections[section.id] ?? false,
+                            showLabel: false,
+                            header: labelState.sections.length > 1 ? header : null,
+                            footer: footer,
+                            showPlanInfo: true,
+                            sorting: TaskListSorting.sortingLabelAscending,
+                          ),
+                          TaskList(
+                            key: keyDoneTasks,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            tasks: doneTasks,
+                            visible: labelState.openedSections[section.id] ?? false,
+                            showLabel: false,
+                            showPlanInfo: true,
+                            sorting: TaskListSorting.sortingLabelAscending,
+                          ),
+                        ],
                       );
                     }).toList(),
-                    const SizedBox(height: 100)
+                    const SizedBox(height: Dimension.paddingXXL)
                   ]),
             ),
           );
@@ -270,7 +292,7 @@ class CompactInfo extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3),
-          border: Border.all(color: ColorsExt.grey5(context), width: 1),
+          border: Border.all(color: ColorsExt.grey200(context), width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -284,14 +306,17 @@ class CompactInfo extends StatelessWidget {
 
               return Row(
                 children: [
-                  SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey2(context))),
-                  const SizedBox(width: 4),
+                  SizedBox(
+                      width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey800(context))),
+                  const SizedBox(width: Dimension.paddingXS),
                 ],
               );
             }),
             Text(
               text,
-              style: TextStyle(fontSize: 13, color: ColorsExt.grey2(context)),
+              style: Theme.of(context).textTheme.caption?.copyWith(
+                    color: ColorsExt.grey800(context),
+                  ),
             ),
           ],
         ),

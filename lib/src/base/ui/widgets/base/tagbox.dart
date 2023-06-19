@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 
 class TagBox extends StatelessWidget {
   final String? icon;
   final double? iconSize;
   final String? text;
   final Color? backgroundColor;
+  final Color? borderColor;
   final Color? foregroundColor;
   final Color? iconColor;
+  final Color? textColor;
   final Function()? onPressed;
   final bool isBig;
   final bool isSquare;
@@ -20,8 +23,10 @@ class TagBox extends StatelessWidget {
     this.iconSize,
     this.text,
     this.backgroundColor,
+    this.borderColor,
     this.foregroundColor,
     this.iconColor,
+    this.textColor,
     this.onPressed,
     this.isBig = false,
     this.isSquare = false,
@@ -32,14 +37,16 @@ class TagBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 400),
         constraints: BoxConstraints(
           minHeight: isBig ? 32 : 22,
           minWidth: isSquare ? (isBig ? 32 : 22) : 0,
         ),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(Dimension.radiusS),
+          border: borderColor != null ? Border.all(color: borderColor!) : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -56,7 +63,7 @@ class TagBox extends StatelessWidget {
                   const SizedBox(width: 6),
                   SvgPicture.asset(
                     icon!,
-                    color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey3(context),
+                    color: active ? (foregroundColor ?? iconColor) : ColorsExt.grey600(context),
                     width: iconSize ?? (isBig ? 20 : 14),
                     height: iconSize ?? (isBig ? 20 : 14),
                   ),
@@ -81,7 +88,7 @@ class TagBox extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: isBig ? 15 : 13,
-                          color: foregroundColor ?? ColorsExt.grey2(context),
+                          color: textColor ?? foregroundColor ?? ColorsExt.grey800(context),
                         ),
                         textAlign: TextAlign.end,
                       ),

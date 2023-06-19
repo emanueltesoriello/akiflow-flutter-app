@@ -30,7 +30,7 @@ return /******/ (() => { // webpackBootstrap
 
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DateTimeHelper = void 0;
 var DateTimeHelper = /** @class */ (function () {
     function DateTimeHelper() {
@@ -103,7 +103,7 @@ exports.DateTimeHelper = DateTimeHelper;
 
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StringHelper = void 0;
 var StringHelper = /** @class */ (function () {
     function StringHelper() {
@@ -149,7 +149,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ChronoHelper = void 0;
 var chrono = __importStar(__webpack_require__(6215));
 var DateTimeHelper_1 = __webpack_require__(8679);
@@ -326,6 +326,10 @@ var ChronoHelper = /** @class */ (function () {
             // fix: chrono parses "any" word as "an year" wrongly
             results.filter(function (result) { return !result.text.startsWith('any'); })); }
         }, {
+            refine: function (_, results) { return (
+            // fix: chrono parses "the day" word as "tomorrow" wrongly
+            results.filter(function (result) { return result.text !== 'the day' && result.text !== 'the d'; })); }
+        }, {
             refine: function (_, results) {
                 var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
                 // Check if all these conditions are met:
@@ -372,6 +376,14 @@ var ChronoHelper = /** @class */ (function () {
                     }
                 }
                 return results;
+            }
+        }, {
+            // values with only a number followed by the single letter `s` are ignored
+            refine: function (_, results) {
+                return results.filter(function (result) {
+                    var match = result.text.match(/^\d+s$/i);
+                    return !match;
+                });
             }
         });
         var parseResults = ChronoHelper.customChrono.parse(text, forwardFrom, options)

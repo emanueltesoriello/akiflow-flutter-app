@@ -78,47 +78,14 @@ class TasksRepository extends DatabaseRepository {
     return objects;
   }
 
-  Future<List<Task>> getTodayTasks<Task>({required DateTime date}) async {
-    DateTime startTime = DateTime(date.year, date.month, date.day, 0, 0, 0);
-    DateTime endTime = startTime.add(const Duration(days: 1));
+  /*
 
-    List<Map<String, Object?>> items;
-
-    try {
-      if (date.day == DateTime.now().day && date.month == DateTime.now().month && date.year == DateTime.now().year) {
-        items = await _databaseService.database!.transaction((txn) async {
-          return await txn.rawQuery(
             """
         SELECT * FROM tasks
-        WHERE deleted_at IS NULL
+        WHERE deleted_at IS NULL 
         AND trashed_at IS NULL
         AND status = '${TaskStatusType.planned.id}'
-        AND (date <= ? OR datetime < ?)
-        ORDER BY
-          CASE
-            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
-              THEN datetime
-            ELSE
-              sorting
-          END
-""",
-            [
-              date.toUtc().toIso8601String(),
-              endTime.toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-            ],
-          );
-        });
-      } else {
-        items = await _databaseService.database!.transaction((txn) async {
-          return await txn.rawQuery(
-            """
-        SELECT * FROM tasks
-        WHERE deleted_at IS NULL
-        AND trashed_at IS NULL
-        AND status = '${TaskStatusType.planned.id}'
-        AND ((date > ? AND date < ?) OR (datetime > ? AND datetime < ?)) 
+        AND (((date > ? AND date < ?) OR (datetime > ? AND datetime < ?)) OR ((date <= ? OR datetime < ?) AND done = 0)) 
         ORDER BY
           CASE
             WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
@@ -130,6 +97,81 @@ class TasksRepository extends DatabaseRepository {
             [
               startTime.toUtc().toIso8601String(),
               endTime.toUtc().toIso8601String(),
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              DateTime.now().toUtc().toIso8601String(),
+              DateTime.now().toUtc().toIso8601String(),
+            ],
+          );
+
+  */
+
+  Future<List<Task>> getTodayTasks<Task>({required DateTime date}) async {
+    var format = DateFormat("yyyy-MM-dd");
+
+    DateTime startTime = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    DateTime endTime = startTime.add(const Duration(days: 1));
+    String startDate = format.format(startTime);
+    String endDate = format.format(endTime);
+
+    List<Map<String, Object?>> items;
+    try {
+      if (date.toLocal().day == DateTime.now().day &&
+          date.toLocal().month == DateTime.now().month &&
+          date.toLocal().year == DateTime.now().year) {
+        items = await _databaseService.database!.transaction((txn) async {
+          print('case Today');
+          //TODO search what indexes we can use on this query
+          return await txn.rawQuery(
+            """
+        SELECT * FROM tasks
+        WHERE deleted_at IS NULL 
+        AND trashed_at IS NULL
+        AND status = '${TaskStatusType.planned.id}'
+        AND (((date = ? AND datetime IS NULL) OR (datetime > ? AND datetime < ?)) OR ((date < ? OR datetime < ?) AND done = 0)) 
+        ORDER BY 
+          CASE 
+            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
+              THEN datetime
+            ELSE 
+              sorting 
+          END
+""",
+            [
+              startDate,
+              startTime.toUtc().toIso8601String(),
+              endTime.toUtc().toIso8601String(),
+              startDate,
+              endTime.toUtc().toIso8601String(),
+              DateTime.now().toUtc().toIso8601String(),
+              DateTime.now().toUtc().toIso8601String(),
+            ],
+          );
+        });
+      } else {
+        items = await _databaseService.database!.transaction((txn) async {
+          print('case not today');
+
+          return await txn.rawQuery(
+            """
+        SELECT * FROM tasks
+        WHERE deleted_at IS NULL
+        AND trashed_at IS NULL
+        AND status = '${TaskStatusType.planned.id}' 
+        AND ((date >= ? AND date <= ?) OR (datetime >= ? AND datetime < ?)) 
+        ORDER BY
+          CASE
+            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
+              THEN datetime
+            ELSE
+              sorting 
+          END
+""",
+            [
+              startDate,
+              endDate,
               startTime.toUtc().toIso8601String(),
               endTime.toUtc().toIso8601String(),
               DateTime.now().toUtc().toIso8601String(),
@@ -172,7 +214,7 @@ class TasksRepository extends DatabaseRepository {
           END
 """,
           [
-            date.toUtc().toIso8601String(),
+            date.toIso8601String(),
             endTime.toUtc().toIso8601String(),
             DateTime.now().toUtc().toIso8601String(),
             DateTime.now().toUtc().toIso8601String(),

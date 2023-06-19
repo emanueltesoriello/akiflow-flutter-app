@@ -14,15 +14,12 @@ class DateDisplay extends StatelessWidget {
     return Flexible(
       child: Container(
         constraints: const BoxConstraints(minWidth: 100),
-        child: Text(
-          DateFormat("MMMM").format(date),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-            color: ColorsExt.grey2(context),
-          ),
-        ),
+        child: Text(DateFormat("MMMM").format(date),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: ColorsExt.grey800(context),
+                )),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:models/task/task.dart';
 
@@ -9,18 +10,19 @@ class DotPrefix extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 14,
+      width: Dimension.appBarLeadingIcon,
+      height: Dimension.appBarLeadingIcon,
       child: Builder(
         builder: (context) {
           Color? color;
 
           if (task?.statusType == TaskStatusType.inbox && task?.readAt == null) {
-            color = ColorsExt.cyan(context);
+            color = ColorsExt.jordyBlue400(context);
           }
 
           try {
-            if (task?.content["expiredSnooze"] == true) {
-              color = ColorsExt.pink(context);
+            if (task?.content != null && task?.content["expiredSnooze"] == true) {
+              color = ColorsExt.rose400(context);
             }
           } catch (_) {}
 
@@ -29,14 +31,24 @@ class DotPrefix extends StatelessWidget {
           }
 
           return Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.topRight,
             child: Container(
-              width: 6,
-              height: 6,
-              margin: const EdgeInsets.only(left: 5, right: 0, top: 22),
-              decoration: BoxDecoration(
-                color: color,
+              // width: 8,
+              // height: 8,
+              decoration: const BoxDecoration(
+                color: Colors.white,
                 shape: BoxShape.circle,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
             ),
           );

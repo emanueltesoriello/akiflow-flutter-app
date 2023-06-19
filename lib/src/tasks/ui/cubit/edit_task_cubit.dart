@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/assets.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -103,8 +101,19 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         return;
       }
       DateTime now = DateTime.now();
+      String? date;
+      try {
+        var format = DateFormat("yyyy-MM-dd");
+
+        DateTime dtDate = DateTime.parse(state.updatedTask.date!);
+        date = format.format(dtDate);
+      } catch (e) {
+        print(e);
+      }
+
       Task updated = state.updatedTask.copyWith(
         id: const Uuid().v4(),
+        date: Nullable(date),
         title: state.updatedTask.title,
         description: state.updatedTask.description,
         createdAt: TzUtils.toUtcStringIfNotNull(now),
@@ -207,13 +216,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
   void setDuration(int? seconds, {bool fromModal = false}) {
     if (seconds != null) {
       emit(state.copyWith(selectedDuration: seconds.toDouble()));
-      Duration duration = Duration(seconds: seconds);
-
-      String text = "${duration.inHours}:${duration.inMinutes.remainder(60)}";
-
-      if (state.openedDurationfromNLP && fromModal == true) {
-        onDurationDetected(Duration(seconds: seconds), text);
-      }
 
       Task task = state.updatedTask;
 
@@ -264,47 +266,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
-  onLabelDetected(Label label, String value) {
-    simpleTitleController.text = simpleTitleController.text + (label.title ?? "");
-    Color bg = ColorsExt.getFromName(label.color!).withOpacity(0.2);
-    if (simpleTitleController.hasParsedLabel() && !simpleTitleController.isRemoved(value)) {
-      simpleTitleController.removeMapping(1);
-      simpleTitleController.addMapping({
-        "#$value": MapType(1, TextStyle(backgroundColor: bg)),
-      });
-    } else if (!simpleTitleController.isRemoved(value)) {
-      simpleTitleController.addMapping({
-        "#$value": MapType(
-            1,
-            TextStyle(
-              backgroundColor: bg,
-            )),
-      });
-    }
-  }
-
-  onDurationDetected(Duration duration, String value) {
-    simpleTitleController.text = simpleTitleController.text + value;
-    if (simpleTitleController.hasParsedDuration() && !simpleTitleController.isRemoved(value)) {
-      simpleTitleController.removeMapping(3);
-      simpleTitleController.addMapping({
-        "=$value": const MapType(
-            3,
-            TextStyle(
-              backgroundColor: ColorsLight.cyan25,
-            )),
-      });
-    } else if (!simpleTitleController.isRemoved(value)) {
-      simpleTitleController.addMapping({
-        "=$value": const MapType(
-            3,
-            TextStyle(
-              backgroundColor: ColorsLight.cyan25,
-            )),
-      });
-    }
-  }
-
   Future<void> setLabel(Label label, {bool forceUpdate = false}) async {
     Task updated = state.updatedTask.copyWith(
       listId: Nullable(label.id),
@@ -323,10 +284,27 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     AnalyticsService.track("Edit Task Label");
   }
 
-  Future<void> markAsDone({bool forceUpdate = false}) async {
+  Future<void> markAsDone(
+      {bool forceUpdate = false, bool forceMarkAsDoneRemote = false, bool forceArchiveRemote = false}) async {
     Task task = state.updatedTask;
 
     Task updated = task.markAsDone(state.originalTask);
+
+    bool markAsDoneRemote = forceMarkAsDoneRemote ? true : await _tasksCubit.shouldMarkAsDoneRemote(updated);
+    if (markAsDoneRemote) {
+      dynamic content = updated.content ?? {};
+      content['shouldMarkAsDoneRemote'] = updated.done!;
+      updated = updated.copyWith(content: content);
+    }
+
+    if (task.connectorId?.value == 'trello') {
+      bool shouldArchiveRemote = forceArchiveRemote ? true : await _tasksCubit.shouldArchiveRemote(updated);
+      if (shouldArchiveRemote) {
+        dynamic content = updated.content ?? {};
+        content['shouldArchiveRemote'] = true;
+        updated = updated.copyWith(content: content);
+      }
+    }
 
     emit(state.copyWith(updatedTask: updated));
 
@@ -340,6 +318,10 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     }
 
     _tasksCubit.handleDocAction([updated]);
+
+    if (updated.isCompletedComputed) {
+      _tasksCubit.setLastTaskDoneAt();
+    }
 
     if (updated.isCompletedComputed) {
       AnalyticsService.track("Task Done");
@@ -730,7 +712,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         nlpDateTime.textWithDate!: MapType(
             0,
             TextStyle(
-              color: ColorsExt.akiflow20(context),
+              color: ColorsExt.akiflow200(context),
             )),
       });
 
@@ -740,7 +722,7 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         nlpDateTime.textWithDate!: MapType(
             0,
             TextStyle(
-              color: ColorsExt.akiflow20(context),
+              color: ColorsExt.akiflow200(context),
             )),
       });
       planWithNLP(nlpDateTime);
@@ -754,6 +736,11 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     );
 
     emit(state.copyWith(updatedTask: updated));
+  }
+
+  void onModalClose() {
+    print('onModalClose');
+    emit(state.copyWith(showDuration: false, showLabelsList: false, showPriority: false));
   }
 
   void addLink(String newLink) {
