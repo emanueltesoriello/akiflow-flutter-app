@@ -1,11 +1,19 @@
 class Assets {
   Assets._();
 
+  static final animations = _AssetsAnimations._();
   static final config = _AssetsConfig._();
   static final fonts = _AssetsFonts._();
   static final html = _AssetsHtml._();
   static final images = _AssetsImages._();
   static final sounds = _AssetsSounds._();
+}
+
+class _AssetsAnimations {
+  _AssetsAnimations._();
+
+  final inboxEmptyAnimationWEBM = 'assets/animations/inbox-empty-animation.webm';
+  final todayEmptyAnimationWEBM = 'assets/animations/today-empty-animation.webm';
 }
 
 class _AssetsConfig {
@@ -168,6 +176,7 @@ class _AssetsImagesIconsCommon {
   final lineHorizontal3DecreaseSVG = 'assets/images/icons/_common/line_horizontal_3_decrease.svg';
   final linkSVG = 'assets/images/icons/_common/link.svg';
   final lockSVG = 'assets/images/icons/_common/lock.svg';
+  final lockShieldSVG = 'assets/images/icons/_common/lock_shield.svg';
   final mapSVG = 'assets/images/icons/_common/map.svg';
   final menuSVG = 'assets/images/icons/_common/menu.svg';
   final moneyDollarCircleSVG = 'assets/images/icons/_common/money_dollar_circle.svg';

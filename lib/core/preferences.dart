@@ -105,6 +105,12 @@ abstract class PreferencesRepository {
   bool get taskCompletedSoundEnabledMobile;
   Future<void> setTaskCompletedSoundEnabledMobile(bool value);
 
+  int get timeFormat;
+  Future<void> setTimeFormat(int value);
+
+  bool get timeFormatChanged;
+  Future<void> setTimeFormatChanged(bool value);
+
   String get deviceUUID;
   Future<void> setDeviceUUID(String value);
 
@@ -116,6 +122,15 @@ abstract class PreferencesRepository {
 
   String get getLastSavedTimeZone;
   Future<void> setLastSavedTimeZone(String value);
+
+  DateTime? get lastTaskDoneAt;
+  Future<void> setLastTaskDoneAt(DateTime? value);
+
+  DateTime? get lastDayInboxZero;
+  Future<void> setLastDayInboxZero(DateTime? value);
+
+  DateTime? get lastDayTodayZero;
+  Future<void> setDayTodayZero(DateTime? value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -515,6 +530,26 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
+  int get timeFormat {
+    return _prefs.getInt("timeFormat") ?? -1;
+  }
+
+  @override
+  Future<void> setTimeFormat(int value) async {
+    await _prefs.setInt("timeFormat", value);
+  }
+
+  @override
+  bool get timeFormatChanged {
+    return _prefs.getBool("timeFormatChanged") ?? false;
+  }
+
+  @override
+  Future<void> setTimeFormatChanged(bool value) async {
+    await _prefs.setBool("timeFormatChanged", value);
+  }
+
+  @override
   String get deviceUUID {
     String? uuid = _prefs.getString("deviceUUID");
 
@@ -561,5 +596,44 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> setLastSavedTimeZone(String value) async {
     await _prefs.setString("last_saved_time_zone", value);
+  }
+
+  @override
+  DateTime? get lastDayInboxZero {
+    String? value = _prefs.getString("lastDayInboxZero");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastDayInboxZero(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastDayInboxZero", value.toIso8601String());
+    }
+  }
+
+  @override
+  DateTime? get lastDayTodayZero {
+    String? value = _prefs.getString("lastDayTodayZero");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setDayTodayZero(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastDayTodayZero", value.toIso8601String());
+    }
+  }
+
+  @override
+  DateTime? get lastTaskDoneAt {
+    String? value = _prefs.getString("lastTaskDoneAt");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastTaskDoneAt(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastTaskDoneAt", value.toIso8601String());
+    }
   }
 }

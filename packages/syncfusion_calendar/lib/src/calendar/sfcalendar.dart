@@ -10961,7 +10961,8 @@ class _AgendaDateTimePainter extends CustomPainter {
       _linePainter.color = todayHighlightColor!;
       _drawTodayCircle(canvas, xPosition, yPosition, padding);
     }
-    _textPainter.paint(canvas, Offset(xPosition, yPosition));
+    _textPainter.paint(canvas, 
+      Offset(xPosition,isToday ? yPosition:yPosition + 5));
   }
 
   void _addDayLabelForWeb(Canvas canvas, Size size, double padding,

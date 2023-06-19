@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.36.01+352
+version: 2.36.02+367
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -117,6 +117,7 @@ flutter:
     - assets/images/icons/web/
     - assets/images/icons/zapier/
     - assets/images/icons/zoom/
+    - assets/animations/
     - assets/html/
     - assets/js/chrono-custom-rules-master/
     - assets/js/chrono-custom-rules-master/dist/

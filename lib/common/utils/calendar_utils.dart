@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarUtils {
   static StartingDayOfWeek computeFirstDayOfWeekForAppbar(int firstDayOfWeek, BuildContext context) {
     if (firstDayOfWeek == -1) {
-      int systemDefault = MaterialLocalizations.of(context).firstDayOfWeekIndex;
+      int systemDefault = context.read<CalendarCubit>().state.systemStartOfWeekDay;
       switch (systemDefault) {
         case DateTime.monday:
           return StartingDayOfWeek.monday;
@@ -20,7 +24,7 @@ class CalendarUtils {
           return StartingDayOfWeek.friday;
         case DateTime.saturday:
           return StartingDayOfWeek.saturday;
-        case 0:
+        case DateTime.sunday:
           return StartingDayOfWeek.sunday;
         default:
           return StartingDayOfWeek.monday;
@@ -62,10 +66,7 @@ class CalendarUtils {
     if (firstDayOfWeek == 0) {
       return DateTime.sunday;
     } else if (firstDayOfWeek == -1) {
-      int systemDefault = MaterialLocalizations.of(context).firstDayOfWeekIndex;
-      if (systemDefault == 0) {
-        return DateTime.sunday;
-      }
+      int systemDefault = context.read<CalendarCubit>().state.systemStartOfWeekDay;
       return systemDefault;
     } else {
       return firstDayOfWeek;
@@ -81,5 +82,40 @@ class CalendarUtils {
     nonWorkingDays.add(secondLastDayOfWeek + 1);
     nonWorkingDays.add(lastWorkingDayOfWeek + 1);
     return nonWorkingDays;
+  }
+
+  static const platform = MethodChannel('com.akiflow.mobile/firstDayOfWeek');
+
+  static Future<int> retrieveSystemFirstDayOfWeek() async {
+    try {
+      final int result = await platform.invokeMethod('getFirstDayOfWeek');
+
+      int firstDayOfWeek;
+      if (Platform.isAndroid) {
+        firstDayOfWeek = convertAndroidDaysToFlutter(result);
+      } else {
+        firstDayOfWeek = convertiOSDaysToFlutter(result);
+      }
+      return firstDayOfWeek;
+    } on PlatformException catch (e) {
+      print("Failed to retrieve first day of the week: ${e.message}");
+      return DateTime.monday;
+    }
+  }
+
+  static int convertAndroidDaysToFlutter(int androidDay) {
+    if (androidDay == 1) {
+      return DateTime.sunday;
+    } else {
+      return androidDay - 1;
+    }
+  }
+
+  static int convertiOSDaysToFlutter(int iOSDay) {
+    if (iOSDay == 1) {
+      return DateTime.sunday;
+    } else {
+      return iOSDay + 1;
+    }
   }
 }

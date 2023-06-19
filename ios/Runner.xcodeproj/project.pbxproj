@@ -686,7 +686,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 348;
+				CURRENT_PROJECT_VERSION = 367;
 				DEVELOPMENT_TEAM = TA7CHTLZGM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -694,7 +694,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.35.28;
+				MARKETING_VERSION = 2.36.02;
 				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -939,7 +939,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 348;
+				CURRENT_PROJECT_VERSION = 367;
 				DEVELOPMENT_TEAM = TA7CHTLZGM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -947,7 +947,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.35.28;
+				MARKETING_VERSION = 2.36.02;
 				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -968,7 +968,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 348;
+				CURRENT_PROJECT_VERSION = 367;
 				DEVELOPMENT_TEAM = TA7CHTLZGM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -976,7 +976,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.35.28;
+				MARKETING_VERSION = 2.36.02;
 				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

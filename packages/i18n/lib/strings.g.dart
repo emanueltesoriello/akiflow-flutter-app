@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 337 
+ * Strings: 345 
  *
- * Built on 2023-05-23 at 11:45 UTC
+ * Built on 2023-06-15 at 15:49 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -409,6 +409,9 @@ class _StringsSettingsEn {
 	String get general => 'General';
 	String get tasks => 'Tasks';
 	String get notifications => 'Notifications';
+	String get calendar => 'Calendar';
+	String get viewOptions => 'view options';
+	String get use24hoursFormat => 'Use 24 hours format';
 	String get referYourFriends => 'Refer your friends';
 	String get helpCenter => 'Help center';
 	String get followUsOnTwitter => 'Follow Us on Twitter';
@@ -681,6 +684,7 @@ class _StringsSnackbarEn {
 	String get connectedSuccesfully => 'Connected successfully!';
 	String get cannotMoveThisEvent => 'You cannot move this event!';
 	String get copiedToYourClipboard => 'Copied to your clipboard';
+	String get gmailLinkNotSupported => 'Gmail link not supported on mobile';
 }
 
 // Path: integrations
@@ -767,6 +771,7 @@ class _StringsSettingsIntegrationsEn {
 	// Translations
 	String get title => 'Integrations';
 	String get connected => 'Connected';
+	late final _StringsSettingsIntegrationsOnMarkAsDoneEn onMarkAsDone = _StringsSettingsIntegrationsOnMarkAsDoneEn._(_root);
 	late final _StringsSettingsIntegrationsGmailEn gmail = _StringsSettingsIntegrationsGmailEn._(_root);
 	late final _StringsSettingsIntegrationsSlackEn slack = _StringsSettingsIntegrationsSlackEn._(_root);
 	late final _StringsSettingsIntegrationsCalendarEn calendar = _StringsSettingsIntegrationsCalendarEn._(_root);
@@ -933,6 +938,26 @@ class _StringsEventSnackbarEn {
 	String get deleted => 'Event has been deleted';
 }
 
+// Path: settings.integrations.onMarkAsDone
+class _StringsSettingsIntegrationsOnMarkAsDoneEn {
+	_StringsSettingsIntegrationsOnMarkAsDoneEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'On mark as done';
+	String behaviorOfToolOnMarkDone({required Object tool}) => 'Behavior of ${tool} tasks on mark as done';
+	String get unstarTheEmail => 'Unstar the email';
+	String get unlabelTheEmail => 'Unlabel the email';
+	String markAsDone({required Object tool}) => 'Mark as done in ${tool}';
+	String get changeListInTrello => 'Change list in Trello';
+	String get archiveInTrello => 'Archive in Trello';
+	String get goTo => 'Go to';
+	String get doNothing => 'Do nothing';
+	String get askMeEveryTime => 'Ask me every time';
+	String get rememberMyChoice => 'Remember my choice';
+}
+
 // Path: settings.integrations.gmail
 class _StringsSettingsIntegrationsGmailEn {
 	_StringsSettingsIntegrationsGmailEn._(this._root);
@@ -949,7 +974,6 @@ class _StringsSettingsIntegrationsGmailEn {
 	String get star => 'Star';
 	String get behavior => 'Behavior';
 	String get communication => 'Communication';
-	late final _StringsSettingsIntegrationsGmailOnMarkAsDoneEn onMarkAsDone = _StringsSettingsIntegrationsGmailOnMarkAsDoneEn._(_root);
 	late final _StringsSettingsIntegrationsGmailToImportTaskEn toImportTask = _StringsSettingsIntegrationsGmailToImportTaskEn._(_root);
 	String get clientSettings => 'Client settings';
 	String get useSuperhuman => 'Use superhuman';
@@ -1051,21 +1075,6 @@ class _StringsSettingsIntegrationsGmailStep1En {
 	String get t3 => ' on Gmail.';
 }
 
-// Path: settings.integrations.gmail.onMarkAsDone
-class _StringsSettingsIntegrationsGmailOnMarkAsDoneEn {
-	_StringsSettingsIntegrationsGmailOnMarkAsDoneEn._(this._root);
-
-	final _StringsEn _root; // ignore: unused_field
-
-	// Translations
-	String get title => 'On mark as done';
-	String get unstarTheEmail => 'Unstar the email';
-	String get unlabelTheEmail => 'Unlabel the email';
-	String get goToGmail => 'Go to Gmail';
-	String get doNothing => 'Do nothing';
-	String get askMeEveryTime => 'Ask me every time';
-}
-
 // Path: settings.integrations.gmail.toImportTask
 class _StringsSettingsIntegrationsGmailToImportTaskEn {
 	_StringsSettingsIntegrationsGmailToImportTaskEn._(this._root);
@@ -1129,6 +1138,9 @@ extension on _StringsEn {
 			'settings.general': 'General',
 			'settings.tasks': 'Tasks',
 			'settings.notifications': 'Notifications',
+			'settings.calendar': 'Calendar',
+			'settings.viewOptions': 'view options',
+			'settings.use24hoursFormat': 'Use 24 hours format',
 			'settings.referYourFriends': 'Refer your friends',
 			'settings.helpCenter': 'Help center',
 			'settings.followUsOnTwitter': 'Follow Us on Twitter',
@@ -1152,6 +1164,17 @@ extension on _StringsEn {
 			'settings.learnAkiflow.useGuide': 'Use guide',
 			'settings.integrations.title': 'Integrations',
 			'settings.integrations.connected': 'Connected',
+			'settings.integrations.onMarkAsDone.title': 'On mark as done',
+			'settings.integrations.onMarkAsDone.behaviorOfToolOnMarkDone': ({required Object tool}) => 'Behavior of ${tool} tasks on mark as done',
+			'settings.integrations.onMarkAsDone.unstarTheEmail': 'Unstar the email',
+			'settings.integrations.onMarkAsDone.unlabelTheEmail': 'Unlabel the email',
+			'settings.integrations.onMarkAsDone.markAsDone': ({required Object tool}) => 'Mark as done in ${tool}',
+			'settings.integrations.onMarkAsDone.changeListInTrello': 'Change list in Trello',
+			'settings.integrations.onMarkAsDone.archiveInTrello': 'Archive in Trello',
+			'settings.integrations.onMarkAsDone.goTo': 'Go to',
+			'settings.integrations.onMarkAsDone.doNothing': 'Do nothing',
+			'settings.integrations.onMarkAsDone.askMeEveryTime': 'Ask me every time',
+			'settings.integrations.onMarkAsDone.rememberMyChoice': 'Remember my choice',
 			'settings.integrations.gmail.title': 'Gmail',
 			'settings.integrations.gmail.description': 'Communication',
 			'settings.integrations.gmail.step1.t1': 'Star an email or activate the ',
@@ -1163,12 +1186,6 @@ extension on _StringsEn {
 			'settings.integrations.gmail.star': 'Star',
 			'settings.integrations.gmail.behavior': 'Behavior',
 			'settings.integrations.gmail.communication': 'Communication',
-			'settings.integrations.gmail.onMarkAsDone.title': 'On mark as done',
-			'settings.integrations.gmail.onMarkAsDone.unstarTheEmail': 'Unstar the email',
-			'settings.integrations.gmail.onMarkAsDone.unlabelTheEmail': 'Unlabel the email',
-			'settings.integrations.gmail.onMarkAsDone.goToGmail': 'Go to Gmail',
-			'settings.integrations.gmail.onMarkAsDone.doNothing': 'Do nothing',
-			'settings.integrations.gmail.onMarkAsDone.askMeEveryTime': 'Ask me every time',
 			'settings.integrations.gmail.toImportTask.title': 'To import tasks',
 			'settings.integrations.gmail.toImportTask.useAkiflowLabel': 'Use Akiflow label',
 			'settings.integrations.gmail.toImportTask.useStarToImport': 'Use star to import',
@@ -1415,6 +1432,7 @@ extension on _StringsEn {
 			'snackbar.connectedSuccesfully': 'Connected successfully!',
 			'snackbar.cannotMoveThisEvent': 'You cannot move this event!',
 			'snackbar.copiedToYourClipboard': 'Copied to your clipboard',
+			'snackbar.gmailLinkNotSupported': 'Gmail link not supported on mobile',
 			'confirm': 'Confirm',
 			'cancel': 'Cancel',
 			'noTitle': '(No title)',

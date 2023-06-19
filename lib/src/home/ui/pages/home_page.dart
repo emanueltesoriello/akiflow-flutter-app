@@ -10,11 +10,12 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
-import 'package:mobile/src/home/ui/widgets/gmail_actions_dialog.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/integrations/ui/pages/reconnect_integrations.dart';
+import 'package:mobile/src/integrations/ui/widgets/mark_done_modal.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
@@ -24,7 +25,6 @@ import 'package:mobile/src/tasks/ui/pages/create_task/create_task_modal.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
-import 'package:models/extensions/account_ext.dart';
 import 'package:share_handler/share_handler.dart';
 
 import 'home_body.dart';
@@ -167,18 +167,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     tasksCubit.docActionsStream.listen((List<GmailDocAction> actions) async {
       for (final action in actions) {
-        await showCupertinoModalBottomSheet(
+        MarkAsDoneType? selectedType = await showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => GmailActionDialog(
-            syncMode: action.account.gmailSyncMode,
-            goToGmail: () {
-              tasksCubit.goToGmail(action.task.doc.url);
-            },
-            unstarOrUnlabel: () {
-              tasksCubit.unstarGmail(action);
-            },
+          builder: (context) => MarkDoneModal(
+            askBehavior: true,
+            initialType: MarkAsDoneType.doNothing,
+            account: action.account,
           ),
         );
+        if (selectedType != null) {
+          switch (selectedType) {
+            case MarkAsDoneType.unstarTheEmail:
+              tasksCubit.unstarGmail(action);
+              break;
+            case MarkAsDoneType.goTo:
+              tasksCubit.goToUrl(action.task.doc?['url']);
+              break;
+            default:
+          }
+        }
       }
     });
 

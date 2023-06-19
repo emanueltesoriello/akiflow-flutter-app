@@ -250,6 +250,14 @@ var ChronoHelper = /** @class */ (function () {
                 }
                 return results;
             }
+        }, {
+            // values with only a number followed by the single letter `s` are ignored
+            refine: function (_, results) {
+                return results.filter(function (result) {
+                    var match = result.text.match(/^\d+s$/i);
+                    return !match;
+                });
+            }
         });
         var parseResults = ChronoHelper.customChrono.parse(text, forwardFrom, options)
             .sort(function (resultA, resultB) {

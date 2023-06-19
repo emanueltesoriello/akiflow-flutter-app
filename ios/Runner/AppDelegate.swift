@@ -61,6 +61,17 @@ import Intents
 
     UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
 
+        let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
+        let channel = FlutterMethodChannel(name: "com.akiflow.mobile/firstDayOfWeek", binaryMessenger: controller.binaryMessenger)
+
+        channel.setMethodCallHandler { [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
+            if call.method == "getFirstDayOfWeek" {
+                let firstDayOfWeek = self?.getFirstDayOfWeek()
+                result(firstDayOfWeek)
+            } else {
+                result(FlutterMethodNotImplemented)
+            }
+        }
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
 
     }
@@ -71,5 +82,10 @@ import Intents
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
          completionHandler(.alert) // shows banner even if app is in foreground
      }
+
+    func getFirstDayOfWeek() -> Int {
+        let calendar = Calendar.current
+        return calendar.firstWeekday
+    }
 
 }

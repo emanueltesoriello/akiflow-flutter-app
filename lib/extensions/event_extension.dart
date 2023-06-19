@@ -503,4 +503,21 @@ extension EventExt on Event {
     }
     return null;
   }
+
+  bool isTimeOrDateValid() {
+    if (startTime != null && endTime != null) {
+      DateTime startT = DateTime.parse(startTime!);
+      DateTime endT = DateTime.parse(endTime!);
+      if (startT.isAtSameMomentAs(endT) || startT.isBefore(endT)) {
+        return true;
+      }
+    } else if (startDate != null && endDate != null) {
+      DateTime startD = DateTime.parse(startDate!);
+      DateTime endD = DateTime.parse(endDate!);
+      if (startD.isAtSameMomentAs(endD) || startD.isBefore(endD)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

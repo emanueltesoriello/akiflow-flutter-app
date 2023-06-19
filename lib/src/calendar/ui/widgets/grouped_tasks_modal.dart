@@ -27,6 +27,7 @@ class GroupedTasksModal extends StatelessWidget {
 
       List<Task> tasksInGroup = calendarTasks.where((task) => idList.contains(task.id)).toList();
       tasksInGroup.sort((a, b) => a.datetime!.compareTo(b.datetime!));
+      tasksInGroup.sort((a, b) => a.done ?? false ? 1 : -1);
 
       return Material(
         color: ColorsExt.background(context),
