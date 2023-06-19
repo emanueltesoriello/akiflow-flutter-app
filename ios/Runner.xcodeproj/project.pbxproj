@@ -19,6 +19,19 @@
 		BB4251C6BBB90722DE4884C4 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94009F12E8436EEC372764A3 /* Pods_Runner.framework */; };
 		D30B5CCF8D4609CBFA4D21CB /* Pods_ShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 370ACEB53661CB74AD4ADFD5 /* Pods_ShareExtension.framework */; };
 		FA2CC80729A132DA0021B677 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA2CC80629A132DA0021B677 /* GoogleService-Info.plist */; };
+		FA2D7D342A3E0B0500F0E69A /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2D7D332A3E0B0500F0E69A /* Intents.framework */; };
+		FA2D7D372A3E0B0500F0E69A /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D362A3E0B0500F0E69A /* IntentHandler.swift */; };
+		FA2D7D3F2A3E0B0500F0E69A /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2D7D3E2A3E0B0500F0E69A /* IntentsUI.framework */; };
+		FA2D7D422A3E0B0500F0E69A /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D412A3E0B0500F0E69A /* IntentViewController.swift */; };
+		FA2D7D452A3E0B0500F0E69A /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA2D7D432A3E0B0500F0E69A /* MainInterface.storyboard */; };
+		FA2D7D492A3E0B0500F0E69A /* AkiflowIntentUI.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FA2D7D3D2A3E0B0500F0E69A /* AkiflowIntentUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FA2D7D4C2A3E0B0500F0E69A /* AkiflowIntent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FA2D7D322A3E0B0500F0E69A /* AkiflowIntent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FA2D7D562A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */; };
+		FA2D7D572A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */; };
+		FA2D7D582A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */; };
+		FA2D7D5A2A3E32B900F0E69A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D592A3E32B900F0E69A /* SceneDelegate.swift */; };
+		FA2D7D5B2A3E32B900F0E69A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D592A3E32B900F0E69A /* SceneDelegate.swift */; };
+		FA2D7D5C2A3E32B900F0E69A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D592A3E32B900F0E69A /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +42,20 @@
 			remoteGlobalIDString = 43C3F605292793AE003A0ACB;
 			remoteInfo = ShareExtension;
 		};
+		FA2D7D472A3E0B0500F0E69A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA2D7D3C2A3E0B0500F0E69A;
+			remoteInfo = AkiflowIntentUI;
+		};
+		FA2D7D4A2A3E0B0500F0E69A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA2D7D312A3E0B0500F0E69A;
+			remoteInfo = AkiflowIntent;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,7 +65,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				FA2D7D492A3E0B0500F0E69A /* AkiflowIntentUI.appex in Embed Foundation Extensions */,
 				43C3F610292793AE003A0ACB /* ShareExtension.appex in Embed Foundation Extensions */,
+				FA2D7D4C2A3E0B0500F0E69A /* AkiflowIntent.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +113,17 @@
 		A876E8EC330FEF0176A5E4B7 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		D49C806B2198944805D62CCB /* Pods-ShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.debug.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		FA2CC80629A132DA0021B677 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Desktop/xCode/Akiflow/prod/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FA2D7D322A3E0B0500F0E69A /* AkiflowIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkiflowIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA2D7D332A3E0B0500F0E69A /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		FA2D7D362A3E0B0500F0E69A /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		FA2D7D382A3E0B0500F0E69A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA2D7D3D2A3E0B0500F0E69A /* AkiflowIntentUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkiflowIntentUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA2D7D3E2A3E0B0500F0E69A /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
+		FA2D7D412A3E0B0500F0E69A /* IntentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentViewController.swift; sourceTree = "<group>"; };
+		FA2D7D442A3E0B0500F0E69A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		FA2D7D462A3E0B0500F0E69A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
+		FA2D7D592A3E32B900F0E69A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +140,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB4251C6BBB90722DE4884C4 /* Pods_Runner.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA2D7D2F2A3E0B0500F0E69A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA2D7D342A3E0B0500F0E69A /* Intents.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA2D7D3A2A3E0B0500F0E69A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA2D7D3F2A3E0B0500F0E69A /* IntentsUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +204,8 @@
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				43C3F607292793AE003A0ACB /* ShareExtension */,
+				FA2D7D352A3E0B0500F0E69A /* AkiflowIntent */,
+				FA2D7D402A3E0B0500F0E69A /* AkiflowIntentUI */,
 				97C146EF1CF9000F007C117D /* Products */,
 				0A0AA22270ABDE7AEB0BC881 /* Pods */,
 				F9B8E72F77BCB7DFCFD06960 /* Frameworks */,
@@ -159,6 +217,8 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				43C3F606292793AE003A0ACB /* ShareExtension.appex */,
+				FA2D7D322A3E0B0500F0E69A /* AkiflowIntent.appex */,
+				FA2D7D3D2A3E0B0500F0E69A /* AkiflowIntentUI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -174,6 +234,8 @@
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
+				FA2D7D592A3E32B900F0E69A /* SceneDelegate.swift */,
+				FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 			);
 			path = Runner;
@@ -184,8 +246,29 @@
 			children = (
 				94009F12E8436EEC372764A3 /* Pods_Runner.framework */,
 				370ACEB53661CB74AD4ADFD5 /* Pods_ShareExtension.framework */,
+				FA2D7D332A3E0B0500F0E69A /* Intents.framework */,
+				FA2D7D3E2A3E0B0500F0E69A /* IntentsUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FA2D7D352A3E0B0500F0E69A /* AkiflowIntent */ = {
+			isa = PBXGroup;
+			children = (
+				FA2D7D362A3E0B0500F0E69A /* IntentHandler.swift */,
+				FA2D7D382A3E0B0500F0E69A /* Info.plist */,
+			);
+			path = AkiflowIntent;
+			sourceTree = "<group>";
+		};
+		FA2D7D402A3E0B0500F0E69A /* AkiflowIntentUI */ = {
+			isa = PBXGroup;
+			children = (
+				FA2D7D412A3E0B0500F0E69A /* IntentViewController.swift */,
+				FA2D7D432A3E0B0500F0E69A /* MainInterface.storyboard */,
+				FA2D7D462A3E0B0500F0E69A /* Info.plist */,
+			);
+			path = AkiflowIntentUI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,11 +310,47 @@
 			);
 			dependencies = (
 				43C3F60F292793AE003A0ACB /* PBXTargetDependency */,
+				FA2D7D482A3E0B0500F0E69A /* PBXTargetDependency */,
+				FA2D7D4B2A3E0B0500F0E69A /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
+		};
+		FA2D7D312A3E0B0500F0E69A /* AkiflowIntent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA2D7D542A3E0B0500F0E69A /* Build configuration list for PBXNativeTarget "AkiflowIntent" */;
+			buildPhases = (
+				FA2D7D2E2A3E0B0500F0E69A /* Sources */,
+				FA2D7D2F2A3E0B0500F0E69A /* Frameworks */,
+				FA2D7D302A3E0B0500F0E69A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AkiflowIntent;
+			productName = AkiflowIntent;
+			productReference = FA2D7D322A3E0B0500F0E69A /* AkiflowIntent.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FA2D7D3C2A3E0B0500F0E69A /* AkiflowIntentUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA2D7D532A3E0B0500F0E69A /* Build configuration list for PBXNativeTarget "AkiflowIntentUI" */;
+			buildPhases = (
+				FA2D7D392A3E0B0500F0E69A /* Sources */,
+				FA2D7D3A2A3E0B0500F0E69A /* Frameworks */,
+				FA2D7D3B2A3E0B0500F0E69A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AkiflowIntentUI;
+			productName = AkiflowIntentUI;
+			productReference = FA2D7D3D2A3E0B0500F0E69A /* AkiflowIntentUI.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -239,7 +358,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1410;
+				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
@@ -249,6 +368,12 @@
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
+					};
+					FA2D7D312A3E0B0500F0E69A = {
+						CreatedOnToolsVersion = 14.3;
+					};
+					FA2D7D3C2A3E0B0500F0E69A = {
+						CreatedOnToolsVersion = 14.3;
 					};
 				};
 			};
@@ -267,6 +392,8 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				43C3F605292793AE003A0ACB /* ShareExtension */,
+				FA2D7D312A3E0B0500F0E69A /* AkiflowIntent */,
+				FA2D7D3C2A3E0B0500F0E69A /* AkiflowIntentUI */,
 			);
 		};
 /* End PBXProject section */
@@ -289,6 +416,21 @@
 				FA2CC80729A132DA0021B677 /* GoogleService-Info.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA2D7D302A3E0B0500F0E69A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA2D7D3B2A3E0B0500F0E69A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA2D7D452A3E0B0500F0E69A /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,8 +543,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA2D7D562A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				FA2D7D5A2A3E32B900F0E69A /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA2D7D2E2A3E0B0500F0E69A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA2D7D572A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */,
+				FA2D7D372A3E0B0500F0E69A /* IntentHandler.swift in Sources */,
+				FA2D7D5B2A3E32B900F0E69A /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA2D7D392A3E0B0500F0E69A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA2D7D582A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */,
+				FA2D7D422A3E0B0500F0E69A /* IntentViewController.swift in Sources */,
+				FA2D7D5C2A3E32B900F0E69A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +577,16 @@
 			isa = PBXTargetDependency;
 			target = 43C3F605292793AE003A0ACB /* ShareExtension */;
 			targetProxy = 43C3F60E292793AE003A0ACB /* PBXContainerItemProxy */;
+		};
+		FA2D7D482A3E0B0500F0E69A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA2D7D3C2A3E0B0500F0E69A /* AkiflowIntentUI */;
+			targetProxy = FA2D7D472A3E0B0500F0E69A /* PBXContainerItemProxy */;
+		};
+		FA2D7D4B2A3E0B0500F0E69A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA2D7D312A3E0B0500F0E69A /* AkiflowIntent */;
+			targetProxy = FA2D7D4A2A3E0B0500F0E69A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -439,6 +613,14 @@
 				97C147001CF9000F007C117D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FA2D7D432A3E0B0500F0E69A /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FA2D7D442A3E0B0500F0E69A /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -485,7 +667,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -687,7 +869,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -736,7 +918,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -804,6 +986,222 @@
 			};
 			name = Release;
 		};
+		FA2D7D4D2A3E0B0500F0E69A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TA7CHTLZGM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkiflowIntent/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkiflowIntent;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile.AkiflowIntent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FA2D7D4E2A3E0B0500F0E69A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TA7CHTLZGM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkiflowIntent/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkiflowIntent;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile.AkiflowIntent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FA2D7D4F2A3E0B0500F0E69A /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TA7CHTLZGM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkiflowIntent/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkiflowIntent;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile.AkiflowIntent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Profile;
+		};
+		FA2D7D502A3E0B0500F0E69A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TA7CHTLZGM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkiflowIntentUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkiflowIntentUI;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile.AkiflowIntentUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FA2D7D512A3E0B0500F0E69A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TA7CHTLZGM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkiflowIntentUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkiflowIntentUI;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile.AkiflowIntentUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FA2D7D522A3E0B0500F0E69A /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TA7CHTLZGM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkiflowIntentUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkiflowIntentUI;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.akiflow.mobile.AkiflowIntentUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Profile;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -833,6 +1231,26 @@
 				97C147061CF9000F007C117D /* Debug */,
 				97C147071CF9000F007C117D /* Release */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA2D7D532A3E0B0500F0E69A /* Build configuration list for PBXNativeTarget "AkiflowIntentUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA2D7D502A3E0B0500F0E69A /* Debug */,
+				FA2D7D512A3E0B0500F0E69A /* Release */,
+				FA2D7D522A3E0B0500F0E69A /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA2D7D542A3E0B0500F0E69A /* Build configuration list for PBXNativeTarget "AkiflowIntent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA2D7D4D2A3E0B0500F0E69A /* Debug */,
+				FA2D7D4E2A3E0B0500F0E69A /* Release */,
+				FA2D7D4F2A3E0B0500F0E69A /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

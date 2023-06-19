@@ -1,11 +1,45 @@
 import UIKit
 import Flutter
 import workmanager
+import AppIntents
+import Foundation
+import Intents
+
+
 
 @UIApplicationMain
 
 @objc class AppDelegate: FlutterAppDelegate {
+    
+    
+    struct CreateTask: AppIntent {
+        static let title: LocalizedStringResource = "Create new task"
+        
 
+        // Example usage
+        var auth = UserDefaults.standard.string(forKey: "auth")
+            
+          
+        @MainActor
+        func perform() async throws -> some IntentResult & ProvidesDialog {
+            print("Auth is: \(String(describing: auth))")
+
+            return .result(dialog: "Okay, what's the title?")
+        }
+    }
+        
+    /*struct CreateTaskAppShortcuts: AppShortcutsProvider {
+        static var appShortcuts: [AppShortcut] {
+            AppShortcut(
+                intent: CreateTask(),
+                phrases: ["Create new task in \(.applicationName)"],
+                systemImageName: "com.akiflow.mobile"
+            )
+        }
+    }*/
+
+  
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
