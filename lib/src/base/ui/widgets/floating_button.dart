@@ -6,6 +6,7 @@ import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/expandable_fab.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -55,23 +56,19 @@ class FloatingButton extends StatelessWidget {
             ],
           );
         } else {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: (state.queue.isNotEmpty || state.justCreatedTask != null) ? bottomBarHeight : 0),
-            child: SizedBox(
-              width: 52,
-              height: 52,
-              child: FloatingActionButton(
-                onPressed: () async {
-                  _onTapTask(context: context, homeViewType: homeViewType);
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimension.radiusM),
-                ),
-                child: SvgPicture.asset(
-                  Assets.images.icons.common.plusSVG,
-                  color: ColorsExt.background(context),
-                ),
+          return SizedBox(
+            width: 52,
+            height: 52,
+            child: FloatingActionButton(
+              onPressed: () async {
+                _onTapTask(context: context, homeViewType: homeViewType);
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Dimension.radiusM),
+              ),
+              child: SvgPicture.asset(
+                Assets.images.icons.common.plusSVG,
+                color: ColorsExt.background(context),
               ),
             ),
           );
@@ -93,10 +90,16 @@ class FloatingButton extends StatelessWidget {
     int duration = 1800;
     if (homeViewType == HomeViewType.calendar) {
       DateTime now = DateTime.now();
-      startTimeRounded =
-          DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()])
-              .toUtc()
-              .toIso8601String();
+      startTimeRounded = DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()])
+          .toUtc()
+          .toIso8601String();
+
+      List<DateTime> visibleDates = context.read<CalendarCubit>().state.visibleDates;
+      if (visibleDates.isNotEmpty && visibleDates.length < 2) {
+        date = visibleDates.first;
+      } else {
+        date = now;
+      }
 
       AuthCubit authCubit = context.read<AuthCubit>();
       if (authCubit.state.user != null &&
@@ -125,10 +128,17 @@ class FloatingButton extends StatelessWidget {
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => const CreateTaskModal(),
-    );
+    ).then((value) => context.read<EditTaskCubit>().onModalClose());
   }
 
   _onTapEvent(BuildContext context) {
-    context.read<EventsCubit>().createEvent(context);
+    int duration = 1800;
+    AuthCubit authCubit = context.read<AuthCubit>();
+    if (authCubit.state.user != null &&
+        authCubit.state.user?.settings != null &&
+        authCubit.state.user?.settings?['calendar'] != null) {
+      duration = authCubit.state.user?.settings?['calendar']?['eventDuration'] ?? 1800;
+    }
+    context.read<EventsCubit>().createEvent(context, duration);
   }
 }

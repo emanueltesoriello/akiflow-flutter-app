@@ -38,12 +38,12 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
 
   @override
   Widget build(BuildContext context) {
-    List<Contact> searchedContacts = context.watch<EventsCubit>().state.searchedContacts;
 
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
+        List<Contact> searchedContacts = state.searchedContacts;
         return Material(
-          color: Theme.of(context).backgroundColor,
+          color: ColorsExt.background(context),
           child: Container(
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -62,7 +62,7 @@ class _AddGuestsModalState extends State<AddGuestsModal> {
                   Text(t.event.editEvent.addGuestModal.addGuest,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey800(context),
                           )),
                   const SizedBox(height: Dimension.padding),
                   BorderedInputView(

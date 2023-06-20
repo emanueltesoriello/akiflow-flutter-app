@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
-//import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -58,19 +57,18 @@ Future<void> initFunctions() async {
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
-  //await Intercom.instance.initialize(Config.intercomCredential.appId,
-  //    iosApiKey: Config.intercomCredential.iosApiKey, androidApiKey: Config.intercomCredential.androidApiKey);
 
   // Init Background Service and register periodic task
   await BackgroundService.initBackgroundService();
-  BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
-
-  try {
-    if (Platform.isAndroid) {
+  if (Platform.isAndroid) {
+    BackgroundService.registerPeriodicTask(const Duration(minutes: 15));
+  }
+  if (Platform.isAndroid) {
+    try {
       await FlutterDisplayMode.setHighRefreshRate();
+    } catch (e) {
+      print(e);
     }
-  } catch (e) {
-    print(e);
   }
 }
 
@@ -84,24 +82,19 @@ _identifyAnalytics(User user) async {
 Future<void> mainCom({kDebugMode = false}) async {
   await initFunctions();
 
-  bool userLogged =
-      locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   await SentryFlutter.init((options) {
     options.beforeSend = beforeSend;
     options.dsn = Config.sentryDsn;
     options.tracesSampleRate = 1.0;
   },
       appRunner: () => runApp(
-            DevicePreview(enabled: kDebugMode, builder: (context) => Application(userLogged: userLogged)),
+            DevicePreview(enabled: kDebugMode, builder: (context) => const RestartWidget(child: Application())),
           ));
 }
 
 class Application extends StatelessWidget {
-  final bool userLogged;
-
   const Application({
     Key? key,
-    required this.userLogged,
   }) : super(key: key);
 
   @override
@@ -113,12 +106,14 @@ class Application extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark,
-      systemNavigationBarDividerColor: ColorsExt.grey5(context),
+      systemNavigationBarDividerColor: ColorsExt.grey200(context),
     ));
 
     return MultiBlocProvider(
         providers: baseProviders,
         child: Builder(builder: (context) {
+          bool userLogged = locator<PreferencesRepository>().user != null &&
+              locator<PreferencesRepository>().user!.accessToken != null;
           return FocusDetector(
               onForegroundGained: () {
                 context.read<MainCubit>().onFocusGained();
@@ -146,5 +141,37 @@ class Application extends StatelessWidget {
                         return BaseNavigator(userLogged: userLogged);
                       })));
         }));
+  }
+}
+
+class RestartWidget extends StatefulWidget {
+  const RestartWidget({super.key, required this.child});
+
+  final Widget child;
+
+  static Future restartApp(BuildContext context) async {
+    context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
+    await initFunctions();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
   }
 }

@@ -17,8 +17,8 @@ class MainCubitState extends Equatable {
 
   const MainCubitState({
     this.loading = false,
-    this.homeViewType = HomeViewType.inbox,
-    this.lastHomeViewType = HomeViewType.inbox,
+    this.homeViewType = HomeViewType.calendar,
+    this.lastHomeViewType = HomeViewType.calendar,
   });
 
   MainCubitState copyWith({

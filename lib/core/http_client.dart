@@ -4,7 +4,7 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/user.dart';
 
-Uri refreshTokenUrl = Uri.parse('https://app.akiflow.com/oauth/refreshToken');
+Uri refreshTokenUrl = Uri.parse('https://web.akiflow.com/oauth/refreshToken');
 
 class HttpClient extends BaseClient {
   final PreferencesRepository _preferences;

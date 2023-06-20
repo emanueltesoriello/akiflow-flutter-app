@@ -2,18 +2,20 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_view_mode.dart';
 import 'package:mobile/src/calendar/ui/models/navigation_state.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/nullable.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 part 'calendar_state.dart';
 
@@ -21,17 +23,20 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
   final SyncCubit _syncCubit;
+  final AuthCubit _authCubit;
 
   final StreamController<PanelState> _panelStateStreamController = StreamController<PanelState>.broadcast();
   Stream<PanelState> get panelStateStream => _panelStateStreamController.stream;
 
-  CalendarCubit(this._syncCubit) : super(const CalendarCubitState()) {
+  CalendarCubit(this._syncCubit, this._authCubit) : super(const CalendarCubitState()) {
     _init();
   }
 
   _init() async {
     fetchFromPreferences();
     fetchCalendars();
+    setNonWorkingDays();
+    await setSystemStartOfWeekDay();
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await fetchCalendars();
@@ -71,6 +76,9 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
     bool areCalendarTasksHidden = _preferencesRepository.areCalendarTasksHidden;
     emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden));
+
+    bool groupOverlappingTasks = _preferencesRepository.groupOverlappingTasks;
+    emit(state.copyWith(groupOverlappingTasks: groupOverlappingTasks));
   }
 
   void changeCalendarView(CalendarView calendarView) {
@@ -124,6 +132,25 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   void setCalendarTasksHidden(bool areCalendarTasksHidden) {
     emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden));
     _preferencesRepository.setAreCalendarTasksHidden(areCalendarTasksHidden);
+  }
+
+  void setGroupOverlappingTasks(bool groupOverlappingTasks) {
+    emit(state.copyWith(groupOverlappingTasks: groupOverlappingTasks));
+    _preferencesRepository.setGroupOverlappingTasks(groupOverlappingTasks);
+  }
+
+  void setNonWorkingDays() {
+    emit(state.copyWith(nonWorkingDays: computeNonWorkinkDays()));
+  }
+
+  Future<void> setSystemStartOfWeekDay() async {
+    int systemDefault = DateTime.sunday;
+    systemDefault = await CalendarUtils.retrieveSystemFirstDayOfWeek();
+    emit(state.copyWith(systemStartOfWeekDay: systemDefault));
+  }
+
+  void setAppointmentTapped(bool tapped) {
+    emit(state.copyWith(appointmentTapped: tapped));
   }
 
   Future<void> fetchCalendars() async {
@@ -194,5 +221,40 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     calendar = calendar.copyWith(settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
 
     return calendar;
+  }
+
+  Calendar changeCalendarNotifications(Calendar calendar) {
+    dynamic settings = calendar.settings;
+    if (settings != null) {
+      bool isEnabled =
+          calendar.settings["notificationsEnabledMobile"] ?? calendar.settings["notificationsEnabled"] ?? false;
+
+      settings["notificationsEnabledMobile"] = !isEnabled;
+    } else {
+      settings = {
+        "visible": true,
+        "notificationsEnabled": true,
+        "visibleMobile": true,
+        "notificationsEnabledMobile": true
+      };
+    }
+
+    calendar = calendar.copyWith(settings: settings, updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
+
+    return calendar;
+  }
+
+  List<int> computeNonWorkinkDays() {
+    int firstWorkdayOfWeek = DateTime.monday;
+    if (_authCubit.state.user?.settings?["calendar"] != null &&
+        _authCubit.state.user?.settings?["calendar"]["firstWorkingDayOfWeek"] != null) {
+      var firstWorkdayFromDb = _authCubit.state.user?.settings?["calendar"]["firstWorkingDayOfWeek"];
+      if (firstWorkdayFromDb is String) {
+        firstWorkdayOfWeek = int.parse(firstWorkdayFromDb);
+      } else if (firstWorkdayFromDb is int) {
+        firstWorkdayOfWeek = firstWorkdayFromDb;
+      }
+    }
+    return CalendarUtils.getNonWorkingDays(firstWorkdayOfWeek);
   }
 }

@@ -9,27 +9,31 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/add_location_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/choose_calendar_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/choose_conference_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
 import 'package:rrule/rrule.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tuple/tuple.dart' as tuple;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class EventEditModal extends StatefulWidget {
@@ -38,11 +42,13 @@ class EventEditModal extends StatefulWidget {
     required this.event,
     required this.tappedDate,
     required this.originalStartTime,
+    required this.use24hFormat,
     this.createingEvent,
   }) : super(key: key);
   final Event event;
   final DateTime tappedDate;
   final String? originalStartTime;
+  final bool use24hFormat;
   final bool? createingEvent;
 
   @override
@@ -60,12 +66,14 @@ class _EventEditModalState extends State<EventEditModal> {
   StreamSubscription? streamSubscription;
   late List<String> atendeesToAdd;
   late List<String> atendeesToRemove;
+  late String meetingSolution;
+  late String conferenceAccountId;
   late bool addingMeeting;
   late bool removingMeeting;
   late bool timeChanged;
   late bool dateChanged;
-  late String organizerCalendar;
-  late String organizerCalendarId;
+  late String choosenCalendar;
+  late Calendar choosedCalendar;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -77,13 +85,16 @@ class _EventEditModalState extends State<EventEditModal> {
 
     locationController = TextEditingController()..text = widget.event.content?['location'] ?? '';
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
-    organizerCalendar = widget.event.organizerId ?? '';
-    organizerCalendarId = widget.event.calendarId ?? '';
+    choosenCalendar = widget.event.organizerId ?? '';
+    choosedCalendar = const Calendar();
 
     atendeesToAdd = List.empty(growable: true);
     atendeesToRemove = List.empty(growable: true);
     addingMeeting = false;
     removingMeeting = false;
+
+    meetingSolution = widget.event.meetingSolution ?? context.read<EventsCubit>().getDefaultConferenceSolution();
+    conferenceAccountId = '';
 
     initDescription().whenComplete(() {
       streamSubscription = quillController.value.changes.listen((change) async {
@@ -122,7 +133,7 @@ class _EventEditModalState extends State<EventEditModal> {
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
-          color: Colors.white,
+          color: ColorsExt.background(context),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(Dimension.radiusM),
             topRight: Radius.circular(Dimension.radiusM),
@@ -133,7 +144,6 @@ class _EventEditModalState extends State<EventEditModal> {
               const ScrollChip(),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: !_descriptionFocusNode.hasFocus && space > 86 ? space - 86 : 0),
                   reverse: _descriptionFocusNode.hasFocus ? true : false,
                   child: Column(
                     children: [
@@ -171,7 +181,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 ),
               ),
               _bottomActionButtonsRow(context),
-              SizedBox(height: _descriptionFocusNode.hasFocus && space > 36 ? space - 36 : 0),
+              SizedBox(height: space),
             ],
           ),
         );
@@ -191,7 +201,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 decoration: InputDecoration(border: InputBorder.none, hintText: t.event.editEvent.addTitle),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey1(context),
+                      color: ColorsExt.grey900(context),
                     )),
           ),
           const SizedBox(width: Dimension.paddingS),
@@ -214,17 +224,15 @@ class _EventEditModalState extends State<EventEditModal> {
                 SizedBox(
                   width: Dimension.defaultIconSize + 6,
                   height: Dimension.defaultIconSize + 6,
-                  child: SvgPicture.asset(
-                    Assets.images.icons.common.circleFillSVG,
-                    color: ColorsExt.fromHex(EventExt.computeColor(updatedEvent)),
-                  ),
+                  child: CalendarColorCircle(
+                      calendarColor: EventExt.computeColor(updatedEvent), size: Dimension.defaultIconSize + 6),
                 ),
                 SizedBox(
                   width: Dimension.smallconSize,
                   height: Dimension.smallconSize,
                   child: SvgPicture.asset(
                     Assets.images.icons.common.chevronDownSVG,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
                 ),
               ],
@@ -239,6 +247,7 @@ class _EventEditModalState extends State<EventEditModal> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: Dimension.defaultIconSize,
@@ -252,12 +261,12 @@ class _EventEditModalState extends State<EventEditModal> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (!isAllDay) _startTime(context),
-                if (isAllDay) _startDate(context),
+                if (!isAllDay) _startDateTime(context),
+                if (isAllDay) _startDateAllDay(context),
                 SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
-                    width: 22, height: 22, color: ColorsExt.grey3(context)),
-                if (!isAllDay) _endTime(context),
-                if (isAllDay) _endDate(context),
+                    width: 22, height: 22, color: ColorsExt.grey600(context)),
+                if (!isAllDay) _endDateTime(context),
+                if (isAllDay) _endDateAllDay(context),
               ],
             ),
           ),
@@ -266,7 +275,7 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  InkWell _startDate(BuildContext context) {
+  InkWell _startDateAllDay(BuildContext context) {
     return InkWell(
       onTap: () {
         showCupertinoModalBottomSheet(
@@ -294,71 +303,122 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              updatedEvent.recurringId == null
+              updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startDate!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                   )),
         ],
       ),
     );
   }
 
-  InkWell _startTime(BuildContext context) {
+  Column _startDateTime(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _startDate(context),
+        const SizedBox(height: Dimension.padding),
+        _startTime(context),
+      ],
+    );
+  }
+
+  InkWell _startDate(BuildContext context) {
     return InkWell(
       onTap: () {
-        Duration duration = const Duration(minutes: 30);
-        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
-          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
-        }
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
-            initialDate: widget.tappedDate,
-            initialDatetime: updatedEvent.startTime != null ? DateTime.parse(updatedEvent.startTime!).toLocal() : null,
+            showTime: false,
+            initialDate: updatedEvent.startTime != null && updatedEvent.recurringId == null
+                ? DateTime.parse(updatedEvent.startTime!).toLocal()
+                : widget.tappedDate,
+            initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
+              DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!).toLocal();
+              DateTime eventEndTime = DateTime.parse(updatedEvent.endTime!).toLocal();
+
+              DateTime selectedStartTime = DateTime(date!.year, date.month, date.day, eventStartTime.hour,
+                      eventStartTime.minute, eventStartTime.second, eventStartTime.millisecond)
+                  .toUtc();
+              DateTime selectedEndTime = DateTime(date.year, date.month, date.day, eventEndTime.hour,
+                      eventEndTime.minute, eventEndTime.second, eventEndTime.millisecond)
+                  .toUtc();
+
               setState(() {
                 timeChanged = true;
-                datetime == null ? isAllDay = true : isAllDay = false;
                 updatedEvent = updatedEvent.copyWith(
-                  startDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
-                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
-                  startTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
-                  endTime:
-                      datetime != null ? Nullable(datetime.toUtc().add(duration).toIso8601String()) : Nullable(null),
+                  startTime: Nullable(selectedStartTime.toUtc().toIso8601String()),
+                  endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
                 );
               });
             },
           ),
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-              updatedEvent.recurringId == null
-                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startTime!))
-                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
-                  )),
-          const SizedBox(height: Dimension.padding),
-          Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.startTime!).toLocal()),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey2(context),
-                  )),
-        ],
-      ),
+      child: Text(
+          DateFormat("EEE dd MMM").format(
+              updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.startTime!).toLocal() : widget.tappedDate),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w400,
+                color: ColorsExt.grey800(context),
+              )),
     );
   }
 
-  InkWell _endDate(BuildContext context) {
+  InkWell _startTime(BuildContext context) {
     return InkWell(
       onTap: () {
+        DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!).toLocal();
+
+        Duration duration = const Duration(minutes: 30);
+        if (updatedEvent.startTime != null && updatedEvent.endTime != null) {
+          duration = DateTime.parse(updatedEvent.endTime!).difference(DateTime.parse(updatedEvent.startTime!));
+        }
+
+        TimeOfDay initialTime = TimeOfDay(hour: eventStartTime.hour, minute: eventStartTime.minute);
+
+        TimePickerUtils.pick(
+          context,
+          initialTime: initialTime,
+          onTimeSelected: (selected) {
+            if (selected != null) {
+              DateTime selectedStartTime = DateTime(eventStartTime.year, eventStartTime.month, eventStartTime.day,
+                      selected.hour, selected.minute, eventStartTime.second, eventStartTime.millisecond)
+                  .toUtc();
+
+              DateTime eventEndTime = selectedStartTime.add(duration);
+
+              setState(() {
+                timeChanged = true;
+                updatedEvent = updatedEvent.copyWith(
+                  startTime: Nullable(selectedStartTime.toUtc().toIso8601String()),
+                  endTime: Nullable(eventEndTime.toUtc().toIso8601String()),
+                );
+              });
+            }
+          },
+        );
+      },
+      child: Text(
+          DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a")
+              .format(DateTime.parse(updatedEvent.startTime!).toLocal()),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey800(context),
+              )),
+    );
+  }
+
+  InkWell _endDateAllDay(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        DateTime eventStart = updatedEvent.startDate != null
+            ? DateTime.parse(updatedEvent.startDate!)
+            : DateTime.parse(updatedEvent.startTime!);
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
@@ -371,7 +431,10 @@ class _EventEditModalState extends State<EventEditModal> {
               setState(() {
                 timeChanged = true;
                 isAllDay = true;
-                updatedEvent = updatedEvent.copyWith(endDate: Nullable(DateFormat("y-MM-dd").format(date!.toUtc())));
+                updatedEvent = updatedEvent.copyWith(
+                    endDate: eventStart.isBefore(date!)
+                        ? Nullable(DateFormat("y-MM-dd").format(date))
+                        : Nullable(DateFormat("y-MM-dd").format(eventStart)));
               });
             },
           ),
@@ -381,62 +444,105 @@ class _EventEditModalState extends State<EventEditModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              updatedEvent.recurringId == null
+              updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endDate!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                   )),
         ],
       ),
     );
   }
 
-  InkWell _endTime(BuildContext context) {
+  Column _endDateTime(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        _endDate(context),
+        const SizedBox(height: Dimension.padding),
+        _endTime(context),
+      ],
+    );
+  }
+
+  InkWell _endDate(BuildContext context) {
     return InkWell(
       onTap: () {
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => EditTimeModal(
+            showTime: false,
             initialDate: updatedEvent.endTime != null && updatedEvent.recurringId == null
                 ? DateTime.parse(updatedEvent.endTime!).toLocal()
                 : widget.tappedDate,
-            initialDatetime: updatedEvent.endTime != null ? DateTime.parse(updatedEvent.endTime!).toLocal() : null,
+            initialDatetime: null,
             onSelectDate: ({required DateTime? date, required DateTime? datetime}) {
-              setState(() {
-                timeChanged = true;
-                if (datetime == null) {
-                  isAllDay = true;
-                }
-                updatedEvent = updatedEvent.copyWith(
-                  endDate: datetime == null ? Nullable(DateFormat("y-MM-dd").format(date!.toUtc())) : Nullable(null),
-                  endTime: datetime != null ? Nullable(datetime.toUtc().toIso8601String()) : Nullable(null),
-                );
-              });
+              DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!);
+              DateTime eventEndTime = DateTime.parse(updatedEvent.endTime!).toLocal();
+
+              DateTime selectedEndTime = DateTime(date!.year, date.month, date.day, eventEndTime.hour,
+                      eventEndTime.minute, eventEndTime.second, eventEndTime.millisecond)
+                  .toUtc();
+
+              if (eventStartTime.isBefore(selectedEndTime)) {
+                setState(() {
+                  timeChanged = true;
+                  updatedEvent = updatedEvent.copyWith(
+                    endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
+                  );
+                });
+              }
             },
           ),
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-              updatedEvent.recurringId == null
-                  ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endTime!))
-                  : DateFormat("EEE dd MMM").format(widget.tappedDate),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: ColorsExt.grey2(context),
-                  )),
-          const SizedBox(height: Dimension.padding),
-          Text(DateFormat("HH:mm").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey2(context),
-                  )),
-        ],
-      ),
+      child: Text(
+          DateFormat("EEE dd MMM").format(
+              updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.endTime!).toLocal() : widget.tappedDate),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w400,
+                color: ColorsExt.grey800(context),
+              )),
+    );
+  }
+
+  InkWell _endTime(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        DateTime eventStartTime = DateTime.parse(updatedEvent.startTime!);
+        DateTime eventEndTime = DateTime.parse(updatedEvent.endTime!).toLocal();
+
+        TimeOfDay initialTime = TimeOfDay(hour: eventEndTime.hour, minute: eventEndTime.minute);
+
+        TimePickerUtils.pick(
+          context,
+          initialTime: initialTime,
+          onTimeSelected: (selected) {
+            if (selected != null) {
+              DateTime selectedEndTime = DateTime(eventEndTime.year, eventEndTime.month, eventEndTime.day,
+                      selected.hour, selected.minute, eventEndTime.second, eventEndTime.millisecond)
+                  .toUtc();
+
+              if (eventStartTime.isBefore(selectedEndTime)) {
+                setState(() {
+                  timeChanged = true;
+                  updatedEvent = updatedEvent.copyWith(
+                    endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
+                  );
+                });
+              }
+            }
+          },
+        );
+      },
+      child: Text(
+          DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.grey800(context),
+              )),
     );
   }
 
@@ -455,8 +561,8 @@ class _EventEditModalState extends State<EventEditModal> {
               child: SvgPicture.asset(
                 Assets.images.icons.common.repeatSVG,
                 color: selectedRecurrence == EventRecurrenceModalType.none
-                    ? ColorsExt.grey3(context)
-                    : ColorsExt.grey2(context),
+                    ? ColorsExt.grey600(context)
+                    : ColorsExt.grey800(context),
               ),
             ),
             const SizedBox(width: Dimension.padding),
@@ -464,8 +570,8 @@ class _EventEditModalState extends State<EventEditModal> {
                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
                       fontWeight: FontWeight.w400,
                       color: selectedRecurrence == EventRecurrenceModalType.none
-                          ? ColorsExt.grey3(context)
-                          : ColorsExt.grey2(context),
+                          ? ColorsExt.grey600(context)
+                          : ColorsExt.grey800(context),
                     )),
           ],
         ),
@@ -537,21 +643,21 @@ class _EventEditModalState extends State<EventEditModal> {
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
                 child: SvgPicture.asset(Assets.images.icons.common.daySVG,
-                    color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+                    color: isAllDay ? ColorsExt.grey800(context) : ColorsExt.grey600(context)),
               ),
               const SizedBox(width: Dimension.padding),
               Text(t.event.editEvent.allDay,
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
+                      color: isAllDay ? ColorsExt.grey800(context) : ColorsExt.grey600(context))),
             ],
           ),
           FlutterSwitch(
             width: 48,
             height: 24,
             toggleSize: 20,
-            activeColor: ColorsExt.akiflow(context),
-            inactiveColor: ColorsExt.grey5(context),
+            activeColor: ColorsExt.akiflow500(context),
+            inactiveColor: ColorsExt.grey200(context),
             value: isAllDay,
             borderRadius: 24,
             padding: 2,
@@ -596,25 +702,24 @@ class _EventEditModalState extends State<EventEditModal> {
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
                 child: SvgPicture.asset(
-                  updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                  meetingSolution == 'meet'
                       ? Assets.images.icons.google.meetSVG
-                      : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                      : meetingSolution == 'zoom'
                           ? Assets.images.icons.zoom.zoomSVG
                           : context.read<EventsCubit>().getDefaultConferenceIcon(),
                 ),
               ),
               const SizedBox(width: Dimension.padding),
               Text(
-                  updatedEvent.meetingSolution == 'meet' && !addingMeeting
+                  meetingSolution == 'meet'
                       ? t.event.googleMeet
-                      : updatedEvent.meetingSolution == 'zoom' && !addingMeeting
+                      : meetingSolution == 'zoom'
                           ? t.event.zoom
-                          : context.read<EventsCubit>().getDefaultConferenceSolution() == 'meet'
-                              ? t.event.googleMeet
-                              : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: isAllDay ? ColorsExt.grey2(context) : ColorsExt.grey3(context))),
+                          : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
             ],
           ),
           Row(
@@ -630,7 +735,7 @@ class _EventEditModalState extends State<EventEditModal> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
                 ),
               const SizedBox(width: Dimension.paddingM),
               InkWell(
@@ -643,7 +748,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 child: SizedBox(
                   width: Dimension.defaultIconSize,
                   height: Dimension.defaultIconSize,
-                  child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG, color: ColorsExt.grey3(context)),
+                  child: SvgPicture.asset(Assets.images.icons.common.xmarkSVG, color: ColorsExt.grey600(context)),
                 ),
               ),
             ],
@@ -656,10 +761,19 @@ class _EventEditModalState extends State<EventEditModal> {
   InkWell _addConferenceRow(BuildContext context) {
     return InkWell(
       onTap: () {
-        setState(() {
-          addingMeeting = true;
-          removingMeeting = false;
-        });
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => ChooseConferenceModal(
+            onChange: (String selectedMeetingSolution, String akiflowAccountId) {
+              setState(() {
+                addingMeeting = true;
+                removingMeeting = false;
+                meetingSolution = selectedMeetingSolution;
+                conferenceAccountId = akiflowAccountId;
+              });
+            },
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
@@ -670,7 +784,7 @@ class _EventEditModalState extends State<EventEditModal> {
               height: Dimension.defaultIconSize,
               child: SvgPicture.asset(
                 Assets.images.icons.common.videocamSVG,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey600(context),
               ),
             ),
             const SizedBox(width: Dimension.padding),
@@ -678,44 +792,51 @@ class _EventEditModalState extends State<EventEditModal> {
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
           ],
         ),
       ),
     );
   }
 
-  Padding _locationRow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Dimension.paddingXS),
-      child: Row(
-        children: [
-          SizedBox(
-            width: Dimension.defaultIconSize,
-            height: Dimension.defaultIconSize,
-            child: SvgPicture.asset(
-              Assets.images.icons.common.mapSVG,
-              color: locationController.text.isEmpty ? ColorsExt.grey3(context) : ColorsExt.grey2(context),
+  InkWell _locationRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => AddLocationModal(
+            initialLocation: updatedEvent.content?["location"],
+            updateLocation: (String location) {
+              setState(() {
+                locationController.text = location;
+              });
+            },
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.mapSVG,
+                color: locationController.text.isEmpty ? ColorsExt.grey600(context) : ColorsExt.grey800(context),
+              ),
             ),
-          ),
-          const SizedBox(width: Dimension.padding),
-          Expanded(
-            child: TextField(
-                controller: locationController,
-                decoration: InputDecoration(
-                  hintText: t.event.editEvent.addLocation,
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .subtitle1
-                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-                  border: InputBorder.none,
-                ),
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
-          ),
-        ],
+            const SizedBox(width: Dimension.padding),
+            Expanded(
+              child: Text(locationController.text.isEmpty ? t.event.editEvent.addLocation : locationController.text,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      color: locationController.text.isEmpty ? ColorsExt.grey600(context) : ColorsExt.grey800(context),
+                      fontWeight: FontWeight.w400)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -728,13 +849,22 @@ class _EventEditModalState extends State<EventEditModal> {
           showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => ChooseCalendarModal(
-              onChange: (String? choosenCalendar, String? choosenCalendarId) {
+              onChange: (Calendar calendar) {
                 setState(() {
-                  organizerCalendar = choosenCalendar ?? organizerCalendar;
-                  organizerCalendarId = choosenCalendarId ?? organizerCalendarId;
+                  choosenCalendar = calendar.originId!;
                 });
+                updatedEvent = updatedEvent.copyWith(
+                  creatorId: calendar.originId,
+                  organizerId: calendar.originId,
+                  calendarId: calendar.id,
+                  originCalendarId: calendar.originId,
+                  connectorId: calendar.connectorId,
+                  akiflowAccountId: calendar.akiflowAccountId,
+                  originAccountId: calendar.originAccountId,
+                  calendarColor: calendar.color,
+                );
               },
-              initialCalendar: updatedEvent.organizerId,
+              initialCalendar: choosenCalendar,
             ),
           );
         }
@@ -743,19 +873,15 @@ class _EventEditModalState extends State<EventEditModal> {
         padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
         child: Row(
           children: [
-            SvgPicture.asset(
-              Assets.images.icons.common.circleFillSVG,
-              width: Dimension.defaultIconSize,
-              height: Dimension.defaultIconSize,
-              color:
-                  ColorsExt.fromHex(EventExt.calendarColor[updatedEvent.calendarColor] ?? updatedEvent.calendarColor!),
-            ),
+            CalendarColorCircle(
+                calendarColor: EventExt.calendarColor[updatedEvent.calendarColor] ?? updatedEvent.calendarColor!,
+                size: Dimension.defaultIconSize),
             const SizedBox(width: Dimension.padding),
-            Text(organizerCalendar,
+            Text(choosenCalendar,
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
           ],
         ),
       ),
@@ -779,7 +905,7 @@ class _EventEditModalState extends State<EventEditModal> {
               style: Theme.of(context)
                   .textTheme
                   .subtitle1
-                  ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                  ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
         ],
       ),
     );
@@ -795,7 +921,7 @@ class _EventEditModalState extends State<EventEditModal> {
             height: Dimension.defaultIconSize,
             child: SvgPicture.asset(
               Assets.images.icons.common.personCropCircleSVG,
-              color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+              color: updatedEvent.attendees != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
             ),
           ),
           const SizedBox(width: Dimension.padding),
@@ -803,7 +929,7 @@ class _EventEditModalState extends State<EventEditModal> {
             t.event.guests,
             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 fontWeight: FontWeight.w400,
-                color: updatedEvent.attendees != null ? ColorsExt.grey2(context) : ColorsExt.grey3(context)),
+                color: updatedEvent.attendees != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context)),
           ),
         ],
       ),
@@ -829,7 +955,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           height: Dimension.defaultIconSize,
                           child: SvgPicture.asset(
                             Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                            color: ColorsExt.green(context),
+                            color: ColorsExt.yorkGreen400(context),
                           ),
                         )
                       : updatedEvent.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
@@ -838,7 +964,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               height: Dimension.defaultIconSize,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.xmarkCircleFillSVG,
-                                color: ColorsExt.red(context),
+                                color: ColorsExt.cosmos400(context),
                               ),
                             )
                           : SizedBox(
@@ -846,7 +972,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               height: Dimension.defaultIconSize,
                               child: SvgPicture.asset(
                                 Assets.images.icons.common.questionCircleFillSVG,
-                                color: ColorsExt.grey3(context),
+                                color: ColorsExt.grey600(context),
                               ),
                             ),
                   const SizedBox(width: Dimension.padding),
@@ -859,12 +985,12 @@ class _EventEditModalState extends State<EventEditModal> {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                              ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
                       if (updatedEvent.attendees![index].organizer ?? false)
                         Text(
                           ' - ${t.event.organizer}',
                           style:
-                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                         ),
                     ],
                   ),
@@ -884,7 +1010,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   height: Dimension.defaultIconSize,
                   child: SvgPicture.asset(
                     Assets.images.icons.common.xmarkSVG,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
                 ),
               ),
@@ -908,14 +1034,14 @@ class _EventEditModalState extends State<EventEditModal> {
               Assets.images.icons.common.plusCircleSVG,
               width: Dimension.defaultIconSize,
               height: Dimension.defaultIconSize,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
             ),
             const SizedBox(width: Dimension.padding),
             Text(t.event.editEvent.addGuests,
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1
-                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey3(context))),
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
           ],
         ),
       ),
@@ -931,19 +1057,19 @@ class _EventEditModalState extends State<EventEditModal> {
           EventAtendee newAtendee = EventAtendee(
             displayName: contact.name,
             email: contact.identifier,
-            responseStatus: contact.identifier == updatedEvent.originCalendarId
+            responseStatus: contact.identifier == choosenCalendar
                 ? AtendeeResponseStatus.accepted.id
                 : AtendeeResponseStatus.needsAction.id,
-            organizer: contact.identifier == updatedEvent.originCalendarId ? true : false,
+            organizer: contact.identifier == choosenCalendar ? true : false,
           );
           atendeesToAdd.add(newAtendee.email!);
           if (attendees == null) {
             attendees = List.from([newAtendee]);
-            if (newAtendee.email! != updatedEvent.originCalendarId) {
+            if (newAtendee.email! != choosenCalendar) {
               EventAtendee loggedInUserAtendee = EventAtendee(
                 organizer: true,
-                displayName: updatedEvent.originCalendarId,
-                email: updatedEvent.originCalendarId,
+                displayName: choosenCalendar,
+                email: choosenCalendar,
                 responseStatus: AtendeeResponseStatus.accepted.id,
               );
               atendeesToAdd.add(loggedInUserAtendee.email!);
@@ -986,7 +1112,7 @@ class _EventEditModalState extends State<EventEditModal> {
       builder: (context, quill.QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: quill.QuillEditor(
@@ -1005,9 +1131,9 @@ class _EventEditModalState extends State<EventEditModal> {
           },
           customStyles: quill.DefaultStyles(
             placeHolder: quill.DefaultTextBlockStyle(
-              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-              const tuple.Tuple2(0, 0),
-              const tuple.Tuple2(0, 0),
+              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
+              const quill.VerticalSpacing(0, 0),
+              const quill.VerticalSpacing(0, 0),
               null,
             ),
           ),
@@ -1045,7 +1171,7 @@ class _EventEditModalState extends State<EventEditModal> {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context))),
+                            ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
                   ],
                 ),
                 SvgPicture.asset(
@@ -1076,27 +1202,37 @@ class _EventEditModalState extends State<EventEditModal> {
       ),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(Dimension.padding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                BottomButton(
-                    title: t.cancel,
-                    image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
-                    onTap: () {
-                      _onCancelTap();
-                    }),
-                BottomButton(
-                  title: widget.createingEvent ?? false ? t.event.editEvent.createEvent : t.event.editEvent.saveChanges,
-                  image: Assets.images.icons.common.checkmarkAltSVG,
-                  containerColor: ColorsExt.green20(context),
-                  iconColor: ColorsExt.green(context),
-                  onTap: () async {
-                    _onSaveTap();
-                  },
-                ),
-              ],
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(Dimension.paddingS),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: BottomButton(
+                        title: t.cancel,
+                        image: Assets.images.icons.common.arrowshapeTurnUpLeftSVG,
+                        onTap: () {
+                          _onCancelTap();
+                        }),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: BottomButton(
+                      title: widget.createingEvent ?? false
+                          ? t.event.editEvent.createEvent
+                          : t.event.editEvent.saveChanges,
+                      image: Assets.images.icons.common.checkmarkAltSVG,
+                      containerColor: ColorsExt.yorkGreen200(context),
+                      iconColor: ColorsExt.yorkGreen400(context),
+                      onTap: () async {
+                        _onSaveTap();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -1123,12 +1259,6 @@ class _EventEditModalState extends State<EventEditModal> {
         updatedAt: Nullable(DateTime.now().toUtc().toIso8601String()));
 
     if (widget.createingEvent ?? false) {
-      updatedEvent = updatedEvent.copyWith(
-        calendarId: organizerCalendarId,
-        creatorId: organizerCalendar,
-        originCalendarId: organizerCalendar,
-        organizerId: organizerCalendar,
-      );
       await context.read<EventsCubit>().addEventToDb(updatedEvent);
     }
 
@@ -1144,13 +1274,13 @@ class _EventEditModalState extends State<EventEditModal> {
                         .createEventException(
                             context: context,
                             tappedDate: widget.tappedDate,
-                            dateChanged: dateChanged,
                             originalStartTime: widget.originalStartTime,
-                            timeChanged: timeChanged,
                             parentEvent: updatedEvent,
                             atendeesToAdd: atendeesToAdd,
                             atendeesToRemove: atendeesToRemove,
                             addMeeting: addingMeeting,
+                            selectedMeetingSolution: meetingSolution,
+                            conferenceAccountId: conferenceAccountId,
                             removeMeeting: removingMeeting,
                             rsvpChanged: false)
                         .then((value) {
@@ -1160,11 +1290,14 @@ class _EventEditModalState extends State<EventEditModal> {
                     context
                         .read<EventsCubit>()
                         .updateEventAndCreateModifiers(
-                            event: updatedEvent,
-                            atendeesToAdd: atendeesToAdd,
-                            atendeesToRemove: atendeesToRemove,
-                            addMeeting: addingMeeting,
-                            removeMeeting: removingMeeting)
+                          event: updatedEvent,
+                          atendeesToAdd: atendeesToAdd,
+                          atendeesToRemove: atendeesToRemove,
+                          addMeeting: addingMeeting,
+                          removeMeeting: removingMeeting,
+                          selectedMeetingSolution: meetingSolution,
+                          conferenceAccountId: conferenceAccountId,
+                        )
                         .then((value) {
                       _showEventEditedSnackbar();
                     });
@@ -1212,12 +1345,13 @@ class _EventEditModalState extends State<EventEditModal> {
                 atendeesToRemove: atendeesToRemove,
                 addMeeting: addingMeeting,
                 removeMeeting: removingMeeting,
+                selectedMeetingSolution: meetingSolution,
+                conferenceAccountId: conferenceAccountId,
                 createingEvent: widget.createingEvent ?? false)
             .then(
           (value) {
             bool createdEvent = widget.createingEvent ?? false;
             if (createdEvent) {
-              context.read<EventsCubit>().refreshAllEvents(context);
               ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
                   context: context, type: CustomSnackbarType.eventCreated, message: t.event.snackbar.created));
             } else {
@@ -1249,21 +1383,27 @@ class _EventEditModalState extends State<EventEditModal> {
       context
           .read<EventsCubit>()
           .updateEventAndCreateModifiers(
-              event: updatedEvent,
-              atendeesToAdd: atendeesToAdd,
-              atendeesToRemove: atendeesToRemove,
-              addMeeting: addingMeeting,
-              removeMeeting: removingMeeting)
+            event: updatedEvent,
+            atendeesToAdd: atendeesToAdd,
+            atendeesToRemove: atendeesToRemove,
+            addMeeting: addingMeeting,
+            removeMeeting: removingMeeting,
+            selectedMeetingSolution: meetingSolution,
+            conferenceAccountId: conferenceAccountId,
+          )
           .then((value) => _showEventEditedSnackbar());
     } else {
       context
           .read<EventsCubit>()
           .updateParentAndExceptions(
-              exceptionEvent: updatedEvent,
-              atendeesToAdd: atendeesToAdd,
-              atendeesToRemove: atendeesToRemove,
-              addMeeting: addingMeeting,
-              removeMeeting: removingMeeting)
+            exceptionEvent: updatedEvent,
+            atendeesToAdd: atendeesToAdd,
+            atendeesToRemove: atendeesToRemove,
+            addMeeting: addingMeeting,
+            removeMeeting: removingMeeting,
+            selectedMeetingSolution: meetingSolution,
+            conferenceAccountId: conferenceAccountId,
+          )
           .then((value) => _showEventEditedSnackbar());
     }
   }

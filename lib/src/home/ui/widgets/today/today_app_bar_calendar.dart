@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
@@ -43,7 +44,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
   @override
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.bodyText1!.copyWith(
-          color: ColorsExt.grey3(context),
+          color: ColorsExt.grey600(context),
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
         );
@@ -56,8 +57,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
             return Column(
               children: [
                 TableCalendar(
-                  startingDayOfWeek:
-                      firstDayOfWeek == -1 || firstDayOfWeek == 1 ? StartingDayOfWeek.monday : StartingDayOfWeek.sunday,
+                  startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
                   onPageChanged: (page) {
                     BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
                   },
@@ -91,7 +91,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                           child: Text(
                             DateFormat("d").format(day),
                             style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: ColorsExt.grey2(context),
+                                  color: ColorsExt.grey800(context),
                                   fontWeight: FontWeight.w500,
                                   overflow: TextOverflow.ellipsis,
                                 ),

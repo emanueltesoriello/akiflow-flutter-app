@@ -5,12 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AppbarCalendarPanel extends StatefulWidget {
@@ -56,9 +57,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                   onCalendarCreated: (pageController) {
                     _pageController = pageController;
                   },
-                  startingDayOfWeek: firstDayOfWeek == -1 || firstDayOfWeek == DateTime.monday
-                      ? StartingDayOfWeek.monday
-                      : StartingDayOfWeek.sunday,
+                  startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
                   rowHeight: Dimension.todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   calendarFormat: CalendarFormat.month,
@@ -87,11 +86,11 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                     weekdayStyle: Theme.of(context)
                         .textTheme
                         .bodyText1!
-                        .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600),
+                        .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600),
                     weekendStyle: Theme.of(context)
                         .textTheme
                         .bodyText1!
-                        .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w600),
+                        .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600),
                   ),
                   calendarBuilders: CalendarBuilders(
                     defaultBuilder: (context, day, focusedDay) {
@@ -103,7 +102,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1!
-                                .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                                .copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                           ),
                         ),
                       );
@@ -123,7 +122,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1!
-                                .copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.w500),
+                                .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                           ),
                         ),
                       );
@@ -144,7 +143,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                                   Assets.images.icons.common.chevronRightSVG,
                                   width: 20,
                                   height: 20,
-                                  color: ColorsExt.grey2(context),
+                                  color: ColorsExt.grey800(context),
                                 ),
                               ),
                             ),
@@ -159,7 +158,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                                 Assets.images.icons.common.chevronRightSVG,
                                 width: 20,
                                 height: 20,
-                                color: ColorsExt.grey2(context),
+                                color: ColorsExt.grey800(context),
                               ),
                             )
                           ],

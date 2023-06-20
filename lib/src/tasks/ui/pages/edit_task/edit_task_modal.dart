@@ -61,15 +61,31 @@ class _EditTaskModalState extends State<EditTaskModal> {
     });
   }
 
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    _titleFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+    super.dispose();
+  }
+
   initFocusNodeListener() {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     _titleFocusNode.addListener(() {
       print('Focus on title');
-      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
+      if (_titleFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 0), () {
+          cubit.setHasFocusOnTitleOrDescription(true);
+        });
+      }
     });
     _descriptionFocusNode.addListener(() {
       print('Focus on description');
-      Future.delayed(const Duration(milliseconds: 0), () => cubit.setHasFocusOnTitleOrDescription(true));
+      if (_descriptionFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 0), () {
+          cubit.setHasFocusOnTitleOrDescription(true);
+        });
+      }
     });
   }
 
@@ -87,12 +103,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
     quillController.value.moveCursorToEnd();
   }
 
-  @override
-  void dispose() {
-    streamSubscription?.cancel();
-    super.dispose();
-  }
-
   _actionsForFocusNodes(EditTaskCubitState state) {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
 
@@ -106,20 +116,24 @@ class _EditTaskModalState extends State<EditTaskModal> {
             onPressed: () {
               onBack(state);
             },
-            icon: Icon(Icons.arrow_back, size: 16, color: ColorsExt.grey3(context)),
+            icon: Icon(Icons.arrow_back, size: 16, color: ColorsExt.grey600(context)),
             label: Text(
               'Edit task',
-              style: Theme.of(context).textTheme.button?.copyWith(color: ColorsExt.grey3(context)),
+              style: Theme.of(context).textTheme.button?.copyWith(color: ColorsExt.grey600(context)),
             ),
           ),
           TextButton(
-            onPressed: () => cubit.setHasFocusOnTitleOrDescription(false),
+            onPressed: () {
+              _titleFocusNode.unfocus();
+              _descriptionFocusNode.unfocus();
+              cubit.setHasFocusOnTitleOrDescription(false);
+            },
             child: Text(
               'SAVE',
               style: Theme.of(context)
                   .textTheme
                   .bodyText1!
-                  .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context)),
+                  .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context)),
             ),
           ),
         ],
@@ -130,62 +144,74 @@ class _EditTaskModalState extends State<EditTaskModal> {
   Future<bool> onBack(EditTaskCubitState state) async {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
     if (state.hasFocusOnTitleOrDescription) {
-      await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('Discard changes?',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey1(context))),
-                    const SizedBox(height: Dimension.paddingM),
-                    Text('The changes you’ve made won’t be saved',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            ?.copyWith(color: ColorsExt.grey2_5(context), fontWeight: FontWeight.normal)),
-                    const SizedBox(height: Dimension.paddingM),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
+      if (cubit.state.originalTask == cubit.state.updatedTask) {
+        cubit.setHasFocusOnTitleOrDescription(false);
+        FocusScope.of(context).unfocus();
+      } else {
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  surfaceTintColor: Colors.white,
+                  backgroundColor: Colors.white,
+                  shape:
+                      const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: Dimension.padding),
+                      Text('Discard changes?',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey900(context))),
+                      const SizedBox(height: Dimension.paddingM),
+                      Text('The changes you’ve made won’t be saved',
                           style: Theme.of(context)
-                              .textButtonTheme
-                              .style
-                              ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Cancel'.toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
-                        ),
-                        const SizedBox(width: Dimension.padding),
-                        TextButton(
-                          style: Theme.of(context)
-                              .textButtonTheme
-                              .style
-                              ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey5(context))),
-                          onPressed: () async {
-                            streamSubscription?.cancel();
-                            quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
-                                document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
-                            _init();
-                            cubit.undoChanges();
-                            cubit.setHasFocusOnTitleOrDescription(false);
-                            FocusScope.of(context).unfocus();
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Discard'.toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey1(context))),
-                        )
-                      ],
-                    )
-                  ],
-                ));
-          });
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.normal)),
+                      const SizedBox(height: Dimension.paddingM),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            style: Theme.of(context)
+                                .textButtonTheme
+                                .style
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey200(context))),
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel'.toUpperCase(),
+                                style:
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey900(context))),
+                          ),
+                          const SizedBox(width: Dimension.padding),
+                          TextButton(
+                            style: Theme.of(context)
+                                .textButtonTheme
+                                .style
+                                ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey200(context))),
+                            onPressed: () async {
+                              streamSubscription?.cancel();
+                              quillController = ValueNotifier<quill.QuillController>(quill.QuillController(
+                                  document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
+                              _init();
+                              cubit.undoChanges();
+                              cubit.setHasFocusOnTitleOrDescription(false);
+                              FocusScope.of(context).unfocus();
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Discard'.toUpperCase(),
+                                style:
+                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey900(context))),
+                          )
+                        ],
+                      )
+                    ],
+                  ));
+            });
+      }
+
       return false;
     } else {
       Navigator.of(context).pop(true);
@@ -195,7 +221,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
   Widget animatedChild(bool showWidget, Widget child) {
     Widget animatedChild = Container();
-    return AnimatedSwitcher(duration: const Duration(milliseconds: 2000), child: showWidget ? child : animatedChild);
+
+    return AnimatedSwitcher(
+        reverseDuration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
+        child: showWidget ? child : animatedChild);
   }
 
   @override
@@ -205,24 +235,31 @@ class _EditTaskModalState extends State<EditTaskModal> {
         return WillPopScope(
           onWillPop: () => onBack(state),
           child: Material(
-              color: Theme.of(context).backgroundColor,
+            color: Colors.transparent,
+            child: ConstrainedBox(
+              constraints:
+                  BoxConstraints(minHeight: 0, maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2),
               child: AnimatedSize(
-                curve: Curves.elasticOut,
-                duration: const Duration(milliseconds: 400),
+                curve: Curves.linear,
+                duration: const Duration(milliseconds: 200),
+                reverseDuration: const Duration(milliseconds: 200),
                 child: Container(
-                  height: state.hasFocusOnTitleOrDescription ? MediaQuery.of(context).size.height / 2 : null,
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(Dimension.radiusS),
-                      topRight: Radius.circular(Dimension.radiusM),
+                  height: state.hasFocusOnTitleOrDescription
+                      ? MediaQuery.of(context).size.height -
+                          (kToolbarHeight * 2) +
+                          MediaQuery.of(context).viewInsets.bottom
+                      : null,
+                  decoration: BoxDecoration(
+                    color: ColorsExt.background(context),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(Dimension.radius),
+                      topRight: Radius.circular(Dimension.radius),
                     ),
                   ),
-                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: ScrollConfiguration(
                     behavior: NoScrollBehav(),
-                    child: ListView(
-                      shrinkWrap: true,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const SizedBox(height: Dimension.padding),
                         animatedChild(!state.hasFocusOnTitleOrDescription, const ScrollChip()),
@@ -242,34 +279,43 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             );
                           },
                         )),
-                        Column(
-                          children: [
-                            animatedChild(!state.hasFocusOnTitleOrDescription, const EditTaskTopActions()),
-                            animatedChild(!state.hasFocusOnTitleOrDescription, const SizedBox(height: 12)),
-                            animatedChild(state.hasFocusOnTitleOrDescription, _actionsForFocusNodes(state)),
-                            if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 10),
-                            if (state.hasFocusOnTitleOrDescription) const Separator(),
-                            if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 15),
-                            EditTaskRow(
-                              key: const GlobalObjectKey('EditTaskRow'),
-                              quillController: quillController,
-                              titleController: _titleController,
-                              descriptionFocusNode: _descriptionFocusNode,
-                              titleFocusNode: _titleFocusNode,
-                            ),
-                            if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
-                            if (!state.hasFocusOnTitleOrDescription) const Separator(),
-                            if (!state.hasFocusOnTitleOrDescription) const EditTaskLinkedContent(),
-                            if (!state.hasFocusOnTitleOrDescription) const EditTaskLinks(),
-                            if (!state.hasFocusOnTitleOrDescription) const EditTaskBottomActions(),
-                            if (!state.hasFocusOnTitleOrDescription) const Separator(),
-                          ],
-                        )
+                        animatedChild(!state.hasFocusOnTitleOrDescription, const EditTaskTopActions()),
+                        animatedChild(!state.hasFocusOnTitleOrDescription, const SizedBox(height: 12)),
+                        animatedChild(state.hasFocusOnTitleOrDescription, _actionsForFocusNodes(state)),
+                        if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 10),
+                        if (state.hasFocusOnTitleOrDescription) const Separator(),
+                        Flexible(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              Column(
+                                children: [
+                                  if (state.hasFocusOnTitleOrDescription) const SizedBox(height: 15),
+                                  EditTaskRow(
+                                    key: const GlobalObjectKey('EditTaskRow'),
+                                    quillController: quillController,
+                                    titleController: _titleController,
+                                    descriptionFocusNode: _descriptionFocusNode,
+                                    titleFocusNode: _titleFocusNode,
+                                  ),
+                                  if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: 12),
+                                  if (!state.hasFocusOnTitleOrDescription) const Separator(),
+                                  if (!state.hasFocusOnTitleOrDescription) const EditTaskLinkedContent(),
+                                  if (!state.hasFocusOnTitleOrDescription) const EditTaskLinks(),
+                                  if (!state.hasFocusOnTitleOrDescription) const EditTaskBottomActions(),
+                                  if (!state.hasFocusOnTitleOrDescription) const Separator(),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-              )),
+              ),
+            ),
+          ),
         );
       },
     );

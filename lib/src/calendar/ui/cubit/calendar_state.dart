@@ -7,9 +7,13 @@ class CalendarCubitState extends Equatable {
   final bool isCalendarWeekendHidden;
   final bool areDeclinedEventsHidden;
   final bool areCalendarTasksHidden;
+  final bool groupOverlappingTasks;
   final List<Calendar> calendars;
   final List<DateTime> visibleDates;
   final PanelState panelState;
+  final List<int> nonWorkingDays;
+  final bool appointmentTapped;
+  final int systemStartOfWeekDay;
 
   const CalendarCubitState({
     this.navigationState = CalendarNavigationState.loading,
@@ -18,9 +22,13 @@ class CalendarCubitState extends Equatable {
     this.isCalendarWeekendHidden = false,
     this.areDeclinedEventsHidden = false,
     this.areCalendarTasksHidden = false,
+    this.groupOverlappingTasks = true,
     this.calendars = const [],
     this.visibleDates = const [],
     this.panelState = PanelState.closed,
+    this.nonWorkingDays = const [DateTime.saturday, DateTime.sunday],
+    this.appointmentTapped = false,
+    this.systemStartOfWeekDay = DateTime.monday,
   });
 
   CalendarCubitState copyWith({
@@ -30,9 +38,13 @@ class CalendarCubitState extends Equatable {
     bool? isCalendarWeekendHidden,
     bool? areDeclinedEventsHidden,
     bool? areCalendarTasksHidden,
+    bool? groupOverlappingTasks,
     List<Calendar>? calendars,
     List<DateTime>? visibleDates,
     PanelState? panelState,
+    List<int>? nonWorkingDays,
+    bool? appointmentTapped,
+    int? systemStartOfWeekDay,
   }) {
     return CalendarCubitState(
       navigationState: navigationState ?? this.navigationState,
@@ -41,9 +53,13 @@ class CalendarCubitState extends Equatable {
       isCalendarWeekendHidden: isCalendarWeekendHidden ?? this.isCalendarWeekendHidden,
       areDeclinedEventsHidden: areDeclinedEventsHidden ?? this.areDeclinedEventsHidden,
       areCalendarTasksHidden: areCalendarTasksHidden ?? this.areCalendarTasksHidden,
+      groupOverlappingTasks: groupOverlappingTasks ?? this.groupOverlappingTasks,
       calendars: calendars ?? this.calendars,
       visibleDates: visibleDates ?? this.visibleDates,
       panelState: panelState ?? this.panelState,
+      nonWorkingDays: nonWorkingDays ?? this.nonWorkingDays,
+      appointmentTapped: appointmentTapped ?? this.appointmentTapped,
+      systemStartOfWeekDay: systemStartOfWeekDay ?? this.systemStartOfWeekDay,
     );
   }
 
@@ -55,8 +71,12 @@ class CalendarCubitState extends Equatable {
         isCalendarWeekendHidden,
         areDeclinedEventsHidden,
         areCalendarTasksHidden,
+        groupOverlappingTasks,
         calendars,
         visibleDates,
         panelState,
+        nonWorkingDays,
+        appointmentTapped,
+        systemStartOfWeekDay,
       ];
 }

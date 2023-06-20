@@ -56,7 +56,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                     return Text(text,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
+                              color: ColorsExt.grey800(context),
                             ));
                   },
                 ),
@@ -74,7 +74,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                           Assets.images.icons.common.checkmarkSVG,
                           width: Dimension.defaultIconSize,
                           height: Dimension.defaultIconSize,
-                          color: ColorsExt.akiflow(context),
+                          color: ColorsExt.akiflow500(context),
                         ),
                       ),
                     );
@@ -94,7 +94,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                 min: 0,
                 max: 4,
                 divisions: 16,
-                thumbColor: ColorsExt.akiflow(context),
+                thumbColor: ColorsExt.akiflow500(context),
                 onChanged: (double value) {
                   _selectedDuration.value = (value * 3600).toInt();
                 },

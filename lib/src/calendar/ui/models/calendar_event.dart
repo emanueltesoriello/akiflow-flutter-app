@@ -4,7 +4,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:models/event/event.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class CalendarEvent extends Appointment {
   CalendarEvent(
@@ -110,9 +110,9 @@ class CalendarEvent extends Appointment {
       List<String> days = byDay.first.replaceFirst('BYDAY=', '').split(',');
       List<int> bySetPos = [];
       for (int i = 0; i < days.length; i++) {
-        if (days[i].startsWith(RegExp(r'[0-9]'))) {
+        if (days[i].startsWith(RegExp(r'-?\+?[0-9]'))) {
           bySetPos.add(int.parse(days[i].replaceAll(RegExp(r'[a-zA-Z]'), '')));
-          days[i] = days[i].replaceAll(RegExp(r'[0-9]'), '');
+          days[i] = days[i].replaceAll(RegExp(r'-?\+?[0-9]'), '');
         }
       }
       DateTime startUtc = startTime.toUtc();
@@ -127,6 +127,9 @@ class CalendarEvent extends Appointment {
       String byDayString = days.join(',');
       parts.add('BYDAY=$byDayString');
 
+      if (parts.where((part) => part.startsWith('BYSETPOS=')).isEmpty && bySetPos.isEmpty) {
+        bySetPos.add(1);
+      }
       String bySetPosString = bySetPos.join(',');
       if (bySetPosString.isNotEmpty) {
         parts.add('BYSETPOS=$bySetPosString');

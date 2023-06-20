@@ -7,92 +7,156 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
-class UndoBottomView extends StatelessWidget {
+class UndoBottomView extends StatefulWidget {
   const UndoBottomView({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<TasksCubit, TasksCubitState>(
-      builder: (context, state) {
-        if (state.queue.isEmpty) {
-          return const SizedBox();
-        }
-        UndoTask? task = state.queue.first;
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Material(
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 51,
-                  margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(left: Dimension.padding),
-                  decoration: BoxDecoration(
-                    color: color(context, task.type),
-                    border: Border.all(
-                      color: ColorsExt.grey4(context),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Row(
-                    children: [
-                      icon(context, task.type),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(text(task.type),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            context.read<TasksCubit>().undo();
-                          },
-                          child: Text(t.task.undo.toUpperCase(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500))),
-                    ],
-                  ),
-                ),
-              ),
+  State<UndoBottomView> createState() => _UndoBottomViewState();
+}
+
+class _UndoBottomViewState extends State<UndoBottomView> {
+  int snackBarShown = 0;
+
+  _buildSnackBarAfterUndoneClick() {
+    return SnackBar(
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      content: Padding(
+        padding: const EdgeInsets.only(bottom: Dimension.padding),
+        child: Container(
+          height: Dimension.snackBarHeight,
+          margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+          width: double.infinity,
+          padding: const EdgeInsets.only(left: Dimension.padding),
+          decoration: BoxDecoration(
+            color: ColorsExt.jordyBlue100(context),
+            border: Border.all(
+              color: ColorsExt.grey300(context),
+              width: 1,
             ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + Dimension.bottomBarHeight + Dimension.padding),
-          ],
-        );
-      },
+            borderRadius: BorderRadius.circular(Dimension.radiusS),
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                Assets.images.icons.common.checkDoneOutlineSVG,
+                color: ColorsExt.grey700(context),
+                height: 25.0,
+              ),
+              const SizedBox(width: Dimension.paddingS),
+              Expanded(
+                child: Text("Action undone",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
+              ),
+              TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                  child: Text("CLOSE",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500))),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  _buildSnackBar(UndoTask task) {
+    return SnackBar(
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      content: Padding(
+        padding: const EdgeInsets.only(bottom: Dimension.padding),
+        child: Container(
+          height: Dimension.snackBarHeight,
+          margin: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+          width: double.infinity,
+          padding: const EdgeInsets.only(left: Dimension.padding),
+          decoration: BoxDecoration(
+            color: color(context, task.type),
+            border: Border.all(
+              color: ColorsExt.grey300(context),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(Dimension.radiusS),
+          ),
+          child: Row(
+            children: [
+              icon(context, task.type),
+              const SizedBox(width: Dimension.paddingS),
+              Expanded(
+                child: Text(text(task.type),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
+              ),
+              TextButton(
+                  onPressed: () {
+                    context.read<TasksCubit>().undo();
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(_buildSnackBarAfterUndoneClick());
+                  },
+                  child: Text(t.task.undo.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500))),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<TasksCubit, TasksCubitState>(
+        listener: (context, state) {
+          if (state.queue.isNotEmpty && snackBarShown == 0) {
+            snackBarShown += 1;
+
+            UndoTask? task = state.queue.first;
+
+            ScaffoldMessenger.of(context).showSnackBar(_buildSnackBar(task));
+          } else if (state.queue.isEmpty) {
+            snackBarShown = 0;
+          }
+        },
+        child: const SizedBox());
   }
 
   Color color(BuildContext context, UndoType type) {
     switch (type) {
       case UndoType.delete:
-        return ColorsExt.cyan25(context);
+        return ColorsExt.jordyBlue100(context);
       case UndoType.markDone:
-        return ColorsExt.green20(context);
+        return ColorsExt.yorkGreen100(context);
       case UndoType.markUndone:
-        return ColorsExt.cyan25(context);
+        return ColorsExt.jordyBlue100(context);
       case UndoType.plan:
-        return ColorsExt.cyan25(context);
+        return ColorsExt.jordyBlue100(context);
       case UndoType.snooze:
-        return ColorsExt.akiflow20(context);
+        return ColorsExt.akiflow200(context);
       case UndoType.restore:
         // TODO: Handle this case.
         break;
       case UndoType.moveToInbox:
-        return ColorsExt.green20(context);
+        return ColorsExt.yorkGreen100(context);
       case UndoType.updated:
-        return ColorsExt.green20(context);
+        return ColorsExt.yorkGreen100(context);
     }
-    return ColorsExt.akiflow(context);
+    return ColorsExt.akiflow500(context);
   }
 
   String text(UndoType type) {
@@ -129,25 +193,25 @@ class UndoBottomView extends StatelessWidget {
       case UndoType.markDone:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneSVG,
-          color: ColorsExt.green(context),
+          color: ColorsExt.yorkGreen400(context),
           height: iconSize,
         );
       case UndoType.plan:
         return SvgPicture.asset(
           Assets.images.icons.common.calendarSVG,
-          color: ColorsExt.cyan(context),
+          color: ColorsExt.jordyBlue400(context),
           height: iconSize,
         );
       case UndoType.snooze:
         return SvgPicture.asset(
           Assets.images.icons.common.clockSVG,
-          color: ColorsExt.akiflow(context),
+          color: ColorsExt.akiflow500(context),
           height: iconSize,
         );
       case UndoType.markUndone:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneSVG,
-          color: ColorsExt.cyan25(context),
+          color: ColorsExt.jordyBlue200(context),
           height: iconSize,
         );
       case UndoType.restore:
@@ -156,19 +220,19 @@ class UndoBottomView extends StatelessWidget {
       case UndoType.moveToInbox:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneOutlineSVG,
-          color: ColorsExt.grey2_5(context),
+          color: ColorsExt.grey700(context),
           height: iconSize,
         );
       case UndoType.updated:
         return SvgPicture.asset(
           Assets.images.icons.common.checkDoneOutlineSVG,
-          color: ColorsExt.grey2_5(context),
+          color: ColorsExt.grey700(context),
           height: iconSize,
         );
     }
     return SvgPicture.asset(
       Assets.images.icons.common.calendarSVG,
-      color: ColorsExt.akiflow10(context),
+      color: ColorsExt.akiflow100(context),
       height: iconSize,
     );
   }

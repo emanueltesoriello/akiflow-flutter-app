@@ -67,12 +67,12 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                                   hintText: t.label.sectionTitle,
                                   border: InputBorder.none,
                                   hintStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        color: ColorsExt.grey3(context),
+                                        color: ColorsExt.grey600(context),
                                         fontWeight: FontWeight.w500,
                                       ),
                                 ),
                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      color: ColorsExt.grey3(context),
+                                      color: ColorsExt.grey600(context),
                                       fontWeight: FontWeight.w500,
                                     ),
                                 onChanged: (value) {

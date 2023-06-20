@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -42,6 +45,10 @@ class _PlanModalState extends State<PlanModal> {
   final ValueNotifier<DateTime> _selectedDate = ValueNotifier(DateTime.now());
   final ValueNotifier<DateTime?> _selectedDatetime = ValueNotifier(null);
   final ValueNotifier<TaskStatusType> _selectedStatus = ValueNotifier(TaskStatusType.planned);
+  final _preferencesRepository = locator<PreferencesRepository>();
+
+  int timeFormat = -1;
+  bool use24hFormat = true;
 
   @override
   void initState() {
@@ -49,11 +56,15 @@ class _PlanModalState extends State<PlanModal> {
     _selectedDatetime.value = widget.initialDatetime;
     _selectedStatus.value = widget.initialHeaderStatusType;
 
+    timeFormat = _preferencesRepository.timeFormat;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
+
     return Material(
       color: Colors.transparent,
       child: Wrap(
@@ -128,7 +139,7 @@ class _PlanModalState extends State<PlanModal> {
                 children: [
                   CreateTaskTopActionItem(
                     text: t.addTask.plan,
-                    color: ColorsExt.grey5(context),
+                    color: ColorsExt.grey200(context),
                     leadingIconAsset: Assets.images.icons.common.calendarSVG,
                     active: status == TaskStatusType.planned,
                     onPressed: () {
@@ -138,7 +149,7 @@ class _PlanModalState extends State<PlanModal> {
                   const SizedBox(width: 24),
                   CreateTaskTopActionItem(
                     text: t.addTask.snooze,
-                    color: ColorsExt.pink30(context),
+                    color: ColorsExt.rose200(context),
                     leadingIconAsset: Assets.images.icons.common.clockSVG,
                     active: status == TaskStatusType.snoozed,
                     onPressed: () {
@@ -171,7 +182,7 @@ class _PlanModalState extends State<PlanModal> {
               datetime ??= DateTime(
                   _selectedDate.value.year, _selectedDate.value.month, _selectedDate.value.day, defaultTimeHour, 0);
 
-              text = " - ${DateFormat("HH:mm").format(datetime)}";
+              text = " - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(datetime)}";
             } else {
               text = "";
             }
@@ -212,7 +223,7 @@ class _PlanModalState extends State<PlanModal> {
                             iconAsset: Assets.images.icons.common.clockSVG,
                             text: t.addTask.laterToday,
                             trailingText:
-                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat("HH:mm").format(laterTodayMore3Hours)}',
+                                '${DateFormat("EEE").format(laterTodayMore3Hours)} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(laterTodayMore3Hours)}',
                             onPressed: () {
                               widget.onSelectDate(
                                   date: laterTodayMore3Hours,
@@ -350,7 +361,7 @@ class _PlanModalState extends State<PlanModal> {
               iconAsset,
               width: 24,
               height: 24,
-              color: ColorsExt.grey2(context),
+              color: ColorsExt.grey800(context),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -359,7 +370,7 @@ class _PlanModalState extends State<PlanModal> {
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1
-                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
               ),
             ),
             const SizedBox(width: 8),
@@ -374,7 +385,7 @@ class _PlanModalState extends State<PlanModal> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                          ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                     ),
                   ),
                 ],

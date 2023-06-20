@@ -4,21 +4,21 @@ import 'package:mobile/common/style/sizes.dart';
 
 /// Light Theme
 final ThemeData lightTheme = ThemeData.light().copyWith(
-  primaryColor: ColorsLight.akiflow,
-  primaryColorLight: ColorsLight.akiflow10,
+  primaryColor: ColorsLight.purple500,
+  primaryColorLight: ColorsLight.purple100,
   backgroundColor: ColorsLight.white,
-  scaffoldBackgroundColor: ColorsLight.grey7,
+  scaffoldBackgroundColor: ColorsLight.grey50,
   appBarTheme: const AppBarTheme(
     color: ColorsLight.white,
-    iconTheme: IconThemeData(color: ColorsLight.grey2, size: 30),
-    actionsIconTheme: IconThemeData(color: ColorsLight.grey2),
-    foregroundColor: ColorsLight.grey2,
-    titleTextStyle: TextStyle(color: ColorsLight.grey2, fontSize: 24, fontWeight: FontWeight.w500),
+    iconTheme: IconThemeData(color: ColorsLight.grey800, size: 30),
+    actionsIconTheme: IconThemeData(color: ColorsLight.grey800),
+    foregroundColor: ColorsLight.grey800,
+    titleTextStyle: TextStyle(color: ColorsLight.grey800, fontSize: 24, fontWeight: FontWeight.w500),
   ),
   textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: ColorsLight.akiflow,
+    cursorColor: ColorsLight.purple500,
     selectionColor: ColorsLight.highlightColor,
-    selectionHandleColor: ColorsLight.akiflow,
+    selectionHandleColor: ColorsLight.purple500,
   ),
   textTheme: const TextTheme(
     caption: TextStyle(fontSize: 11.5),
@@ -28,12 +28,12 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     subtitle2: TextStyle(fontSize: 17.0),
   ).apply(
     fontFamily: "Inter",
-    bodyColor: ColorsLight.grey1,
-    displayColor: ColorsLight.grey1,
+    bodyColor: ColorsLight.grey900,
+    displayColor: ColorsLight.grey900,
   ),
   colorScheme: ColorScheme.fromSwatch().copyWith(
-    primary: ColorsLight.akiflow,
-    secondary: ColorsLight.akiflow,
+    primary: ColorsLight.purple500,
+    secondary: ColorsLight.purple500,
   ),
   cardTheme: CardTheme(
     margin: EdgeInsets.zero,
@@ -42,22 +42,22 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       borderRadius: BorderRadius.circular(0),
     ),
   ),
-  checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
+  checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.all(ColorsLight.purple500)),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimension.radius),
       ),
-      primary: ColorsLight.akiflow,
-      textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.akiflow),
+      primary: ColorsLight.purple500,
+      textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.purple500),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-    textStyle: ThemeData().primaryTextTheme.button!.copyWith(fontSize: 17, color: ColorsLight.grey2),
+    textStyle: ThemeData().primaryTextTheme.button!.copyWith(fontSize: 17, color: ColorsLight.grey800),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimension.outlineBorderRadius)),
-    backgroundColor: ColorsLight.grey6,
-    side: const BorderSide(color: ColorsLight.grey4, width: 1),
+    backgroundColor: ColorsLight.grey100,
+    side: const BorderSide(color: ColorsLight.grey300, width: 1),
     minimumSize: const Size(
       Dimension.minButtonWidth,
       Dimension.minButtonHeight,
@@ -70,19 +70,19 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     },
   ),
   iconTheme: const IconThemeData(
-    color: ColorsLight.grey2,
+    color: ColorsLight.grey800,
   ),
-  dividerColor: ColorsLight.grey5,
-  dividerTheme: const DividerThemeData(color: ColorsLight.grey5, thickness: 1),
+  dividerColor: ColorsLight.grey200,
+  dividerTheme: const DividerThemeData(color: ColorsLight.grey200, thickness: 1),
   popupMenuTheme: const PopupMenuThemeData(
-    color: ColorsLight.grey7,
+    color: ColorsLight.grey50,
     textStyle: TextStyle(
       fontWeight: FontWeight.w500,
-      color: ColorsLight.grey2,
+      color: ColorsLight.grey800,
     ),
   ),
   sliderTheme: const SliderThemeData(
-    activeTrackColor: ColorsLight.akiflow,
+    activeTrackColor: ColorsLight.purple500,
     inactiveTrackColor: Color(0x33787880),
     trackShape: RoundedRectSliderTrackShape(),
     trackHeight: 4.0,
@@ -94,7 +94,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   ),
   useMaterial3: true,
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: ColorsLight.akiflow,
+    backgroundColor: ColorsLight.purple500,
   ),
 );
 

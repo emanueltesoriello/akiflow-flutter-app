@@ -58,12 +58,12 @@ class _CreateLinkModalState extends State<CreateLinkModal> {
                               hintText: t.task.links.addLink,
                               border: InputBorder.none,
                               hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: ColorsExt.grey3(context),
+                                    color: ColorsExt.grey600(context),
                                     fontWeight: FontWeight.w500,
                                   ),
                             ),
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  color: ColorsExt.grey2(context),
+                                  color: ColorsExt.grey800(context),
                                   fontWeight: FontWeight.w500,
                                 ),
                             onChanged: (value) {

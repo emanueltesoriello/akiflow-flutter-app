@@ -81,7 +81,7 @@ class ExpandableFabState extends State<ExpandableFab> with SingleTickerProviderS
       height: 56.0,
       child: Center(
         child: Material(
-          color: ColorsExt.grey5(context),
+          color: ColorsExt.grey200(context),
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
           shadowColor: Colors.black,
@@ -227,7 +227,7 @@ class FabActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       clipBehavior: Clip.antiAlias,
-      color: ColorsExt.akiflow(context),
+      color: ColorsExt.akiflow500(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimension.radiusM),
       ),

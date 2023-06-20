@@ -16,13 +16,13 @@ class AvailabilityView extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBarComp(
-          title: t.availability.availabilities,
+          title: t.availability.shareAvailabilities,
           showLinearProgress: true,
           leading: SvgPicture.asset(
             Assets.images.icons.common.availabilitySVG,
             width: Dimension.appBarLeadingIcon,
             height: Dimension.appBarLeadingIcon,
-            color: ColorsExt.grey1(context),
+            color: ColorsExt.grey900(context),
           ),
           showSyncButton: true,
         ),

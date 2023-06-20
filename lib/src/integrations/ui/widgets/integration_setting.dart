@@ -41,7 +41,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
-        end: ColorsExt.grey5(context),
+        end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
@@ -86,7 +86,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                       borderRadius: BorderRadius.circular(Dimension.radius),
                       boxShadow: [
                         BoxShadow(
-                          color: ColorsExt.grey5(context),
+                          color: ColorsExt.grey200(context),
                           offset: const Offset(0, 2),
                           blurRadius: 1,
                         ),
@@ -108,7 +108,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                                     textAlign: TextAlign.left,
                                     style: Theme.of(context).textTheme.subtitle1?.copyWith(
                                           fontWeight: FontWeight.w500,
-                                          color: ColorsExt.grey2(context),
+                                          color: ColorsExt.grey800(context),
                                         ),
                                   )),
                                 ],
@@ -121,7 +121,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                                     widget.subtitle,
                                     style: Theme.of(context).textTheme.bodyText1?.copyWith(
                                           fontWeight: FontWeight.w500,
-                                          color: ColorsExt.grey3(context),
+                                          color: ColorsExt.grey600(context),
                                         ),
                                   )),
                                 ],
@@ -139,7 +139,7 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                             Assets.images.icons.common.chevronRightSVG,
                             width: Dimension.chevronIconSize,
                             height: Dimension.chevronIconSize,
-                            color: ColorsExt.grey3(context),
+                            color: ColorsExt.grey600(context),
                           );
                         }),
                       ],

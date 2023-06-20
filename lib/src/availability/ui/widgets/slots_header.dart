@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/availability/ui/cubit/availability_cubit.dart';
 import 'package:models/task/availability_config.dart';
@@ -23,15 +24,26 @@ class SlotsHeader extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           const SizedBox(width: Dimension.padding),
-          SvgPicture.asset(asset),
-          const SizedBox(width: Dimension.padding),
-          Text(
-            text,
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1!
-                .copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500),
+          SvgPicture.asset(
+            asset,
+            height: Dimension.smallconSize,
           ),
+          const SizedBox(width: Dimension.paddingS),
+          Text(text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
+          const Spacer(),
+          Container(
+            margin: const EdgeInsetsDirectional.only(end: Dimension.padding),
+            child: SvgPicture.asset(
+              isOpen ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
+              color: ColorsExt.grey600(context),
+              width: Dimension.chevronIconSize,
+              height: Dimension.chevronIconSize,
+            ),
+          )
         ],
       ),
     );

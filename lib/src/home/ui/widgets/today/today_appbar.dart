@@ -8,7 +8,6 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/availability/ui/widgets/imported_from_material/chevron_icon.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list_menu.dart';
@@ -86,6 +85,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
       actions: _buildActions(context),
       shadow: false,
       showSyncButton: true,
+      elevation: 0,
     );
   }
 
@@ -111,24 +111,24 @@ class _TodayAppBarState extends State<TodayAppBar> {
                       print('case 0');
                       String monthName = DateFormat('MMMM').format(DateTime(0, viewedMonthState.viewedMonth!));
                       text = monthName;
-                      color = ColorsExt.grey2(context);
+                      color = ColorsExt.grey800(context);
                     } else if (isToday) {
                       print('case 1');
                       text = t.today.title;
-                      color = ColorsExt.akiflow(context);
+                      color = ColorsExt.akiflow500(context);
                     } else if (state.selectedDate.month != DateTime.now().month) {
                       print('case 2');
                       text = DateFormat('MMMM dd').format(state.selectedDate);
-                      color = ColorsExt.grey2(context);
+                      color = ColorsExt.grey800(context);
                     } else {
                       print('case 3');
                       text = DateFormat('EEE, dd').format(state.selectedDate);
-                      color = ColorsExt.grey2(context);
+                      color = ColorsExt.grey800(context);
                     }
                   } catch (e) {
                     print('case 4 - exception handling');
                     text = DateFormat('EEE, dd').format(state.selectedDate);
-                    color = ColorsExt.grey2(context);
+                    color = ColorsExt.grey800(context);
                   }
 
                   return Text(
@@ -165,7 +165,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
             Assets.images.icons.common.arrowLeftSVG,
             width: Dimension.appBarLeadingIcon,
             height: Dimension.appBarLeadingIcon,
-            color: ColorsExt.grey2(context),
+            color: ColorsExt.grey800(context),
           ),
         ),
       );
@@ -191,7 +191,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1!
-                      .copyWith(fontWeight: FontWeight.w600, color: ColorsExt.akiflow(context))),
+                      .copyWith(fontWeight: FontWeight.w600, color: ColorsExt.akiflow500(context))),
             ),
           );
         },

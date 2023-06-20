@@ -1,8 +1,7 @@
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/calendar_event.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:models/calendar/calendar.dart';
@@ -10,7 +9,7 @@ import 'package:models/event/event.dart';
 import 'package:models/event/event_atendee.dart';
 import 'package:models/nullable.dart';
 import 'package:rrule/rrule.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum AtendeeResponseStatus { needsAction, accepted, declined, tentative }
@@ -178,6 +177,17 @@ extension EventExt on Event {
         .join('&');
   }
 
+  Future<void> launchMapsUrl() async {
+    String location = Uri.encodeFull(content?["location"] ?? '');
+
+    Uri uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$location');
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Map<String, String> eventColor = {
     '#a4bdfc': '#7986cb',
     '#7ae7bf': '#33b679',
@@ -225,7 +235,7 @@ extension EventExt on Event {
     } else if (event.calendarColor != null) {
       return calendarColor[event.calendarColor] ?? event.calendarColor!;
     }
-    return ColorsLight.akiflow.value.toRadixString(16);
+    return ColorsLight.purple500.value.toRadixString(16);
   }
 
   RecurrenceRule? get ruleFromStringList {
@@ -300,12 +310,23 @@ extension EventExt on Event {
     return computedRule;
   }
 
+  ///returns rrule on first position and exdate on second
+  List<String> computeRuleForThisAndFuture() {
+    List<String> parts = recurrence!;
+    parts.removeWhere((part) => part.startsWith('WKST'));
+
+    List<String> goodRule = parts.where((part) => !part.startsWith('EXDATE') && !part.startsWith('TZID')).toList();
+
+    parts.removeWhere((part) => goodRule.contains(part));
+
+    return [goodRule.join(";"), parts.join(";")];
+  }
+
   ///returns all the valid events to be scheduled for the next 20 days
-  Future<Map<String, Event>> eventNotifications() async {
+  static Future<Map<String, Event>> eventNotifications(
+      EventsRepository eventsRepository, List<Calendar> calendars) async {
     DateTime now = DateTime.now().toUtc();
     DateTime endDate = now.add(const Duration(days: 20));
-    EventsRepository eventsRepository = locator<EventsRepository>();
-    List<Calendar> calendars = locator<CalendarCubit>().state.calendars;
 
     List<Event> events = await eventsRepository.getEventsBetweenDates(now, endDate);
 
@@ -314,19 +335,20 @@ extension EventExt on Event {
     List<Event> recurringExceptions = <Event>[];
 
     //gets the visible calendars in order to process only their events
-    List<String> visibleCalendarIds = [];
+    List<String> notificationsEnabledCalendarIds = [];
     if (calendars.isNotEmpty) {
       calendars = calendars
           .where((element) =>
               element.settings != null &&
-              ((element.settings["visibleMobile"] ?? element.settings["visible"] ?? false) == true))
+              ((element.settings["notificationsEnabledMobile"] ?? element.settings["notificationsEnabled"] ?? false) ==
+                  true))
           .toList();
 
       for (var calendar in calendars) {
-        visibleCalendarIds.add(calendar.id!);
+        notificationsEnabledCalendarIds.add(calendar.id!);
       }
     }
-    events = events.where((element) => visibleCalendarIds.contains(element.calendarId)).toList();
+    events = events.where((element) => notificationsEnabledCalendarIds.contains(element.calendarId)).toList();
 
     nonRecurring = events.where((event) => event.recurringId == null).toList();
     recurringParents = events.where((event) => event.id == event.recurringId).toList();
@@ -338,8 +360,10 @@ extension EventExt on Event {
     for (Event event in nonRecurring) {
       DateTime eventStartTime =
           event.startTime != null ? DateTime.parse(event.startTime!) : DateTime.parse(event.startDate!);
-      eventsToSchedule
-          .addAll({'${generateNotificationIdFromEventId(event.id!)};${eventStartTime.toIso8601String()}': event});
+      if (eventStartTime.isAfter(now)) {
+        eventsToSchedule
+            .addAll({'${generateNotificationIdFromEventId(event.id!)};${eventStartTime.toIso8601String()}': event});
+      }
     }
 
     //processing parent events
@@ -356,25 +380,17 @@ extension EventExt on Event {
           specificStartDate: now, specificEndDate: endDate);
       List<DateTime> hiddenExceptionDates = [];
 
-      //removing deleted and declined event exception dates
+      //removing exception dates from the recurrence list
       for (Event exceptionEvent in recurringExceptions) {
         if (exceptionEvent.recurringId == parentEvent.id) {
           if (exceptionEvent.originalStartTime != null || exceptionEvent.originalStartDate != null) {
-            if (exceptionEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined ||
-                exceptionEvent.deletedAt != null ||
-                (exceptionEvent.status != null && exceptionEvent.status == EventExt.eventStatusCancelled)) {
-              hiddenExceptionDates.add(exceptionEvent.originalStartTime != null
-                  ? DateTime.parse(exceptionEvent.originalStartTime!)
-                  : DateTime.parse(exceptionEvent.originalStartDate!));
-            }
+            hiddenExceptionDates.add(exceptionEvent.originalStartTime != null
+                ? DateTime.parse(exceptionEvent.originalStartTime!)
+                : DateTime.parse(exceptionEvent.originalStartDate!));
           } else if (exceptionEvent.startTime != null || exceptionEvent.startDate != null) {
-            if (exceptionEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined ||
-                exceptionEvent.deletedAt != null ||
-                (exceptionEvent.status != null && exceptionEvent.status == EventExt.eventStatusCancelled)) {
-              hiddenExceptionDates.add(exceptionEvent.startTime != null
-                  ? DateTime.parse(exceptionEvent.startTime!)
-                  : DateTime.parse(exceptionEvent.startDate!));
-            }
+            hiddenExceptionDates.add(exceptionEvent.startTime != null
+                ? DateTime.parse(exceptionEvent.startTime!)
+                : DateTime.parse(exceptionEvent.startDate!));
           }
         }
       }
@@ -394,7 +410,11 @@ extension EventExt on Event {
       if (exception.startTime != null || exception.startDate != null) {
         DateTime eventStartTime =
             exception.startTime != null ? DateTime.parse(exception.startTime!) : DateTime.parse(exception.startDate!);
-        if (eventStartTime.isAfter(now) && exception.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined) {
+        //validating exceptions by not adding deleted and declined ones
+        if (eventStartTime.isAfter(now) &&
+            exception.isLoggedUserAttndingEvent != AtendeeResponseStatus.declined &&
+            exception.deletedAt == null &&
+            exception.status != EventExt.eventStatusCancelled) {
           eventsToSchedule.addAll(
               {'${generateNotificationIdFromEventId(exception.id!)};${eventStartTime.toIso8601String()}': exception});
         }
@@ -403,7 +423,7 @@ extension EventExt on Event {
     return eventsToSchedule;
   }
 
-  int generateNotificationIdFromEventId(String eventId) {
+  static int generateNotificationIdFromEventId(String eventId) {
     int notificationsId = 0;
 
     try {
@@ -413,5 +433,91 @@ extension EventExt on Event {
       notificationsId = eventId.hashCode;
     }
     return notificationsId;
+  }
+
+  bool isOrganizer() {
+    return organizerId == originCalendarId;
+  }
+
+  List<EventAtendee> getGuestsExceptOrganizer() {
+    if (attendees != null && attendees!.isNotEmpty) {
+      return attendees!.where((attendee) => attendee.email != organizerId).toList();
+    }
+    return [];
+  }
+
+  EventAtendee? getOrganizerGuest() {
+    if (attendees != null && attendees!.isNotEmpty) {
+      try {
+        return attendees!.firstWhere((attendee) => attendee.email == organizerId);
+      } catch (e) {
+        print(e);
+      }
+    }
+    return null;
+  }
+
+  bool hasOrganizerAccepted() {
+    return getOrganizerGuest()?.responseStatus == AtendeeResponseStatus.accepted.id;
+  }
+
+  bool hasOrganizerDeclined() {
+    return getOrganizerGuest()?.responseStatus == AtendeeResponseStatus.declined.id;
+  }
+
+  bool hasOrganizerChosenMaybe() {
+    return getOrganizerGuest()?.responseStatus == AtendeeResponseStatus.tentative.id;
+  }
+
+  bool haveAllGuestsResponse(AtendeeResponseStatus responseStatus) {
+    List<EventAtendee> guestsExceptOrganizer = getGuestsExceptOrganizer();
+    if (guestsExceptOrganizer.isEmpty) {
+      return false;
+    }
+    return guestsExceptOrganizer.every((attendee) => attendee.responseStatus == responseStatus.id);
+  }
+
+  String? getRsvpIcon() {
+    if (attendees == null || (isOrganizer() && attendees!.length < 2)) {
+      return null;
+    }
+
+    if (isOrganizer()) {
+      if (haveAllGuestsResponse(AtendeeResponseStatus.needsAction)) {
+        return Assets.images.icons.common.questionSquareFillSVG;
+      } else if (haveAllGuestsResponse(AtendeeResponseStatus.accepted)) {
+        return null;
+      } else if (haveAllGuestsResponse(AtendeeResponseStatus.tentative)) {
+        return Assets.images.icons.common.questionSquareFillSVG;
+      } else if (haveAllGuestsResponse(AtendeeResponseStatus.declined)) {
+        return Assets.images.icons.common.xmarkSquareFillSVG;
+      }
+    } else {
+      if (hasOrganizerAccepted() || haveAllGuestsResponse(AtendeeResponseStatus.accepted)) {
+        return null;
+      } else if (hasOrganizerDeclined() || haveAllGuestsResponse(AtendeeResponseStatus.declined)) {
+        return Assets.images.icons.common.xmarkSquareFillSVG;
+      } else if (hasOrganizerChosenMaybe() || haveAllGuestsResponse(AtendeeResponseStatus.tentative)) {
+        return Assets.images.icons.common.questionSquareFillSVG;
+      }
+    }
+    return null;
+  }
+
+  bool isTimeOrDateValid() {
+    if (startTime != null && endTime != null) {
+      DateTime startT = DateTime.parse(startTime!);
+      DateTime endT = DateTime.parse(endTime!);
+      if (startT.isAtSameMomentAs(endT) || startT.isBefore(endT)) {
+        return true;
+      }
+    } else if (startDate != null && endDate != null) {
+      DateTime startD = DateTime.parse(startDate!);
+      DateTime endD = DateTime.parse(endDate!);
+      if (startD.isAtSameMomentAs(endD) || startD.isBefore(endD)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -93,7 +93,7 @@ class _LicenseItem extends StatelessWidget {
         child: Text(name,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey3(context),
+                  color: ColorsExt.grey600(context),
                   decoration: TextDecoration.underline,
                 )),
       ),

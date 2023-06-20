@@ -10,6 +10,7 @@ class ButtonSelectable extends StatefulWidget {
   final Widget? leading;
   final Widget? trailing;
   final bool selected;
+  final Color? titleColor;
 
   const ButtonSelectable({
     Key? key,
@@ -18,6 +19,7 @@ class ButtonSelectable extends StatefulWidget {
     this.leading,
     this.trailing,
     this.selected = false,
+    this.titleColor,
   }) : super(key: key);
 
   @override
@@ -41,7 +43,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
         begin: Theme.of(context).backgroundColor,
-        end: ColorsExt.grey5(context),
+        end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
@@ -77,7 +79,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
               height: 42,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
-                color: widget.selected ? ColorsExt.grey5(context) : ColorsExt.grey7(context),
+                color: widget.selected ? ColorsExt.grey200(context) : ColorsExt.background(context),
               ),
               child: AnimatedBuilder(
                 animation: _animation!,
@@ -86,14 +88,14 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                   child: Material(
                     color: _animation!.value,
                     child: Material(
-                      color: widget.selected ? ColorsExt.grey5(context) : ColorsExt.grey7(context),
+                      color: widget.selected ? ColorsExt.grey200(context) : ColorsExt.background(context),
                       child: Row(
                         children: [
                           LeadingIcon(leading: widget.leading),
                           Expanded(
                             child: Text(widget.title,
                                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                      color: ColorsExt.grey2(context),
+                                      color: widget.titleColor ?? ColorsExt.grey800(context),
                                     )),
                           ),
                           Visibility(

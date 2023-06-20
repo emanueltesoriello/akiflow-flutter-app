@@ -15,10 +15,10 @@ class PlanWithLabel extends StatelessWidget {
       children: [
         Flexible(
           child: SlidableButtonAction(
-            backColor: ColorsExt.cyan25(context),
-            topColor: ColorsExt.cyan(context),
+            backColor: ColorsExt.jordyBlue200(context),
+            topColor: ColorsExt.jordyBlue400(context),
             icon: Assets.images.icons.common.calendarSVG,
-            label: t.task.plan.toUpperCase(),
+            label: t.task.plan,
             leftToRight: false,
             click: () {
               click.call();

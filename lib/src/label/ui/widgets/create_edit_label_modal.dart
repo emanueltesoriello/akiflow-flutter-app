@@ -107,7 +107,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                                     width: Dimension.defaultIconSize,
                                     child: SvgPicture.asset(
                                       Assets.images.icons.common.folderSVG,
-                                      color: ColorsExt.grey2(context),
+                                      color: ColorsExt.grey800(context),
                                     )),
                               ),
                               onPressed: () async {
@@ -143,7 +143,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                                   width: 22,
                                   height: 22,
                                   child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
-                                      color: ColorsExt.grey1(context)),
+                                      color: ColorsExt.grey900(context)),
                                 ),
                                 const SizedBox(width: 11),
                                 ValueListenableBuilder(
@@ -160,7 +160,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                                     return Text(
                                       text,
                                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                                            color: ColorsExt.grey2(context),
+                                            color: ColorsExt.grey800(context),
                                           ),
                                       textAlign: TextAlign.center,
                                     );
@@ -191,11 +191,11 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
         Color iconForeground;
 
         if (label.color != null) {
-          iconBackground = ColorsExt.getFromName(label.color!).withOpacity(0.1);
+          iconBackground = ColorsExt.getLightColorFromName(label.color!);
           iconForeground = ColorsExt.getFromName(label.color!);
         } else {
-          iconBackground = ColorsExt.grey6(context);
-          iconForeground = ColorsExt.grey2(context);
+          iconBackground = ColorsExt.grey100(context);
+          iconForeground = ColorsExt.grey800(context);
         }
 
         return InkWell(
@@ -214,7 +214,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
             height: Dimension.bigIconSize,
             decoration: BoxDecoration(
               border: Border.all(
-                color: ColorsExt.grey4(context),
+                color: ColorsExt.grey300(context),
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(Dimension.radius),

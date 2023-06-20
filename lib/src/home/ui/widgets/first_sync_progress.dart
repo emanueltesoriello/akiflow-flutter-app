@@ -13,28 +13,39 @@ class FirstSyncProgress extends StatelessWidget {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Center(
-        child: Stack(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: Dimension.firstSyncProgressInboxSize,
-              height: Dimension.firstSyncProgressInboxSize,
-              child: CircularProgressIndicator(
-                strokeWidth: 5,
-                color: ColorsExt.akiflow20(context),
-              ),
-            ),
-            SizedBox(
-              width: Dimension.firstSyncProgressInboxSize,
-              height: Dimension.firstSyncProgressInboxSize,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimension.paddingS),
-                  child: Image.asset(
-                    Assets.images.appIcon.topPNG,
+            Stack(
+              children: [
+                SizedBox(
+                  width: Dimension.firstSyncProgressInboxSize,
+                  height: Dimension.firstSyncProgressInboxSize,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 5,
+                    color: ColorsExt.akiflow200(context),
                   ),
                 ),
-              ),
+                SizedBox(
+                  width: Dimension.firstSyncProgressInboxSize,
+                  height: Dimension.firstSyncProgressInboxSize,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Dimension.paddingS),
+                      child: Image.asset(
+                        Assets.images.appIcon.topPNG,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+            const SizedBox(height: Dimension.padding),
+            Text(
+              'Synching your tasks...',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
+            )
           ],
         ),
       ),

@@ -6,7 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
@@ -49,6 +52,11 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
   final ValueNotifier<DateTime> _selectedDay;
   final ValueNotifier<TimeOfDay?> _selectedDatetime;
 
+  final _preferencesRepository = locator<PreferencesRepository>();
+
+  int timeFormat = -1;
+  bool use24hFormat = true;
+
   _CreateTaskCalendarState()
       : _selectedDay = ValueNotifier(DateTime.now()),
         _selectedDatetime = ValueNotifier(null);
@@ -62,12 +70,14 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
     } else {
       _selectedDatetime.value = null;
     }
+    timeFormat = _preferencesRepository.timeFormat;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
     return ValueListenableBuilder<DateTime>(
       valueListenable: _selectedDay,
@@ -104,11 +114,11 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
               },
               weekdayStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
               weekendStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey600(context),
                   ),
             ),
             calendarBuilders: CalendarBuilders(
@@ -120,7 +130,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                       DateFormat("d").format(day),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey800(context),
                           ),
                     ),
                   ),
@@ -140,7 +150,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                       DateFormat("d").format(day),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey3(context),
+                            color: ColorsExt.grey600(context),
                           ),
                     ),
                   ),
@@ -162,7 +172,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                             Assets.images.icons.common.chevronRightSVG,
                             width: Dimension.chevronIconSize,
                             height: Dimension.chevronIconSize,
-                            color: ColorsExt.grey2(context),
+                            color: ColorsExt.grey600(context),
                           ),
                         ),
                       ),
@@ -177,7 +187,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                           Assets.images.icons.common.chevronRightSVG,
                           width: Dimension.chevronIconSize,
                           height: Dimension.chevronIconSize,
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey600(context),
                         ),
                       )
                     ],
@@ -227,11 +237,15 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                     child: Text(
                                       selectedTime == null
                                           ? t.addTask.addTime
-                                          : DateFormat("HH:mm").format(DateTime(selectedDate.year, selectedDate.month,
-                                              selectedDate.day, selectedTime.hour, selectedTime.minute)),
+                                          : DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime(
+                                              selectedDate.year,
+                                              selectedDate.month,
+                                              selectedDate.day,
+                                              selectedTime.hour,
+                                              selectedTime.minute)),
                                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                             fontWeight: FontWeight.w500,
-                                            color: ColorsExt.grey2(context),
+                                            color: ColorsExt.grey800(context),
                                           ),
                                     ));
                               },
@@ -240,10 +254,9 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                             if (widget.showRepeat)
                               InkWell(
                                 onTap: () {
-                                  var cubit = context.read<EditTaskCubit>();
-                                  cubit.recurrenceTap();
                                   Task updatedTask = context.read<EditTaskCubit>().state.updatedTask;
-                                  print('UPDATED TASK: $updatedTask');
+                                  var cubit = context.read<EditTaskCubit>()..attachTask(updatedTask);
+                                  cubit.recurrenceTap();
 
                                   showCupertinoModalBottomSheet(
                                     context: context,
@@ -255,7 +268,9 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       rule: updatedTask.ruleFromStringList,
                                       taskDatetime: updatedTask.datetime != null
                                           ? DateTime.parse(updatedTask.datetime!)
-                                          : DateTime.parse(updatedTask.date!),
+                                          : updatedTask.date != null
+                                              ? DateTime.parse(updatedTask.date!)
+                                              : DateTime.now(),
                                     ),
                                   );
                                 },
@@ -265,18 +280,26 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                       Assets.images.icons.common.repeatSVG,
                                       width: Dimension.defaultIconSize,
                                       height: Dimension.defaultIconSize,
-                                      color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                          ? ColorsExt.grey2(context)
-                                          : ColorsExt.grey3(context),
+                                      color: context.read<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                              context.read<EditTaskCubit>().state.updatedTask.recurrence!.isNotEmpty
+                                          ? ColorsExt.grey800(context)
+                                          : ColorsExt.grey600(context),
                                     ),
                                     const SizedBox(width: Dimension.paddingS),
                                     Text(
                                       t.editTask.repeat,
                                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                             fontWeight: FontWeight.w500,
-                                            color: context.read<EditTaskCubit>().state.updatedTask.recurringId != null
-                                                ? ColorsExt.grey2(context)
-                                                : ColorsExt.grey3(context),
+                                            color:
+                                                context.watch<EditTaskCubit>().state.updatedTask.recurrence != null &&
+                                                        context
+                                                            .read<EditTaskCubit>()
+                                                            .state
+                                                            .updatedTask
+                                                            .recurrence!
+                                                            .isNotEmpty
+                                                    ? ColorsExt.grey800(context)
+                                                    : ColorsExt.grey600(context),
                                           ),
                                     ),
                                   ],
@@ -285,34 +308,39 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                           ],
                         ),
                         const SizedBox(width: Dimension.padding),
-                        InkWell(
-                          onTap: () {
-                            DateTime date = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                            );
-
-                            DateTime? datetime;
-
-                            if (_selectedDatetime.value != null) {
-                              datetime = DateTime(
+                        SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              DateTime date = DateTime(
                                 selectedDate.year,
                                 selectedDate.month,
                                 selectedDate.day,
-                                _selectedDatetime.value!.hour,
-                                _selectedDatetime.value!.minute,
                               );
-                            }
 
-                            widget.onConfirm(date, datetime);
+                              DateTime? datetime;
 
-                            Navigator.pop(context);
-                          },
-                          child: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
-                              width: Dimension.chevronIconSize,
-                              height: Dimension.chevronIconSize,
-                              color: ColorsExt.akiflow(context)),
+                              if (_selectedDatetime.value != null) {
+                                datetime = DateTime(
+                                  selectedDate.year,
+                                  selectedDate.month,
+                                  selectedDate.day,
+                                  _selectedDatetime.value!.hour,
+                                  _selectedDatetime.value!.minute,
+                                );
+                              }
+
+                              widget.onConfirm(date, datetime);
+
+                              Navigator.pop(context);
+                            },
+                            icon: SvgPicture.asset(Assets.images.icons.common.checkmarkSVG,
+                                width: Dimension.chevronIconSize,
+                                height: Dimension.chevronIconSize,
+                                color: ColorsExt.akiflow500(context)),
+                          ),
                         ),
                       ],
                     ),

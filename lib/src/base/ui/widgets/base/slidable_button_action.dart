@@ -26,73 +26,65 @@ class SlidableButtonAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (label == null || label!.isEmpty) {
-      return GestureDetector(
-        onTap: click,
-        child: Material(
-          color: Colors.transparent,
-          child: Center(
-            child: SvgPicture.asset(
-              icon,
-              color: topColor,
-              width: size ?? 24,
-              height: size ?? 24,
-            ),
-          ),
+    return GestureDetector(
+      onTap: click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        child: Align(
+          child: leftToRight
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SvgPicture.asset(
+                        icon,
+                        color: topColor,
+                        width: size ?? Dimension.defaultIconSize,
+                        height: size ?? Dimension.defaultIconSize,
+                      ),
+                      if (label != null && label!.isNotEmpty) const SizedBox(width: Dimension.padding),
+                      if (label != null && label!.isNotEmpty)
+                        Text(
+                          label!,
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: topColor,
+                              ),
+                        ),
+                    ],
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(
+                      right: (MediaQuery.of(context).size.width * 0.6 / 3 / 2) -
+                          (size ?? Dimension.defaultIconSize) +
+                          Dimension.paddingS),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (label != null && label!.isNotEmpty)
+                        Text(
+                          label!,
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: topColor,
+                              ),
+                        ),
+                      if (label != null && label!.isNotEmpty) const SizedBox(width: Dimension.padding),
+                      SvgPicture.asset(
+                        icon,
+                        color: topColor,
+                        width: size ?? Dimension.defaultIconSize,
+                        height: size ?? Dimension.defaultIconSize,
+                      ),
+                    ],
+                  ),
+                ),
         ),
-      );
-    } else {
-      return GestureDetector(
-        onTap: click,
-        child: Material(
-          color: Colors.transparent,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: _content(context),
-          ),
-        ),
-      );
-    }
-  }
-
-  Row _content(BuildContext context) {
-    if (leftToRight) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            icon,
-            color: topColor,
-            width: size ?? Dimension.defaultIconSize,
-            height: size ?? Dimension.defaultIconSize,
-          ),
-          const SizedBox(width: Dimension.paddingXS),
-          Text(label!,
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.caption?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: topColor,
-                  )),
-          const Spacer(),
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Spacer(),
-          Text(label!,
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.caption?.copyWith(fontWeight: FontWeight.w500, color: topColor)),
-          const SizedBox(width: Dimension.paddingXS),
-          SvgPicture.asset(
-            icon,
-            color: topColor,
-            width: Dimension.defaultIconSize,
-            height: Dimension.defaultIconSize,
-          ),
-        ],
-      );
-    }
+      ),
+    );
   }
 }

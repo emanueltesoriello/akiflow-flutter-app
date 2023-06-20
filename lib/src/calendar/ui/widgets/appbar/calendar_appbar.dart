@@ -12,7 +12,7 @@ import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/widgets/settings/calendar_settings_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_calendar/calendar.dart';
 
 class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
   final CalendarController calendarController;
@@ -29,7 +29,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(
       builder: (context, state) {
         return AppBarComp(
-          shadow: false,
+          elevation: 0,
           titleWidget: _buildTitle(context, state, calendarController),
           leading: SvgPicture.asset(
             Assets.images.icons.common.calendarSVG,
@@ -51,7 +51,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1!
-                      .copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w600),
+                      .copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w600),
                 ),
               ),
             IconButton(
@@ -59,7 +59,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Assets.images.icons.common.ellipsisSVG,
                 width: 24,
                 height: 24,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey800(context),
               ),
               onPressed: () {
                 showCupertinoModalBottomSheet(
@@ -99,7 +99,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500),
+                .copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: Dimension.padding),
           AnimatedChevron(iconUp: state.panelState == PanelState.opened),

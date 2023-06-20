@@ -39,7 +39,7 @@ class CreateTaskTopActionItem extends StatelessWidget {
                 leadingIconAsset,
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
-                color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                color: active ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
               ),
               TextTopActionItem(text: text, active: active)
             ],

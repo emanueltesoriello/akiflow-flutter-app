@@ -59,7 +59,7 @@ class PriorityModal extends StatelessWidget {
                     t.task.priority.title,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w500,
-                          color: ColorsExt.grey2(context),
+                          color: ColorsExt.grey800(context),
                         ),
                   ),
                 ],
@@ -122,7 +122,7 @@ class PriorityModal extends StatelessWidget {
     return InkWell(
       onTap: click,
       child: Container(
-        color: active ? ColorsExt.grey6(context) : Colors.transparent,
+        color: active ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Row(
           children: [
@@ -136,7 +136,7 @@ class PriorityModal extends StatelessWidget {
               child: Text(
                 text,
                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                      color: ColorsExt.grey2(context),
+                      color: ColorsExt.grey800(context),
                     ),
               ),
             ),

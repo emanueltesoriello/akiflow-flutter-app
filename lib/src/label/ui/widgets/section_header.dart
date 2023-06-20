@@ -4,7 +4,6 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/src/base/ui/widgets/base/animated_chevron.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 
 enum SectionActionType { addTask, rename, delete }
@@ -43,23 +42,23 @@ class SectionHeaderItem extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.caption?.copyWith(
+              style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: ColorsExt.akiflow(context),
+                    color: ColorsExt.akiflow500(context),
                   ),
             ),
             const SizedBox(width: Dimension.paddingXS),
             Text(
               "($taskCount)",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: ColorsExt.grey2_5(context),
+                    color: ColorsExt.grey700(context),
                   ),
             ),
             const Spacer(),
             SvgPicture.asset(
               listOpened ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
               width: Dimension.chevronIconSize,
               height: Dimension.chevronIconSize,
             ),
@@ -73,10 +72,11 @@ class SectionHeaderItem extends StatelessWidget {
                 data: Theme.of(context)
                     .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
                 child: PopupMenuButton<SectionActionType>(
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
                   padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     Assets.images.icons.common.ellipsisSVG,
-                    color: ColorsExt.grey3(context),
+                    color: ColorsExt.grey800(context),
                     width: Dimension.defaultIconSize,
                     height: Dimension.defaultIconSize,
                   ),
@@ -98,7 +98,7 @@ class SectionHeaderItem extends StatelessWidget {
                       value: SectionActionType.addTask,
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
                           iconAsset: Assets.images.icons.common.plusSquareSVG,
                           text: t.label.addTask,
@@ -109,7 +109,7 @@ class SectionHeaderItem extends StatelessWidget {
                       value: SectionActionType.rename,
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
                           iconAsset: Assets.images.icons.common.pencilSVG,
                           text: t.label.rename,
@@ -120,7 +120,7 @@ class SectionHeaderItem extends StatelessWidget {
                       value: SectionActionType.delete,
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
                           iconAsset: Assets.images.icons.common.trashSVG,
                           text: t.label.delete,

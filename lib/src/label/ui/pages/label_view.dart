@@ -137,7 +137,7 @@ class _LabelViewState extends State<LabelView> {
                           showCupertinoModalBottomSheet(
                             context: context,
                             builder: (context) => const CreateTaskModal(),
-                          );
+                          ).then((value) => context.read<EditTaskCubit>().onModalClose());
                         },
                         onDelete: () {
                           context.read<LabelsCubit>().deleteSection(section);
@@ -224,17 +224,41 @@ class _LabelViewState extends State<LabelView> {
                           child: Wrap(spacing: 8, runSpacing: 8, children: wrapped),
                         );
                       }
+                      List<Task> notDoneTasks = [];
+                      notDoneTasks.addAll(
+                          tasksWithoutSnoozedAndSomeday.where((task) => !task.done! || task.doneAt == null).toList());
+                      Key keyNotDoneTasks = Key("label${notDoneTasks.isNotEmpty ? notDoneTasks[0].id : ''}");
 
-                      return TaskList(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        tasks: tasksWithoutSnoozedAndSomeday,
-                        visible: labelState.openedSections[section.id] ?? false,
-                        showLabel: false,
-                        header: labelState.sections.length > 1 ? header : null,
-                        footer: footer,
-                        showPlanInfo: true,
-                        sorting: TaskListSorting.sortingLabelAscending,
+                      List<Task> doneTasks = [];
+                      doneTasks.addAll(
+                          tasksWithoutSnoozedAndSomeday.where((task) => task.done! || task.doneAt != null).toList());
+                      Key keyDoneTasks = Key("labelDone${doneTasks.isNotEmpty ? doneTasks[0].id : ''}");
+
+                      return Column(
+                        children: [
+                          TaskList(
+                            key: keyNotDoneTasks,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            tasks: notDoneTasks,
+                            visible: labelState.openedSections[section.id] ?? false,
+                            showLabel: false,
+                            header: labelState.sections.length > 1 ? header : null,
+                            footer: footer,
+                            showPlanInfo: true,
+                            sorting: TaskListSorting.sortingLabelAscending,
+                          ),
+                          TaskList(
+                            key: keyDoneTasks,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            tasks: doneTasks,
+                            visible: labelState.openedSections[section.id] ?? false,
+                            showLabel: false,
+                            showPlanInfo: true,
+                            sorting: TaskListSorting.sortingLabelAscending,
+                          ),
+                        ],
                       );
                     }).toList(),
                     const SizedBox(height: Dimension.paddingXXL)
@@ -268,7 +292,7 @@ class CompactInfo extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3),
-          border: Border.all(color: ColorsExt.grey5(context), width: 1),
+          border: Border.all(color: ColorsExt.grey200(context), width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -282,7 +306,8 @@ class CompactInfo extends StatelessWidget {
 
               return Row(
                 children: [
-                  SizedBox(width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey2(context))),
+                  SizedBox(
+                      width: 16, height: 16, child: SvgPicture.asset(iconAsset!, color: ColorsExt.grey800(context))),
                   const SizedBox(width: Dimension.paddingXS),
                 ],
               );
@@ -290,7 +315,7 @@ class CompactInfo extends StatelessWidget {
             Text(
               text,
               style: Theme.of(context).textTheme.caption?.copyWith(
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                   ),
             ),
           ],

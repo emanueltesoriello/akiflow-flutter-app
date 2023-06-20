@@ -15,7 +15,7 @@ import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
@@ -40,16 +40,16 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
   IntegrationsCubit(this._authCubit, this._syncCubit) : super(const IntegrationsCubitState()) {
     _syncCubit.syncCompletedStream.listen((_) async {
-      List<Account> accounts = await _accountsRepository.get();
-      emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+      List<Account> accounts = await _accountsRepository.getAccounts();
+      emit(state.copyWith(accounts: accounts));
     });
 
     _init();
   }
 
   _init() async {
-    List<Account> accounts = await _accountsRepository.get();
-    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+    List<Account> accounts = await _accountsRepository.getAccounts();
+    emit(state.copyWith(accounts: accounts));
   }
 
   Future<void> gmailImportOptions(Account account, GmailSyncMode selectedType) async {
@@ -63,21 +63,27 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     await _accountsRepository.updateById(account.id, data: account);
 
-    List<Account> accounts = await _accountsRepository.get();
-    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+    List<Account> accounts = await _accountsRepository.getAccounts();
+    emit(state.copyWith(accounts: accounts));
 
     _syncCubit.sync(loading: true);
   }
 
-  void gmailBehaviorOnMarkAsDone(GmailMarkAsDoneType selectedType) {
-    Map<String, dynamic> settings = Map.from(_authCubit.state.user!.settings ?? {});
-    Map<String, dynamic> popups = settings['popups'] ?? {};
+  Future<void> behaviorMarkAsDone(Account account, MarkAsDoneType selectedType) async {
+    Map<String, dynamic>? settings = Map.from(account.details ?? {});
+    settings['mark_as_done_action'] = selectedType.key;
 
-    popups['gmail.unstar'] = selectedType.key;
+    account = account.copyWith(
+      details: settings,
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
 
-    settings['popups'] = popups;
+    await _accountsRepository.updateById(account.id, data: account);
 
-    _authCubit.updateUserSettings(Map<String, dynamic>.from(settings));
+    List<Account> accounts = await _accountsRepository.getAccounts();
+    emit(state.copyWith(accounts: accounts));
+
+    _syncCubit.sync(loading: true);
   }
 
   Future<void> updateGmailSuperHumanEnabled(Account account, {required bool isSuperhumanEnabled}) async {
@@ -91,8 +97,8 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     await _accountsRepository.updateById(account.id, data: account);
 
-    List<Account> accounts = await _accountsRepository.get();
-    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+    List<Account> accounts = await _accountsRepository.getAccounts();
+    emit(state.copyWith(accounts: accounts));
 
     _syncCubit.sync(loading: true);
   }
@@ -159,8 +165,8 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     emit(state.copyWith(isAuthenticatingOAuth: false));
 
-    List<Account> accounts = await _accountsRepository.get();
-    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+    List<Account> accounts = await _accountsRepository.getAccounts();
+    emit(state.copyWith(accounts: accounts));
 
     emit(state.copyWith(connected: true));
     emit(state.copyWith(connected: false));
@@ -193,8 +199,8 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
 
     emit(state.copyWith(isAuthenticatingOAuth: false));
 
-    List<Account> accounts = await _accountsRepository.get();
-    emit(state.copyWith(accounts: accounts.where((element) => element.deletedAt == null).toList()));
+    List<Account> accounts = await _accountsRepository.getAccounts();
+    emit(state.copyWith(accounts: accounts));
 
     emit(state.copyWith(connected: false));
     emit(state.copyWith(connected: false));

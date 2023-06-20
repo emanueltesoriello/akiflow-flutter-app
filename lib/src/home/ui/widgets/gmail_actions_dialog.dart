@@ -113,9 +113,9 @@ class GmailActionDialog extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: active ? Colors.transparent : ColorsExt.grey6(context),
+          color: active ? Colors.transparent : ColorsExt.grey100(context),
           border: Border.all(
-            color: ColorsExt.grey5(context),
+            color: ColorsExt.grey200(context),
             width: 1,
           ),
         ),
@@ -126,7 +126,7 @@ class GmailActionDialog extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey2(context)),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
               ),
             ),
           ],

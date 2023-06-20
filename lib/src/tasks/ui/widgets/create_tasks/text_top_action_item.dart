@@ -19,7 +19,7 @@ class TextTopActionItem extends StatelessWidget {
         Text(text!,
             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: active ? ColorsExt.grey2(context) : ColorsExt.grey3(context),
+                  color: active ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                 )),
       ],
     );

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:html/parser.dart';
@@ -9,10 +10,13 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/common/utils/no_scroll_behav.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/base/ui/widgets/interactive_webview.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
@@ -23,7 +27,6 @@ import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tuple/tuple.dart' as tuple;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class EventModal extends StatefulWidget {
@@ -48,6 +51,11 @@ class _EventModalState extends State<EventModal> {
   StreamSubscription? streamSubscription;
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
+
+  final _preferencesRepository = locator<PreferencesRepository>();
+
+  int timeFormat = -1;
+  bool use24hFormat = true;
 
   @override
   void initState() {
@@ -78,6 +86,8 @@ class _EventModalState extends State<EventModal> {
       });
     });
 
+    timeFormat = _preferencesRepository.timeFormat;
+
     super.initState();
   }
 
@@ -97,42 +107,49 @@ class _EventModalState extends State<EventModal> {
 
   @override
   Widget build(BuildContext context) {
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
+
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
-          color: Colors.white,
+          color: ColorsExt.background(context),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(Dimension.padding),
             topRight: Radius.circular(Dimension.padding),
           ),
-          child: ScrollConfiguration(
-            behavior: NoScrollBehav(),
-            child: Column(
-              children: [
-                const SizedBox(height: Dimension.padding),
-                const ScrollChip(),
-                Expanded(
-                  child: ListView(
-                    physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.all(Dimension.padding),
-                    children: [
-                      _titleRow(context),
-                      const Separator(),
-                      _datetimeRow(context),
-                      if (selectedEvent.meetingUrl != null) _conferenceRow(context),
-                      const Separator(),
-                      _busyRow(context),
-                      if (location != null && location!.isNotEmpty) _locationRow(context),
-                      if (selectedEvent.attendees != null) _attendeesRow(context),
-                      if (descriptionController.text.isNotEmpty &&
-                          parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
-                        _descriptionRow(context),
-                    ],
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    const SizedBox(height: Dimension.padding),
+                    const ScrollChip(),
+                    ListView(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                      children: [
+                        _titleRow(context),
+                        const Separator(),
+                        _datetimeRow(context),
+                        if (selectedEvent.meetingUrl != null) _conferenceRow(context),
+                        const Separator(),
+                        _busyRow(context),
+                        if (location != null && location!.isNotEmpty) _locationRow(context),
+                        if (selectedEvent.attendees != null) _attendeesRow(context),
+                        if (descriptionController.text.isNotEmpty &&
+                            parse(descriptionController.text).body!.text.trim() != EventExt.akiflowSignature)
+                          _descriptionRow(context),
+                      ],
+                    ),
+                  ],
                 ),
-                _bottomButtonsRow(context),
-              ],
-            ),
+              ),
+              _bottomButtonsRow(context),
+            ],
           ),
         );
       },
@@ -151,16 +168,14 @@ class _EventModalState extends State<EventModal> {
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge
-                    ?.copyWith(color: ColorsExt.grey1(context), fontWeight: FontWeight.w500)),
+                    ?.copyWith(color: ColorsExt.grey900(context), fontWeight: FontWeight.w500)),
           ),
           const SizedBox(width: Dimension.paddingS),
           SizedBox(
             width: Dimension.defaultIconSize + 6,
             height: Dimension.defaultIconSize + 6,
-            child: SvgPicture.asset(
-              Assets.images.icons.common.circleFillSVG,
-              color: ColorsExt.fromHex(EventExt.computeColor(selectedEvent)),
-            ),
+            child: CalendarColorCircle(
+                calendarColor: EventExt.computeColor(selectedEvent), size: Dimension.defaultIconSize + 6),
           ),
         ],
       ),
@@ -195,13 +210,15 @@ class _EventModalState extends State<EventModal> {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
-                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.startTime!).toLocal()),
+                      Text(
+                          DateFormat(use24hFormat ? "HH:mm" : "h:mm a")
+                              .format(DateTime.parse(selectedEvent.startTime!).toLocal()),
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                     ],
                   ),
                 if (selectedEvent.startDate != null)
@@ -215,13 +232,13 @@ class _EventModalState extends State<EventModal> {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
                 SvgPicture.asset(Assets.images.icons.common.arrowRightSVG,
                     width: Dimension.defaultIconSize,
                     height: Dimension.defaultIconSize,
-                    color: ColorsExt.grey3(context)),
+                    color: ColorsExt.grey600(context)),
                 if (selectedEvent.endTime != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -233,13 +250,15 @@ class _EventModalState extends State<EventModal> {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
-                      Text(DateFormat("HH:mm").format(DateTime.parse(selectedEvent.endTime!).toLocal()),
+                      Text(
+                          DateFormat(use24hFormat ? "HH:mm" : "h:mm a")
+                              .format(DateTime.parse(selectedEvent.endTime!).toLocal()),
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w600)),
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                     ],
                   ),
                 if (selectedEvent.endDate != null)
@@ -253,7 +272,7 @@ class _EventModalState extends State<EventModal> {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                              ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
               ],
@@ -294,8 +313,8 @@ class _EventModalState extends State<EventModal> {
                             ? t.event.zoom
                             : 'Conference',
                     style: selectedEvent.meetingSolution == 'meet' || selectedEvent.meetingSolution == 'zoom'
-                        ? TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context))
-                        : TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                        ? TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))
+                        : TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                   ),
                 ],
               ),
@@ -310,7 +329,7 @@ class _EventModalState extends State<EventModal> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(color: ColorsExt.akiflow(context), fontWeight: FontWeight.w500)),
+                          ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500)),
                 ),
             ],
           ),
@@ -336,7 +355,7 @@ class _EventModalState extends State<EventModal> {
               style: Theme.of(context)
                   .textTheme
                   .subtitle1
-                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
         ],
       ),
     );
@@ -346,26 +365,36 @@ class _EventModalState extends State<EventModal> {
     return Column(
       children: [
         const Separator(),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
-          child: Row(
-            children: [
-              SizedBox(
-                width: Dimension.defaultIconSize,
-                height: Dimension.defaultIconSize,
-                child: SvgPicture.asset(Assets.images.icons.common.mapSVG, color: ColorsExt.grey2(context)),
-              ),
-              const SizedBox(width: Dimension.padding),
-              Expanded(
-                child: Text('${selectedEvent.content?["location"]}',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
-              ),
-            ],
+        InkWell(
+          onTap: () {
+            selectedEvent.launchMapsUrl();
+          },
+          onLongPress: () {
+            Clipboard.setData(ClipboardData(text: location)).then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                CustomSnackbar.get(
+                    context: context, type: CustomSnackbarType.success, message: t.snackbar.copiedToYourClipboard)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: Dimension.defaultIconSize,
+                  height: Dimension.defaultIconSize,
+                  child: SvgPicture.asset(Assets.images.icons.common.mapSVG, color: ColorsExt.grey800(context)),
+                ),
+                const SizedBox(width: Dimension.padding),
+                Expanded(
+                  child: Text('${selectedEvent.content?["location"]}',
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -385,7 +414,7 @@ class _EventModalState extends State<EventModal> {
                 height: Dimension.defaultIconSize,
                 child: SvgPicture.asset(
                   Assets.images.icons.common.personCropCircleSVG,
-                  color: ColorsExt.grey2(context),
+                  color: ColorsExt.grey800(context),
                 ),
               ),
               const SizedBox(width: Dimension.padding),
@@ -393,7 +422,7 @@ class _EventModalState extends State<EventModal> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
-                      ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
             ],
           ),
         ),
@@ -414,7 +443,7 @@ class _EventModalState extends State<EventModal> {
                             height: Dimension.defaultIconSize,
                             child: SvgPicture.asset(
                               Assets.images.icons.common.checkmarkAltCircleFillSVG,
-                              color: ColorsExt.green(context),
+                              color: ColorsExt.yorkGreen400(context),
                             ),
                           )
                         : selectedEvent.attendees![index].responseStatus == AtendeeResponseStatus.declined.id
@@ -423,7 +452,7 @@ class _EventModalState extends State<EventModal> {
                                 height: Dimension.defaultIconSize,
                                 child: SvgPicture.asset(
                                   Assets.images.icons.common.xmarkCircleFillSVG,
-                                  color: ColorsExt.red(context),
+                                  color: ColorsExt.cosmos400(context),
                                 ),
                               )
                             : SizedBox(
@@ -431,7 +460,7 @@ class _EventModalState extends State<EventModal> {
                                 height: Dimension.defaultIconSize,
                                 child: SvgPicture.asset(
                                   Assets.images.icons.common.questionCircleFillSVG,
-                                  color: ColorsExt.grey3(context),
+                                  color: ColorsExt.grey600(context),
                                 ),
                               ),
                     const SizedBox(width: Dimension.padding),
@@ -442,13 +471,13 @@ class _EventModalState extends State<EventModal> {
                               ? '${selectedEvent.attendees![index].displayName}'
                               : '${selectedEvent.attendees![index].email}',
                           style:
-                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                         ),
                         if (selectedEvent.attendees![index].organizer ?? false)
                           Text(
                             ' - ${t.event.organizer}',
-                            style:
-                                TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
+                            style: TextStyle(
+                                fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                           ),
                       ],
                     ),
@@ -473,7 +502,8 @@ class _EventModalState extends State<EventModal> {
               SizedBox(
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
-                child: SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG, color: ColorsExt.grey2(context)),
+                child:
+                    SvgPicture.asset(Assets.images.icons.common.textJustifyLeftSVG, color: ColorsExt.grey800(context)),
               ),
               const SizedBox(width: Dimension.padding),
               Expanded(
@@ -492,7 +522,7 @@ class _EventModalState extends State<EventModal> {
       builder: (context, quill.QuillController value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow(context)!.withOpacity(0.1),
+            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
           ),
         ),
         child: quill.QuillEditor(
@@ -512,11 +542,10 @@ class _EventModalState extends State<EventModal> {
           },
           customStyles: quill.DefaultStyles(
             placeHolder: quill.DefaultTextBlockStyle(
-              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey3(context)),
-              const tuple.Tuple2(0, 0),
-              const tuple.Tuple2(0, 0),
-              null,
-            ),
+                TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
+                const quill.VerticalSpacing(0, 0),
+                const quill.VerticalSpacing(0, 0),
+                null),
           ),
         ),
       ),
@@ -540,7 +569,7 @@ class _EventModalState extends State<EventModal> {
         children: [
           if (selectedEvent.attendees != null && selectedEvent.attendees!.isNotEmpty) _responseStatusRow(context),
           const Separator(),
-          _eventActionButtonsRow(context),
+          SafeArea(child: _eventActionButtonsRow(context)),
         ],
       ),
     );
@@ -556,7 +585,7 @@ class _EventModalState extends State<EventModal> {
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
-                  ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w400)),
+                  ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
           Row(
             children: [
               InkWell(
@@ -570,8 +599,8 @@ class _EventModalState extends State<EventModal> {
                     child: Text(t.event.yes,
                         style: Theme.of(context).textTheme.bodyText1?.copyWith(
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
-                                ? ColorsExt.green(context)
-                                : ColorsExt.grey3(context),
+                                ? ColorsExt.yorkGreen400(context)
+                                : ColorsExt.grey600(context),
                             fontWeight: FontWeight.w500)),
                   ),
                 ),
@@ -589,8 +618,8 @@ class _EventModalState extends State<EventModal> {
                         style: Theme.of(context).textTheme.bodyText1?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
-                                ? ColorsExt.red(context)
-                                : ColorsExt.grey3(context))),
+                                ? ColorsExt.cosmos400(context)
+                                : ColorsExt.grey600(context))),
                   ),
                 ),
               ),
@@ -606,8 +635,8 @@ class _EventModalState extends State<EventModal> {
                         style: Theme.of(context).textTheme.bodyText1?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
-                                ? ColorsExt.grey2(context)
-                                : ColorsExt.grey3(context))),
+                                ? ColorsExt.grey800(context)
+                                : ColorsExt.grey600(context))),
                   ),
                 ),
               ),
@@ -636,8 +665,6 @@ class _EventModalState extends State<EventModal> {
                         context: context,
                         tappedDate: widget.tappedDate!,
                         originalStartTime: originalStartTime,
-                        dateChanged: false,
-                        timeChanged: false,
                         parentEvent: selectedEvent,
                         atendeesToAdd: const [],
                         atendeesToRemove: const [],
@@ -720,7 +747,7 @@ class _EventModalState extends State<EventModal> {
 
   Padding _eventActionButtonsRow(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Dimension.padding),
+      padding: const EdgeInsets.all(Dimension.paddingS),
       child: selectedEvent.canModify()
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -743,6 +770,7 @@ class _EventModalState extends State<EventModal> {
                         event: selectedEvent,
                         tappedDate: widget.tappedDate!,
                         originalStartTime: originalStartTime,
+                        use24hFormat: use24hFormat,
                       ),
                     ).whenComplete(
                       () {
@@ -793,8 +821,6 @@ class _EventModalState extends State<EventModal> {
                   context: context,
                   tappedDate: widget.tappedDate!,
                   originalStartTime: originalStartTime,
-                  dateChanged: false,
-                  timeChanged: false,
                   parentEvent: selectedEvent,
                   atendeesToAdd: const [],
                   atendeesToRemove: const [],

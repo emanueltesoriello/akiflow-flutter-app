@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -12,6 +13,7 @@ import 'package:mobile/core/repository/event_modifiers_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
+import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
@@ -64,6 +66,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
     } catch (e) {
       print(e);
     }
+  }
+
+  resetEvents() {
+    emit(state.copyWith(events: []));
   }
 
   Future<void> fetchSearchedContacts(String query) async {
@@ -132,13 +138,24 @@ class EventsCubit extends Cubit<EventsCubitState> {
     await _eventsRepository.add([event]);
   }
 
-  Future<void> createEvent(BuildContext context) async {
+  Future<void> createEvent(BuildContext context, int duration, {DateTime? tappedTime}) async {
+    String description = generateAkiflowSignature(context);
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
     Calendar calendar = calendarCubit.state.calendars.firstWhere((calendar) => calendar.akiflowPrimary == true);
     var id = const Uuid().v4();
+    DateTime startTime;
     DateTime now = DateTime.now();
-    DateTime startTimeRounded =
-        DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).round()]);
+    List<DateTime> visibleDates = calendarCubit.state.visibleDates;
+
+    if (tappedTime != null) {
+      startTime = tappedTime;
+    } else if (visibleDates.isNotEmpty && visibleDates.length < 2) {
+      startTime = DateTime(visibleDates.first.year, visibleDates.first.month, visibleDates.first.day, now.hour,
+          [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
+    } else {
+      startTime = DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
+    }
+
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
     Event event = Event(
       id: id,
@@ -150,12 +167,17 @@ class EventsCubit extends Cubit<EventsCubitState> {
       akiflowAccountId: calendar.akiflowAccountId,
       originAccountId: calendar.originAccountId,
       calendarColor: calendar.color,
+      description: description,
       content: {"transparency": "opaque", "visibility": "default", "location": null},
       startDatetimeTz: currentTimeZone,
-      startTime: TzUtils.toUtcStringIfNotNull(startTimeRounded),
-      endTime: TzUtils.toUtcStringIfNotNull(startTimeRounded.add(const Duration(minutes: 30))),
+      startTime: TzUtils.toUtcStringIfNotNull(startTime),
+      endTime: TzUtils.toUtcStringIfNotNull(startTime.add(Duration(seconds: duration))),
       createdAt: TzUtils.toUtcStringIfNotNull(now),
     );
+
+    int timeFormat = -1;
+    bool use24hFormat = true;
+    use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
 
     showCupertinoModalBottomSheet(
       context: context,
@@ -163,9 +185,29 @@ class EventsCubit extends Cubit<EventsCubitState> {
         event: event,
         tappedDate: now,
         originalStartTime: now.toIso8601String(),
+        use24hFormat: use24hFormat,
         createingEvent: true,
       ),
     ).whenComplete(() => refreshAllEvents(context));
+  }
+
+  String generateAkiflowSignature(BuildContext context) {
+    String akiflowUrl =
+        'https://akiflow.com/?utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
+    bool showAkiflowSignature = true;
+    if (context.read<AuthCubit>().state.user?.settings?["general"] != null &&
+        context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"] != null) {
+      showAkiflowSignature = context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"];
+    }
+
+    if (showAkiflowSignature && context.read<AuthCubit>().state.user?.referralUrl != null) {
+      var referral = context.read<AuthCubit>().state.user?.referralUrl;
+      akiflowUrl = '$referral&utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
+    }
+    if (showAkiflowSignature) {
+      return '<br /><br />Scheduled with <a href="$akiflowUrl" target="_blank">Akiflow</a>';
+    }
+    return '';
   }
   //END create Event section
 
@@ -200,6 +242,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required bool removeMeeting,
     bool createingEvent = false,
     bool dragAndDrop = false,
+    String? selectedMeetingSolution,
+    String? conferenceAccountId,
   }) async {
     if (atendeesToAdd.isNotEmpty || atendeesToRemove.isNotEmpty) {
       await _eventModifiersRepository.add([
@@ -207,29 +251,32 @@ class EventsCubit extends Cubit<EventsCubitState> {
       ]);
     }
     if (addMeeting || (event.meetingUrl == null && atendeesToAdd.isNotEmpty)) {
-      await _eventModifiersRepository.add([addMeetingEventModifier(event)]);
+      await _eventModifiersRepository
+          .add([addMeetingEventModifier(event, selectedMeetingSolution, conferenceAccountId)]);
     }
     if (removeMeeting) {
       await _eventModifiersRepository.add([removeMeetingEventModifier(event)]);
     }
-    await _eventsRepository.updateById(event.id, data: event);
-    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-    await scheduleEventsSync();
-    refetchEvent(event);
+    if (event.isTimeOrDateValid()) {
+      await _eventsRepository.updateById(event.id, data: event);
+      await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+      await scheduleEventsSync();
+      refetchEvent(event);
 
-    AnalyticsService.track(
-        createingEvent == true
-            ? 'New Event'
-            : dragAndDrop
-                ? "Event Rescheduled"
-                : 'Edit Event',
-        properties: {
-          "mobile": true,
-          "mode": dragAndDrop ? "DragAndDrop" : "click",
-          "origin": dragAndDrop ? "calendar" : "eventModal",
-          "eventId": event.id,
-          "eventRecurringId": event.recurringId,
-        });
+      AnalyticsService.track(
+          createingEvent == true
+              ? 'New Event'
+              : dragAndDrop
+                  ? "Event Rescheduled"
+                  : 'Edit Event',
+          properties: {
+            "mobile": true,
+            "mode": dragAndDrop ? "DragAndDrop" : "click",
+            "origin": dragAndDrop ? "calendar" : "eventModal",
+            "eventId": event.id,
+            "eventRecurringId": event.recurringId,
+          });
+    }
   }
 
   ///update method for case user selects "All Events" from an exception-event
@@ -239,11 +286,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
     required List<String> atendeesToRemove,
     required bool addMeeting,
     required bool removeMeeting,
+    String? selectedMeetingSolution,
+    String? conferenceAccountId,
     bool dragAndDrop = false,
   }) async {
     Event parentEvent = await _eventsRepository.getById(exceptionEvent.recurringId);
     String now = DateTime.now().toUtc().toIso8601String();
 
+    //processing start/end time
     DateTime? parentStartTime = parentEvent.startTime != null ? DateTime.parse(parentEvent.startTime!).toLocal() : null;
     DateTime? exceptionStartTime =
         exceptionEvent.startTime != null ? DateTime.parse(exceptionEvent.startTime!).toLocal() : null;
@@ -264,11 +314,22 @@ class EventsCubit extends Cubit<EventsCubitState> {
             .toIso8601String()
         : null;
 
+    //processing start/end date
+    String? parentStartDate = parentEvent.startDate;
+    String? exceptionStartDate = exceptionEvent.startDate;
+    String? startDate = parentStartDate != null && exceptionStartDate != null ? exceptionStartDate : null;
+
+    String? parentEndDate = parentEvent.endDate;
+    String? exceptionEndDate = exceptionEvent.endDate;
+    String? endDate = parentEndDate != null && exceptionEndDate != null ? exceptionEndDate : null;
+
     parentEvent = parentEvent.copyWith(
       title: Nullable(exceptionEvent.title),
       description: Nullable(exceptionEvent.description),
       startTime: Nullable(startTime),
       endTime: Nullable(endTime),
+      startDate: Nullable(startDate),
+      endDate: Nullable(endDate),
       color: exceptionEvent.color,
       meetingIcon: Nullable(exceptionEvent.meetingIcon),
       meetingSolution: Nullable(exceptionEvent.meetingSolution),
@@ -285,6 +346,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting,
+        selectedMeetingSolution: selectedMeetingSolution,
+        conferenceAccountId: conferenceAccountId,
         dragAndDrop: dragAndDrop);
     updateEventAndCreateModifiers(
         event: exceptionEvent.copyWith(updatedAt: Nullable(now)),
@@ -292,6 +355,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
         atendeesToRemove: atendeesToRemove,
         addMeeting: addMeeting,
         removeMeeting: removeMeeting,
+        selectedMeetingSolution: selectedMeetingSolution,
+        conferenceAccountId: conferenceAccountId,
         dragAndDrop: dragAndDrop);
   }
 
@@ -300,13 +365,13 @@ class EventsCubit extends Cubit<EventsCubitState> {
       {required BuildContext context,
       required DateTime tappedDate,
       required Event parentEvent,
-      required bool dateChanged,
-      required bool timeChanged,
       required List<String> atendeesToAdd,
       required List<String> atendeesToRemove,
       required bool addMeeting,
       required bool removeMeeting,
       required bool rsvpChanged,
+      String? selectedMeetingSolution,
+      String? conferenceAccountId,
       String? rsvpResponse,
       bool deleteEvent = false,
       bool dragAndDrop = false,
@@ -315,33 +380,23 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     DateTime? eventStartTime = parentEvent.startTime != null ? DateTime.parse(parentEvent.startTime!).toLocal() : null;
     DateTime? eventEndTime = parentEvent.endTime != null ? DateTime.parse(parentEvent.endTime!).toLocal() : null;
-    String? startTime = timeChanged
-        ? parentEvent.startTime
-        : eventStartTime != null
-            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
-                    eventStartTime.second)
-                .toUtc()
-                .toIso8601String()
-            : null;
-    String? endTime = timeChanged
-        ? parentEvent.endTime
-        : eventEndTime != null
-            ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
-                    eventEndTime.second)
-                .toUtc()
-                .toIso8601String()
-            : null;
 
-    String? startDate = parentEvent.startDate != null
-        ? dateChanged
-            ? parentEvent.startDate
-            : DateFormat("y-MM-dd").format(tappedDate.toUtc())
+    String? startTime = eventStartTime != null
+        ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventStartTime.hour, eventStartTime.minute,
+                eventStartTime.second)
+            .toUtc()
+            .toIso8601String()
         : null;
-    String? endDate = parentEvent.endDate != null
-        ? dateChanged
-            ? parentEvent.endDate
-            : DateFormat("y-MM-dd").format(tappedDate.toUtc())
+
+    String? endTime = eventEndTime != null
+        ? DateTime(tappedDate.year, tappedDate.month, tappedDate.day, eventEndTime.hour, eventEndTime.minute,
+                eventEndTime.second)
+            .toUtc()
+            .toIso8601String()
         : null;
+
+    String? startDate = parentEvent.startDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
+    String? endDate = parentEvent.endDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
 
     Event recurringException = parentEvent.copyWith(
       id: const Uuid().v4(),
@@ -380,6 +435,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
               atendeesToRemove: atendeesToRemove,
               addMeeting: addMeeting,
               removeMeeting: removeMeeting,
+              selectedMeetingSolution: selectedMeetingSolution,
+              conferenceAccountId: conferenceAccountId,
               createingEvent: true,
               dragAndDrop: dragAndDrop)
           .then((value) => refreshAllEvents(context));
@@ -418,11 +475,18 @@ class EventsCubit extends Cubit<EventsCubitState> {
             .toIso8601String()
         : null;
 
+    String? originalStartDate =
+        selectedEvent.startDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
+    String? originalEndDate = selectedEvent.endDate != null ? DateFormat("y-MM-dd").format(tappedDate.toUtc()) : null;
+
     Event newParent = selectedEvent.copyWith(
       id: id,
       recurringId: id,
+      recurrence: Nullable(selectedEvent.computeRuleForThisAndFuture()),
       startTime: Nullable(originalStartTime),
       endTime: Nullable(originalEndTime),
+      startDate: Nullable(originalStartDate),
+      endDate: Nullable(originalEndDate),
       originId: Nullable(null),
       customOriginId: Nullable(null),
       untilDatetime: Nullable(null),
@@ -472,14 +536,10 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     DateTime oldParenUntil = DateTime(tappedDate.year, tappedDate.month, tappedDate.day - 1, 23, 59, 59).toUtc();
 
-    List<String> processedRrule = [];
-    for (String rule in parentEvent.recurrence!) {
-      List<String> parts = rule.split(";");
-      parts.removeWhere((part) => part.startsWith('WKST'));
-      processedRrule.add(parts.join(';'));
-    }
+    String processedRrule = '';
+    processedRrule = parentEvent.computeRuleForThisAndFuture().first;
 
-    RecurrenceRule parentRrule = RecurrenceRule.fromString(processedRrule.join(';'));
+    RecurrenceRule parentRrule = RecurrenceRule.fromString(processedRrule);
     String newParenRrule = parentRrule.copyWith(clearCount: true, until: oldParenUntil).toString();
 
     List<String> parts = newParenRrule.split(";");
@@ -613,9 +673,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
                   createEventException(
                       context: context,
                       tappedDate: droppedTimeRounded,
-                      dateChanged: false,
                       originalStartTime: originalStartTime,
-                      timeChanged: true,
                       parentEvent: event,
                       atendeesToAdd: [],
                       atendeesToRemove: [],
@@ -751,14 +809,14 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   ///creates EventModifier for adding meeting
-  EventModifier addMeetingEventModifier(Event event) {
-    String meetingSolution = getDefaultConferenceSolution();
+  EventModifier addMeetingEventModifier(Event event, String? selectedMeetingSolution, String? conferenceAccountId) {
+    String meetingSolution = selectedMeetingSolution ?? getDefaultConferenceSolution();
     AuthCubit authCubit = locator<AuthCubit>();
 
     dynamic content;
     if (meetingSolution == 'zoom') {
-      String? conferenceAccountId;
-      if (authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
+      if (((conferenceAccountId != null && conferenceAccountId.isEmpty) || conferenceAccountId == null) &&
+          authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
         conferenceAccountId = authCubit.state.user?.settings?['calendar']['conferenceAccountId'];
       }
       if (conferenceAccountId != null) {

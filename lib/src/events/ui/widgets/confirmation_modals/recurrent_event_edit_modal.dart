@@ -49,7 +49,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                         deleteEvent ? Assets.images.icons.common.trashSVG : Assets.images.icons.common.pencilSVG,
                         width: 28,
                         height: 28,
-                        color: ColorsExt.grey2(context)),
+                        color: ColorsExt.grey800(context)),
                     const SizedBox(width: Dimension.paddingS),
                     Text(
                         deleteEvent
@@ -57,7 +57,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                             : t.event.editEvent.repeatingEditModal.title,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
+                              color: ColorsExt.grey800(context),
                             )),
                   ],
                 ),
@@ -71,7 +71,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
-                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                      ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                 ),
               ),
               const SizedBox(height: Dimension.paddingM),
@@ -86,14 +86,14 @@ class RecurrentEventEditModal extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
-                      border: Border.all(color: ColorsExt.grey4(context))),
+                      border: Border.all(color: ColorsExt.grey300(context))),
                   child: Center(
                     child: Text(
                       t.event.editEvent.repeatingEditModal.onlyThis,
                       style: Theme.of(context)
                           .textTheme
                           .subtitle1
-                          ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                          ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                     ),
                   ),
                 ),
@@ -113,14 +113,14 @@ class RecurrentEventEditModal extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimension.radius),
-                            border: Border.all(color: ColorsExt.grey4(context))),
+                            border: Border.all(color: ColorsExt.grey300(context))),
                         child: Center(
                           child: Text(
                             t.event.editEvent.repeatingEditModal.thisAndAllFuture,
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1
-                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                                ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                           ),
                         ),
                       ),
@@ -139,14 +139,14 @@ class RecurrentEventEditModal extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius),
-                      border: Border.all(color: ColorsExt.grey4(context))),
+                      border: Border.all(color: ColorsExt.grey300(context))),
                   child: Center(
                     child: Text(
                       t.event.editEvent.repeatingEditModal.allEvents,
                       style: Theme.of(context)
                           .textTheme
                           .subtitle1
-                          ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey2(context)),
+                          ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                     ),
                   ),
                 ),

@@ -26,7 +26,7 @@ class BottomButton extends StatelessWidget {
                 height: 40.0,
                 width: 40.0,
                 decoration: BoxDecoration(
-                  color: containerColor ?? ColorsExt.grey6(context),
+                  color: containerColor ?? ColorsExt.grey100(context),
                   borderRadius: const BorderRadius.all(
                     Radius.circular(12.0),
                   ),
@@ -39,7 +39,7 @@ class BottomButton extends StatelessWidget {
                   image,
                   width: iconColor != null ? 15 : 20,
                   height: iconColor != null ? 15 : 20,
-                  color: iconColor ?? ColorsExt.grey3(context),
+                  color: iconColor ?? ColorsExt.grey600(context),
                 ),
               ),
             ],
@@ -49,7 +49,7 @@ class BottomButton extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .caption
-                ?.copyWith(color: ColorsExt.grey2(context), fontWeight: FontWeight.w500)),
+                ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
       ],
     );
   }

@@ -18,7 +18,7 @@ class DateDisplay extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2(context),
+                  color: ColorsExt.grey800(context),
                 )),
       ),
     );

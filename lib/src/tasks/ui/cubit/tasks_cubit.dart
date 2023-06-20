@@ -21,12 +21,13 @@ import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
-import 'package:mobile/src/base/models/gmail_mark_as_done_type.dart';
+import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/doc_action.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
+import 'package:models/extensions/account_ext.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
@@ -87,6 +88,15 @@ class TasksCubit extends Cubit<TasksCubitState> {
         _syncCubit.emit(_syncCubit.state.copyWith(loading: false));
       }
     });
+
+    DateTime? lastTaskDoneAt = _preferencesRepository.lastTaskDoneAt;
+    DateTime? lastDayInboxZero = _preferencesRepository.lastDayInboxZero;
+    DateTime? lastDayTodayZero = _preferencesRepository.lastDayTodayZero;
+    emit(state.copyWith(
+      lastTaskDoneAt: lastTaskDoneAt,
+      lastDayInboxZero: lastDayInboxZero,
+      lastDayTodayZero: lastDayTodayZero,
+    ));
   }
 
   attachAuthCubit(AuthCubit authCubit) {
@@ -109,6 +119,26 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
+  setLastTaskDoneAt() {
+    print('setLastTaskDoneAt A FOST AICI la TASK DONE');
+    DateTime now = DateTime.now().toUtc();
+    emit(state.copyWith(lastTaskDoneAt: now));
+    _preferencesRepository.setLastTaskDoneAt(now);
+  }
+
+  setLastDayTodayZero() {
+    DateTime now = DateTime.now().toUtc();
+    emit(state.copyWith(lastDayTodayZero: now));
+    _preferencesRepository.setDayTodayZero(now);
+  }
+
+  setLastDayInboxZero() {
+    print('setLastDayInboxZero A FOST AICI');
+    DateTime now = DateTime.now().toUtc();
+    emit(state.copyWith(lastDayInboxZero: now));
+    _preferencesRepository.setLastDayInboxZero(now);
+  }
+
   void refreshTasksUi(Task updatedTask) {
     emit(state.copyWith(
       inboxTasks: state.inboxTasks.map((task) => task.id == updatedTask.id ? updatedTask : task).toList(),
@@ -123,11 +153,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
     try {
       String startDateCalendarTasks = DateTime.now().toUtc().subtract(const Duration(days: 7)).toIso8601String();
       String endDateCalendarTasks = DateTime.now().toUtc().add(const Duration(days: 7)).toIso8601String();
-
+      if (_todayCubit != null) {}
       await Future.wait([
         fetchInbox().then((_) => print('fetched inbox')),
         fetchTodayTasks().then((_) => print('fetched today tasks')),
-        fetchSelectedDayTasks(_todayCubit!.state.selectedDate).then((_) => print('fetched selected day tasks')),
+        if (_todayCubit != null)
+          fetchSelectedDayTasks(_todayCubit!.state.selectedDate).then((_) => print('fetched selected day tasks')),
         _labelsCubit != null
             ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!).then((_) => print('fetched label tasks'))
             : Future.value(),
@@ -233,6 +264,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
+  resetTasks() {
+    emit(state.copyWith(calendarTasks: []));
+  }
+
   Future<void> getTodayTasksByDate(DateTime selectedDay) async {
     try {
       await fetchSelectedDayTasks(selectedDay);
@@ -282,12 +317,22 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task taskSelected in all) {
       Task updated = taskSelected.markAsDone(taskSelected);
 
+      bool markAsDoneRemote = await shouldMarkAsDoneRemote(updated);
+      if (markAsDoneRemote) {
+        Map<String, dynamic> content = updated.content;
+        content['shouldMarkAsDoneRemote'] = updated.done!;
+
+        updated = updated.copyWith(content: content);
+      }
+
       await _tasksRepository.updateById(taskSelected.id, data: updated);
 
       refreshTasksUi(updated);
 
       tasksChanged.add(updated);
     }
+
+    setLastTaskDoneAt();
 
     refreshAllFromRepository();
 
@@ -296,6 +341,20 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync(entities: [Entity.tasks]);
 
     handleDocAction(tasksChanged);
+  }
+
+  Future<void> markAsDoneRemoteOnly(Task task) async {
+    task = task.markAsDone(task);
+
+    Map<String, dynamic> content = task.content;
+    content['shouldMarkAsDoneRemote'] = true;
+
+    task = task.copyWith(
+      content: content,
+    );
+    await _tasksRepository.updateById(task.id, data: task);
+
+    _syncCubit.sync(entities: [Entity.tasks]);
   }
 
   Future<void> duplicate() async {
@@ -642,7 +701,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in allSelected) {
       Task updated = task.copyWith(
         date: Nullable(date?.toIso8601String()),
-        datetime: Nullable(dateTime?.toIso8601String()),
+        datetime: Nullable(TzUtils.toUtcStringIfNotNull(dateTime)),
         status: Nullable(statusType.id),
         updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(now)),
         selected: false,
@@ -733,6 +792,14 @@ class TasksCubit extends Cubit<TasksCubitState> {
     for (Task task in labelTasksSelected) {
       Task updated = task.markAsDone(task);
 
+      bool markAsDoneRemote = await shouldMarkAsDoneRemote(updated);
+      if (markAsDoneRemote) {
+        Map<String, dynamic> content = updated.content;
+        content['shouldMarkAsDoneRemote'] = updated.done!;
+
+        updated = updated.copyWith(content: content);
+      }
+
       await _tasksRepository.updateById(updated.id, data: updated);
 
       refreshTasksUi(updated);
@@ -745,6 +812,38 @@ class TasksCubit extends Cubit<TasksCubitState> {
     _syncCubit.sync(entities: [Entity.tasks]);
 
     emit(state.copyWith(labelTasks: []));
+  }
+
+  Future<bool> shouldMarkAsDoneRemote(Task task) async {
+    if (task.connectorId != null && AccountExt.settingsEnabled.contains(task.connectorId!.value!)) {
+      List<Account> accounts = await _accountsRepository.getAccounts();
+      Account account = accounts.firstWhere(
+          (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
+
+      String? markAsDoneKey = account.details?['mark_as_done_action'];
+      MarkAsDoneType markAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
+
+      if (markAsDoneType == MarkAsDoneType.markAsDone || markAsDoneType == MarkAsDoneType.changeList) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> shouldArchiveRemote(Task task) async {
+    if (task.connectorId != null && AccountExt.settingsEnabled.contains(task.connectorId!.value!)) {
+      List<Account> accounts = await _accountsRepository.getAccounts();
+      Account account = accounts.firstWhere(
+          (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
+
+      String? markAsDoneKey = account.details?['mark_as_done_action'];
+      MarkAsDoneType markAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
+
+      if (markAsDoneType == MarkAsDoneType.archive) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Future<void> handleDocAction(List<Task> tasks) async {
@@ -762,67 +861,48 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> gmailTasks = [];
 
     for (var task in all) {
-      if (task.connectorId != null && task.connectorId!.value! == 'gmail' && task.doc != null) {
+      if (task.connectorId != null &&
+          task.doc != null &&
+          (task.connectorId!.value! == 'gmail' || AccountExt.settingsEnabled.contains(task.connectorId!.value!))) {
         gmailTasks.add(task);
       }
     }
 
-    List<GmailDocAction> docActions = [];
-
     for (Task task in gmailTasks) {
-      String? markAsDoneKey = _authCubit!.state.user?.settings?['popups']['gmail.unstar'];
-      GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(markAsDoneKey);
+      List<Account> accounts = await _accountsRepository.getAccounts();
+      Account account = accounts.firstWhere(
+          (a) => (a.originAccountId == task.originAccountId?.value!) && (a.connectorId == task.connectorId?.value));
 
-      List<Account> accounts = await _accountsRepository.get();
-      Account account = accounts.firstWhere((a) => a.originAccountId == task.originAccountId?.value!);
+      String? markAsDoneKey = account.details?['mark_as_done_action'];
+      MarkAsDoneType gmailMarkAsDoneType = MarkAsDoneType.fromKey(markAsDoneKey);
 
       switch (gmailMarkAsDoneType) {
-        case GmailMarkAsDoneType.unstarTheEmail:
-          docActions.add(GmailDocAction(
-            markAsDoneType: GmailMarkAsDoneType.unstarTheEmail,
+        case MarkAsDoneType.unstarTheEmail:
+          await unstarGmail(GmailDocAction(
+            markAsDoneType: MarkAsDoneType.unstarTheEmail,
             task: task,
             account: account,
           ));
           break;
-        case GmailMarkAsDoneType.goToGmail:
-          docActions.add(GmailDocAction(
-            markAsDoneType: GmailMarkAsDoneType.goToGmail,
-            task: task,
-            account: account,
-          ));
+        case MarkAsDoneType.goTo:
+          Future.delayed(
+            const Duration(milliseconds: 1200),
+            () => launchUrl(Uri.parse(task.doc?['url']), mode: LaunchMode.externalApplication),
+          );
           break;
-        case GmailMarkAsDoneType.askMeEveryTime:
-          docActions.add(GmailDocAction(
-            markAsDoneType: GmailMarkAsDoneType.askMeEveryTime,
-            task: task,
-            account: account,
-          ));
+        case MarkAsDoneType.askMeEveryTime:
+          if (task.done! && task.connectorId!.value! == 'gmail') {
+            _docActionsController.add([
+              GmailDocAction(
+                markAsDoneType: MarkAsDoneType.askMeEveryTime,
+                task: task,
+                account: account,
+              )
+            ]);
+          }
           break;
         default:
       }
-    }
-
-    GmailMarkAsDoneType gmailMarkAsDoneType = GmailMarkAsDoneType.fromKey(
-      _authCubit!.state.user?.settings?['popups']['gmail.unstar'],
-    );
-
-    switch (gmailMarkAsDoneType) {
-      case GmailMarkAsDoneType.unstarTheEmail:
-        for (GmailDocAction docAction in docActions) {
-          await unstarGmail(docAction);
-        }
-        break;
-      case GmailMarkAsDoneType.goToGmail:
-        for (GmailDocAction docAction in docActions) {
-          await launchUrl(Uri.parse(docAction.task.doc!.value!.url!), mode: LaunchMode.externalApplication);
-        }
-        break;
-      case GmailMarkAsDoneType.askMeEveryTime:
-        if (docActions.isNotEmpty) {
-          _docActionsController.add(docActions);
-        }
-        break;
-      default:
     }
   }
 
@@ -836,7 +916,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
     await gmailApi.unstar(action.task.originId!.value!);
   }
 
-  Future<void> goToGmail(String url) async {
+  Future<void> goToUrl(String url) async {
+    print(url);
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
 }

@@ -121,7 +121,7 @@ class _LabelsListState extends State<LabelsList> {
                 t.editTask.assignLabel,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
+                      color: ColorsExt.grey800(context),
                     ),
               ),
             );
@@ -208,7 +208,7 @@ class _LabelsListState extends State<LabelsList> {
                       open ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
                       width: 16,
                       height: 16,
-                      color: ColorsExt.grey3(context),
+                      color: ColorsExt.grey600(context),
                     ),
                   );
                 },

@@ -40,7 +40,7 @@ class SettingsModal extends StatelessWidget {
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.traySVG,
-          color: ColorsExt.grey2(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       selected: homeViewType == HomeViewType.inbox,
@@ -50,7 +50,7 @@ class SettingsModal extends StatelessWidget {
         return Text(tasks.length.toString(),
             style: Theme.of(context).textTheme.bodyText1?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2_5(context),
+                  color: ColorsExt.grey700(context),
                 ));
       }),
       onPressed: () {
@@ -68,7 +68,7 @@ class SettingsModal extends StatelessWidget {
         width: 22,
         child: SvgPicture.asset(
           "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-          color: ColorsExt.grey1(context),
+          color: ColorsExt.grey900(context),
         ),
       ),
       selected: homeViewType == HomeViewType.today,
@@ -80,7 +80,7 @@ class SettingsModal extends StatelessWidget {
         return Text(fixedTodoTodayTasks.length.toString(),
             style: Theme.of(context).textTheme.bodyText1?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: ColorsExt.grey2_5(context),
+                  color: ColorsExt.grey700(context),
                 ));
       }),
       onPressed: () {
@@ -93,18 +93,19 @@ class SettingsModal extends StatelessWidget {
   _buildSomeday(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
       title: t.task.someday,
+      titleColor: ColorsExt.grey600(context),
       leading: SizedBox(
         height: Dimension.defaultIconSize,
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.archiveboxSVG,
-          color: ColorsExt.grey3(context),
+          color: ColorsExt.grey600(context),
         ),
       ),
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(t.comingSoon,
           style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey600(context),
               )),
       onPressed: () {
         // TODO someday list
@@ -115,19 +116,20 @@ class SettingsModal extends StatelessWidget {
   _buildAllTasks(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
       title: t.allTasks,
+      titleColor: ColorsExt.grey600(context),
       leading: SizedBox(
         height: Dimension.defaultIconSize,
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.rectangleGrid1X2SVG,
           height: 19,
-          color: ColorsExt.grey3(context),
+          color: ColorsExt.grey600(context),
         ),
       ),
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(
         t.comingSoon,
-        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey3(context)),
+        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey600(context)),
       ),
       onPressed: () {
         // TODO all tasks list
@@ -146,18 +148,19 @@ class SettingsModal extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey3(context)),
+                  ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey600(context)),
             ),
           ),
           Theme(
             data:
                 Theme.of(context).copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
             child: PopupMenuButton<AddListType>(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
               icon: SvgPicture.asset(
                 Assets.images.icons.common.plusSVG,
                 width: Dimension.defaultIconSize,
                 height: Dimension.defaultIconSize,
-                color: ColorsExt.grey3(context),
+                color: ColorsExt.grey800(context),
               ),
               onSelected: (AddListType result) async {
                 switch (result) {
@@ -221,10 +224,31 @@ class SettingsModal extends StatelessWidget {
     );
   }
 
+  _buildAvailabilitySection(BuildContext context) {
+    return ButtonSelectable(
+      title: t.availability.shareAvailabilities,
+      titleColor: ColorsExt.grey800(context),
+      leading: SizedBox(
+        height: Dimension.defaultIconSize,
+        width: Dimension.defaultIconSize,
+        child: SvgPicture.asset(
+          Assets.images.icons.common.availabilitySVG,
+          height: 19,
+          color: ColorsExt.grey800(context),
+        ),
+      ),
+      trailing: Container(),
+      onPressed: () {
+        context.read<MainCubit>().changeHomeView(HomeViewType.availability);
+        Navigator.pop(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: Colors.white,
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(Dimension.padding),
         topRight: Radius.circular(Dimension.padding),
@@ -276,6 +300,7 @@ class SettingsModal extends StatelessWidget {
                       return _buildAllTasks(homeViewType, context);
                     },
                   ),
+                  _buildAvailabilitySection(context),
                   const SizedBox(height: Dimension.paddingS),
                   const Separator(),
                   const SizedBox(height: Dimension.paddingS),

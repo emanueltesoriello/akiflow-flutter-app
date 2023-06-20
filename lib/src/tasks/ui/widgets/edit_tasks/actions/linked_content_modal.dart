@@ -82,7 +82,7 @@ class LinkedContentModal extends StatelessWidget {
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText1
-                                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
+                                    ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                               ),
                             ),
                           ],
@@ -120,9 +120,25 @@ class LinkedContentModal extends StatelessWidget {
               Container(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
-                child: ButtonList(
-                    leadingTextIconAsset: Assets.images.icons.common.arrowUpRightSquareSVG,
-                    title: t.linkedContent.open,
+                child: OutlinedButton(
+                    style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+                        backgroundColor: MaterialStateProperty.all((Colors.transparent)),
+                        minimumSize: MaterialStateProperty.all(const Size(double.infinity, Dimension.buttonHeight))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          Assets.images.icons.common.arrowUpRightSquareSVG,
+                          color: ColorsExt.grey800(context),
+                        ),
+                        const SizedBox(width: Dimension.paddingS),
+                        Text(
+                          t.linkedContent.open,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                     onPressed: () {
                       task.openLinkedContentUrl(doc);
                     }),
@@ -153,19 +169,19 @@ class LinkedContentModal extends StatelessWidget {
           children: [
             Text(
               title.isEmpty ? '-' : title,
-              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey3(context)),
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey600(context)),
             ),
             const SizedBox(width: Dimension.paddingS),
             Expanded(
               child: Text(value.isEmpty ? '-' : value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey2(context))),
+                  style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context))),
             ),
             syncing
                 ? SvgPicture.asset(
                     Assets.images.icons.common.syncingSVG,
-                    color: ColorsExt.grey2(context),
+                    color: ColorsExt.grey800(context),
                     width: 18,
                     height: 18,
                   )

@@ -7,21 +7,21 @@ import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 
-class ReceiveNotificationSettingModal extends StatefulWidget {
+class ReceiveTaskNotificationSettingModal extends StatefulWidget {
   final NextTaskNotificationsModel selectedNextTaskNotificationsModel;
   final Function(NextTaskNotificationsModel value) onSelectedNextTaskNotificationsModel;
 
-  const ReceiveNotificationSettingModal({
+  const ReceiveTaskNotificationSettingModal({
     required this.selectedNextTaskNotificationsModel,
     required this.onSelectedNextTaskNotificationsModel,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ReceiveNotificationSettingModal> createState() => _ReceiveNotificationSettingModalState();
+  State<ReceiveTaskNotificationSettingModal> createState() => _ReceiveTaskNotificationSettingModalState();
 }
 
-class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSettingModal> {
+class _ReceiveTaskNotificationSettingModalState extends State<ReceiveTaskNotificationSettingModal> {
   NextTaskNotificationsModel _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
 
   @override
@@ -39,7 +39,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
     return InkWell(
       onTap: onPressed,
       child: Container(
-        color: selected ? ColorsExt.grey6(context) : Colors.transparent,
+        color: selected ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
         height: 40,
         child: Row(
@@ -48,7 +48,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
               child: Text(
                 text,
                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                      color: ColorsExt.grey2(context),
+                      color: ColorsExt.grey800(context),
                     ),
               ),
             ),
@@ -88,7 +88,7 @@ class _ReceiveNotificationSettingModalState extends State<ReceiveNotificationSet
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                           child: Text('Send notifications ...',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey2(context))),
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey800(context))),
                         ),
                         const SizedBox(height: Dimension.padding),
                         ...List.generate(
