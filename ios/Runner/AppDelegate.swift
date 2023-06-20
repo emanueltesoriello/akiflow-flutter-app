@@ -108,13 +108,13 @@ struct CreateTaskAppShortcuts: AppShortcutsProvider {
             GeneratedPluginRegistrant.register(with: registry)
         } 
     
-    INInteraction(intent: AkiflowIntent(), response: nil).donate { (error) in
+    /*INInteraction(intent: Akiflow(), response: nil).donate { (error) in
         if let error = error { 
             print("Failed to donate intent: \(error.localizedDescription)")
         } else {
             print("Intent donated successfully")
         }
-    }
+    }*/
     WorkmanagerPlugin.registerTask(withIdentifier: "com.akiflow.mobile.periodicTask")
 
     UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))

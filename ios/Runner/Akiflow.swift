@@ -15,7 +15,7 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
     static var title: LocalizedStringResource = "Create an Akiflow task"
     static var description = IntentDescription("Create a new task via Siri dialog")
 
-    @Parameter(title: "Title")
+    @Parameter(title: "Title", default: "My Akiflow task!")
     var title: String?
 
     static var parameterSummary: some ParameterSummary {
@@ -31,9 +31,36 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
         }
     }
 
-    func perform() async throws -> some IntentResult {
+    /*func perform() async throws -> some IntentResult {
         // TODO: Place your refactored intent handler code here.
         return .result()
+    }*/
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        
+        if (title != nil)
+            {
+            IntentParameter(title: Akiflow.title, requestDisambiguationDialog: IntentDialog("What session would you like?"))
+
+                print("Empty")
+                return .result(dialog: IntentDialog.responseFailure)
+                
+            }
+        else
+            {
+                return .result(dialog: IntentDialog.responseSuccess)
+                
+            }
+    }
+}
+
+struct CreateTaskAppShortcuts: AppShortcutsProvider {
+    static var appShortcuts: [AppShortcut] {
+        AppShortcut(
+            intent: Akiflow(),
+            phrases: ["Create new task in \(.applicationName)"],
+            systemImageName: "com.akiflow.mobile"
+        )
     }
 }
 

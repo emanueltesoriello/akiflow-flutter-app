@@ -20,15 +20,9 @@
 		D30B5CCF8D4609CBFA4D21CB /* Pods_ShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 370ACEB53661CB74AD4ADFD5 /* Pods_ShareExtension.framework */; };
 		FA2CC80729A132DA0021B677 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA2CC80629A132DA0021B677 /* GoogleService-Info.plist */; };
 		FA2D7D342A3E0B0500F0E69A /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2D7D332A3E0B0500F0E69A /* Intents.framework */; };
-		FA2D7D372A3E0B0500F0E69A /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D362A3E0B0500F0E69A /* IntentHandler.swift */; };
 		FA2D7D3F2A3E0B0500F0E69A /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2D7D3E2A3E0B0500F0E69A /* IntentsUI.framework */; };
-		FA2D7D422A3E0B0500F0E69A /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D412A3E0B0500F0E69A /* IntentViewController.swift */; };
-		FA2D7D452A3E0B0500F0E69A /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA2D7D432A3E0B0500F0E69A /* MainInterface.storyboard */; };
 		FA2D7D492A3E0B0500F0E69A /* AkiflowIntentUI.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FA2D7D3D2A3E0B0500F0E69A /* AkiflowIntentUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FA2D7D4C2A3E0B0500F0E69A /* AkiflowIntent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FA2D7D322A3E0B0500F0E69A /* AkiflowIntent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FA2D7D562A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */; };
-		FA2D7D572A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */; };
-		FA2D7D582A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */; };
 		FA2D7D5E2A406CBD00F0E69A /* Akiflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D7D5D2A406CBD00F0E69A /* Akiflow.swift */; };
 /* End PBXBuildFile section */
 
@@ -113,17 +107,9 @@
 		FA2CC80629A132DA0021B677 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Desktop/xCode/Akiflow/prod/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA2D7D322A3E0B0500F0E69A /* AkiflowIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkiflowIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA2D7D332A3E0B0500F0E69A /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
-		FA2D7D362A3E0B0500F0E69A /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
-		FA2D7D382A3E0B0500F0E69A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA2D7D3D2A3E0B0500F0E69A /* AkiflowIntentUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkiflowIntentUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA2D7D3E2A3E0B0500F0E69A /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
-		FA2D7D412A3E0B0500F0E69A /* IntentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentViewController.swift; sourceTree = "<group>"; };
-		FA2D7D442A3E0B0500F0E69A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		FA2D7D462A3E0B0500F0E69A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
 		FA2D7D5D2A406CBD00F0E69A /* Akiflow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Akiflow.swift; sourceTree = "<group>"; };
-		FA2D7D5F2A4075FF00F0E69A /* AkiflowIntent.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AkiflowIntent.entitlements; sourceTree = "<group>"; };
-		FA2D7D602A40760E00F0E69A /* AkiflowIntentUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AkiflowIntentUI.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,8 +190,6 @@
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				43C3F607292793AE003A0ACB /* ShareExtension */,
-				FA2D7D352A3E0B0500F0E69A /* AkiflowIntent */,
-				FA2D7D402A3E0B0500F0E69A /* AkiflowIntentUI */,
 				97C146EF1CF9000F007C117D /* Products */,
 				0A0AA22270ABDE7AEB0BC881 /* Pods */,
 				F9B8E72F77BCB7DFCFD06960 /* Frameworks */,
@@ -235,7 +219,6 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				FA2D7D5D2A406CBD00F0E69A /* Akiflow.swift */,
-				FA2D7D552A3E0B9D00F0E69A /* Intents.intentdefinition */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 			);
 			path = Runner;
@@ -250,27 +233,6 @@
 				FA2D7D3E2A3E0B0500F0E69A /* IntentsUI.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		FA2D7D352A3E0B0500F0E69A /* AkiflowIntent */ = {
-			isa = PBXGroup;
-			children = (
-				FA2D7D5F2A4075FF00F0E69A /* AkiflowIntent.entitlements */,
-				FA2D7D362A3E0B0500F0E69A /* IntentHandler.swift */,
-				FA2D7D382A3E0B0500F0E69A /* Info.plist */,
-			);
-			path = AkiflowIntent;
-			sourceTree = "<group>";
-		};
-		FA2D7D402A3E0B0500F0E69A /* AkiflowIntentUI */ = {
-			isa = PBXGroup;
-			children = (
-				FA2D7D602A40760E00F0E69A /* AkiflowIntentUI.entitlements */,
-				FA2D7D412A3E0B0500F0E69A /* IntentViewController.swift */,
-				FA2D7D432A3E0B0500F0E69A /* MainInterface.storyboard */,
-				FA2D7D462A3E0B0500F0E69A /* Info.plist */,
-			);
-			path = AkiflowIntentUI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -432,7 +394,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA2D7D452A3E0B0500F0E69A /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,7 +506,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA2D7D562A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				FA2D7D5E2A406CBD00F0E69A /* Akiflow.swift in Sources */,
@@ -556,8 +516,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA2D7D572A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */,
-				FA2D7D372A3E0B0500F0E69A /* IntentHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,8 +523,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA2D7D582A3E0B9D00F0E69A /* Intents.intentdefinition in Sources */,
-				FA2D7D422A3E0B0500F0E69A /* IntentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,14 +569,6 @@
 				97C147001CF9000F007C117D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		FA2D7D432A3E0B0500F0E69A /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FA2D7D442A3E0B0500F0E69A /* Base */,
-			);
-			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
