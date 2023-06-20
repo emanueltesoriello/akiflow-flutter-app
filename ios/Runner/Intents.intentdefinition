@@ -74,8 +74,6 @@
 					<dict>
 						<key>INIntentParameterMetadataCapitalization</key>
 						<string>Sentences</string>
-						<key>INIntentParameterMetadataDefaultValue</key>
-						<string>test</string>
 						<key>INIntentParameterMetadataDefaultValueID</key>
 						<string>RfpXl9</string>
 					</dict>

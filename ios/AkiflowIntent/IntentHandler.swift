@@ -20,6 +20,8 @@ import Intents
 class IntentHandler: INExtension {
     
     override func handler(for intent: INIntent) -> Any {
+        print("handler runned")
+
         guard intent is AkiflowIntent else {
             fatalError("Unhandled Intent error : \(intent)")
         }
@@ -31,6 +33,7 @@ class AkiflowHandler: NSObject, AkiflowIntentHandling {
     
     
     func handle(intent: AkiflowIntent, completion: @escaping (AkiflowIntentResponse) -> Void) {
+        print("handle runned")
         if let title = intent.title {
             let numberOfCreatedTasks = createTask(title: title)
             completion(AkiflowIntentResponse(code: AkiflowIntentResponseCode.success,userActivity: nil))
@@ -40,6 +43,7 @@ class AkiflowHandler: NSObject, AkiflowIntentHandling {
     
     
     func resolveTitle(for intent: AkiflowIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+        print("resolveTitle runned")
         guard let title = intent.title else {
             completion(INStringResolutionResult.needsValue())
             return
@@ -49,6 +53,7 @@ class AkiflowHandler: NSObject, AkiflowIntentHandling {
     
     
     func createTask(title: String) -> Int {
+        print("createTask runned")
         var data = [[String:Any]]()
         data.append(["title": title])
         if let userDefaults = UserDefaults(suiteName: "group.com.akiflow.mobile") {
