@@ -7,6 +7,7 @@ import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/src/base/ui/widgets/task/plan_for_action.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_cupertino_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
@@ -109,7 +110,14 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                 isBig: true,
                 text: text,
                 onPressed: () {
-                  context.read<EditTaskCubit>().toggleDuration();
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => DurationCupertinoModal(
+                      state: state,
+                      cubit: context.read<EditTaskCubit>(),
+                      onConfirm: (int duration) => context.read<EditTaskCubit>().setDuration(duration, fromModal: true),
+                    ),
+                  );
                 },
               );
             },
