@@ -102,8 +102,9 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                 icon: Assets.images.icons.common.hourglassSVG,
                 active: task.duration != null && task.duration != 0,
                 foregroundColor: ColorsExt.grey800(context),
-                backgroundColor:
-                    task.duration != null && task.duration != 0 ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+                backgroundColor: task.duration != null && task.duration != 0
+                    ? ColorsExt.grey100(context)
+                    : ColorsExt.grey50(context),
                 isSquare: task.duration != null && task.duration != 0 ? false : true,
                 isBig: true,
                 text: text,
