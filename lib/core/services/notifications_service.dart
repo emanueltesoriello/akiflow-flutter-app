@@ -159,7 +159,9 @@ class NotificationsService {
 
           scheduleNotifications(
             event.title ?? '',
-            "Event start at $startTime",
+            (event.startDate != null && event.endDate != null && startTime.contains("24:00"))
+                ? "Today"
+                : "Event start at $startTime",
             notificationId: notificationsId,
             scheduledDate: tz.TZDateTime.parse(
               tz.local,
