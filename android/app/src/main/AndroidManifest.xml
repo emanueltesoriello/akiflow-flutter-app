@@ -12,14 +12,17 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="default_channel" />
             <!-- Add custom icon for notifications -->
-            <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications" />
+
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
             
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -63,8 +66,15 @@
                <data android:mimeType="text/*" />
             </intent-filter>
 
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" /> 
+        </activity>
+        <activity android:name=".ActivityForReceivingActions" exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <!-- Don't delete the meta-data below.
