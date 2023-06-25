@@ -269,87 +269,91 @@ class _EditTaskModalState extends State<EditTaskModal> {
     );
   }
 
+  Widget body(EditTaskCubitState state) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: Dimension.padding),
+        _buildAnimatedChild(
+          !state.hasFocusOnTitleOrDescription,
+          const ScrollChip(),
+        ),
+        _buildAnimatedChild(
+          !state.hasFocusOnTitleOrDescription,
+          const SizedBox(height: Dimension.padding),
+        ),
+        _buildAnimatedChild(
+          !state.hasFocusOnTitleOrDescription,
+          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+            builder: (context, state) {
+              return Visibility(
+                visible: state.showDuration,
+                replacement: const SizedBox(),
+                child: Column(
+                  children: const [
+                    Separator(),
+                    CreateTaskDurationItem(),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        _buildAnimatedChild(
+          !state.hasFocusOnTitleOrDescription,
+          const EditTaskTopActions(),
+        ),
+        _buildAnimatedChild(
+          !state.hasFocusOnTitleOrDescription,
+          const SizedBox(height: Dimension.padding),
+        ),
+        _buildAnimatedChild(
+          state.hasFocusOnTitleOrDescription,
+          _buildActionsForFocusNodes(state),
+        ),
+        if (state.hasFocusOnTitleOrDescription) const SizedBox(height: Dimension.padding),
+        if (state.hasFocusOnTitleOrDescription) const Separator(),
+        Flexible(
+          child: _buildContent(state),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         return WillPopScope(
           onWillPop: () => onBack(state),
-          child: Material(
-            color: Colors.transparent,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: 0,
-                maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2,
-              ),
-              child: AnimatedSize(
-                curve: Curves.linear,
-                duration: const Duration(milliseconds: 200),
-                reverseDuration: const Duration(milliseconds: 200),
-                child: Container(
-                  height: state.hasFocusOnTitleOrDescription
-                      ? MediaQuery.of(context).size.height -
-                          (kToolbarHeight * 2) +
-                          MediaQuery.of(context).viewInsets.bottom
-                      : null,
-                  decoration: BoxDecoration(
-                    color: ColorsExt.background(context),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(Dimension.radius),
-                      topRight: Radius.circular(Dimension.radius),
-                    ),
-                  ),
-                  child: Scaffold(
-                    backgroundColor: Colors.transparent,
-                    resizeToAvoidBottomInset: true,
-                    body: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: Dimension.padding),
-                        _buildAnimatedChild(
-                          !state.hasFocusOnTitleOrDescription,
-                          const ScrollChip(),
-                        ),
-                        _buildAnimatedChild(
-                          !state.hasFocusOnTitleOrDescription,
-                          const SizedBox(height: Dimension.padding),
-                        ),
-                        _buildAnimatedChild(
-                          !state.hasFocusOnTitleOrDescription,
-                          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-                            builder: (context, state) {
-                              return Visibility(
-                                visible: state.showDuration,
-                                replacement: const SizedBox(),
-                                child: Column(
-                                  children: const [
-                                    Separator(),
-                                    CreateTaskDurationItem(),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        _buildAnimatedChild(
-                          !state.hasFocusOnTitleOrDescription,
-                          const EditTaskTopActions(),
-                        ),
-                        _buildAnimatedChild(
-                          !state.hasFocusOnTitleOrDescription,
-                          const SizedBox(height: Dimension.padding),
-                        ),
-                        _buildAnimatedChild(
-                          state.hasFocusOnTitleOrDescription,
-                          _buildActionsForFocusNodes(state),
-                        ),
-                        if (state.hasFocusOnTitleOrDescription) const SizedBox(height: Dimension.padding),
-                        if (state.hasFocusOnTitleOrDescription) const Separator(),
-                        Flexible(
-                          child: _buildContent(state),
-                        ),
-                      ],
-                    ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(Dimension.radius),
+              topRight: Radius.circular(Dimension.radius),
+            ),
+            child: Material(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: 0,
+                  maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2,
+                ),
+                child: AnimatedSize(
+                  curve: Curves.linear,
+                  duration: const Duration(milliseconds: 200),
+                  reverseDuration: const Duration(milliseconds: 200),
+                  child: SizedBox(
+                    height: state.hasFocusOnTitleOrDescription
+                        ? MediaQuery.of(context).size.height -
+                            (kToolbarHeight * 2) +
+                            MediaQuery.of(context).viewInsets.bottom
+                        : null,
+                    child: state.hasFocusOnTitleOrDescription
+                        ? Scaffold(
+                            backgroundColor: Colors.transparent.withOpacity(0),
+                            resizeToAvoidBottomInset: true,
+                            body: body(state),
+                          )
+                        : body(state),
                   ),
                 ),
               ),
