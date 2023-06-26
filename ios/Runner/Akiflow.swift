@@ -37,7 +37,9 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
     }*/
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        
+        if let user = NSUserDefaults.standard.string(forKey: "flutter.user") {
+            print(user)
+        }
         if (title != nil)
             {
             IntentParameter(title: Akiflow.title, requestDisambiguationDialog: IntentDialog("What session would you like?"))
