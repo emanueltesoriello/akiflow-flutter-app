@@ -40,6 +40,24 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
         let user = UserDefaults.standard.string(forKey: "flutter.user")
         print(user ?? "Empty user")
         
+        // Convert the JSON string into Data
+        if (user != nil) {
+             let jsonData = user?.data(using: .utf8)
+
+            // Convert the JSON data into a Dictionary
+            let jsonDict = try? JSONSerialization.jsonObject(with: jsonData! , options: []) as? [String: Any]
+
+            // Access the 'code' key from the Dictionary
+            if let code = jsonDict!["code"] as? String {
+                // Use the extracted code
+                print("Code: \(code)")
+            } else {
+                // Handle the case when the 'code' key is not present or is not of type String
+                print("error");
+            }
+        }
+       
+        
         /*if (title != nil)
             {
             IntentParameter(title: Akiflow.title, requestDisambiguationDialog: IntentDialog("What session would you like?"))
