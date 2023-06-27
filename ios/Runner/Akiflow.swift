@@ -77,6 +77,7 @@ func makeAPICall(withAccessToken accessToken: String, title: String) async throw
 
     // Set the authorization header with the access token
     request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
     // Set the request body with the task data
     request.httpBody = taskData
