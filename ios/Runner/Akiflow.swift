@@ -4,13 +4,21 @@ import AppIntents
 func makeAPICall(withAccessToken accessToken: String, title: String) async throws {
     // Define the API endpoint URL
     let urlString = "https://api.akiflow.com/v3/tasks"
+    
+    let dateFormatter = ISO8601DateFormatter()
+    dateFormatter.formatOptions = [.withInternetDateTime]
+
+    let currentDate = Date()
+    let createdAtString = dateFormatter.string(from: currentDate)
 
     // Create the task object
     let taskObject: [[String: Any]] = [
         [
             "id": UUID().uuidString,
             "status": 1,
-            "title": title
+            "title": title,
+            "created_at": createdAtString,
+            "global_created_at": createdAtString
         ]
     ]
 
