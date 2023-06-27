@@ -93,7 +93,7 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
                         // intercept the answer
                         // pass the title to the makeAPICall method
                         
-                        try await makeAPICall(withAccessToken: accessToken, "Test Emanuel")
+                        try await makeAPICall(withAccessToken: accessToken, title: "Test Emanuel")
                         return .result(dialog: IntentDialog.responseSuccess)
                     } catch {
                         print("API request failed: \(error.localizedDescription)")
