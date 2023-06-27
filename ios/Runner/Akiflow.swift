@@ -1,12 +1,55 @@
-//
-//  Akiflow.swift
-//  
-//
-//  Created by Emanuel Tesoriello on 19/06/23.
-//
- 
 import Foundation
 import AppIntents
+
+func makeAPICall(withAccessToken accessToken: String, title: String) async throws {
+    // Define the API endpoint URL
+    let urlString = "https://api.akiflow.com/v3/tasks"
+
+    // Create the task object
+    let taskObject: [[String: Any]] = [
+        [
+            "id": UUID().uuidString,
+            "status": 1,
+            "title": title
+        ]
+    ]
+
+    // Convert the task object to Data
+    guard let taskData = try? JSONSerialization.data(withJSONObject: taskObject, options: []) else {
+        // Handle the case when the task object cannot be converted to data
+        throw NSError(domain: "com.akiflow.mobile", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert task object to data"])
+    }
+
+    // Create the URL object
+    guard let url = URL(string: urlString) else {
+        // Handle the case when the URL is invalid
+        throw NSError(domain: "com.akiflow.mobile", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+    }
+
+    // Create the request object
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+
+    // Set the authorization header with the access token
+    request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+    // Set the request body with the task data
+    request.httpBody = taskData
+
+    // Create a URLSession task to perform the request
+    let (data, response) = try await URLSession.shared.data(for: request)
+
+    // Check the response status code
+    if let httpResponse = response as? HTTPURLResponse {
+        if httpResponse.statusCode == 200 {
+            print("API request successful - 200 OK")
+            // Handle the successful response here
+        } else {
+            print("API request failed - Status Code: \(httpResponse.statusCode)")
+            throw NSError(domain: "com.example.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "API request failed with status code \(httpResponse.statusCode)"])
+        }
+    }
+}
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
@@ -31,47 +74,36 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
         }
     }
 
-    /*func perform() async throws -> some IntentResult {
-        // TODO: Place your refactored intent handler code here.
-        return .result()
-    }*/
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let user = UserDefaults.standard.string(forKey: "flutter.user")
         print(user ?? "Empty user")
-        
+
         // Convert the JSON string into Data
-        if (user != nil) {
-             let jsonData = user?.data(using: .utf8)
-
+        if let jsonData = user?.data(using: .utf8) {
             // Convert the JSON data into a Dictionary
-            let jsonDict = try? JSONSerialization.jsonObject(with: jsonData! , options: []) as? [String: Any]
-
-            // Access the 'code' key from the Dictionary
-            if let code = jsonDict!["code"] as? String {
-                // Use the extracted code
-                print("Code: \(code)")
-            } else {
-                // Handle the case when the 'code' key is not present or is not of type String
-                print("error");
+            if let jsonDict = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                // Access the 'access_token' key from the Dictionary
+                if let accessToken = jsonDict["access_token"] as? String {
+                    // Use the extracted access_token
+                    print("Access Token: \(accessToken)")
+                    do {
+                        
+                        // TODO ask to the user via Siri "What's the title?"
+                        // intercept the answer
+                        // pass the title to the makeAPICall method
+                        
+                        try await makeAPICall(withAccessToken: accessToken, "Test Emanuel")
+                        return .result(dialog: IntentDialog.responseSuccess)
+                    } catch {
+                        print("API request failed: \(error.localizedDescription)")
+                        return .result(dialog: IntentDialog.responseFailure)
+                    }
+                }
             }
         }
-       
-        
-        /*if (title != nil)
-            {
-            IntentParameter(title: Akiflow.title, requestDisambiguationDialog: IntentDialog("What session would you like?"))
 
-                print("Empty")
-                return .result(dialog: IntentDialog.responseFailure)
-                
-            }
-        else
-            {
-                return .result(dialog: IntentDialog.responseSuccess)
-                
-            }*/
-        return .result(dialog: IntentDialog.responseSuccess)
+        return .result(dialog: IntentDialog.responseFailure)
     }
 }
 
@@ -90,10 +122,9 @@ fileprivate extension IntentDialog {
         "What's the \(title)?"
     }
     static var responseSuccess: Self {
-        "Task created! "
+        "Task created!"
     }
     static var responseFailure: Self {
-        "Oops! Loos like something went wrong! "
+        "Oops! Looks like something went wrong!"
     }
 }
-
