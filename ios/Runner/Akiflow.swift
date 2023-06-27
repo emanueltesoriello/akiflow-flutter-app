@@ -15,10 +15,44 @@ func makeAPICall(withAccessToken accessToken: String, title: String) async throw
     let taskObject: [[String: Any]] = [
         [
             "id": UUID().uuidString,
+            "title": "ciaone",
+            "date": NSNull(),
+            "description": "",
+            "duration": NSNull(),
             "status": 1,
-            "title": title,
-            "created_at": createdAtString,
-            "global_created_at": createdAtString
+            "created_at": "2023-06-27T17:22:55.055164Z",
+            "updated_at": "2023-06-27T17:22:55.055164Z",
+            "deleted_at": NSNull(),
+            "remote_list_id_updated_at": NSNull(),
+            "global_list_id_updated_at": NSNull(),
+            "done": false,
+            "done_at": NSNull(),
+            "datetime": NSNull(),
+            "read_at": NSNull(),
+            "global_updated_at": "2023-06-27T17:22:55.055164Z",
+            "global_created_at": "2023-06-27T17:22:55.055164Z",
+            "activation_datetime": NSNull(),
+            "due_date": NSNull(),
+            "remote_updated_at": NSNull(),
+            "recurring_id": NSNull(),
+            "priority": NSNull(),
+            "listId": NSNull(),
+            "section_id": NSNull(),
+            "origin": NSNull(),
+            "sorting": 1687871996165,
+            "sorting_label": NSNull(),
+            "trashed_at": NSNull(),
+            "selected": NSNull(),
+            "dailyGoal": NSNull(),
+            "links": NSNull(),
+            "recurrence": NSNull(),
+            "content": NSNull(),
+            "connector_id": NSNull(),
+            "origin_id": NSNull(),
+            "origin_account_id": NSNull(),
+            "akiflow_account_id": NSNull(),
+            "calendar_id": NSNull(),
+            "doc": NSNull()
         ]
     ]
 
@@ -27,7 +61,10 @@ func makeAPICall(withAccessToken accessToken: String, title: String) async throw
         // Handle the case when the task object cannot be converted to data
         throw NSError(domain: "com.akiflow.mobile", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert task object to data"])
     }
-
+    
+    if let taskDataString = String(data: taskData, encoding: .utf8) {
+        print("Task Data: \(taskDataString)")
+    }
     // Create the URL object
     guard let url = URL(string: urlString) else {
         // Handle the case when the URL is invalid
@@ -47,8 +84,12 @@ func makeAPICall(withAccessToken accessToken: String, title: String) async throw
     // Create a URLSession task to perform the request
     let (data, response) = try await URLSession.shared.data(for: request)
 
+    if let responseData = String(data: data, encoding: .utf8) {
+        print("Response Data: \(responseData)")
+    }
     // Check the response status code
     if let httpResponse = response as? HTTPURLResponse {
+        print("HTTP Response: \(httpResponse)")
         if httpResponse.statusCode == 200 {
             print("API request successful - 200 OK")
             // Handle the successful response here
