@@ -87,7 +87,7 @@ class EventAppointment extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: responseStatus == AtendeeResponseStatus.declined
                         ? ColorsExt.grey700(context)
-                        : ColorsExt.grey900(context),
+                        : ColorsExt.getCalendarEventTitleColor(appointment.color),
                     decoration: responseStatus == AtendeeResponseStatus.declined ? TextDecoration.lineThrough : null,
                   ),
                 ),
@@ -102,7 +102,7 @@ class EventAppointment extends StatelessWidget {
                             height: 1.3,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey600(context),
+                            color: ColorsExt.grey700(context),
                           )),
               ],
             ),
@@ -129,8 +129,8 @@ class EventAppointment extends StatelessWidget {
               colors: [
                 ColorsExt.getCalendarBackgroundColor(appointment.color),
                 ColorsExt.getCalendarBackgroundColor(appointment.color),
-                ColorsExt.getCalendarBackgroundColorLight(appointment.color),
-                ColorsExt.getCalendarBackgroundColorLight(appointment.color),
+                ColorsExt.getCalendarBackgroundColorDark(appointment.color),
+                ColorsExt.getCalendarBackgroundColorDark(appointment.color),
               ],
               tileMode: TileMode.repeated,
             ),
