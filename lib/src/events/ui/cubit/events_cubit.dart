@@ -47,6 +47,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await fetchUnprocessedEventModifiers();
+      await refreshEventsAtSync();
     });
   }
 
@@ -89,6 +90,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
   Future<void> refreshAllEvents(BuildContext context) async {
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    computeRefreshEvents(calendarCubit);
+  }
+
+  Future<void> refreshEventsAtSync() async {
+    CalendarCubit calendarCubit = locator<CalendarCubit>();
+    computeRefreshEvents(calendarCubit);
+  }
+
+  computeRefreshEvents(CalendarCubit calendarCubit) {
     fetchEvents();
     Future.delayed(
       const Duration(milliseconds: 1200),

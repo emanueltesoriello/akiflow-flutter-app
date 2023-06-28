@@ -140,6 +140,9 @@ class CalendarEvent extends Appointment {
       if (day != null) {
         parts.add('BYDAY=$day');
       }
+    } else if (parts.where((part) => part.startsWith('BYMONTHDAY=')).isNotEmpty &&
+        parts.where((part) => part.startsWith('BYMONTH=')).isEmpty) {
+      parts.add('BYMONTH=${startTime.month}');
     }
 
     String? recurrenceString = parts.join(';');
