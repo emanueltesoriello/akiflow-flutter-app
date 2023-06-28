@@ -21,6 +21,25 @@ class PlanForAction extends StatelessWidget {
       {Key? key, required this.task, required this.onTap, this.backgroundPlanColor, this.borderPlanColor})
       : super(key: key);
 
+  bool isToday(DateTime date) {
+    DateTime now = DateTime.now().toLocal();
+    return date.day == now.day && date.month == now.month && date.year == now.year;
+  }
+
+  bool isTomorrow(DateTime date) {
+    DateTime now = DateTime.now().toLocal();
+    return date.day == now.day + 1 && date.month == now.month && date.year == now.year;
+  }
+
+  bool isCurrentWeek(DateTime date) {
+    final now = DateTime.now();
+    final currentWeekStart = now.subtract(Duration(days: now.weekday - 1));
+    final currentWeekEnd = currentWeekStart.add(const Duration(days: 7));
+
+    return date.isAfter(currentWeekStart.subtract(const Duration(days: 1))) &&
+        date.isBefore(currentWeekEnd.add(const Duration(days: 1)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final preferencesRepository = locator<PreferencesRepository>();
@@ -73,13 +92,28 @@ class PlanForAction extends StatelessWidget {
 
         DateTime parsed = DateTime.parse(task.date!);
         text = DateFormat("EEE, d MMM").format(parsed);
+        if (isCurrentWeek(parsed)) {
+          text = DateFormat("EEE").format(parsed);
+        }
+        if (isToday(parsed)) {
+          text = "Today";
+        }
+        if (isTomorrow(parsed)) {
+          text = "Tomorrow";
+        }
       } else {
         text = t.bottomBar.inbox;
       }
 
       if (task.datetime != null) {
         DateTime parsed = DateTime.parse(task.datetime!).toLocal();
-        text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(parsed)}";
+        if (isToday(parsed)) {
+          text = "Today ${DateFormat(use24hFormat ? "HH:mm" : "h:mm").format(parsed)}";
+        } else if (isTomorrow(parsed)) {
+          text = "Tomorrow ${DateFormat(use24hFormat ? "HH:mm" : "h:mm").format(parsed)}";
+        } else {
+          text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(parsed)}";
+        }
       }
     } else if (task.date != null && !task.isOverdue) {
       color = ColorsExt.jordyBlue200(context);
