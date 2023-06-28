@@ -15,8 +15,8 @@ func makeAPICall(withAccessToken accessToken: String, title: String) async throw
     let taskObject: [[String: Any]] = [
         [
             "id": UUID().uuidString,
-            "title": "ciaone",
-            "date": NSNull(),
+            "title": title,
+            "date": NSNull(), 
             "description": "",
             "duration": NSNull(),
             "status": 1,
@@ -143,7 +143,9 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
                         // intercept the answer
                         // pass the title to the makeAPICall method
                         
-                        try await makeAPICall(withAccessToken: accessToken, title: "Test Emanuel")
+                        let myTitle = try await $title.requestValue()
+                    
+                        try await makeAPICall(withAccessToken: accessToken, title: myTitle)
                         return .result(dialog: IntentDialog.responseSuccess)
                     } catch {
                         print("API request failed: \(error.localizedDescription)")

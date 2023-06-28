@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -326,7 +327,7 @@ class SettingsModal extends StatelessWidget {
                     },
                   ),
                   _buildAvailabilitySection(context),
-                  _buildSiri(context),
+                  if (kDebugMode) _buildSiri(context),
                   const SizedBox(height: Dimension.paddingS),
                   const Separator(),
                   const SizedBox(height: Dimension.paddingS),
