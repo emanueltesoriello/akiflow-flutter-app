@@ -45,7 +45,7 @@ class TaskListMenu extends StatelessWidget {
               child: Text(t.comingSoon.toUpperCase(),
                   style: Theme.of(context)
                       .textTheme
-                      .caption
+                      .bodySmall
                       ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500)),
             ),
           ),

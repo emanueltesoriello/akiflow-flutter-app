@@ -243,7 +243,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                               selectedDate.day,
                                               selectedTime.hour,
                                               selectedTime.minute)),
-                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                             fontWeight: FontWeight.w500,
                                             color: ColorsExt.grey800(context),
                                           ),
@@ -288,7 +288,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                     const SizedBox(width: Dimension.paddingS),
                                     Text(
                                       t.editTask.repeat,
-                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                             fontWeight: FontWeight.w500,
                                             color:
                                                 context.watch<EditTaskCubit>().state.updatedTask.recurrence != null &&

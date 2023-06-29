@@ -50,7 +50,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
                   t.bottomBar.today,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1!
+                      .bodyLarge!
                       .copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w600),
                 ),
               ),

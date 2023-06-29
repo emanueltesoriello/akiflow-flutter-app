@@ -314,7 +314,7 @@ class CompactInfo extends StatelessWidget {
             }),
             Text(
               text,
-              style: Theme.of(context).textTheme.caption?.copyWith(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: ColorsExt.grey800(context),
                   ),
             ),

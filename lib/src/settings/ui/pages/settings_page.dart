@@ -64,7 +64,7 @@ class SettingsPage extends StatelessWidget {
                   radius: Dimension.radius,
                   child: Text(
                     count.toString(),
-                    style: Theme.of(context).textTheme.caption?.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: ColorsExt.background(context),
                         ),

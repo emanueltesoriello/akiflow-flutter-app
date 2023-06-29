@@ -87,7 +87,7 @@ class ReconnectIntegrations extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       child: Text(t.onboarding.gmail.skipForNow,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context))),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey800(context))),
                     ),
                   ],
                 ),

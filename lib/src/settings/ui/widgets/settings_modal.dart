@@ -48,7 +48,7 @@ class SettingsModal extends StatelessWidget {
         List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
         return Text(tasks.length.toString(),
-            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: ColorsExt.grey700(context),
                 ));
@@ -78,7 +78,7 @@ class SettingsModal extends StatelessWidget {
             List.from(fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
         return Text(fixedTodoTodayTasks.length.toString(),
-            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: ColorsExt.grey700(context),
                 ));
@@ -104,7 +104,7 @@ class SettingsModal extends StatelessWidget {
       ),
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(t.comingSoon,
-          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: ColorsExt.grey600(context),
               )),
       onPressed: () {
@@ -129,7 +129,7 @@ class SettingsModal extends StatelessWidget {
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(
         t.comingSoon,
-        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey600(context)),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey600(context)),
       ),
       onPressed: () {
         // TODO all tasks list
@@ -147,7 +147,7 @@ class SettingsModal extends StatelessWidget {
               t.settings.labels.toUpperCase(),
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1
+                  .bodyLarge
                   ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey600(context)),
             ),
           ),

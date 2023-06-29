@@ -119,7 +119,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
             icon: Icon(Icons.arrow_back, size: 16, color: ColorsExt.grey600(context)),
             label: Text(
               'Edit task',
-              style: Theme.of(context).textTheme.button?.copyWith(color: ColorsExt.grey600(context)),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: ColorsExt.grey600(context)),
             ),
           ),
           TextButton(
@@ -132,7 +132,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
               'SAVE',
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context)),
             ),
           ),
@@ -167,7 +167,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                       Text('The changes you’ve made won’t be saved',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.normal)),
                       const SizedBox(height: Dimension.paddingM),
                       Row(
@@ -183,7 +183,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             },
                             child: Text('Cancel'.toUpperCase(),
                                 style:
-                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey900(context))),
+                                    Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey900(context))),
                           ),
                           const SizedBox(width: Dimension.padding),
                           TextButton(
@@ -203,7 +203,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                             },
                             child: Text('Discard'.toUpperCase(),
                                 style:
-                                    Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey900(context))),
+                                    Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey900(context))),
                           )
                         ],
                       )

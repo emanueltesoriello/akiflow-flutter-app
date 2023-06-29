@@ -98,7 +98,7 @@ class EventAppointment extends StatelessWidget {
                         DateTime.parse(event.startTime!).toLocal(), DateTime.parse(event.endTime!).toLocal()))
                   Text(
                       '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.endTime!).toLocal())}',
-                      style: Theme.of(context).textTheme.caption?.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             height: 1.3,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w500,

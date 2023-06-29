@@ -50,7 +50,7 @@ class AvailabilityViewPlaceholder extends StatelessWidget {
                     Text(
                       t.availability.toCreateLinkUseDesktop,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: ColorsExt.grey600(context)),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(color: ColorsExt.grey600(context)),
                     ),
                   ],
                 ),

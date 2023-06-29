@@ -48,7 +48,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   t.settings.viewOptions.toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -79,7 +79,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                             Text(
                               t.settings.use24hoursFormat,
                               textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: ColorsExt.grey800(context),
                                   ),
                             ),
@@ -87,7 +87,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                             Text(
                               use24hFormat ? "13:00" : "1:00 PM",
                               textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.caption?.copyWith(
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: ColorsExt.grey600(context),
                                   ),
                             ),

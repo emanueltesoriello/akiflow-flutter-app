@@ -71,7 +71,7 @@ class _PlanModalState extends State<PlanModal> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).colorScheme.background,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(Dimension.radiusM),
                 topRight: Radius.circular(Dimension.radiusM),
@@ -369,7 +369,7 @@ class _PlanModalState extends State<PlanModal> {
                 text,
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText1
+                    .bodyLarge
                     ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
               ),
             ),
@@ -384,7 +384,7 @@ class _PlanModalState extends State<PlanModal> {
                       textAlign: TextAlign.end,
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyLarge
                           ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                     ),
                   ),

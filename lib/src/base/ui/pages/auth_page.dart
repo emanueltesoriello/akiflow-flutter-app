@@ -57,7 +57,7 @@ class AuthPage extends StatelessWidget {
                   const SizedBox(height: Dimension.paddingS),
                   Text(t.onboarding.welcomeToAkiflowSubtitle,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w400,
                             color: ColorsExt.grey700(context),
                           )),
@@ -88,21 +88,21 @@ class AuthPage extends StatelessWidget {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w400,
                             color: ColorsExt.grey700(context),
                           ),
                       children: [
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.continuingYouAcceptThe,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: ColorsExt.grey700(context),
                               ),
                         ),
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.termsAndConditions,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: ColorsExt.grey800(context),
                               ),
@@ -114,14 +114,14 @@ class AuthPage extends StatelessWidget {
                         ),
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.andThe,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: ColorsExt.grey700(context),
                               ),
                         ),
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.privacyPolicy,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: ColorsExt.grey800(context),
                               ),
@@ -133,7 +133,7 @@ class AuthPage extends StatelessWidget {
                         ),
                         TextSpan(
                           text: t.onboarding.termsAndPrivacy.ofAkiflow,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: ColorsExt.grey800(context),
                               ),

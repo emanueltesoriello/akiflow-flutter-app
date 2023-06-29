@@ -45,7 +45,7 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                 topRight: Radius.circular(Dimension.padding),
               ),
               child: Container(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.background,
                 margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SafeArea(
                   child: Padding(
@@ -98,7 +98,7 @@ class _CreateEditSectionModalState extends State<CreateEditSectionModal> {
                                         Assets.images.icons.common.arrowUpSVG,
                                         width: Dimension.chevronIconSize,
                                         height: Dimension.chevronIconSize,
-                                        color: Theme.of(context).backgroundColor,
+                                        color: Theme.of(context).colorScheme.background,
                                       ),
                                     ),
                                   ),

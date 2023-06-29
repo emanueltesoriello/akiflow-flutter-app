@@ -33,7 +33,7 @@ class FolderItem extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(label.title ?? '(No title)',
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: ColorsExt.grey800(context),
                       )),
             ],

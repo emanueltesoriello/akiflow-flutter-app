@@ -75,14 +75,14 @@ class _IntegrationsPageState extends State<IntegrationsPage> {
                               Text('Nothing to reconnect',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle1
+                                      .titleMedium
                                       ?.copyWith(color: ColorsExt.grey800(context))),
                               const SizedBox(height: Dimension.padding),
                               Text('You have no active integrations, check your desktop app to add more',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle1
+                                      .titleMedium
                                       ?.copyWith(color: ColorsExt.grey600(context))),
                             ],
                           ),

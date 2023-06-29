@@ -24,7 +24,7 @@ class RecurrentEventEditModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -70,7 +70,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       : t.event.editEvent.repeatingEditModal.description,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .titleMedium
                       ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                 ),
               ),
@@ -92,7 +92,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       t.event.editEvent.repeatingEditModal.onlyThis,
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle1
+                          .titleMedium
                           ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                     ),
                   ),
@@ -119,7 +119,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                             t.event.editEvent.repeatingEditModal.thisAndAllFuture,
                             style: Theme.of(context)
                                 .textTheme
-                                .subtitle1
+                                .titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                           ),
                         ),
@@ -145,7 +145,7 @@ class RecurrentEventEditModal extends StatelessWidget {
                       t.event.editEvent.repeatingEditModal.allEvents,
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle1
+                          .titleMedium
                           ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context)),
                     ),
                   ),

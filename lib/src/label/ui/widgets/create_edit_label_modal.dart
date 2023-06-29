@@ -55,7 +55,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
                 topRight: Radius.circular(Dimension.padding),
               ),
               child: Container(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.background,
                 margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SafeArea(
                   bottom: true,
@@ -159,7 +159,7 @@ class _CreateEditLabelModalState extends State<CreateEditLabelModal> {
 
                                     return Text(
                                       text,
-                                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                             color: ColorsExt.grey800(context),
                                           ),
                                       textAlign: TextAlign.center,

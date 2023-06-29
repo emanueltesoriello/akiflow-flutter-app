@@ -142,11 +142,11 @@ class CalendarBody extends StatelessWidget {
                 viewHeaderStyle: ViewHeaderStyle(
                   dayTextStyle: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .bodyLarge
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                   dateTextStyle: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .bodyLarge
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
                   narrowDateDay: narrowDateDay,
                 ),
@@ -155,7 +155,7 @@ class CalendarBody extends StatelessWidget {
                   minimumAppointmentDuration: const Duration(minutes: 15),
                   timeTextStyle: Theme.of(context)
                       .textTheme
-                      .caption
+                      .bodySmall
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
                   numberOfDaysInView: isThreeDays ? 3 : -1,
                   timeFormat: use24hFormat ? 'HH:mm' : 'h a',
@@ -166,7 +166,7 @@ class CalendarBody extends StatelessWidget {
                     dayHeaderSettings: DayHeaderSettings(
                       dayTextStyle: Theme.of(context)
                           .textTheme
-                          .bodyText2
+                          .bodyMedium
                           ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.w500),
                       dateTextStyle: Theme.of(context)
                           .textTheme

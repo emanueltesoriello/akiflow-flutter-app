@@ -50,7 +50,7 @@ class _CalendarItemState extends State<CalendarItem> {
                       Text(widget.title,
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
@@ -103,7 +103,7 @@ class _CalendarItemState extends State<CalendarItem> {
                                 child: Text("${widget.calendars[index].title}",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                         color: visible ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                                         fontWeight: FontWeight.w400)),
                               ),
