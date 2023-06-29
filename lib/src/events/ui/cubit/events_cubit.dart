@@ -47,6 +47,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await fetchUnprocessedEventModifiers();
+      await refreshEventsAtSync();
     });
   }
 
@@ -89,12 +90,26 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
   Future<void> refreshAllEvents(BuildContext context) async {
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    computeRefreshEvents(calendarCubit);
+  }
+
+  Future<void> refreshEventsAtSync() async {
+    CalendarCubit calendarCubit = locator<CalendarCubit>();
+    computeRefreshEvents(calendarCubit);
+  }
+
+  computeRefreshEvents(CalendarCubit calendarCubit) {
     fetchEvents();
     Future.delayed(
       const Duration(milliseconds: 1200),
       () {
-        fetchEventsBetweenDates(calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)),
-            calendarCubit.state.visibleDates.last.add(const Duration(days: 1)));
+        if (calendarCubit.state.visibleDates.isNotEmpty) {
+          fetchEventsBetweenDates(calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)),
+              calendarCubit.state.visibleDates.last.add(const Duration(days: 1)));
+        } else {
+          DateTime now = DateTime.now();
+          fetchEventsBetweenDates(now.subtract(const Duration(days: 31)), now.add(const Duration(days: 31)));
+        }
       },
     );
   }
