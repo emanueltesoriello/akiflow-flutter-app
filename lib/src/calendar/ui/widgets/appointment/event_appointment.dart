@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -32,6 +33,21 @@ class EventAppointment extends StatelessWidget {
     double boxWidth = calendarAppointmentDetails.bounds.width;
     AtendeeResponseStatus responseStatus = event.isLoggedUserAttndingEvent;
     String? rsvpIcon = event.getRsvpIcon();
+    return responseStatus == AtendeeResponseStatus.needsAction && event.attendees != null
+        ? DottedBorder(
+            color: appointment.color,
+            dashPattern: const [4, 3, 4, 3],
+            borderType: BorderType.RRect,
+            radius: Radius.circular(
+              calendarController.view == CalendarView.schedule ? 6.0 : 4.0,
+            ),
+            child: _container(boxWidth, boxHeight, responseStatus, rsvpIcon, context),
+          )
+        : _container(boxWidth, boxHeight, responseStatus, rsvpIcon, context);
+  }
+
+  Container _container(
+      double boxWidth, double boxHeight, AtendeeResponseStatus responseStatus, String? rsvpIcon, BuildContext context) {
     return Container(
       width: boxWidth,
       height: boxHeight,
@@ -159,7 +175,6 @@ class EventAppointment extends StatelessWidget {
         if (event.attendees != null) {
           return BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: appointment.color),
               borderRadius: BorderRadius.all(
                 Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
               ));

@@ -305,7 +305,7 @@ class _AllDayAppointmentLayoutState extends State<AllDayAppointmentLayout> {
                     cellEndPadding,
                 (kAllDayAppointmentHeight * appointmentView.position) +
                     kAllDayAppointmentHeight -
-                    1),
+                    2),
             const Radius.circular(cornerRadius));
       }
 
