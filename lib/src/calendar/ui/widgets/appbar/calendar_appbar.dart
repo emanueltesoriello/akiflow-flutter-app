@@ -30,6 +30,7 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
       builder: (context, state) {
         return AppBarComp(
           elevation: 0,
+          shadow: false,
           titleWidget: _buildTitle(context, state, calendarController),
           leading: SvgPicture.asset(
             Assets.images.icons.common.calendarSVG,
