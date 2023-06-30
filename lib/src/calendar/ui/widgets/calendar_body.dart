@@ -274,8 +274,18 @@ class CalendarBody extends StatelessWidget {
     mainContext.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
-      mainContext.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
-      calendarController.view = CalendarView.schedule;
+      mainContext.read<CalendarCubit>().changeCalendarView(CalendarView.day);
+      calendarController.view = CalendarView.day;
+    } else if ((calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
+        calendarTapDetails.targetElement == CalendarElement.viewHeader) {
+      DateTime now = DateTime.now().toLocal();
+      mainContext.read<CalendarCubit>().setCalendarViewThreeDays(false);
+      mainContext.read<CalendarCubit>().changeCalendarView(CalendarView.day);
+      calendarController
+        ..view = CalendarView.day
+        ..displayDate = calendarController.displayDate = now.hour > 2
+            ? calendarTapDetails.date?.add(Duration(hours: now.hour - 2, minutes: now.minute))
+            : calendarTapDetails.date;
     } else if (calendarController.view != CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
       calendarCubit.setAppointmentTapped(false);
