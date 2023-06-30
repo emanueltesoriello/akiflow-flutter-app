@@ -88,7 +88,7 @@ class CalendarBody extends StatelessWidget {
           bodyHeight: constraints.maxHeight,
           slideDirection: SlideDirection.down,
           controller: panelController,
-          maxHeight: 330,
+          maxHeight: 280,
           minHeight: 0,
           defaultPanelState: PanelState.closed,
           panel: ValueListenableBuilder(
