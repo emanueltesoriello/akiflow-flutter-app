@@ -31,6 +31,11 @@ class EventAppointment extends StatelessWidget {
   Widget build(BuildContext context) {
     double boxHeight = calendarAppointmentDetails.bounds.height;
     double boxWidth = calendarAppointmentDetails.bounds.width;
+
+    if (appointment.isAllDay && calendarController.view != CalendarView.schedule) {
+      boxHeight = 14;
+    }
+
     AtendeeResponseStatus responseStatus = event.isLoggedUserAttndingEvent;
     String? rsvpIcon = event.getRsvpIcon();
     return responseStatus == AtendeeResponseStatus.needsAction && event.attendees != null

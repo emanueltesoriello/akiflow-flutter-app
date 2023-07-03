@@ -11,7 +11,7 @@ import '../appointment_engine/appointment_helper.dart';
 import 'date_time_engine.dart';
 
 /// All day appointment height
-const double kAllDayAppointmentHeight = 20;
+const double kAllDayAppointmentHeight = 16;
 
 /// Signature for callback that used to get and update the calendar
 /// state details.

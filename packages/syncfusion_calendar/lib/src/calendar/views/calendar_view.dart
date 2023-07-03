@@ -24,7 +24,7 @@ import '../views/month_view.dart';
 import '../views/timeline_view.dart';
 
 /// All day appointment views default height
-const double _kAllDayLayoutHeight = 38;
+const double _kAllDayLayoutHeight = 30;
 
 /// Holds the looping widget for calendar view(time slot, month, timeline and
 /// appointment views) widgets of calendar widget.
@@ -5532,7 +5532,7 @@ class _CalendarViewState extends State<_CalendarView>
   //// timeline header is used to implement the sticky view header in horizontal calendar view mode.
   late TimelineViewHeaderView _timelineViewHeader;
   _SelectionPainter? _selectionPainter;
-  double _allDayHeight = 38;
+  double _allDayHeight = 30;
   late double _timeIntervalHeight;
   final UpdateCalendarStateDetails _updateCalendarStateDetails =
       UpdateCalendarStateDetails();
@@ -5944,7 +5944,7 @@ class _CalendarViewState extends State<_CalendarView>
       return;
     }
 
-    _allDayHeight = 38;
+    _allDayHeight = 30;
     if (isCurrentView) {
       // _allDayHeight =
       //     _updateCalendarStateDetails.allDayPanelHeight > _kAllDayLayoutHeight
