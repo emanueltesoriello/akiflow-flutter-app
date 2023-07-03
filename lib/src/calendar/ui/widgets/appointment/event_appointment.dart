@@ -41,13 +41,14 @@ class EventAppointment extends StatelessWidget {
             radius: Radius.circular(
               calendarController.view == CalendarView.schedule ? 6.0 : 4.0,
             ),
-            child: _container(boxWidth, boxHeight, responseStatus, rsvpIcon, context),
+            borderPadding: const EdgeInsets.all(1),
+            child: _container(boxWidth, boxHeight, responseStatus, rsvpIcon, true, context),
           )
-        : _container(boxWidth, boxHeight, responseStatus, rsvpIcon, context);
+        : _container(boxWidth, boxHeight, responseStatus, rsvpIcon, false, context);
   }
 
-  Container _container(
-      double boxWidth, double boxHeight, AtendeeResponseStatus responseStatus, String? rsvpIcon, BuildContext context) {
+  Container _container(double boxWidth, double boxHeight, AtendeeResponseStatus responseStatus, String? rsvpIcon,
+      bool dashedBorder, BuildContext context) {
     return Container(
       width: boxWidth,
       height: boxHeight,
@@ -55,7 +56,9 @@ class EventAppointment extends StatelessWidget {
       child: Row(
         children: [
           rsvpIcon == null
-              ? const SizedBox(width: Dimension.paddingXS)
+              ? dashedBorder
+                  ? const SizedBox(width: Dimension.paddingXS - 2)
+                  : const SizedBox(width: Dimension.paddingXS)
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
