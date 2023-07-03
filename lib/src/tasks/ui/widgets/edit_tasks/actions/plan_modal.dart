@@ -114,7 +114,6 @@ class _PlanModalState extends State<PlanModal> {
                       }
                     }(),
                   ),
-                  const SizedBox(height: Dimension.padding),
                 ],
               ),
             ),
