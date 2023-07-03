@@ -1245,10 +1245,7 @@ class _AllDayAppointmentRenderObject extends CustomCalendarRenderObject {
     final TextSpan icon = TextSpan(
         text: String.fromCharCode(iconCodePoint),
         style: TextStyle(
-          color: calendar.viewHeaderStyle.dayTextStyle != null &&
-                  calendar.viewHeaderStyle.dayTextStyle!.color != null
-              ? calendar.viewHeaderStyle.dayTextStyle!.color
-              : calendarTheme.viewHeaderDayTextStyle!.color,
+          color:const Color.fromRGBO(145, 158, 176, 1),
           fontSize: calendar.viewHeaderStyle.dayTextStyle != null &&
                   calendar.viewHeaderStyle.dayTextStyle!.fontSize != null
               ? calendar.viewHeaderStyle.dayTextStyle!.fontSize! * 2
