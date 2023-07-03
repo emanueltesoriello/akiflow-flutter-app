@@ -10644,7 +10644,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
           yPosition +
           topPadding +
           _dayTextPainter.height +
-          inBetweenPadding));
+          inBetweenPadding-5));
       }else{
         _dateTextPainter.paint(
         canvas,
