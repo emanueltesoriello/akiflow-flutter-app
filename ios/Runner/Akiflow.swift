@@ -160,10 +160,34 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
 }
 
 struct CreateTaskAppShortcuts: AppShortcutsProvider {
+    
+    
+    
     static var appShortcuts: [AppShortcut] {
+        
         AppShortcut(
             intent: Akiflow(),
-            phrases: ["Create new task in \(.applicationName)"],
+            phrases: ["Create a new task in \(.applicationName).",
+                      "Add a task in \(.applicationName).",
+                      "Create a new task in \(.applicationName).",
+                      "Can you help me make a task in \(.applicationName)?",
+                      "Start a new task in \(.applicationName).",
+                      "Please create a task in \(.applicationName).",
+                      "I need to make a task in \(.applicationName).",
+                      "Add a new task in \(.applicationName).",
+                      "I want to create a task in \(.applicationName).",
+                      "Could you add a new task in \(.applicationName)?",
+                      "Let's create a task in \(.applicationName).",
+                      "I want to make a task in \(.applicationName).",
+                      "Help me add a task in \(.applicationName), please.",
+                      "Start a new task in \(.applicationName) for me.",
+                      "I need to add a task in \(.applicationName).",
+                      "Assist me in creating a task in \(.applicationName).",
+                      "Add a new task in my \(.applicationName) app.",
+                      "Can you help me with a task in \(.applicationName)?",
+                      "Add a new task in \(.applicationName) for me.",
+                      "Let's make a task in \(.applicationName) together.",
+                      "Create a task in \(.applicationName) now."],
             systemImageName: "com.akiflow.mobile"
         )
     }
