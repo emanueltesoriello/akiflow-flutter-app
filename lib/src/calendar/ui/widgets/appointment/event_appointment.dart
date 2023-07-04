@@ -106,12 +106,12 @@ class EventAppointment extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
                     style: TextStyle(
-                      height: event.attendees != null && responseStatus == AtendeeResponseStatus.needsAction
+                      height: dashedBorder
                           ? boxHeight < 15.0
                               ? 1.1
                               : appointment.isAllDay
                                   ? 1.1
-                                  : 1.3
+                                  : 1.2
                           : calendarController.view == CalendarView.schedule
                               ? 1.1
                               : 1.3,
