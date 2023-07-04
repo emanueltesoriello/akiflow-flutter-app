@@ -111,7 +111,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: ListView(
           controller: parentScrollController,
           physics: const ClampingScrollPhysics(),
@@ -119,7 +119,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(Dimension.radiusM),
                   topRight: Radius.circular(Dimension.radiusM),

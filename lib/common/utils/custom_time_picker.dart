@@ -209,8 +209,8 @@ class _DayPeriodControl extends StatelessWidget {
     final Color activeColor = fragmentContext.activeColor;
     final Color inactiveColor = fragmentContext.inactiveColor;
     final bool amSelected = selectedTime.period == DayPeriod.am;
-    final TextStyle amStyle = headerTextTheme.subtitle1!.copyWith(color: amSelected ? activeColor : inactiveColor);
-    final TextStyle pmStyle = headerTextTheme.subtitle1!.copyWith(color: !amSelected ? activeColor : inactiveColor);
+    final TextStyle amStyle = headerTextTheme.titleMedium!.copyWith(color: amSelected ? activeColor : inactiveColor);
+    final TextStyle pmStyle = headerTextTheme.titleMedium!.copyWith(color: !amSelected ? activeColor : inactiveColor);
     final bool layoutPortrait = orientation == Orientation.portrait;
 
     final Widget amButton = ConstrainedBox(
@@ -727,7 +727,7 @@ class _TimePickerHeader extends StatelessWidget {
     // These font sizes aren't listed in the spec explicitly. I worked them out
     // by measuring the text using a screen ruler and comparing them to the
     // screen shots of the time picker in the spec.
-    return headerTextTheme.headline2!.copyWith(fontSize: 50.0);
+    return headerTextTheme.displayMedium!.copyWith(fontSize: 50.0);
   }
 
   @override
@@ -761,13 +761,13 @@ class _TimePickerHeader extends StatelessWidget {
         break;
       case Brightness.dark:
       default:
-        backgroundColor = themeData.backgroundColor;
+        backgroundColor = themeData.colorScheme.background;
         break;
     }
 
     Color activeColor;
     Color inactiveColor;
-    switch (themeData.primaryColorBrightness) {
+    switch (themeData.brightness) {
       case Brightness.light:
         activeColor = ColorsExt.akiflow500(context);
         inactiveColor = Colors.black54;
@@ -1288,7 +1288,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   ];
 
   _TappableLabel _buildTappableLabel(TextTheme textTheme, int value, String label, VoidCallback onTap) {
-    final TextStyle? style = textTheme.subtitle1;
+    final TextStyle? style = textTheme.titleMedium;
     // TODO(abarth): Handle textScaleFactor.
     // https://github.com/flutter/flutter/issues/5939
     return _TappableLabel(
@@ -1375,7 +1375,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
         break;
       case Brightness.dark:
       default:
-        backgroundColor = themeData.backgroundColor;
+        backgroundColor = themeData.colorScheme.background;
         break;
     }
 
@@ -1390,20 +1390,20 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
         if (widget.use24HourDials) {
           selectedDialValue = widget.selectedTime.hour;
           primaryOuterLabels = _build24HourOuterRing(theme.textTheme);
-          secondaryOuterLabels = _build24HourOuterRing(theme.accentTextTheme);
+          secondaryOuterLabels = _build24HourOuterRing(theme.textTheme);
           primaryInnerLabels = _build24HourInnerRing(theme.textTheme);
-          secondaryInnerLabels = _build24HourInnerRing(theme.accentTextTheme);
+          secondaryInnerLabels = _build24HourInnerRing(theme.textTheme);
         } else {
           selectedDialValue = widget.selectedTime.hourOfPeriod;
           primaryOuterLabels = _build12HourOuterRing(theme.textTheme);
-          secondaryOuterLabels = _build12HourOuterRing(theme.accentTextTheme);
+          secondaryOuterLabels = _build12HourOuterRing(theme.textTheme);
         }
         break;
       case _TimePickerMode.minute:
         selectedDialValue = widget.selectedTime.minute;
         primaryOuterLabels = _buildMinutes(theme.textTheme);
         primaryInnerLabels = null;
-        secondaryOuterLabels = _buildMinutes(theme.accentTextTheme);
+        secondaryOuterLabels = _buildMinutes(theme.textTheme);
         secondaryInnerLabels = null;
         break;
     }
@@ -1423,7 +1423,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
           secondaryOuterLabels: secondaryOuterLabels,
           secondaryInnerLabels: secondaryInnerLabels,
           backgroundColor: backgroundColor,
-          accentColor: themeData.accentColor,
+          accentColor: themeData.colorScheme.secondary,
           theta: _theta.value,
           activeRing: _activeRing,
           textDirection: Directionality.of(context),

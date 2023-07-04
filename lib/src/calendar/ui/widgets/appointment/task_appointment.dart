@@ -129,7 +129,7 @@ class TaskAppointment extends StatelessWidget {
                         child: Text(appointment.subject,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.caption?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   height: 1.3,
                                   fontSize: calendarController.view == CalendarView.schedule
                                       ? 15.0
@@ -150,7 +150,7 @@ class TaskAppointment extends StatelessWidget {
                         const SizedBox(width: 5),
                         Text(
                             '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(task.datetime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!)))}',
-                            style: Theme.of(context).textTheme.caption?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   height: 1.3,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w500,

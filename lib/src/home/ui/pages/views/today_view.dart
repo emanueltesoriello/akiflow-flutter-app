@@ -253,7 +253,7 @@ class _TodayViewState extends State<TodayView> {
                                     'Good job! All done',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle1
+                                        .titleMedium
                                         ?.copyWith(color: ColorsExt.grey900(context)),
                                   )
                                 ],

@@ -52,7 +52,7 @@ class Subtitle extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText1
+                                .bodyLarge
                                 ?.copyWith(color: ColorsExt.grey600(context), height: 1),
                           );
                         },
@@ -79,7 +79,7 @@ class Subtitle extends StatelessWidget {
                       task.descriptionParsed,
                       maxLines: 1,
                       style:
-                          Theme.of(context).textTheme.bodyText1?.copyWith(height: 1, color: ColorsExt.grey600(context)),
+                          Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1, color: ColorsExt.grey600(context)),
                     )),
                   ],
                 ),
@@ -144,7 +144,7 @@ class Subtitle extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
                               .textTheme
-                              .bodyText1
+                              .bodyLarge
                               ?.copyWith(height: 1, color: ColorsExt.grey600(context)),
                         ),
                       )

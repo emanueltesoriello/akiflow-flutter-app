@@ -30,7 +30,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -162,7 +162,7 @@ Widget _predefinedDateItem(
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: ColorsExt.grey800(context),
                     fontWeight: FontWeight.w500,
                   ),
@@ -171,7 +171,7 @@ Widget _predefinedDateItem(
           const SizedBox(width: Dimension.paddingS),
           Text(
             trailingText,
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: ColorsExt.grey600(context),
                   fontWeight: FontWeight.w500,
                 ),

@@ -85,11 +85,11 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                     },
                     weekdayStyle: Theme.of(context)
                         .textTheme
-                        .bodyText1!
+                        .bodyLarge!
                         .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600),
                     weekendStyle: Theme.of(context)
                         .textTheme
-                        .bodyText1!
+                        .bodyLarge!
                         .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600),
                   ),
                   calendarBuilders: CalendarBuilders(
@@ -101,7 +101,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                             DateFormat("d").format(day),
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText1!
+                                .bodyLarge!
                                 .copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -121,7 +121,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                             DateFormat("d").format(day),
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText1!
+                                .bodyLarge!
                                 .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                           ),
                         ),

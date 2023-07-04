@@ -152,7 +152,7 @@ class LocationRow extends StatelessWidget {
                   child: Text(locationName ?? '',
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: ColorsExt.grey800(context),
                           )),

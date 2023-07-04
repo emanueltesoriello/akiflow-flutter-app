@@ -30,7 +30,7 @@ class BoxWithInfo extends StatelessWidget {
           padding: const EdgeInsets.all(Dimension.padding),
           child: Text(
             info,
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: ColorsExt.grey900(context),
                 ),
           ),

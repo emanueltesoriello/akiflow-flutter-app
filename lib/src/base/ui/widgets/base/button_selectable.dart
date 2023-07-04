@@ -42,7 +42,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
-        begin: Theme.of(context).backgroundColor,
+        begin: Theme.of(context).colorScheme.background,
         end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
@@ -94,7 +94,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                           LeadingIcon(leading: widget.leading),
                           Expanded(
                             child: Text(widget.title,
-                                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                       color: widget.titleColor ?? ColorsExt.grey800(context),
                                     )),
                           ),

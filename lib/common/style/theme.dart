@@ -6,10 +6,9 @@ import 'package:mobile/common/style/sizes.dart';
 final ThemeData lightTheme = ThemeData.light().copyWith(
   primaryColor: ColorsLight.purple500,
   primaryColorLight: ColorsLight.purple100,
-  backgroundColor: ColorsLight.white,
   scaffoldBackgroundColor: ColorsLight.grey50,
   appBarTheme: const AppBarTheme(
-    color: ColorsLight.white,
+    backgroundColor: ColorsLight.white,
     iconTheme: IconThemeData(color: ColorsLight.grey800, size: 30),
     actionsIconTheme: IconThemeData(color: ColorsLight.grey800),
     foregroundColor: ColorsLight.grey800,
@@ -21,19 +20,15 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     selectionHandleColor: ColorsLight.purple500,
   ),
   textTheme: const TextTheme(
-    caption: TextStyle(fontSize: 11.5),
-    bodyText1: TextStyle(fontSize: 15.0),
-    bodyText2: TextStyle(fontSize: 12.5),
-    subtitle1: TextStyle(fontSize: 17.0),
-    subtitle2: TextStyle(fontSize: 17.0),
+    bodySmall: TextStyle(fontSize: 11.5),
+    bodyLarge: TextStyle(fontSize: 15.0),
+    bodyMedium: TextStyle(fontSize: 12.5),
+    titleMedium: TextStyle(fontSize: 17.0),
+    titleSmall: TextStyle(fontSize: 17.0),
   ).apply(
     fontFamily: "Inter",
     bodyColor: ColorsLight.grey900,
     displayColor: ColorsLight.grey900,
-  ),
-  colorScheme: ColorScheme.fromSwatch().copyWith(
-    primary: ColorsLight.purple500,
-    secondary: ColorsLight.purple500,
   ),
   cardTheme: CardTheme(
     margin: EdgeInsets.zero,
@@ -45,16 +40,15 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.all(ColorsLight.purple500)),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
+      foregroundColor: ColorsLight.purple500, shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimension.radius),
       ),
-      primary: ColorsLight.purple500,
       textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.purple500),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-    textStyle: ThemeData().primaryTextTheme.button!.copyWith(fontSize: 17, color: ColorsLight.grey800),
+    textStyle: ThemeData().primaryTextTheme.labelLarge!.copyWith(fontSize: 17, color: ColorsLight.grey800),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimension.outlineBorderRadius)),
     backgroundColor: ColorsLight.grey100,
     side: const BorderSide(color: ColorsLight.grey300, width: 1),
@@ -96,6 +90,12 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: ColorsLight.purple500,
   ),
+  colorScheme: ColorScheme.fromSwatch()
+      .copyWith(
+        primary: ColorsLight.purple500,
+        secondary: ColorsLight.purple500,
+      )
+      .copyWith(background: ColorsLight.white),
 );
 
 /// Dark Theme

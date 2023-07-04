@@ -32,7 +32,7 @@ class MyAccountPage extends StatelessWidget {
                   const SizedBox(height: Dimension.paddingS),
                   Text(
                     t.settings.myAccount.connectedAs.toUpperCase(),
-                    style: Theme.of(context).textTheme.caption?.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: ColorsExt.grey600(context),
                         ),
@@ -67,7 +67,7 @@ class MyAccountPage extends StatelessWidget {
                                     state.user?.name ?? "n/d",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle1
+                                        .titleMedium
                                         ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                                   ),
                                   const SizedBox(height: Dimension.paddingXS),
@@ -75,7 +75,7 @@ class MyAccountPage extends StatelessWidget {
                                     state.user?.email ?? "n/d",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .bodyText2
+                                        .bodyMedium
                                         ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                                   ),
                                 ],

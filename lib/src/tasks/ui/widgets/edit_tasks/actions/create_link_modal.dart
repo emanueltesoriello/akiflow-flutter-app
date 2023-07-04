@@ -25,7 +25,7 @@ class _CreateLinkModalState extends State<CreateLinkModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Wrap(
         children: [
           Container(
@@ -89,7 +89,7 @@ class _CreateLinkModalState extends State<CreateLinkModal> {
                                     Assets.images.icons.common.arrowUpSVG,
                                     width: 24,
                                     height: 24,
-                                    color: Theme.of(context).backgroundColor,
+                                    color: Theme.of(context).colorScheme.background,
                                   ),
                                 ),
                               ),

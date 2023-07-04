@@ -25,7 +25,7 @@ class MarksWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     i == 0 ? "0" : "${i ~/ 4}h",
-                    style: Theme.of(context).textTheme.caption?.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: ColorsExt.grey800(context),
                         ),

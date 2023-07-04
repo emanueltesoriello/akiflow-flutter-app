@@ -42,7 +42,7 @@ class SectionHeaderItem extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.bodyText2?.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: ColorsExt.akiflow500(context),
                   ),
@@ -50,7 +50,7 @@ class SectionHeaderItem extends StatelessWidget {
             const SizedBox(width: Dimension.paddingXS),
             Text(
               "($taskCount)",
-              style: Theme.of(context).textTheme.bodyText2?.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: ColorsExt.grey700(context),
                   ),

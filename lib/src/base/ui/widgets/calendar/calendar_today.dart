@@ -19,7 +19,7 @@ class CalendarSelectedDay extends StatelessWidget {
       child: Center(
         child: Text(
           DateFormat("d").format(day),
-          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: ColorsExt.background(context),
               ),

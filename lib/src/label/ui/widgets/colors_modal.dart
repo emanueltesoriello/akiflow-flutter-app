@@ -13,7 +13,7 @@ class ColorsModal extends StatelessWidget {
       child: Container(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
           decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(Dimension.padding),
               topRight: Radius.circular(Dimension.padding),

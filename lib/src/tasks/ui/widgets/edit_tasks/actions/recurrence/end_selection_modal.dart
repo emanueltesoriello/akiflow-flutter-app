@@ -12,7 +12,7 @@ class EndSelectionModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -89,7 +89,7 @@ class EndSelectionModal extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: ColorsExt.grey800(context),
               ),
         ),

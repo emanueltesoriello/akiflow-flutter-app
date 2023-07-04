@@ -14,7 +14,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -42,7 +42,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                       child: Text(t.event.editEvent.deleteModal.title(eventName: eventName),
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))),
                     ),
                   ],
@@ -53,7 +53,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                 child: Text(t.event.editEvent.deleteModal.description,
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle1
+                        .titleMedium
                         ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
               ),
               const SizedBox(height: Dimension.paddingM),
@@ -71,7 +71,7 @@ class DeleteEventConfirmationModal extends StatelessWidget {
                       border: Border.all(color: ColorsExt.grey300(context))),
                   child: Center(
                     child: Text(t.event.delete,
-                        style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w400,
                               color: ColorsExt.grey800(context),
                             )),
