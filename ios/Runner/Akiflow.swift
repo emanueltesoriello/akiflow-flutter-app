@@ -16,43 +16,10 @@ func makeAPICall(withAccessToken accessToken: String, title: String) async throw
         [
             "id": UUID().uuidString,
             "title": title,
-            "date": NSNull(), 
+            "date": NSNull(),
             "description": "",
-            "duration": NSNull(),
             "status": 1,
-            "created_at": "2023-06-27T17:22:55.055164Z",
-            "updated_at": "2023-06-27T17:22:55.055164Z",
-            "deleted_at": NSNull(),
-            "remote_list_id_updated_at": NSNull(),
-            "global_list_id_updated_at": NSNull(),
             "done": false,
-            "done_at": NSNull(),
-            "datetime": NSNull(),
-            "read_at": NSNull(),
-            "global_updated_at": "2023-06-27T17:22:55.055164Z",
-            "global_created_at": "2023-06-27T17:22:55.055164Z",
-            "activation_datetime": NSNull(),
-            "due_date": NSNull(),
-            "remote_updated_at": NSNull(),
-            "recurring_id": NSNull(),
-            "priority": NSNull(),
-            "listId": NSNull(),
-            "section_id": NSNull(),
-            "origin": NSNull(),
-            "sorting": 1687871996165,
-            "sorting_label": NSNull(),
-            "trashed_at": NSNull(),
-            "selected": NSNull(),
-            "dailyGoal": NSNull(),
-            "links": NSNull(),
-            "recurrence": NSNull(),
-            "content": NSNull(),
-            "connector_id": NSNull(),
-            "origin_id": NSNull(),
-            "origin_account_id": NSNull(),
-            "akiflow_account_id": NSNull(),
-            "calendar_id": NSNull(),
-            "doc": NSNull()
         ]
     ]
 
@@ -138,11 +105,8 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
                     // Use the extracted access_token
                     print("Access Token: \(accessToken)")
                     do {
-                        
-                        // TODO ask to the user via Siri "What's the title?"
-                        // intercept the answer
+                        // intercept the answer prompt
                         // pass the title to the makeAPICall method
-                        
                         let myTitle = try await $title.requestValue()
                     
                         try await makeAPICall(withAccessToken: accessToken, title: myTitle)
@@ -160,8 +124,6 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
 }
 
 struct CreateTaskAppShortcuts: AppShortcutsProvider {
-    
-    
     
     static var appShortcuts: [AppShortcut] {
         
