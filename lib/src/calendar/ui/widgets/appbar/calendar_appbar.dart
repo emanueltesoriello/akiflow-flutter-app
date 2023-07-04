@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -11,10 +12,11 @@ import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/widgets/settings/calendar_settings_modal.dart';
+import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_calendar/calendar.dart';
 
-class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CalendarAppBar extends StatefulWidget implements PreferredSizeWidget {
   final CalendarController calendarController;
 
   const CalendarAppBar({
@@ -23,63 +25,57 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    DateTime now = DateTime.now().toLocal();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    return BlocBuilder<CalendarCubit, CalendarCubitState>(
-      builder: (context, state) {
-        return AppBarComp(
-          elevation: 0,
-          titleWidget: _buildTitle(context, state, calendarController),
-          leading: SvgPicture.asset(
-            Assets.images.icons.common.calendarSVG,
-            width: 26,
-            height: 26,
-          ),
-          actions: [
-            if (!state.visibleDates.contains(today))
-              TextButton(
-                onPressed: () {
-                  calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-                  context.read<CalendarCubit>().closePanel();
-                },
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-                ),
-                child: Text(
-                  t.bottomBar.today,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w600),
-                ),
-              ),
-            IconButton(
-              icon: SvgPicture.asset(
-                Assets.images.icons.common.ellipsisSVG,
-                width: 24,
-                height: 24,
-                color: ColorsExt.grey800(context),
-              ),
-              onPressed: () {
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => CalendarSettingsModal(calendarController: calendarController),
-                );
-                context.read<CalendarCubit>().closePanel();
-              },
-            )
-          ],
-          showSyncButton: true,
-        );
-      },
-    );
-  }
+  State<CalendarAppBar> createState() => _CalendarAppBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
+}
 
-  Widget _buildTitle(BuildContext context, CalendarCubitState state, CalendarController calendarController) {
+class _CalendarAppBarState extends State<CalendarAppBar> {
+  bool isPanelOpen = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    calendarCubit.panelStateStream.listen((PanelState panelState) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        switch (panelState) {
+          case PanelState.opened:
+            isPanelOpen = true;
+            break;
+          case PanelState.closed:
+            isPanelOpen = false;
+            break;
+        }
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime now = DateTime.now().toLocal();
+    return AppBarComp(
+      showLinearProgress: false,
+      leading: SvgPicture.asset(
+        Assets.images.icons.common.calendarSVG,
+        width: 26,
+        height: 26,
+      ),
+      titleWidget: _buildTitle(context, now),
+      actions: _buildActions(now),
+      shadow: false,
+      showSyncButton: true,
+      elevation: 0,
+    );
+  }
+
+  Widget _buildTitle(BuildContext context, DateTime now) {
     return InkWell(
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
       onTap: () {
@@ -87,24 +83,87 @@ class CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
       },
       child: Row(
         children: [
-          Text(
-            DateFormat('MMMM').format(state.visibleDates.isEmpty
-                ? DateTime.now().toLocal()
-                : state.visibleDates.length > 29
-                    ? state.visibleDates.elementAt(7)
-                    : state.visibleDates.first),
-            textAlign: TextAlign.start,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+          BlocBuilder<ViewedMonthCubit, ViewedMonthState>(
+            builder: (context, viewedMonthState) {
+              return BlocBuilder<CalendarCubit, CalendarCubitState>(
+                builder: (context, state) {
+                  String text;
+                  int? monthNum = viewedMonthState.viewedMonth;
+                  try {
+                    if (isPanelOpen && monthNum != null) {
+                      String monthName = DateFormat('MMMM').format(DateTime(0, viewedMonthState.viewedMonth!));
+                      text = monthName;
+                    } else {
+                      text = DateFormat('MMMM').format(state.visibleDates.isEmpty
+                          ? now
+                          : state.visibleDates.length > 29
+                              ? state.visibleDates.elementAt(7)
+                              : state.visibleDates.first);
+                    }
+                  } catch (e) {
+                    text = DateFormat('MMMM').format(state.visibleDates.isEmpty
+                        ? now
+                        : state.visibleDates.length > 29
+                            ? state.visibleDates.elementAt(7)
+                            : state.visibleDates.first);
+                  }
+
+                  return Text(
+                    text,
+                    textAlign: TextAlign.start,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
+                  );
+                },
+              );
+            },
           ),
-          const SizedBox(width: Dimension.padding),
-          AnimatedChevron(iconUp: state.panelState == PanelState.opened),
+          const SizedBox(width: Dimension.paddingS),
+          AnimatedChevron(iconUp: !isPanelOpen),
         ],
       ),
     );
+  }
+
+  List<Widget> _buildActions(DateTime now) {
+    DateTime today = DateTime(now.year, now.month, now.day);
+    return [
+      if (!context.read<CalendarCubit>().state.visibleDates.contains(today))
+        TextButton(
+          onPressed: () {
+            widget.calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
+            context.read<CalendarCubit>().closePanel();
+          },
+          style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+          ),
+          child: Text(
+            t.bottomBar.today,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w600),
+          ),
+        ),
+      IconButton(
+        icon: SvgPicture.asset(
+          Assets.images.icons.common.ellipsisSVG,
+          width: 24,
+          height: 24,
+          color: ColorsExt.grey800(context),
+        ),
+        onPressed: () {
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => CalendarSettingsModal(calendarController: widget.calendarController),
+          );
+          context.read<CalendarCubit>().closePanel();
+        },
+      )
+    ];
   }
 }

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/base/date_display.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
+import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
 import 'package:syncfusion_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -74,6 +72,10 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                         : selectedDay;
                     context.read<CalendarCubit>().closePanel();
                   },
+                  onPageChanged: (focusedDay) {
+                    BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(focusedDay.month);
+                  },
+                  headerVisible: false,
                   headerStyle: const HeaderStyle(
                     formatButtonVisible: false,
                     leftChevronVisible: false,
@@ -124,44 +126,6 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
                                 .bodyLarge!
                                 .copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w500),
                           ),
-                        ),
-                      );
-                    },
-                    headerTitleBuilder: (context, date) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                _pageController?.jumpToPage((_pageController!.page! - 1).toInt());
-                              },
-                              child: RotatedBox(
-                                quarterTurns: 2,
-                                child: SvgPicture.asset(
-                                  Assets.images.icons.common.chevronRightSVG,
-                                  width: 20,
-                                  height: 20,
-                                  color: ColorsExt.grey800(context),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            DateDisplay(date: date),
-                            const SizedBox(width: 12),
-                            InkWell(
-                              onTap: () {
-                                _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
-                              },
-                              child: SvgPicture.asset(
-                                Assets.images.icons.common.chevronRightSVG,
-                                width: 20,
-                                height: 20,
-                                color: ColorsExt.grey800(context),
-                              ),
-                            )
-                          ],
                         ),
                       );
                     },

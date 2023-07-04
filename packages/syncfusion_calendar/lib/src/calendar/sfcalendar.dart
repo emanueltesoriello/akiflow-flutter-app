@@ -5416,7 +5416,7 @@ class _SfCalendarState extends State<SfCalendar>
         _getAppointmentCollectionOnDateBasis(
             appointmentCollection, startDate, endDate);
     final List<DateTime> dateAppointmentKeys = dateAppointments.keys.toList();
-    const double padding = 5;
+    const double padding = 8;
 
     /// Check the current week view show display date or current date view.
     bool isNeedDisplayDateHighlight =
@@ -11036,7 +11036,7 @@ class _AgendaDateTimePainter extends CustomPainter {
     radius: _textPainter.width > _textPainter.height
             ? (_textPainter.width / 2) + padding
             : (_textPainter.height / 2) + padding,),
-    const Radius.circular(6));
+    const Radius.circular(8));
     canvas.drawRRect(rrect, _linePainter);    
   }
 

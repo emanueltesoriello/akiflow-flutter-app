@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -30,8 +31,29 @@ class EventAppointment extends StatelessWidget {
   Widget build(BuildContext context) {
     double boxHeight = calendarAppointmentDetails.bounds.height;
     double boxWidth = calendarAppointmentDetails.bounds.width;
+
+    if (appointment.isAllDay && calendarController.view != CalendarView.schedule) {
+      boxHeight = 14;
+    }
+
     AtendeeResponseStatus responseStatus = event.isLoggedUserAttndingEvent;
     String? rsvpIcon = event.getRsvpIcon();
+    return responseStatus == AtendeeResponseStatus.needsAction && event.attendees != null
+        ? DottedBorder(
+            color: appointment.color,
+            dashPattern: const [4, 3, 4, 3],
+            borderType: BorderType.RRect,
+            radius: Radius.circular(
+              calendarController.view == CalendarView.schedule ? 6.0 : 4.0,
+            ),
+            borderPadding: const EdgeInsets.all(1),
+            child: _container(boxWidth, boxHeight, responseStatus, rsvpIcon, true, context),
+          )
+        : _container(boxWidth, boxHeight, responseStatus, rsvpIcon, false, context);
+  }
+
+  Container _container(double boxWidth, double boxHeight, AtendeeResponseStatus responseStatus, String? rsvpIcon,
+      bool dashedBorder, BuildContext context) {
     return Container(
       width: boxWidth,
       height: boxHeight,
@@ -39,7 +61,9 @@ class EventAppointment extends StatelessWidget {
       child: Row(
         children: [
           rsvpIcon == null
-              ? const SizedBox(width: Dimension.paddingXS)
+              ? dashedBorder
+                  ? const SizedBox(width: Dimension.paddingXS - 2)
+                  : const SizedBox(width: Dimension.paddingXS)
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -73,30 +97,37 @@ class EventAppointment extends StatelessWidget {
                   ? MainAxisAlignment.center
                   : MainAxisAlignment.start,
               children: [
-                Text(
-                  appointment.subject.isEmpty ? t.noTitle : appointment.subject,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
-                  style: TextStyle(
-                    height: event.attendees != null && responseStatus == AtendeeResponseStatus.needsAction
-                        ? boxHeight < 15.0
-                            ? 1.1
-                            : appointment.isAllDay
-                                ? 1.1
-                                : 1.3
-                        : 1.3,
-                    fontSize: calendarController.view == CalendarView.schedule
-                        ? 15.0
-                        : calendarController.view == CalendarView.month
-                            ? 9.0
-                            : boxHeight < 15.0
-                                ? 10.5
-                                : 13.0,
-                    fontWeight: FontWeight.w500,
-                    color: responseStatus == AtendeeResponseStatus.declined
-                        ? ColorsExt.grey700(context)
-                        : ColorsExt.getCalendarEventTitleColor(appointment.color),
-                    decoration: responseStatus == AtendeeResponseStatus.declined ? TextDecoration.lineThrough : null,
+                Padding(
+                  padding: calendarController.view == CalendarView.schedule
+                      ? const EdgeInsets.only(top: 4, left: 4)
+                      : const EdgeInsets.all(0),
+                  child: Text(
+                    appointment.subject.isEmpty ? t.noTitle : appointment.subject,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
+                    style: TextStyle(
+                      height: event.attendees != null && responseStatus == AtendeeResponseStatus.needsAction
+                          ? boxHeight < 15.0
+                              ? 1.1
+                              : appointment.isAllDay
+                                  ? 1.1
+                                  : 1.3
+                          : calendarController.view == CalendarView.schedule
+                              ? 1.1
+                              : 1.3,
+                      fontSize: calendarController.view == CalendarView.schedule
+                          ? 15.0
+                          : calendarController.view == CalendarView.month
+                              ? 9.0
+                              : boxHeight < 15.0
+                                  ? 10.5
+                                  : 13.0,
+                      fontWeight: FontWeight.w500,
+                      color: responseStatus == AtendeeResponseStatus.declined
+                          ? ColorsExt.grey700(context)
+                          : ColorsExt.getCalendarEventTitleColor(appointment.color),
+                      decoration: responseStatus == AtendeeResponseStatus.declined ? TextDecoration.lineThrough : null,
+                    ),
                   ),
                 ),
                 if (calendarController.view == CalendarView.schedule &&
@@ -104,14 +135,17 @@ class EventAppointment extends StatelessWidget {
                     event.endTime != null &&
                     DateUtils.isSameDay(
                         DateTime.parse(event.startTime!).toLocal(), DateTime.parse(event.endTime!).toLocal()))
-                  Text(
-                      '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.endTime!).toLocal())}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            height: 1.3,
-                            fontSize: 11.0,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsExt.grey700(context),
-                          )),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2, left: 4),
+                    child: Text(
+                        '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.startTime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(event.endTime!).toLocal())}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              height: 1.3,
+                              fontSize: 11.0,
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey700(context),
+                            )),
+                  ),
               ],
             ),
           ),
@@ -125,8 +159,8 @@ class EventAppointment extends StatelessWidget {
       case AtendeeResponseStatus.declined:
         return BoxDecoration(
             color: ColorsExt.getCalendarBackgroundColorLight(appointment.color),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(4.0),
+            borderRadius: BorderRadius.all(
+              Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
             ));
       case AtendeeResponseStatus.tentative:
         return BoxDecoration(
@@ -142,28 +176,27 @@ class EventAppointment extends StatelessWidget {
               ],
               tileMode: TileMode.repeated,
             ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(4.0),
+            borderRadius: BorderRadius.all(
+              Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
             ));
       case AtendeeResponseStatus.needsAction:
         if (event.attendees != null) {
           return BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: appointment.color),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(4.0),
+              borderRadius: BorderRadius.all(
+                Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
               ));
         }
         return BoxDecoration(
             color: ColorsExt.getCalendarBackgroundColor(appointment.color),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(4.0),
+            borderRadius: BorderRadius.all(
+              Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
             ));
       default:
         return BoxDecoration(
             color: ColorsExt.getCalendarBackgroundColor(appointment.color),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(4.0),
+            borderRadius: BorderRadius.all(
+              Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
             ));
     }
   }
