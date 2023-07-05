@@ -164,7 +164,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     if (tappedTime != null) {
       startTime = tappedTime;
-    } else if (visibleDates.isNotEmpty && visibleDates.length < 2) {
+    } else if (visibleDates.isNotEmpty) {
       startTime = DateTime(visibleDates.first.year, visibleDates.first.month, visibleDates.first.day, now.hour,
           [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
     } else {

@@ -303,7 +303,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
                                   if (!state.hasFocusOnTitleOrDescription) const EditTaskLinkedContent(),
                                   if (!state.hasFocusOnTitleOrDescription) const EditTaskLinks(),
                                   if (!state.hasFocusOnTitleOrDescription) const EditTaskBottomActions(),
-                                  if (!state.hasFocusOnTitleOrDescription) const Separator(),
                                 ],
                               )
                             ],
