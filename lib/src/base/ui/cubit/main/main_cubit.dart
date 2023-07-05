@@ -194,8 +194,16 @@ class MainCubit extends Cubit<MainCubitState> {
 
           bool timeFormatChanged = _preferencesRepository.timeFormatChanged;
           if (!timeFormatChanged) {
-            _preferencesRepository
-                .setTimeFormat(appUser.settings?['calendar']?['timeFormat'] ?? TimeFormatUtils.systemDefault);
+            int? timeFormat = TimeFormatUtils.systemDefault;
+            if (appUser.settings?["calendar"] != null) {
+              List<dynamic> calendarSettings = appUser.settings?["calendar"];
+              for (Map<String, dynamic> element in calendarSettings) {
+                if (element['key'] == 'timeFormat') {
+                  timeFormat = element['value'];
+                }
+              }
+            }
+            _preferencesRepository.setTimeFormat(timeFormat ?? TimeFormatUtils.systemDefault);
           }
 
           //await _intercomService.authenticate(
