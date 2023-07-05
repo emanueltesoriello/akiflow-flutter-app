@@ -86,7 +86,7 @@ class GroupedTasksAppointment extends StatelessWidget {
                         ),
                         child: FittedBox(
                           child: Text('${groupedTasks.taskList.length}',
-                              style: Theme.of(context).textTheme.caption?.copyWith(
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     height: boxHeight < 15.0 ? 1.0 : 1.2,
                                     fontSize: calendarController.view == CalendarView.month
                                         ? 11.0
@@ -103,7 +103,7 @@ class GroupedTasksAppointment extends StatelessWidget {
                         child: Text(appointment.subject,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.caption?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   height: boxHeight < 15.0 ? 1.0 : 1.3,
                                   fontSize: calendarController.view == CalendarView.month
                                       ? 11.0

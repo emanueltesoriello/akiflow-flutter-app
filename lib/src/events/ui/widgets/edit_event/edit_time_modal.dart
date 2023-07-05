@@ -43,7 +43,7 @@ class _EditTimeModalState extends State<EditTimeModal> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).colorScheme.background,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(Dimension.radiusM),
                 topRight: Radius.circular(Dimension.radiusM),

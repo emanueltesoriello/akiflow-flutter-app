@@ -109,13 +109,13 @@ class EventCreationSmallModal extends StatelessWidget {
                     Text(DateFormat("EEE dd MMM").format(tappedTime),
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
+                            .titleMedium
                             ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     const SizedBox(height: Dimension.padding),
                     Text(DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(tappedTime),
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
+                            .titleMedium
                             ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                   ],
                 ),
@@ -129,13 +129,13 @@ class EventCreationSmallModal extends StatelessWidget {
                     Text(DateFormat("EEE dd MMM").format(tappedTime),
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
+                            .titleMedium
                             ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     const SizedBox(height: Dimension.padding),
                     Text(DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(tappedTime.add(const Duration(hours: 1))),
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
+                            .titleMedium
                             ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                   ],
                 ),
@@ -163,7 +163,7 @@ class EventCreationSmallModal extends StatelessWidget {
           Text(t.event.busy,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1
+                  .titleMedium
                   ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
         ],
       ),

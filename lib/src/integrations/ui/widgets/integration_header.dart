@@ -41,7 +41,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
                   child: Text(
                     t.settings.integrations.gmail.title,
                     textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
                   ),
                 ),
                 const SizedBox(height: Dimension.paddingXS),
@@ -60,7 +60,7 @@ class IntegrationDetailsHeader extends StatelessWidget {
                         identifier,
                         style: Theme.of(context)
                             .textTheme
-                            .caption
+                            .bodySmall
                             ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                       ),
                     ),

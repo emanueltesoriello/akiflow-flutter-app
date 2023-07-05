@@ -48,7 +48,7 @@ class SlidableButtonAction extends StatelessWidget {
                         Text(
                           label!,
                           textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w500,
                                 color: topColor,
                               ),
@@ -68,7 +68,7 @@ class SlidableButtonAction extends StatelessWidget {
                         Text(
                           label!,
                           textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w500,
                                 color: topColor,
                               ),

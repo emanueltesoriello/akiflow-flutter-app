@@ -80,7 +80,7 @@ class EditTaskLinkedContent extends StatelessWidget {
                                   doc?.getLinkedContentSummary().toString().parseHtmlString ?? doc?.url ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                         color: ColorsExt.grey800(context),
                                       ),
                                 ),

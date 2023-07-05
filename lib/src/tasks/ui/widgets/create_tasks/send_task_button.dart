@@ -25,7 +25,7 @@ class SendTaskButton extends StatelessWidget {
               Assets.images.icons.common.paperplaneSendSVG,
               width: 24,
               height: 24,
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).colorScheme.background,
             ),
           ),
         ),

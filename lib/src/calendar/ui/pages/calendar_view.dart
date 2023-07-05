@@ -5,12 +5,12 @@ import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/calendar/ui/models/grouped_tasks.dart';
 import 'package:mobile/src/calendar/ui/widgets/appbar/calendar_appbar.dart';
 import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
+import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
 import 'package:models/task/task.dart';
 import 'package:syncfusion_calendar/calendar.dart' as sf_calendar;
-import 'package:uuid/uuid.dart';
 import '../widgets/calendar_body.dart';
 
 class CalendarView extends StatelessWidget {
@@ -58,18 +58,21 @@ class CalendarView extends StatelessWidget {
         List<Event> events = List.from(eventsCubit.state.events);
         events = events.where((element) => visibleCalendarIds.contains(element.calendarId)).toList();
 
-        return Scaffold(
-          appBar: CalendarAppBar(
-            calendarController: calendarController,
-          ),
-          body: CalendarBody(
-            calendarController: calendarController,
-            panelController: panelController,
-            tasks: tasks,
-            groupedTasks: groupedTasks,
-            events: events,
-          ),
-        );
+        return BlocProvider(
+            lazy: false,
+            create: (BuildContext context) => ViewedMonthCubit(),
+            child: Scaffold(
+              appBar: CalendarAppBar(
+                calendarController: calendarController,
+              ),
+              body: CalendarBody(
+                calendarController: calendarController,
+                panelController: panelController,
+                tasks: tasks,
+                groupedTasks: groupedTasks,
+                events: events,
+              ),
+            ));
       },
     );
   }

@@ -40,7 +40,7 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
       child: Wrap(
         children: [
           Container(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SafeArea(
               child: Padding(
@@ -78,7 +78,7 @@ class _CreateFolderModalState extends State<CreateFolderModal> {
                             const SizedBox(width: Dimension.paddingS),
                             Text(
                               t.label.createFolder,
-                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: ColorsExt.grey800(context),
                                   ),
                               textAlign: TextAlign.center,

@@ -100,7 +100,7 @@ class ChooseCalendarModal extends StatelessWidget {
             const SizedBox(width: Dimension.paddingS),
             Text(
               text,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
             ),
           ],
         ),

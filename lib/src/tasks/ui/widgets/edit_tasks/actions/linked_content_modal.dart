@@ -45,7 +45,7 @@ class LinkedContentModal extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).colorScheme.background,
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
@@ -81,7 +81,7 @@ class LinkedContentModal extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .bodyText1
+                                    .bodyLarge
                                     ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
                               ),
                             ),
@@ -169,14 +169,14 @@ class LinkedContentModal extends StatelessWidget {
           children: [
             Text(
               title.isEmpty ? '-' : title,
-              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey600(context)),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey600(context)),
             ),
             const SizedBox(width: Dimension.paddingS),
             Expanded(
               child: Text(value.isEmpty ? '-' : value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context))),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey800(context))),
             ),
             syncing
                 ? SvgPicture.asset(

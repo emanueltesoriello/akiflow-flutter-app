@@ -133,6 +133,7 @@ class CalendarValueChangedNotifier with Diagnosticable {
 class CalendarController extends CalendarValueChangedNotifier {
   DateTime? _selectedDate;
   DateTime? _displayDate;
+  DateTime? _agendaViewedMonth;
   CalendarView? _view;
 
   /// The selected date in the [SfCalendar].
@@ -227,6 +228,18 @@ class CalendarController extends CalendarValueChangedNotifier {
 
     _displayDate = date;
     notifyPropertyChangedListeners('displayDate');
+  }
+
+  ///current viewed month of the agenda(schedule) view
+  DateTime? get agendaViewedMonth => _agendaViewedMonth;
+
+  set agendaViewedMonth(DateTime? date) {
+    if (date == null) {
+      return;
+    }
+
+    _agendaViewedMonth = date;
+    notifyPropertyChangedListeners('agendaViewedMonth');
   }
 
   /// The displayed view of the [SfCalendar].
@@ -407,6 +420,7 @@ class CalendarController extends CalendarValueChangedNotifier {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<DateTime>('selectedDate', selectedDate));
     properties.add(DiagnosticsProperty<DateTime>('displayDate', displayDate));
+    properties.add(DiagnosticsProperty<DateTime>('agendaViewedMonth', agendaViewedMonth));
     properties.add(EnumProperty<CalendarView>('view', view));
   }
 }

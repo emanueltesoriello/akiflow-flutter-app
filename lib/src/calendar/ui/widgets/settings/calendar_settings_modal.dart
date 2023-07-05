@@ -88,7 +88,7 @@ class CalendarSettingsModal extends StatelessWidget {
           child: Text(t.calendar.calendarView.toUpperCase(),
               style: Theme.of(context)
                   .textTheme
-                  .caption
+                  .bodySmall
                   ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600)),
         ),
         _agenda(context, isThreeDays, now),
@@ -256,7 +256,7 @@ class CalendarSettingsModal extends StatelessWidget {
             ),
             const SizedBox(width: Dimension.padding),
             Text(t.calendar.refresh,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
           ],
         ),
       ),
@@ -277,7 +277,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.groupOverlappingTasks,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: groupOverlappingTasks,
                 onToggle: (value) {
@@ -291,7 +291,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.hideWeekends,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: isWeekendHidden,
                 onToggle: (value) {
@@ -315,7 +315,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.hideDeclinedEvents,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: areDeclinedEventsHidden,
                 onToggle: (value) {
@@ -329,7 +329,7 @@ class CalendarSettingsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.calendar.hideTasksFromCalendar,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context))),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
                 value: areCalendarTasksHidden,
                 onToggle: (value) {
@@ -352,7 +352,7 @@ class CalendarSettingsModal extends StatelessWidget {
           child: Text(t.calendar.calendars.toUpperCase(),
               style: Theme.of(context)
                   .textTheme
-                  .caption
+                  .bodySmall
                   ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w600)),
         ),
         ListView.builder(

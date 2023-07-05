@@ -31,7 +31,7 @@ class TitleWidget extends StatelessWidget {
                 text,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       height: 1.3,
                       fontWeight: FontWeight.w500,
                       color: task.statusType == TaskStatusType.deleted || task.deletedAt != null

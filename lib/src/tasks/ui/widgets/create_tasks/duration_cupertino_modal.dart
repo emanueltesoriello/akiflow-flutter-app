@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -52,18 +51,21 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
         color: ColorsExt.background(context),
         child: SafeArea(
           child: SizedBox(
-            height: 350,
+            height: 400,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: Dimension.paddingM, left: Dimension.padding),
-                  child: Text('Select Duration',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey800(context))),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: Dimension.paddingM, left: Dimension.padding),
+                    child: Text('Select Duration',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey800(context))),
+                  ),
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -73,6 +75,7 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
                         const SizedBox(height: Dimension.padding),
                         SizedBox(
                           height: 150,
+                          width: MediaQuery.of(context).size.width / 3,
                           child: NumberPicker(
                               itemWidth: 200,
                               step: 1,
@@ -111,6 +114,7 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
                         const SizedBox(height: Dimension.padding),
                         SizedBox(
                           height: 150,
+                          width: MediaQuery.of(context).size.width / 3,
                           child: NumberPicker(
                               step: 5,
                               infiniteLoop: true,
@@ -138,7 +142,8 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
+                  padding: const EdgeInsets.only(
+                      left: Dimension.padding, right: Dimension.padding, bottom: Dimension.paddingM),
                   child: OutlinedButton(
                     onPressed: () {
                       widget.onConfirm(

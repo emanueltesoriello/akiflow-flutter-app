@@ -23,7 +23,7 @@ class PopupMenuCustomItem extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
             child: Text(text,
-                style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: ColorsExt.grey800(context),
                     ))),

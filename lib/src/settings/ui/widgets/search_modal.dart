@@ -38,7 +38,7 @@ class _SearchModalState extends State<SearchModal> {
                 topRight: Radius.circular(Dimension.radiusM),
               ),
               child: Container(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.background,
                 constraints: BoxConstraints(
                   minHeight: MediaQuery.of(context).size.height * 0.5,
                 ),

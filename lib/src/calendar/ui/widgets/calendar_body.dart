@@ -88,7 +88,7 @@ class CalendarBody extends StatelessWidget {
           bodyHeight: constraints.maxHeight,
           slideDirection: SlideDirection.down,
           controller: panelController,
-          maxHeight: 330,
+          maxHeight: 280,
           minHeight: 0,
           defaultPanelState: PanelState.closed,
           panel: ValueListenableBuilder(
@@ -142,11 +142,11 @@ class CalendarBody extends StatelessWidget {
                 viewHeaderStyle: ViewHeaderStyle(
                   dayTextStyle: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .bodyLarge
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                   dateTextStyle: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .bodyLarge
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
                   narrowDateDay: narrowDateDay,
                 ),
@@ -155,7 +155,7 @@ class CalendarBody extends StatelessWidget {
                   minimumAppointmentDuration: const Duration(minutes: 15),
                   timeTextStyle: Theme.of(context)
                       .textTheme
-                      .caption
+                      .bodySmall
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600),
                   numberOfDaysInView: isThreeDays ? 3 : -1,
                   timeFormat: use24hFormat ? 'HH:mm' : 'h a',
@@ -166,7 +166,7 @@ class CalendarBody extends StatelessWidget {
                     dayHeaderSettings: DayHeaderSettings(
                       dayTextStyle: Theme.of(context)
                           .textTheme
-                          .bodyText2
+                          .bodyMedium
                           ?.copyWith(color: ColorsExt.grey700(context), fontWeight: FontWeight.w500),
                       dateTextStyle: Theme.of(context)
                           .textTheme
@@ -200,9 +200,9 @@ class CalendarBody extends StatelessWidget {
               if (!(calendarController.view == CalendarView.schedule || calendarController.view == CalendarView.month))
                 Container(
                   width: 55,
-                  height: 50,
+                  height: 40,
                   color: ColorsExt.background(context),
-                  padding: EdgeInsets.fromLTRB(8, narrowDateDay ? 8 : 18, 2, 8),
+                  padding: EdgeInsets.fromLTRB(8, narrowDateDay ? 0 : 10, 2, 8),
                   child: Text(
                     overflow: TextOverflow.ellipsis,
                     DateTime.now().timeZoneName,
@@ -274,8 +274,18 @@ class CalendarBody extends StatelessWidget {
     mainContext.read<CalendarCubit>().closePanel();
     if (calendarController.view == CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
-      mainContext.read<CalendarCubit>().changeCalendarView(CalendarView.schedule);
-      calendarController.view = CalendarView.schedule;
+      mainContext.read<CalendarCubit>().changeCalendarView(CalendarView.day);
+      calendarController.view = CalendarView.day;
+    } else if ((calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
+        calendarTapDetails.targetElement == CalendarElement.viewHeader) {
+      DateTime now = DateTime.now().toLocal();
+      mainContext.read<CalendarCubit>().setCalendarViewThreeDays(false);
+      mainContext.read<CalendarCubit>().changeCalendarView(CalendarView.day);
+      calendarController
+        ..view = CalendarView.day
+        ..displayDate = calendarController.displayDate = now.hour > 2
+            ? calendarTapDetails.date?.add(Duration(hours: now.hour - 2, minutes: now.minute))
+            : calendarTapDetails.date;
     } else if (calendarController.view != CalendarView.month &&
         calendarTapDetails.targetElement == CalendarElement.calendarCell) {
       calendarCubit.setAppointmentTapped(false);

@@ -43,7 +43,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    textStyle = Theme.of(context).textTheme.bodyText1!.copyWith(
+    textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
           color: ColorsExt.grey600(context),
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
@@ -90,7 +90,7 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                         child: Center(
                           child: Text(
                             DateFormat("d").format(day),
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                   color: ColorsExt.grey800(context),
                                   fontWeight: FontWeight.w500,
                                   overflow: TextOverflow.ellipsis,

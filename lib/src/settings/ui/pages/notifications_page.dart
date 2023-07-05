@@ -72,7 +72,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Text(
                     switchTitle,
                     textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: ColorsExt.grey800(context),
                         ),
                   ),
@@ -106,7 +106,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .titleMedium
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                 ),
                 subtitle: Text(
@@ -114,7 +114,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText2
+                      .bodyMedium
                       ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w400),
                 ),
                 trailing: const Icon(
@@ -197,7 +197,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "EVENTS IN CALENDAR".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -222,7 +222,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "TASKS IN CALENDAR".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -243,7 +243,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "DAILY OVERVIEW".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -266,7 +266,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "sounds".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -293,7 +293,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         Text(
                           "Task completed",
                           textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: ColorsExt.grey800(context),
                               ),
                         ),

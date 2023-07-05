@@ -17,7 +17,7 @@ class TextTopActionItem extends StatelessWidget {
       children: [
         const SizedBox(width: Dimension.paddingS),
         Text(text!,
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: active ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                 )),

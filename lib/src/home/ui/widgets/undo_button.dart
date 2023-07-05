@@ -51,7 +51,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                 child: Text("Action undone",
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText1
+                        .bodyLarge
                         ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
               ),
               TextButton(
@@ -98,7 +98,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                 child: Text(text(task.type),
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText1
+                        .bodyLarge
                         ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
               ),
               TextButton(

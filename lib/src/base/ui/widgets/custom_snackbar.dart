@@ -45,7 +45,7 @@ class CustomSnackbar extends SnackBar {
                     const SizedBox(width: Dimension.paddingS),
                     Expanded(
                       child: Text(message,
-                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 color: ColorsExt.grey800(context),
                                 fontWeight: FontWeight.w500,
                               )),

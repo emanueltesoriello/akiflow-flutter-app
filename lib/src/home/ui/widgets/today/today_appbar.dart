@@ -190,7 +190,7 @@ class _TodayAppBarState extends State<TodayAppBar> {
               child: Text(t.bottomBar.today,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1!
+                      .bodyLarge!
                       .copyWith(fontWeight: FontWeight.w600, color: ColorsExt.akiflow500(context))),
             ),
           );

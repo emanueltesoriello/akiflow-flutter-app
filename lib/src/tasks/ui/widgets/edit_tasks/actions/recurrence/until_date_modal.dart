@@ -27,7 +27,7 @@ class _DeadlineModalState extends State<UntilDateModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,

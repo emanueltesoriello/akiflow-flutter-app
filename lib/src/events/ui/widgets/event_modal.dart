@@ -209,7 +209,7 @@ class _EventModalState extends State<EventModal> {
                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
                       Text(
@@ -217,7 +217,7 @@ class _EventModalState extends State<EventModal> {
                               .format(DateTime.parse(selectedEvent.startTime!).toLocal()),
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                     ],
                   ),
@@ -231,7 +231,7 @@ class _EventModalState extends State<EventModal> {
                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
@@ -249,7 +249,7 @@ class _EventModalState extends State<EventModal> {
                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                       const SizedBox(height: Dimension.padding),
                       Text(
@@ -257,7 +257,7 @@ class _EventModalState extends State<EventModal> {
                               .format(DateTime.parse(selectedEvent.endTime!).toLocal()),
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w600)),
                     ],
                   ),
@@ -271,7 +271,7 @@ class _EventModalState extends State<EventModal> {
                               : DateFormat("EEE dd MMM").format(widget.tappedDate!),
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
@@ -328,7 +328,7 @@ class _EventModalState extends State<EventModal> {
                   child: Text(t.event.join.toUpperCase(),
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyLarge
                           ?.copyWith(color: ColorsExt.akiflow500(context), fontWeight: FontWeight.w500)),
                 ),
             ],
@@ -354,7 +354,7 @@ class _EventModalState extends State<EventModal> {
           Text(t.event.busy,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1
+                  .titleMedium
                   ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
         ],
       ),
@@ -390,7 +390,7 @@ class _EventModalState extends State<EventModal> {
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle1
+                          .titleMedium
                           ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                 ),
               ],
@@ -421,7 +421,7 @@ class _EventModalState extends State<EventModal> {
               Text(t.event.guests,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .titleMedium
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
             ],
           ),
@@ -584,7 +584,7 @@ class _EventModalState extends State<EventModal> {
           Text(t.event.going,
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1
+                  .bodyLarge
                   ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
           Row(
             children: [
@@ -597,7 +597,7 @@ class _EventModalState extends State<EventModal> {
                   width: 40,
                   child: Center(
                     child: Text(t.event.yes,
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.accepted
                                 ? ColorsExt.yorkGreen400(context)
                                 : ColorsExt.grey600(context),
@@ -615,7 +615,7 @@ class _EventModalState extends State<EventModal> {
                   width: 40,
                   child: Center(
                     child: Text(t.event.no,
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.declined
                                 ? ColorsExt.cosmos400(context)
@@ -632,7 +632,7 @@ class _EventModalState extends State<EventModal> {
                   height: 50,
                   child: Center(
                     child: Text(t.event.maybe,
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: selectedEvent.isLoggedUserAttndingEvent == AtendeeResponseStatus.tentative
                                 ? ColorsExt.grey800(context)

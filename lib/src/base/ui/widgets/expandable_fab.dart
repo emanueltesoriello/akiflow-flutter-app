@@ -251,7 +251,7 @@ class FabActionButton extends StatelessWidget {
               Text(title,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .bodyLarge
                       ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.background(context))),
             ],
           ),

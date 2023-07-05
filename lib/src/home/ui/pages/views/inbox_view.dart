@@ -184,7 +184,7 @@ class _ViewState extends State<_View> {
             },
             child: Text(
               t.calendar.goToToday,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
             ),
           ),
         ),
