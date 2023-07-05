@@ -13,7 +13,7 @@ class UserApi extends ApiClient {
 
   UserApi({String? endpoint})
       : super(
-          Uri.parse("${endpoint ?? Config.endpoint}/v3/user"),
+          Uri.parse("${endpoint ?? Config.endpoint}/v4/user"),
           fromMap: User.fromMap,
         );
 
@@ -21,6 +21,8 @@ class UserApi extends ApiClient {
     Response responseRaw = await _httpClient.get(url);
 
     var response = jsonDecode(responseRaw.body);
+    print('getSettings');
+    print('getSettings: $response');
     if (response["data"] == null) {
       return null;
     } else if (response.containsKey("errors")) {

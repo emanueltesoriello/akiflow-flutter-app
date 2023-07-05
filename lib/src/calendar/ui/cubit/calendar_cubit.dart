@@ -246,13 +246,17 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   List<int> computeNonWorkinkDays() {
     int firstWorkdayOfWeek = DateTime.monday;
-    if (_authCubit.state.user?.settings?["calendar"] != null &&
-        _authCubit.state.user?.settings?["calendar"]["firstWorkingDayOfWeek"] != null) {
-      var firstWorkdayFromDb = _authCubit.state.user?.settings?["calendar"]["firstWorkingDayOfWeek"];
-      if (firstWorkdayFromDb is String) {
-        firstWorkdayOfWeek = int.parse(firstWorkdayFromDb);
-      } else if (firstWorkdayFromDb is int) {
-        firstWorkdayOfWeek = firstWorkdayFromDb;
+    if (_authCubit.state.user?.settings?["calendar"] != null) {
+      List<dynamic> calendarSettings = _authCubit.state.user?.settings?["calendar"];
+      for (Map<String, dynamic> element in calendarSettings) {
+        if (element['key'] == 'firstWorkingDayOfWeek') {
+          var firstDayFromDb = element['value'];
+          if (firstDayFromDb is String) {
+            firstWorkdayOfWeek = int.parse(firstDayFromDb);
+          } else if (firstDayFromDb is int) {
+            firstWorkdayOfWeek = firstDayFromDb;
+          }
+        }
       }
     }
     return CalendarUtils.getNonWorkingDays(firstWorkdayOfWeek);
