@@ -33,6 +33,7 @@ class CalendarAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _CalendarAppBarState extends State<CalendarAppBar> {
   bool isPanelOpen = false;
+  DateTime? agendaViewedMonth = DateTime.now().toLocal();
 
   @override
   void dispose() {
@@ -76,6 +77,15 @@ class _CalendarAppBarState extends State<CalendarAppBar> {
   }
 
   Widget _buildTitle(BuildContext context, DateTime now) {
+    widget.calendarController.addPropertyChangedListener(
+      (property) {
+        if (property == 'agendaViewedMonth') {
+          setState(() {
+            agendaViewedMonth = widget.calendarController.agendaViewedMonth!;
+          });
+        }
+      },
+    );
     return InkWell(
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
       onTap: () {
@@ -94,18 +104,10 @@ class _CalendarAppBarState extends State<CalendarAppBar> {
                       String monthName = DateFormat('MMMM').format(DateTime(0, viewedMonthState.viewedMonth!));
                       text = monthName;
                     } else {
-                      text = DateFormat('MMMM').format(state.visibleDates.isEmpty
-                          ? now
-                          : state.visibleDates.length > 29
-                              ? state.visibleDates.elementAt(7)
-                              : state.visibleDates.first);
+                      text = getHeaderText(state, now);
                     }
                   } catch (e) {
-                    text = DateFormat('MMMM').format(state.visibleDates.isEmpty
-                        ? now
-                        : state.visibleDates.length > 29
-                            ? state.visibleDates.elementAt(7)
-                            : state.visibleDates.first);
+                    text = getHeaderText(state, now);
                   }
 
                   return Text(
@@ -129,6 +131,16 @@ class _CalendarAppBarState extends State<CalendarAppBar> {
     );
   }
 
+  String getHeaderText(CalendarCubitState state, DateTime now) {
+    return widget.calendarController.view == CalendarView.schedule
+        ? DateFormat('MMMM').format(agendaViewedMonth == null ? now : agendaViewedMonth!)
+        : DateFormat('MMMM').format(state.visibleDates.isEmpty
+            ? now
+            : state.visibleDates.length > 29
+                ? state.visibleDates.elementAt(7)
+                : state.visibleDates.first);
+  }
+
   List<Widget> _buildActions(DateTime now) {
     DateTime today = DateTime(now.year, now.month, now.day);
     return [
@@ -137,6 +149,9 @@ class _CalendarAppBarState extends State<CalendarAppBar> {
           onPressed: () {
             widget.calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
             context.read<CalendarCubit>().closePanel();
+            setState(() {
+              agendaViewedMonth = now;
+            });
           },
           style: ButtonStyle(
             overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),

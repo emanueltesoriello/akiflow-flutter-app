@@ -9927,7 +9927,9 @@ class _CalendarHeaderViewState extends State<_CalendarHeaderView> {
   }
 
   void _updateHeaderChanged() {
-    setState(() {});
+    setState(() {
+      widget.controller.agendaViewedMonth = widget.valueChangeNotifier.value;
+    });
   }
 
   void _updateWeekNumberChangedForTimelineMonth() {
