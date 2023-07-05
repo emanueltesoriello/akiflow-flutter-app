@@ -197,7 +197,7 @@ class NotificationsService {
       tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
       DateTime date = DateTime.now().toUtc();
-      DateTime endTime = date.add(const Duration(days: 30));
+      DateTime endTime = date.add(const Duration(days: 2));
 
       if (notExistingTasks != null && notExistingTasks.isNotEmpty) {
         toBeScheduled.addAll(notExistingTasks
