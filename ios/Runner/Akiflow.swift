@@ -1,7 +1,35 @@
 import Foundation
 import AppIntents
 
-func makeAPICall(withAccessToken accessToken: String, title: String) async throws {
+
+func refreshAccessToken(withRefreshToken refreshToken: String) async throws -> String {
+    let refreshTokenURLString = "https://web.akiflow.com/oauth/refreshToken"
+    
+    // Create the refresh token request
+    var refreshTokenRequest = URLRequest(url: URL(string: refreshTokenURLString)!)
+    refreshTokenRequest.httpMethod = "POST"
+    
+    // Set the request body with the refresh token
+    let requestBody: [String: Any] = [
+        "client_id": "1000006",
+        "refresh_token": refreshToken
+    ]
+    refreshTokenRequest.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+    refreshTokenRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    // Perform the refresh token request
+    let (refreshTokenData, refreshTokenResponse) = try await URLSession.shared.data(for: refreshTokenRequest)
+
+    // Check the refresh token response
+    if let jsonDict = try JSONSerialization.jsonObject(with: refreshTokenData, options: []) as? [String: Any],
+       let accessToken = jsonDict["access_token"] as? String {
+        return accessToken
+    } else {
+        throw NSError(domain: "com.example.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to refresh access token"])
+    }
+}
+
+func makeAPICall(withAccessToken accessToken: String, refreshToken: String, title: String) async throws {
     // Define the API endpoint URL
     let urlString = "https://api.akiflow.com/v3/tasks"
     
@@ -61,6 +89,13 @@ func makeAPICall(withAccessToken accessToken: String, title: String) async throw
         if httpResponse.statusCode == 200 {
             print("API request successful - 200 OK")
             // Handle the successful response here
+        } else if httpResponse.statusCode == 401 || httpResponse.statusCode == 403 {
+            print("invalid AccessToken")
+            // Call refresh token API passing refreshToken and receive back the new accessToken
+            let newAccessToken = try await refreshAccessToken(withRefreshToken: refreshToken)
+            
+            // Retry the API call with the new accessToken
+            try await makeAPICall(withAccessToken: newAccessToken, refreshToken: refreshToken, title: title)
         } else {
             print("API request failed - Status Code: \(httpResponse.statusCode)")
             throw NSError(domain: "com.example.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "API request failed with status code \(httpResponse.statusCode)"])
@@ -109,7 +144,7 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
                         // pass the title to the makeAPICall method
                         let myTitle = try await $title.requestValue()
                     
-                        try await makeAPICall(withAccessToken: accessToken, title: myTitle)
+                        try await makeAPICall(withAccessToken: accessToken, refreshToken: jsonDict["refresh_token"] as! String, title: myTitle)
                         return .result(dialog: IntentDialog.responseSuccess)
                     } catch {
                         print("API request failed: \(error.localizedDescription)")
@@ -130,13 +165,19 @@ struct CreateTaskAppShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: Akiflow(),
             phrases: ["Create a new task in \(.applicationName).",
+                      "Create a new task with \(.applicationName).",
                       "Add a task in \(.applicationName).",
-                      "Create a new task in \(.applicationName).",
+                      "Add a task with \(.applicationName).",
                       "Can you help me make a task in \(.applicationName)?",
+                      "Can you help me make a task with \(.applicationName)?",
                       "Start a new task in \(.applicationName).",
+                      "Start a new task with \(.applicationName).",
                       "Please create a task in \(.applicationName).",
+                      "Please create a task with \(.applicationName).",
                       "I need to make a task in \(.applicationName).",
+                      "I need to make a task with \(.applicationName).",
                       "Add a new task in \(.applicationName).",
+                      "Add a new task with \(.applicationName).",
                       "I want to create a task in \(.applicationName).",
                       "Could you add a new task in \(.applicationName)?",
                       "Let's create a task in \(.applicationName).",
@@ -149,6 +190,8 @@ struct CreateTaskAppShortcuts: AppShortcutsProvider {
                       "Can you help me with a task in \(.applicationName)?",
                       "Add a new task in \(.applicationName) for me.",
                       "Let's make a task in \(.applicationName) together.",
+                      "Create a task in \(.applicationName).",
+                      "Create a task with \(.applicationName).",
                       "Create a task in \(.applicationName) now."],
             systemImageName: "com.akiflow.mobile"
         )
