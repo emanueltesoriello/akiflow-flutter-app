@@ -57,7 +57,7 @@ android {
         multiDexEnabled true
         applicationId "com.akiflow.mobile"
         minSdkVersion localProperties.getProperty('flutter.minSdkVersion')
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders += [

@@ -88,19 +88,23 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   }
 
   animatePlanDate() {
-    if (previousUpdatedTask?.date != context.read<EditTaskCubit>().state.updatedTask.date ||
-        previousUpdatedTask?.datetime! != context.read<EditTaskCubit>().state.updatedTask.datetime) {
-      setState(() {
-        backgroundPlanColor = Colors.white;
-        borderPlanColor = ColorsExt.jordyBlue400(context);
-      });
-      Future.delayed(const Duration(milliseconds: 1000), () {
+    try {
+      if (previousUpdatedTask?.date != context.read<EditTaskCubit>().state.updatedTask.date ||
+          previousUpdatedTask?.datetime! != context.read<EditTaskCubit>().state.updatedTask.datetime) {
         setState(() {
-          backgroundPlanColor = null;
-          borderPlanColor = null;
+          backgroundPlanColor = Colors.white;
+          borderPlanColor = ColorsExt.jordyBlue400(context);
         });
-      });
-      previousUpdatedTask = context.read<EditTaskCubit>().state.updatedTask;
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          setState(() {
+            backgroundPlanColor = null;
+            borderPlanColor = null;
+          });
+        });
+        previousUpdatedTask = context.read<EditTaskCubit>().state.updatedTask;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
