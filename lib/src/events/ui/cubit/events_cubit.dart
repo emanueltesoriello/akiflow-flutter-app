@@ -134,7 +134,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
       List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
       for (Map<String, dynamic> element in calendarSettings) {
         if (element['key'] == 'conferenceSolution') {
-          conferenceSolution = element['value'];
+          if (element['value'] != null) {
+            conferenceSolution = element['value'];
+          }
         }
       }
     }
@@ -221,7 +223,9 @@ class EventsCubit extends Cubit<EventsCubitState> {
       List<dynamic> generalSettings = authCubit.state.user?.settings?["general"];
       for (Map<String, dynamic> element in generalSettings) {
         if (element['key'] == 'showAkiflowSignature') {
-          showAkiflowSignature = element['value'];
+          if (element['value'] != null) {
+            showAkiflowSignature = element['value'];
+          }
         }
       }
     }
@@ -843,10 +847,12 @@ class EventsCubit extends Cubit<EventsCubitState> {
     if (meetingSolution == 'zoom') {
       if (((conferenceAccountId != null && conferenceAccountId.isEmpty) || conferenceAccountId == null) &&
           authCubit.state.user?.settings?['calendar'] != null) {
-        List<dynamic> calendarSettings = authCubit.state.user?.settings?["general"];
+        List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
         for (Map<String, dynamic> element in calendarSettings) {
           if (element['key'] == 'conferenceAccountId') {
-            conferenceAccountId = element['value'];
+            if (element['value'] != null) {
+              conferenceAccountId = element['value'];
+            }
           }
         }
       }

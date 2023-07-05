@@ -251,10 +251,12 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
       for (Map<String, dynamic> element in calendarSettings) {
         if (element['key'] == 'firstWorkingDayOfWeek') {
           var firstDayFromDb = element['value'];
-          if (firstDayFromDb is String) {
-            firstWorkdayOfWeek = int.parse(firstDayFromDb);
-          } else if (firstDayFromDb is int) {
-            firstWorkdayOfWeek = firstDayFromDb;
+          if (firstDayFromDb != null) {
+            if (firstDayFromDb is String) {
+              firstWorkdayOfWeek = int.parse(firstDayFromDb);
+            } else if (firstDayFromDb is int) {
+              firstWorkdayOfWeek = firstDayFromDb;
+            }
           }
         }
       }

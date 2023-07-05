@@ -16,10 +16,12 @@ extension UserExt on User {
       for (Map<String, dynamic> element in taskSettings) {
         if (element['key'] == 'defaultTasksDuration') {
           var defaultTasksDuration = element['value'];
-          if (defaultTasksDuration is String) {
-            duration = int.parse(defaultTasksDuration);
-          } else if (defaultTasksDuration is int) {
-            duration = defaultTasksDuration;
+          if (defaultTasksDuration != null) {
+            if (defaultTasksDuration is String) {
+              duration = int.parse(defaultTasksDuration);
+            } else if (defaultTasksDuration is int) {
+              duration = defaultTasksDuration;
+            }
           }
         }
       }

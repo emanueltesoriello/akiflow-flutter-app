@@ -37,10 +37,12 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
       for (Map<String, dynamic> element in calendarSettings) {
         if (element['key'] == 'firstDayOfWeek') {
           var firstDayFromDb = element['value'];
-          if (firstDayFromDb is String) {
-            firstDayOfWeek = int.parse(firstDayFromDb);
-          } else if (firstDayFromDb is int) {
-            firstDayOfWeek = firstDayFromDb;
+          if (firstDayFromDb != null) {
+            if (firstDayFromDb is String) {
+              firstDayOfWeek = int.parse(firstDayFromDb);
+            } else if (firstDayFromDb is int) {
+              firstDayOfWeek = firstDayFromDb;
+            }
           }
         }
       }

@@ -107,10 +107,12 @@ class FloatingButton extends StatelessWidget {
         for (Map<String, dynamic> element in taskSettings) {
           if (element['key'] == 'defaultTasksDuration') {
             var defaultTasksDuration = element['value'];
-            if (defaultTasksDuration is String) {
-              duration = int.parse(defaultTasksDuration);
-            } else if (defaultTasksDuration is int) {
-              duration = defaultTasksDuration;
+            if (defaultTasksDuration != null) {
+              if (defaultTasksDuration is String) {
+                duration = int.parse(defaultTasksDuration);
+              } else if (defaultTasksDuration is int) {
+                duration = defaultTasksDuration;
+              }
             }
           }
         }
@@ -148,10 +150,12 @@ class FloatingButton extends StatelessWidget {
       for (Map<String, dynamic> element in calendarSettings) {
         if (element['key'] == 'eventDuration') {
           var eventDuration = element['value'];
-          if (eventDuration is String) {
-            duration = int.parse(eventDuration);
-          } else if (eventDuration is int) {
-            duration = eventDuration;
+          if (eventDuration != null) {
+            if (eventDuration is String) {
+              duration = int.parse(eventDuration);
+            } else if (eventDuration is int) {
+              duration = eventDuration;
+            }
           }
         }
       }
