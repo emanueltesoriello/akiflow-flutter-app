@@ -142,9 +142,14 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
                     do {
                         // intercept the answer prompt
                         // pass the title to the makeAPICall method
-                        let myTitle = try await $title.requestValue()
-                    
-                        try await makeAPICall(withAccessToken: accessToken, refreshToken: jsonDict["refresh_token"] as! String, title: myTitle)
+                        if((title != nil) && (!title!.isEmpty) && (title != "My Akiflow task!")){
+                            try await makeAPICall(withAccessToken: accessToken, refreshToken: jsonDict["refresh_token"] as! String, title: title!)
+                        }
+                        else {
+                            let myTitle = try await $title.requestValue()
+                            
+                            try await makeAPICall(withAccessToken: accessToken, refreshToken: jsonDict["refresh_token"] as! String, title: myTitle)
+                        }
                         return .result(dialog: IntentDialog.responseSuccess)
                     } catch {
                         print("API request failed: \(error.localizedDescription)")
@@ -165,9 +170,15 @@ struct CreateTaskAppShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: Akiflow(),
             phrases: ["Create a new task in \(.applicationName).",
+                      "New task with title: \(\.$title)",
+                      "New task with title: \(\.$title). In \(.applicationName)",
+                      "New task with title: \(\.$title). Using \(.applicationName)",
+                      "Create a new task in \(.applicationName) \(\.$title)",
                       "Create a new task with \(.applicationName).",
                       "Add a task in \(.applicationName).",
-                      "Add a task with \(.applicationName).",
+                      "Add a task \(\.$title) with \(.applicationName).",
+                      "Add a task in \(.applicationName) \(\.$title)",
+                      "Add a task with title \(\.$title).",
                       "Can you help me make a task in \(.applicationName)?",
                       "Can you help me make a task with \(.applicationName)?",
                       "Start a new task in \(.applicationName).",
