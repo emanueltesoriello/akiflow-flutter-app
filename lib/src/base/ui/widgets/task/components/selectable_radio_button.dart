@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:models/task/task.dart';
 
@@ -12,7 +13,7 @@ class SelectableRadioButton extends StatelessWidget {
   Widget build(BuildContext context) {
     bool selected = task.selected ?? false;
 
-    Color color = selected ? ColorsExt.akiflow(context) : ColorsExt.grey3(context);
+    Color color = selected ? ColorsExt.akiflow500(context) : ColorsExt.grey600(context);
 
     return Container(
       height: double.infinity,
@@ -23,9 +24,7 @@ class SelectableRadioButton extends StatelessWidget {
           width: 21.67,
           height: 21.67,
           child: SvgPicture.asset(
-            selected
-                ? "assets/images/icons/_common/largecircle_fill_circle_2.svg"
-                : "assets/images/icons/_common/circle.svg",
+            selected ? Assets.images.icons.common.largecircleFillCircle2SVG : Assets.images.icons.common.circleSVG,
             color: color,
           ),
         ),

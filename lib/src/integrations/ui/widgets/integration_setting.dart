@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/style/theme.dart';
 
 class IntegrationSetting extends StatefulWidget {
@@ -38,8 +40,8 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
-        begin: Theme.of(context).backgroundColor,
-        end: ColorsExt.grey5(context),
+        begin: Theme.of(context).colorScheme.background,
+        end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
     });
@@ -81,10 +83,10 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                     margin: const EdgeInsets.all(1),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(radius),
+                      borderRadius: BorderRadius.circular(Dimension.radius),
                       boxShadow: [
                         BoxShadow(
-                          color: ColorsExt.grey5(context),
+                          color: ColorsExt.grey200(context),
                           offset: const Offset(0, 2),
                           blurRadius: 1,
                         ),
@@ -104,38 +106,40 @@ class _IntegrationSettingState extends State<IntegrationSetting> with SingleTick
                                       child: Text(
                                     widget.title,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorsExt.grey800(context),
+                                        ),
                                   )),
                                 ],
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: Dimension.paddingXS),
                               Row(
                                 children: [
                                   Expanded(
                                       child: Text(
                                     widget.subtitle,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorsExt.grey3(context),
-                                      fontSize: 13,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorsExt.grey600(context),
+                                        ),
                                   )),
                                 ],
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: Dimension.padding),
                         Builder(builder: (context) {
                           if (widget.trailingWidget != null) {
                             return widget.trailingWidget!;
                           }
 
                           return SvgPicture.asset(
-                            "assets/images/icons/_common/chevron_right.svg",
-                            width: 20,
-                            height: 20,
-                            color: ColorsExt.grey3(context),
+                            Assets.images.icons.common.chevronRightSVG,
+                            width: Dimension.chevronIconSize,
+                            height: Dimension.chevronIconSize,
+                            color: ColorsExt.grey600(context),
                           );
                         }),
                       ],

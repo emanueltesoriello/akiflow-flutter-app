@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/config.dart';
@@ -6,6 +7,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/availabilities_repository.dart';
 import 'package:mobile/extensions/date_extension.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../../../core/api/availability_api.dart';
 import '../models/navigation_state.dart';
 import 'package:models/task/availability_config.dart';
@@ -25,22 +27,9 @@ class AvailabilityCubit extends Cubit<AvailabilityCubitState> {
   }
 
   _init() async {
-    if (_preferencesRepository.availabilitiesNoticeHidden == true) {
-      print(_preferencesRepository.availabilitiesNoticeHidden);
-      emit(state.copyWith(isNoticeDismissed: true));
-    }
     if (_preferencesRepository.user != null) {
       await getAvailabilities();
     }
-  }
-
-  Future<bool> getNoticeStatus() async {
-    return _preferencesRepository.availabilitiesNoticeHidden;
-  }
-
-  Future<void> noticeClosed() async {
-    await _preferencesRepository.setAvailabilitiesNoticeHidden(true);
-    emit(state.copyWith(isNoticeDismissed: true));
   }
 
   String getAbbreviatedTimezone(String? timezone, String? minTime) {
@@ -116,5 +105,13 @@ https://booking.akiflow.com/${config.url_path}'''
     emit(state.copyWith(
         navigationState: AvailabilityNavigationState.mainPage, availabilities: filteredNetworkAvailabilities));
     await _availabilitiesRepository.add(filteredNetworkAvailabilities);
+  }
+
+  launchUrl(String? urlPath) {
+    launchUrlString("https://booking.akiflow.com/$urlPath", mode: LaunchMode.externalApplication);
+  }
+
+  Future<void> copyLinkToClipboard(AvailabilityConfig config) async {
+    Clipboard.setData(ClipboardData(text: getAvailabilityText(config)));
   }
 }

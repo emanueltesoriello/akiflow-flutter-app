@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/core/config.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/background_service.dart';
-//import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/src/base/ui/widgets/floating_button.dart';
 import 'package:mobile/src/base/ui/widgets/navbar/bottom_nav_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/bottom_task_actions.dart';
@@ -17,25 +10,11 @@ import 'package:mobile/src/home/ui/widgets/webview.dart';
 import 'package:mobile/src/onboarding/ui/cubit/onboarding_cubit.dart';
 import 'package:mobile/src/onboarding/ui/pages/onboarding_tutorial.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key, required this.bottomBarHeight, required this.homeViewType});
   final double bottomBarHeight;
   final int homeViewType;
-
-  init() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    DatabaseService databaseService = DatabaseService();
-    await databaseService.open();
-    try {
-      setupLocator(preferences: preferences, databaseService: databaseService);
-    } catch (e) {
-      print(e);
-    }
-    print("environment: ${Config.development ? "dev" : "prod"}");
-    await AnalyticsService.config();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +25,6 @@ class HomeBody extends StatelessWidget {
           extendBodyBehindAppBar: true,
           floatingActionButton: FloatingButton(bottomBarHeight: bottomBarHeight),
           bottomNavigationBar: CustomBottomNavigationBar(
-            labelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey2(context)),
-            bottomBarIconSize: 30,
             topPadding: MediaQuery.of(context).padding.top,
           ),
           body: Builder(builder: (context) {

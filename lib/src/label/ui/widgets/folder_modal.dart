@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:models/label/label.dart';
 
@@ -25,18 +26,18 @@ class FolderModal extends StatelessWidget {
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radius),
+            topRight: Radius.circular(Dimension.radius),
           ),
           child: Material(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
               shrinkWrap: true,
               children: [
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimension.padding),
                 const ScrollChip(),
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimension.padding),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -44,10 +45,13 @@ class FolderModal extends StatelessWidget {
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
                         child: Text(
                           t.label.folder,
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: ColorsExt.grey2(context)),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: ColorsExt.grey800(context),
+                              ),
                         ),
                       );
                     }
@@ -67,7 +71,9 @@ class FolderModal extends StatelessWidget {
                             Expanded(
                                 child: Text(
                               folder.title ?? t.noTitle,
-                              style: TextStyle(color: ColorsExt.grey2(context), fontSize: 17),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: ColorsExt.grey800(context),
+                                  ),
                             )),
                           ],
                         ),

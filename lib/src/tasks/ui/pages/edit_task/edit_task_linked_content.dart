@@ -2,18 +2,20 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
+import 'package:mobile/src/base/ui/widgets/custom_snackbar.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
-import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/linked_content_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
-import 'package:models/doc/doc.dart';
+import 'package:models/doc/gmail_doc.dart';
 import 'package:models/task/task.dart';
 
 class EditTaskLinkedContent extends StatelessWidget {
@@ -24,9 +26,10 @@ class EditTaskLinkedContent extends StatelessWidget {
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         Task task = state.updatedTask;
-        Doc? doc = task.computedDoc(context.watch<TasksCubit>().state.docs.firstWhereOrNull(
-              (doc) => doc.taskId == task.id,
-            ));
+        dynamic doc;
+        if (task.doc != null) {
+          doc = task.computedDoc();
+        }
         print(task.toSql());
         if (doc == null) {
           return const SizedBox();
@@ -34,8 +37,8 @@ class EditTaskLinkedContent extends StatelessWidget {
 
         return BlocBuilder<IntegrationsCubit, IntegrationsCubitState>(builder: (context, integrations) {
           Account? account =
-              integrations.accounts.firstWhereOrNull((element) => element.connectorId == doc.connectorId);
-          print(doc.url ?? '');
+              integrations.accounts.firstWhereOrNull((element) => element.connectorId == task.connectorId?.value);
+          print(doc?.url ?? '');
 
           return InkWell(
             onTap: () {
@@ -46,7 +49,7 @@ class EditTaskLinkedContent extends StatelessWidget {
             },
             child: Column(
               children: [
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimension.padding),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: Row(
@@ -54,22 +57,32 @@ class EditTaskLinkedContent extends StatelessWidget {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            task.openLinkedContentUrl(doc);
+                            if (doc is GmailDoc) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(CustomSnackbar.get(
+                                  context: context,
+                                  type: CustomSnackbarType.error,
+                                  message: t.snackbar.gmailLinkNotSupported));
+                            } else {
+                              task.openLinkedContentUrl(doc);
+                            }
                           },
                           child: Row(
                             children: [
                               SvgPicture.asset(
-                                task.computedIcon(doc),
+                                task.computedIcon(),
                                 width: 18,
                                 height: 18,
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: Dimension.paddingS),
                               Expanded(
                                 child: Text(
-                                  doc.getSummary.parseHtmlString ?? doc.url ?? '',
+                                  doc?.getLinkedContentSummary().toString().parseHtmlString ?? doc?.url ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 17, color: ColorsExt.grey2(context)),
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: ColorsExt.grey800(context),
+                                      ),
                                 ),
                               ),
                             ],
@@ -78,21 +91,21 @@ class EditTaskLinkedContent extends StatelessWidget {
                       ),
                       SvgPicture.asset(
                         Assets.images.icons.common.syncingSVG,
-                        color: ColorsExt.grey2(context),
+                        color: ColorsExt.grey800(context),
                         width: 17,
                         height: 17,
                       ),
                       const SizedBox(width: 10),
                       SvgPicture.asset(
                         Assets.images.icons.common.infoCircleSVG,
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                         width: 18,
                         height: 18,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: Dimension.padding),
                 const Separator(),
               ],
             ),

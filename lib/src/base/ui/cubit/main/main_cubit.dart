@@ -1,21 +1,22 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/api/pusher.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/user.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 part 'main_state.dart';
 
@@ -47,8 +48,114 @@ class MainCubit extends Cubit<MainCubitState> {
 
     if (user != null) {
       _syncCubit.sync(loading: true);
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
       AnalyticsService.track("Show Main Window");
+      // lunch Pusher
+      try {
+        connect();
+      } catch (e) {
+        print('error on Pusher connect: $e');
+      }
+    }
+  }
+
+  connect() async {
+    try {
+      PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
+
+      await pusher.init(
+        apiKey: "4fa6328da6969ef162ec",
+        cluster: "eu",
+        onConnectionStateChange: (m, s) {
+          print("onConnectionStateChange m: $m \n s: $s");
+        },
+        onError: (m, s, t) {
+          print("onError m: $m\n s: $s\n t: $t");
+        },
+        onSubscriptionSucceeded: (_, __) {
+          print("onSubscriptionSucceeded");
+        },
+        onEvent: (event) {
+          try {
+            print("onEvent: $event");
+            print(jsonDecode(event.data)["syncEntities"]);
+            var syncEntities = jsonDecode(event.data)["syncEntities"];
+            List<Entity>? entities = [];
+
+            if (syncEntities != null) {
+              if (syncEntities.contains("tasks")) {
+                entities.add(Entity.tasks);
+              }
+              if (syncEntities.contains("events")) {
+                entities.add(Entity.events);
+              }
+              if (syncEntities.contains("event_modifier")) {
+                entities.add(Entity.eventModifiers);
+              }
+              if (syncEntities.contains("accounts")) {
+                entities.add(Entity.accounts);
+              }
+              if (syncEntities.contains("labels")) {
+                entities.add(Entity.labels);
+              }
+              if (syncEntities.contains("calendars")) {
+                entities.add(Entity.calendars);
+              }
+              if (syncEntities.contains("contacts")) {
+                entities.add(Entity.contacts);
+              }
+              if (entities.isNotEmpty) {
+                locator<SyncCubit>().sync(entities: entities);
+              }
+            }
+          } catch (e) {
+            print('error on Pusher event: $e');
+          }
+        },
+        onSubscriptionError: (String message, dynamic e) {
+          print("onSubscriptionError: $message, \n Exception: $e");
+        },
+        onDecryptionFailure: (String event, String reason) {
+          print("onDecryptionFailure event: $event \n reason: $reason");
+        },
+        onMemberAdded: (_, __) {
+          print("onMemberAdded");
+        },
+        onMemberRemoved: (_, __) {
+          print("onMemberRemoved");
+        },
+        onAuthorizer: (String channelName, String socketId, dynamic options) async {
+          print("onAuthorizer");
+
+          try {
+            PusherAPI pusherApi = PusherAPI();
+            var res = await pusherApi.authorizePusher(channelName: channelName, socketId: socketId);
+            if (res.statusCode == 200) {
+              print({
+                "auth": jsonDecode(res.body)['auth'],
+              });
+              return {
+                "auth": jsonDecode(res.body)['auth'],
+              };
+            } else {
+              if (Platform.isAndroid) {
+                return false;
+              } else {
+                print('No auth on iOS - Pusher');
+              }
+            }
+          } catch (e) {
+            print(e);
+          }
+        },
+      );
+      await pusher.connect();
+
+      await pusher.subscribe(
+        channelName: "private-user.${locator<PreferencesRepository>().user!.id}",
+      );
+    } catch (e) {
+      print("ERROR: $e");
+      rethrow;
     }
   }
 
@@ -84,8 +191,15 @@ class MainCubit extends Cubit<MainCubitState> {
               status: user.status,
               planExpireDate: user.planExpireDate));
           _sentryService.authenticate(user.id.toString(), user.email);
+
+          bool timeFormatChanged = _preferencesRepository.timeFormatChanged;
+          if (!timeFormatChanged) {
+            _preferencesRepository
+                .setTimeFormat(appUser.settings?['calendar']?['timeFormat'] ?? TimeFormatUtils.systemDefault);
+          }
+
           //await _intercomService.authenticate(
-          //    email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
+          //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
           try {
             // trigger that start every time the set port is called
             // used for handling backgroundSync that update the UI
@@ -93,7 +207,8 @@ class MainCubit extends Cubit<MainCubitState> {
             IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSync");
             port.listen((dynamic data) async {
               print('got $data on UI');
-              await _syncControllerService.sync();
+              //await _syncControllerService.sync();
+              await locator<SyncCubit>().sync();
             });
           } catch (e) {
             print(e);
@@ -110,6 +225,5 @@ class MainCubit extends Cubit<MainCubitState> {
   void onFocusLost() async {
     _preferencesRepository.setLastAppUseAt(DateTime.now());
     await _syncControllerService.sync([Entity.tasks]);
-    NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
   }
 }

@@ -1,6 +1,6 @@
 {
   "endpoint": "https://api.akiflow.com",
-  "oauth_endpoint": "https://app.akiflow.com",
+  "oauth_endpoint": "https://web.akiflow.com",
   "sentry_dsn": "https://add9dcb365c04a5998caa2a54f5b3bc9@bugtracker.akiflow.com/7",
   "oauth_client_id": "1000006",
   "oauth_redirect_url": "com.akiflow.mobile:/callback",
@@ -13,5 +13,9 @@
     "app_id": "hqlby49q",
     "ios_api_key": "ios_sdk-c80c16999ffce9cb6988a6478b18de09a932c4ed",
     "android_api_key": "android_sdk-02d22b9bbde45e6ca6419ac5af05878bae1a74c6"
-  }
+  },
+  "google_places": {
+    "android_api_key": "AIzaSyClM0f0xJJyAaZfM8xnQVKt7_WN5VdKiog",
+    "ios_api_key": "AIzaSyClM0f0xJJyAaZfM8xnQVKt7_WN5VdKiog"
+}
 }

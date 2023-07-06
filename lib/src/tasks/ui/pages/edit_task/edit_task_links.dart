@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -28,7 +29,7 @@ class EditTaskLinks extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               itemCount: links.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
+              separatorBuilder: (context, index) => const SizedBox(height: Dimension.paddingS),
               itemBuilder: (context, index) {
                 String link = links[index];
 
@@ -45,7 +46,7 @@ class EditTaskLinks extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(3),
-                            color: ColorsExt.grey6(context),
+                            color: ColorsExt.grey100(context),
                           ),
                           padding: const EdgeInsets.all(6),
                           child: Row(
@@ -68,7 +69,7 @@ class EditTaskLinks extends StatelessWidget {
                                         width: 16,
                                         height: 16,
                                         errorBuilder: (context, error, stacktrace) => Image.asset(
-                                          "assets/images/icons/web/faviconV2.png",
+                                          Assets.images.icons.web.faviconV2PNG,
                                           width: 16,
                                           height: 16,
                                         ),
@@ -79,16 +80,15 @@ class EditTaskLinks extends StatelessWidget {
                                   return const SizedBox();
                                 }
                               }),
-                              const SizedBox(width: 9),
+                              const SizedBox(width: Dimension.paddingS),
                               Flexible(
                                 child: Text(
                                   link,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: ColorsExt.grey3(context),
-                                  ),
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: ColorsExt.grey600(context),
+                                      ),
                                 ),
                               )
                             ],
@@ -96,14 +96,14 @@ class EditTaskLinks extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: Dimension.paddingS),
                     InkWell(
                       onTap: () => context.read<EditTaskCubit>().removeLink(link),
                       child: SvgPicture.asset(
                         Assets.images.icons.common.xmarkSVG,
                         width: 22,
                         height: 22,
-                        color: ColorsExt.grey3(context),
+                        color: ColorsExt.grey600(context),
                       ),
                     ),
                   ],

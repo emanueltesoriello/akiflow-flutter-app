@@ -57,7 +57,7 @@ android {
         multiDexEnabled true
         applicationId "com.akiflow.mobile"
         minSdkVersion localProperties.getProperty('flutter.minSdkVersion')
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders += [
@@ -76,18 +76,38 @@ android {
             dimension "default"
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
+            resValue "string", "app_name", "Akiflow_Dev"
+        }
+        preprod {
+            dimension "default"
+            applicationIdSuffix ".dev" 
+            versionNameSuffix "-preprod"
+            resValue "string", "app_name", "Akiflow_Pre-prod"
         }
         prod {
             dimension "default"
+            resValue "string", "app_name", "Akiflow"
+ 
         }
     }
 
     buildTypes {
         debug {
             signingConfig signingConfigs.release
+
+            minifyEnabled true
+            //useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        release {
+        release {            
             signingConfig signingConfigs.release
+
+            minifyEnabled true
+            //useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
 }
@@ -103,4 +123,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    implementation 'com.pusher:pusher-java-client:2.4.4'
 }

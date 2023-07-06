@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
@@ -10,26 +14,49 @@ import 'package:models/task/task.dart';
 class PlanForAction extends StatelessWidget {
   final Task task;
   final Function() onTap;
+  final Color? backgroundPlanColor;
+  final Color? borderPlanColor;
 
-  const PlanForAction({
-    Key? key,
-    required this.task,
-    required this.onTap,
-  }) : super(key: key);
+  const PlanForAction(
+      {Key? key, required this.task, required this.onTap, this.backgroundPlanColor, this.borderPlanColor})
+      : super(key: key);
+
+  bool isToday(DateTime date) {
+    DateTime now = DateTime.now().toLocal();
+    return date.day == now.day && date.month == now.month && date.year == now.year;
+  }
+
+  bool isTomorrow(DateTime date) {
+    DateTime now = DateTime.now().toLocal();
+    return date.day == now.day + 1 && date.month == now.month && date.year == now.year;
+  }
+
+  bool isCurrentWeek(DateTime date) {
+    final now = DateTime.now();
+    final currentWeekStart = now.subtract(Duration(days: now.weekday - 1));
+    final currentWeekEnd = currentWeekStart.add(const Duration(days: 7));
+
+    return date.isAfter(currentWeekStart.subtract(const Duration(days: 1))) &&
+        date.isBefore(currentWeekEnd.add(const Duration(days: 1)));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final preferencesRepository = locator<PreferencesRepository>();
+    int timeFormat = preferencesRepository.timeFormat;
+    bool use24hFormat = TimeFormatUtils.use24hFormat(timeFormat: timeFormat, context: context);
+
     String? leadingIconAsset;
     String? text;
     Color? color;
 
     if (task.statusType == TaskStatusType.inbox) {
-      leadingIconAsset = "assets/images/icons/_common/tray.svg";
-      color = ColorsExt.cyan25(context);
-      text = t.bottomBar.inbox;
+      leadingIconAsset = Assets.images.icons.common.calendarSVG;
+      color = ColorsExt.grey200(context);
+      text = t.addTask.plan;
     } else if (task.statusType == TaskStatusType.someday) {
-      leadingIconAsset = "assets/images/icons/_common/archivebox.svg";
-      color = ColorsExt.akiflow10(context);
+      leadingIconAsset = Assets.images.icons.common.archiveboxSVG;
+      color = ColorsExt.akiflow100(context);
       text = task.statusType!.name.capitalizeFirstCharacter();
     } else if (task.statusType == TaskStatusType.snoozed) {
       if (task.date != null) {
@@ -43,37 +70,63 @@ class PlanForAction extends StatelessWidget {
       }
 
       if (task.datetime != null) {
-        text = task.datetimeFormatted;
+        DateTime parsed = DateTime.parse(task.datetime!).toLocal();
+        text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(parsed)}";
       }
 
-      leadingIconAsset = "assets/images/icons/_common/clock.svg";
-      color = ColorsExt.akiflow10(context);
+      leadingIconAsset = Assets.images.icons.common.clockSVG;
+      color = ColorsExt.akiflow100(context);
       text = text ?? t.task.snoozed;
     } else if (task.statusType == TaskStatusType.planned) {
-      leadingIconAsset = "assets/images/icons/_common/calendar.svg";
-      color = ColorsExt.grey5(context);
+      leadingIconAsset = Assets.images.icons.common.calendarSVG;
+      color = ColorsExt.grey200(context);
 
       if (task.date != null) {
+        if (task.isOverdue) {
+          leadingIconAsset = Assets.images.icons.common.clockAlertSVG;
+          color = ColorsExt.cosmos200(context);
+        }
+        if (task.done ?? false) {
+          color = ColorsExt.yorkGreen200(context);
+        }
+
         DateTime parsed = DateTime.parse(task.date!);
         text = DateFormat("EEE, d MMM").format(parsed);
+        if (isCurrentWeek(parsed)) {
+          text = DateFormat("EEE").format(parsed);
+        }
+        if (isToday(parsed)) {
+          text = "Today";
+        }
+        if (isTomorrow(parsed)) {
+          text = "Tomorrow";
+        }
       } else {
         text = t.bottomBar.inbox;
       }
 
       if (task.datetime != null) {
         DateTime parsed = DateTime.parse(task.datetime!).toLocal();
-        text = "$text ${DateFormat("HH:mm").format(parsed)}";
+        if (isToday(parsed)) {
+          text = "Today ${DateFormat(use24hFormat ? "HH:mm" : "h:mm").format(parsed)}";
+        } else if (isTomorrow(parsed)) {
+          text = "Tomorrow ${DateFormat(use24hFormat ? "HH:mm" : "h:mm").format(parsed)}";
+        } else {
+          text = "$text ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(parsed)}";
+        }
       }
     } else if (task.date != null && !task.isOverdue) {
-      color = ColorsExt.cyan25(context);
+      color = ColorsExt.jordyBlue200(context);
       DateTime parsed = DateTime.parse(task.date!);
       text = DateFormat("EEE, d MMM").format(parsed);
     }
 
     return TagBox(
       text: text,
-      backgroundColor: color,
+      backgroundColor: backgroundPlanColor ?? color,
+      borderColor: borderPlanColor,
       icon: leadingIconAsset,
+      foregroundColor: ColorsExt.grey800(context),
       isBig: true,
       active: true,
       onPressed: () {

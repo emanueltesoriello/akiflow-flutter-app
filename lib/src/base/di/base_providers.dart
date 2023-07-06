@@ -5,6 +5,8 @@ import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/dialog/dialog_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
+import 'package:mobile/src/events/ui/cubit/events_cubit.dart';
 import 'package:mobile/src/home/ui/cubit/today/today_cubit.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
@@ -16,7 +18,7 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 List<BlocProvider> baseProviders = [
   BlocProvider<DialogCubit>(
     lazy: false,
-    create: (BuildContext context) => DialogCubit(),
+    create: (BuildContext context) => locator<DialogCubit>(),
   ),
   BlocProvider<SyncCubit>(
     lazy: false,
@@ -57,5 +59,13 @@ List<BlocProvider> baseProviders = [
   BlocProvider<OnboardingCubit>(
     lazy: false,
     create: (BuildContext context) => OnboardingCubit(),
+  ),
+  BlocProvider<CalendarCubit>(
+    lazy: false,
+    create: (BuildContext context) => CalendarCubit(locator<SyncCubit>(), locator<AuthCubit>()),
+  ),
+  BlocProvider<EventsCubit>(
+    lazy: false,
+    create: (BuildContext context) => EventsCubit(locator<SyncCubit>()),
   ),
 ];

@@ -93,4 +93,30 @@ class ApiClient implements IBaseApi {
 
     return objects;
   }
+
+  @override
+  Future<Map<String, dynamic>?> postClient<T>(
+      {required Map<String, dynamic> client, bool keepFCMTokenToNull = false}) async {
+    if (keepFCMTokenToNull) {
+      client.removeWhere((key, value) => key == "notifications_token" ? false : value == null);
+    } else {
+      client.removeWhere((key, value) => value == null);
+    }
+    String json = jsonEncode(client);
+
+    Response responseRaw = await _httpClient.post(url, body: json);
+    if (responseRaw.statusCode == 401) {
+      throw ApiException({"errors": [], "message": "Server error"});
+    }
+    Map<String, dynamic> response = jsonDecode(responseRaw.body);
+
+    if (response.containsKey("errors")) {
+      log(json);
+      throw ApiException(response);
+    }
+    if (response['data'] != null) {
+      return response['data'];
+    }
+    return null;
+  }
 }

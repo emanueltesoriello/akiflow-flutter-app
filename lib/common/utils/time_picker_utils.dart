@@ -11,53 +11,9 @@ class TimePickerUtils {
     required TimeOfDay initialTime,
     required Function(TimeOfDay?) onTimeSelected,
   }) async {
-    // switch (theme.platform) {
-    // case TargetPlatform.iOS:
-    // case TargetPlatform.macOS:
-    // _buildCupertinoDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
-    // onTimeSelected(selected);
-    //    break;
-    //   default:
     _buildMaterialDatePicker(context, initialTime, onTimeSelected: onTimeSelected);
     onTimeSelected(selected);
-    //   break;
-    // }
   }
-
-  final _timePickerTheme = TimePickerThemeData(
-    backgroundColor: Colors.blueGrey,
-    hourMinuteShape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-      side: BorderSide(color: Colors.orange, width: 4),
-    ),
-    dayPeriodBorderSide: const BorderSide(color: Colors.orange, width: 4),
-    dayPeriodColor: Colors.blueGrey.shade600,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-      side: BorderSide(color: Colors.orange, width: 4),
-    ),
-    dayPeriodTextColor: Colors.white,
-    dayPeriodShape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-      side: BorderSide(color: Colors.orange, width: 4),
-    ),
-    hourMinuteColor: MaterialStateColor.resolveWith(
-        (states) => states.contains(MaterialState.selected) ? Colors.orange : Colors.blueGrey.shade800),
-    hourMinuteTextColor: MaterialStateColor.resolveWith(
-        (states) => states.contains(MaterialState.selected) ? Colors.white : Colors.orange),
-    dialHandColor: Colors.blueGrey.shade700,
-    dialBackgroundColor: Colors.blueGrey.shade800,
-    hourMinuteTextStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-    dayPeriodTextStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-    helpTextStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-    inputDecorationTheme: const InputDecorationTheme(
-      border: InputBorder.none,
-      contentPadding: EdgeInsets.all(0),
-    ),
-    dialTextColor: MaterialStateColor.resolveWith(
-        (states) => states.contains(MaterialState.selected) ? Colors.orange : Colors.white),
-    entryModeIconColor: Colors.orange,
-  );
 
   /// create android date picker
   static _buildMaterialDatePicker(
@@ -71,28 +27,27 @@ class TimePickerUtils {
       context: context,
       initialTime: initialTime,
       borderRadius: 8,
-      locale: const Locale("it", "IT"),
       theme: ThemeData(
         fontFamily: "Inter",
         primaryColor: Colors.white,
         colorScheme: ColorScheme.light(
-          primary: ColorsExt.akiflow(context),
-          secondary: ColorsExt.akiflow(context),
+          primary: ColorsExt.akiflow500(context),
+          secondary: ColorsExt.akiflow500(context),
         ),
         dialogBackgroundColor: Colors.white,
         primarySwatch: MaterialColor(
-          ColorsExt.akiflow(context).value,
+          ColorsExt.akiflow500(context).value,
           {
-            50: ColorsExt.akiflow(context),
-            100: ColorsExt.akiflow(context),
-            200: ColorsExt.akiflow(context),
-            300: ColorsExt.akiflow(context),
-            400: ColorsExt.akiflow(context),
-            500: ColorsExt.akiflow(context),
-            600: ColorsExt.akiflow(context),
-            700: ColorsExt.akiflow(context),
-            800: ColorsExt.akiflow(context),
-            900: ColorsExt.akiflow(context),
+            50: ColorsExt.akiflow500(context),
+            100: ColorsExt.akiflow500(context),
+            200: ColorsExt.akiflow500(context),
+            300: ColorsExt.akiflow500(context),
+            400: ColorsExt.akiflow500(context),
+            500: ColorsExt.akiflow500(context),
+            600: ColorsExt.akiflow500(context),
+            700: ColorsExt.akiflow500(context),
+            800: ColorsExt.akiflow500(context),
+            900: ColorsExt.akiflow500(context),
           },
         ),
       ),

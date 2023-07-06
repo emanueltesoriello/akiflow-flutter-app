@@ -4,59 +4,71 @@ import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/custom_recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rrule/rrule.dart';
 
-enum RecurrenceModalType { none, daily, everyCurrentDay, everyYearOnThisDay, everyWeekday, custom }
+enum RecurrenceModalType {
+  none,
+  daily,
+  everyCurrentDay,
+  everyYearOnThisDay,
+  everyMonthOnThisDay,
+  everyLastDayOfTheMonth,
+  everyWeekday,
+  custom
+}
 
 class RecurrenceModal extends StatelessWidget {
   final Function(RecurrenceRule?) onChange;
   final RecurrenceModalType? selectedRecurrence;
   final RecurrenceRule? rule;
+  final DateTime taskDatetime;
 
   const RecurrenceModal({
     Key? key,
     required this.onChange,
     required this.selectedRecurrence,
     required this.rule,
+    required this.taskDatetime,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    DateTime lastDayOfMonth = DateTime(taskDatetime.year, taskDatetime.month + 1, 0);
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(Dimension.radiusM),
+            topRight: Radius.circular(Dimension.radiusM),
           ),
         ),
-        height: MediaQuery.of(context).size.height * 0.5,
         child: ListView(
+          shrinkWrap: true,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             const ScrollChip(),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimension.padding),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(Dimension.padding),
               child: Row(
                 children: [
                   SvgPicture.asset(
-                   Assets.images.icons.common.repeatSVG,
+                    Assets.images.icons.common.repeatSVG,
                     width: 28,
                     height: 28,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimension.paddingS),
                   Text(
                     t.editTask.repeat,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: ColorsExt.grey800(context),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),
@@ -77,7 +89,7 @@ class RecurrenceModal extends StatelessWidget {
               click: () {
                 var rule = RecurrenceRule(
                   frequency: Frequency.daily,
-                  until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
+                  until: taskDatetime.toUtc().add(const Duration(days: 365 * 2)),
                 );
 
                 onChange(rule);
@@ -88,15 +100,15 @@ class RecurrenceModal extends StatelessWidget {
               context,
               active: selectedRecurrence == RecurrenceModalType.everyCurrentDay,
               text: t.editTask.everyCurrentDay(
-                day: DateFormat("EEEE").format(DateTime.now()),
+                day: DateFormat("EEEE").format(taskDatetime),
               ),
               click: () {
                 var rule = RecurrenceRule(
                   frequency: Frequency.weekly,
                   byWeekDays: {
-                    ByWeekDayEntry(DateTime.now().weekday),
+                    ByWeekDayEntry(taskDatetime.weekday),
                   },
-                  until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
+                  until: taskDatetime.toUtc().add(const Duration(days: 365 * 2)),
                 );
 
                 onChange(rule);
@@ -107,18 +119,50 @@ class RecurrenceModal extends StatelessWidget {
               context,
               active: selectedRecurrence == RecurrenceModalType.everyYearOnThisDay,
               text: t.editTask.everyYearOn(
-                date: DateFormat("MMM dd").format(DateTime.now()),
+                date: DateFormat("MMM dd").format(taskDatetime),
               ),
               click: () {
                 var rule = RecurrenceRule(
                   frequency: Frequency.yearly,
-                  until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
+                  until: taskDatetime.toUtc().add(const Duration(days: 365 * 2)),
                 );
 
                 onChange(rule);
                 Navigator.pop(context);
               },
             ),
+            _item(
+              context,
+              active: selectedRecurrence == RecurrenceModalType.everyMonthOnThisDay,
+              text: t.editTask.everyMonthOn(
+                date: DateFormat("MMM dd").format(taskDatetime),
+              ),
+              click: () {
+                var rule = RecurrenceRule(
+                  frequency: Frequency.monthly,
+                  until: taskDatetime.toUtc().add(const Duration(days: 365 * 2)),
+                );
+                onChange(rule);
+                Navigator.pop(context);
+              },
+            ),
+            if (taskDatetime.year == lastDayOfMonth.year &&
+                taskDatetime.month == lastDayOfMonth.month &&
+                taskDatetime.day == lastDayOfMonth.day)
+              _item(
+                context,
+                active: selectedRecurrence == RecurrenceModalType.everyLastDayOfTheMonth,
+                text: t.editTask.everyLastDayOfTheMonth,
+                click: () {
+                  var rule = RecurrenceRule(
+                    frequency: Frequency.monthly,
+                    byMonthDays: const {-1},
+                    until: taskDatetime.toUtc().add(const Duration(days: 365 * 2)),
+                  );
+                  onChange(rule);
+                  Navigator.pop(context);
+                },
+              ),
             _item(
               context,
               active: selectedRecurrence == RecurrenceModalType.everyWeekday,
@@ -133,7 +177,7 @@ class RecurrenceModal extends StatelessWidget {
                     ByWeekDayEntry(DateTime.thursday),
                     ByWeekDayEntry(DateTime.friday),
                   },
-                  until: DateTime.now().toUtc().add(const Duration(days: 365 * 2)),
+                  until: taskDatetime.toUtc().add(const Duration(days: 365 * 2)),
                 );
 
                 onChange(rule);
@@ -141,27 +185,28 @@ class RecurrenceModal extends StatelessWidget {
               },
             ),
             Container(
-                color: selectedRecurrence == RecurrenceModalType.custom ? ColorsExt.grey6(context) : Colors.transparent,
+                color:
+                    selectedRecurrence == RecurrenceModalType.custom ? ColorsExt.grey100(context) : Colors.transparent,
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 child: InkWell(
                   onTap: () {
                     Navigator.pop(context);
                     showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context) => CustomRecurrenceModal(rule: rule,
-                      onChange: (RecurrenceRule? rule) {
-                        onChange(rule);
-                      },),
+                      builder: (context) => CustomRecurrenceModal(
+                        rule: rule,
+                        onChange: (RecurrenceRule? rule) {
+                          onChange(rule);
+                        },
+                      ),
                     );
                   },
                   child: Text(
                     t.editTask.custom,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
                   ),
-                ))
+                )),
+            const SizedBox(height: Dimension.paddingL),
           ],
         ),
       ),
@@ -177,14 +222,11 @@ class RecurrenceModal extends StatelessWidget {
     return InkWell(
       onTap: click,
       child: Container(
-        color: active ? ColorsExt.grey6(context) : Colors.transparent,
+        color: active ? ColorsExt.grey100(context) : Colors.transparent,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 17,
-            color: ColorsExt.grey2(context),
-          ),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
         ),
       ),
     );

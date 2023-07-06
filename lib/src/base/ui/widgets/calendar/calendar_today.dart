@@ -14,16 +14,15 @@ class CalendarSelectedDay extends StatelessWidget {
       height: 24,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Center(
         child: Text(
           DateFormat("d").format(day),
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: ColorsExt.background(context),
-          ),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: ColorsExt.background(context),
+              ),
           textAlign: TextAlign.center,
         ),
       ),

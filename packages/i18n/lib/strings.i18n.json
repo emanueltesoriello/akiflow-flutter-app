@@ -55,6 +55,9 @@
     "general": "General",
     "tasks": "Tasks",
     "notifications": "Notifications",
+    "calendar": "Calendar",
+    "viewOptions": "view options",
+    "use24hoursFormat": "Use 24 hours format",
     "referYourFriends": "Refer your friends",
     "helpCenter": "Help center",
     "followUsOnTwitter": "Follow Us on Twitter",
@@ -85,6 +88,19 @@
     "integrations": {
       "title": "Integrations",
       "connected": "Connected",
+      "onMarkAsDone": {
+        "title": "On mark as done",
+        "behaviorOfToolOnMarkDone": "Behavior of ${tool} tasks on mark as done",
+        "unstarTheEmail": "Unstar the email",
+        "unlabelTheEmail": "Unlabel the email",
+        "markAsDone": "Mark as done in ${tool}",
+        "changeListInTrello": "Change list in Trello",
+        "archiveInTrello": "Archive in Trello",
+        "goTo": "Go to",
+        "doNothing": "Do nothing",
+        "askMeEveryTime": "Ask me every time",
+        "rememberMyChoice": "Remember my choice"
+      },
       "gmail": {
         "title": "Gmail",
         "description": "Communication",
@@ -99,14 +115,6 @@
         "star": "Star",
         "behavior": "Behavior",
         "communication": "Communication",
-        "onMarkAsDone": {
-          "title": "On mark as done",
-          "unstarTheEmail": "Unstar the email",
-          "unlabelTheEmail": "Unlabel the email",
-          "goToGmail": "Go to Gmail",
-          "doNothing": "Do nothing",
-          "askMeEveryTime": "Ask me every time"
-        },
         "toImportTask": {
           "title": "To import tasks",
           "useAkiflowLabel": "Use Akiflow label",
@@ -206,12 +214,26 @@
   },
   "calendar": {
     "comingSoon": "Calendar is coming in the near future!",
-    "goToToday": "Go to Today"
+    "goToToday": "Go to Today",
+    "calendarView": "Calendar View",
+    "view": {
+      "agenda": "Agenda",
+      "oneDay": "1 Day",
+      "threeDays": "3 Days",
+      "week": "Week",
+      "month": "Month"
+    },
+    "groupOverlappingTasks": "Group overlapping tasks",
+    "hideWeekends": "Hide Weekends",
+    "hideDeclinedEvents": "Hide Declined events",
+    "hideTasksFromCalendar": "Hide Tasks from calendar",
+    "calendars": "Calendars",
+    "refresh": "Refresh"
   },
   "linkedContent": {
-    "subject": "Subject:",
-    "from": "From:",
-    "date": "Date:",
+    "subject": "Subject",
+    "from": "From",
+    "date": "Date",
     "open": "Open",
     "parentTask": "Parent task",
     "project": "Project",
@@ -231,13 +253,18 @@
     "savedOn": "Saved on",
     "status": "Status",
     "done": "Done",
-    "toDo": "To do"
+    "toDo": "To do",
+    "section": "Section",
+    "scheduledDate": "Scheduled Date",
+    "duration": "Duration",
+    "team": "Team"
   },
   "editTask": {
     "add": "Add",
     "assignLabel": "Assign Label",
     "searchALabel": "Search a label",
     "noLabel": "No label",
+    "addLabel": "Add label",
     "removeLabel": "Remove label",
     "deadline": "Deadline",
     "repeat": "Repeat",
@@ -246,6 +273,8 @@
     "everyCurrentDay": "Every ${day}",
     "everyFirstCurrentDayOfTheMonth": "Every first ${day} of the month",
     "everyYearOn": "Every year on ${date}",
+    "everyMonthOn": "Every month on ${date}",
+    "everyLastDayOfTheMonth": "Every last day of the month",
     "everyWeekday": "Every weekday",
     "custom": "Custom",
     "comingSoon": "Coming soon",
@@ -312,6 +341,87 @@
       "markAllTasksAsDone": "Mark all tasks as Done"
     },
     "sortComingSoon": "Sort (Coming soon)"
+  },
+  "event": {
+    "googleMeet": "Google Meet",
+    "zoom": "Zoom",
+    "join": "Join",
+    "busy": "Busy",
+    "conference": "Conference",
+    "guests": "Guests",
+    "organizer": "Organizer",
+    "going": "Going?",
+    "yes": "Yes",
+    "no": "No",
+    "maybe": "Maybe",
+    "copy": "Copy",
+    "share": "Share",
+    "mailGuests": "Mail Guests",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editEvent": {
+      "addTitle": "Add title",
+      "allDay": "All Day",
+      "addConference": "Add Conference",
+      "addLocation": "Add Location",
+      "chooseCalendar": "Choose Calendar",
+      "addGuests": "Add guests",
+      "addDescription": "Add Description",
+      "defaultColor": "Default Color",
+      "customColor": "Custom color",
+      "eventColor": "Event color",
+      "viewOnGoogleCalendar": "View on Google Calendar",
+      "createEvent": "Create event",
+      "saveChanges": "Save Changes",
+      "repeatingEditModal": {
+        "title": "Editing repeating event",
+        "deleteTitle": "You are deleting a recurrent event",
+        "description": "Do you want to change only this occurrence or change this and all future occurrences?",
+        "deleteDescription": "Do you want to delete only this occurrence or delete this and all future occurrences?",
+        "onlyThis": "Only this event",
+        "thisAndAllFuture": "This and all future events",
+        "allEvents": "All events"
+      },
+      "deleteModal": {
+        "title": "Are you sure you want to delete ${eventName}",
+        "description": "You can't undo this action!"
+      },
+      "recurrence": {
+        "noRepeat": "No repeat",
+        "setRepeat": "Set Repeat",
+        "everyDay": "Every day",
+        "everyWeekday": "Every weekday",
+        "custom": "Custom"
+      },
+      "addGuestModal": {
+        "addGuest": "Add guest",
+        "searchContact": "Search contact"
+      },
+      "addLocationModal": {
+        "addLocation": "Add Location",
+        "search": "Search"
+      }
+    },
+    "snackbar": {
+      "created": "Event created successfully",
+      "edited": "Event updated successfully",
+      "deleted": "Event has been deleted"
+    }
+  },
+  "availability": {
+    "availabilities": "Availabilities",
+    "shareAvailabilities": "Share availabilities",
+    "activeRecurrentSlots": "Recurrent slots",
+    "activeManualSlots": "Active manual slots",
+    "noActiveLinksToShow": "No active links to show",
+    "toCreateLinkUseDesktop": "To create a link use the desktop app",
+    "linkCopiedToClipboard": "Link copied to clipboard!"
+  },
+  "snackbar": {
+    "connectedSuccesfully": "Connected successfully!",
+    "cannotMoveThisEvent": "You cannot move this event!",
+    "copiedToYourClipboard": "Copied to your clipboard",
+    "gmailLinkNotSupported": "Gmail link not supported on mobile"
   },
   "confirm": "Confirm",
   "cancel": "Cancel",

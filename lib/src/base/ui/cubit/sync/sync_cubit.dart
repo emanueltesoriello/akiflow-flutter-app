@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/core/api/core_api.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:models/user.dart';
 
@@ -12,12 +13,11 @@ part 'sync_state.dart';
 class SyncCubit extends Cubit<SyncCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final SyncControllerService _syncControllerService = locator<SyncControllerService>();
-
   Stream get syncCompletedStream => _syncControllerService.syncCompletedStream;
 
   SyncCubit() : super(const SyncCubitState(loading: true));
 
-  Future sync({List<Entity>? entities, bool loading = false}) async {
+  Future sync({List<Entity>? entities, bool loading = true}) async {
     print("start sync $entities");
 
     try {
@@ -57,6 +57,10 @@ class SyncCubit extends Cubit<SyncCubitState> {
     } catch (e) {
       emit(state.copyWith(networkError: true));
     }
+  }
+
+  void showLoadingIcon(bool loading) {
+    emit(state.copyWith(loading: loading));
   }
 
   @override

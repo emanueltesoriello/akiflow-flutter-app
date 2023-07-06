@@ -1,13 +1,14 @@
 import 'dart:convert';
-
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:models/base.dart';
-import 'package:models/doc/doc.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
 import 'package:models/task/task.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:convert/convert.dart';
+import 'package:uuid/uuid.dart';
 
 class RawListConvert {
   final List<dynamic> items;
@@ -62,13 +63,18 @@ List<dynamic> fromObjToMapList<T>(List<T> items) {
 }
 
 List<dynamic> fromObjToSqlList<T>(List<T> items) {
-  List<dynamic> result = [];
+  try {
+    List<dynamic> result = [];
 
-  for (T item in items) {
-    result.add((item as Base).toSql());
+    for (T item in items) {
+      result.add((item as Base).toSql());
+    }
+
+    return result;
+  } catch (e) {
+    print(e);
+    rethrow;
   }
-
-  return result;
 }
 
 DateTime? getMaxUpdatedAt(List<dynamic> items) {
@@ -132,59 +138,112 @@ Batch prepareBatchInsert(BatchInsertModel batchInsertModel) {
 }
 
 Future<List<List<dynamic>>> partitionItemsToUpsert<T>(PartitioneItemModel partitioneItemModel) async {
-  List<dynamic> allRemoteModels = partitioneItemModel.remoteItems;
-  List<dynamic> existingLocalModels = partitioneItemModel.existingItems;
-  List<dynamic> changedModels = [];
-  List<dynamic> unchangedModels = [];
-  List<dynamic> nonExistingModels = [];
+  try {
+    List<dynamic> allRemoteModels = partitioneItemModel.remoteItems;
+    List<dynamic> existingLocalModels = partitioneItemModel.existingItems;
+    List<dynamic> changedModels = [];
+    List<dynamic> unchangedModels = [];
+    List<dynamic> nonExistingModels = [];
 
-  Map<String, dynamic> existingModelsById = Map.fromIterable(existingLocalModels, key: (model) => model.id);
+    Map<String, dynamic> existingModelsById = Map.fromIterable(existingLocalModels, key: (model) => model.id);
 
-  for (var remoteModel in allRemoteModels) {
-    int remoteGlobalUpdateAtMillis = 0;
-    int localUpdatedAtMillis = 0;
+    for (var remoteModel in allRemoteModels) {
+      int remoteGlobalUpdateAtMillis = 0;
+      int localUpdatedAtMillis = 0;
 
-    if (remoteModel.globalUpdatedAt != null) {
-      remoteGlobalUpdateAtMillis = DateTime.parse(remoteModel.globalUpdatedAt!).millisecondsSinceEpoch;
-    }
-
-    if (existingModelsById[remoteModel.id]?.updatedAt != null) {
-      localUpdatedAtMillis = DateTime.parse(existingModelsById[remoteModel.id]!.updatedAt!).millisecondsSinceEpoch;
-    }
-
-    Nullable<String?>? remoteUpdatedAt = Nullable(remoteModel.globalUpdatedAt);
-
-    remoteModel = remoteModel.copyWith(
-      updatedAt: remoteUpdatedAt,
-      createdAt: remoteModel.globalCreatedAt,
-      deletedAt: remoteModel.deletedAt,
-      remoteUpdatedAt: remoteUpdatedAt,
-    );
-
-    if (existingModelsById.containsKey(remoteModel.id)) {
-      if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
-        changedModels.add(remoteModel);
-      } else {
-        unchangedModels.add(remoteModel);
+      if (remoteModel.globalUpdatedAt != null) {
+        remoteGlobalUpdateAtMillis = DateTime.parse(remoteModel.globalUpdatedAt!).millisecondsSinceEpoch;
       }
-    } else {
-      nonExistingModels.add(remoteModel);
+
+      if (existingModelsById[remoteModel.id]?.updatedAt != null) {
+        localUpdatedAtMillis = DateTime.parse(existingModelsById[remoteModel.id]!.updatedAt!).millisecondsSinceEpoch;
+      }
+
+      Nullable<String?>? remoteUpdatedAt = Nullable(remoteModel.globalUpdatedAt);
+
+      remoteModel = remoteModel.copyWith(
+          updatedAt: remoteUpdatedAt,
+          createdAt: remoteModel.globalCreatedAt,
+          deletedAt: remoteModel.deletedAt,
+          remoteUpdatedAt: remoteUpdatedAt);
+
+      if (existingModelsById.containsKey(remoteModel.id)) {
+        int globalListIdUpdatedAtAtMillis = 0;
+        int localListIdUpdatedAtAtMillis = 0;
+
+        if (remoteModel.runtimeType == Task) {
+          var remoteListIdUpdatedAt = remoteModel.globalListIdUpdatedAt;
+
+          remoteModel = remoteModel.copyWith(remoteListIdUpdatedAt: remoteListIdUpdatedAt);
+
+          if (remoteModel.globalListIdUpdatedAt != null) {
+            globalListIdUpdatedAtAtMillis = DateTime.parse(remoteModel.globalListIdUpdatedAt).millisecondsSinceEpoch;
+          }
+          if (existingModelsById[remoteModel.id] != null &&
+              existingModelsById[remoteModel.id].globalListIdUpdatedAt != null) {
+            localListIdUpdatedAtAtMillis =
+                DateTime.parse(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt).millisecondsSinceEpoch;
+          }
+        }
+
+        if (remoteGlobalUpdateAtMillis >= localUpdatedAtMillis) {
+          if (remoteModel.runtimeType == Task) {
+            if (globalListIdUpdatedAtAtMillis < localListIdUpdatedAtAtMillis) {
+              try {
+                Nullable<String?>? globalListIdUpdatedAt =
+                    Nullable(existingModelsById[remoteModel.id]?.globalListIdUpdatedAt);
+                Nullable<String?>? listId = Nullable(existingModelsById[remoteModel.id]?.listId.toString());
+                Nullable<String?>? sectionId = Nullable(existingModelsById[remoteModel.id]?.sectionId);
+
+                remoteModel = (remoteModel as Task).copyWith(
+                    listId: listId,
+                    sectionId: sectionId,
+                    globalListIdUpdatedAt: globalListIdUpdatedAt,
+                    remoteListIdUpdatedAt: existingModelsById[remoteModel.id]?.remoteListIdUpdatedAt);
+              } catch (e) {
+                print('Error on partitionItemsToUpsert 1');
+                print(e);
+              }
+            }
+          }
+
+          changedModels.add(remoteModel);
+        } else {
+          if (remoteModel.runtimeType == Task) {
+            if (globalListIdUpdatedAtAtMillis > localListIdUpdatedAtAtMillis) {
+              Nullable<String?>? globalListIdUpdatedAt = Nullable(remoteModel.globalListIdUpdatedAt);
+              try {
+                existingModelsById[remoteModel.id] = existingModelsById[remoteModel.id].copyWith(
+                    listId: remoteModel.listId,
+                    sectionId: remoteModel.sectionId,
+                    globalListIdUpdatedAt: globalListIdUpdatedAt,
+                    remoteListIdUpdatedAt: remoteModel.remoteListIdUpdatedAt);
+              } catch (e) {
+                print('Error on partitionItemsToUpsert 2');
+                print(e);
+              }
+
+              changedModels.add(existingModelsById[remoteModel.id]);
+            } else {
+              unchangedModels.add(existingModelsById[remoteModel.id]);
+            }
+          } else {
+            unchangedModels.add(remoteModel);
+          }
+        }
+      } else {
+        if (remoteModel.runtimeType == Task) {
+          remoteModel = remoteModel.copyWith(remoteListIdUpdatedAt: remoteModel.globalListIdUpdatedAt);
+        }
+        nonExistingModels.add(remoteModel);
+      }
     }
+    return [changedModels, unchangedModels, nonExistingModels];
+  } catch (e) {
+    print(e);
+    rethrow;
   }
-  return [changedModels, unchangedModels, nonExistingModels];
 }
-
-class PrepareDocForRemoteModel {
-  final List<Doc> remoteItems;
-  final List<Doc?> existingItems;
-
-  PrepareDocForRemoteModel({
-    required this.remoteItems,
-    required this.existingItems,
-  });
-}
-
-class GmailTask {}
 
 class DocsFromGmailDataModel {
   final List<GmailMessage> messages;
@@ -216,8 +275,8 @@ generateMd5(String data) {
   return hex.encode(digest.bytes);
 }
 
-List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
-  List<Doc> result = [];
+List<Task> payloadFromGmailData(DocsFromGmailDataModel data) {
+  List<Task> result = [];
 
   for (GmailMessage messageContent in data.messages) {
     var doc = {
@@ -233,12 +292,12 @@ List<Doc> payloadFromGmailData(DocsFromGmailDataModel data) {
 
     doc.addAll({"hash": hash});
 
-    result.add(Doc(
-      //TODO: change to partial task
-      connectorId: data.connectorId,
-      originId: messageContent.messageId,
-      originAccountId: data.originAccountId,
+    result.add(Task(
+      id: const Uuid().v4(),
       title: getTitleString(messageContent.subject),
+      connectorId: Nullable(data.connectorId),
+      originId: Nullable(messageContent.messageId),
+      originAccountId: Nullable(data.originAccountId),
       doc: doc,
     ));
   }

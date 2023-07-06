@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/sizes.dart';
 //import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
-import 'package:mobile/src/base/ui/widgets/base/badged_icon.dart';
-import 'package:mobile/src/base/ui/widgets/base/icon_badge.dart';
 import 'package:mobile/src/settings/ui/pages/settings_page.dart';
 import 'package:mobile/src/settings/ui/widgets/search_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -42,13 +42,12 @@ class Header extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: Dimension.radiusS),
                   Text(
                     state.user?.email ?? "n/d",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: ColorsExt.grey3(context),
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: ColorsExt.grey600(context),
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -58,39 +57,42 @@ class Header extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        InkWell(
-          child: SvgPicture.asset(
-            "assets/images/icons/_common/search.svg",
-            height: 25,
-            color: ColorsExt.grey3(context),
+        SizedBox(
+          width: 35,
+          height: 35,
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: SvgPicture.asset(
+              Assets.images.icons.common.searchSVG,
+              height: 25,
+              color: ColorsExt.grey800(context),
+            ),
+            onPressed: () {
+              showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context) => const SearchModal(),
+              );
+            },
           ),
-          onTap: () {
-            showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context) => const SearchModal(),
-            );
-          },
         ),
-        const SizedBox(width: 12),
-        InkWell(
-          child: BadgedIcon(
-            icon: "assets/images/icons/_common/gear_alt.svg",
-            color: Colors.transparent,
-            badge: FutureBuilder<dynamic>(
-                //future: Intercom.instance.unreadConversationCount(),
-                builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return IconBadge(
-                  snapshot.data,
-                  offset: const Offset(12, -9),
-                );
-              }
-              return const SizedBox();
-            }),
+        const SizedBox(width: Dimension.paddingS),
+        SizedBox(
+          width: 35,
+          height: 35,
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: SizedBox(
+              width: 25,
+              height: 25,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.gearAltSVG,
+                color: ColorsExt.grey800(context),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+            },
           ),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
-          },
         ),
       ],
     );

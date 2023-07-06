@@ -1,21 +1,18 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
-import 'package:mobile/core/services/background_service.dart';
+import 'package:mobile/core/services/notifications_service.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
-import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
-import 'package:mobile/src/settings/ui/widgets/receive_notification_setting_modal.dart';
+import 'package:mobile/src/settings/ui/widgets/receive_event_notification_setting_modal.dart';
+import 'package:mobile/src/settings/ui/widgets/receive_task_notification_setting_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:workmanager/workmanager.dart';
-import 'package:mobile/core/preferences.dart';
+import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -28,28 +25,33 @@ class _NotificationsPageState extends State<NotificationsPage> {
   final service = locator<PreferencesRepository>();
   String dailyOverviewTime = '';
   NextTaskNotificationsModel selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
+  NextEventNotificationsModel selectedNextEventNotificationsModel = NextEventNotificationsModel.d;
   bool nextTaskNotificationSettingEnabled = false;
+  bool nextEventNotificationSettingEnabled = false;
   bool dailyOverviewNotificationTimeEnabled = false;
+  bool taskCompletedSoundEnabled = true;
 
   @override
   void initState() {
     super.initState();
     selectedNextTaskNotificationsModel = service.nextTaskNotificationSetting;
     nextTaskNotificationSettingEnabled = service.nextTaskNotificationSettingEnabled;
+    selectedNextEventNotificationsModel = service.nextEventNotificationSetting;
+    nextEventNotificationSettingEnabled = service.nextEventNotificationSettingEnabled;
     dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
     dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
+    taskCompletedSoundEnabled = service.taskCompletedSoundEnabledMobile;
   }
 
-  mainItem(String switchTitle, String mainButtonListTitle, String selectedButtonListItem, Function onTap,
+  mainItem(String switchTitle, String mainButtonListTitle, String selectedBottomListItem, Function onTap,
       {required Function(bool) onChanged, required bool isEnabled}) {
     return Container(
       margin: const EdgeInsets.all(1),
-      //padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(Dimension.radius),
           boxShadow: [
             BoxShadow(
-              color: ColorsExt.grey5(context),
+              color: ColorsExt.grey200(context),
               offset: const Offset(0, 2),
               blurRadius: 1,
             ),
@@ -59,28 +61,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
         shrinkWrap: true,
         children: [
           Container(
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            height: 44,
+            padding:
+                const EdgeInsets.only(top: Dimension.paddingS, left: Dimension.paddingSM, right: Dimension.paddingSM),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     switchTitle,
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: ColorsExt.grey800(context),
+                        ),
                   ),
                   FlutterSwitch(
                     width: 48,
                     height: 24,
                     toggleSize: 20,
-                    activeColor: ColorsExt.akiflow(context),
-                    inactiveColor: ColorsExt.grey5(context),
+                    activeColor: ColorsExt.akiflow500(context),
+                    inactiveColor: ColorsExt.grey200(context),
                     value: isEnabled,
-                    borderRadius: 24,
+                    borderRadius: Dimension.radiusL,
                     padding: 2,
                     onToggle: (val) => onChanged(val),
                   ),
@@ -95,25 +98,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ignoring: !isEnabled,
               child: ListTile(
                 visualDensity: const VisualDensity(vertical: -4), // to compact
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                contentPadding: const EdgeInsets.only(
+                    bottom: Dimension.paddingS, left: Dimension.paddingSM, right: Dimension.paddingSM),
                 onTap: () => onTap(),
                 title: Text(
                   mainButtonListTitle,
                   textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: ColorsExt.grey2(context),
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                 ),
                 subtitle: Text(
-                  selectedButtonListItem,
+                  selectedBottomListItem,
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle2
-                      ?.copyWith(color: ColorsExt.grey3(context), fontWeight: FontWeight.normal),
+                      .bodyMedium
+                      ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w400),
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: Dimension.chevronIconSize,
+                ),
               ),
             ),
           ),
@@ -125,11 +132,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
   onReceiveNotificationNextTaskClick() async {
     await showCupertinoModalBottomSheet(
       context: context,
-      builder: (context) => ReceiveNotificationSettingModal(
+      builder: (context) => ReceiveTaskNotificationSettingModal(
         selectedNextTaskNotificationsModel: selectedNextTaskNotificationsModel,
         onSelectedNextTaskNotificationsModel: (NextTaskNotificationsModel newVal) {
           setState(() {
             selectedNextTaskNotificationsModel = newVal;
+          });
+        },
+      ),
+    );
+  }
+
+  onReceiveNotificationNextEventClick() async {
+    await showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => ReceiveEventNotificationSettingModal(
+        selectedNextEventNotificationsModel: selectedNextEventNotificationsModel,
+        onSelectedNextEventNotificationsModel: (NextEventNotificationsModel newVal) {
+          setState(() {
+            selectedNextEventNotificationsModel = newVal;
           });
         },
       ),
@@ -153,7 +174,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           setState(() {
             dailyOverviewTime = fromTimeOfDayToFormattedString(selected);
           });
-          NotificationsCubit.setDailyReminder();
+          NotificationsService.setDailyReminder(locator<PreferencesRepository>());
         }
       },
     );
@@ -171,14 +192,42 @@ class _NotificationsPageState extends State<NotificationsPage> {
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: Dimension.padding),
+                Text(
+                  "EVENTS IN CALENDAR".toUpperCase(),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey600(context),
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+                const SizedBox(height: Dimension.paddingXS),
+                mainItem(
+                    "Next events",
+                    "Receive notification",
+                    selectedNextEventNotificationsModel.title.replaceAll(RegExp(r'task'), 'event'),
+                    () => onReceiveNotificationNextEventClick(), onChanged: (newVal) async {
+                  service.setNextEventNotificationSettingEnabled(newVal);
+                  setState(() {
+                    nextEventNotificationSettingEnabled = newVal;
+                  });
+                  if (newVal == false) {
+                    await NotificationsService.cancelScheduledNotifications(locator<PreferencesRepository>());
+                    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
+                  } else if (newVal) {
+                    locator<SyncCubit>().sync();
+                  }
+                }, isEnabled: nextEventNotificationSettingEnabled),
+                const SizedBox(height: Dimension.padding),
                 Text(
                   "TASKS IN CALENDAR".toUpperCase(),
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey600(context),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: Dimension.paddingXS),
                 mainItem("Next tasks", "Receive notification", selectedNextTaskNotificationsModel.title,
                     () => onReceiveNotificationNextTaskClick(), onChanged: (newVal) async {
                   service.setNextTaskNotificationSettingEnabled(newVal);
@@ -186,24 +235,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     nextTaskNotificationSettingEnabled = newVal;
                   });
                   if (newVal == false) {
-                    await NotificationsCubit.cancelScheduledNotifications();
+                    await NotificationsService.cancelScheduledNotifications(locator<PreferencesRepository>());
                   } else if (newVal) {
-                    if (Platform.isAndroid) {
-                      Workmanager().registerOneOffTask(
-                        scheduleNotificationsTaskKey,
-                        scheduleNotificationsTaskKey,
-                      );
-                    } else {
-                      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
-                    }
+                    NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                   }
                 }, isEnabled: nextTaskNotificationSettingEnabled),
-                const SizedBox(height: 20),
+                const SizedBox(height: Dimension.padding),
                 Text(
                   "DAILY OVERVIEW".toUpperCase(),
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: ColorsExt.grey3(context)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey600(context),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: Dimension.paddingXS),
                 FutureBuilder(builder: (context, AsyncSnapshot<PreferencesRepository> repo) {
                   return Container();
                 }),
@@ -214,10 +259,64 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     dailyOverviewNotificationTimeEnabled = newVal;
                   });
                   if (!newVal) {
-                    NotificationsCubit.cancelNotificationById(NotificationsCubit.dailyReminderTaskId);
+                    NotificationsService.cancelNotificationById(NotificationsService.dailyReminderTaskId);
                   }
-                  NotificationsCubit.setDailyReminder();
+                  NotificationsService.setDailyReminder(locator<PreferencesRepository>());
                 }, isEnabled: dailyOverviewNotificationTimeEnabled),
+                const SizedBox(height: Dimension.padding),
+                Text(
+                  "sounds".toUpperCase(),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorsExt.grey600(context),
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+                const SizedBox(height: Dimension.paddingXS),
+                Container(
+                  height: 54,
+                  margin: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimension.radius),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ColorsExt.grey200(context),
+                          offset: const Offset(0, 2),
+                          blurRadius: 1,
+                        ),
+                      ],
+                      color: Colors.white),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Task completed",
+                          textAlign: TextAlign.left,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: ColorsExt.grey800(context),
+                              ),
+                        ),
+                        FlutterSwitch(
+                          width: 48,
+                          height: 24,
+                          toggleSize: 20,
+                          activeColor: ColorsExt.akiflow500(context),
+                          inactiveColor: ColorsExt.grey200(context),
+                          value: taskCompletedSoundEnabled,
+                          borderRadius: 24,
+                          padding: 2,
+                          onToggle: (value) {
+                            setState(() {
+                              taskCompletedSoundEnabled = value;
+                            });
+                            service.setTaskCompletedSoundEnabledMobile(value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

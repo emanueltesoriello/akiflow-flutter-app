@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
+import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
@@ -22,34 +21,51 @@ class TodayAppBarCalendar extends StatefulWidget {
 }
 
 class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
-  PageController? _pageController;
+  int firstDayOfWeek = DateTime.monday;
+  DateTime now = DateTime.now();
+  double size = Dimension.calendarElementHeight;
+  late TextStyle textStyle;
+
+  @override
+  void initState() {
+    if (context.read<AuthCubit>().state.user?.settings?["calendar"] != null &&
+        context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] != null) {
+      var firstDayFromDb = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"];
+      if (firstDayFromDb is String) {
+        firstDayOfWeek = int.parse(firstDayFromDb);
+      } else if (firstDayFromDb is int) {
+        firstDayOfWeek = firstDayFromDb;
+      }
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
+          color: ColorsExt.grey600(context),
+          fontWeight: FontWeight.w500,
+          overflow: TextOverflow.ellipsis,
+        );
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(color: ColorsExt.background(context), height: 12),
+        const SizedBox(height: Dimension.paddingS),
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
-            DateTime now = DateTime.now();
-            int firstDayOfWeek = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] ?? 1;
             return Column(
               children: [
                 TableCalendar(
-                  startingDayOfWeek:
-                      firstDayOfWeek == -1 || firstDayOfWeek == 1 ? StartingDayOfWeek.monday : StartingDayOfWeek.sunday,
+                  startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
                   onPageChanged: (page) {
                     BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
                   },
-                  rowHeight: todayCalendarMinHeight,
+                  rowHeight: Dimension.todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   calendarFormat: widget.calendarFormat != null
                       ? (widget.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month)
                       : (state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month),
-                  onCalendarCreated: (pageController) {
-                    _pageController = pageController;
-                  },
                   sixWeekMonthsEnforced: true,
                   focusedDay: state.selectedDate,
                   firstDay: now.subtract(const Duration(days: 365)),
@@ -62,91 +78,38 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
                   },
                   headerVisible: false,
                   daysOfWeekStyle: DaysOfWeekStyle(
-                    dowTextFormatter: (date, locale) {
-                      return DateFormat("E").format(date).substring(0, 1);
-                    },
-                    weekdayStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: ColorsExt.grey3(context),
-                    ),
-                    weekendStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: ColorsExt.grey3(context),
-                    ),
-                  ),
+                      dowTextFormatter: (date, locale) {
+                        return DateFormat("E").format(date).substring(0, 1);
+                      },
+                      weekdayStyle: textStyle,
+                      weekendStyle: textStyle),
                   calendarBuilders: CalendarBuilders(
                     defaultBuilder: (context, day, focusedDay) {
                       return SizedBox(
-                        height: 24,
+                        height: size,
                         child: Center(
                           child: Text(
                             DateFormat("d").format(day),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey2(context),
-                            ),
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                  color: ColorsExt.grey800(context),
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                           ),
                         ),
                       );
                     },
                     selectedBuilder: (context, day, focusedDay) {
-                      return SizedBox(height: 24, child: CalendarSelectedDay(day));
+                      return SizedBox(height: size, child: CalendarSelectedDay(day));
                     },
                     todayBuilder: (context, day, focusedDay) {
-                      return SizedBox(height: 24, child: CalendarToday(day));
+                      return SizedBox(height: size, child: CalendarToday(day));
                     },
                     outsideBuilder: (context, day, focused) {
                       return SizedBox(
-                        height: 24,
+                        height: size,
                         child: Center(
-                          child: Text(
-                            DateFormat("d").format(day),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: ColorsExt.grey3(context),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    headerTitleBuilder: (context, day) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                _pageController?.jumpToPage((_pageController!.page! - 1).toInt());
-                              },
-                              child: RotatedBox(
-                                quarterTurns: 2,
-                                child: SvgPicture.asset(
-                                  Assets.images.icons.common.chevronRightSVG,
-                                  width: 20,
-                                  height: 20,
-                                  color: ColorsExt.grey2(context),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            const SizedBox(width: 12),
-                            InkWell(
-                              onTap: () {
-                                _pageController?.jumpToPage((_pageController!.page! + 1).toInt());
-                              },
-                              child: SvgPicture.asset(
-                                Assets.images.icons.common.chevronRightSVG,
-                                width: 20,
-                                height: 20,
-                                color: ColorsExt.grey2(context),
-                              ),
-                            )
-                          ],
+                          child: Text(DateFormat("d").format(day), style: textStyle),
                         ),
                       );
                     },

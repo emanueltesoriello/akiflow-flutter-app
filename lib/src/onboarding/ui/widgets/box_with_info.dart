@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/onboarding/ui/widgets/triangle_painter.dart';
 
 class BoxWithInfo extends StatelessWidget {
@@ -15,7 +16,7 @@ class BoxWithInfo extends StatelessWidget {
     return Column(
       children: [
         CustomPaint(
-          painter: TrianglePainter(strokeColor: ColorsExt.cyan25(context)),
+          painter: TrianglePainter(strokeColor: ColorsExt.jordyBlue200(context)),
           child: const SizedBox(
             height: 12,
             width: 14,
@@ -23,16 +24,15 @@ class BoxWithInfo extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            color: ColorsExt.cyan25(context),
-            borderRadius: BorderRadius.circular(8),
+            color: ColorsExt.jordyBlue200(context),
+            borderRadius: BorderRadius.circular(Dimension.radius),
           ),
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(Dimension.padding),
           child: Text(
             info,
-            style: TextStyle(
-              color: ColorsExt.grey1(context),
-              fontSize: 17,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: ColorsExt.grey900(context),
+                ),
           ),
         ),
       ],

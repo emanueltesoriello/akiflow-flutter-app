@@ -5,6 +5,8 @@ abstract class IBaseDatabaseRepository {
 
   Future<List<T>> getByIds<T>(List<String> ids);
 
+  Future<List<T>> getByItems<T>(List<dynamic> ids);
+
   Future<List<Object?>> add<T>(List<T> items);
 
   Future<void> updateById<T>(String? id, {required T data});

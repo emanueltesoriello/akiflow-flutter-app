@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:models/task/task.dart';
 
@@ -21,10 +22,10 @@ class TaskBorderedRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Theme.of(context).backgroundColor,
-        borderRadius: BorderRadius.circular(noticeRadius),
+        color: Theme.of(context).colorScheme.background,
+        borderRadius: BorderRadius.circular(Dimension.noticeRadius),
         border: Border.all(
-          color: ColorsExt.grey5(context),
+          color: ColorsExt.grey200(context),
           width: 1,
         ),
       ),
@@ -39,7 +40,7 @@ class TaskBorderedRow extends StatelessWidget {
               Assets.images.icons.common.squareSVG,
               width: 20,
               height: 20,
-              color: ColorsExt.grey3(context),
+              color: ColorsExt.grey600(context),
             ),
           ),
           const SizedBox(width: 10),

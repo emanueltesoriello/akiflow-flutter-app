@@ -5,13 +5,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:i18n/strings.g.dart';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
+import 'package:mobile/src/base/ui/widgets/base/animated_linear_progress_indicator.dart';
 import 'package:mobile/src/base/ui/widgets/task/panel.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
-import 'package:mobile/src/home/ui/widgets/today/first_sync_progress_today.dart';
+import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
@@ -22,7 +21,7 @@ import 'package:mobile/src/home/ui/widgets/today/today_header.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
-import 'package:mobile/core/preferences.dart';
+import 'package:video_player/video_player.dart';
 
 class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
@@ -36,6 +35,7 @@ class _TodayViewState extends State<TodayView> {
   ScrollController scrollController = ScrollController();
   ValueNotifier<double> calendarOffsetNotifier = ValueNotifier<double>(200);
   PanelController panelController = PanelController();
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
@@ -56,7 +56,22 @@ class _TodayViewState extends State<TodayView> {
         }
       });
     });
+
+    _controller = VideoPlayerController.asset(Assets.animations.todayEmptyAnimationWEBM)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    _controller.play();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -69,6 +84,9 @@ class _TodayViewState extends State<TodayView> {
     List<Task> todos;
     List<Task> pinned;
     List<Task> completed;
+
+    DateTime? lastTaskDoneAt = tasksCubit.state.lastTaskDoneAt;
+    DateTime? lastDayTodayZero = tasksCubit.state.lastDayTodayZero;
 
     if (selectedDate.day == DateTime.now().day &&
         selectedDate.month == DateTime.now().month &&
@@ -92,12 +110,13 @@ class _TodayViewState extends State<TodayView> {
       completed =
           List.from(todayTasks.where((element) => element.isCompletedComputed && element.isSameDateOf(selectedDate)));
     }
-
     pinned.sort((a, b) {
       try {
-        return DateTime.parse(a.datetime!).toLocal().compareTo(DateTime.parse(b.datetime!).toLocal());
-      } catch (_) {}
-      return 0;
+        return a.datetime!.compareTo(b.datetime!);
+      } catch (e) {
+        print("Error sorting pinned items: ${e.toString()}");
+        return 0;
+      }
     });
 
     return BlocProvider(
@@ -105,21 +124,28 @@ class _TodayViewState extends State<TodayView> {
         create: (BuildContext context) => ViewedMonthCubit(),
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const TodayAppBar(preferredSizeHeight: toolbarHeight, calendarTopMargin: toolbarHeight),
+          appBar: const TodayAppBar(
+              preferredSizeHeight: Dimension.toolbarHeight, calendarTopMargin: Dimension.toolbarHeight),
           body: LayoutBuilder(builder: (context, constraints) {
             return SlidingUpPanel(
               bodyHeight: constraints.maxHeight,
               slideDirection: SlideDirection.down,
               controller: panelController,
               maxHeight: 280,
-              minHeight: todayViewTopMargin,
+              minHeight: Dimension.todayViewTopMargin,
               defaultPanelState: PanelState.closed,
               panel: ValueListenableBuilder(
                 valueListenable: calendarOffsetNotifier,
                 builder: (context, value, child) {
                   return Container(
                     color: Colors.white,
-                    child: const TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        TodayAppBarCalendar(calendarFormat: CalendarFormatState.month),
+                        AnimatedLinearProgressIndicator(),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -129,19 +155,24 @@ class _TodayViewState extends State<TodayView> {
               onPanelOpened: () {
                 context.read<TodayCubit>().panelOpened();
               },
-              collapsed: const Material(
+              collapsed: Material(
                 color: Colors.white,
-                child: TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    TodayAppBarCalendar(calendarFormat: CalendarFormatState.week),
+                    AnimatedLinearProgressIndicator()
+                  ],
+                ),
               ),
               body: Container(
-                margin: const EdgeInsets.only(top: todayViewTopMargin),
+                margin: const EdgeInsets.only(top: Dimension.todayViewTopMargin),
                 child: Stack(
                   children: [
                     RefreshIndicator(
                       backgroundColor: ColorsExt.background(context),
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
-                        NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
                       },
                       child: SlidableAutoCloseBehavior(
                         child: ListView(
@@ -150,17 +181,17 @@ class _TodayViewState extends State<TodayView> {
                           padding: EdgeInsets.zero,
                           children: [
                             TaskList(
-                              key: const ObjectKey("todos"),
+                              key: Key("todos${todos.isNotEmpty ? todos[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: todos,
-                              sorting: TaskListSorting.dateAscending,
+                              sorting: TaskListSorting.sortingDescending,
                               visible: context.watch<TodayCubit>().state.todosListOpen,
                               showLabel: true,
                               showPlanInfo: false,
                               header: TodayHeader(
                                 t.today.toDos,
-                                tasks: todos,
+                                tasksLenght: todos.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openTodoList();
                                 },
@@ -168,7 +199,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("pinned"),
+                              key: Key("pinned${pinned.isNotEmpty ? pinned[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: pinned,
@@ -178,7 +209,7 @@ class _TodayViewState extends State<TodayView> {
                               sorting: TaskListSorting.dateAscending,
                               header: TodayHeader(
                                 t.today.pinnedInCalendar,
-                                tasks: pinned,
+                                tasksLenght: pinned.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openPinnedList();
                                 },
@@ -186,7 +217,7 @@ class _TodayViewState extends State<TodayView> {
                               ),
                             ),
                             TaskList(
-                              key: const ObjectKey("completed"),
+                              key: Key("completed${completed.isNotEmpty ? completed[0].id : ''}"),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               tasks: completed,
@@ -196,14 +227,38 @@ class _TodayViewState extends State<TodayView> {
                               showPlanInfo: false,
                               header: TodayHeader(
                                 t.today.done,
-                                tasks: completed,
+                                tasksLenght: completed.length,
                                 onClick: () {
                                   context.read<TodayCubit>().openCompletedList();
                                 },
                                 listOpened: context.watch<TodayCubit>().state.completedListOpen,
                               ),
                             ),
-                            const SizedBox(height: 100)
+                            if (todos.isEmpty && pinned.isEmpty && !context.watch<TodayCubit>().state.completedListOpen)
+                              Column(
+                                children: [
+                                  const SizedBox(height: Dimension.padding),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.only(top: Dimension.paddingXXL, bottom: Dimension.paddingS),
+                                    child: lastTaskDoneAt != null &&
+                                            lastTaskDoneAt.difference(DateTime.now().toUtc()).inSeconds.abs() < 1 &&
+                                            (!DateUtils.isSameDay(lastDayTodayZero, DateTime.now().toUtc()) ||
+                                                lastDayTodayZero == null)
+                                        ? _todayEmptyAnimation(play: true)
+                                        : _todayEmptyAnimation(play: false),
+                                  ),
+                                  const SizedBox(height: Dimension.paddingS),
+                                  Text(
+                                    'Good job! All done',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(color: ColorsExt.grey900(context)),
+                                  )
+                                ],
+                              ),
+                            const SizedBox(height: Dimension.paddingXXL)
                           ],
                         ),
                       ),
@@ -211,7 +266,7 @@ class _TodayViewState extends State<TodayView> {
                     Builder(
                       builder: (context) {
                         if (tasksCubit.state.loading) {
-                          return const FirstSyncProgressToday();
+                          return const FirstSyncProgress();
                         } else {
                           return const SizedBox();
                         }
@@ -222,6 +277,21 @@ class _TodayViewState extends State<TodayView> {
               ),
             );
           }),
+        ));
+  }
+
+  SizedBox _todayEmptyAnimation({required bool play}) {
+    if (play) {
+      _controller.play();
+      context.read<TasksCubit>().setLastDayTodayZero();
+    }
+
+    return SizedBox(
+        height: 125,
+        width: 125,
+        child: AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: _controller.value.isInitialized ? VideoPlayer(_controller) : Container(),
         ));
   }
 }

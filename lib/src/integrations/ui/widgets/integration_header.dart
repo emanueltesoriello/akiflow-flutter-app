@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
-import 'package:mobile/common/style/theme.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
 
 class IntegrationDetailsHeader extends StatelessWidget {
@@ -22,16 +22,16 @@ class IntegrationDetailsHeader extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: 62, maxHeight: 70),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: ColorsExt.grey5(context)),
+        borderRadius: BorderRadius.circular(Dimension.radius),
+        border: Border.all(color: ColorsExt.grey200(context)),
         color: ColorsExt.background(context),
       ),
       margin: const EdgeInsets.all(1),
       child: Row(
         children: [
-          const SizedBox(width: 16),
+          const SizedBox(width: Dimension.padding),
           SizedBox(width: 32, height: 32, child: SvgPicture.asset(TaskExt.iconFromConnectorId(connectorId))),
-          const SizedBox(width: 16),
+          const SizedBox(width: Dimension.padding),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -41,32 +41,29 @@ class IntegrationDetailsHeader extends StatelessWidget {
                   child: Text(
                     t.settings.integrations.gmail.title,
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: ColorsExt.grey2(context),
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: Dimension.paddingXS),
                 Row(
                   children: [
                     Visibility(
                       visible: isActive,
                       replacement: const SizedBox(),
                       child: CircleAvatar(
-                        radius: 5,
-                        backgroundColor: ColorsExt.green(context),
+                        radius: Dimension.radiusS,
+                        backgroundColor: ColorsExt.yorkGreen400(context),
                       ),
                     ),
                     Flexible(
-                        child: Text(
-                      identifier,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey3(context),
-                        fontSize: 13,
+                      child: Text(
+                        identifier,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey600(context)),
                       ),
-                    )),
+                    ),
                   ],
                 )
               ],

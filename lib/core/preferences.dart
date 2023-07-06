@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class PreferencesRepository {
   Future<void> clear();
@@ -14,12 +16,7 @@ abstract class PreferencesRepository {
   User? get user;
 
   bool get inboxNoticeHidden;
-
-  bool get availabilitiesNoticeHidden;
-
   Future<void> setInboxNoticeHidden(bool value);
-
-  Future<void> setAvailabilitiesNoticeHidden(bool value);
 
   DateTime? get lastAccountsSyncAt;
   Future<void> setLastAccountsSyncAt(DateTime? value);
@@ -40,6 +37,12 @@ abstract class PreferencesRepository {
 
   DateTime? get lastEventsSyncAt;
   Future<void> setLastEventsSyncAt(DateTime? value);
+
+  DateTime? get lastEventModifiersSyncAt;
+  Future<void> setLastEventModifiersSyncAt(DateTime? value);
+
+  DateTime? get lastContactsSyncAt;
+  Future<void> setLastContactsSyncAt(DateTime? value);
 
   DateTime? get lastDocsSyncAt;
   Future<void> setLastDocsSyncAt(DateTime? value);
@@ -63,6 +66,24 @@ abstract class PreferencesRepository {
   bool get reconnectPageSkipped;
   Future<void> setReconnectPageSkipped(bool value);
 
+  int get calendarView;
+  Future<void> setCalendarView(int calendarView);
+
+  bool get isCalendarThreeDays;
+  Future<void> setIsCalendarThreeDays(bool isCalendarThreeDays);
+
+  bool get isCalendarWeekendHidden;
+  Future<void> setIsCalendarWeekendHidden(bool isCalendarWeekendHidden);
+
+  bool get areDeclinedEventsHidden;
+  Future<void> setAreDeclinedEventsHidden(bool areDeclinedEventsHidden);
+
+  bool get areCalendarTasksHidden;
+  Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden);
+
+  bool get groupOverlappingTasks;
+  Future<void> setGroupOverlappingTasks(bool groupOverlappingTasks);
+
   NextTaskNotificationsModel get nextTaskNotificationSetting;
   Future<void> setNextTaskNotificationSetting(NextTaskNotificationsModel value);
 
@@ -72,8 +93,44 @@ abstract class PreferencesRepository {
   bool get nextTaskNotificationSettingEnabled;
   Future<void> setNextTaskNotificationSettingEnabled(bool value);
 
+  NextEventNotificationsModel get nextEventNotificationSetting;
+  Future<void> setNextEventNotificationSetting(NextEventNotificationsModel value);
+
+  bool get nextEventNotificationSettingEnabled;
+  Future<void> setNextEventNotificationSettingEnabled(bool value);
+
   bool get dailyOverviewNotificationTimeEnabled;
   Future<void> seDailyOverviewNotificationTime(bool value);
+
+  bool get taskCompletedSoundEnabledMobile;
+  Future<void> setTaskCompletedSoundEnabledMobile(bool value);
+
+  int get timeFormat;
+  Future<void> setTimeFormat(int value);
+
+  bool get timeFormatChanged;
+  Future<void> setTimeFormatChanged(bool value);
+
+  String get deviceUUID;
+  Future<void> setDeviceUUID(String value);
+
+  int get recurringBackgroundSyncCounter;
+  Future<void> setRecurringBackgroundSyncCounter(int value);
+
+  int get recurringNotificationsSyncCounter;
+  Future<void> setRecurringNotificationsSyncCounter(int value);
+
+  String get getLastSavedTimeZone;
+  Future<void> setLastSavedTimeZone(String value);
+
+  DateTime? get lastTaskDoneAt;
+  Future<void> setLastTaskDoneAt(DateTime? value);
+
+  DateTime? get lastDayInboxZero;
+  Future<void> setLastDayInboxZero(DateTime? value);
+
+  DateTime? get lastDayTodayZero;
+  Future<void> setDayTodayZero(DateTime? value);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
@@ -214,6 +271,32 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
+  DateTime? get lastEventModifiersSyncAt {
+    String? value = _prefs.getString("lastEventModifiersSyncAt");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastEventModifiersSyncAt(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastEventModifiersSyncAt", value.toIso8601String());
+    }
+  }
+
+  @override
+  DateTime? get lastContactsSyncAt {
+    String? value = _prefs.getString("lastContactsSyncAt");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastContactsSyncAt(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastContactsSyncAt", value.toIso8601String());
+    }
+  }
+
+  @override
   DateTime? get lastDocsSyncAt {
     String? value = _prefs.getString("lastDocsSyncAt");
     return value == null ? null : DateTime.parse(value);
@@ -301,6 +384,66 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
+  int get calendarView {
+    return _prefs.getInt("calendarView") ?? 2;
+  }
+
+  @override
+  Future<void> setCalendarView(int calendarView) async {
+    await _prefs.setInt("calendarView", calendarView);
+  }
+
+  @override
+  bool get isCalendarThreeDays {
+    return _prefs.getBool("isCalendarThreeDays") ?? false;
+  }
+
+  @override
+  Future<void> setIsCalendarThreeDays(bool isCalendarThreeDays) async {
+    await _prefs.setBool("isCalendarThreeDays", isCalendarThreeDays);
+  }
+
+  @override
+  bool get isCalendarWeekendHidden {
+    return _prefs.getBool("isCalendarWeekendHidden") ?? false;
+  }
+
+  @override
+  Future<void> setIsCalendarWeekendHidden(bool isCalendarWeekendHidden) async {
+    await _prefs.setBool("isCalendarWeekendHidden", isCalendarWeekendHidden);
+  }
+
+  @override
+  bool get areDeclinedEventsHidden {
+    return _prefs.getBool("areDeclinedEventsHidden") ?? false;
+  }
+
+  @override
+  Future<void> setAreDeclinedEventsHidden(bool areDeclinedEventsHidden) async {
+    await _prefs.setBool("areDeclinedEventsHidden", areDeclinedEventsHidden);
+  }
+
+  @override
+  bool get areCalendarTasksHidden {
+    return _prefs.getBool("areCalendarTasksHidden") ?? false;
+  }
+
+  @override
+  Future<void> setAreCalendarTasksHidden(bool areCalendarTasksHidden) async {
+    await _prefs.setBool("areCalendarTasksHidden", areCalendarTasksHidden);
+  }
+
+  @override
+  bool get groupOverlappingTasks {
+    return _prefs.getBool("groupOverlappingTasks") ?? true;
+  }
+
+  @override
+  Future<void> setGroupOverlappingTasks(bool groupOverlappingTasks) async {
+    await _prefs.setBool("groupOverlappingTasks", groupOverlappingTasks);
+  }
+
+  @override
   NextTaskNotificationsModel get nextTaskNotificationSetting {
     return NextTaskNotificationsModel.fromMap(
       jsonDecode(_prefs.getString("nextTaskNotificationSettingValue") ?? '{}'),
@@ -342,6 +485,31 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   }
 
   @override
+  bool get nextEventNotificationSettingEnabled {
+    return _prefs.getBool("nextEventNotificationSettingEnabled") ?? true;
+  }
+
+  @override
+  Future<void> setNextEventNotificationSettingEnabled(bool value) async {
+    await _prefs.setBool("nextEventNotificationSettingEnabled", value);
+  }
+
+  @override
+  NextEventNotificationsModel get nextEventNotificationSetting {
+    return NextEventNotificationsModel.fromMap(
+      jsonDecode(_prefs.getString("nextEventNotificationSettingValue") ?? '{}'),
+    );
+  }
+
+  @override
+  Future<void> setNextEventNotificationSetting(NextEventNotificationsModel value) async {
+    await _prefs.setString(
+      "nextEventNotificationSettingValue",
+      jsonEncode(NextEventNotificationsModel.toMap(value)),
+    );
+  }
+
+  @override
   bool get dailyOverviewNotificationTimeEnabled {
     return _prefs.getBool("dailyOverviewNotificationTimeEnabled") ?? true;
   }
@@ -349,5 +517,123 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   @override
   Future<void> seDailyOverviewNotificationTime(bool value) async {
     await _prefs.setBool("dailyOverviewNotificationTimeEnabled", value);
+  }
+
+  @override
+  Future<void> setTaskCompletedSoundEnabledMobile(bool value) async {
+    await _prefs.setBool("taskCompletedSoundEnabledMobile", value);
+  }
+
+  @override
+  bool get taskCompletedSoundEnabledMobile {
+    return _prefs.getBool("taskCompletedSoundEnabledMobile") ?? true;
+  }
+
+  @override
+  int get timeFormat {
+    return _prefs.getInt("timeFormat") ?? -1;
+  }
+
+  @override
+  Future<void> setTimeFormat(int value) async {
+    await _prefs.setInt("timeFormat", value);
+  }
+
+  @override
+  bool get timeFormatChanged {
+    return _prefs.getBool("timeFormatChanged") ?? false;
+  }
+
+  @override
+  Future<void> setTimeFormatChanged(bool value) async {
+    await _prefs.setBool("timeFormatChanged", value);
+  }
+
+  @override
+  String get deviceUUID {
+    String? uuid = _prefs.getString("deviceUUID");
+
+    if (uuid == null) {
+      uuid = const Uuid().v4();
+
+      _prefs.setString("deviceUUID", uuid);
+      return uuid;
+    } else {
+      return uuid;
+    }
+  }
+
+  @override
+  Future<void> setDeviceUUID(String value) async {
+    await _prefs.setString("deviceUUID", value);
+  }
+
+  @override
+  int get recurringBackgroundSyncCounter {
+    return _prefs.getInt("recurring_background_sync_counter") ?? 0;
+  }
+
+  @override
+  Future<void> setRecurringBackgroundSyncCounter(int value) async {
+    await _prefs.setInt("recurring_background_sync_counter", value);
+  }
+
+  @override
+  int get recurringNotificationsSyncCounter {
+    return _prefs.getInt("recurring_notifications_sync_counter") ?? 0;
+  }
+
+  @override
+  Future<void> setRecurringNotificationsSyncCounter(int value) async {
+    await _prefs.setInt("recurring_notifications_sync_counter", value);
+  }
+
+  @override
+  String get getLastSavedTimeZone {
+    return _prefs.getString("last_saved_time_zone") ?? "";
+  }
+
+  @override
+  Future<void> setLastSavedTimeZone(String value) async {
+    await _prefs.setString("last_saved_time_zone", value);
+  }
+
+  @override
+  DateTime? get lastDayInboxZero {
+    String? value = _prefs.getString("lastDayInboxZero");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastDayInboxZero(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastDayInboxZero", value.toIso8601String());
+    }
+  }
+
+  @override
+  DateTime? get lastDayTodayZero {
+    String? value = _prefs.getString("lastDayTodayZero");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setDayTodayZero(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastDayTodayZero", value.toIso8601String());
+    }
+  }
+
+  @override
+  DateTime? get lastTaskDoneAt {
+    String? value = _prefs.getString("lastTaskDoneAt");
+    return value == null ? null : DateTime.parse(value);
+  }
+
+  @override
+  Future<void> setLastTaskDoneAt(DateTime? value) async {
+    if (value != null) {
+      await _prefs.setString("lastTaskDoneAt", value.toIso8601String());
+    }
   }
 }

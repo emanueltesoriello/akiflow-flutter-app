@@ -36,10 +36,12 @@ class NavItem extends StatelessWidget {
             context.read<MainCubit>().changeHomeView(homeViewType!);
 
             if (homeViewType == HomeViewType.today) {
-              context.read<TodayCubit>().onDateSelected(DateTime.now());
+              DateTime now = DateTime.now();
+              context.read<TodayCubit>().onDateSelected(now);
             }
           } else {
             showCupertinoModalBottomSheet(
+              duration: const Duration(milliseconds: 300),
               context: context,
               builder: (context) => SettingsModal(topPadding: topPadding),
             );
@@ -66,11 +68,12 @@ class NavItem extends StatelessWidget {
                       ),
                     )),
                     Flexible(
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color(context)),
-                      ),
+                      child: Text(title,
+                          maxLines: 1,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500, color: color(context))),
                     ),
                   ],
                 ),
@@ -85,9 +88,9 @@ class NavItem extends StatelessWidget {
 
   Color color(BuildContext context) {
     if (active) {
-      return ColorsExt.akiflow(context);
+      return ColorsExt.akiflow500(context);
     } else {
-      return ColorsExt.grey2(context);
+      return ColorsExt.grey800(context);
     }
   }
 }

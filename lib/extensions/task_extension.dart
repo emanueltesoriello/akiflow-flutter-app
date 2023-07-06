@@ -1,14 +1,14 @@
-import 'dart:io';
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/background_service.dart';
-import 'package:mobile/src/base/ui/cubit/notifications/notifications_cubit.dart';
+import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -19,8 +19,9 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurr
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/doc/asana_doc.dart';
 import 'package:models/doc/click_up_doc.dart';
-import 'package:models/doc/doc.dart';
+import 'package:models/doc/github_doc.dart';
 import 'package:models/doc/gmail_doc.dart';
+import 'package:models/doc/jira_doc.dart';
 import 'package:models/doc/notion_doc.dart';
 import 'package:models/doc/slack_doc.dart';
 import 'package:models/doc/todoist_doc.dart';
@@ -30,7 +31,6 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:mobile/core/preferences.dart';
 
 enum TaskStatusType {
@@ -103,11 +103,20 @@ extension TaskStatusTypeExt on TaskStatusType {
 
 extension TaskExt on Task {
   bool isSameDateOf(DateTime ofDate) {
-    if (date != null) {
+    ofDate = DateTime(
+        ofDate.year, ofDate.month, ofDate.day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second);
+
+    if (datetime != null) {
+      DateTime selectedLocalDate = ofDate;
+      DateTime dateParsed = DateTime.parse(datetime!);
+
+      return dateParsed.toLocal().day == selectedLocalDate.day &&
+          dateParsed.toLocal().month == selectedLocalDate.month &&
+          dateParsed.toLocal().year == selectedLocalDate.year;
+    } else if (date != null) {
       DateTime dateParsed = DateTime.parse(date!);
       return dateParsed.day == ofDate.day && dateParsed.month == ofDate.month && dateParsed.year == ofDate.year;
     }
-
     return false;
   }
 
@@ -229,8 +238,8 @@ extension TaskExt on Task {
   String get internalDateFormatted {
     DateTime? internalDate;
 
-    if (doc?.value?.internalDate != null) {
-      int internalDateAsMilliseconds = int.parse(doc!.value!.internalDate!);
+    if (doc?.internalDate != null) {
+      int internalDateAsMilliseconds = int.parse(doc!.internalDate!);
       internalDate = DateTime.fromMillisecondsSinceEpoch(internalDateAsMilliseconds).toLocal();
     }
 
@@ -294,6 +303,10 @@ extension TaskExt on Task {
           return RecurrenceModalType.everyWeekday;
         } else if (rule.frequency == Frequency.yearly && rule.interval == null) {
           return RecurrenceModalType.everyYearOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && rule.interval == null && !rule.hasByMonthDays) {
+          return RecurrenceModalType.everyMonthOnThisDay;
+        } else if (rule.frequency == Frequency.monthly && (rule.hasByMonthDays || rule.hasBySetPositions)) {
+          return RecurrenceModalType.everyLastDayOfTheMonth;
         } else if (rule.frequency == Frequency.weekly && rule.interval == null) {
           return RecurrenceModalType.everyCurrentDay;
         } else if (rule.interval != null || rule.byWeekDays.length > 1) {
@@ -439,12 +452,11 @@ extension TaskExt on Task {
     return null;
   }
 
-  String computedIcon(Doc? doc) {
+  String computedIcon() {
     if (connectorId != null) {
       return iconFromConnectorId(connectorId?.value);
-    } else {
-      return iconFromConnectorId(doc?.connectorId);
     }
+    return '';
   }
 
   bool get isDailyGoal {
@@ -458,39 +470,41 @@ extension TaskExt on Task {
   static String iconFromConnectorId(String? connectorId) {
     switch (connectorId) {
       case "asana":
-        return "assets/images/icons/asana/asana.svg";
+        return Assets.images.icons.asana.asanaSVG;
       case "clickup":
-        return "assets/images/icons/clickup/clickup.svg";
+        return Assets.images.icons.clickup.clickupSVG;
       case "dropbox":
-        return "assets/images/icons/dropbox/dropbox.svg";
+        return Assets.images.icons.dropbox.dropboxSVG;
+      case "github":
+        return Assets.images.icons.github.githubSVG;
       case "google":
-        return "assets/images/icons/google/google.svg";
+        return Assets.images.icons.google.calendarSVG;
       case "gmail":
-        return "assets/images/icons/google/gmail.svg";
+        return Assets.images.icons.google.gmailSVG;
       case "jira":
-        return "assets/images/icons/jira/jira.svg";
+        return Assets.images.icons.jira.jiraSVG;
       case "skype":
-        return "assets/images/icons/skype/skype.svg";
+        return Assets.images.icons.skype.skypeSVG;
       case "teams":
-        return "assets/images/icons/teams/teams.svg";
+        return Assets.images.icons.teams.teamsSVG;
       case "notion":
-        return "assets/images/icons/notion/notion.svg";
+        return Assets.images.icons.notion.notionSVG;
       case "slack":
-        return "assets/images/icons/slack/slack.svg";
+        return Assets.images.icons.slack.slackSVG;
       case "superhuman":
-        return "assets/images/icons/superhuman/superhuman-grey-dark.svg";
+        return Assets.images.icons.superhuman.superhumanGreyDarkSVG;
       case "todoist":
-        return "assets/images/icons/todoist/todoist.svg";
+        return Assets.images.icons.todoist.todoistSVG;
       case "trello":
-        return "assets/images/icons/trello/trello.svg";
+        return Assets.images.icons.trello.trelloSVG;
       case "twitter":
-        return "assets/images/icons/twitter/twitter.svg";
+        return Assets.images.icons.twitter.twitterSVG;
       case "zapier":
-        return "assets/images/icons/zapier/zapier.svg";
+        return Assets.images.icons.zapier.zapierSVG;
       case "zoom":
-        return "assets/images/icons/zoom/zoom.svg";
+        return Assets.images.icons.zoom.zoomSVG;
       default:
-        return "assets/images/icons/_common/info.svg";
+        return Assets.images.icons.common.infoSVG;
     }
   }
 
@@ -507,8 +521,13 @@ extension TaskExt on Task {
         (askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete);
   }
 
-  static bool hasDataChanges({required Task original, required Task updated}) {
-    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(original: original, updated: updated);
+  static bool hasDataChanges({
+    required Task original,
+    required Task updated,
+    bool includeListIdAndSectionId = true,
+  }) {
+    bool askEditThisOrFutureTasks = TaskExt.hasEditedData(
+        original: original, updated: updated, includeListIdAndSectionId: includeListIdAndSectionId);
     bool hasEditedTimings = TaskExt.hasEditedTimings(original: original, updated: updated);
     bool hasEditedCalendar = TaskExt.hasEditedCalendar(original: original, updated: updated);
     bool hasEditedDelete = TaskExt.hasEditedDelete(original: original, updated: updated);
@@ -516,15 +535,15 @@ extension TaskExt on Task {
     return askEditThisOrFutureTasks || hasEditedTimings || hasEditedCalendar || hasEditedDelete;
   }
 
-  static bool hasEditedData({required Task original, required Task updated}) {
+  static bool hasEditedData({required Task original, required Task updated, bool includeListIdAndSectionId = true}) {
     return original.title != updated.title ||
         original.priority != updated.priority ||
         original.dailyGoal != (updated.dailyGoal != null ? updated.dailyGoal!.toInt() : null) ||
         (original.eventLockInCalendar != updated.eventLockInCalendar) ||
         original.duration != updated.duration ||
         original.description != updated.description ||
-        original.listId != updated.listId ||
-        original.sectionId != updated.sectionId ||
+        (original.listId != updated.listId && includeListIdAndSectionId) ||
+        (original.sectionId != updated.sectionId && includeListIdAndSectionId) ||
         original.dueDate != updated.dueDate ||
         ((original.links ?? []).length != (updated.links ?? []).length ||
             (original.links ?? []).any((element) => !(updated.links ?? []).contains(element)));
@@ -543,6 +562,14 @@ extension TaskExt on Task {
 
   static bool hasEditedDelete({required Task original, required Task updated}) {
     return original.deletedAt != updated.deletedAt;
+  }
+
+  static bool hasEditedListId({required Task original, required Task updated}) {
+    return original.listId != updated.listId;
+  }
+
+  static bool hasEditedSectionId({required Task original, required Task updated}) {
+    return original.sectionId != updated.sectionId;
   }
 
   static bool hasEditedCalendar({required Task original, required Task updated}) {
@@ -726,60 +753,38 @@ extension TaskExt on Task {
         updatedTask.listId != null;
   }
 
-  static Doc _fromBuiltinDoc(Task task) {
-    return Doc(
-      taskId: task.id,
-      title: task.title,
-      description: task.description,
-      connectorId: task.connectorId?.value,
-      originId: task.originId?.value,
-      accountId: task.originAccountId?.value,
-      url: task.doc?.value?.url,
-      localUrl: task.doc?.value?.localUrl,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-      deletedAt: task.deletedAt,
-      globalUpdatedAt: task.globalUpdatedAt,
-      globalCreatedAt: task.globalCreatedAt,
-      remoteUpdatedAt: task.remoteUpdatedAt,
-      content: task.doc?.value?.content,
-    );
-  }
-
-  Doc? computedDoc(Doc? doc) {
-    String? connectorId = doc?.connectorId ?? this.connectorId?.value;
+  dynamic computedDoc() {
+    String? connectorId = this.connectorId?.value;
 
     if (connectorId == null) {
       return null;
     }
-
-    doc = doc ?? _fromBuiltinDoc(this);
-
-    switch (connectorId) {
-      case "asana":
-        return AsanaDoc(doc);
-      case "clickup":
-        return ClickupDoc(doc);
-      case "gmail":
-        return GmailDoc(doc);
-      case "notion":
-        return NotionDoc(doc);
-      case "slack":
-        if (this.doc != null) {
-          return SlackDoc(_fromBuiltinDoc(this));
-        } else {
-          return SlackDoc(doc);
-        }
-      case "todoist":
-        if (this.doc != null) {
-          return TodoistDoc(_fromBuiltinDoc(this));
-        } else {
-          return TodoistDoc(doc);
-        }
-      case "trello":
-        return TrelloDoc(doc);
-      default:
-        return null;
+    try {
+      switch (connectorId) {
+        case "asana":
+          return AsanaDoc.fromMap(doc)..setTitle(title);
+        case "clickup":
+          return ClickupDoc.fromMap(doc)..setTitle(title);
+        case "github":
+          return GithubDoc.fromMap(doc)..setTitle(title);
+        case "gmail":
+          return GmailDoc.fromMap(doc)..setTitle(title);
+        case "jira":
+          return JiraDoc.fromMap(doc)..setTitle(title);
+        case "notion":
+          return NotionDoc.fromMap(doc)..setTitle(title);
+        case "slack":
+          return SlackDoc.fromMap(doc);
+        case "todoist":
+          return TodoistDoc.fromMap(doc)..setTitle(title);
+        case "trello":
+          return TrelloDoc.fromMap(doc)..setTitle(title);
+        default:
+          return null;
+      }
+    } catch (e) {
+      locator<SentryService>()
+          .addBreadcrumb(category: 'doc', message: 'Error computing doc for task: $id - message: $e');
     }
   }
 
@@ -787,8 +792,11 @@ extension TaskExt on Task {
     TasksCubit tasksCubit = context.read<TasksCubit>();
     SyncCubit syncCubit = context.read<SyncCubit>();
     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
-    await showCupertinoModalBottomSheet(
+    await showModalBottomSheet(
+      elevation: 0,
+      backgroundColor: ColorsExt.background(context),
       context: context,
+      isScrollControlled: true,
       builder: (context) => BlocProvider(
         create: (context) => editTaskCubit,
         child: const EditTaskModal(),
@@ -801,17 +809,33 @@ extension TaskExt on Task {
       return;
     }
 
-    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated)) {
-      showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => RecurringEditModal(
-                onlyThisTap: () {
-                  editTaskCubit.modalDismissed();
-                },
-                allTap: () {
-                  editTaskCubit.modalDismissed(updateAllFuture: true);
-                },
-              ));
+    bool hasEditedListIdOrSectionId = false;
+
+    if (hasEditedListId(original: original, updated: updated) ||
+        hasEditedSectionId(original: original, updated: updated)) {
+      print("hasEditedListId || hasEditedSectionId");
+      hasEditedListIdOrSectionId = true;
+      editTaskCubit.onListIdOrSectionIdChanges(original: original, updated: updated);
+    }
+
+    if (TaskExt.hasRecurringDataChanges(original: original, updated: updated) ||
+        (hasEditedListIdOrSectionId && updated.recurringId != null)) {
+      try {
+        await showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => RecurringEditModal(
+                  onlyThisTap: () {
+                    editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+                  },
+                  allTap: () {
+                    editTaskCubit.modalDismissed(
+                        updateAllFuture: true, hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+                  },
+                ));
+      } catch (e) {
+        print(e);
+        editTaskCubit.modalDismissed(hasEditedListIdOrSectionId: hasEditedListIdOrSectionId);
+      }
     } else {
       editTaskCubit.modalDismissed();
     }
@@ -819,16 +843,11 @@ extension TaskExt on Task {
     if (updated.isCompletedComputed != original.isCompletedComputed) {
       tasksCubit.handleDocAction([updated]);
     }
-    if (Platform.isAndroid) {
-      Workmanager().registerOneOffTask(scheduleNotificationsTaskKey, scheduleNotificationsTaskKey,
-          existingWorkPolicy: ExistingWorkPolicy.replace);
-    } else {
-      NotificationsCubit.scheduleNotificationsService(locator<PreferencesRepository>());
-    }
   }
 
-  Future<void> openLinkedContentUrl([Doc? doc]) async {
-    String? localUrl = doc?.localUrl ?? doc?.content?["local_url"] ?? content?["local_url"];
+  Future<void> openLinkedContentUrl([dynamic doc]) async {
+    String? localUrl =
+        doc is GmailDoc || doc is TrelloDoc || doc is JiraDoc || doc is GithubDoc ? doc.url : doc.localUrl;
 
     Uri uri = Uri.parse(localUrl ?? '');
 
@@ -848,6 +867,33 @@ extension TaskExt on Task {
       launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication).catchError((e) {
         print(e);
       });
+    }
+  }
+
+  playTaskDoneSound() {
+    AudioContext audioContext = const AudioContext(
+      iOS: AudioContextIOS(
+        category: AVAudioSessionCategory.ambient,
+        options: [
+          AVAudioSessionOptions.defaultToSpeaker,
+          AVAudioSessionOptions.mixWithOthers,
+        ],
+      ),
+      android: AudioContextAndroid(
+          contentType: AndroidContentType.sonification,
+          usageType: AndroidUsageType.assistanceSonification,
+          isSpeakerphoneOn: true,
+          audioFocus: null),
+    );
+    AudioPlayer.global.setGlobalAudioContext(audioContext);
+
+    if (!(done ?? false)) {
+      PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+      if (preferencesRepository.taskCompletedSoundEnabledMobile) {
+        final audioPlayer = AudioPlayer();
+        audioPlayer.play(
+            volume: 0.3, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
+      }
     }
   }
 }

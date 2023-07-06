@@ -14,13 +14,9 @@ import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({
     Key? key,
-    required this.labelStyle,
-    required this.bottomBarIconSize,
     required this.topPadding,
   }) : super(key: key);
 
-  final TextStyle labelStyle;
-  final double bottomBarIconSize;
   final double topPadding;
 
   @override
@@ -42,7 +38,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              height: bottomBarHeight,
+              height: Dimension.bottomBarHeight,
               child: BlocBuilder<MainCubit, MainCubitState>(
                 builder: (context, state) {
                   return Row(
@@ -51,11 +47,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
                     children: [
                       NavItem(
                         active: false,
-                        activeIconAsset: "assets/images/icons/_common/menu.svg",
+                        activeIconAsset: Assets.images.icons.common.menuSVG,
                         title: t.bottomBar.menu,
                         topPadding: topPadding,
                         badge: FutureBuilder<dynamic>(
-                            // future: Intercom.instance.unreadConversationCount(),
+                            //future: Intercom.instance.unreadConversationCount(),
                             builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return IconBadge(
@@ -67,7 +63,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       ),
                       NavItem(
                         active: active(HomeViewType.inbox, state.homeViewType),
-                        activeIconAsset: "assets/images/icons/_common/tray.svg",
+                        activeIconAsset: Assets.images.icons.common.traySVG,
                         title: t.bottomBar.inbox,
                         homeViewType: HomeViewType.inbox,
                         badge: IconBadge(List.from(taskState.inboxTasks).length),
@@ -83,10 +79,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
                         topPadding: topPadding,
                       ),
                       NavItem(
-                        active: active(HomeViewType.availability, state.homeViewType),
-                        activeIconAsset: Assets.images.icons.common.availabilitySVG,
-                        title: "Availability",
-                        homeViewType: HomeViewType.availability,
+                        active: active(HomeViewType.calendar, state.homeViewType),
+                        activeIconAsset: "assets/images/icons/_common/calendar.svg",
+                        title: t.bottomBar.calendar,
+                        homeViewType: HomeViewType.calendar,
                         topPadding: topPadding,
                       ),
                     ],

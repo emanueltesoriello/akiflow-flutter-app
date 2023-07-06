@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/task/slidable_sender.dart';
 import 'package:mobile/src/integrations/ui/cubit/integrations_cubit.dart';
@@ -36,60 +37,6 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        children: [
-          SafeArea(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.only(top: toolbarHeight, bottom: bottomBarHeight),
-            ),
-          ),
-          GestureDetector(
-            onPanUpdate: (details) {
-              swipeLeftToRight = details.delta.dx < 0 ? false : true;
-            },
-            onPanEnd: (details) {
-              if (swipeLeftToRight == null) {
-                return;
-              } else if (swipeLeftToRight!) {
-                back();
-              } else if (!swipeLeftToRight!) {
-                next();
-              }
-            },
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: SafeArea(
-                child: BlocBuilder<OnboardingCubit, OnboardingCubitState>(
-                  builder: (context, state) => Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: toolbarHeight + 10),
-                        child: Column(children: [
-                          _task(context, state.page),
-                          _boxInfoAndImage(context, state.page),
-                        ]),
-                      ),
-                      _controls(state.page, context),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Column _controls(int page, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +55,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
                   children: [
                     GestureDetector(
                       onTap: () => back(),
-                      child: SvgPicture.asset("assets/images/onboarding/arrow_left.svg",
+                      child: SvgPicture.asset(Assets.images.icons.onboarding.arrowLeftSVG,
                           width: 46, height: 46, color: Theme.of(context).scaffoldBackgroundColor),
                     ),
                   ],
@@ -120,7 +67,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
               visible: page != onboardingSteps + 1,
               child: GestureDetector(
                 onTap: () => next(),
-                child: SvgPicture.asset("assets/images/onboarding/arrow_right.svg",
+                child: SvgPicture.asset(Assets.images.icons.onboarding.arrowRightSVG,
                     width: 46, height: 46, color: Theme.of(context).scaffoldBackgroundColor),
               ),
             ),
@@ -130,7 +77,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
         Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: const EdgeInsets.only(top: 90, right: 16),
+            padding: const EdgeInsets.only(top: 90, right: Dimension.padding),
             child: TextButton(
                 onPressed: () {
                   context.read<OnboardingCubit>().skipAll();
@@ -173,22 +120,22 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
 
     switch (page) {
       case 0:
-        assetIcon = "assets/images/onboarding/onboarding_finger.svg";
+        assetIcon = Assets.images.icons.onboarding.fingerSVG;
         text = t.onboarding.longTapMultipleSelection;
         size = const Size(47, 57);
         break;
       case 1:
-        assetIcon = "assets/images/onboarding/finger_move.svg";
+        assetIcon = Assets.images.icons.onboarding.fingerMoveSVG;
         text = t.onboarding.swipeLeftMoreOption;
         size = const Size(47, 40);
         break;
       case 2:
-        assetIcon = "assets/images/onboarding/finger_long_move.svg";
+        assetIcon = Assets.images.icons.onboarding.fingerLongMoveSVG;
         text = t.onboarding.swipeMorePlanTask;
         size = const Size(66, 40);
         break;
       case 3:
-        assetIcon = "assets/images/onboarding/finger_move_invert.svg";
+        assetIcon = Assets.images.icons.onboarding.fingerMoveInvertSVG;
         text = t.onboarding.swipeRightToMarkAsDone;
         size = const Size(47, 40);
         break;
@@ -275,5 +222,59 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> with SingleTick
         context.read<IntegrationsCubit>().reconnectPageVisible(false);
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Stack(
+        children: [
+          SafeArea(
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(top: Dimension.toolbarHeight, bottom: Dimension.bottomBarHeight),
+            ),
+          ),
+          GestureDetector(
+            onPanUpdate: (details) {
+              swipeLeftToRight = details.delta.dx < 0 ? false : true;
+            },
+            onPanEnd: (details) {
+              if (swipeLeftToRight == null) {
+                return;
+              } else if (swipeLeftToRight!) {
+                back();
+              } else if (!swipeLeftToRight!) {
+                next();
+              }
+            },
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: SafeArea(
+                child: BlocBuilder<OnboardingCubit, OnboardingCubitState>(
+                  builder: (context, state) => Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: Dimension.toolbarHeight + 10),
+                        child: Column(children: [
+                          _task(context, state.page),
+                          _boxInfoAndImage(context, state.page),
+                        ]),
+                      ),
+                      _controls(state.page, context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

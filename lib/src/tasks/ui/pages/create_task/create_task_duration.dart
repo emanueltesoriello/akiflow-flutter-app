@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -12,7 +13,8 @@ import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 
 class CreateTaskDurationItem extends StatefulWidget {
-  const CreateTaskDurationItem({Key? key}) : super(key: key);
+  const CreateTaskDurationItem({Key? key, this.onDurationSelected}) : super(key: key);
+  final Function(String)? onDurationSelected;
 
   @override
   State<CreateTaskDurationItem> createState() => _CreateTaskDurationItemState();
@@ -39,7 +41,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+          padding: const EdgeInsets.all(Dimension.padding),
           child: Stack(
             children: [
               Align(
@@ -51,31 +53,32 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
 
                     String text = "${duration.inHours}h ${duration.inMinutes.remainder(60)}m";
 
-                    return Text(
-                      text,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: ColorsExt.grey2(context),
-                        fontSize: 15,
-                      ),
-                    );
+                    return Text(text,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: ColorsExt.grey800(context),
+                            ));
                   },
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  context.read<EditTaskCubit>().setDuration(_selectedDuration.value);
-                },
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: SvgPicture.asset(
-                    Assets.images.icons.common.checkmarkSVG,
-                    width: 24,
-                    height: 24,
-                    color: ColorsExt.akiflow(context),
-                  ),
-                ),
-              ),
+              ValueListenableBuilder(
+                  valueListenable: _selectedDuration,
+                  builder: (context, int selectedDuration, child) {
+                    return GestureDetector(
+                      onTap: () {
+                        context.read<EditTaskCubit>().setDuration(_selectedDuration.value, fromModal: true);
+                      },
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: SvgPicture.asset(
+                          Assets.images.icons.common.checkmarkSVG,
+                          width: Dimension.defaultIconSize,
+                          height: Dimension.defaultIconSize,
+                          color: ColorsExt.akiflow500(context),
+                        ),
+                      ),
+                    );
+                  })
             ],
           ),
         ),
@@ -84,8 +87,6 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
           builder: (context, int selectedDuration, child) {
             return SliderTheme(
               data: SliderTheme.of(context).copyWith(
-                //activeTrackColor: Colors.red,
-                //inactiveTrackColor: Colors.grey,
                 thumbShape: const CircleThumbShape(thumbRadius: 12),
               ),
               child: Slider(
@@ -93,7 +94,7 @@ class _CreateTaskDurationItemState extends State<CreateTaskDurationItem> {
                 min: 0,
                 max: 4,
                 divisions: 16,
-                thumbColor: ColorsExt.akiflow(context),
+                thumbColor: ColorsExt.akiflow500(context),
                 onChanged: (double value) {
                   _selectedDuration.value = (value * 3600).toInt();
                 },

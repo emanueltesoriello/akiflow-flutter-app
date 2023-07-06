@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
@@ -30,34 +31,18 @@ class TitleWidget extends StatelessWidget {
                 text,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  height: 1.3,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
-                      ? ColorsExt.grey3(context)
-                      : ColorsExt.grey1(context),
-                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      height: 1.3,
+                      fontWeight: FontWeight.w500,
+                      color: task.statusType == TaskStatusType.deleted || task.deletedAt != null
+                          ? ColorsExt.grey600(context)
+                          : ColorsExt.grey900(context),
+                    ),
               ),
             ),
-            isGoal(context),
           ],
         ),
       ),
     );
-  }
-
-  Widget isGoal(BuildContext context) {
-    if (task.isDailyGoal) {
-      return TagBox(
-        icon: "assets/images/icons/_common/target_active.svg",
-        isBig: true,
-        isSquare: true,
-        backgroundColor: Colors.transparent,
-        active: task.dailyGoal != null && task.dailyGoal == 1,
-      );
-    }
-
-    return const SizedBox();
   }
 }

@@ -6,13 +6,25 @@ extension AccountExt on Account {
     "akiflow",
     "google",
     "slack",
-    "todoist",
     "gmail",
-    "clickup",
     "notion",
+    "todoist",
     "asana",
+    "clickup",
+    "jira",
+    "github",
     "trello",
-    "zoom"
+    "zoom",
+  ];
+
+  static const List<String> settingsEnabled = [
+    "notion",
+    "todoist",
+    "asana",
+    "clickup",
+    "jira",
+    "github",
+    "trello",
   ];
 
   static const List<String> v3Accounts = ["gmail"];

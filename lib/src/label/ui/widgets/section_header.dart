@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/popup_menu_item.dart';
 
 enum SectionActionType { addTask, rename, delete }
@@ -33,26 +35,34 @@ class SectionHeaderItem extends StatelessWidget {
     return InkWell(
       onTap: onClick,
       child: Container(
-        height: 42,
         width: double.infinity,
-        padding: const EdgeInsets.only(left: 16),
+        padding: const EdgeInsets.only(left: Dimension.padding, top: Dimension.padding),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.akiflow(context))),
-            const SizedBox(width: 4),
-            Text("($taskCount)",
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ColorsExt.grey2_5(context))),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: ColorsExt.akiflow500(context),
+                  ),
+            ),
+            const SizedBox(width: Dimension.paddingXS),
+            Text(
+              "($taskCount)",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: ColorsExt.grey700(context),
+                  ),
+            ),
             const Spacer(),
             SvgPicture.asset(
-              listOpened
-                  ? "assets/images/icons/_common/chevron_up.svg"
-                  : "assets/images/icons/_common/chevron_down.svg",
-              color: ColorsExt.grey3(context),
-              width: 20,
-              height: 20,
+              listOpened ? Assets.images.icons.common.chevronUpSVG : Assets.images.icons.common.chevronDownSVG,
+              color: ColorsExt.grey600(context),
+              width: Dimension.chevronIconSize,
+              height: Dimension.chevronIconSize,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: Dimension.paddingS),
             Builder(builder: (context) {
               if (!showActionsMenu) {
                 return const SizedBox();
@@ -62,12 +72,13 @@ class SectionHeaderItem extends StatelessWidget {
                 data: Theme.of(context)
                     .copyWith(useMaterial3: false, popupMenuTheme: const PopupMenuThemeData(elevation: 4)),
                 child: PopupMenuButton<SectionActionType>(
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
                   padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
-                    "assets/images/icons/_common/ellipsis.svg",
-                    color: ColorsExt.grey3(context),
-                    width: 20,
-                    height: 20,
+                    Assets.images.icons.common.ellipsisSVG,
+                    color: ColorsExt.grey800(context),
+                    width: Dimension.defaultIconSize,
+                    height: Dimension.defaultIconSize,
                   ),
                   onSelected: (SectionActionType result) {
                     switch (result) {
@@ -86,11 +97,10 @@ class SectionHeaderItem extends StatelessWidget {
                     PopupMenuItem<SectionActionType>(
                       value: SectionActionType.addTask,
                       padding: EdgeInsets.zero,
-                      height: 40,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/plus_square.svg",
+                          iconAsset: Assets.images.icons.common.plusSquareSVG,
                           text: t.label.addTask,
                         ),
                       ),
@@ -98,11 +108,10 @@ class SectionHeaderItem extends StatelessWidget {
                     PopupMenuItem<SectionActionType>(
                       value: SectionActionType.rename,
                       padding: EdgeInsets.zero,
-                      height: 40,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/pencil.svg",
+                          iconAsset: Assets.images.icons.common.pencilSVG,
                           text: t.label.rename,
                         ),
                       ),
@@ -110,11 +119,10 @@ class SectionHeaderItem extends StatelessWidget {
                     PopupMenuItem<SectionActionType>(
                       value: SectionActionType.delete,
                       padding: EdgeInsets.zero,
-                      height: 40,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingSM),
                         child: PopupMenuCustomItem(
-                          iconAsset: "assets/images/icons/_common/trash.svg",
+                          iconAsset: Assets.images.icons.common.trashSVG,
                           text: t.label.delete,
                         ),
                       ),

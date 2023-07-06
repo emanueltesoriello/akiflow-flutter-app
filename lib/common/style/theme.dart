@@ -1,50 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
-
-/// Styles
-const double cardRadius = 10.0;
-const double cardElevation = 0.0;
-const double titleFontSize = 34.0;
-const double subtitleFontSize = 16.0;
-const double buttonFontSize = 18.0;
-const double buttonSubtitleFontSize = 16.0;
-const double buttonHeight = 60;
-
-/// Sizes
-const double maxWidth = 600;
-const double radius = 8;
-const double noticeRadius = 4;
-const double border = 1;
+import 'package:mobile/common/style/sizes.dart';
 
 /// Light Theme
 final ThemeData lightTheme = ThemeData.light().copyWith(
-  primaryColor: ColorsLight.akiflow,
-  primaryColorLight: ColorsLight.akiflow10,
-  backgroundColor: ColorsLight.white,
-  scaffoldBackgroundColor: ColorsLight.grey7,
+  primaryColor: ColorsLight.purple500,
+  primaryColorLight: ColorsLight.purple100,
+  scaffoldBackgroundColor: ColorsLight.grey50,
   appBarTheme: const AppBarTheme(
-    color: ColorsLight.white,
-    iconTheme: IconThemeData(color: ColorsLight.grey2, size: 30),
-    actionsIconTheme: IconThemeData(color: ColorsLight.grey2),
-    foregroundColor: ColorsLight.grey2,
-    titleTextStyle: TextStyle(color: ColorsLight.grey2, fontSize: 24, fontWeight: FontWeight.w500),
+    backgroundColor: ColorsLight.white,
+    iconTheme: IconThemeData(color: ColorsLight.grey800, size: 30),
+    actionsIconTheme: IconThemeData(color: ColorsLight.grey800),
+    foregroundColor: ColorsLight.grey800,
+    titleTextStyle: TextStyle(color: ColorsLight.grey800, fontSize: 24, fontWeight: FontWeight.w500),
   ),
   textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: ColorsLight.akiflow,
+    cursorColor: ColorsLight.purple500,
     selectionColor: ColorsLight.highlightColor,
-    selectionHandleColor: ColorsLight.akiflow,
+    selectionHandleColor: ColorsLight.purple500,
   ),
   textTheme: const TextTheme(
-    bodyText1: TextStyle(),
-    bodyText2: TextStyle(),
+    bodySmall: TextStyle(fontSize: 11.5),
+    bodyLarge: TextStyle(fontSize: 15.0),
+    bodyMedium: TextStyle(fontSize: 12.5),
+    titleMedium: TextStyle(fontSize: 17.0),
+    titleSmall: TextStyle(fontSize: 17.0),
   ).apply(
     fontFamily: "Inter",
-    bodyColor: ColorsLight.grey1,
-    displayColor: ColorsLight.grey1,
-  ),
-  colorScheme: ColorScheme.fromSwatch().copyWith(
-    primary: ColorsLight.akiflow,
-    secondary: ColorsLight.akiflow,
+    bodyColor: ColorsLight.grey900,
+    displayColor: ColorsLight.grey900,
   ),
   cardTheme: CardTheme(
     margin: EdgeInsets.zero,
@@ -53,16 +37,26 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       borderRadius: BorderRadius.circular(0),
     ),
   ),
-  checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.all(ColorsLight.akiflow)),
+  checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.all(ColorsLight.purple500)),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius),
+      foregroundColor: ColorsLight.purple500, shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimension.radius),
       ),
-      primary: ColorsLight.akiflow,
-      textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.akiflow),
+      textStyle: const TextStyle(fontWeight: FontWeight.w400, color: ColorsLight.purple500),
     ),
   ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+    textStyle: ThemeData().primaryTextTheme.labelLarge!.copyWith(fontSize: 17, color: ColorsLight.grey800),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimension.outlineBorderRadius)),
+    backgroundColor: ColorsLight.grey100,
+    side: const BorderSide(color: ColorsLight.grey300, width: 1),
+    minimumSize: const Size(
+      Dimension.minButtonWidth,
+      Dimension.minButtonHeight,
+    ),
+  )),
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: ZoomPageTransitionsBuilder(),
@@ -70,19 +64,19 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     },
   ),
   iconTheme: const IconThemeData(
-    color: ColorsLight.grey2,
+    color: ColorsLight.grey800,
   ),
-  dividerColor: ColorsLight.grey5,
-  dividerTheme: const DividerThemeData(color: ColorsLight.grey5, thickness: 1),
+  dividerColor: ColorsLight.grey200,
+  dividerTheme: const DividerThemeData(color: ColorsLight.grey200, thickness: 1),
   popupMenuTheme: const PopupMenuThemeData(
-    color: ColorsLight.grey7,
+    color: ColorsLight.grey50,
     textStyle: TextStyle(
       fontWeight: FontWeight.w500,
-      color: ColorsLight.grey2,
+      color: ColorsLight.grey800,
     ),
   ),
   sliderTheme: const SliderThemeData(
-    activeTrackColor: ColorsLight.akiflow,
+    activeTrackColor: ColorsLight.purple500,
     inactiveTrackColor: Color(0x33787880),
     trackShape: RoundedRectSliderTrackShape(),
     trackHeight: 4.0,
@@ -94,8 +88,14 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   ),
   useMaterial3: true,
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: ColorsLight.akiflow,
+    backgroundColor: ColorsLight.purple500,
   ),
+  colorScheme: ColorScheme.fromSwatch()
+      .copyWith(
+        primary: ColorsLight.purple500,
+        secondary: ColorsLight.purple500,
+      )
+      .copyWith(background: ColorsLight.white),
 );
 
 /// Dark Theme

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/no_scroll_behav.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -24,7 +25,7 @@ class LabelWidget extends StatelessWidget {
                     child: SingleChildScrollView(
                       physics: const ClampingScrollPhysics(),
                       child: Padding(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(Dimension.padding),
                         child: LabelsList(
                           showHeaders: false,
                           onSelect: (Label selected) {

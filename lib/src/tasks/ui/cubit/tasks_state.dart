@@ -37,11 +37,14 @@ class TasksCubitState extends Equatable {
   final List<Task> selectedDayTasks;
   final List<Task> labelTasks;
   final List<Task> fixedTodayTasks;
-  final List<Doc> docs;
+  final List<Task> calendarTasks;
   final List<UndoTask> queue;
   final Task? justCreatedTask;
   final bool tasksLoaded;
   final bool loading;
+  final DateTime? lastTaskDoneAt;
+  final DateTime? lastDayInboxZero;
+  final DateTime? lastDayTodayZero;
 
   int get todayCount =>
       fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore).toList().length;
@@ -51,11 +54,14 @@ class TasksCubitState extends Equatable {
     this.selectedDayTasks = const [],
     this.labelTasks = const [],
     this.fixedTodayTasks = const [],
-    this.docs = const [],
+    this.calendarTasks = const [],
     this.queue = const [],
     this.justCreatedTask,
     this.tasksLoaded = false,
     this.loading = false,
+    this.lastTaskDoneAt,
+    this.lastDayInboxZero,
+    this.lastDayTodayZero,
   });
 
   TasksCubitState copyWith({
@@ -63,22 +69,28 @@ class TasksCubitState extends Equatable {
     List<Task>? selectedDayTasks,
     List<Task>? labelTasks,
     List<Task>? fixedTodayTasks,
-    List<Doc>? docs,
+    List<Task>? calendarTasks,
     List<UndoTask>? queue,
     Nullable<Task?>? justCreatedTask,
     bool? tasksLoaded,
     bool? loading,
+    DateTime? lastTaskDoneAt,
+    DateTime? lastDayInboxZero,
+    DateTime? lastDayTodayZero,
   }) {
     return TasksCubitState(
       inboxTasks: inboxTasks ?? this.inboxTasks,
       selectedDayTasks: selectedDayTasks ?? this.selectedDayTasks,
       labelTasks: labelTasks ?? this.labelTasks,
       fixedTodayTasks: fixedTodayTasks ?? this.fixedTodayTasks,
-      docs: docs ?? this.docs,
+      calendarTasks: calendarTasks ?? this.calendarTasks,
       queue: queue ?? this.queue,
       justCreatedTask: justCreatedTask != null ? justCreatedTask.value : this.justCreatedTask,
       tasksLoaded: tasksLoaded ?? this.tasksLoaded,
       loading: loading ?? this.loading,
+      lastTaskDoneAt: lastTaskDoneAt ?? this.lastTaskDoneAt,
+      lastDayInboxZero: lastDayInboxZero ?? this.lastDayInboxZero,
+      lastDayTodayZero: lastDayTodayZero ?? this.lastDayTodayZero,
     );
   }
 
@@ -88,10 +100,13 @@ class TasksCubitState extends Equatable {
         selectedDayTasks,
         labelTasks,
         fixedTodayTasks,
-        docs,
+        calendarTasks,
         queue,
         justCreatedTask,
         tasksLoaded,
         loading,
+        lastTaskDoneAt,
+        lastDayInboxZero,
+        lastDayTodayZero,
       ];
 }

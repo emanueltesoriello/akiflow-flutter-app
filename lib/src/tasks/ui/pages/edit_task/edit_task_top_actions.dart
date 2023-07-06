@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/src/base/ui/widgets/task/plan_for_action.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_cupertino_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -90,48 +92,63 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
               }
             }
 
-            return TagBox(
-              icon: "assets/images/icons/_common/hourglass.svg",
-              backgroundColor:
-                  task.duration != null && task.duration != 0 ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-              active: task.duration != null && task.duration != 0,
-              isSquare: task.duration != null && task.duration != 0 ? false : true,
-              text: text,
-              isBig: true,
-              onPressed: () {
-                context.read<EditTaskCubit>().toggleDuration();
-              },
-            );
-          })),
-          const SizedBox(width: 8),
-          Builder(
-            builder: (context) {
-              bool enabled = updatedTask.recurrence != null && updatedTask.recurrence!.isNotEmpty;
-
+            bool hasDuration = task.duration != null && task.duration != 0;
+            return BlocBuilder<EditTaskCubit, EditTaskCubitState>(builder: (context, state) {
               return TagBox(
-                icon: "assets/images/icons/_common/repeat.svg",
-                backgroundColor: enabled ? ColorsExt.grey6(context) : ColorsExt.grey7(context),
-                active: enabled,
+                icon: Assets.images.icons.common.hourglassSVG,
+                foregroundColor: hasDuration ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                backgroundColor: hasDuration ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+                active: hasDuration,
+                isSquare: hasDuration ? false : true,
+                text: text,
                 isBig: true,
                 onPressed: () {
-                  var cubit = context.read<EditTaskCubit>();
-
-                  cubit.recurrenceTap();
-
                   showCupertinoModalBottomSheet(
                     context: context,
-                    builder: (context) => RecurrenceModal(
-                      onChange: (RecurrenceRule? rule) {
-                        cubit.setRecurrence(rule);
-                      },
-                      selectedRecurrence: updatedTask.recurrenceComputed,
-                      rule: updatedTask.ruleFromStringList,
+                    builder: (_) => DurationCupertinoModal(
+                      state: state,
+                      cubit: context.read<EditTaskCubit>(),
+                      onConfirm: (int duration) => context.read<EditTaskCubit>().setDuration(duration, fromModal: true),
                     ),
                   );
                 },
               );
-            },
-          ),
+            });
+          })),
+          const SizedBox(width: 8),
+          if (updatedTask.statusType == TaskStatusType.planned)
+            Builder(
+              builder: (context) {
+                bool enabled = updatedTask.recurrence != null && updatedTask.recurrence!.isNotEmpty;
+
+                return TagBox(
+                  icon: Assets.images.icons.common.repeatSVG,
+                  foregroundColor: enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                  backgroundColor: enabled ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+                  active: enabled,
+                  isBig: true,
+                  onPressed: () {
+                    var cubit = context.read<EditTaskCubit>();
+
+                    cubit.recurrenceTap();
+
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => RecurrenceModal(
+                        onChange: (RecurrenceRule? rule) {
+                          cubit.setRecurrence(rule);
+                        },
+                        selectedRecurrence: updatedTask.recurrenceComputed,
+                        rule: updatedTask.ruleFromStringList,
+                        taskDatetime: updatedTask.datetime != null
+                            ? DateTime.parse(updatedTask.datetime!)
+                            : DateTime.parse(updatedTask.date!),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
         ],
       ),
     );

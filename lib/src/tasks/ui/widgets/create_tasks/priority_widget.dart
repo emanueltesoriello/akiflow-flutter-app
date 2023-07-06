@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/separator.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 
@@ -25,7 +26,7 @@ class PriorityWidget extends StatelessWidget {
                     child: SingleChildScrollView(
                       physics: const ClampingScrollPhysics(),
                       child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(Dimension.paddingS),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -35,7 +36,6 @@ class PriorityWidget extends StatelessWidget {
                                 hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 1);
-                                  context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
                               PriorityItem(
@@ -44,8 +44,6 @@ class PriorityWidget extends StatelessWidget {
                                 hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 2);
-
-                                  context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
                               PriorityItem(
@@ -54,7 +52,6 @@ class PriorityWidget extends StatelessWidget {
                                 hint: "",
                                 onSelect: () {
                                   context.read<EditTaskCubit>().setPriority(null, value: 3);
-                                  context.read<EditTaskCubit>().toggleImportance();
                                 },
                               ),
                               state.updatedTask.priority != null && state.updatedTask.priority! > -1
@@ -64,7 +61,6 @@ class PriorityWidget extends StatelessWidget {
                                       hint: "",
                                       onSelect: () {
                                         context.read<EditTaskCubit>().removePriority();
-                                        context.read<EditTaskCubit>().toggleImportance();
                                       },
                                     )
                                   : const SizedBox(),
