@@ -7,6 +7,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/api/auth_api.dart';
 import 'package:mobile/core/api/client_api.dart';
@@ -67,10 +68,13 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
         _sentryService.addBreadcrumb(category: 'user', message: 'Fetching updates');
 
-        Map<String, dynamic>? settings = await _userApi.getSettings();
+        Map<String, dynamic>? remoteSettings = await _userApi.getSettings();
+        Map<String, dynamic>? localSettings = user.settings;
 
-        if (settings != null) {
-          user = user.copyWith(settings: settings);
+        if (remoteSettings != null) {
+          Map<String, dynamic>? mergedSettings =
+              UserSettingsUtils.compareRemoteWithLocal(remoteSettings: remoteSettings, localSettings: localSettings);
+          user = user.copyWith(settings: mergedSettings);
         }
 
         _preferencesRepository.saveUser(user);
@@ -219,6 +223,44 @@ class AuthCubit extends Cubit<AuthCubitState> {
     if (updated != null) {
       user = user.copyWith(settings: updated);
       _preferencesRepository.saveUser(user);
+    }
+  }
+
+  void updateSection({required String sectionName, required List<dynamic> section}) {
+    Map<String, dynamic>? settings = _preferencesRepository.user?.settings;
+
+    settings?[sectionName] = section;
+
+    User user = _preferencesRepository.user!;
+    user = user.copyWith(settings: settings);
+    _preferencesRepository.saveUser(user);
+
+    emit(state.copyWith(user: Nullable(user)));
+  }
+
+  dynamic getSettingBySectionAndKey({required String sectionName, required String key}) {
+    Map<String, dynamic>? settings = _preferencesRepository.user?.settings;
+    List<dynamic>? section = settings?[sectionName];
+
+    String desktopVersionKey = key.split('_').first;
+    bool settingFound = false;
+    print('HIDE WEEKEND split $desktopVersionKey');
+
+    if (section != null) {
+      for (Map<String, dynamic> element in section) {
+        print('HIDE WEEKEND elements $element');
+        if (element['key'] == key) {
+          settingFound = true;
+          return element['value'];
+        }
+      }
+      if (!settingFound) {
+        for (Map<String, dynamic> element in section) {
+          if (element['key'] == desktopVersionKey) {
+            return element['value'];
+          }
+        }
+      }
     }
   }
 }
