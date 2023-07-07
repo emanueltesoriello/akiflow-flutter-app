@@ -129,6 +129,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
     _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
 
+    _authCubit.updateUserSettings({
+      UserSettingsUtils.calendarSection: [setting]
+    });
+
     AnalyticsService.track("Changed calendar view", properties: {
       "mobile": true,
       "calendarView": state.isCalendarThreeDays ? "3-custom" : trackView,
@@ -150,6 +154,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
           newSetting: setting);
 
       _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
+
+      _authCubit.updateUserSettings({
+        UserSettingsUtils.calendarSection: [setting]
+      });
     }
   }
 
@@ -167,6 +175,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         newSetting: setting);
 
     _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
+
+    _authCubit.updateUserSettings({
+      UserSettingsUtils.calendarSection: [setting]
+    });
   }
 
   void setDeclinedEventsHidden(bool areDeclinedEventsHidden) {
@@ -183,6 +195,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         newSetting: setting);
 
     _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
+
+    _authCubit.updateUserSettings({
+      UserSettingsUtils.calendarSection: [setting]
+    });
   }
 
   void setCalendarTasksHidden(bool areCalendarTasksHidden) {
@@ -199,6 +215,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         newSetting: setting);
 
     _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
+
+    _authCubit.updateUserSettings({
+      UserSettingsUtils.calendarSection: [setting]
+    });
   }
 
   void setGroupOverlappingTasks(bool groupOverlappingTasks) {
@@ -215,6 +235,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         newSetting: setting);
 
     _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
+
+    _authCubit.updateUserSettings({
+      UserSettingsUtils.calendarSection: [setting]
+    });
   }
 
   void setNonWorkingDays() {

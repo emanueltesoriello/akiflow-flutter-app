@@ -211,18 +211,14 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   Future<void> updateUserSettings(Map<String, dynamic> settings) async {
-    User user = User.fromMap(state.user!.toMap());
-
-    user = user.copyWith(settings: settings);
-
-    emit(state.copyWith(user: Nullable(const User())));
-    emit(state.copyWith(user: Nullable(user)));
-
-    Map<String, dynamic>? updated = await _userApi.postSettings(settings);
+    String id = _preferencesRepository.deviceUUID;
+    Map<String, dynamic>? updated = await _userApi.postSettings(id, settings);
 
     if (updated != null) {
+      User user = _preferencesRepository.user!;
       user = user.copyWith(settings: updated);
       _preferencesRepository.saveUser(user);
+      emit(state.copyWith(user: Nullable(user)));
     }
   }
 
@@ -244,7 +240,6 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     String desktopVersionKey = key.split('_').first;
     bool settingFound = false;
-    print('HIDE WEEKEND split $desktopVersionKey');
 
     if (section != null) {
       for (Map<String, dynamic> element in section) {
@@ -254,7 +249,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
           return element['value'];
         }
       }
-      if (!settingFound) {
+      if (!settingFound && desktopVersionKey != 'view') {
         for (Map<String, dynamic> element in section) {
           if (element['key'] == desktopVersionKey) {
             return element['value'];

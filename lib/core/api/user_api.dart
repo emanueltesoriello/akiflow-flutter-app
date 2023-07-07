@@ -32,13 +32,13 @@ class UserApi extends ApiClient {
     }
   }
 
-  Future<Map<String, dynamic>?> postSettings(Map<String, dynamic> newSettings) async {
+  Future<Map<String, dynamic>?> postSettings(String id, Map<String, dynamic> newSettings) async {
     String json = jsonEncode({
+      "clientId": id,
       "settings": newSettings,
-      "isFirstLoad": false,
     });
 
-    Response responseRaw = await _httpClient.post(url, body: json);
+    Response responseRaw = await _httpClient.patch(Uri.parse("${Config.endpoint}/v4/user/settings"), body: json);
 
     Map<String, dynamic> response = jsonDecode(responseRaw.body);
 
