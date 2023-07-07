@@ -346,7 +346,6 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                     ),
                   ),
                 ),
-                const Separator(),
               ],
             ),
           ),

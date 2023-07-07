@@ -24,7 +24,7 @@ import '../views/month_view.dart';
 import '../views/timeline_view.dart';
 
 /// All day appointment views default height
-const double _kAllDayLayoutHeight = 60;
+const double _kAllDayLayoutHeight = 30;
 
 /// Holds the looping widget for calendar view(time slot, month, timeline and
 /// appointment views) widgets of calendar widget.
@@ -5532,7 +5532,7 @@ class _CalendarViewState extends State<_CalendarView>
   //// timeline header is used to implement the sticky view header in horizontal calendar view mode.
   late TimelineViewHeaderView _timelineViewHeader;
   _SelectionPainter? _selectionPainter;
-  double _allDayHeight = 0;
+  double _allDayHeight = 30;
   late double _timeIntervalHeight;
   final UpdateCalendarStateDetails _updateCalendarStateDetails =
       UpdateCalendarStateDetails();
@@ -5944,12 +5944,12 @@ class _CalendarViewState extends State<_CalendarView>
       return;
     }
 
-    _allDayHeight = 0;
+    _allDayHeight = 30;
     if (isCurrentView) {
-      _allDayHeight =
-          _updateCalendarStateDetails.allDayPanelHeight > _kAllDayLayoutHeight
-              ? _kAllDayLayoutHeight
-              : _updateCalendarStateDetails.allDayPanelHeight;
+      // _allDayHeight =
+      //     _updateCalendarStateDetails.allDayPanelHeight > _kAllDayLayoutHeight
+      //         ? _kAllDayLayoutHeight
+      //         : _updateCalendarStateDetails.allDayPanelHeight;
       _allDayHeight = _allDayHeight * _heightAnimation!.value;
     }
   }
@@ -10559,16 +10559,14 @@ class _ViewHeaderViewPainter extends CustomPainter {
           DateFormat(timeSlotViewSettings.dateFormat).format(currentDate);
       final bool isToday = isSameDate(currentDate, today);
       if (isToday) {
-        final Color? todayTextStyleColor = todayTextStyle != null
-            ? todayTextStyle!.color
-            : calendarTheme.todayTextStyle!.color;
+        final Color? todayTextStyleColor = todayHighlightColor;
         final Color? todayTextColor =
             CalendarViewHelper.getTodayHighlightTextColor(
                 todayHighlightColor, todayTextStyle, calendarTheme);
         dayTextStyle = todayTextStyle != null
             ? todayTextStyle!.copyWith(
                 fontSize: viewHeaderDayStyle.fontSize, color: todayTextColor)
-            : viewHeaderDayStyle;
+            : viewHeaderDayStyle.copyWith(color: todayTextStyleColor);
         dateTextStyle = todayTextStyle != null
             ? todayTextStyle!.copyWith(fontSize: viewHeaderDateStyle.fontSize)
             : viewHeaderDateStyle.copyWith(color: todayTextStyleColor);
@@ -10613,7 +10611,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
       /// To calculate the date start position by width and date painter
       final double dateXPosition = (cellWidth - _dateTextPainter.width) / 2;
 
-      final int horizontalPadding = isDayView ? 25 : 35;
+      final int horizontalPadding = isDayView ? 20 : 30;
 
       const int inBetweenPadding = 2;
       yPosition = size.height / 2 -
@@ -10633,21 +10631,6 @@ class _ViewHeaderViewPainter extends CustomPainter {
             isDayView ? _dayTextPainter.width: _dateTextPainter.width),
            yPosition));
 
-      if (isToday) {
-        if(narrowDateDay){
-          _drawTodayCircle(
-            canvas,
-            xPosition + dateXPosition,
-            yPosition + topPadding + _dayTextPainter.height + inBetweenPadding,
-            _dateTextPainter);
-        }else{
-          _drawTodayCircle(
-            canvas,
-            xPosition + dateXPosition + horizontalPadding - _dateTextPainter.width,
-            yPosition,
-            _dateTextPainter);}
-      }
-
       if (viewHeaderNotifier.value != null) {
         _addMouseHoverForTimeSlotView(canvas, size, xPosition, yPosition,
             dateXPosition, topPadding, isToday, inBetweenPadding);
@@ -10661,7 +10644,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
           yPosition +
           topPadding +
           _dayTextPainter.height +
-          inBetweenPadding));
+          inBetweenPadding-5));
       }else{
         _dateTextPainter.paint(
         canvas,

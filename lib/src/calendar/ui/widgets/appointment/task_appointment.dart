@@ -56,17 +56,19 @@ class TaskAppointment extends StatelessWidget {
         height: boxHeight,
         decoration: BoxDecoration(
           color: ColorsExt.grey50(context),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(4.0),
+          borderRadius: BorderRadius.all(
+            Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(15),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(1, 2),
-            ),
-          ],
+          boxShadow: calendarController.view != CalendarView.schedule
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(15),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: const Offset(1, 2),
+                  ),
+                ]
+              : [],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,84 +79,88 @@ class TaskAppointment extends StatelessWidget {
                 height: boxHeight,
                 width: 2,
                 decoration: BoxDecoration(
-                  borderRadius:
-                      const BorderRadius.only(topLeft: Radius.circular(4.0), bottomLeft: Radius.circular(4.0)),
-                  color: ColorsExt.jordyBlue400(context),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
+                      bottomLeft: Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0)),
+                  color: appointment.color,
                 ),
               ),
             Expanded(
               child: Column(
                 children: [
-                  Row(
-                    crossAxisAlignment: calendarController.view == CalendarView.schedule
-                        ? CrossAxisAlignment.center
-                        : CrossAxisAlignment.start,
-                    children: [
-                      boxHeight > 14 &&
-                              (calendarController.view == CalendarView.day ||
-                                  calendarController.view == CalendarView.schedule)
-                          ? GestureDetector(
-                              onTap: () {
-                                task.playTaskDoneSound();
-                                checkboxController?.completedClick();
-                              },
-                              child: Row(
-                                children: [
-                                  Builder(builder: ((context) {
-                                    TasksCubit tasksCubit = context.read<TasksCubit>();
-                                    SyncCubit syncCubit = context.read<SyncCubit>();
-                                    EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)
-                                      ..attachTask(task);
-                                    return SizedBox(
-                                      height: calendarController.view == CalendarView.day ? 20 : 24,
-                                      width: calendarController.view == CalendarView.day ? 20 : 24,
-                                      child: CheckboxAnimated(
-                                        onControllerReady: (controller) {
-                                          checkboxController = controller;
-                                        },
-                                        task: task,
-                                        key: ObjectKey(task),
-                                        onCompleted: () async {
-                                          HapticFeedback.mediumImpact();
-                                          editTaskCubit.markAsDone(forceUpdate: true);
-                                        },
-                                      ),
-                                    );
-                                  })),
-                                ],
-                              ),
-                            )
-                          : const SizedBox(width: 3),
-                      Expanded(
-                        child: Text(appointment.subject,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  height: 1.3,
-                                  fontSize: calendarController.view == CalendarView.schedule
-                                      ? 15.0
-                                      : calendarController.view == CalendarView.month
-                                          ? 10.5
-                                          : boxHeight < 15.0
-                                              ? 10.5
-                                              : 13.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey900(context),
-                                )),
-                      ),
-                    ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 2, left: 4, bottom: boxHeight < 15.0 ? 0 : 2),
+                    child: Row(
+                      crossAxisAlignment: calendarController.view == CalendarView.schedule
+                          ? CrossAxisAlignment.center
+                          : CrossAxisAlignment.start,
+                      children: [
+                        boxHeight > 14 &&
+                                (calendarController.view == CalendarView.day ||
+                                    calendarController.view == CalendarView.schedule)
+                            ? GestureDetector(
+                                onTap: () {
+                                  task.playTaskDoneSound();
+                                  checkboxController?.completedClick();
+                                },
+                                child: Row(
+                                  children: [
+                                    Builder(builder: ((context) {
+                                      TasksCubit tasksCubit = context.read<TasksCubit>();
+                                      SyncCubit syncCubit = context.read<SyncCubit>();
+                                      EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)
+                                        ..attachTask(task);
+                                      return SizedBox(
+                                        height: calendarController.view == CalendarView.day ? 20 : 24,
+                                        width: calendarController.view == CalendarView.day ? 20 : 24,
+                                        child: CheckboxAnimated(
+                                          onControllerReady: (controller) {
+                                            checkboxController = controller;
+                                          },
+                                          task: task,
+                                          key: ObjectKey(task),
+                                          onCompleted: () async {
+                                            HapticFeedback.mediumImpact();
+                                            editTaskCubit.markAsDone(forceUpdate: true);
+                                          },
+                                        ),
+                                      );
+                                    })),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(width: 3),
+                        Expanded(
+                          child: Text(appointment.subject,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    height: boxHeight < 15.0 ? 1.1 : 1.3,
+                                    fontSize: calendarController.view == CalendarView.schedule
+                                        ? 15.0
+                                        : calendarController.view == CalendarView.month
+                                            ? 10.5
+                                            : boxHeight < 15.0
+                                                ? 10.5
+                                                : 13.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorsExt.grey900(context),
+                                  )),
+                        ),
+                      ],
+                    ),
                   ),
                   if (calendarController.view == CalendarView.schedule)
                     Row(
                       children: [
-                        const SizedBox(width: 5),
+                        const SizedBox(width: 8),
                         Text(
                             '${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(task.datetime!).toLocal())} - ${DateFormat(use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(task.datetime!).toLocal().add(Duration(seconds: task.duration!)))}',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   height: 1.3,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w500,
-                                  color: ColorsExt.grey600(context),
+                                  color: ColorsExt.grey700(context),
                                 )),
                       ],
                     ),
@@ -162,7 +168,7 @@ class TaskAppointment extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 4, right: 2),
+              padding: EdgeInsets.only(top: calendarController.view == CalendarView.schedule ? 6.0 : 4.0, right: 2.0),
               child: Row(
                 children: [
                   if (boxWidth > 92 &&

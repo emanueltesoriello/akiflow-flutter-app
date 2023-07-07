@@ -171,7 +171,9 @@ class NotificationsService {
 
           scheduleNotifications(
             event.title ?? '',
-            "Event start at $startTime",
+            (event.startDate != null && event.endDate != null && startTime.contains("24:00"))
+                ? "Today"
+                : "Event start at $startTime",
             notificationId: notificationsId,
             scheduledDate: tz.TZDateTime.parse(
               tz.local,
@@ -212,7 +214,7 @@ class NotificationsService {
       tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
       DateTime date = DateTime.now().toUtc();
-      DateTime endTime = date.add(const Duration(days: 30));
+      DateTime endTime = date.add(const Duration(days: 2));
 
       if (notExistingTasks != null && notExistingTasks.isNotEmpty) {
         toBeScheduled.addAll(notExistingTasks
