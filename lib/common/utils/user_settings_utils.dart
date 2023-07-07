@@ -53,26 +53,19 @@ class UserSettingsUtils {
           mergedSectionSettings.add(localSetting);
         },
       );
-
       if (remoteSetting['updatedAt'] == null && localSetting['updatedAt'] != null) {
-        print('UserSettingsUtils - remote null ${remoteSetting['key']}');
         mergedSectionSettings.add(localSetting);
       } else if (localSetting['updatedAt'] == null && remoteSetting['updatedAt'] != null) {
-        print('UserSettingsUtils - local null ${remoteSetting['key']}');
         mergedSectionSettings.add(remoteSetting);
       } else if (remoteSetting['updatedAt'] != null && localSetting['updatedAt'] != null) {
         if (remoteSetting['updatedAt'] > localSetting['updatedAt']) {
-          print('UserSettingsUtils - remote > local ${remoteSetting['key']}');
           mergedSectionSettings.add(remoteSetting);
         } else if (localSetting['updatedAt'] > remoteSetting['updatedAt']) {
-          print('UserSettingsUtils - local > remote ${remoteSetting['key']}');
           mergedSectionSettings.add(localSetting);
         } else {
-          print('UserSettingsUtils - remote =? local ${remoteSetting['key']}');
           mergedSectionSettings.add(remoteSetting);
         }
       } else if (remoteSetting['updatedAt'] == null && localSetting['updatedAt'] == null) {
-        print('UserSettingsUtils - both null ${remoteSetting['key']}');
         mergedSectionSettings.add(remoteSetting);
       }
     }
@@ -113,7 +106,6 @@ class UserSettingsUtils {
 
     for (Map<String, dynamic> oldSetting in localSectionSettings) {
       if (oldSetting['key'] == newSetting['key']) {
-        print('HIDE WEEKEND setting found $newSetting');
         newSectionSettings.add(newSetting);
         settingFound = true;
       } else {
@@ -121,7 +113,6 @@ class UserSettingsUtils {
       }
     }
     if (!settingFound) {
-      print('HIDE WEEKEND setting NOT found $newSetting');
       newSectionSettings.add(newSetting);
     }
     return newSectionSettings;

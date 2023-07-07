@@ -377,6 +377,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _saveNewSetting({required String sectionName, required String key, required dynamic value}) {
+    final PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
     Map<String, dynamic> setting = {
       'key': key,
       'value': value,
@@ -384,7 +385,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     };
     List<dynamic> sectionSettings = UserSettingsUtils.updateSectionSetting(
         sectionName: sectionName,
-        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.tasksSection],
+        localSectionSettings: preferencesRepository.user?.settings?[sectionName],
         newSetting: setting);
 
     _authCubit.updateSection(sectionName: sectionName, section: sectionSettings);

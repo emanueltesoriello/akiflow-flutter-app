@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
@@ -46,6 +47,10 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     dynamic viewMobile = _authCubit.getSettingBySectionAndKey(
         sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.view);
 
+    dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
+        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.hideWeekends);
+    emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden ?? false));
+
     switch (viewMobile) {
       case CalendarViewMode.agenda:
         emit(state.copyWith(calendarView: CalendarView.schedule));
@@ -54,19 +59,13 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         emit(state.copyWith(calendarView: CalendarView.day));
         break;
       case CalendarViewMode.threeDays:
-        dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-                sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.hideWeekends) ??
-            false;
-        emit(state.copyWith(calendarView: isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
+        emit(state.copyWith(calendarView: state.isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
         break;
       case CalendarViewMode.workWeek:
         emit(state.copyWith(calendarView: CalendarView.workWeek));
         break;
       case CalendarViewMode.week:
-        dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-                sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.hideWeekends) ??
-            false;
-        emit(state.copyWith(calendarView: isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
+        emit(state.copyWith(calendarView: state.isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
         break;
       case CalendarViewMode.month:
         emit(state.copyWith(calendarView: CalendarView.month));
@@ -78,10 +77,6 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     dynamic view = _authCubit.getSettingBySectionAndKey(
         sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.view);
     emit(state.copyWith(isCalendarThreeDays: view != null ? view == UserSettingsUtils.threeCustom : false));
-
-    dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.hideWeekends);
-    emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden ?? false));
 
     dynamic areDeclinedEventsHidden = _authCubit.getSettingBySectionAndKey(
         sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.declinedEventsVisible);
@@ -300,6 +295,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   }
 
   void saveNewSetting({required String sectionName, required String key, required dynamic value}) {
+    final PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
     Map<String, dynamic> setting = {
       'key': key,
       'value': value,
@@ -307,7 +303,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     };
     List<dynamic> sectionSettings = UserSettingsUtils.updateSectionSetting(
         sectionName: sectionName,
-        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.tasksSection],
+        localSectionSettings: preferencesRepository.user?.settings?[sectionName],
         newSetting: setting);
 
     _authCubit.updateSection(sectionName: sectionName, section: sectionSettings);
