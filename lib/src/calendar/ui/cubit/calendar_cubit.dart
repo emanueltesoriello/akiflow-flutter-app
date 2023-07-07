@@ -55,7 +55,8 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         break;
       case CalendarViewMode.threeDays:
         dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-            sectionName: UserSettingsUtils.calendarSection, key: 'hideWeekends_mobile');
+                sectionName: UserSettingsUtils.calendarSection, key: 'hideWeekends_mobile') ??
+            false;
         emit(state.copyWith(calendarView: isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
         break;
       case CalendarViewMode.workWeek:
@@ -63,7 +64,8 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         break;
       case CalendarViewMode.week:
         dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-            sectionName: UserSettingsUtils.calendarSection, key: 'hideWeekends_mobile');
+                sectionName: UserSettingsUtils.calendarSection, key: 'hideWeekends_mobile') ??
+            false;
         emit(state.copyWith(calendarView: isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
         break;
       case CalendarViewMode.month:

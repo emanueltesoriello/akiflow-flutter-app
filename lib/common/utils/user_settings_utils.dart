@@ -1,8 +1,19 @@
+import 'package:mobile/core/preferences.dart';
+
 class UserSettingsUtils {
   static String generalSection = 'general';
   static String calendarSection = 'calendar';
   static String tasksSection = 'tasks';
-  static List<String> sections = [generalSection, calendarSection, tasksSection];
+  static String notificationsSection = 'notifications';
+  static List<String> sections = [generalSection, calendarSection, tasksSection, notificationsSection];
+
+  static String eventsNotificationsEnabled = 'eventsNotificationsEnabled_mobile';
+  static String eventsNotificationsTime = 'eventsNotificationsTime_mobile';
+  static String tasksNotificationsEnabled = 'tasksNotificationsEnabled_mobile';
+  static String tasksNotificationsTime = 'tasksNotificationsTime_mobile';
+  static String dailyOverviewNotificationsEnabled = 'dailyOverviewNotificationsEnabled_mobile';
+  static String dailyOverviewNotificationsTime = 'dailyOverviewNotificationsTime_mobile';
+  static String taskCompletedSoundEnabled = 'taskCompletedSoundEnabled_mobile';
 
   static Map<String, dynamic>? compareRemoteWithLocal({
     required Map<String, dynamic>? remoteSettings,
@@ -59,6 +70,31 @@ class UserSettingsUtils {
       }
     }
     return mergedSectionSettings;
+  }
+
+  static dynamic getSettingBySectionAndKey(
+      {required PreferencesRepository preferencesRepository, required String sectionName, required String key}) {
+    Map<String, dynamic>? settings = preferencesRepository.user?.settings;
+    List<dynamic>? section = settings?[sectionName];
+
+    String desktopVersionKey = key.split('_').first;
+    bool settingFound = false;
+
+    if (section != null) {
+      for (Map<String, dynamic> element in section) {
+        if (element['key'] == key) {
+          settingFound = true;
+          return element['value'];
+        }
+      }
+      if (!settingFound && desktopVersionKey != 'view') {
+        for (Map<String, dynamic> element in section) {
+          if (element['key'] == desktopVersionKey) {
+            return element['value'];
+          }
+        }
+      }
+    }
   }
 
   static List<dynamic> updateSectionSetting(
