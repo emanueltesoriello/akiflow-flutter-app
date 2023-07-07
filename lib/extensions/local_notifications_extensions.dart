@@ -94,8 +94,8 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
   // Define a method to schedule a notification and save it to SharedPreferences
   Future<void> zonedScheduleExt(
     int id,
-    String? title,
-    String? body,
+    String title,
+    String body,
     TZDateTime scheduledDate,
     NotificationDetails notificationDetails, {
     required UILocalNotificationDateInterpretation uiLocalNotificationDateInterpretation,
@@ -111,12 +111,22 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
       // If there are already scheduled notifications, add the new notification to the list
       if (alreadyScheduledNotifications != null) {
         alreadyScheduledNotifications.add(ScheduledNotification(
-            notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType));
+            notificationBody: body,
+            notificationTitle: title,
+            notificationId: id,
+            plannedDate: scheduledDate.toIso8601String(),
+            type: notificationType,
+            payload: payload ?? ''));
       } else {
         // If there are no scheduled notifications, create a new list with the new notification
         alreadyScheduledNotifications = [
           ScheduledNotification(
-              notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType)
+              notificationBody: body,
+              notificationTitle: title,
+              notificationId: id,
+              plannedDate: scheduledDate.toIso8601String(),
+              type: notificationType,
+              payload: payload ?? '')
         ];
       }
       List<String> reScheduleNotifications = [];
@@ -133,6 +143,56 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     return FlutterLocalNotificationsPlugin().zonedSchedule(id, title, body, scheduledDate, notificationDetails,
         uiLocalNotificationDateInterpretation: uiLocalNotificationDateInterpretation,
         androidAllowWhileIdle: androidAllowWhileIdle);
+  }
+
+  // Define a method to save a notification to SharedPreferences
+  Future<void> saveScheduleExt(
+    int id,
+    String title,
+    String body,
+    TZDateTime scheduledDate,
+    NotificationDetails notificationDetails, {
+    required UILocalNotificationDateInterpretation uiLocalNotificationDateInterpretation,
+    required bool androidAllowWhileIdle,
+    String? payload,
+    DateTimeComponents? matchDateTimeComponents,
+    required NotificationType notificationType,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<ScheduledNotification>? alreadyScheduledNotifications = await getScheduledNotifications();
+
+      // If there are already scheduled notifications, add the new notification to the list
+      if (alreadyScheduledNotifications != null) {
+        alreadyScheduledNotifications.add(ScheduledNotification(
+            notificationBody: body,
+            notificationTitle: title,
+            notificationId: id,
+            plannedDate: scheduledDate.toIso8601String(),
+            type: notificationType,
+            payload: payload ?? ''));
+      } else {
+        // If there are no scheduled notifications, create a new list with the new notification
+        alreadyScheduledNotifications = [
+          ScheduledNotification(
+              notificationId: id,
+              notificationBody: body,
+              notificationTitle: title,
+              plannedDate: scheduledDate.toIso8601String(),
+              type: notificationType,
+              payload: payload ?? '')
+        ];
+      }
+      List<String> reScheduleNotifications = [];
+      // Convert each ScheduledNotification object to a JSON string and add it to the list
+      for (var element in alreadyScheduledNotifications) {
+        reScheduleNotifications.add(json.encode(element.toMap()));
+      }
+      // Save the list of scheduled notifications to SharedPreferences
+      prefs.setStringList(scheduledNotificationsConst, reScheduleNotifications);
+    } catch (e) {
+      print(e);
+    }
   }
 
   // Define a method to cancel a notification and remove it from SharedPreferences
@@ -181,7 +241,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     return filteredList.isNotEmpty;
   }
 
-  showExt(int id, String? title, String? body, NotificationDetails? notificationDetails,
+  showExt(int id, String title, String body, NotificationDetails? notificationDetails,
       {String? payload,
       required TZDateTime scheduledDate,
       required NotificationType notificationType,
@@ -197,12 +257,22 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
           return;
         }
         alreadyShownNotifications.add(ScheduledNotification(
-            notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType));
+            notificationBody: body,
+            notificationTitle: title,
+            notificationId: id,
+            plannedDate: scheduledDate.toIso8601String(),
+            type: notificationType,
+            payload: payload ?? ''));
       } else {
         // If there are no shown notifications, create a new list with the new notification
         alreadyShownNotifications = [
           ScheduledNotification(
-              notificationId: id, plannedDate: scheduledDate.toIso8601String(), type: notificationType)
+              notificationBody: body,
+              notificationTitle: title,
+              notificationId: id,
+              plannedDate: scheduledDate.toIso8601String(),
+              type: notificationType,
+              payload: payload ?? '')
         ];
       }
       List<String> reScheduleNotifications = [];

@@ -92,25 +92,9 @@ class NotificationsService {
     });
   }
 
-  static scheduleEvents(PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
+  static Future scheduleEvents(
+      PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
     if (preferencesRepository.nextEventNotificationSettingEnabled) {
-      List<int> eventsIdsForNotifications = [];
-      if (eventsTobeScheduled.isNotEmpty) {
-        for (var eventId in eventsTobeScheduled.keys) {
-          String eventIdString = eventId.split(';')[0];
-          int notificationsId = 0;
-
-          try {
-            // get the last 8 hex char from the ID and convert them into an int
-            notificationsId = int.parse(eventIdString);
-          } catch (e) {
-            print(e);
-            notificationsId = eventIdString.hashCode;
-          }
-          eventsIdsForNotifications.add(notificationsId);
-        }
-      }
-
       var scheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
 
       List<ScheduledNotification> toBeRemoved = [];
@@ -122,9 +106,19 @@ class NotificationsService {
           NotificationType notificationType = scheduledNotification.type;
 
           if (notificationType == NotificationType.Event) {
-            int eventId = scheduledNotification.notificationId;
-            if (!eventsTobeScheduled.containsKey(eventId)) {
-              toBeRemoved.add(scheduledNotification);
+            if (eventsTobeScheduled.isNotEmpty) {
+              for (var eventId in eventsTobeScheduled.keys) {
+                String fullEventId = eventId;
+
+                try {
+                  if (!eventsTobeScheduled.containsKey(fullEventId)) {
+                    // Handle changes of time but same event -> in this case remove and re-schedule!
+                    toBeRemoved.add(scheduledNotification);
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              }
             }
           }
         }
@@ -470,7 +464,7 @@ class NotificationsService {
       int minuteBeforeToStart = 5}) async {
     //final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
-      await FlutterLocalNotificationsPlugin().zonedScheduleExt(
+      await FlutterLocalNotificationsPlugin().saveScheduleExt(
         notificationId,
         title,
         description,
@@ -518,7 +512,7 @@ class NotificationsService {
       await localNotificationsPlugin.zonedScheduleExt(
         dailyReminderTaskId,
         "Start your day right by checking your schedule!",
-        null,
+        "",
         tz.TZDateTime.parse(tz.local, dt.toIso8601String()),
         platformChannelSpecifics,
         androidAllowWhileIdle: true,

@@ -13,7 +13,7 @@ onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin f
   if (notificationType == 'trigger_sync:tasks' || notificationType == 'trigger_sync:events') {
     backgroundProcesses(backgroundSyncFromNotification, fromBackground: fromBackground);
   }
-  //TODO add support for other  type of notifications like the handling of the visible ones
+  // Add support in future for other  type of notifications like the handling of the visible ones
 }
 
 @pragma('vm:entry-point')
