@@ -7,6 +7,13 @@ class UserSettingsUtils {
   static String notificationsSection = 'notifications';
   static List<String> sections = [generalSection, calendarSection, tasksSection, notificationsSection];
 
+  static String view = 'view_mobile';
+  static String threeCustom = '3-custom';
+  static String hideWeekends = 'hideWeekends_mobile';
+  static String declinedEventsVisible = 'declinedEventsVisible_mobile';
+  static String calendarTasksHidden = 'calendarTasksHidden_mobile';
+  static String groupCloseTasks = 'groupCloseTasks_mobile';
+
   static String eventsNotificationsEnabled = 'eventsNotificationsEnabled_mobile';
   static String eventsNotificationsTime = 'eventsNotificationsTime_mobile';
   static String tasksNotificationsEnabled = 'tasksNotificationsEnabled_mobile';

@@ -43,8 +43,8 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   }
 
   fetchFromPreferences() {
-    dynamic viewMobile =
-        _authCubit.getSettingBySectionAndKey(sectionName: UserSettingsUtils.calendarSection, key: 'view_mobile');
+    dynamic viewMobile = _authCubit.getSettingBySectionAndKey(
+        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.view);
 
     switch (viewMobile) {
       case CalendarViewMode.agenda:
@@ -55,7 +55,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         break;
       case CalendarViewMode.threeDays:
         dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-                sectionName: UserSettingsUtils.calendarSection, key: 'hideWeekends_mobile') ??
+                sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.hideWeekends) ??
             false;
         emit(state.copyWith(calendarView: isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
         break;
@@ -64,7 +64,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         break;
       case CalendarViewMode.week:
         dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-                sectionName: UserSettingsUtils.calendarSection, key: 'hideWeekends_mobile') ??
+                sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.hideWeekends) ??
             false;
         emit(state.copyWith(calendarView: isCalendarWeekendHidden ? CalendarView.workWeek : CalendarView.week));
         break;
@@ -75,24 +75,24 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
         emit(state.copyWith(calendarView: CalendarView.day));
     }
 
-    dynamic view =
-        _authCubit.getSettingBySectionAndKey(sectionName: UserSettingsUtils.calendarSection, key: 'view_mobile');
-    emit(state.copyWith(isCalendarThreeDays: view != null ? view == '3-custom' : false));
+    dynamic view = _authCubit.getSettingBySectionAndKey(
+        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.view);
+    emit(state.copyWith(isCalendarThreeDays: view != null ? view == UserSettingsUtils.threeCustom : false));
 
     dynamic isCalendarWeekendHidden = _authCubit.getSettingBySectionAndKey(
-        sectionName: UserSettingsUtils.calendarSection, key: 'hideWeekends_mobile');
+        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.hideWeekends);
     emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden ?? false));
 
     dynamic areDeclinedEventsHidden = _authCubit.getSettingBySectionAndKey(
-        sectionName: UserSettingsUtils.calendarSection, key: 'declinedEventsVisible_mobile');
+        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.declinedEventsVisible);
     emit(state.copyWith(areDeclinedEventsHidden: areDeclinedEventsHidden ?? false));
 
     dynamic areCalendarTasksHidden = _authCubit.getSettingBySectionAndKey(
-        sectionName: UserSettingsUtils.calendarSection, key: 'calendarTasksHidden_mobile');
+        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.calendarTasksHidden);
     emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden ?? false));
 
     dynamic groupOverlappingTasks = _authCubit.getSettingBySectionAndKey(
-        sectionName: UserSettingsUtils.calendarSection, key: 'groupCloseTasks_mobile');
+        sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.groupCloseTasks);
     emit(state.copyWith(groupOverlappingTasks: groupOverlappingTasks ?? true));
   }
 
@@ -119,21 +119,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
       default:
     }
 
-    Map<String, dynamic> setting = {
-      'key': 'view_mobile',
-      'value': trackView,
-      'updatedAt': DateTime.now().millisecondsSinceEpoch
-    };
-    List<dynamic> calendarSectionSettings = UserSettingsUtils.updateSectionSetting(
-        sectionName: UserSettingsUtils.calendarSection,
-        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.calendarSection],
-        newSetting: setting);
-
-    _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
-
-    _authCubit.updateUserSettings({
-      UserSettingsUtils.calendarSection: [setting]
-    });
+    saveNewSetting(sectionName: UserSettingsUtils.calendarSection, key: UserSettingsUtils.view, value: trackView);
 
     AnalyticsService.track("Changed calendar view", properties: {
       "mobile": true,
@@ -145,102 +131,47 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     emit(state.copyWith(isCalendarThreeDays: isCalendarThreeDays));
 
     if (isCalendarThreeDays) {
-      Map<String, dynamic> setting = {
-        'key': 'view_mobile',
-        'value': '3-custom',
-        'updatedAt': DateTime.now().millisecondsSinceEpoch
-      };
-      List<dynamic> calendarSectionSettings = UserSettingsUtils.updateSectionSetting(
+      saveNewSetting(
           sectionName: UserSettingsUtils.calendarSection,
-          localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.calendarSection],
-          newSetting: setting);
-
-      _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
-
-      _authCubit.updateUserSettings({
-        UserSettingsUtils.calendarSection: [setting]
-      });
+          key: UserSettingsUtils.view,
+          value: UserSettingsUtils.threeCustom);
     }
   }
 
   void setCalendarWeekendHidden(bool isCalendarWeekendHidden) {
     emit(state.copyWith(isCalendarWeekendHidden: isCalendarWeekendHidden));
 
-    Map<String, dynamic> setting = {
-      'key': 'hideWeekends_mobile',
-      'value': isCalendarWeekendHidden,
-      'updatedAt': DateTime.now().millisecondsSinceEpoch
-    };
-    List<dynamic> calendarSectionSettings = UserSettingsUtils.updateSectionSetting(
+    saveNewSetting(
         sectionName: UserSettingsUtils.calendarSection,
-        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.calendarSection],
-        newSetting: setting);
-
-    _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
-
-    _authCubit.updateUserSettings({
-      UserSettingsUtils.calendarSection: [setting]
-    });
+        key: UserSettingsUtils.hideWeekends,
+        value: isCalendarWeekendHidden);
   }
 
   void setDeclinedEventsHidden(bool areDeclinedEventsHidden) {
     emit(state.copyWith(areDeclinedEventsHidden: areDeclinedEventsHidden));
 
-    Map<String, dynamic> setting = {
-      'key': 'declinedEventsVisible_mobile',
-      'value': areDeclinedEventsHidden,
-      'updatedAt': DateTime.now().millisecondsSinceEpoch
-    };
-    List<dynamic> calendarSectionSettings = UserSettingsUtils.updateSectionSetting(
+    saveNewSetting(
         sectionName: UserSettingsUtils.calendarSection,
-        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.calendarSection],
-        newSetting: setting);
-
-    _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
-
-    _authCubit.updateUserSettings({
-      UserSettingsUtils.calendarSection: [setting]
-    });
+        key: UserSettingsUtils.declinedEventsVisible,
+        value: areDeclinedEventsHidden);
   }
 
   void setCalendarTasksHidden(bool areCalendarTasksHidden) {
     emit(state.copyWith(areCalendarTasksHidden: areCalendarTasksHidden));
 
-    Map<String, dynamic> setting = {
-      'key': 'calendarTasksHidden_mobile',
-      'value': areCalendarTasksHidden,
-      'updatedAt': DateTime.now().millisecondsSinceEpoch
-    };
-    List<dynamic> calendarSectionSettings = UserSettingsUtils.updateSectionSetting(
+    saveNewSetting(
         sectionName: UserSettingsUtils.calendarSection,
-        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.calendarSection],
-        newSetting: setting);
-
-    _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
-
-    _authCubit.updateUserSettings({
-      UserSettingsUtils.calendarSection: [setting]
-    });
+        key: UserSettingsUtils.calendarTasksHidden,
+        value: areCalendarTasksHidden);
   }
 
   void setGroupOverlappingTasks(bool groupOverlappingTasks) {
     emit(state.copyWith(groupOverlappingTasks: groupOverlappingTasks));
 
-    Map<String, dynamic> setting = {
-      'key': 'groupCloseTasks_mobile',
-      'value': groupOverlappingTasks,
-      'updatedAt': DateTime.now().millisecondsSinceEpoch
-    };
-    List<dynamic> calendarSectionSettings = UserSettingsUtils.updateSectionSetting(
+    saveNewSetting(
         sectionName: UserSettingsUtils.calendarSection,
-        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.calendarSection],
-        newSetting: setting);
-
-    _authCubit.updateSection(sectionName: UserSettingsUtils.calendarSection, section: calendarSectionSettings);
-
-    _authCubit.updateUserSettings({
-      UserSettingsUtils.calendarSection: [setting]
-    });
+        key: UserSettingsUtils.groupCloseTasks,
+        value: groupOverlappingTasks);
   }
 
   void setNonWorkingDays() {
@@ -366,5 +297,23 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
       }
     }
     return CalendarUtils.getNonWorkingDays(firstWorkdayOfWeek);
+  }
+
+  void saveNewSetting({required String sectionName, required String key, required dynamic value}) {
+    Map<String, dynamic> setting = {
+      'key': key,
+      'value': value,
+      'updatedAt': DateTime.now().toUtc().millisecondsSinceEpoch,
+    };
+    List<dynamic> sectionSettings = UserSettingsUtils.updateSectionSetting(
+        sectionName: sectionName,
+        localSectionSettings: _authCubit.state.user?.settings?[UserSettingsUtils.tasksSection],
+        newSetting: setting);
+
+    _authCubit.updateSection(sectionName: sectionName, section: sectionSettings);
+
+    _authCubit.updateUserSettings({
+      sectionName: [setting]
+    });
   }
 }
