@@ -28,19 +28,11 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         }
 
         // Remove notifications with plannedDate in the past
-        List<ScheduledNotification> toRemove = [];
-
-        for (var notification in scheduledNotifications) {
+        scheduledNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          int minutes = await minutesBeforeToStartNotification(notification.type);
-          if (plannedDate.isBefore(DateTime.now().subtract(Duration(minutes: minutes)).toUtc())) {
-            toRemove.add(notification);
-          }
-        }
-
-        for (var notification in toRemove) {
-          scheduledNotifications.remove(notification);
-        }
+          // TODO get minutes from minutesBeforeToStartNotification
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 10)).toUtc());
+        });
 
         scheduledNotifications = scheduledNotifications.toSet().toList();
 
@@ -100,19 +92,12 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         }
 
         // Remove notifications with plannedDate in the past
-        List<ScheduledNotification> toRemove = [];
-
-        for (var notification in shownNotifications) {
+        shownNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          int minutes = await minutesBeforeToStartNotification(notification.type);
-          if (plannedDate.isBefore(DateTime.now().subtract(Duration(minutes: minutes)).toUtc())) {
-            toRemove.add(notification);
-          }
-        }
 
-        for (var notification in toRemove) {
-          shownNotifications.remove(notification);
-        }
+          // TODO get minutes from minutesBeforeToStartNotification
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 10)).toUtc());
+        });
 
         shownNotifications = shownNotifications.toSet().toList();
 
