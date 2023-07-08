@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobile/core/preferences.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
+import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/notifications/scheduled_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
@@ -25,10 +28,19 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         }
 
         // Remove notifications with plannedDate in the past
-        scheduledNotifications.removeWhere((notification) {
+        List<ScheduledNotification> toRemove = [];
+
+        for (var notification in scheduledNotifications) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 11)).toUtc());
-        });
+          int minutes = await minutesBeforeToStartNotification(notification.type);
+          if (plannedDate.isBefore(DateTime.now().subtract(Duration(minutes: minutes)).toUtc())) {
+            toRemove.add(notification);
+          }
+        }
+
+        for (var notification in toRemove) {
+          scheduledNotifications.remove(notification);
+        }
 
         scheduledNotifications = scheduledNotifications.toSet().toList();
 
@@ -50,8 +62,31 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     }
   }
 
+  Future<int> minutesBeforeToStartNotification(NotificationType type) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      NextEventNotificationsModel nextEventNotificationsModel = NextEventNotificationsModel.fromMap(
+        jsonDecode(prefs.getString("nextEventNotificationSettingValue") ?? '{}'),
+      );
+      NextTaskNotificationsModel nextTaskNotificationsModel = NextTaskNotificationsModel.fromMap(
+        jsonDecode(prefs.getString("nextTaskNotificationSettingValue") ?? '{}'),
+      );
+      if (type == NotificationType.Event) {
+        return nextEventNotificationsModel.minutesBeforeToStart;
+      }
+      if (type == NotificationType.Tasks) {
+        return nextTaskNotificationsModel.minutesBeforeToStart;
+      }
+      return 10;
+    } catch (e) {
+      print(e);
+      return 10;
+    }
+  }
+
   // Define a method to retrieve scheduled notifications, that are immediately shown and not scheduled anymore, from SharedPreferences
-  Future<List<ScheduledNotification>?> getNotificationsScheduledButImmediatelyShown(int minuteBeforeToStart) async {
+  Future<List<ScheduledNotification>?> getNotificationsScheduledButImmediatelyShown() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<String>? shownNotificationsList = prefs.getStringList(shownNotificationsConst);
@@ -65,10 +100,19 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         }
 
         // Remove notifications with plannedDate in the past
-        shownNotifications.removeWhere((notification) {
+        List<ScheduledNotification> toRemove = [];
+
+        for (var notification in shownNotifications) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 11)).toUtc());
-        });
+          int minutes = await minutesBeforeToStartNotification(notification.type);
+          if (plannedDate.isBefore(DateTime.now().subtract(Duration(minutes: minutes)).toUtc())) {
+            toRemove.add(notification);
+          }
+        }
+
+        for (var notification in toRemove) {
+          shownNotifications.remove(notification);
+        }
 
         shownNotifications = shownNotifications.toSet().toList();
 
@@ -92,26 +136,14 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
 
   // Define a method to schedule a notification and save it to SharedPreferences
   Future<void> zonedScheduleExt(
-    int id,
-    String title,
-    String body,
-    TZDateTime scheduledDate,
-    NotificationDetails notificationDetails, {
-    required UILocalNotificationDateInterpretation uiLocalNotificationDateInterpretation,
-    required bool androidAllowWhileIdle,
-    String? payload,
-    DateTimeComponents? matchDateTimeComponents,
-    required NotificationType notificationType,
-  }) async {
+      int id, String title, String body, TZDateTime scheduledDate, NotificationDetails notificationDetails,
+      {required UILocalNotificationDateInterpretation uiLocalNotificationDateInterpretation,
+      required bool androidAllowWhileIdle,
+      String? payload,
+      DateTimeComponents? matchDateTimeComponents,
+      required NotificationType notificationType}) async {
     try {
-      await saveScheduleExt(
-        id,
-        title,
-        body,
-        scheduledDate,
-        payload: payload,
-        notificationType: notificationType,
-      );
+      await saveScheduleExt(id, title, body, scheduledDate, payload: payload, notificationType: notificationType);
     } catch (e) {
       print(e);
     }
@@ -214,14 +246,10 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
   }
 
   showExt(int id, String title, String body, NotificationDetails? notificationDetails,
-      {String? payload,
-      required TZDateTime scheduledDate,
-      required NotificationType notificationType,
-      int minuteBeforeToStart = 5}) async {
+      {String? payload, required TZDateTime scheduledDate, required NotificationType notificationType}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<ScheduledNotification>? alreadyShownNotifications =
-          await getNotificationsScheduledButImmediatelyShown(minuteBeforeToStart);
+      List<ScheduledNotification>? alreadyShownNotifications = await getNotificationsScheduledButImmediatelyShown();
 
       // If there are already shown notifications, add the new notification to the list
       if (alreadyShownNotifications != null) {

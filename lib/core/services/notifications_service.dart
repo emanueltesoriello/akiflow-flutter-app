@@ -528,22 +528,13 @@ class NotificationsService {
       int minuteBeforeToStart = 5}) async {
     //final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
-      await FlutterLocalNotificationsPlugin().saveScheduleExt(
-        notificationId,
-        title,
-        description,
-        scheduledDate,
-        payload: payload,
-        notificationType: notificationType,
-      );
+      await FlutterLocalNotificationsPlugin().saveScheduleExt(notificationId, title, description, scheduledDate,
+          payload: payload, notificationType: notificationType);
     } else {
       print('show immediately this notification');
       FlutterLocalNotificationsPlugin().showExt(
           notificationId, title, description, notificationDetails ?? const NotificationDetails(),
-          payload: payload,
-          scheduledDate: scheduledDate,
-          notificationType: notificationType,
-          minuteBeforeToStart: minuteBeforeToStart);
+          payload: payload, scheduledDate: scheduledDate, notificationType: notificationType);
     }
   }
 
@@ -571,16 +562,15 @@ class NotificationsService {
       DateTime dt = DateTime(
           now.year, now.month, now.day, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
       await localNotificationsPlugin.zonedScheduleExt(
-        dailyReminderTaskId,
-        "Start your day right by checking your schedule!",
-        "",
-        tz.TZDateTime.parse(tz.local, dt.toIso8601String()),
-        platformChannelSpecifics,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-        notificationType: NotificationType.Other,
-      );
+          dailyReminderTaskId,
+          "Start your day right by checking your schedule!",
+          "",
+          tz.TZDateTime.parse(tz.local, dt.toIso8601String()),
+          platformChannelSpecifics,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+          matchDateTimeComponents: DateTimeComponents.time,
+          notificationType: NotificationType.Other);
     }
   }
 
