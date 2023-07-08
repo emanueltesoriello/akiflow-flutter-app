@@ -23,12 +23,11 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         for (var element in scheduledNotificationsList) {
           scheduledNotifications.add(ScheduledNotification.fromMap(json.decode(element)));
         }
-        // Remove duplicates and return the list
 
         // Remove notifications with plannedDate in the past
         scheduledNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 5)).toUtc());
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 11)).toUtc());
         });
 
         scheduledNotifications = scheduledNotifications.toSet().toList();
@@ -68,7 +67,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         // Remove notifications with plannedDate in the past
         shownNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          return plannedDate.isBefore(DateTime.now().subtract(Duration(minutes: minuteBeforeToStart)).toUtc());
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 11)).toUtc());
         });
 
         shownNotifications = shownNotifications.toSet().toList();
@@ -105,37 +104,14 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     required NotificationType notificationType,
   }) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<ScheduledNotification>? alreadyScheduledNotifications = await getScheduledNotifications();
-
-      // If there are already scheduled notifications, add the new notification to the list
-      if (alreadyScheduledNotifications != null) {
-        alreadyScheduledNotifications.add(ScheduledNotification(
-            notificationBody: body,
-            notificationTitle: title,
-            notificationId: id,
-            plannedDate: scheduledDate.toIso8601String(),
-            type: notificationType,
-            payload: payload ?? ''));
-      } else {
-        // If there are no scheduled notifications, create a new list with the new notification
-        alreadyScheduledNotifications = [
-          ScheduledNotification(
-              notificationBody: body,
-              notificationTitle: title,
-              notificationId: id,
-              plannedDate: scheduledDate.toIso8601String(),
-              type: notificationType,
-              payload: payload ?? '')
-        ];
-      }
-      List<String> reScheduleNotifications = [];
-      // Convert each ScheduledNotification object to a JSON string and add it to the list
-      for (var element in alreadyScheduledNotifications) {
-        reScheduleNotifications.add(json.encode(element.toMap()));
-      }
-      // Save the list of scheduled notifications to SharedPreferences
-      prefs.setStringList(scheduledNotificationsConst, reScheduleNotifications);
+      await saveScheduleExt(
+        id,
+        title,
+        body,
+        scheduledDate,
+        payload: payload,
+        notificationType: notificationType,
+      );
     } catch (e) {
       print(e);
     }
@@ -150,12 +126,8 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     int id,
     String title,
     String body,
-    TZDateTime scheduledDate,
-    NotificationDetails notificationDetails, {
-    required UILocalNotificationDateInterpretation uiLocalNotificationDateInterpretation,
-    required bool androidAllowWhileIdle,
+    TZDateTime scheduledDate, {
     String? payload,
-    DateTimeComponents? matchDateTimeComponents,
     required NotificationType notificationType,
   }) async {
     try {

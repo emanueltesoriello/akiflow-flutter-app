@@ -188,65 +188,7 @@ class SyncControllerService {
             EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then(
               (eventNotifications) async {
                 NotificationsService.scheduleEvents(_preferencesRepository, eventNotifications).then((_) async {
-                  List<ScheduledNotification>? scheduledNotifications =
-                      await FlutterLocalNotificationsPlugin().getScheduledNotifications();
-                  if (scheduledNotifications != null && scheduledNotifications.isNotEmpty) {
-                    // order notifications by date and limit to 64 notifications max
-                    scheduledNotifications.sort((a, b) {
-                      try {
-                        return a.plannedDate.compareTo(b.plannedDate);
-                      } catch (e) {
-                        print("Error sorting scheduledNotifications: ${e.toString()}");
-                      }
-                      return 0;
-                    });
-
-                    final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
-                    tz.initializeTimeZones();
-                    tz.setLocalLocation(tz.getLocation(currentTimeZone));
-                    if (scheduledNotifications.length > 64) {
-                      scheduledNotifications = scheduledNotifications.sublist(0, 63);
-                    }
-
-                    for (var notification in scheduledNotifications) {
-                      NotificationDetails notificationDetails = const NotificationDetails();
-                      if (notification.type == NotificationType.Tasks) {
-                        notificationDetails = const NotificationDetails(
-                          android: AndroidNotificationDetails("channel_tasks", "Task Notification",
-                              channelDescription: "Reminders that a task is about to start.",
-                              importance: Importance.max,
-                              priority: Priority.high),
-                        );
-                      } else if (notification.type == NotificationType.Event) {
-                        notificationDetails = const NotificationDetails(
-                          android: AndroidNotificationDetails("channel_events", "Event Notification",
-                              channelDescription: "Reminders that an event is about to start.",
-                              importance: Importance.max,
-                              priority: Priority.high),
-                        );
-                      } else {
-                        notificationDetails = const NotificationDetails(
-                          android: AndroidNotificationDetails("channel_reminders", "Daily Overview",
-                              channelDescription: "Reminder to view how your day looks like.",
-                              importance: Importance.max,
-                              priority: Priority.high),
-                        );
-                      }
-
-                      await FlutterLocalNotificationsPlugin().zonedScheduleExt(
-                          notification.notificationId,
-                          notification.notificationTitle,
-                          notification.notificationBody,
-                          tz.TZDateTime.parse(tz.local, notification.plannedDate),
-                          notificationDetails,
-                          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-                          androidAllowWhileIdle: true,
-                          payload: notification.payload,
-                          matchDateTimeComponents:
-                              notification.type == NotificationType.Other ? DateTimeComponents.time : null,
-                          notificationType: notification.type);
-                    }
-                  }
+                  await NotificationsService.scheduleEventsTasksAndOthers();
                 });
               },
             );
