@@ -25,7 +25,7 @@ func refreshAccessToken(withRefreshToken refreshToken: String) async throws -> S
        let accessToken = jsonDict["access_token"] as? String {
         return accessToken
     } else {
-        throw NSError(domain: "com.example.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to refresh access token"])
+        throw NSError(domain: "com.akiflow.mobile", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to refresh access token"])
     }
 }
 
@@ -98,7 +98,7 @@ func makeAPICall(withAccessToken accessToken: String, refreshToken: String, titl
             try await makeAPICall(withAccessToken: newAccessToken, refreshToken: refreshToken, title: title)
         } else {
             print("API request failed - Status Code: \(httpResponse.statusCode)")
-            throw NSError(domain: "com.example.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "API request failed with status code \(httpResponse.statusCode)"])
+            throw NSError(domain: "com.akiflow.mobile", code: 0, userInfo: [NSLocalizedDescriptionKey: "API request failed with status code \(httpResponse.statusCode)"])
         }
     }
 }
