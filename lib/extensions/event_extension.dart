@@ -326,7 +326,7 @@ extension EventExt on Event {
   static Future<Map<String, Event>> eventNotifications(
       EventsRepository eventsRepository, List<Calendar> calendars) async {
     DateTime now = DateTime.now().toUtc();
-    DateTime endDate = now.add(const Duration(days: 2));
+    DateTime endDate = now.add(const Duration(days: 5));
 
     List<Event> events = await eventsRepository.getEventsBetweenDates(now, endDate);
 
