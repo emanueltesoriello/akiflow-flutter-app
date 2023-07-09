@@ -188,7 +188,7 @@ class SyncControllerService {
             EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then(
               (eventNotifications) async {
                 NotificationsService.scheduleEvents(_preferencesRepository, eventNotifications).then((_) async {
-                  await NotificationsService.scheduleEventsTasksAndOthers();
+                   NotificationsService.scheduleEventsTasksAndOthers();
                 });
               },
             );
