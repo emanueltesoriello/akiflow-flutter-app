@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/notifications/scheduled_notification.dart';
@@ -12,6 +11,13 @@ import 'package:timezone/timezone.dart';
 extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotificationsPlugin {
   static const scheduledNotificationsConst = "scheduled_notifications";
   static const shownNotificationsConst = "shown_notifications";
+
+  Future<void> cleanLocalNotificationsStorageExt() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(scheduledNotificationsConst);
+    } catch (e) {}
+  }
 
   // Define a method to retrieve scheduled notifications from SharedPreferences
   Future<List<ScheduledNotification>?> getScheduledNotifications() async {
@@ -31,7 +37,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         scheduledNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
           // TODO get minutes from minutesBeforeToStartNotification
-          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 10)).toUtc());
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 1)).toUtc());
         });
 
         scheduledNotifications = scheduledNotifications.toSet().toList();
@@ -96,7 +102,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
 
           // TODO get minutes from minutesBeforeToStartNotification
-          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 10)).toUtc());
+          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 4)).toUtc());
         });
 
         shownNotifications = shownNotifications.toSet().toList();
@@ -127,11 +133,6 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
       String? payload,
       DateTimeComponents? matchDateTimeComponents,
       required NotificationType notificationType}) async {
-    /*try {
-      await saveScheduleExt(id, title, body, scheduledDate, payload: payload, notificationType: notificationType);
-    } catch (e) {
-      print(e);
-    }*/
     // Schedule the notification using the FlutterLocalNotificationsPlugin
     return FlutterLocalNotificationsPlugin().zonedSchedule(id, title, body, scheduledDate, notificationDetails,
         uiLocalNotificationDateInterpretation: uiLocalNotificationDateInterpretation,
@@ -144,6 +145,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     String title,
     String body,
     TZDateTime scheduledDate, {
+    String? fullEventId,
     String? payload,
     required NotificationType notificationType,
   }) async {
@@ -156,6 +158,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         alreadyScheduledNotifications.add(ScheduledNotification(
             notificationBody: body,
             notificationTitle: title,
+            fullEventId: fullEventId,
             notificationId: id,
             plannedDate: scheduledDate.toIso8601String(),
             type: notificationType,
@@ -166,6 +169,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
           ScheduledNotification(
               notificationId: id,
               notificationBody: body,
+              fullEventId: fullEventId,
               notificationTitle: title,
               plannedDate: scheduledDate.toIso8601String(),
               type: notificationType,

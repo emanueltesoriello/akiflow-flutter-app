@@ -17,6 +17,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/notifications/scheduled_notification.dart';
 import 'package:models/task/task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';
@@ -141,7 +142,7 @@ class NotificationsService {
           );
         }
         if (notification.notificationTitle.isNotEmpty) {
-          await FlutterLocalNotificationsPlugin().zonedScheduleExt(
+          FlutterLocalNotificationsPlugin().zonedScheduleExt(
               notification.notificationId,
               notification.notificationTitle,
               notification.notificationBody,
@@ -160,30 +161,19 @@ class NotificationsService {
   static Future scheduleEvents(
       PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
     if (preferencesRepository.nextEventNotificationSettingEnabled) {
-      var scheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
+      var dbScheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
 
       List<ScheduledNotification> toBeRemoved = [];
 
-      if (scheduledNotifications != null) {
+      if (dbScheduledNotifications != null) {
         // put in toBeRemoved all the events that are in scheduledNotifications but not in eventsToBeScheduled (check only the scheduledNotifications that has type == Event)
-        for (var scheduledNotification in scheduledNotifications) {
+        for (var dbScheduledNotification in dbScheduledNotifications) {
           // Assuming that the 'type' field is available in the notification's payload
-          NotificationType notificationType = scheduledNotification.type;
+          NotificationType notificationType = dbScheduledNotification.type;
 
           if (notificationType == NotificationType.Event) {
-            if (eventsTobeScheduled.isNotEmpty) {
-              for (var eventId in eventsTobeScheduled.keys) {
-                String fullEventId = eventId;
-
-                try {
-                  if (!eventsTobeScheduled.containsKey(fullEventId)) {
-                    // Handle changes of time but same event -> in this case remove and re-schedule!
-                    toBeRemoved.add(scheduledNotification);
-                  }
-                } catch (e) {
-                  print(e);
-                }
-              }
+            if (!eventsTobeScheduled.containsKey(dbScheduledNotification.fullEventId)) {
+              toBeRemoved.add(dbScheduledNotification);
             }
           }
         }
@@ -216,19 +206,19 @@ class NotificationsService {
           }
           NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
 
-          scheduleNotifications(
+          NotificationsService.scheduleNotifications(
             event.title ?? '',
             (event.startDate != null && event.endDate != null && startTime.contains("24:00"))
                 ? "Today"
                 : "Event start at $startTime",
             notificationId: notificationsId,
+            fullEventId: id,
             scheduledDate: tz.TZDateTime.parse(
               tz.local,
               startTimeString,
             ).subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
             payload: jsonEncode(event.toMap()),
             notificationType: NotificationType.Event,
-            minuteBeforeToStart: minutesBefore.minutesBeforeToStart,
             notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails("channel_d", "Event Notification",
                   channelDescription: "Reminders that an event is about to start.",
@@ -521,16 +511,15 @@ class NotificationsService {
   }
 
   static scheduleNotifications(String title, String description,
-      {int notificationId = 0,
+      {String? fullEventId,
+      int notificationId = 0,
       NotificationDetails? notificationDetails,
       required TZDateTime scheduledDate,
       required String? payload,
-      required NotificationType notificationType,
-      int minuteBeforeToStart = 5}) async {
-    //final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+      required NotificationType notificationType}) async {
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
       await FlutterLocalNotificationsPlugin().saveScheduleExt(notificationId, title, description, scheduledDate,
-          payload: payload, notificationType: notificationType);
+          fullEventId: fullEventId, payload: payload, notificationType: notificationType);
     } else {
       print('show immediately this notification');
       FlutterLocalNotificationsPlugin().showExt(
@@ -562,6 +551,9 @@ class NotificationsService {
 
       DateTime dt = DateTime(
           now.year, now.month, now.day, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
+      await localNotificationsPlugin.saveScheduleExt(dailyReminderTaskId,
+          "Start your day right by checking your schedule!", "", tz.TZDateTime.parse(tz.local, dt.toIso8601String()),
+          notificationType: NotificationType.Other);
       await localNotificationsPlugin.zonedScheduleExt(
           dailyReminderTaskId,
           "Start your day right by checking your schedule!",

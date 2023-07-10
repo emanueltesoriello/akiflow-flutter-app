@@ -9,6 +9,7 @@ class ScheduledNotification extends Equatable implements Base {
       required this.plannedDate,
       required this.type,
       required this.payload,
+      this.fullEventId,
       required this.notificationBody,
       required this.notificationTitle});
 
@@ -18,12 +19,14 @@ class ScheduledNotification extends Equatable implements Base {
   final String payload;
   final String notificationTitle;
   final String notificationBody;
+  final String? fullEventId;
 
   factory ScheduledNotification.fromMap(Map<String, dynamic> json) {
     NotificationType type;
     String payload;
     String notificationBody;
     String notificationTitle;
+    String fullEventId;
 
     try {
       type = NotificationType.values[json['type'] as int];
@@ -45,13 +48,19 @@ class ScheduledNotification extends Equatable implements Base {
     } catch (_) {
       notificationTitle = "";
     }
+    try {
+      fullEventId = json['full_event_id'] as String;
+    } catch (_) {
+      fullEventId = "";
+    }
     return ScheduledNotification(
         notificationId: json['notification_id'] as int,
         plannedDate: json['planned_date'] as String,
         type: type,
         payload: payload,
         notificationBody: notificationBody,
-        notificationTitle: notificationTitle);
+        notificationTitle: notificationTitle,
+        fullEventId: fullEventId);
   }
 
   @override
@@ -61,7 +70,8 @@ class ScheduledNotification extends Equatable implements Base {
         'type': type.index,
         'payload': payload,
         'notification_title': notificationTitle,
-        'notification_body': notificationBody
+        'notification_body': notificationBody,
+        'full_event_id': fullEventId,
       };
 
   ScheduledNotification copyWith(
@@ -70,14 +80,16 @@ class ScheduledNotification extends Equatable implements Base {
       NotificationType? type,
       String? payload,
       String? notificationBody,
-      String? notificationTitle}) {
+      String? notificationTitle,
+      String? fullEventId}) {
     return ScheduledNotification(
         notificationId: notificationId ?? this.notificationId,
         plannedDate: plannedDate ?? this.plannedDate,
         type: type ?? this.type,
         payload: payload ?? this.payload,
         notificationBody: notificationBody ?? this.notificationBody,
-        notificationTitle: notificationBody ?? this.notificationBody);
+        notificationTitle: notificationBody ?? this.notificationBody,
+        fullEventId: fullEventId ?? this.fullEventId);
   }
 
   @override
@@ -99,6 +111,7 @@ class ScheduledNotification extends Equatable implements Base {
       payload,
       notificationBody,
       notificationTitle,
+      fullEventId,
     ];
   }
 }
