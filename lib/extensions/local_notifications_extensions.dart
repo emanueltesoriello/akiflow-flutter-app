@@ -127,11 +127,11 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
       String? payload,
       DateTimeComponents? matchDateTimeComponents,
       required NotificationType notificationType}) async {
-    try {
+    /*try {
       await saveScheduleExt(id, title, body, scheduledDate, payload: payload, notificationType: notificationType);
     } catch (e) {
       print(e);
-    }
+    }*/
     // Schedule the notification using the FlutterLocalNotificationsPlugin
     return FlutterLocalNotificationsPlugin().zonedSchedule(id, title, body, scheduledDate, notificationDetails,
         uiLocalNotificationDateInterpretation: uiLocalNotificationDateInterpretation,

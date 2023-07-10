@@ -140,18 +140,19 @@ class NotificationsService {
                 priority: Priority.high),
           );
         }
-
-        await FlutterLocalNotificationsPlugin().zonedScheduleExt(
-            notification.notificationId,
-            notification.notificationTitle,
-            notification.notificationBody,
-            tz.TZDateTime.parse(tz.local, notification.plannedDate),
-            notificationDetails,
-            uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-            androidAllowWhileIdle: true,
-            payload: notification.payload,
-            matchDateTimeComponents: notification.type == NotificationType.Other ? DateTimeComponents.time : null,
-            notificationType: notification.type);
+        if (notification.notificationTitle.isNotEmpty) {
+          await FlutterLocalNotificationsPlugin().zonedScheduleExt(
+              notification.notificationId,
+              notification.notificationTitle,
+              notification.notificationBody,
+              tz.TZDateTime.parse(tz.local, notification.plannedDate),
+              notificationDetails,
+              uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+              androidAllowWhileIdle: true,
+              payload: notification.payload,
+              matchDateTimeComponents: notification.type == NotificationType.Other ? DateTimeComponents.time : null,
+              notificationType: notification.type);
+        }
       }
     }
   }
