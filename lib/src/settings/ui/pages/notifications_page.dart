@@ -199,10 +199,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   onReceiveNotificationDailyOverviewClick() {
-    PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
     TimePickerUtils.pick(
       context,
-      initialTime: preferencesRepository.dailyOverviewNotificationTime,
+      initialTime: _authCubit.getSettingBySectionAndKey(
+              sectionName: UserSettingsUtils.notificationsSection,
+              key: UserSettingsUtils.dailyOverviewNotificationsTime) ??
+          const TimeOfDay(hour: 8, minute: 0),
       onTimeSelected: (selected) {
         if (selected != null) {
           setState(() {

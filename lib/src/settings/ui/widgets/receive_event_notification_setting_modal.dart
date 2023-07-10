@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -88,16 +87,14 @@ class _ReceiveEventNotificationSettingModalState extends State<ReceiveEventNotif
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                           child: Text('Send notifications ...',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey800(context))),
+                              style:
+                                  Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey800(context))),
                         ),
                         const SizedBox(height: Dimension.padding),
                         ...List.generate(
                           NextEventNotificationsModel.values.length,
                           (index) => _predefinedDateItem(context, text: NextEventNotificationsModel.values[index].title,
                               onPressed: () {
-                            PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
-                            preferencesRepository
-                                .setNextEventNotificationSetting(NextEventNotificationsModel.values[index]);
                             widget.onSelectedNextEventNotificationsModel(NextEventNotificationsModel.values[index]);
                             setState(() {
                               _selectedNextEventNotificationsModel = NextEventNotificationsModel.values[index];
