@@ -13,6 +13,7 @@ class UserSettingsUtils {
   static String declinedEventsVisible = 'declinedEventsVisible_mobile';
   static String calendarTasksHidden = 'calendarTasksHidden_mobile';
   static String groupCloseTasks = 'groupCloseTasks_mobile';
+  static String timeFormat = 'timeFormat_mobile';
 
   static String eventsNotificationsEnabled = 'eventsNotificationsEnabled_mobile';
   static String eventsNotificationsTime = 'eventsNotificationsTime_mobile';

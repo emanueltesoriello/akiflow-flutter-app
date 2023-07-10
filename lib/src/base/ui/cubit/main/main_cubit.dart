@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/api/pusher.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
@@ -192,19 +193,13 @@ class MainCubit extends Cubit<MainCubitState> {
               planExpireDate: user.planExpireDate));
           _sentryService.authenticate(user.id.toString(), user.email);
 
-          bool timeFormatChanged = _preferencesRepository.timeFormatChanged;
-          if (!timeFormatChanged) {
-            int? timeFormat = TimeFormatUtils.systemDefault;
-            if (appUser.settings?["calendar"] != null) {
-              List<dynamic> calendarSettings = appUser.settings?["calendar"];
-              for (Map<String, dynamic> element in calendarSettings) {
-                if (element['key'] == 'timeFormat') {
-                  timeFormat = element['value'];
-                }
-              }
-            }
-            _preferencesRepository.setTimeFormat(timeFormat ?? TimeFormatUtils.systemDefault);
-          }
+          int? timeFormat = TimeFormatUtils.systemDefault;
+          timeFormat = UserSettingsUtils.getSettingBySectionAndKey(
+                  preferencesRepository: _preferencesRepository,
+                  sectionName: UserSettingsUtils.calendarSection,
+                  key: UserSettingsUtils.timeFormat) ??
+              TimeFormatUtils.systemDefault;
+          _preferencesRepository.setTimeFormat(timeFormat ?? TimeFormatUtils.systemDefault);
 
           //await _intercomService.authenticate(
           //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
