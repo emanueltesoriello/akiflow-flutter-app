@@ -235,27 +235,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   dynamic getSettingBySectionAndKey({required String sectionName, required String key}) {
-    Map<String, dynamic>? settings = _preferencesRepository.user?.settings;
-    List<dynamic>? section = settings?[sectionName];
-
-    String desktopVersionKey = key.split('_').first;
-    bool settingFound = false;
-
-    if (section != null) {
-      for (Map<String, dynamic> element in section) {
-        print('HIDE WEEKEND elements $element');
-        if (element['key'] == key) {
-          settingFound = true;
-          return element['value'];
-        }
-      }
-      if (!settingFound && desktopVersionKey != 'view') {
-        for (Map<String, dynamic> element in section) {
-          if (element['key'] == desktopVersionKey) {
-            return element['value'];
-          }
-        }
-      }
-    }
+    return UserSettingsUtils.getSettingBySectionAndKey(
+        preferencesRepository: _preferencesRepository, sectionName: sectionName, key: key);
   }
 }
