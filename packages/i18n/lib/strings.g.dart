@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 345 
+ * Strings: 346 
  *
- * Built on 2023-06-15 at 15:49 UTC
+ * Built on 2023-07-11 at 08:24 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -514,9 +514,9 @@ class _StringsCalendarEn {
 	String get calendarView => 'Calendar View';
 	late final _StringsCalendarViewEn view = _StringsCalendarViewEn._(_root);
 	String get groupOverlappingTasks => 'Group overlapping tasks';
-	String get hideWeekends => 'Hide Weekends';
-	String get hideDeclinedEvents => 'Hide Declined events';
-	String get hideTasksFromCalendar => 'Hide Tasks from calendar';
+	String get hideWeekends => 'Weekends';
+	String get hideDeclinedEvents => 'Declined events';
+	String get hideTasksFromCalendar => 'Tasks';
 	String get calendars => 'Calendars';
 	String get refresh => 'Refresh';
 }
@@ -1269,9 +1269,9 @@ extension on _StringsEn {
 			'calendar.view.week': 'Week',
 			'calendar.view.month': 'Month',
 			'calendar.groupOverlappingTasks': 'Group overlapping tasks',
-			'calendar.hideWeekends': 'Hide Weekends',
-			'calendar.hideDeclinedEvents': 'Hide Declined events',
-			'calendar.hideTasksFromCalendar': 'Hide Tasks from calendar',
+			'calendar.hideWeekends': 'Weekends',
+			'calendar.hideDeclinedEvents': 'Declined events',
+			'calendar.hideTasksFromCalendar': 'Tasks',
 			'calendar.calendars': 'Calendars',
 			'calendar.refresh': 'Refresh',
 			'linkedContent.subject': 'Subject',
