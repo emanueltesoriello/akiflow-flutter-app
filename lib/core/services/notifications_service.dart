@@ -180,7 +180,7 @@ class NotificationsService {
         if (toBeRemoved.isNotEmpty) {
           // remove notifications
           for (var eventToBeRemoved in toBeRemoved) {
-            FlutterLocalNotificationsPlugin().cancelExt(eventToBeRemoved.notificationId);
+            await cancelNotificationById(eventToBeRemoved.notificationId);
           }
         }
       }
@@ -207,25 +207,25 @@ class NotificationsService {
           NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
 
           NotificationsService.scheduleNotifications(
-            event.title ?? '',
-            (event.startDate != null && event.endDate != null && startTime.contains("24:00"))
-                ? "Today"
-                : "Event start at $startTime",
-            notificationId: notificationsId,
-            fullEventId: id,
-            scheduledDate: tz.TZDateTime.parse(
-              tz.local,
-              startTimeString,
-            ).subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
-            payload: jsonEncode(event.toMap()),
-            notificationType: NotificationType.Event,
-            notificationDetails: const NotificationDetails(
-              android: AndroidNotificationDetails("channel_d", "Event Notification",
-                  channelDescription: "Reminders that an event is about to start.",
-                  importance: Importance.max,
-                  priority: Priority.high),
-            ),
-          );
+              event.title ?? '',
+              (event.startDate != null && event.endDate != null && startTime.contains("24:00"))
+                  ? "Today"
+                  : "Event start at $startTime",
+              notificationId: notificationsId,
+              fullEventId: id,
+              scheduledDate: tz.TZDateTime.parse(
+                tz.local,
+                startTimeString,
+              ).subtract(Duration(minutes: minutesBefore.minutesBeforeToStart)),
+              payload: jsonEncode(event.toMap()),
+              notificationType: NotificationType.Event,
+              notificationDetails: const NotificationDetails(
+                android: AndroidNotificationDetails("channel_d", "Event Notification",
+                    channelDescription: "Reminders that an event is about to start.",
+                    importance: Importance.max,
+                    priority: Priority.high),
+              ),
+              minutesBeforeToStart: minutesBefore.minutesBeforeToStart);
         } catch (e) {
           print(e);
         }
@@ -318,7 +318,8 @@ class NotificationsService {
                       channelDescription: "Reminders that a task is about to start.",
                       importance: Importance.max,
                       priority: Priority.high),
-                ));
+                ),
+                minutesBeforeToStart: minutesBefore.minutesBeforeToStart);
           } catch (e) {
             print(e);
           }
@@ -502,7 +503,8 @@ class NotificationsService {
                     channelDescription: "Reminders that a task is about to start.",
                     importance: Importance.max,
                     priority: Priority.high),
-              ));
+              ),
+              minutesBeforeToStart: minutesBefore.minutesBeforeToStart);
         } catch (e) {
           print(e);
         }
@@ -516,15 +518,22 @@ class NotificationsService {
       NotificationDetails? notificationDetails,
       required TZDateTime scheduledDate,
       required String? payload,
-      required NotificationType notificationType}) async {
+      required NotificationType notificationType,
+      required int minutesBeforeToStart}) async {
     if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
       await FlutterLocalNotificationsPlugin().saveScheduleExt(notificationId, title, description, scheduledDate,
-          fullEventId: fullEventId, payload: payload, notificationType: notificationType);
+          fullEventId: fullEventId,
+          payload: payload,
+          notificationType: notificationType,
+          minutesBeforeToStart: minutesBeforeToStart);
     } else {
       print('show immediately this notification');
       FlutterLocalNotificationsPlugin().showExt(
           notificationId, title, description, notificationDetails ?? const NotificationDetails(),
-          payload: payload, scheduledDate: scheduledDate, notificationType: notificationType);
+          payload: payload,
+          scheduledDate: scheduledDate,
+          notificationType: notificationType,
+          minutesBeforeToStart: minutesBeforeToStart);
     }
   }
 
@@ -553,7 +562,7 @@ class NotificationsService {
           now.year, now.month, now.day, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
       await localNotificationsPlugin.saveScheduleExt(dailyReminderTaskId,
           "Start your day right by checking your schedule!", "", tz.TZDateTime.parse(tz.local, dt.toIso8601String()),
-          notificationType: NotificationType.Other);
+          notificationType: NotificationType.Other, minutesBeforeToStart: 5);
       await localNotificationsPlugin.zonedScheduleExt(
           dailyReminderTaskId,
           "Start your day right by checking your schedule!",
@@ -567,5 +576,5 @@ class NotificationsService {
     }
   }
 
-  static cancelNotificationById(int id) => FlutterLocalNotificationsPlugin().cancelExt(id);
+  static Future cancelNotificationById(int id) async => await FlutterLocalNotificationsPlugin().cancelExt(id);
 }

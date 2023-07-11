@@ -36,7 +36,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         // Remove notifications with plannedDate in the past
         scheduledNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
-          // TODO get minutes from minutesBeforeToStartNotification
+
           return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 1)).toUtc());
         });
 
@@ -76,10 +76,10 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
       if (type == NotificationType.Tasks) {
         return nextTaskNotificationsModel.minutesBeforeToStart;
       }
-      return 10;
+      return 5;
     } catch (e) {
       print(e);
-      return 10;
+      return 5;
     }
   }
 
@@ -101,8 +101,8 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
         shownNotifications.removeWhere((notification) {
           DateTime plannedDate = DateTime.parse(notification.plannedDate);
 
-          // TODO get minutes from minutesBeforeToStartNotification
-          return plannedDate.isBefore(DateTime.now().subtract(const Duration(minutes: 4)).toUtc());
+          return plannedDate
+              .isBefore(DateTime.now().subtract(Duration(minutes: notification.minutesBeforeToStart + 1)).toUtc());
         });
 
         shownNotifications = shownNotifications.toSet().toList();
@@ -148,6 +148,7 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
     String? fullEventId,
     String? payload,
     required NotificationType notificationType,
+    required int minutesBeforeToStart,
   }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -162,7 +163,8 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
             notificationId: id,
             plannedDate: scheduledDate.toIso8601String(),
             type: notificationType,
-            payload: payload ?? ''));
+            payload: payload ?? '',
+            minutesBeforeToStart: minutesBeforeToStart));
       } else {
         // If there are no scheduled notifications, create a new list with the new notification
         alreadyScheduledNotifications = [
@@ -173,7 +175,8 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
               notificationTitle: title,
               plannedDate: scheduledDate.toIso8601String(),
               type: notificationType,
-              payload: payload ?? '')
+              payload: payload ?? '',
+              minutesBeforeToStart: minutesBeforeToStart)
         ];
       }
       List<String> reScheduleNotifications = [];
@@ -235,7 +238,10 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
   }
 
   showExt(int id, String title, String body, NotificationDetails? notificationDetails,
-      {String? payload, required TZDateTime scheduledDate, required NotificationType notificationType}) async {
+      {String? payload,
+      required TZDateTime scheduledDate,
+      required NotificationType notificationType,
+      required int minutesBeforeToStart}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<ScheduledNotification>? alreadyShownNotifications = await getNotificationsScheduledButImmediatelyShown();
@@ -251,7 +257,8 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
             notificationId: id,
             plannedDate: scheduledDate.toIso8601String(),
             type: notificationType,
-            payload: payload ?? ''));
+            payload: payload ?? '',
+            minutesBeforeToStart: minutesBeforeToStart));
       } else {
         // If there are no shown notifications, create a new list with the new notification
         alreadyShownNotifications = [
@@ -261,7 +268,8 @@ extension FlutterLocalNotificationsPluginExtensions on FlutterLocalNotifications
               notificationId: id,
               plannedDate: scheduledDate.toIso8601String(),
               type: notificationType,
-              payload: payload ?? '')
+              payload: payload ?? '',
+              minutesBeforeToStart: minutesBeforeToStart)
         ];
       }
       List<String> reScheduleNotifications = [];
