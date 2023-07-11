@@ -182,17 +182,6 @@ class TaskAppointment extends StatelessWidget {
                         color: ColorsExt.grey600(context),
                       ),
                     ),
-                  if (task.calendarId != null &&
-                      boxWidth > 75 &&
-                      (calendarController.view == CalendarView.day || calendarController.view == CalendarView.schedule))
-                    SizedBox(
-                      height: 14,
-                      width: 14,
-                      child: SvgPicture.asset(
-                        Assets.images.icons.common.lockSVG,
-                        color: ColorsExt.grey600(context),
-                      ),
-                    ),
                   if (appointment.label != null && calendarController.view != CalendarView.month && boxWidth > 25)
                     Padding(
                       padding: const EdgeInsets.only(left: 4),

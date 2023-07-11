@@ -10559,14 +10559,16 @@ class _ViewHeaderViewPainter extends CustomPainter {
           DateFormat(timeSlotViewSettings.dateFormat).format(currentDate);
       final bool isToday = isSameDate(currentDate, today);
       if (isToday) {
-        final Color? todayTextStyleColor = todayHighlightColor;
+        final Color? todayTextStyleColor = todayTextStyle != null
+            ? todayTextStyle!.color
+            : calendarTheme.todayTextStyle!.color;
         final Color? todayTextColor =
             CalendarViewHelper.getTodayHighlightTextColor(
                 todayHighlightColor, todayTextStyle, calendarTheme);
         dayTextStyle = todayTextStyle != null
             ? todayTextStyle!.copyWith(
                 fontSize: viewHeaderDayStyle.fontSize, color: todayTextColor)
-            : viewHeaderDayStyle.copyWith(color: todayTextStyleColor);
+            : viewHeaderDayStyle.copyWith(color: todayHighlightColor);
         dateTextStyle = todayTextStyle != null
             ? todayTextStyle!.copyWith(fontSize: viewHeaderDateStyle.fontSize)
             : viewHeaderDateStyle.copyWith(color: todayTextStyleColor);
@@ -10616,7 +10618,7 @@ class _ViewHeaderViewPainter extends CustomPainter {
       const int inBetweenPadding = 2;
       yPosition = size.height / 2 -
           (_dayTextPainter.height +
-                  topPadding +
+                  (narrowDateDay? 10 : topPadding) +
                   _dateTextPainter.height +
                   inBetweenPadding) /
               2;
@@ -10629,8 +10631,25 @@ class _ViewHeaderViewPainter extends CustomPainter {
           Offset(xPosition + dayXPosition 
           - (narrowDateDay ? 0 : 
             isDayView ? _dayTextPainter.width: _dateTextPainter.width),
-           yPosition));
+           yPosition-2));
 
+      if (isToday) {
+        if(narrowDateDay){
+          _drawTodayCircle(
+            canvas,
+            xPosition + dateXPosition,
+            yPosition + topPadding + _dayTextPainter.height + 
+              (narrowDateDay? -3 : inBetweenPadding),
+            _dateTextPainter);
+        }else{
+          _drawTodayCircle(
+            canvas,
+            xPosition + dateXPosition + horizontalPadding - _dateTextPainter.width,
+            yPosition,
+            _dateTextPainter);}
+      }
+
+      
       if (viewHeaderNotifier.value != null) {
         _addMouseHoverForTimeSlotView(canvas, size, xPosition, yPosition,
             dateXPosition, topPadding, isToday, inBetweenPadding);
