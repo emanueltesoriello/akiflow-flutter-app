@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/api.dart';
@@ -31,20 +32,16 @@ import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_integration_service.dart';
 import 'package:mobile/core/services/sync_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/extensions/local_notifications_extensions.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/client/client.dart';
-import 'package:models/notifications/scheduled_notification.dart';
 import 'package:models/nullable.dart';
-import 'package:models/task/task.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mobile/extensions/event_extension.dart';
-import './../../../../../extensions/local_notifications_extensions.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers }
 
@@ -188,7 +185,7 @@ class SyncControllerService {
             EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then(
               (eventNotifications) async {
                 NotificationsService.scheduleEvents(_preferencesRepository, eventNotifications).then((_) async {
-                   NotificationsService.scheduleEventsTasksAndOthers();
+                  NotificationsService.scheduleEventsTasksAndOthers();
                 });
               },
             );

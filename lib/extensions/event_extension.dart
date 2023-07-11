@@ -399,8 +399,10 @@ extension EventExt on Event {
           .toList();
       if (computedEventDates.isNotEmpty) {
         for (DateTime date in computedEventDates) {
-          eventsToSchedule.addAll(
-              {'${generateNotificationIdFromEventId(parentEvent.id!)};${date.toUtc().toIso8601String()}': parentEvent});
+          eventsToSchedule.addAll({
+            '${generateNotificationIdFromEventId(parentEvent.id!) + date.toUtc().day};${date.toUtc().toIso8601String()}':
+                parentEvent
+          });
         }
       }
     }
