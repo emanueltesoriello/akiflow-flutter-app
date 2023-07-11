@@ -5,6 +5,7 @@ import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
@@ -792,6 +793,8 @@ extension TaskExt on Task {
     SyncCubit syncCubit = context.read<SyncCubit>();
     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
     await showModalBottomSheet(
+      elevation: 0,
+      backgroundColor: ColorsExt.background(context),
       context: context,
       isScrollControlled: true,
       builder: (context) => BlocProvider(
