@@ -4,14 +4,18 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
+import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_cupertino_modal.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/nlp/nlp_date_time.dart';
 import 'package:models/nullable.dart';
@@ -20,6 +24,7 @@ import 'package:rrule/rrule.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uuid/uuid.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 import '../../../../common/style/colors.dart';
 import '../../../../common/utils/stylable_text_editing_controller.dart';
@@ -239,14 +244,6 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
         openedPrirorityfromNLP: openedFromNLP,
         showPriority: !state.showPriority,
         showDuration: false,
-        showLabelsList: false));
-  }
-
-  void toggleDuration({bool openedFromNLP = false}) {
-    emit(state.copyWith(
-        showDuration: !state.showDuration,
-        openedDurationfromNLP: openedFromNLP,
-        showPriority: false,
         showLabelsList: false));
   }
 

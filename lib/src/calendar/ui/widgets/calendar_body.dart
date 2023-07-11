@@ -221,15 +221,17 @@ class CalendarBody extends StatelessWidget {
     }
     if (appointment is CalendarTask) {
       try {
-        Task task = tasks.where((task) => task.id == appointment.id).first;
-        return TaskAppointment(
-            calendarController: calendarController,
-            appointment: appointment,
-            calendarAppointmentDetails: calendarAppointmentDetails,
-            checkboxController: checkboxController,
-            task: task,
-            context: context,
-            use24hFormat: use24hFormat);
+        if (tasks.isNotEmpty) {
+          Task task = tasks.where((task) => task.id == appointment.id).first;
+          return TaskAppointment(
+              calendarController: calendarController,
+              appointment: appointment,
+              calendarAppointmentDetails: calendarAppointmentDetails,
+              checkboxController: checkboxController,
+              task: task,
+              context: context,
+              use24hFormat: use24hFormat);
+        }
       } catch (e) {
         print('calendar_body find task error: $e');
       }
@@ -251,14 +253,16 @@ class CalendarBody extends StatelessWidget {
       return const SizedBox();
     } else {
       try {
-        Event event = events.where((event) => event.id == appointment.id).first;
-        return EventAppointment(
-            calendarAppointmentDetails: calendarAppointmentDetails,
-            calendarController: calendarController,
-            appointment: appointment,
-            event: event,
-            context: context,
-            use24hFormat: use24hFormat);
+        if (events.isNotEmpty) {
+          Event event = events.where((event) => event.id == appointment.id).first;
+          return EventAppointment(
+              calendarAppointmentDetails: calendarAppointmentDetails,
+              calendarController: calendarController,
+              appointment: appointment,
+              event: event,
+              context: context,
+              use24hFormat: use24hFormat);
+        }
       } catch (e) {
         print('calendar_body find event error: $e');
       }
