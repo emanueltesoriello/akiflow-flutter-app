@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/common/utils/time_format_utils.dart';
@@ -217,7 +219,17 @@ class CalendarBody extends StatelessWidget {
       CheckboxAnimatedController? checkboxController, bool use24hFormat) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
     if (calendarAppointmentDetails.isMoreAppointmentRegion) {
-      return const Text(' ...');
+      return Row(
+        children: [
+          SizedBox(
+            height: 14,
+            width: 14,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.ellipsisSVG,
+            ),
+          ),
+        ],
+      );
     }
     if (appointment is CalendarTask) {
       try {
