@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
+import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/events/ui/widgets/event_modal.dart';
@@ -160,7 +162,12 @@ class NotificationsService {
 
   static Future scheduleEvents(
       PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
-    if (preferencesRepository.nextEventNotificationSettingEnabled) {
+    bool eventsNotificationEnabled = UserSettingsUtils.getSettingBySectionAndKey(
+            preferencesRepository: preferencesRepository,
+            sectionName: UserSettingsUtils.notificationsSection,
+            key: UserSettingsUtils.eventsNotificationsEnabled) ??
+        true;
+    if (eventsNotificationEnabled) {
       var dbScheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
 
       List<ScheduledNotification> toBeRemoved = [];
@@ -204,7 +211,12 @@ class NotificationsService {
             print(e);
             notificationsId = eventIdString.hashCode;
           }
-          NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
+          NextEventNotificationsModel minutesBefore = NextEventNotificationsModel.fromMap(jsonDecode(
+              UserSettingsUtils.getSettingBySectionAndKey(
+                      preferencesRepository: preferencesRepository,
+                      sectionName: UserSettingsUtils.notificationsSection,
+                      key: UserSettingsUtils.eventsNotificationsTime) ??
+                  '{"minutesBeforeToStart":5,"title":"5 minutes before the event starts"}'));
 
           NotificationsService.scheduleNotifications(
               event.title ?? '',
@@ -237,7 +249,12 @@ class NotificationsService {
   /// It automatically schedule the new one and also update the existing ones and removes the deleted/done/trashed tasks
   static planTasksNotifications(PreferencesRepository preferencesRepository,
       {List<Task>? changedTasks, List<Task>? notExistingTasks, List<Task>? unchangedTasks}) async {
-    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+    bool tasksNotificationEnabled = UserSettingsUtils.getSettingBySectionAndKey(
+            preferencesRepository: preferencesRepository,
+            sectionName: UserSettingsUtils.notificationsSection,
+            key: UserSettingsUtils.tasksNotificationsEnabled) ??
+        true;
+    if (tasksNotificationEnabled) {
       List<Task> toBeScheduled = [];
       List<Task> toBeRemoved = [];
 
@@ -302,7 +319,12 @@ class NotificationsService {
           } catch (e) {
             notificationsId = task.id.hashCode;
           }
-          NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
+          NextTaskNotificationsModel minutesBefore = NextTaskNotificationsModel.fromMap(jsonDecode(
+              UserSettingsUtils.getSettingBySectionAndKey(
+                      preferencesRepository: preferencesRepository,
+                      sectionName: UserSettingsUtils.notificationsSection,
+                      key: UserSettingsUtils.tasksNotificationsTime) ??
+                  '{"minutesBeforeToStart":5,"title":"5 minutes before the task starts"}'));
 
           try {
             String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toLocal());
@@ -469,7 +491,12 @@ class NotificationsService {
   }
 
   static scheduleNotificationsService(PreferencesRepository preferencesRepository) async {
-    if (preferencesRepository.nextTaskNotificationSettingEnabled) {
+    bool tasksNotificationEnabled = UserSettingsUtils.getSettingBySectionAndKey(
+            preferencesRepository: preferencesRepository,
+            sectionName: UserSettingsUtils.notificationsSection,
+            key: UserSettingsUtils.tasksNotificationsEnabled) ??
+        true;
+    if (tasksNotificationEnabled) {
       await NotificationsService.cancelScheduledNotifications(preferencesRepository);
 
       TasksRepository tasksRepository = locator<TasksRepository>();
@@ -488,7 +515,12 @@ class NotificationsService {
         } catch (e) {
           notificationsId = task.id.hashCode;
         }
-        NextTaskNotificationsModel minutesBefore = preferencesRepository.nextTaskNotificationSetting;
+        NextTaskNotificationsModel minutesBefore = NextTaskNotificationsModel.fromMap(jsonDecode(
+            UserSettingsUtils.getSettingBySectionAndKey(
+                    preferencesRepository: preferencesRepository,
+                    sectionName: UserSettingsUtils.notificationsSection,
+                    key: UserSettingsUtils.tasksNotificationsTime) ??
+                '{"minutesBeforeToStart":5,"title":"5 minutes before the task starts"}'));
         try {
           String startTime = DateFormat('kk:mm').format(DateTime.parse(task.datetime!).toUtc().toLocal());
 
@@ -548,14 +580,32 @@ class NotificationsService {
     // *********************************************
     // *********************************************
 
-    bool dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
+    bool dailyOverviewNotificationTimeEnabled = UserSettingsUtils.getSettingBySectionAndKey(
+            preferencesRepository: service,
+            sectionName: UserSettingsUtils.notificationsSection,
+            key: UserSettingsUtils.dailyOverviewNotificationsEnabled) ??
+        true;
 
     if (dailyOverviewNotificationTimeEnabled) {
       final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
       tz.initializeTimeZones();
       tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
-      TimeOfDay dailyOverviewNotificationTime = service.dailyOverviewNotificationTime;
+      TimeOfDay dailyOverviewNotificationTime;
+      dynamic savedDailyOverviewTime = UserSettingsUtils.getSettingBySectionAndKey(
+          preferencesRepository: service,
+          sectionName: UserSettingsUtils.notificationsSection,
+          key: UserSettingsUtils.dailyOverviewNotificationsTime);
+
+      if (savedDailyOverviewTime != null) {
+        TimeOfDay time = TimeOfDay(
+            hour: int.parse(savedDailyOverviewTime.split(":")[0]),
+            minute: int.parse(savedDailyOverviewTime.split(":")[1]));
+        dailyOverviewNotificationTime = time;
+      } else {
+        dailyOverviewNotificationTime = const TimeOfDay(hour: 8, minute: 0);
+      }
+
       final now = DateTime.now();
 
       DateTime dt = DateTime(

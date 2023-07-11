@@ -4,8 +4,10 @@ import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 
 class CalendarSettingsPage extends StatefulWidget {
@@ -106,9 +108,12 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                             setState(() {
                               use24hFormat = value;
                             });
-                            _preferencesRepository
-                                .setTimeFormat(value ? TimeFormatUtils.twentyFourHours : TimeFormatUtils.twelveHours);
-                            _preferencesRepository.setTimeFormatChanged(true);
+                            int timeFormat = value ? TimeFormatUtils.twentyFourHours : TimeFormatUtils.twelveHours;
+                            _preferencesRepository.setTimeFormat(timeFormat);
+                            _saveNewSetting(
+                                sectionName: UserSettingsUtils.calendarSection,
+                                key: UserSettingsUtils.timeFormat,
+                                value: timeFormat);
                           },
                         ),
                       ],
@@ -121,5 +126,25 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
         ],
       ),
     );
+  }
+
+  void _saveNewSetting({required String sectionName, required String key, required dynamic value}) {
+    final PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+    final AuthCubit authCubit = locator<AuthCubit>();
+    Map<String, dynamic> setting = {
+      'key': key,
+      'value': value,
+      'updatedAt': DateTime.now().toUtc().millisecondsSinceEpoch,
+    };
+    List<dynamic> sectionSettings = UserSettingsUtils.updateSectionSetting(
+        sectionName: sectionName,
+        localSectionSettings: preferencesRepository.user?.settings?[sectionName],
+        newSetting: setting);
+
+    authCubit.updateSection(sectionName: sectionName, section: sectionSettings);
+
+    authCubit.updateUserSettings({
+      sectionName: [setting]
+    });
   }
 }

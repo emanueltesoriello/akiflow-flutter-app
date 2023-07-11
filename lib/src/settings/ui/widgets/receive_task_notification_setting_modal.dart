@@ -95,9 +95,6 @@ class _ReceiveTaskNotificationSettingModalState extends State<ReceiveTaskNotific
                           NextTaskNotificationsModel.values.length,
                           (index) => _predefinedDateItem(context, text: NextTaskNotificationsModel.values[index].title,
                               onPressed: () {
-                            PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
-                            preferencesRepository
-                                .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
                             widget.onSelectedNextTaskNotificationsModel(NextTaskNotificationsModel.values[index]);
                             setState(() {
                               _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];
