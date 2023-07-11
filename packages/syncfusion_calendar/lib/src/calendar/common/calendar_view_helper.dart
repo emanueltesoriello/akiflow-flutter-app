@@ -405,7 +405,7 @@ class CalendarViewHelper {
       case CalendarView.day:
       case CalendarView.week:
       case CalendarView.workWeek:
-        return 40;
+        return 45;
       case CalendarView.month:
         return 25;
       case CalendarView.timelineDay:
