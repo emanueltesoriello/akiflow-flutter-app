@@ -58,11 +58,7 @@ class CalendarBody extends StatelessWidget {
       TasksCubit tasksCubit = context.read<TasksCubit>();
       bool isThreeDays = calendarCubit.state.isCalendarThreeDays;
       bool appointmentTapped = calendarCubit.state.appointmentTapped;
-      bool narrowDateDay =
-          (calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
-                  !isThreeDays
-              ? true
-              : false;
+      bool narrowDateDay = true;
 
       calendarCubit.panelStateStream.listen((PanelState panelState) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -202,11 +198,12 @@ class CalendarBody extends StatelessWidget {
                   width: 55,
                   height: 40,
                   color: ColorsExt.background(context),
-                  padding: EdgeInsets.fromLTRB(8, narrowDateDay ? 0 : 10, 2, 8),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 2, 8),
                   child: Text(
                     overflow: TextOverflow.ellipsis,
                     DateTime.now().timeZoneName,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey800(context)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey800(context), height: 1.0),
                   ),
                 ),
             ],
