@@ -162,7 +162,12 @@ class NotificationsService {
 
   static Future scheduleEvents(
       PreferencesRepository preferencesRepository, Map<String, Event> eventsTobeScheduled) async {
-    if (preferencesRepository.nextEventNotificationSettingEnabled) {
+    bool eventsNotificationEnabled = UserSettingsUtils.getSettingBySectionAndKey(
+            preferencesRepository: preferencesRepository,
+            sectionName: UserSettingsUtils.notificationsSection,
+            key: UserSettingsUtils.eventsNotificationsEnabled) ??
+        true;
+    if (eventsNotificationEnabled) {
       var dbScheduledNotifications = await FlutterLocalNotificationsPlugin().getScheduledNotifications();
 
       List<ScheduledNotification> toBeRemoved = [];
