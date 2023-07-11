@@ -71,10 +71,17 @@ class AuthCubit extends Cubit<AuthCubitState> {
         Map<String, dynamic>? remoteSettings = await _userApi.getSettings();
         Map<String, dynamic>? localSettings = user.settings;
 
+        bool userSettingsAreV4 = _preferencesRepository.userSettingsAreV4;
+
         if (remoteSettings != null) {
-          Map<String, dynamic>? mergedSettings =
-              UserSettingsUtils.compareRemoteWithLocal(remoteSettings: remoteSettings, localSettings: localSettings);
-          user = user.copyWith(settings: mergedSettings);
+          if (userSettingsAreV4) {
+            Map<String, dynamic>? mergedSettings =
+                UserSettingsUtils.compareRemoteWithLocal(remoteSettings: remoteSettings, localSettings: localSettings);
+            user = user.copyWith(settings: mergedSettings);
+          } else {
+            user = user.copyWith(settings: remoteSettings);
+            _preferencesRepository.setUserSettingsAreV4(true);
+          }
         }
 
         _preferencesRepository.saveUser(user);

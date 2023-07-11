@@ -33,7 +33,12 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   }
 
   _init() async {
-    fetchFromPreferences();
+    try {
+      fetchFromPreferences();
+    } catch (e) {
+      print('ERROR calendar_cubit fetchFromPreferences: $e');
+    }
+
     fetchCalendars();
     setNonWorkingDays();
     await setSystemStartOfWeekDay();

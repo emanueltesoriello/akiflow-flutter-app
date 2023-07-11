@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:mobile/src/base/models/next_event_notifications_models.dart';
-import 'package:mobile/src/base/models/next_task_notifications_models.dart';
 import 'package:models/account/account_token.dart';
 import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +11,9 @@ abstract class PreferencesRepository {
   Future<void> saveUser(User user);
 
   User? get user;
+
+  bool get userSettingsAreV4;
+  Future<void> setUserSettingsAreV4(bool value);
 
   bool get inboxNoticeHidden;
   Future<void> setInboxNoticeHidden(bool value);
@@ -115,6 +115,16 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     return User.fromMap(jsonDecode(userString));
+  }
+
+  @override
+  bool get userSettingsAreV4 {
+    return _prefs.getBool("userSettingsAreV4") ?? false;
+  }
+
+  @override
+  Future<void> setUserSettingsAreV4(bool value) async {
+    await _prefs.setBool("userSettingsAreV4", value);
   }
 
   @override
