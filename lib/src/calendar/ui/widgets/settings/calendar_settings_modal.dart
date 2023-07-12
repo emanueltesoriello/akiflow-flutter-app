@@ -196,7 +196,7 @@ class CalendarSettingsModal extends StatelessWidget {
           !isThreeDays,
       onPressed: () {
         calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
-        if (isWeekendHidden) {
+        if (!isWeekendHidden) {
           context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
           calendarController.view = CalendarView.workWeek;
         } else {
