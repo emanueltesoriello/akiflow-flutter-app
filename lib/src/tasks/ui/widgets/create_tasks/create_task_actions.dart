@@ -12,6 +12,7 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 
 import '../../../../../assets.dart';
 import '../../../../../common/style/colors.dart';
@@ -114,7 +115,6 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                     context: context,
                     builder: (context) => DurationCupertinoModal(
                       state: state,
-                      cubit: context.read<EditTaskCubit>(),
                       onConfirm: (int duration) => context.read<EditTaskCubit>().setDuration(duration, fromModal: true),
                     ),
                   );
@@ -154,8 +154,20 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                 isSquare: true,
                 isBig: true,
                 text: text,
-                onPressed: () {
-                  context.read<EditTaskCubit>().toggleImportance();
+                onPressed: () async {
+                  PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
+                  EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+                  cubit.priorityTap();
+
+                  PriorityEnum? newPriority = await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => PriorityModal(currentPriority),
+                    closeProgressThreshold: 0,
+                    expand: false,
+                  );
+
+                  cubit.setPriority(newPriority);
                 },
               );
             },

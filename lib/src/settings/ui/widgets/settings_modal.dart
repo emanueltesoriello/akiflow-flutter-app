@@ -62,7 +62,7 @@ class SettingsModal extends StatelessWidget {
     );
   }
 
-  _buildSiri(BuildContext context) {
+  /* _buildSiri(BuildContext context) {
     return ButtonSelectable(
       title: "Siri suggestions",
       leading: SizedBox(
@@ -84,7 +84,7 @@ class SettingsModal extends StatelessWidget {
         );
       },
     );
-  }
+  }*/
 
   _buildToday(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
@@ -327,7 +327,7 @@ class SettingsModal extends StatelessWidget {
                     },
                   ),
                   _buildAvailabilitySection(context),
-                  if (kDebugMode) _buildSiri(context),
+                  //if (kDebugMode) _buildSiri(context),
                   const SizedBox(height: Dimension.paddingS),
                   const Separator(),
                   const SizedBox(height: Dimension.paddingS),

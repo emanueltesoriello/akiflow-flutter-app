@@ -6,9 +6,8 @@ import 'package:numberpicker/numberpicker.dart';
 
 class DurationCupertinoModal extends StatefulWidget {
   final EditTaskCubitState state;
-  final EditTaskCubit cubit;
   final Function(int) onConfirm;
-  const DurationCupertinoModal({super.key, required this.onConfirm, required this.state, required this.cubit});
+  const DurationCupertinoModal({super.key, required this.onConfirm, required this.state});
 
   @override
   State<DurationCupertinoModal> createState() => _DurationCupertinoModalState();

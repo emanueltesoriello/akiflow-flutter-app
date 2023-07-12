@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_siri_suggestions/flutter_siri_suggestions.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 
@@ -173,3 +173,4 @@ class _SiriSuggestionsState extends State<SiriSuggestions> {
     );
   }
 }
+*/

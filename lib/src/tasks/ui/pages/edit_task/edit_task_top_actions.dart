@@ -107,7 +107,6 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                     context: context,
                     builder: (_) => DurationCupertinoModal(
                       state: state,
-                      cubit: context.read<EditTaskCubit>(),
                       onConfirm: (int duration) => context.read<EditTaskCubit>().setDuration(duration, fromModal: true),
                     ),
                   );
