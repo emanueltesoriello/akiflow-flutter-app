@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/notifications_service.dart';
@@ -39,6 +40,25 @@ class DatabaseService {
     }
   }
 
+  onUserSettingsVersionUpdate() async {
+    const lastUserSettingsVersion = 4;
+
+    int userSettingsVersion;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      userSettingsVersion = prefs.getInt("user_settings_version")!;
+      prefs.setInt("user_settings_version", lastUserSettingsVersion);
+    } catch (_) {
+      userSettingsVersion = 0;
+    }
+
+    if (userSettingsVersion < lastUserSettingsVersion) {
+      try {
+        UserSettingsUtils.migrateUserSettingsToV4(prefs);
+      } catch (_) {}
+    }
+  }
+
   Future<sql.Database> open({bool skipDirectoryCreation = false}) async {
     try {
       if (database != null) {
@@ -55,7 +75,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 10,
+        version: 11,
         singleInstance: true,
         onCreate: (db, version) async {
           print('Creating database version $version');
@@ -120,7 +140,8 @@ class DatabaseService {
             _addIndexesForListIdUpdatedAt(batch);
           }
 
-          if (oldVersion < 10) {
+          if (oldVersion < 11) {
+            await onUserSettingsVersionUpdate();
             await onNotificationsSystemUpdates();
           }
 

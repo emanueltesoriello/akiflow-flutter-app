@@ -69,12 +69,12 @@ class GroupedTasksAppointment extends StatelessWidget {
                     children: [
                       Container(
                         width: calendarController.view == CalendarView.month
-                            ? 11.0
+                            ? 9.0
                             : boxHeight < 15.0 && groupedTasks.taskList.length < 10
                                 ? 12.0
                                 : 14.0,
                         height: calendarController.view == CalendarView.month
-                            ? 11.0
+                            ? 9.0
                             : boxHeight < 15.0
                                 ? 12.0
                                 : 14.0,
@@ -87,9 +87,9 @@ class GroupedTasksAppointment extends StatelessWidget {
                         child: FittedBox(
                           child: Text('${groupedTasks.taskList.length}',
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    height: boxHeight < 15.0 ? 1.0 : 1.2,
+                                    height: boxHeight < 15.0 ? 1.1 : 1.2,
                                     fontSize: calendarController.view == CalendarView.month
-                                        ? 11.0
+                                        ? 8.0
                                         : boxHeight < 15.0
                                             ? 11.0
                                             : 13.0,
@@ -104,9 +104,9 @@ class GroupedTasksAppointment extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  height: boxHeight < 15.0 ? 1.0 : 1.3,
+                                  height: boxHeight < 15.0 ? 1.1 : 1.3,
                                   fontSize: calendarController.view == CalendarView.month
-                                      ? 11.0
+                                      ? 8.0
                                       : boxHeight < 15.0
                                           ? 11.0
                                           : 13.0,

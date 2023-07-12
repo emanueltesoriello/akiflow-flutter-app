@@ -73,12 +73,12 @@ class EventAppointment extends StatelessWidget {
                           : EdgeInsets.only(left: 2, right: 2, top: boxHeight < 15.0 ? 0 : 2),
                       child: SizedBox(
                         height: calendarController.view == CalendarView.month
-                            ? 12
+                            ? 10
                             : boxHeight < 15.0
                                 ? 13
                                 : 16,
                         width: calendarController.view == CalendarView.month
-                            ? 13
+                            ? 11
                             : boxHeight < 15.0
                                 ? 13
                                 : 16,
@@ -103,22 +103,22 @@ class EventAppointment extends StatelessWidget {
                       : const EdgeInsets.all(0),
                   child: Text(
                     appointment.subject.isEmpty ? t.noTitle : appointment.subject,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: calendarController.view == CalendarView.month ? TextOverflow.clip : TextOverflow.ellipsis,
                     maxLines: boxHeight < 50.0 || appointment.isAllDay ? 1 : 2,
                     style: TextStyle(
                       height: dashedBorder
                           ? boxHeight < 15.0
-                              ? 1.1
-                              : appointment.isAllDay
-                                  ? 1.1
-                                  : 1.2
+                              ? calendarController.view == CalendarView.month
+                                  ? 1.0
+                                  : 1.1
+                              : 1.2
                           : calendarController.view == CalendarView.schedule
                               ? 1.1
                               : 1.3,
                       fontSize: calendarController.view == CalendarView.schedule
                           ? 15.0
                           : calendarController.view == CalendarView.month
-                              ? 9.0
+                              ? 8.0
                               : boxHeight < 15.0
                                   ? 10.5
                                   : 13.0,
