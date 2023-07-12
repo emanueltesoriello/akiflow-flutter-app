@@ -140,7 +140,7 @@ class DatabaseService {
             _addIndexesForListIdUpdatedAt(batch);
           }
 
-          if (oldVersion < 10) {
+          if (oldVersion < 11) {
             await onUserSettingsVersionUpdate();
             await onNotificationsSystemUpdates();
           }
