@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:mobile/core/preferences.dart';
+import 'package:models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSettingsUtils {
   static String generalSection = 'general';
@@ -117,5 +121,36 @@ class UserSettingsUtils {
       newSectionSettings.add(newSetting);
     }
     return newSectionSettings;
+  }
+
+  static Future<void> migrateUserSettingsToV4(SharedPreferences prefs) async {
+    try {
+      final userString = prefs.getString("user");
+
+      if (userString != null) {
+        User user = User.fromMap(jsonDecode(userString));
+
+        Map<String, dynamic>? oldSettings = user.settings;
+        Map<String, dynamic>? newSettings = oldSettings;
+
+        for (var section in sections) {
+          Map<String, dynamic>? oldSectionSettings = oldSettings?[section];
+          List<dynamic> newSectionSettings = [];
+
+          for (int i = 0; i < oldSectionSettings!.keys.length; i++) {
+            newSectionSettings
+                .add({'key': oldSectionSettings.keys.elementAt(i), 'value': oldSectionSettings.values.elementAt(i)});
+          }
+
+          newSettings?[section] = newSectionSettings;
+        }
+        print('INFO: user settings migrated to V4');
+
+        user = user.copyWith(settings: newSettings);
+        await prefs.setString("user", jsonEncode(user.toMap()));
+      }
+    } catch (e) {
+      print('ERROR updateUserSettingsToRemote: $e');
+    }
   }
 }
