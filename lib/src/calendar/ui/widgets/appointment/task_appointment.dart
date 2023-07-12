@@ -89,7 +89,7 @@ class TaskAppointment extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 2, left: 4, bottom: boxHeight < 15.0 ? 0 : 2),
+                    padding: EdgeInsets.only(top: boxHeight < 15.0 ? 1 : 2, left: 4, bottom: boxHeight < 15.0 ? 0 : 2),
                     child: Row(
                       crossAxisAlignment: calendarController.view == CalendarView.schedule
                           ? CrossAxisAlignment.center
@@ -132,14 +132,16 @@ class TaskAppointment extends StatelessWidget {
                             : const SizedBox(width: 3),
                         Expanded(
                           child: Text(appointment.subject,
-                              overflow: TextOverflow.ellipsis,
+                              overflow: calendarController.view == CalendarView.month
+                                  ? TextOverflow.clip
+                                  : TextOverflow.ellipsis,
                               maxLines: 1,
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     height: boxHeight < 15.0 ? 1.1 : 1.3,
                                     fontSize: calendarController.view == CalendarView.schedule
                                         ? 15.0
                                         : calendarController.view == CalendarView.month
-                                            ? 10.5
+                                            ? 8.0
                                             : boxHeight < 15.0
                                                 ? 10.5
                                                 : 13.0,

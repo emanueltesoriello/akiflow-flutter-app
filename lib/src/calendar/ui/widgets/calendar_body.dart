@@ -186,7 +186,7 @@ class CalendarBody extends StatelessWidget {
                           ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500),
                     )),
                 monthViewSettings: const MonthViewSettings(
-                    appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 4),
+                    appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, appointmentDisplayCount: 5),
                 onTap: (calendarTapDetails) =>
                     calendarTapped(calendarTapDetails, context, eventsCubit, calendarCubit, use24hFormat),
                 appointmentBuilder: (context, calendarAppointmentDetails) =>
