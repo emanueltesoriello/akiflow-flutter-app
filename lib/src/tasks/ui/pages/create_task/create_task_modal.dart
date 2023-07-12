@@ -131,7 +131,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                   children: [
                     const DurationWidget(),
                     const PriorityWidget(),
-                    const LabelWidget(),
+                    //const LabelWidget(),
                     const SizedBox(height: Dimension.padding),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
