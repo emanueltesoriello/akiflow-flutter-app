@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/calendar_utils.dart';
 import 'package:mobile/common/utils/time_format_utils.dart';
@@ -58,11 +60,7 @@ class CalendarBody extends StatelessWidget {
       TasksCubit tasksCubit = context.read<TasksCubit>();
       bool isThreeDays = calendarCubit.state.isCalendarThreeDays;
       bool appointmentTapped = calendarCubit.state.appointmentTapped;
-      bool narrowDateDay =
-          (calendarController.view == CalendarView.week || calendarController.view == CalendarView.workWeek) &&
-                  !isThreeDays
-              ? true
-              : false;
+      bool narrowDateDay = true;
 
       calendarCubit.panelStateStream.listen((PanelState panelState) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -202,11 +200,12 @@ class CalendarBody extends StatelessWidget {
                   width: 55,
                   height: 40,
                   color: ColorsExt.background(context),
-                  padding: EdgeInsets.fromLTRB(8, narrowDateDay ? 0 : 10, 2, 8),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 2, 8),
                   child: Text(
                     overflow: TextOverflow.ellipsis,
                     DateTime.now().timeZoneName,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey800(context)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 13, color: ColorsExt.grey800(context), height: 1.0),
                   ),
                 ),
             ],
@@ -220,19 +219,31 @@ class CalendarBody extends StatelessWidget {
       CheckboxAnimatedController? checkboxController, bool use24hFormat) {
     final Appointment appointment = calendarAppointmentDetails.appointments.first;
     if (calendarAppointmentDetails.isMoreAppointmentRegion) {
-      return const Text(' ...');
+      return Row(
+        children: [
+          SizedBox(
+            height: 14,
+            width: 14,
+            child: SvgPicture.asset(
+              Assets.images.icons.common.ellipsisSVG,
+            ),
+          ),
+        ],
+      );
     }
     if (appointment is CalendarTask) {
       try {
-        Task task = tasks.where((task) => task.id == appointment.id).first;
-        return TaskAppointment(
-            calendarController: calendarController,
-            appointment: appointment,
-            calendarAppointmentDetails: calendarAppointmentDetails,
-            checkboxController: checkboxController,
-            task: task,
-            context: context,
-            use24hFormat: use24hFormat);
+        if (tasks.isNotEmpty) {
+          Task task = tasks.where((task) => task.id == appointment.id).first;
+          return TaskAppointment(
+              calendarController: calendarController,
+              appointment: appointment,
+              calendarAppointmentDetails: calendarAppointmentDetails,
+              checkboxController: checkboxController,
+              task: task,
+              context: context,
+              use24hFormat: use24hFormat);
+        }
       } catch (e) {
         print('calendar_body find task error: $e');
       }
@@ -254,14 +265,16 @@ class CalendarBody extends StatelessWidget {
       return const SizedBox();
     } else {
       try {
-        Event event = events.where((event) => event.id == appointment.id).first;
-        return EventAppointment(
-            calendarAppointmentDetails: calendarAppointmentDetails,
-            calendarController: calendarController,
-            appointment: appointment,
-            event: event,
-            context: context,
-            use24hFormat: use24hFormat);
+        if (events.isNotEmpty) {
+          Event event = events.where((event) => event.id == appointment.id).first;
+          return EventAppointment(
+              calendarAppointmentDetails: calendarAppointmentDetails,
+              calendarController: calendarController,
+              appointment: appointment,
+              event: event,
+              context: context,
+              use24hFormat: use24hFormat);
+        }
       } catch (e) {
         print('calendar_body find event error: $e');
       }

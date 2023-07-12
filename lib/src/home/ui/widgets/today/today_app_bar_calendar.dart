@@ -28,13 +28,20 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
 
   @override
   void initState() {
-    if (context.read<AuthCubit>().state.user?.settings?["calendar"] != null &&
-        context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"] != null) {
-      var firstDayFromDb = context.read<AuthCubit>().state.user?.settings?["calendar"]["firstDayOfWeek"];
-      if (firstDayFromDb is String) {
-        firstDayOfWeek = int.parse(firstDayFromDb);
-      } else if (firstDayFromDb is int) {
-        firstDayOfWeek = firstDayFromDb;
+    AuthCubit authCubit = context.read<AuthCubit>();
+    if (authCubit.state.user?.settings?["calendar"] != null) {
+      List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
+      for (Map<String, dynamic> element in calendarSettings) {
+        if (element['key'] == 'firstDayOfWeek') {
+          var firstDayFromDb = element['value'];
+          if (firstDayFromDb != null) {
+            if (firstDayFromDb is String) {
+              firstDayOfWeek = int.parse(firstDayFromDb);
+            } else if (firstDayFromDb is int) {
+              firstDayOfWeek = firstDayFromDb;
+            }
+          }
+        }
       }
     }
 

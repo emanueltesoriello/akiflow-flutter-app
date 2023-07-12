@@ -1,7 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/preferences.dart';
+import 'package:mobile/core/services/notifications_service.dart';
+import 'package:mobile/extensions/local_notifications_extensions.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqflite.dart';
 
@@ -11,6 +17,27 @@ class DatabaseService {
   sql.Database? database;
 
   DatabaseService();
+
+  onNotificationsSystemUpdates() async {
+    const lastNotificationsSystemVer = 2;
+
+    int notificationsSystemVer;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      notificationsSystemVer = prefs.getInt("notifications_system_ver")!;
+      prefs.setInt("notifications_system_ver", lastNotificationsSystemVer);
+    } catch (_) {
+      notificationsSystemVer = 0;
+    }
+
+    if (notificationsSystemVer < lastNotificationsSystemVer) {
+      FlutterLocalNotificationsPlugin().cleanLocalNotificationsStorageExt();
+      try {
+        PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+        NotificationsService.scheduleNotificationsService(preferencesRepository);
+      } catch (_) {}
+    }
+  }
 
   Future<sql.Database> open({bool skipDirectoryCreation = false}) async {
     try {
@@ -28,7 +55,7 @@ class DatabaseService {
       }
       database = await sql.openDatabase(
         _databaseName,
-        version: 9,
+        version: 10,
         singleInstance: true,
         onCreate: (db, version) async {
           print('Creating database version $version');
@@ -91,6 +118,10 @@ class DatabaseService {
 
           if (oldVersion < 9) {
             _addIndexesForListIdUpdatedAt(batch);
+          }
+
+          if (oldVersion < 10) {
+            await onNotificationsSystemUpdates();
           }
 
           await batch.commit();

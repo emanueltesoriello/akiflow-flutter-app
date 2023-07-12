@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/utils/time_format_utils.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/api/pusher.dart';
 import 'package:mobile/core/api/user_api.dart';
 import 'package:mobile/core/locator.dart';
@@ -76,35 +77,37 @@ class MainCubit extends Cubit<MainCubitState> {
         },
         onEvent: (event) {
           try {
-            print("onEvent: $event");
-            print(jsonDecode(event.data)["syncEntities"]);
-            var syncEntities = jsonDecode(event.data)["syncEntities"];
-            List<Entity>? entities = [];
+            if (event.data.toString() != "" && event.data.toString() != "{}") {
+              print("onEvent: $event");
+              print(jsonDecode(event.data)["syncEntities"]);
+              var syncEntities = jsonDecode(event.data)["syncEntities"];
+              List<Entity>? entities = [];
 
-            if (syncEntities != null) {
-              if (syncEntities.contains("tasks")) {
-                entities.add(Entity.tasks);
-              }
-              if (syncEntities.contains("events")) {
-                entities.add(Entity.events);
-              }
-              if (syncEntities.contains("event_modifier")) {
-                entities.add(Entity.eventModifiers);
-              }
-              if (syncEntities.contains("accounts")) {
-                entities.add(Entity.accounts);
-              }
-              if (syncEntities.contains("labels")) {
-                entities.add(Entity.labels);
-              }
-              if (syncEntities.contains("calendars")) {
-                entities.add(Entity.calendars);
-              }
-              if (syncEntities.contains("contacts")) {
-                entities.add(Entity.contacts);
-              }
-              if (entities.isNotEmpty) {
-                locator<SyncCubit>().sync(entities: entities);
+              if (syncEntities != null) {
+                if (syncEntities.contains("tasks")) {
+                  entities.add(Entity.tasks);
+                }
+                if (syncEntities.contains("events")) {
+                  entities.add(Entity.events);
+                }
+                if (syncEntities.contains("event_modifier")) {
+                  entities.add(Entity.eventModifiers);
+                }
+                if (syncEntities.contains("accounts")) {
+                  entities.add(Entity.accounts);
+                }
+                if (syncEntities.contains("labels")) {
+                  entities.add(Entity.labels);
+                }
+                if (syncEntities.contains("calendars")) {
+                  entities.add(Entity.calendars);
+                }
+                if (syncEntities.contains("contacts")) {
+                  entities.add(Entity.contacts);
+                }
+                if (entities.isNotEmpty) {
+                  locator<SyncCubit>().sync(entities: entities);
+                }
               }
             }
           } catch (e) {
@@ -192,11 +195,13 @@ class MainCubit extends Cubit<MainCubitState> {
               planExpireDate: user.planExpireDate));
           _sentryService.authenticate(user.id.toString(), user.email);
 
-          bool timeFormatChanged = _preferencesRepository.timeFormatChanged;
-          if (!timeFormatChanged) {
-            _preferencesRepository
-                .setTimeFormat(appUser.settings?['calendar']?['timeFormat'] ?? TimeFormatUtils.systemDefault);
-          }
+          int? timeFormat = TimeFormatUtils.systemDefault;
+          timeFormat = UserSettingsUtils.getSettingBySectionAndKey(
+                  preferencesRepository: _preferencesRepository,
+                  sectionName: UserSettingsUtils.calendarSection,
+                  key: UserSettingsUtils.timeFormat) ??
+              TimeFormatUtils.systemDefault;
+          _preferencesRepository.setTimeFormat(timeFormat ?? TimeFormatUtils.systemDefault);
 
           //await _intercomService.authenticate(
           //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);

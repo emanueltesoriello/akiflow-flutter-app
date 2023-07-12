@@ -25,7 +25,7 @@ func refreshAccessToken(withRefreshToken refreshToken: String) async throws -> S
        let accessToken = jsonDict["access_token"] as? String {
         return accessToken
     } else {
-        throw NSError(domain: "com.example.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to refresh access token"])
+        throw NSError(domain: "com.akiflow.mobile", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to refresh access token"])
     }
 }
 
@@ -98,7 +98,7 @@ func makeAPICall(withAccessToken accessToken: String, refreshToken: String, titl
             try await makeAPICall(withAccessToken: newAccessToken, refreshToken: refreshToken, title: title)
         } else {
             print("API request failed - Status Code: \(httpResponse.statusCode)")
-            throw NSError(domain: "com.example.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "API request failed with status code \(httpResponse.statusCode)"])
+            throw NSError(domain: "com.akiflow.mobile", code: 0, userInfo: [NSLocalizedDescriptionKey: "API request failed with status code \(httpResponse.statusCode)"])
         }
     }
 }
@@ -142,9 +142,14 @@ struct Akiflow: AppIntent, CustomIntentMigratedAppIntent, PredictableIntent {
                     do {
                         // intercept the answer prompt
                         // pass the title to the makeAPICall method
-                        let myTitle = try await $title.requestValue()
-                    
-                        try await makeAPICall(withAccessToken: accessToken, refreshToken: jsonDict["refresh_token"] as! String, title: myTitle)
+                        if((title != nil) && (!title!.isEmpty) && (title != "My Akiflow task!")){
+                            try await makeAPICall(withAccessToken: accessToken, refreshToken: jsonDict["refresh_token"] as! String, title: title!)
+                        }
+                        else {
+                            let myTitle = try await $title.requestValue()
+                            
+                            try await makeAPICall(withAccessToken: accessToken, refreshToken: jsonDict["refresh_token"] as! String, title: myTitle)
+                        }
                         return .result(dialog: IntentDialog.responseSuccess)
                     } catch {
                         print("API request failed: \(error.localizedDescription)")
@@ -165,9 +170,15 @@ struct CreateTaskAppShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: Akiflow(),
             phrases: ["Create a new task in \(.applicationName).",
+                      "New task with title: \(\.$title)",
+                      "New task with title: \(\.$title). In \(.applicationName)",
+                      "New task with title: \(\.$title). Using \(.applicationName)",
+                      "Create a new task in \(.applicationName) \(\.$title)",
                       "Create a new task with \(.applicationName).",
                       "Add a task in \(.applicationName).",
-                      "Add a task with \(.applicationName).",
+                      "Add a task \(\.$title) with \(.applicationName).",
+                      "Add a task in \(.applicationName) \(\.$title)",
+                      "Add a task with title \(\.$title).",
                       "Can you help me make a task in \(.applicationName)?",
                       "Can you help me make a task with \(.applicationName)?",
                       "Start a new task in \(.applicationName).",

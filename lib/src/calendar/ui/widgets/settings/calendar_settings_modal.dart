@@ -30,9 +30,9 @@ class CalendarSettingsModal extends StatelessWidget {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(
       builder: (context, state) {
         bool isThreeDays = state.isCalendarThreeDays;
-        bool isWeekendHidden = state.isCalendarWeekendHidden;
-        bool areDeclinedEventsHidden = state.areDeclinedEventsHidden;
-        bool areCalendarTasksHidden = state.areCalendarTasksHidden;
+        bool isWeekendHidden = !state.isCalendarWeekendHidden;
+        bool areDeclinedEventsHidden = !state.areDeclinedEventsHidden;
+        bool areCalendarTasksHidden = !state.areCalendarTasksHidden;
         bool groupOverlappingTasks = state.groupOverlappingTasks;
         List<Calendar> calendars = context.watch<CalendarCubit>().state.calendars;
 
@@ -62,10 +62,11 @@ class CalendarSettingsModal extends StatelessWidget {
                       const SizedBox(height: Dimension.padding),
                       _switchButtons(
                           context: context,
-                          groupOverlappingTasks: groupOverlappingTasks,
                           isWeekendHidden: isWeekendHidden,
+                          groupOverlappingTasks: groupOverlappingTasks,
+                          areCalendarTasksHidden: areCalendarTasksHidden,
                           areDeclinedEventsHidden: areDeclinedEventsHidden,
-                          areCalendarTasksHidden: areCalendarTasksHidden),
+                          isThreeDays: isThreeDays),
                       const Separator(),
                       _calendars(context, primaryCalendars, calendars),
                     ],
@@ -168,10 +169,10 @@ class CalendarSettingsModal extends StatelessWidget {
         context.read<CalendarCubit>().setCalendarViewThreeDays(true);
         calendarController.displayDate = now.hour > 2 ? now.subtract(const Duration(hours: 2)) : now;
         if (isWeekendHidden) {
-          context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
+          //context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
           calendarController.view = CalendarView.workWeek;
         } else {
-          context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
+          //context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
           calendarController.view = CalendarView.week;
         }
         Navigator.pop(context);
@@ -265,14 +266,42 @@ class CalendarSettingsModal extends StatelessWidget {
 
   Padding _switchButtons(
       {required BuildContext context,
-      required bool groupOverlappingTasks,
       required bool isWeekendHidden,
+      required bool groupOverlappingTasks,
+      required bool areCalendarTasksHidden,
       required bool areDeclinedEventsHidden,
-      required bool areCalendarTasksHidden}) {
+      bool isThreeDays = false}) {
     return Padding(
       padding: const EdgeInsets.only(left: Dimension.paddingS, bottom: Dimension.padding),
       child: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(t.calendar.hideWeekends,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
+              SwitchButton(
+                value: isWeekendHidden,
+                onToggle: (value) {
+                  context.read<CalendarCubit>().setCalendarWeekendHidden(!value);
+                  if (calendarController.view == CalendarView.week ||
+                      calendarController.view == CalendarView.workWeek) {
+                    if (!value) {
+                      context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
+                      calendarController.view = CalendarView.workWeek;
+                    } else {
+                      context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
+                      calendarController.view = CalendarView.week;
+                    }
+                    if (isThreeDays) {
+                      context.read<CalendarCubit>().setCalendarViewThreeDays(true);
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.paddingM),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -290,22 +319,12 @@ class CalendarSettingsModal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(t.calendar.hideWeekends,
+              Text(t.calendar.hideTasksFromCalendar,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
               SwitchButton(
-                value: isWeekendHidden,
+                value: areCalendarTasksHidden,
                 onToggle: (value) {
-                  context.read<CalendarCubit>().setCalendarWeekendHidden(value);
-                  if (calendarController.view == CalendarView.week ||
-                      calendarController.view == CalendarView.workWeek) {
-                    if (value) {
-                      context.read<CalendarCubit>().changeCalendarView(CalendarView.workWeek);
-                      calendarController.view = CalendarView.workWeek;
-                    } else {
-                      context.read<CalendarCubit>().changeCalendarView(CalendarView.week);
-                      calendarController.view = CalendarView.week;
-                    }
-                  }
+                  context.read<CalendarCubit>().setCalendarTasksHidden(!value);
                 },
               ),
             ],
@@ -319,21 +338,7 @@ class CalendarSettingsModal extends StatelessWidget {
               SwitchButton(
                 value: areDeclinedEventsHidden,
                 onToggle: (value) {
-                  context.read<CalendarCubit>().setDeclinedEventsHidden(value);
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: Dimension.paddingM),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(t.calendar.hideTasksFromCalendar,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context))),
-              SwitchButton(
-                value: areCalendarTasksHidden,
-                onToggle: (value) {
-                  context.read<CalendarCubit>().setCalendarTasksHidden(value);
+                  context.read<CalendarCubit>().setDeclinedEventsHidden(!value);
                 },
               ),
             ],
