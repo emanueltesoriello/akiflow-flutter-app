@@ -144,7 +144,7 @@ class NotificationsService {
           );
         }
         if (notification.notificationTitle.isNotEmpty) {
-          FlutterLocalNotificationsPlugin().zonedScheduleExt(
+          await FlutterLocalNotificationsPlugin().zonedScheduleExt(
               notification.notificationId,
               notification.notificationTitle,
               notification.notificationBody,
@@ -563,7 +563,7 @@ class NotificationsService {
     } else {
       print('show immediately this notification');
       FlutterLocalNotificationsPlugin().showExt(
-          notificationId, title, "showExt: " + description, notificationDetails ?? const NotificationDetails(),
+          notificationId, title, description, notificationDetails ?? const NotificationDetails(),
           payload: payload,
           scheduledDate: scheduledDate,
           notificationType: notificationType,
