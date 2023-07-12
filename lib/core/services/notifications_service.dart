@@ -552,7 +552,9 @@ class NotificationsService {
       required String? payload,
       required NotificationType notificationType,
       required int minutesBeforeToStart}) async {
-    if (scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes > 0) {
+    // 17:50-17:48 = 2 --> 2>0?
+    int notificationsStartInMinutes = scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes;
+    if (notificationsStartInMinutes > 0 && notificationsStartInMinutes > minutesBeforeToStart) {
       await FlutterLocalNotificationsPlugin().saveScheduleExt(notificationId, title, description, scheduledDate,
           fullEventId: fullEventId,
           payload: payload,
@@ -561,7 +563,7 @@ class NotificationsService {
     } else {
       print('show immediately this notification');
       FlutterLocalNotificationsPlugin().showExt(
-          notificationId, title, description, notificationDetails ?? const NotificationDetails(),
+          notificationId, title, "showExt: " + description, notificationDetails ?? const NotificationDetails(),
           payload: payload,
           scheduledDate: scheduledDate,
           notificationType: notificationType,
