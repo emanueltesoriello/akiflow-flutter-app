@@ -554,7 +554,7 @@ class NotificationsService {
       required int minutesBeforeToStart}) async {
     // 17:50-17:48 = 2 --> 2>0?
     int notificationsStartInMinutes = scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes;
-    if (notificationsStartInMinutes > 0 && notificationsStartInMinutes > minutesBeforeToStart) {
+    if (notificationsStartInMinutes > 0) {
       await FlutterLocalNotificationsPlugin().saveScheduleExt(notificationId, title, description, scheduledDate,
           fullEventId: fullEventId,
           payload: payload,
