@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
@@ -39,7 +40,7 @@ class FloatingButton extends StatelessWidget {
             children: [
               FabActionButton(
                 icon: Assets.images.icons.common.daySVG,
-                title: 'Event',
+                title: t.fab.event,
                 onTap: () async {
                   _onTapEvent(context);
                   fabKey.currentState!.toggle();
@@ -47,7 +48,7 @@ class FloatingButton extends StatelessWidget {
               ),
               FabActionButton(
                 icon: Assets.images.icons.common.checkDoneOutlineSVG,
-                title: 'Task - Today',
+                title: t.fab.taskToday,
                 onTap: () async {
                   _onTapTask(context: context, homeViewType: homeViewType);
                   fabKey.currentState!.toggle();
@@ -55,7 +56,7 @@ class FloatingButton extends StatelessWidget {
               ),
               FabActionButton(
                 icon: Assets.images.icons.common.traySVG,
-                title: 'Task - Inbox',
+                title: t.fab.taskInbox,
                 onTap: () async {
                   _onTapTask(context: context, homeViewType: HomeViewType.inbox);
                   fabKey.currentState!.toggle();

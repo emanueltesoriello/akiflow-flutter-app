@@ -432,5 +432,10 @@
   "integrations": {
     "todoist": "Todoist",
     "slack": "Slack"
+  },
+  "fab": {
+    "event": "Event",
+    "taskToday": "Task - Today",
+    "taskInbox": "Task - Inbox"
   }
 }
