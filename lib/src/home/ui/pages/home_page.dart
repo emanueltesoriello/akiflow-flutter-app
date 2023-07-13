@@ -26,6 +26,7 @@ import 'package:mobile/src/tasks/ui/pages/edit_task/recurring_edit_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/account/account.dart';
 import 'package:share_handler/share_handler.dart';
+import 'package:flutter/services.dart';
 
 import 'home_body.dart';
 
@@ -82,7 +83,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             builder: (context) => CreateTaskModal(
               sharedText: media.content,
             ),
-          ).then((value) => context.read<EditTaskCubit>().onModalClose());
+          ).then((value) async {
+            context.read<EditTaskCubit>().onModalClose();
+            await Future.delayed(const Duration(milliseconds: 700));
+
+            SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          });
         }
       }
 
@@ -98,7 +104,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               builder: (context) => CreateTaskModal(
                 sharedText: media.content,
               ),
-            ).then((value) => context.read<EditTaskCubit>().onModalClose());
+            ).then((value) async {
+              context.read<EditTaskCubit>().onModalClose();
+              await Future.delayed(const Duration(milliseconds: 700));
+              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            });
           }
         }
       });
