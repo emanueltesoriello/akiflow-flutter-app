@@ -35,21 +35,29 @@ class FloatingButton extends StatelessWidget {
           GlobalKey<ExpandableFabState> fabKey = GlobalKey();
           return ExpandableFab(
             key: fabKey,
-            distance: 70.0,
+            distance: 58.0,
             children: [
               FabActionButton(
+                icon: Assets.images.icons.common.daySVG,
+                title: 'Event',
+                onTap: () async {
+                  _onTapEvent(context);
+                  fabKey.currentState!.toggle();
+                },
+              ),
+              FabActionButton(
                 icon: Assets.images.icons.common.checkDoneOutlineSVG,
-                title: 'Task',
+                title: 'Task - Today',
                 onTap: () async {
                   _onTapTask(context: context, homeViewType: homeViewType);
                   fabKey.currentState!.toggle();
                 },
               ),
               FabActionButton(
-                icon: Assets.images.icons.common.daySVG,
-                title: 'Event',
+                icon: Assets.images.icons.common.traySVG,
+                title: 'Task - Inbox',
                 onTap: () async {
-                  _onTapEvent(context);
+                  _onTapTask(context: context, homeViewType: HomeViewType.inbox);
                   fabKey.currentState!.toggle();
                 },
               ),
