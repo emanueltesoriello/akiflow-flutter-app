@@ -377,6 +377,7 @@ class NotificationsService {
     return;
   }
 
+  @pragma('vm:entry-point')
   static handleNotificationClick(NotificationResponse payload) async {
     //payload.payload;
     if (payload.payload != '') {
