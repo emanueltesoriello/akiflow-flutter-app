@@ -150,7 +150,7 @@ class UserSettingsUtils {
         await prefs.setString("user", jsonEncode(user.toMap()));
       }
     } catch (e) {
-      print('ERROR updateUserSettingsToRemote: $e');
+      print('ERROR migrateUserSettingsToV4: $e');
     }
   }
 }

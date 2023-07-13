@@ -21,8 +21,6 @@ class UserApi extends ApiClient {
     Response responseRaw = await _httpClient.get(url);
 
     var response = jsonDecode(responseRaw.body);
-    print('getSettings');
-    print('getSettings: $response');
     if (response["data"] == null) {
       return null;
     } else if (response.containsKey("errors")) {
