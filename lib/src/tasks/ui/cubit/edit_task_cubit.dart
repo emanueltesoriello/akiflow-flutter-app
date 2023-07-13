@@ -11,6 +11,7 @@ import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
@@ -159,9 +160,32 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(selectedDate: date));
     Task task = state.updatedTask;
 
+    int duration = 1800;
+    AuthCubit authCubit = locator<AuthCubit>();
+    if (authCubit.state.user?.settings?["tasks"] != null) {
+      List<dynamic> taskSettings = authCubit.state.user?.settings?["tasks"];
+      for (Map<String, dynamic> element in taskSettings) {
+        if (element['key'] == 'defaultTasksDuration') {
+          var defaultTasksDuration = element['value'];
+          if (defaultTasksDuration != null) {
+            if (defaultTasksDuration is String) {
+              duration = int.parse(defaultTasksDuration);
+            } else if (defaultTasksDuration is int) {
+              duration = defaultTasksDuration;
+            }
+          }
+        }
+      }
+    }
+
     Task updated = task.copyWith(
       date: Nullable(date?.toIso8601String()),
       datetime: Nullable(TzUtils.toUtcStringIfNotNull(dateTime)),
+      duration: state.updatedTask.duration != null && state.updatedTask.duration != 0
+          ? Nullable(state.updatedTask.duration)
+          : dateTime != null
+              ? Nullable(duration)
+              : Nullable(0),
       status: Nullable(statusType.id),
       updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
     );

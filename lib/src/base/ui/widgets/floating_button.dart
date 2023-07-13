@@ -102,10 +102,20 @@ class FloatingButton extends StatelessWidget {
       }
 
       AuthCubit authCubit = context.read<AuthCubit>();
-      if (authCubit.state.user != null &&
-          authCubit.state.user?.settings != null &&
-          authCubit.state.user?.settings?['tasks'] != null) {
-        duration = authCubit.state.user?.settings?['tasks']?['defaultTasksDuration'] ?? 1800;
+      if (authCubit.state.user?.settings?["tasks"] != null) {
+        List<dynamic> taskSettings = authCubit.state.user?.settings?["tasks"];
+        for (Map<String, dynamic> element in taskSettings) {
+          if (element['key'] == 'defaultTasksDuration') {
+            var defaultTasksDuration = element['value'];
+            if (defaultTasksDuration != null) {
+              if (defaultTasksDuration is String) {
+                duration = int.parse(defaultTasksDuration);
+              } else if (defaultTasksDuration is int) {
+                duration = defaultTasksDuration;
+              }
+            }
+          }
+        }
       }
     }
 
@@ -134,10 +144,21 @@ class FloatingButton extends StatelessWidget {
   _onTapEvent(BuildContext context) {
     int duration = 1800;
     AuthCubit authCubit = context.read<AuthCubit>();
-    if (authCubit.state.user != null &&
-        authCubit.state.user?.settings != null &&
-        authCubit.state.user?.settings?['calendar'] != null) {
-      duration = authCubit.state.user?.settings?['calendar']?['eventDuration'] ?? 1800;
+
+    if (authCubit.state.user?.settings?["calendar"] != null) {
+      List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
+      for (Map<String, dynamic> element in calendarSettings) {
+        if (element['key'] == 'eventDuration') {
+          var eventDuration = element['value'];
+          if (eventDuration != null) {
+            if (eventDuration is String) {
+              duration = int.parse(eventDuration);
+            } else if (eventDuration is int) {
+              duration = eventDuration;
+            }
+          }
+        }
+      }
     }
     context.read<EventsCubit>().createEvent(context, duration);
   }

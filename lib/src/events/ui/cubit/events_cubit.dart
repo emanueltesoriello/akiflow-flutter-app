@@ -130,8 +130,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
   String getDefaultConferenceSolution() {
     String conferenceSolution = 'meet';
     AuthCubit authCubit = locator<AuthCubit>();
-    if (authCubit.state.user?.settings?['calendar']['conferenceSolution'] != null) {
-      conferenceSolution = authCubit.state.user?.settings?['calendar']['conferenceSolution'];
+    if (authCubit.state.user?.settings?["calendar"] != null) {
+      List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
+      for (Map<String, dynamic> element in calendarSettings) {
+        if (element['key'] == 'conferenceSolution') {
+          if (element['value'] != null) {
+            conferenceSolution = element['value'];
+          }
+        }
+      }
     }
     return conferenceSolution;
   }
@@ -139,8 +146,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
   String getDefaultConferenceIcon() {
     String conferenceSolution = 'meet';
     AuthCubit authCubit = locator<AuthCubit>();
-    if (authCubit.state.user?.settings?['calendar']['conferenceSolution'] != null) {
-      conferenceSolution = authCubit.state.user?.settings?['calendar']['conferenceSolution'];
+    if (authCubit.state.user?.settings?["calendar"] != null) {
+      conferenceSolution = getDefaultConferenceSolution();
     }
     if (conferenceSolution == 'zoom') {
       return Assets.images.icons.zoom.zoomSVG;
@@ -207,16 +214,24 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   String generateAkiflowSignature(BuildContext context) {
+    AuthCubit authCubit = context.read<AuthCubit>();
     String akiflowUrl =
         'https://akiflow.com/?utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
     bool showAkiflowSignature = true;
-    if (context.read<AuthCubit>().state.user?.settings?["general"] != null &&
-        context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"] != null) {
-      showAkiflowSignature = context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"];
+
+    if (authCubit.state.user?.settings?["general"] != null) {
+      List<dynamic> generalSettings = authCubit.state.user?.settings?["general"];
+      for (Map<String, dynamic> element in generalSettings) {
+        if (element['key'] == 'showAkiflowSignature') {
+          if (element['value'] != null) {
+            showAkiflowSignature = element['value'];
+          }
+        }
+      }
     }
 
-    if (showAkiflowSignature && context.read<AuthCubit>().state.user?.referralUrl != null) {
-      var referral = context.read<AuthCubit>().state.user?.referralUrl;
+    if (showAkiflowSignature && authCubit.state.user?.referralUrl != null) {
+      var referral = authCubit.state.user?.referralUrl;
       akiflowUrl = '$referral&utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
     }
     if (showAkiflowSignature) {
@@ -831,8 +846,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
     dynamic content;
     if (meetingSolution == 'zoom') {
       if (((conferenceAccountId != null && conferenceAccountId.isEmpty) || conferenceAccountId == null) &&
-          authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
-        conferenceAccountId = authCubit.state.user?.settings?['calendar']['conferenceAccountId'];
+          authCubit.state.user?.settings?['calendar'] != null) {
+        List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
+        for (Map<String, dynamic> element in calendarSettings) {
+          if (element['key'] == 'conferenceAccountId') {
+            if (element['value'] != null) {
+              conferenceAccountId = element['value'];
+            }
+          }
+        }
       }
       if (conferenceAccountId != null) {
         content = {"meetingSolution": meetingSolution, "akiflowAccountId": conferenceAccountId};

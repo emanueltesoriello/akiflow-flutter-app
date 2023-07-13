@@ -1,7 +1,8 @@
 abstract class CalendarViewMode {
-  static const int agenda = 1;
-  static const int day = 2;
-  static const int workWeek = 3;
-  static const int week = 4;
-  static const int month = 5;
+  static const String agenda = 'agenda';
+  static const String day = 'day';
+  static const String threeDays = '3-custom';
+  static const String workWeek = 'workWeek';
+  static const String week = 'week';
+  static const String month = 'month';
 }
