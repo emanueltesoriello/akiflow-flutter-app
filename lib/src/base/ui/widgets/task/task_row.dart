@@ -112,7 +112,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
   _planDismissable() {
     return DismissiblePane(
       closeOnCancel: true,
-      dismissThreshold: 0.65,
+      dismissThreshold: 0.55,
       confirmDismiss: () async {
         widget.swipeActionPlanClick();
         return false;
@@ -195,7 +195,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         ),
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
-          extentRatio: 0.6,
+          extentRatio: 0.5,
           dismissible: _planDismissable(),
           children: [
             Builder(builder: (context) {

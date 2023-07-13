@@ -58,9 +58,7 @@ class SlidableButtonAction extends StatelessWidget {
                 )
               : Padding(
                   padding: EdgeInsets.only(
-                      right: (MediaQuery.of(context).size.width * 0.6 / 3 / 2) -
-                          (size ?? Dimension.defaultIconSize) +
-                          Dimension.paddingS),
+                      right: (MediaQuery.of(context).size.width * 0.6 / 3 / 2) - (size ?? Dimension.defaultIconSize)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
