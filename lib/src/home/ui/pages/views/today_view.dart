@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
@@ -21,7 +22,6 @@ import 'package:mobile/src/home/ui/widgets/today/today_header.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
 import 'package:mobile/src/home/ui/cubit/today/viewed_month_cubit.dart';
-import 'package:video_player/video_player.dart';
 
 class TodayView extends StatefulWidget {
   const TodayView({Key? key}) : super(key: key);
@@ -35,7 +35,6 @@ class _TodayViewState extends State<TodayView> {
   ScrollController scrollController = ScrollController();
   ValueNotifier<double> calendarOffsetNotifier = ValueNotifier<double>(200);
   PanelController panelController = PanelController();
-  late VideoPlayerController _controller;
 
   @override
   void initState() {
@@ -56,22 +55,7 @@ class _TodayViewState extends State<TodayView> {
         }
       });
     });
-
-    _controller = VideoPlayerController.asset(Assets.animations.todayEmptyAnimationWEBM)
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
-    _controller.play();
-
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -84,9 +68,6 @@ class _TodayViewState extends State<TodayView> {
     List<Task> todos;
     List<Task> pinned;
     List<Task> completed;
-
-    DateTime? lastTaskDoneAt = tasksCubit.state.lastTaskDoneAt;
-    DateTime? lastDayTodayZero = tasksCubit.state.lastDayTodayZero;
 
     if (selectedDate.day == DateTime.now().day &&
         selectedDate.month == DateTime.now().month &&
@@ -241,12 +222,8 @@ class _TodayViewState extends State<TodayView> {
                                   Container(
                                     padding:
                                         const EdgeInsets.only(top: Dimension.paddingXXL, bottom: Dimension.paddingS),
-                                    child: lastTaskDoneAt != null &&
-                                            lastTaskDoneAt.difference(DateTime.now().toUtc()).inSeconds.abs() < 1 &&
-                                            (!DateUtils.isSameDay(lastDayTodayZero, DateTime.now().toUtc()) ||
-                                                lastDayTodayZero == null)
-                                        ? _todayEmptyAnimation(play: true)
-                                        : _todayEmptyAnimation(play: false),
+                                    child: SvgPicture.asset(Assets.images.akiflow.tasksDoneSVG,
+                                        width: Dimension.pagesImageSize, height: Dimension.pagesImageSize),
                                   ),
                                   const SizedBox(height: Dimension.paddingS),
                                   Text(
@@ -277,21 +254,6 @@ class _TodayViewState extends State<TodayView> {
               ),
             );
           }),
-        ));
-  }
-
-  SizedBox _todayEmptyAnimation({required bool play}) {
-    if (play) {
-      _controller.play();
-      context.read<TasksCubit>().setLastDayTodayZero();
-    }
-
-    return SizedBox(
-        height: 125,
-        width: 125,
-        child: AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: _controller.value.isInitialized ? VideoPlayer(_controller) : Container(),
         ));
   }
 }

@@ -120,7 +120,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   setLastTaskDoneAt() {
-    print('setLastTaskDoneAt A FOST AICI la TASK DONE');
     DateTime now = DateTime.now().toUtc();
     emit(state.copyWith(lastTaskDoneAt: now));
     _preferencesRepository.setLastTaskDoneAt(now);
@@ -133,7 +132,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
   }
 
   setLastDayInboxZero() {
-    print('setLastDayInboxZero A FOST AICI');
     DateTime now = DateTime.now().toUtc();
     emit(state.copyWith(lastDayInboxZero: now));
     _preferencesRepository.setLastDayInboxZero(now);
