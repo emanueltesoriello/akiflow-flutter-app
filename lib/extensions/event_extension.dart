@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/core/repository/events_repository.dart';
@@ -322,17 +323,16 @@ extension EventExt on Event {
     return [goodRule.join(";"), parts.join(";")];
   }
 
-  ///returns all the valid events to be scheduled for the next 20 days
-  static Future<Map<String, Event>> eventNotifications(
-      EventsRepository eventsRepository, List<Calendar> calendars) async {
-    DateTime now = DateTime.now().toUtc();
-    DateTime endDate = now.add(const Duration(days: 5));
-
-    List<Event> events = await eventsRepository.getEventsBetweenDates(now, endDate);
+  static Map<String, Event> calculateEvents(List args) {
+    List<Event> events = args[0];
+    List<Calendar> calendars = args[1];
 
     List<Event> nonRecurring = <Event>[];
     List<Event> recurringParents = <Event>[];
     List<Event> recurringExceptions = <Event>[];
+
+    DateTime now = DateTime.now().toUtc();
+    DateTime endDate = now.add(const Duration(days: 5));
 
     //gets the visible calendars in order to process only their events
     List<String> notificationsEnabledCalendarIds = [];
@@ -423,6 +423,16 @@ extension EventExt on Event {
       }
     }
     return eventsToSchedule;
+  }
+
+  ///returns all the valid events to be scheduled for the next 20 days
+  static Future<Map<String, Event>> eventNotifications(
+      EventsRepository eventsRepository, List<Calendar> calendars) async {
+    DateTime now = DateTime.now().toUtc();
+    DateTime endDate = now.add(const Duration(days: 5));
+
+    List<Event> events = await eventsRepository.getEventsBetweenDates(now, endDate);
+    return compute(calculateEvents, [events, calendars]);
   }
 
   static int generateNotificationIdFromEventId(String eventId) {

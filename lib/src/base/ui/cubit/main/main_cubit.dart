@@ -203,8 +203,6 @@ class MainCubit extends Cubit<MainCubitState> {
               TimeFormatUtils.systemDefault;
           _preferencesRepository.setTimeFormat(timeFormat ?? TimeFormatUtils.systemDefault);
 
-          //await _intercomService.authenticate(
-          //   email: user.email, intercomHashAndroid: user.intercomHashAndroid, intercomHashIos: user.intercomHashIos);
           try {
             // trigger that start every time the set port is called
             // used for handling backgroundSync that update the UI
@@ -212,8 +210,7 @@ class MainCubit extends Cubit<MainCubitState> {
             IsolateNameServer.registerPortWithName(port.sendPort, "backgroundSync");
             port.listen((dynamic data) async {
               print('got $data on UI');
-              //await _syncControllerService.sync();
-              await locator<SyncCubit>().sync();
+              locator<SyncCubit>().sync();
             });
           } catch (e) {
             print(e);
@@ -229,6 +226,6 @@ class MainCubit extends Cubit<MainCubitState> {
 
   void onFocusLost() async {
     _preferencesRepository.setLastAppUseAt(DateTime.now());
-    await _syncControllerService.sync([Entity.tasks]);
+    _syncControllerService.sync();
   }
 }

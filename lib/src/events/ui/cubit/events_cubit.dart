@@ -250,8 +250,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     if (updateParent) {
       await _eventModifiersRepository.add([responseStatusEventModifier(event, response, updateParent: true)]);
     }
-    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-    await scheduleEventsSync();
+    _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+    scheduleEventsSync();
     refetchEvent(event);
 
     AnalyticsService.track("Edit Event", properties: {
@@ -289,8 +289,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
     if (event.isTimeOrDateValid()) {
       await _eventsRepository.updateById(event.id, data: event);
-      await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-      await scheduleEventsSync();
+      _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+      scheduleEventsSync();
       refetchEvent(event);
 
       AnalyticsService.track(
@@ -588,8 +588,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     await _eventsRepository.updateById(parentEvent.id, data: parentEvent);
     deleteExceptionsByRecurringId(parentEvent.recurringId!, startingFrom: tappedDate.add(const Duration(days: 1)));
-    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-    await scheduleEventsSync();
+    _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+    scheduleEventsSync();
 
     AnalyticsService.track("Edit Event", properties: {
       "mobile": true,
@@ -620,7 +620,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
 
     if (sync) {
-      await _syncCubit.sync(entities: [Entity.events]);
+      _syncCubit.sync(entities: [Entity.events]);
     }
   }
   //END update Event section
@@ -762,7 +762,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     );
     await _eventsRepository.updateById(event.id, data: event);
     refetchEvent(event);
-    await _syncCubit.sync(entities: [Entity.events]);
+    _syncCubit.sync(entities: [Entity.events]);
 
     AnalyticsService.track("Event Rescheduled", properties: {
       "mobile": true,

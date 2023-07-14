@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:mobile/core/api/account_api.dart';
 import 'package:mobile/core/api/api.dart';
@@ -32,7 +30,6 @@ import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_integration_service.dart';
 import 'package:mobile/core/services/sync_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
-import 'package:mobile/extensions/local_notifications_extensions.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:models/account/account.dart';
 import 'package:models/account/account_token.dart';
@@ -41,7 +38,8 @@ import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mobile/extensions/event_extension.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mobile/common/utils/converters_isolate.dart';
+import 'package:flutter/foundation.dart';
 
 enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers }
 
@@ -142,76 +140,77 @@ class SyncControllerService {
 
   Timer? debounce;
 
-  sync([List<Entity>? entities]) async {
-    if (debounce != null) debounce!.cancel();
-
-    debounce = Timer(
-      const Duration(milliseconds: 500),
-      () async {
-        print("started sync");
-
-        if (_isSyncing) {
-          print("sync already in progress");
-          return;
-        }
-
-        _isSyncing = true;
-
-        User? user = _preferencesRepository.user;
-
-        if (user != null) {
-          AnalyticsService.track("Trigger sync now");
-
-          if (entities == null) {
-            await _syncEntity(Entity.accounts);
-            await _syncEntity(Entity.tasks);
-            await _syncEntity(Entity.labels);
-            await _syncEntity(Entity.calendars);
-            await _syncEntity(Entity.events);
-            await _syncEntity(Entity.eventModifiers);
-            await _syncEntity(Entity.contacts);
-          } else {
-            for (Entity entity in entities) {
-              await _syncEntity(entity);
-            }
-          }
-
-          try {
-            await postClient();
-          } catch (e, s) {
-            _sentryService.captureException(e, stackTrace: s);
-          }
-          try {
-            EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then(
-              (eventNotifications) async {
-                NotificationsService.scheduleEvents(_preferencesRepository, eventNotifications).then((_) async {
-                  NotificationsService.scheduleEventsTasksAndOthers();
-                });
-              },
-            );
-          } catch (e, s) {
-            _sentryService.captureException(e, stackTrace: s);
-          }
-
-          syncCompletedController.add(0);
-
-          // check after docs sync to prevent docs duplicates
-          try {
-            bool hasNewDocs = await _syncIntegration();
-
-            if (hasNewDocs) {
-              await _syncEntity(Entity.tasks);
-            }
-          } catch (e, s) {
-            _sentryService.captureException(e, stackTrace: s);
-          }
-        }
-
-        _isSyncing = false;
-
-        syncCompletedController.add(0);
+  scheduleNotifications() {
+    EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then(
+      (eventNotifications) async {
+        NotificationsService.scheduleEvents(_preferencesRepository, eventNotifications).then((_) async {
+          compute(NotificationsService.scheduleEventsTasksAndOthers, null);
+        });
       },
     );
+  }
+
+  sync([List<Entity>? entities]) async {
+    print("started sync");
+
+    if (_isSyncing) {
+      print("sync already in progress");
+      return;
+    }
+
+    _isSyncing = true;
+
+    User? user = _preferencesRepository.user;
+
+    if (user != null) {
+      AnalyticsService.track("Trigger sync now");
+
+      if (entities == null) {
+        Future.wait([
+          _syncEntity(Entity.accounts),
+          _syncEntity(Entity.tasks),
+          _syncEntity(Entity.labels),
+          _syncEntity(Entity.calendars),
+          _syncEntity(Entity.events),
+          _syncEntity(Entity.eventModifiers),
+          _syncEntity(Entity.contacts),
+        ]).then((_) => _isSyncing = false);
+      } else {
+        for (Entity entity in entities) {
+          _syncEntity(entity).then((_) => _isSyncing = false);
+        }
+      }
+
+      try {
+        postClient();
+      } catch (e, s) {
+        _sentryService.captureException(e, stackTrace: s);
+      }
+      try {
+        scheduleNotifications();
+      } catch (e, s) {
+        _sentryService.captureException(e, stackTrace: s);
+      }
+
+      syncCompletedController.add(0);
+
+      // check after docs sync to prevent docs duplicates
+      try {
+        await _syncIntegration();
+        // bool hasNewDocs = await _syncIntegration();
+
+        // if (hasNewDocs) {
+        //   await _syncEntity(Entity.tasks);
+        // }
+      } catch (e, s) {
+        _sentryService.captureException(e, stackTrace: s);
+      }
+    }
+
+    //_isSyncing = false;
+
+    syncCompletedController.add(0);
+    return;
   }
 
   Future<void> syncIntegrationWithCheckUser() async {
@@ -228,7 +227,7 @@ class SyncControllerService {
       bool hasNewDocs = await _syncIntegration();
 
       if (hasNewDocs) {
-        await _syncEntity(Entity.tasks);
+        _syncEntity(Entity.tasks);
       }
     }
 
@@ -391,6 +390,7 @@ class SyncControllerService {
 
       _sentryService.captureException(e, stackTrace: s);
     }
+    return;
   }
 
   /// Return `true` if there are new docs to import

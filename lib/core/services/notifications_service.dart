@@ -98,7 +98,7 @@ class NotificationsService {
   // read all the previously scheduled events, tasks, and other local notifications
   // aggregate them
   // schedule the next 64 notifications --> according to iOS limits
-  static Future scheduleEventsTasksAndOthers() async {
+  static Future scheduleEventsTasksAndOthers(dynamic _) async {
     List<ScheduledNotification>? scheduledNotifications =
         await FlutterLocalNotificationsPlugin().getScheduledNotifications();
     if (scheduledNotifications != null && scheduledNotifications.isNotEmpty) {
@@ -144,7 +144,7 @@ class NotificationsService {
           );
         }
         if (notification.notificationTitle.isNotEmpty) {
-          await FlutterLocalNotificationsPlugin().zonedScheduleExt(
+          FlutterLocalNotificationsPlugin().zonedScheduleExt(
               notification.notificationId,
               notification.notificationTitle,
               notification.notificationBody,
@@ -181,13 +181,8 @@ class NotificationsService {
           if (notificationType == NotificationType.Event) {
             if (!eventsTobeScheduled.containsKey(dbScheduledNotification.fullEventId)) {
               toBeRemoved.add(dbScheduledNotification);
+              cancelNotificationById(dbScheduledNotification.notificationId);
             }
-          }
-        }
-        if (toBeRemoved.isNotEmpty) {
-          // remove notifications
-          for (var eventToBeRemoved in toBeRemoved) {
-            await cancelNotificationById(eventToBeRemoved.notificationId);
           }
         }
       }
