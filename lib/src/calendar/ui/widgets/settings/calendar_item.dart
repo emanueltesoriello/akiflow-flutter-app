@@ -72,14 +72,16 @@ class _CalendarItemState extends State<CalendarItem> {
                 shrinkWrap: true,
                 itemCount: widget.calendars.length,
                 itemBuilder: (context, index) {
-                  bool notificationsEnabled = widget.calendars[index].settings != null &&
-                      ((widget.calendars[index].settings["notificationsEnabledMobile"] ??
-                              widget.calendars[index].settings["notificationsEnabled"] ??
+                  bool notificationsEnabled = false;
+                  notificationsEnabled = widget.calendars[index].settings != null &&
+                      ((widget.calendars[index].settings?["notificationsEnabledMobile"] ??
+                              widget.calendars[index].settings?["notificationsEnabled"] ??
                               false) ==
                           true);
-                  bool visible = widget.calendars[index].settings != null &&
-                      ((widget.calendars[index].settings["visibleMobile"] ??
-                              widget.calendars[index].settings["visible"] ??
+                  bool visible = false;
+                  visible = widget.calendars[index].settings != null &&
+                      ((widget.calendars[index].settings?["visibleMobile"] ??
+                              widget.calendars[index].settings?["visible"] ??
                               false) ==
                           true);
                   return Padding(
