@@ -173,13 +173,13 @@ class SyncControllerService {
         await _syncEntity(Entity.events);
         await _syncEntity(Entity.eventModifiers);
         await _syncEntity(Entity.contacts);
-        _isSyncing = false;
-        syncCompletedController.add(0);
       } else {
         for (Entity entity in entities) {
-          _syncEntity(entity).then((_) => _isSyncing = false);
+          await _syncEntity(entity);
         }
       }
+      _isSyncing = false;
+      syncCompletedController.add(0);
 
       try {
         postClient();
@@ -205,7 +205,7 @@ class SyncControllerService {
       }
     }
 
-    //_isSyncing = false;
+    _isSyncing = false;
 
     return;
   }
