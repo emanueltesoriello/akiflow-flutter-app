@@ -46,8 +46,9 @@ class CalendarView extends StatelessWidget {
         List<String> visibleCalendarIds = [];
         if (calendars.isNotEmpty) {
           for (Calendar calendar in calendars) {
-            bool visible = calendar.settings != null &&
-                ((calendar.settings["visibleMobile"] ?? calendar.settings["visible"] ?? false) == true);
+            bool visible = false;
+            visible = calendar.settings != null &&
+                ((calendar.settings?["visibleMobile"] ?? calendar.settings?["visible"] ?? false) == true);
             if (visible) {
               visibleCalendarIds.add(calendar.id!);
             }

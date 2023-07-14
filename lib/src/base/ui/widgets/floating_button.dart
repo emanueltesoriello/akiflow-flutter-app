@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
@@ -35,21 +36,29 @@ class FloatingButton extends StatelessWidget {
           GlobalKey<ExpandableFabState> fabKey = GlobalKey();
           return ExpandableFab(
             key: fabKey,
-            distance: 70.0,
+            distance: 58.0,
             children: [
               FabActionButton(
+                icon: Assets.images.icons.common.daySVG,
+                title: t.fab.event,
+                onTap: () async {
+                  _onTapEvent(context);
+                  fabKey.currentState!.toggle();
+                },
+              ),
+              FabActionButton(
                 icon: Assets.images.icons.common.checkDoneOutlineSVG,
-                title: 'Task',
+                title: t.fab.taskToday,
                 onTap: () async {
                   _onTapTask(context: context, homeViewType: homeViewType);
                   fabKey.currentState!.toggle();
                 },
               ),
               FabActionButton(
-                icon: Assets.images.icons.common.daySVG,
-                title: 'Event',
+                icon: Assets.images.icons.common.traySVG,
+                title: t.fab.taskInbox,
                 onTap: () async {
-                  _onTapEvent(context);
+                  _onTapTask(context: context, homeViewType: HomeViewType.inbox);
                   fabKey.currentState!.toggle();
                 },
               ),
