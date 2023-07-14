@@ -192,8 +192,6 @@ class SyncControllerService {
         _sentryService.captureException(e, stackTrace: s);
       }
 
-      syncCompletedController.add(0);
-
       // check after docs sync to prevent docs duplicates
       try {
         await _syncIntegration();
