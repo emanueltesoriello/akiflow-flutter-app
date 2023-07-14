@@ -94,7 +94,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
               children: [
-                QuillToolbar.basic(controller: value),
+                // QuillToolbar.basic(controller: value),
                 QuillEditor(
                   controller: value,
                   readOnly: false,
