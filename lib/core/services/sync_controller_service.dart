@@ -166,15 +166,15 @@ class SyncControllerService {
       AnalyticsService.track("Trigger sync now");
 
       if (entities == null) {
-        Future.wait([
-          _syncEntity(Entity.accounts),
-          _syncEntity(Entity.tasks),
-          _syncEntity(Entity.labels),
-          _syncEntity(Entity.calendars),
-          _syncEntity(Entity.events),
-          _syncEntity(Entity.eventModifiers),
-          _syncEntity(Entity.contacts),
-        ]).then((_) => _isSyncing = false);
+        await _syncEntity(Entity.accounts);
+        await _syncEntity(Entity.tasks);
+        await _syncEntity(Entity.labels);
+        await _syncEntity(Entity.calendars);
+        await _syncEntity(Entity.events);
+        await _syncEntity(Entity.eventModifiers);
+        await _syncEntity(Entity.contacts);
+        _isSyncing = false;
+        syncCompletedController.add(0);
       } else {
         for (Entity entity in entities) {
           _syncEntity(entity).then((_) => _isSyncing = false);
@@ -207,7 +207,6 @@ class SyncControllerService {
 
     //_isSyncing = false;
 
-    syncCompletedController.add(0);
     return;
   }
 
