@@ -873,6 +873,7 @@ extension TaskExt on Task {
   }
 
   playTaskDoneSound() {
+    /*  Audio
     AudioContext audioContext = const AudioContext(
       iOS: AudioContextIOS(
         category: AVAudioSessionCategory.ambient,
@@ -887,7 +888,7 @@ extension TaskExt on Task {
           isSpeakerphoneOn: true,
           audioFocus: null),
     );
-    AudioPlayer.global.setGlobalAudioContext(audioContext);
+    AudioPlayer.global.setGlobalAudioContext(audioContext);*/
 
     if (!(done ?? false)) {
       final AuthCubit authCubit = locator<AuthCubit>();
@@ -898,7 +899,12 @@ extension TaskExt on Task {
       if (taskCompletedSoundEnabled) {
         final audioPlayer = AudioPlayer();
         audioPlayer.play(
-            volume: 0.3, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);
+          Assets.sounds.taskCompletedMP3,
+          volume: 0.3,
+          respectSilence: true,
+          isLocal:
+              true, /*, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency*/
+        );
       }
     }
   }

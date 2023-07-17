@@ -139,7 +139,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     try {
       return await _databaseService.database!.transaction<List<Object?>>((txn) async {
         Batch batch = txn.batch();
-        batch = await compute(prepareBatchInsert, BatchInsertModel(items: result, batch: batch, tableName: tableName));
+        batch = prepareBatchInsert(BatchInsertModel(items: result, batch: batch, tableName: tableName));
         return await batch.commit();
       });
     } catch (e) {

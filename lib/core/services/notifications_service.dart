@@ -464,7 +464,7 @@ class NotificationsService {
     if (activeNotifications.isNotEmpty) {
       for (var notification in activeNotifications) {
         localNotificationsPlugin.show(
-          notification.id,
+          notification.id ?? 0,
           notification.title,
           notification.body,
           const NotificationDetails(

@@ -14,8 +14,6 @@ class InteractiveWebView {
     _wController = controller;
   }
 
-  
-
   static Future<Document> htmlToDelta(String html) async {
     html = html.replaceAll('\n', '</br>');
 
@@ -24,7 +22,7 @@ class InteractiveWebView {
     }
 
     try {
-      String deltaJson = await _wController!.runJavascriptReturningResult("""htmlToDelta(`$html`);""");
+      String deltaJson = await _wController!.runJavaScriptReturningResult("""htmlToDelta(`$html`);""") as String;
 
       if (deltaJson == "null") {
         locator<SentryService>().captureException(Exception("can't parse html: $html"));
@@ -52,7 +50,7 @@ class InteractiveWebView {
     try {
       String deltaJson = jsonEncode(delta).replaceAll("\\", "\\\\");
 
-      String html = await _wController!.runJavascriptReturningResult("deltaToHtml(`$deltaJson`);");
+      String html = await _wController!.runJavaScriptReturningResult("deltaToHtml(`$deltaJson`);") as String;
 
       // JS interface on Android platform comes as quoted string
       if (Platform.isAndroid) {
@@ -71,7 +69,7 @@ class InteractiveWebView {
     try {
       value = value.replaceAll("\n", "");
 
-      String result = await _wController!.runJavascriptReturningResult("chronoParse(`$value`);");
+      String result = await _wController!.runJavaScriptReturningResult("chronoParse(`$value`);") as String;
 
       List<dynamic> objects;
 

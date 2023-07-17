@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:mobile/core/locator.dart';
-import 'package:mobile/core/services/sentry_service.dart';
 import 'package:models/base.dart';
 import 'package:models/integrations/gmail.dart';
 import 'package:models/nullable.dart';
