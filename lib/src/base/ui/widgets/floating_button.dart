@@ -23,8 +23,9 @@ import '../../../../common/style/colors.dart';
 import '../../../../extensions/task_extension.dart';
 
 class FloatingButton extends StatelessWidget {
-  const FloatingButton({Key? key, required this.bottomBarHeight}) : super(key: key);
+  FloatingButton({Key? key, required this.bottomBarHeight}) : super(key: key);
   final double bottomBarHeight;
+  final GlobalKey<ExpandableFabState> fabKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
@@ -33,7 +34,6 @@ class FloatingButton extends StatelessWidget {
         if (homeViewType == HomeViewType.availability) {
           return Container();
         } else if (homeViewType == HomeViewType.calendar) {
-          GlobalKey<ExpandableFabState> fabKey = GlobalKey();
           return ExpandableFab(
             key: fabKey,
             distance: 58.0,
