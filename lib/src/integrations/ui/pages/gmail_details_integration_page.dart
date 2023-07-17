@@ -170,7 +170,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                         child: Text('Disconnect',
                             style: Theme.of(context)
                                 .textTheme
-                                .subtitle1
+                                .titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey700(context))))
                     : ActionButton(
                         key: const Key('Reconnect'),
@@ -181,7 +181,7 @@ class _GmailDetailsIntegrationsPageState extends State<GmailDetailsIntegrationsP
                         splashColor: ColorsExt.apricot400(context),
                         borderColor: ColorsExt.apricot400(context),
                         child: Text('Reconnect',
-                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w400,
                                 )),
                       );

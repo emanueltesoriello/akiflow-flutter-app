@@ -69,7 +69,7 @@ class ButtonAction extends StatelessWidget {
         const SizedBox(height: 2),
         Text(bottomLabel!,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption?.copyWith(
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: ColorsExt.grey800(context),
                   fontWeight: FontWeight.w500,
                 )),

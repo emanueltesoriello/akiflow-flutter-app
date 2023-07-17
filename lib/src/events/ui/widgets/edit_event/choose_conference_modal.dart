@@ -20,7 +20,7 @@ class ChooseConferenceModal extends StatelessWidget {
         List<Account> zoomAccounts = state.accounts.where((element) => element.connectorId == "zoom").toList();
 
         return Material(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           child: Container(
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -104,7 +104,7 @@ class ChooseConferenceModal extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
               ),
             ),
           ],

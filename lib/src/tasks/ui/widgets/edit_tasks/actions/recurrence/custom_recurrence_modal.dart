@@ -63,7 +63,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -107,7 +107,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                   children: [
                     Text(
                       t.editTask.recurrence.every,
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: ColorsExt.grey800(context),
                             fontWeight: FontWeight.w500,
                           ),
@@ -137,7 +137,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                             isDense: true,
                           ),
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: ColorsExt.grey800(context),
                                 fontWeight: FontWeight.w500,
                               ),
@@ -170,7 +170,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         child: Center(
                           child: Text(
                             _frequency(),
-                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: ColorsExt.grey800(context),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -186,7 +186,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 padding: const EdgeInsets.only(top: Dimension.padding, bottom: Dimension.paddingS),
                 child: Text(
                   t.editTask.recurrence.selectedDays,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: ColorsExt.grey800(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -213,7 +213,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                 children: [
                   Text(
                     t.editTask.recurrence.ends,
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: ColorsExt.grey800(context),
                           fontWeight: FontWeight.w500,
                         ),
@@ -246,7 +246,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         child: Center(
                           child: Text(
                             _endOption(),
-                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: ColorsExt.grey800(context),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -282,7 +282,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         child: Center(
                           child: Text(
                             DateFormat("dd MMM yyyy").format(ends!.toLocal()),
-                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: ColorsExt.grey800(context),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -318,7 +318,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                                 isDense: true,
                               ),
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: ColorsExt.grey800(context),
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -327,7 +327,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         ),
                         Text(
                           t.editTask.recurrence.times,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: ColorsExt.grey800(context),
                                 fontWeight: FontWeight.w500,
                               ),
@@ -357,7 +357,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         child: Center(
                           child: Text(
                             t.cancel,
-                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: ColorsExt.grey600(context),
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -394,7 +394,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
                         child: Center(
                           child: Text(
                             t.confirm,
-                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: ColorsExt.grey800(context),
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -472,7 +472,7 @@ class CustomRecurrenceModalState extends State<CustomRecurrenceModal> {
         child: Center(
           child: Text(
             text,
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: selectedDays[index] ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                   fontWeight: FontWeight.w500,
                 ),

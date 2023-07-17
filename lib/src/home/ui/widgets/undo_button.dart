@@ -51,7 +51,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                 child: Text("Action undone",
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText1
+                        .bodyLarge
                         ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
               ),
               TextButton(
@@ -98,7 +98,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
                 child: Text(text(task.type),
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText1
+                        .bodyLarge
                         ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
               ),
               TextButton(
@@ -143,7 +143,7 @@ class _UndoBottomViewState extends State<UndoBottomView> {
       case UndoType.markDone:
         return ColorsExt.yorkGreen100(context);
       case UndoType.markUndone:
-        return ColorsExt.jordyBlue100(context);
+        return ColorsExt.grey200(context);
       case UndoType.plan:
         return ColorsExt.jordyBlue100(context);
       case UndoType.snooze:
@@ -210,8 +210,8 @@ class _UndoBottomViewState extends State<UndoBottomView> {
         );
       case UndoType.markUndone:
         return SvgPicture.asset(
-          Assets.images.icons.common.checkDoneSVG,
-          color: ColorsExt.jordyBlue200(context),
+          Assets.images.icons.common.checkEmptySVG,
+          color: ColorsExt.grey700(context),
           height: iconSize,
         );
       case UndoType.restore:

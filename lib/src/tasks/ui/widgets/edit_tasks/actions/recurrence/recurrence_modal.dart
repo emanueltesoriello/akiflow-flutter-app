@@ -39,7 +39,7 @@ class RecurrenceModal extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime lastDayOfMonth = DateTime(taskDatetime.year, taskDatetime.month + 1, 0);
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -203,7 +203,7 @@ class RecurrenceModal extends StatelessWidget {
                   },
                   child: Text(
                     t.editTask.custom,
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
                   ),
                 )),
             const SizedBox(height: Dimension.paddingL),
@@ -226,7 +226,7 @@ class RecurrenceModal extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
         ),
       ),
     );

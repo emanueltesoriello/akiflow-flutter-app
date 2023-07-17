@@ -29,7 +29,7 @@ class _GmaiImportTaskModalState extends State<GmaiImportTaskModal> {
       color: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(Dimension.radiusM),
             topRight: Radius.circular(Dimension.radiusM),
@@ -121,7 +121,7 @@ Widget _predefinedDateItem(
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: ColorsExt.grey800(context),
                   ),
             ),

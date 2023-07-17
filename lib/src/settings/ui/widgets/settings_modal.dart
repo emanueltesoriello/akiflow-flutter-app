@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,6 +17,7 @@ import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/label/ui/widgets/create_edit_label_modal.dart';
 import 'package:mobile/src/label/ui/widgets/create_folder_modal.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_selectable.dart';
+import 'package:mobile/src/settings/ui/widgets/siri_suggestions.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/labels_list.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -48,7 +50,7 @@ class SettingsModal extends StatelessWidget {
         List<Task> tasks = List.from(context.watch<TasksCubit>().state.inboxTasks);
 
         return Text(tasks.length.toString(),
-            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: ColorsExt.grey700(context),
                 ));
@@ -59,6 +61,30 @@ class SettingsModal extends StatelessWidget {
       },
     );
   }
+
+  /* _buildSiri(BuildContext context) {
+    return ButtonSelectable(
+      title: "Siri suggestions",
+      leading: SizedBox(
+        height: 22,
+        width: 22,
+        child: SvgPicture.asset(
+          "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
+          color: ColorsExt.grey900(context),
+        ),
+      ),
+      selected: false,
+      trailing: Container(),
+      onPressed: () {
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const SiriSuggestions(),
+          ),
+        );
+      },
+    );
+  }*/
 
   _buildToday(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
@@ -78,7 +104,7 @@ class SettingsModal extends StatelessWidget {
             List.from(fixedTodayTasks.where((element) => !element.isCompletedComputed && element.isTodayOrBefore));
 
         return Text(fixedTodoTodayTasks.length.toString(),
-            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: ColorsExt.grey700(context),
                 ));
@@ -104,7 +130,7 @@ class SettingsModal extends StatelessWidget {
       ),
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(t.comingSoon,
-          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: ColorsExt.grey600(context),
               )),
       onPressed: () {
@@ -129,7 +155,7 @@ class SettingsModal extends StatelessWidget {
       selected: homeViewType == HomeViewType.someday,
       trailing: Text(
         t.comingSoon,
-        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey600(context)),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey600(context)),
       ),
       onPressed: () {
         // TODO all tasks list
@@ -147,7 +173,7 @@ class SettingsModal extends StatelessWidget {
               t.settings.labels.toUpperCase(),
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1
+                  .bodyLarge
                   ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.grey600(context)),
             ),
           ),
@@ -301,6 +327,7 @@ class SettingsModal extends StatelessWidget {
                     },
                   ),
                   _buildAvailabilitySection(context),
+                  //if (kDebugMode) _buildSiri(context),
                   const SizedBox(height: Dimension.paddingS),
                   const Separator(),
                   const SizedBox(height: Dimension.paddingS),

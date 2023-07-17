@@ -57,7 +57,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
-        begin: Theme.of(context).backgroundColor,
+        begin: Theme.of(context).colorScheme.background,
         end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
@@ -122,7 +122,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                                     child: Text(
                                       widget.title,
                                       textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
-                                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                           color: (widget.enabled
                                               ? ColorsExt.grey800(context)
                                               : ColorsExt.grey600(context))),

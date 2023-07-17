@@ -306,7 +306,7 @@ class _EventEditModalState extends State<EventEditModal> {
               updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.startDate!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w400,
                     color: ColorsExt.grey800(context),
                   )),
@@ -362,7 +362,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Text(
           DateFormat("EEE dd MMM").format(
               updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.startTime!).toLocal() : widget.tappedDate),
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: ColorsExt.grey800(context),
               )),
@@ -406,7 +406,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Text(
           DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a")
               .format(DateTime.parse(updatedEvent.startTime!).toLocal()),
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: ColorsExt.grey800(context),
               )),
@@ -447,7 +447,7 @@ class _EventEditModalState extends State<EventEditModal> {
               updatedEvent.recurringId == null || timeChanged
                   ? DateFormat("EEE dd MMM").format(DateTime.parse(updatedEvent.endDate!))
                   : DateFormat("EEE dd MMM").format(widget.tappedDate),
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w400,
                     color: ColorsExt.grey800(context),
                   )),
@@ -501,7 +501,7 @@ class _EventEditModalState extends State<EventEditModal> {
       child: Text(
           DateFormat("EEE dd MMM").format(
               updatedEvent.recurringId == null ? DateTime.parse(updatedEvent.endTime!).toLocal() : widget.tappedDate),
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: ColorsExt.grey800(context),
               )),
@@ -539,7 +539,7 @@ class _EventEditModalState extends State<EventEditModal> {
       },
       child: Text(
           DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(updatedEvent.endTime!).toLocal()),
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: ColorsExt.grey800(context),
               )),
@@ -567,7 +567,7 @@ class _EventEditModalState extends State<EventEditModal> {
             ),
             const SizedBox(width: Dimension.padding),
             Text(_recurrenceText(selectedRecurrence),
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w400,
                       color: selectedRecurrence == EventRecurrenceModalType.none
                           ? ColorsExt.grey600(context)
@@ -647,7 +647,7 @@ class _EventEditModalState extends State<EventEditModal> {
               ),
               const SizedBox(width: Dimension.padding),
               Text(t.event.editEvent.allDay,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w400,
                       color: isAllDay ? ColorsExt.grey800(context) : ColorsExt.grey600(context))),
             ],
@@ -718,7 +718,7 @@ class _EventEditModalState extends State<EventEditModal> {
                           : context.read<EventsCubit>().getDefaultConferenceSolution().capitalizeFirstCharacter(),
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .titleMedium
                       ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
             ],
           ),
@@ -734,7 +734,7 @@ class _EventEditModalState extends State<EventEditModal> {
                   child: Text(t.event.join.toUpperCase(),
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyLarge
                           ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.akiflow500(context))),
                 ),
               const SizedBox(width: Dimension.paddingM),
@@ -791,7 +791,7 @@ class _EventEditModalState extends State<EventEditModal> {
             Text(t.event.editEvent.addConference,
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
+                    .titleMedium
                     ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
           ],
         ),
@@ -831,7 +831,7 @@ class _EventEditModalState extends State<EventEditModal> {
               child: Text(locationController.text.isEmpty ? t.event.editEvent.addLocation : locationController.text,
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: locationController.text.isEmpty ? ColorsExt.grey600(context) : ColorsExt.grey800(context),
                       fontWeight: FontWeight.w400)),
             ),
@@ -880,7 +880,7 @@ class _EventEditModalState extends State<EventEditModal> {
             Text(choosenCalendar,
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
+                    .titleMedium
                     ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
           ],
         ),
@@ -904,7 +904,7 @@ class _EventEditModalState extends State<EventEditModal> {
           Text(t.event.busy,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1
+                  .titleMedium
                   ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
         ],
       ),
@@ -927,7 +927,7 @@ class _EventEditModalState extends State<EventEditModal> {
           const SizedBox(width: Dimension.padding),
           Text(
             t.event.guests,
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: updatedEvent.attendees != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context)),
           ),
@@ -984,7 +984,7 @@ class _EventEditModalState extends State<EventEditModal> {
                               : '${updatedEvent.attendees![index].email}',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
                       if (updatedEvent.attendees![index].organizer ?? false)
                         Text(
@@ -1040,7 +1040,7 @@ class _EventEditModalState extends State<EventEditModal> {
             Text(t.event.editEvent.addGuests,
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
+                    .titleMedium
                     ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context))),
           ],
         ),
@@ -1170,7 +1170,7 @@ class _EventEditModalState extends State<EventEditModal> {
                     Text(t.event.editEvent.viewOnGoogleCalendar,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
+                            .titleMedium
                             ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
                   ],
                 ),

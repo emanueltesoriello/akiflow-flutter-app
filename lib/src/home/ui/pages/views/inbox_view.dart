@@ -9,16 +9,15 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/task/notice.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/home/ui/cubit/inbox/inbox_view_cubit.dart';
+import 'package:mobile/src/home/ui/pages/views/empty_inbox_placeholder.dart';
 import 'package:mobile/src/home/ui/widgets/first_sync_progress.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:models/task/task.dart';
-import 'package:video_player/video_player.dart';
 
 class InboxView extends StatelessWidget {
   const InboxView({Key? key}) : super(key: key);
@@ -40,7 +39,6 @@ class _ViewState extends State<_View> {
   StreamSubscription? streamSubscription;
   ScrollController scrollController = ScrollController();
   bool wasEmpty = false;
-  late VideoPlayerController _controller;
 
   @override
   void initState() {
@@ -69,12 +67,6 @@ class _ViewState extends State<_View> {
     } catch (e) {
       print(e);
     }
-    _controller = VideoPlayerController.asset(Assets.animations.inboxEmptyAnimationWEBM)
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
-    _controller.play();
     super.initState();
   }
 
@@ -82,8 +74,6 @@ class _ViewState extends State<_View> {
   Widget build(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, tasksState) {
-        DateTime? lastTaskDoneAt = tasksState.lastTaskDoneAt;
-        DateTime? lastDayInboxZero = tasksState.lastDayInboxZero;
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBarComp(
@@ -109,7 +99,7 @@ class _ViewState extends State<_View> {
                       onRefresh: () async {
                         context.read<SyncCubit>().sync();
                       },
-                      child: _emptyInboxView(lastTaskDoneAt, lastDayInboxZero, context),
+                      child: const EmptyInboxPlaceholder(),
                     );
                   } else {
                     return TaskList(
@@ -155,55 +145,5 @@ class _ViewState extends State<_View> {
         );
       },
     );
-  }
-
-  Column _emptyInboxView(DateTime? lastTaskDoneAt, DateTime? lastDayInboxZero, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        lastTaskDoneAt != null &&
-                lastTaskDoneAt.difference(DateTime.now().toUtc()).inSeconds.abs() < 1 &&
-                (!DateUtils.isSameDay(lastDayInboxZero, DateTime.now().toUtc()) || lastDayInboxZero == null)
-            ? _inboxEmptyAnimation(play: true)
-            : _inboxEmptyAnimation(play: false),
-        const SizedBox(height: Dimension.paddingM),
-        Text(
-          t.task.awesomeInboxZero,
-          textAlign: TextAlign.center,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(fontWeight: FontWeight.w500, color: ColorsExt.grey800(context)),
-        ),
-        const SizedBox(height: Dimension.padding),
-        Center(
-          child: OutlinedButton(
-            onPressed: () {
-              context.read<MainCubit>().changeHomeView(HomeViewType.today);
-            },
-            child: Text(
-              t.calendar.goToToday,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  SizedBox _inboxEmptyAnimation({required bool play}) {
-    if (play) {
-      _controller.play();
-      context.read<TasksCubit>().setLastDayInboxZero();
-    }
-
-    return SizedBox(
-        height: 200,
-        width: 200,
-        child: AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: _controller.value.isInitialized ? VideoPlayer(_controller) : Container(),
-        ));
   }
 }

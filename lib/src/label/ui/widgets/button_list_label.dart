@@ -44,7 +44,7 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
-        begin: Theme.of(context).backgroundColor,
+        begin: Theme.of(context).colorScheme.background,
         end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
@@ -101,7 +101,7 @@ class _View extends State<ButtonListLabel> with SingleTickerProviderStateMixin {
                               child: Text(
                                 widget.title,
                                 textAlign: widget.leading == null ? TextAlign.center : TextAlign.left,
-                                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                       color: ColorsExt.grey800(context),
                                     ),
                               ),

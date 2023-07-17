@@ -2,20 +2,20 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.36.02+367
+version: 2.37.03+398
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
 
 dependencies: 
-  async: ^2.9.0 
+  async: ^2.9.0  
   equatable: ^2.0.3
   flutter:
     sdk: flutter 
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter 
-  flutter_quill: ^7.1.13
+  flutter_quill: ^7.1.16
   flutter_rounded_date_picker: ^3.0.2
   flutter_segment: ^3.9.0
   flutter_slidable: ^3.0.0
@@ -66,7 +66,10 @@ dependencies:
   audioplayers: ^3.0.1
   pusher_channels_flutter: ^2.1.2
   app_links: ^3.4.2
-  video_player: ^2.6.1
+  #flutter_siri_suggestions: ^2.1.0 
+  numberpicker: ^2.1.2
+  dotted_border: ^2.0.0+3
+  
   
 dev_dependencies:
   flutter_launcher_icons_maker: ^0.10.1
@@ -116,7 +119,6 @@ flutter:
     - assets/images/icons/web/
     - assets/images/icons/zapier/
     - assets/images/icons/zoom/
-    - assets/animations/
     - assets/html/
     - assets/js/chrono-custom-rules-master/
     - assets/js/chrono-custom-rules-master/dist/

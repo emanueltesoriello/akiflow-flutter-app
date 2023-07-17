@@ -96,6 +96,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
     return Container(
       color: color,
       child: DoneWithLabel(
+          isTaskDone: widget.task.done ?? false,
           iconColor: iconColor,
           click: () async {
             await Slidable.of(context)?.close();
@@ -111,7 +112,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
   _planDismissable() {
     return DismissiblePane(
       closeOnCancel: true,
-      dismissThreshold: 0.65,
+      dismissThreshold: 0.55,
       confirmDismiss: () async {
         widget.swipeActionPlanClick();
         return false;
@@ -149,7 +150,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
               dismissThreshold: 0.18,
               motionChild: Builder(builder: (context) {
                 HapticFeedback.mediumImpact();
-                return _buildSlidableDone(ColorsExt.yorkGreen200(context), ColorsExt.yorkGreen400(context));
+                return _buildSlidableDone(
+                    widget.task.done ?? false ? ColorsExt.grey100(context) : ColorsExt.yorkGreen200(context),
+                    widget.task.done ?? false ? ColorsExt.grey600(context) : ColorsExt.yorkGreen400(context));
               }),
               staticChild: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -173,7 +176,9 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                 child: SlidableButtonAction(
                   backColor: ColorsExt.grey100(context),
                   topColor: ColorsExt.grey600(context),
-                  icon: Assets.images.icons.common.checkDoneSVG,
+                  icon: widget.task.done ?? false
+                      ? Assets.images.icons.common.checkEmptySVG
+                      : Assets.images.icons.common.checkDoneSVG,
                   leftToRight: true,
                   click: () async {
                     await Slidable.of(context)?.close();
@@ -190,7 +195,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
         ),
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
-          extentRatio: 0.6,
+          extentRatio: 0.5,
           dismissible: _planDismissable(),
           children: [
             Builder(builder: (context) {

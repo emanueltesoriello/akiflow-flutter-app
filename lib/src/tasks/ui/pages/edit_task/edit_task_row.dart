@@ -16,8 +16,6 @@ import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/labels_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
-import 'package:models/task/task.dart';
-import 'package:tuple/tuple.dart' as tuple;
 import 'package:url_launcher/url_launcher.dart';
 
 class EditTaskRow extends StatefulWidget {
@@ -25,13 +23,14 @@ class EditTaskRow extends StatefulWidget {
   final ValueNotifier<QuillController> quillController;
   final FocusNode descriptionFocusNode;
   final FocusNode titleFocusNode;
-  const EditTaskRow(
-      {Key? key,
-      required this.titleController,
-      required this.quillController,
-      required this.descriptionFocusNode,
-      required this.titleFocusNode})
-      : super(key: key);
+
+  const EditTaskRow({
+    Key? key,
+    required this.titleController,
+    required this.quillController,
+    required this.descriptionFocusNode,
+    required this.titleFocusNode,
+  }) : super(key: key);
 
   @override
   State<EditTaskRow> createState() => _EditTaskRowState();
@@ -72,9 +71,9 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _description(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<QuillController>(
       valueListenable: widget.quillController,
-      builder: (context, QuillController value, child) => Theme(
+      builder: (context, value, child) => Theme(
         data: Theme.of(context).copyWith(
           textSelectionTheme: TextSelectionThemeData(
             selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
@@ -93,32 +92,38 @@ class _EditTaskRowState extends State<EditTaskRow> {
           },
           child: Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: QuillEditor(
-              controller: value,
-              readOnly: false,
-              scrollController: ScrollController(),
-              scrollable: true,
-              focusNode: widget.descriptionFocusNode,
-              autoFocus: false,
-              expands: false,
-              padding: EdgeInsets.zero,
-              keyboardAppearance: Brightness.light,
-              placeholder: t.task.description,
-              linkActionPickerDelegate: (BuildContext context, String link, node) async {
-                launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-                return LinkMenuAction.none;
-              },
-              customStyles: DefaultStyles(
-                placeHolder: DefaultTextBlockStyle(
-                  const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 18,
+            child: Column(
+              children: [
+                // QuillToolbar.basic(controller: value),
+                QuillEditor(
+                  controller: value,
+                  readOnly: false,
+                  enableSelectionToolbar: true,
+                  scrollController: ScrollController(),
+                  scrollable: true,
+                  focusNode: widget.descriptionFocusNode,
+                  autoFocus: false,
+                  expands: false,
+                  padding: EdgeInsets.zero,
+                  keyboardAppearance: Brightness.light,
+                  placeholder: t.task.description,
+                  linkActionPickerDelegate: (BuildContext context, String link, node) async {
+                    launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                    return LinkMenuAction.none;
+                  },
+                  customStyles: DefaultStyles(
+                    placeHolder: DefaultTextBlockStyle(
+                      const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                      ),
+                      const VerticalSpacing(0, 0),
+                      const VerticalSpacing(0, 0),
+                      null,
+                    ),
                   ),
-                  const VerticalSpacing(0, 0),
-                  const VerticalSpacing(0, 0),
-                  null,
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -127,17 +132,14 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _thirdLine(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.updatedTask;
+    final task = context.watch<EditTaskCubit>().state.updatedTask;
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 4,
       children: [
         Builder(builder: (context) {
-          if (task.statusType == null) {
-            return const SizedBox();
-          }
-          if (task.statusType == TaskStatusType.inbox) {
+          if (task.statusType == null || task.statusType == TaskStatusType.inbox) {
             return const SizedBox();
           }
 
@@ -188,8 +190,8 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   InkWell _checkbox(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.updatedTask;
-    bool hasFocusOnTitleOrDescription = context.watch<EditTaskCubit>().state.hasFocusOnTitleOrDescription;
+    final task = context.watch<EditTaskCubit>().state.updatedTask;
+    final hasFocusOnTitleOrDescription = context.watch<EditTaskCubit>().state.hasFocusOnTitleOrDescription;
     return InkWell(
       onTap: hasFocusOnTitleOrDescription
           ? null
@@ -200,7 +202,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
               Navigator.of(context).pop();
             },
       child: Builder(builder: (context) {
-        bool completed = task.isCompletedComputed;
+        final completed = task.isCompletedComputed;
 
         return SvgPicture.asset(
           completed ? Assets.images.icons.common.checkDoneSVG : Assets.images.icons.common.checkEmptySVG,
@@ -213,7 +215,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _status(BuildContext context) {
-    Task task = context.watch<EditTaskCubit>().state.updatedTask;
+    final task = context.watch<EditTaskCubit>().state.updatedTask;
 
     if (task.deletedAt != null ||
         task.statusType == TaskStatusType.deleted ||
@@ -235,18 +237,15 @@ class _EditTaskRowState extends State<EditTaskRow> {
   }
 
   Widget _label(BuildContext context) {
-    EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
-    Task task = editTaskCubit.state.updatedTask;
+    final editTaskCubit = context.read<EditTaskCubit>();
+    final task = editTaskCubit.state.updatedTask;
+    final labels = context.read<LabelsCubit>().state.labels;
 
-    List<Label> labels = context.read<LabelsCubit>().state.labels;
-
-    Label? label;
-
-    if (task.listId != null) {
-      label = labels.firstWhereOrNull(
-        (label) => task.listId!.contains(label.id!),
-      );
-    }
+    final label = task.listId != null
+        ? labels.firstWhereOrNull(
+            (label) => task.listId!.contains(label.id!),
+          )
+        : null;
 
     return TagBox(
       isBig: true,

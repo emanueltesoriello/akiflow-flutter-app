@@ -86,10 +86,10 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
         }
       }
       if (entitiesToSync.isNotEmpty) {
-        await syncControllerService.sync(entitiesToSync);
+        syncControllerService.sync(entitiesToSync);
       }
     } else {
-      await locator<SyncControllerService>().sync();
+      locator<SyncControllerService>().sync();
     }
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {
@@ -113,7 +113,6 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
       await locator<PreferencesRepository>().setRecurringBackgroundSyncCounter(counter);
     }
     // ***********************************
-
   } catch (err) {
     if (kDebugMode) log(err.toString());
     throw Exception(err);

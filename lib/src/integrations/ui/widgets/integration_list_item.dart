@@ -53,7 +53,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
-        begin: Theme.of(context).backgroundColor,
+        begin: Theme.of(context).colorScheme.background,
         end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
@@ -129,7 +129,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                   Flexible(
                                     child: Text(widget.title,
                                         textAlign: TextAlign.left,
-                                        style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                               color: (widget.enabled
                                                   ? ColorsExt.grey800(context)
                                                   : ColorsExt.grey600(context)),
@@ -156,7 +156,7 @@ class _IntegrationListItemState extends State<IntegrationListItem> with SingleTi
                                         Flexible(
                                             child: Text(
                                           widget.identifier!,
-                                          style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                                 fontWeight: FontWeight.w500,
                                                 color: ColorsExt.grey600(context),
                                               ),

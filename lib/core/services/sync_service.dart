@@ -127,6 +127,7 @@ class SyncService {
         "errors": [e]
       });
     }
+    return;
   }
 
   /// Return if there is data to import.

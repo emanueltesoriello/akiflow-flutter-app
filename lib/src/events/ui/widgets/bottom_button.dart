@@ -48,7 +48,7 @@ class BottomButton extends StatelessWidget {
         Text(title,
             style: Theme.of(context)
                 .textTheme
-                .caption
+                .bodySmall
                 ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
       ],
     );

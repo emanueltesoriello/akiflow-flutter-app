@@ -29,7 +29,7 @@ class GmailActionDialog extends StatelessWidget {
             topRight: Radius.circular(Dimension.radiusM),
           ),
           child: Material(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             child: ListView(
               shrinkWrap: true,
               children: [
@@ -126,7 +126,7 @@ class GmailActionDialog extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ColorsExt.grey800(context)),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.grey800(context)),
               ),
             ),
           ],

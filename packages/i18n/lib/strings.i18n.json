@@ -224,9 +224,9 @@
       "month": "Month"
     },
     "groupOverlappingTasks": "Group overlapping tasks",
-    "hideWeekends": "Hide Weekends",
-    "hideDeclinedEvents": "Hide Declined events",
-    "hideTasksFromCalendar": "Hide Tasks from calendar",
+    "hideWeekends": "Weekends",
+    "hideDeclinedEvents": "Declined events",
+    "hideTasksFromCalendar": "Tasks",
     "calendars": "Calendars",
     "refresh": "Refresh"
   },
@@ -432,5 +432,10 @@
   "integrations": {
     "todoist": "Todoist",
     "slack": "Slack"
+  },
+  "fab": {
+    "event": "Event",
+    "taskToday": "Task - Today",
+    "taskInbox": "Task - Inbox"
   }
 }

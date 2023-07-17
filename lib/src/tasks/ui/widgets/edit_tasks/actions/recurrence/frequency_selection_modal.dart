@@ -13,7 +13,7 @@ class FrequencySelectionModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -99,7 +99,7 @@ class FrequencySelectionModal extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Text(
           text,
-          style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ColorsExt.grey800(context)),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey800(context)),
         ),
       ),
     );

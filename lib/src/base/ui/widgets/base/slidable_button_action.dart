@@ -48,7 +48,7 @@ class SlidableButtonAction extends StatelessWidget {
                         Text(
                           label!,
                           textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w500,
                                 color: topColor,
                               ),
@@ -58,9 +58,7 @@ class SlidableButtonAction extends StatelessWidget {
                 )
               : Padding(
                   padding: EdgeInsets.only(
-                      right: (MediaQuery.of(context).size.width * 0.6 / 3 / 2) -
-                          (size ?? Dimension.defaultIconSize) +
-                          Dimension.paddingS),
+                      right: (MediaQuery.of(context).size.width * 0.6 / 3 / 2) - (size ?? Dimension.defaultIconSize)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -68,7 +66,7 @@ class SlidableButtonAction extends StatelessWidget {
                         Text(
                           label!,
                           textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w500,
                                 color: topColor,
                               ),

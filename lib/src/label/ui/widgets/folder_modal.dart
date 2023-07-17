@@ -30,7 +30,7 @@ class FolderModal extends StatelessWidget {
             topRight: Radius.circular(Dimension.radius),
           ),
           child: Material(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
               shrinkWrap: true,
@@ -71,7 +71,7 @@ class FolderModal extends StatelessWidget {
                             Expanded(
                                 child: Text(
                               folder.title ?? t.noTitle,
-                              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: ColorsExt.grey800(context),
                                   ),
                             )),

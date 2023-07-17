@@ -88,26 +88,30 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   }
 
   animatePlanDate() {
-    if (previousUpdatedTask?.date != context.read<EditTaskCubit>().state.updatedTask.date ||
-        previousUpdatedTask?.datetime! != context.read<EditTaskCubit>().state.updatedTask.datetime) {
-      setState(() {
-        backgroundPlanColor = Colors.white;
-        borderPlanColor = ColorsExt.jordyBlue400(context);
-      });
-      Future.delayed(const Duration(milliseconds: 1000), () {
+    try {
+      if (previousUpdatedTask?.date != context.read<EditTaskCubit>().state.updatedTask.date ||
+          previousUpdatedTask?.datetime! != context.read<EditTaskCubit>().state.updatedTask.datetime) {
         setState(() {
-          backgroundPlanColor = null;
-          borderPlanColor = null;
+          backgroundPlanColor = Colors.white;
+          borderPlanColor = ColorsExt.jordyBlue400(context);
         });
-      });
-      previousUpdatedTask = context.read<EditTaskCubit>().state.updatedTask;
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          setState(() {
+            backgroundPlanColor = null;
+            borderPlanColor = null;
+          });
+        });
+        previousUpdatedTask = context.read<EditTaskCubit>().state.updatedTask;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: ListView(
           controller: parentScrollController,
           physics: const ClampingScrollPhysics(),
@@ -115,7 +119,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(Dimension.radiusM),
                   topRight: Radius.circular(Dimension.radiusM),
@@ -127,7 +131,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                   children: [
                     const DurationWidget(),
                     const PriorityWidget(),
-                    const LabelWidget(),
+                    //const LabelWidget(),
                     const SizedBox(height: Dimension.padding),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
